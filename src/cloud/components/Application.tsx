@@ -27,9 +27,6 @@ import { usePathnameChangeEffect, useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
 import EventSource from './organisms/EventSource'
 import ApplicationLayout from '../../shared/components/molecules/ApplicationLayout'
-import Sidebar, {
-  PopOverState,
-} from '../../shared/components/organisms/Sidebar'
 import { MenuTypes, useContextMenu } from '../../shared/lib/stores/contextMenu'
 import { useGlobalData } from '../lib/stores/globalData'
 import { getDocLinkHref } from './atoms/Link/DocLink'
@@ -38,10 +35,7 @@ import {
   SidebarSearchHistory,
   SidebarSearchResult,
 } from '../../shared/components/organisms/Sidebar/molecules/SidebarSearch'
-import {
-  SidebarState,
-  SidebarTreeSortingOrders,
-} from '../../shared/lib/sidebar'
+import { SidebarState } from '../../shared/lib/sidebar'
 import useApi from '../../shared/lib/hooks/useApi'
 import {
   GetSearchResultsRequestQuery,
@@ -49,34 +43,18 @@ import {
   HistoryItem,
   SearchResult,
 } from '../api/search'
-import { SidebarToolbarRow } from '../../shared/components/organisms/Sidebar/molecules/SidebarToolbar'
 import { mapUsers } from '../../shared/lib/mappers/users'
-import { SerializedDoc, SerializedDocWithBookmark } from '../interfaces/db/doc'
+import { SerializedDoc } from '../interfaces/db/doc'
 import { SerializedTeam } from '../interfaces/db/team'
-import { compareDateString } from '../../shared/lib/date'
+import { getDocTitle, getTeamURL } from '../lib/utils/patterns'
 import {
-  getDocTitle,
-  getTeamURL,
-  getOriginalDocId,
-} from '../lib/utils/patterns'
-import {
-  mdiAccountMultiplePlusOutline,
-  mdiClockOutline,
-  mdiCogOutline,
   mdiDownload,
-  mdiFileDocumentMultipleOutline,
   mdiFileDocumentOutline,
-  mdiGiftOutline,
   mdiLogoutVariant,
-  mdiMagnify,
   mdiPlusCircleOutline,
-  mdiBellOutline,
-  mdiBellRingOutline,
 } from '@mdi/js'
-import { getColorFromString } from '../../shared/lib/string'
 import { buildIconUrl } from '../api/files'
 import { SerializedFolder } from '../interfaces/db/folder'
-import RoundedImage from '../../shared/components/atoms/RoundedImage'
 import ImportModal from './organisms/Modal/contents/Import/ImportModal'
 import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
 import { getHexFromUUID } from '../lib/utils/string'
@@ -86,7 +64,6 @@ import { SidebarSpace } from '../../shared/components/organisms/Sidebar/molecule
 import ContentLayout, {
   ContentLayoutProps,
 } from '../../shared/components/templates/ContentLayout'
-import { getTeamLinkHref } from './atoms/Link/TeamLink'
 import cc from 'classcat'
 import { useCloudResourceModals } from '../lib/hooks/useCloudResourceModals'
 import { mapTopbarTree } from '../lib/mappers/topbarTree'
@@ -103,16 +80,20 @@ import { isEligibleForDiscount } from '../lib/subscription'
 import { trackEvent } from '../api/track'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 import DiscountModal from './organisms/Modal/contents/DiscountModal'
-import { compareAsc } from 'date-fns'
 import { SidebarTreeControl } from '../../shared/components/organisms/Sidebar/molecules/SidebarTree'
 import { Notification as UserNotification } from '../interfaces/db/notifications'
 import useNotificationState from '../../shared/lib/hooks/useNotificationState'
 import { useNotifications } from '../../shared/lib/stores/notifications'
-import NotifyIcon from '../../shared/components/atoms/NotifyIcon'
 import '../lib/i18n'
 import { useI18n } from '../lib/hooks/useI18n'
 import { TFunction } from 'i18next'
 import { lngKeys } from '../lib/i18n/types'
+import SidebarV2, {
+  PopOverState,
+} from '../../shared/components/organisms/SidebarV2'
+import SidebarHeader, {
+  SidebarControls,
+} from '../../shared/components/organisms/SidebarV2/atoms/SidebarHeader'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -133,7 +114,6 @@ const Application = ({
     workspacesMap,
     currentParentFolderId,
     currentWorkspaceId,
-    appEventsMap,
   } = useNav()
   const {
     team,
@@ -146,8 +126,9 @@ const Application = ({
   const {
     globalData: { teams, invites, currentUser },
   } = useGlobalData()
-  const { push, query, pathname, goBack, goForward } = useRouter()
-  const { history, searchHistory, addToSearchHistory } = useSearch()
+  const { push, query, goBack, goForward } = useRouter()
+  const [showSearchScreen, setShowSearchScreen] = useState(false)
+  const { history, addToSearchHistory } = useSearch()
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
   const [popOverState, setPopOverState] = useState<PopOverState>(null)
   const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
@@ -161,7 +142,10 @@ const Application = ({
   const { openNewFolderForm } = useCloudResourceModals()
   const [showFuzzyNavigation, setShowFuzzyNavigation] = useState(false)
   const { popup } = useContextMenu()
-  const { treeWithOrderedCategories } = useCloudSidebarTree()
+  const {
+    treeWithOrderedCategories,
+    sidebarHeaderControls,
+  } = useCloudSidebarTree()
   const { counts } = useNotifications()
   const { translate } = useI18n()
 
@@ -189,10 +173,6 @@ const Application = ({
     }
   }, [])
 
-  const openState = useCallback((state: SidebarState) => {
-    setSidebarState((prev) => (prev === state ? undefined : state))
-  }, [])
-
   const sidebarResize = useCallback(
     (width: number) => setPreferences({ sideBarWidth: width }),
     [setPreferences]
@@ -201,31 +181,6 @@ const Application = ({
   const users = useMemo(() => {
     return mapUsers(permissions, currentUser)
   }, [permissions, currentUser])
-
-  const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
-    return mapToolbarRows(
-      popOverState,
-      setPopOverState,
-      translate,
-      openState,
-      openModal,
-      openSettingsTab,
-      sidebarState,
-      team,
-      subscription,
-      team != null ? counts[team.id] : 0
-    )
-  }, [
-    translate,
-    sidebarState,
-    openModal,
-    openSettingsTab,
-    team,
-    openState,
-    popOverState,
-    subscription,
-    counts,
-  ])
 
   const topbarTree = useMemo(() => {
     if (team == null) {
@@ -245,10 +200,6 @@ const Application = ({
   const spaces = useMemo(() => {
     return mapSpaces(push, teams, invites, counts, team)
   }, [teams, team, invites, push, counts])
-
-  const historyItems = useMemo(() => {
-    return mapHistory(history || [], push, docsMap, foldersMap, team)
-  }, [team, history, push, docsMap, foldersMap])
 
   const setSearchQuery = useCallback((val: string) => {
     setSidebarSearchQuery(val)
@@ -295,31 +246,6 @@ const Application = ({
     600,
     [sidebarSearchQuery]
   )
-
-  const timelineRows = useMemo(() => {
-    const appEvents = [...appEventsMap.values()].sort((a, b) =>
-      compareAsc(new Date(a.createdAt), new Date(b.createdAt))
-    )
-
-    const docs: SerializedDocWithBookmark[] = []
-    let count = 0
-    for (const appEvent of appEvents) {
-      const { resource } = appEvent.data || {}
-      if (typeof resource !== 'string') {
-        continue
-      }
-      const doc = docsMap.get(getOriginalDocId(resource))
-      if (doc != null) {
-        docs.push(doc)
-
-        if (count++ > 20) {
-          break
-        }
-      }
-    }
-
-    return mapTimelineItems(docs, push, team)
-  }, [appEventsMap, docsMap, push, team])
 
   const openCreateFolderModal = useCallback(() => {
     openNewFolderForm({
@@ -447,38 +373,6 @@ const Application = ({
     setPopOverState(null)
   }, [sidebarState])
 
-  const treeControls: SidebarTreeControl[] = useMemo(() => {
-    return [
-      {
-        icon:
-          preferences.sidebarTreeSortingOrder === 'a-z'
-            ? SidebarTreeSortingOrders.aZ.icon
-            : preferences.sidebarTreeSortingOrder === 'z-a'
-            ? SidebarTreeSortingOrders.zA.icon
-            : preferences.sidebarTreeSortingOrder === 'last-updated'
-            ? SidebarTreeSortingOrders.lastUpdated.icon
-            : SidebarTreeSortingOrders.dragDrop.icon,
-        onClick: (event) => {
-          popup(
-            event,
-            Object.values(SidebarTreeSortingOrders).map((sort) => {
-              return {
-                type: MenuTypes.Normal,
-                onClick: () =>
-                  setPreferences({
-                    sidebarTreeSortingOrder: sort.value,
-                  }),
-                label: translate(`sort.${sort.value}`),
-                icon: sort.icon,
-                active: sort.value === preferences.sidebarTreeSortingOrder,
-              }
-            })
-          )
-        },
-      },
-    ]
-  }, [preferences, popup, setPreferences, translate])
-
   const treeTopRows = useMemo(() => {
     return team != null && currentUserIsCoreMember ? (
       <NewDocButton team={team} />
@@ -493,15 +387,6 @@ const Application = ({
     () => buildSpacesBottomRows(push, translate),
     [push, translate]
   )
-
-  const timelineMore = useMemo(() => {
-    return team != null && pathname !== getTeamLinkHref(team, 'timeline')
-      ? {
-          variant: 'primary' as const,
-          onClick: () => push(getTeamLinkHref(team, 'timeline')),
-        }
-      : undefined
-  }, [team, pathname, push])
 
   const sidebarSearchState = useMemo(() => {
     return {
@@ -549,29 +434,29 @@ const Application = ({
       )}
       <ApplicationLayout
         sidebar={
-          <Sidebar
+          <SidebarV2
             className={cc(['application__sidebar'])}
             popOver={popOverState}
-            showToolbar={!usingElectron}
             onSpacesBlur={onSpacesBlurCallback}
-            toolbarRows={toolbarRows}
             spaces={spaces}
             spaceBottomRows={spaceBottomRows}
             sidebarExpandedWidth={preferences.sideBarWidth}
-            sidebarState={sidebarState}
             tree={treeWithOrderedCategories}
             sidebarResize={sidebarResize}
-            searchQuery={sidebarSearchQuery}
-            setSearchQuery={setSearchQuery}
-            searchHistory={searchHistory}
-            recentPages={historyItems}
-            treeControls={treeControls}
+            header={
+              <SidebarHeader
+                onSpaceClick={() => setPopOverState('spaces')}
+                spaceName={team != null ? team.name : '...'}
+                spaceImage={
+                  team != null && team.icon != null
+                    ? buildIconUrl(team.icon.location)
+                    : undefined
+                }
+                controls={sidebarHeaderControls}
+              />
+            }
             treeTopRows={treeTopRows}
-            searchResults={searchResults}
             users={users}
-            timelineRows={timelineRows}
-            timelineMore={timelineMore}
-            sidebarSearchState={sidebarSearchState}
             notificationState={notificationState}
             getMoreNotifications={getMoreNotifications}
             notificationClick={notificationClick}
@@ -601,53 +486,6 @@ const Application = ({
 }
 
 export default Application
-
-function mapTimelineItems(
-  docs: SerializedDoc[],
-  push: (url: string) => void,
-  team?: SerializedTeam,
-  limit = 10
-) {
-  if (team == null) {
-    return []
-  }
-
-  return docs
-    .sort((a, b) =>
-      compareDateString(
-        a.head?.created || a.updatedAt,
-        b.head?.created || b.updatedAt,
-        'DESC'
-      )
-    )
-    .slice(0, limit)
-    .map((doc) => {
-      const labelHref = getDocLinkHref(doc, team, 'index')
-      return {
-        id: doc.id,
-        label: getDocTitle(doc, 'Untitled'),
-        labelHref,
-        labelOnClick: () => push(labelHref),
-        emoji: doc.emoji,
-        defaultIcon: mdiFileDocumentOutline,
-        lastUpdated: doc.head?.created || doc.updatedAt,
-        lastUpdatedBy:
-          doc.head == null
-            ? []
-            : (doc.head.creators || []).map((user) => {
-                return {
-                  color: getColorFromString(user.id),
-                  userId: user.id,
-                  name: user.displayName,
-                  iconUrl:
-                    user.icon != null
-                      ? buildIconUrl(user.icon.location)
-                      : undefined,
-                }
-              }),
-      }
-    })
-}
 
 function mapSearchResults(
   results: SearchResult[],
@@ -740,111 +578,6 @@ function mapHistory(
   })
 
   return items
-}
-
-function mapToolbarRows(
-  popOverState: PopOverState,
-  setPopOverState: React.Dispatch<React.SetStateAction<PopOverState>>,
-  t: TFunction,
-  openState: (sidebarState: SidebarState) => void,
-  openModal: (cmp: JSX.Element, options?: ModalOpeningOptions) => void,
-  openSettingsTab: (tab: SettingsTab) => void,
-  sidebarState?: SidebarState,
-  team?: SerializedTeam,
-  subscription?: SerializedSubscription,
-  newNotifications?: number
-) {
-  const rows: SidebarToolbarRow[] = []
-  if (team != null) {
-    rows.push({
-      active: popOverState === 'spaces',
-      tooltip: t(lngKeys.ToolbarTooltipsSpaces),
-      icon: (
-        <RoundedImage
-          size={26}
-          alt={team.name}
-          url={team.icon != null ? buildIconUrl(team.icon.location) : undefined}
-        />
-      ),
-      onClick: () =>
-        setPopOverState((prev) => (prev === 'spaces' ? null : 'spaces')),
-    })
-  }
-  rows.push({
-    tooltip: t(lngKeys.ToolbarTooltipsTree),
-    active: sidebarState === 'tree',
-    icon: mdiFileDocumentMultipleOutline,
-    onClick: () => openState('tree'),
-  })
-  rows.push({
-    tooltip: t(lngKeys.GeneralSearchVerb),
-    active: sidebarState === 'search',
-    icon: mdiMagnify,
-    onClick: () => openState('search'),
-  })
-  rows.push({
-    tooltip: t(lngKeys.GeneralTimeline),
-    active: sidebarState === 'timeline',
-    icon: mdiClockOutline,
-    onClick: () => openState('timeline'),
-  })
-
-  if (team != null && !team.personal) {
-    rows.push({
-      tooltip: 'Notifications',
-      active: popOverState === 'notifications',
-      icon: newNotifications ? (
-        <NotifyIcon
-          size={26}
-          count={newNotifications}
-          path={mdiBellRingOutline}
-        />
-      ) : (
-        mdiBellOutline
-      ),
-      onClick: () => {
-        setPopOverState((prev) =>
-          prev === 'notifications' ? null : 'notifications'
-        )
-      },
-    })
-  }
-
-  if (team != null && subscription == null && isEligibleForDiscount(team)) {
-    rows.push({
-      position: 'bottom',
-      tooltip: t(lngKeys.ToolbarTooltipsDiscount),
-      icon: mdiGiftOutline,
-      pelletVariant: 'danger',
-      onClick: () => {
-        trackEvent(MixpanelActionTrackTypes.UpgradeDiscount, { team: team.id })
-        openModal(<DiscountModal />, { showCloseIcon: true, width: 'large' })
-      },
-    })
-  }
-
-  rows.push({
-    tooltip: t(lngKeys.GeneralImport),
-    icon: mdiDownload,
-    position: 'bottom',
-    onClick: () => openModal(<ImportModal />, { showCloseIcon: true }),
-  })
-  rows.push({
-    tooltip: t(lngKeys.GeneralMembers),
-    active: sidebarState === 'members',
-    icon: mdiAccountMultiplePlusOutline,
-    position: 'bottom',
-    onClick: () => openSettingsTab('teamMembers'),
-  })
-  rows.push({
-    tooltip: t(lngKeys.GeneralSettings),
-    active: sidebarState === 'settings',
-    icon: mdiCogOutline,
-    position: 'bottom',
-    onClick: () => openSettingsTab('preferences'),
-  })
-
-  return rows
 }
 
 function mapSpaces(

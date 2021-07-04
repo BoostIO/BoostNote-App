@@ -25,6 +25,7 @@ export type ButtonVariant =
 export interface ButtonProps {
   variant?: ButtonVariant
   size?: 'sm' | 'md' | 'lg'
+  icon?: React.ReactNode
   iconPath?: string
   iconSize?: IconSize
   type?: 'button' | 'submit'
@@ -61,6 +62,7 @@ const Button = React.forwardRef<
       variant = 'primary',
       size = 'md',
       type = 'button',
+      icon,
       iconPath,
       iconSize,
       disabled,
@@ -122,6 +124,7 @@ const Button = React.forwardRef<
         {iconPath != null && (
           <Icon className='button__icon' size={iconSize} path={iconPath} />
         )}
+        {icon}
         {children != null && <div className='button__label'>{children}</div>}
       </StyledButton>
     )
