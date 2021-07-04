@@ -26,7 +26,10 @@ import {
   SidebarTreeChildRow,
 } from '../../../../shared/components/organisms/Sidebar/molecules/SidebarTree'
 import { SidebarDragState } from '../../../../shared/lib/dnd'
-import { SidebarTreeSortingOrder } from '../../../../shared/lib/sidebar'
+import {
+  SidebarTreeSortingOrder,
+  SidebarTreeSortingOrders,
+} from '../../../../shared/lib/sidebar'
 import { MenuItem, MenuTypes } from '../../../../shared/lib/stores/contextMenu'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import {
@@ -63,6 +66,7 @@ import { useDialog } from '../../../../shared/lib/stores/dialog'
 import { DocStatus } from '../../../interfaces/db/doc'
 import { useI18n } from '../useI18n'
 import { lngKeys } from '../../i18n/types'
+import { SidebarControls } from '../../../../shared/components/organisms/SidebarV2/atoms/SidebarHeader'
 
 export function useCloudSidebarTree() {
   const { team, currentUserIsCoreMember } = usePage()
@@ -137,6 +141,59 @@ export function useCloudSidebarTree() {
     },
     [toggleItem, unfoldItem, foldItem]
   )
+
+  const sidebarHeaderControls: SidebarControls = useMemo(() => {
+    return {
+      viewOptions: [
+        {
+          label: translate(lngKeys.GeneralBookmarks),
+          checked: !sideBarOpenedLinksIdsSet.has('hide-bookmarks'),
+          onClick: () => toggleItem('links', 'hide-bookmarks'),
+        },
+        {
+          label: translate(lngKeys.GeneralFolders),
+          checked: !sideBarOpenedLinksIdsSet.has('hide-folders'),
+          onClick: () => toggleItem('links', 'hide-folders'),
+        },
+        {
+          label: translate(lngKeys.GeneralLabels),
+          checked: !sideBarOpenedLinksIdsSet.has('hide-labels'),
+          onClick: () => toggleItem('links', 'hide-labels'),
+        },
+        {
+          label: translate(lngKeys.GeneralPrivate),
+          checked: !sideBarOpenedLinksIdsSet.has('hide-private'),
+          onClick: () => toggleItem('links', 'hide-private'),
+        },
+        {
+          label: translate(lngKeys.GeneralSmartFolders),
+          checked: !sideBarOpenedLinksIdsSet.has('hide-smart folders'),
+          onClick: () => toggleItem('links', 'hide-smart folders'),
+        },
+        {
+          label: translate(lngKeys.GeneralStatus),
+          checked: !sideBarOpenedLinksIdsSet.has('hide-status'),
+          onClick: () => toggleItem('links', 'hide-status'),
+        },
+      ],
+      sortingOptions: Object.values(SidebarTreeSortingOrders).map((sort) => {
+        return {
+          label: translate(`sort.${sort.value}`),
+          checked: sort.value === preferences.sidebarTreeSortingOrder,
+          onClick: () =>
+            setPreferences({
+              sidebarTreeSortingOrder: sort.value,
+            }),
+        }
+      }),
+    }
+  }, [
+    preferences,
+    setPreferences,
+    translate,
+    toggleItem,
+    sideBarOpenedLinksIdsSet,
+  ])
 
   const tree = useMemo(() => {
     if (!initialLoadDone || team == null) {
@@ -909,6 +966,7 @@ export function useCloudSidebarTree() {
   return {
     tree,
     treeWithOrderedCategories,
+    sidebarHeaderControls,
   }
 }
 
