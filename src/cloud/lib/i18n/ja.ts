@@ -436,6 +436,9 @@ const jpTranslation: TranslationSource = {
   [lngKeys.GeneralHours]: '時間',
   [lngKeys.GeneralMinutes]: '分',
   [lngKeys.GeneralSeconds]: '秒',
+
+  [lngKeys.GeneralOrdering]: 'Ordering',
+  [lngKeys.SidebarViewOptions]: 'View Options',
 }
 
 export default {

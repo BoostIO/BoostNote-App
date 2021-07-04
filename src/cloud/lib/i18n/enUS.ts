@@ -432,6 +432,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.GeneralHours]: 'hours',
   [lngKeys.GeneralMinutes]: 'minutes',
   [lngKeys.GeneralSeconds]: 'seconds',
+  [lngKeys.GeneralOrdering]: 'Ordering',
+  [lngKeys.SidebarViewOptions]: 'View Options',
 }
 
 export default {

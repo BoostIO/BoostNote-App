@@ -12,7 +12,6 @@ import {
   useContextMenu,
 } from '../../../../lib/stores/contextMenu'
 import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
-import Radio from '../../../molecules/Form/atoms/FormRadio'
 
 interface SidebarHeaderProps {
   spaceImage?: string
@@ -21,9 +20,8 @@ interface SidebarHeaderProps {
   controls?: SidebarControls
 }
 
-export interface SidebarControls {
-  viewOptions: SidebarControl[]
-  sortingOptions: SidebarControl[]
+export type SidebarControls = {
+  [category: string]: SidebarControl[]
 }
 
 export interface SidebarControl {
@@ -78,37 +76,22 @@ const SidebarHeader: AppComponent<SidebarHeaderProps> = ({
 function mapControlsToPopup(controls: SidebarControls) {
   const items: MenuItem[] = []
 
-  items.push({
-    type: MenuTypes.Component,
-    component: <PopupCategory>View Options</PopupCategory>,
-  })
-  controls.viewOptions.forEach((option) => {
+  Object.entries(controls).forEach(([category, value]) => {
     items.push({
-      type: MenuTypes.Normal,
-      onClick: option.onClick,
-      label: (
-        <span>
-          <Checkbox checked={option.checked} />
-          <span style={{ paddingLeft: 6 }}>{option.label}</span>
-        </span>
-      ),
+      type: MenuTypes.Component,
+      component: <PopupCategory>{category}</PopupCategory>,
     })
-  })
-
-  items.push({
-    type: MenuTypes.Component,
-    component: <PopupCategory className='last'>Sorting</PopupCategory>,
-  })
-  controls.sortingOptions.forEach((option) => {
-    items.push({
-      type: MenuTypes.Normal,
-      onClick: option.onClick,
-      label: (
-        <span>
-          <Radio checked={option.checked} />
-          <span style={{ paddingLeft: 6 }}>{option.label}</span>
-        </span>
-      ),
+    value.forEach((option) => {
+      items.push({
+        type: MenuTypes.Normal,
+        onClick: option.onClick,
+        label: (
+          <span>
+            <Checkbox checked={option.checked} />
+            <span style={{ paddingLeft: 6 }}>{option.label}</span>
+          </span>
+        ),
+      })
     })
   })
 
