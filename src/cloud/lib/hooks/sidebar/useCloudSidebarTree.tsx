@@ -144,7 +144,7 @@ export function useCloudSidebarTree() {
 
   const sidebarHeaderControls: SidebarControls = useMemo(() => {
     return {
-      viewOptions: [
+      [translate(lngKeys.SidebarViewOptions)]: [
         {
           label: translate(lngKeys.GeneralBookmarks),
           checked: !sideBarOpenedLinksIdsSet.has('hide-bookmarks'),
@@ -176,7 +176,9 @@ export function useCloudSidebarTree() {
           onClick: () => toggleItem('links', 'hide-status'),
         },
       ],
-      sortingOptions: Object.values(SidebarTreeSortingOrders).map((sort) => {
+      [translate(lngKeys.GeneralOrdering)]: Object.values(
+        SidebarTreeSortingOrders
+      ).map((sort) => {
         return {
           label: translate(`sort.${sort.value}`),
           checked: sort.value === preferences.sidebarTreeSortingOrder,

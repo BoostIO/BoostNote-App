@@ -395,6 +395,9 @@ export enum lngKeys {
   FormChangeImage = 'form.image.change',
 
   SettingsUserForum = 'settings.user.forum',
+
+  SidebarViewOptions = 'sidebar.view.options',
+  GeneralOrdering = 'general.ordering',
 }
 
 export type TranslationSource = {

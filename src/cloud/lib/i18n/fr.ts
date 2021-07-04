@@ -441,6 +441,8 @@ const frTranslation: TranslationSource = {
   [lngKeys.GeneralHours]: 'heures',
   [lngKeys.GeneralMinutes]: 'minutes',
   [lngKeys.GeneralSeconds]: 'secondes',
+  [lngKeys.GeneralOrdering]: 'Ordre',
+  [lngKeys.SidebarViewOptions]: "Options d'affichage",
 }
 
 export default {
