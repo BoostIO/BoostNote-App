@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components'
 import { BaseTheme } from '../../lib/styled/types'
 import 'emoji-mart/css/emoji-mart.css'
+import 'overlayscrollbars/css/OverlayScrollbars.css'
 
 export const getGlobalCss = (theme: BaseTheme) => `
 body {
