@@ -14,8 +14,6 @@ import { shortcuts } from '../lib/shortcuts'
 import { useSearch } from '../lib/stores/search'
 import AnnouncementAlert from './atoms/AnnouncementAlert'
 import {
-  modalDiscountEventEmitter,
-  modalImportEventEmitter,
   newFolderEventEmitter,
   searchEventEmitter,
   toggleSidebarSearchEventEmitter,
@@ -45,7 +43,6 @@ import {
   mdiWeb,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
-import ImportModal from './organisms/Modal/contents/Import/ImportModal'
 import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
 import { getHexFromUUID } from '../lib/utils/string'
 import { stringify } from 'querystring'
@@ -66,8 +63,6 @@ import { useModal } from '../../shared/lib/stores/modal'
 import NewDocButton from './molecules/NewDocButton'
 import { useCloudSidebarTree } from '../lib/hooks/sidebar/useCloudSidebarTree'
 import { isEligibleForDiscount } from '../lib/subscription'
-import { trackEvent } from '../api/track'
-import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 import DiscountModal from './organisms/Modal/contents/DiscountModal'
 import { Notification as UserNotification } from '../interfaces/db/notifications'
 import useNotificationState from '../../shared/lib/hooks/useNotificationState'
@@ -134,9 +129,12 @@ const Application = ({
   const { counts } = useNotifications()
   const { translate } = useI18n()
 
+  const { history, showSearchScreen, setShowSearchScreen } = useSearch()
+
   usePathnameChangeEffect(() => {
     setShowFuzzyNavigation(false)
     setShowSearchScreen(false)
+    closeSettingsTab()
   })
 
   useEffectOnce(() => {
@@ -243,10 +241,9 @@ const Application = ({
 
   const toggleSidebarSearch = useCallback(() => {
     closeSettingsTab()
-    setSidebarState((prev) => {
-      return prev === 'search' ? undefined : 'search'
-    })
-  }, [closeSettingsTab])
+    setShowSearchScreen((prev) => !prev)
+  }, [closeSettingsTab, setShowSearchScreen])
+
   useEffect(() => {
     toggleSidebarSearchEventEmitter.listen(toggleSidebarSearch)
     return () => {
@@ -275,32 +272,6 @@ const Application = ({
     toggleSidebarNotificationsEventEmitter.listen(handler)
     return () => toggleSidebarNotificationsEventEmitter.unlisten(handler)
   }, [])
-
-  const openImportModal = useCallback(() => {
-    closeSettingsTab()
-    openModal(<ImportModal />, { showCloseIcon: true })
-  }, [closeSettingsTab, openModal])
-
-  useEffect(() => {
-    modalImportEventEmitter.listen(openImportModal)
-    return () => {
-      modalImportEventEmitter.unlisten(openImportModal)
-    }
-  }, [openImportModal])
-
-  useEffect(() => {
-    const openDiscountModal = () => {
-      if (team == null) {
-        return
-      }
-      trackEvent(MixpanelActionTrackTypes.UpgradeDiscount, { team: team.id })
-      openModal(<DiscountModal />, { showCloseIcon: true, width: 'large' })
-    }
-    modalDiscountEventEmitter.listen(openDiscountModal)
-    return () => {
-      modalDiscountEventEmitter.unlisten(openDiscountModal)
-    }
-  }, [openModal, team])
 
   useEffect(() => {
     if (!usingElectron) {
@@ -335,8 +306,6 @@ const Application = ({
     },
     [push, setViewed]
   )
-
-  const { history, showSearchScreen, setShowSearchScreen } = useSearch()
   return (
     <>
       {team != null && <EventSource teamId={team.id} />}
@@ -448,7 +417,7 @@ const Application = ({
                       label: translate(lngKeys.GeneralImport),
                       icon: mdiImport,
                       variant: 'subtle',
-                      labelClick: () => openSettingsTab('api'),
+                      labelClick: () => openSettingsTab('import'),
                       id: 'sidebar__button__import',
                     },
                   ]}

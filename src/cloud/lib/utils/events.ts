@@ -81,15 +81,6 @@ export const toggleSidebarNotificationsEventEmitter = createCustomEventEmitter(
   'sidebar-notifications'
 )
 
-export const toggleSidebarImportEventEmitter = createCustomEventEmitter(
-  'sidebar-search'
-)
-
 export const toggleSettingsMembersEventEmitter = createCustomEventEmitter(
   'toggle-settings-members'
-)
-
-export const modalImportEventEmitter = createCustomEventEmitter('modal-import')
-export const modalDiscountEventEmitter = createCustomEventEmitter(
-  'modal-discount'
 )

@@ -401,6 +401,7 @@ export enum lngKeys {
   SidebarNewUserDiscount = 'sidebar.discount',
   GeneralOrdering = 'general.ordering',
   GeneralInbox = 'general.inbox',
+  SettingsImportDescription = 'settings.import.description',
 }
 
 export type TranslationSource = {

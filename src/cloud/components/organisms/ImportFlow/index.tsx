@@ -1,31 +1,28 @@
 import React, { useState, useMemo, useCallback, useRef } from 'react'
-import { ModalContainer } from '../styled'
-import ImportModalHeader, { ImportStep } from './ImportModalHeader'
-import { StyledImportModalContainer } from './styled'
-import ImportModalSelectFolder from './ImportModalSelectFolder'
-import ImportModalSelectSource from './ImportModalSelectSource'
-import ImportModalGuide, { ImportService } from './ImportModalGuide'
+import ImportModalSelectFolder from './molecules/ImportFlowDestination'
 import {
   AllowedDocTypeImports,
   importDocs,
-} from '../../../../../api/teams/docs/import'
-import { usePage } from '../../../../../lib/stores/pageStore'
-import { useNav } from '../../../../../lib/stores/nav'
-import { getMapFromEntityArray } from '../../../../../lib/utils/array'
-import ImportModalUpload from './ImportModalUpload'
-import { useNavigateToDoc } from '../../../../atoms/Link/DocLink'
-import { useNavigateToFolder } from '../../../../atoms/Link/FolderLink'
-import { useNavigateToWorkspace } from '../../../../atoms/Link/WorkspaceLink'
-import { useNavigateToTeam } from '../../../../atoms/Link/TeamLink'
-import { useToast } from '../../../../../../shared/lib/stores/toast'
-import { useModal } from '../../../../../../shared/lib/stores/modal'
-import ViewerRestrictedWrapper from '../../../../molecules/ViewerRestrictedWrapper'
+} from '../../../api/teams/docs/import'
+import { usePage } from '../../../lib/stores/pageStore'
+import { useNav } from '../../../lib/stores/nav'
+import { getMapFromEntityArray } from '../../../lib/utils/array'
+import { useNavigateToDoc } from '../../atoms/Link/DocLink'
+import { useNavigateToFolder } from '../../atoms/Link/FolderLink'
+import { useNavigateToWorkspace } from '../../atoms/Link/WorkspaceLink'
+import { useNavigateToTeam } from '../../atoms/Link/TeamLink'
+import { useToast } from '../../../../shared/lib/stores/toast'
+import { useModal } from '../../../../shared/lib/stores/modal'
+import styled from '../../../../shared/lib/styled'
+import Spinner from '../../../../shared/components/atoms/Spinner'
+import ImportFlowSource from './molecules/ImportFlowSources'
 
-const ImportModal = () => {
+type ImportStep = 'destination' | 'source' | 'import'
+
+const ImportFlow = () => {
   const [step, setStep] = useState<ImportStep>('source')
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>()
   const [selectedFolderId, setSelectedFolderId] = useState<string>()
-  const [service, setService] = useState<ImportService>()
   const { closeLastModal: closeModal } = useModal()
   const fileUploaderRef = useRef<HTMLInputElement>(null)
   const [uploadType, setUploadType] = useState<
@@ -37,11 +34,6 @@ const ImportModal = () => {
   const { updateDocsMap, updateFoldersMap, updateWorkspacesMap } = useNav()
   const navigateToDoc = useNavigateToDoc()
   const navigateToFolder = useNavigateToFolder()
-
-  const showGuide = useCallback((service: ImportService) => {
-    setService(service)
-    setStep('guide')
-  }, [])
 
   const openFileExplorer = useCallback(() => {
     if (fileUploaderRef.current != null) {
@@ -154,8 +146,31 @@ const ImportModal = () => {
     ]
   )
 
+  const onsourceCallback = useCallback((val: string) => {
+    switch (val) {
+      case 'dropbox':
+      case 'gdocs':
+      case 'md':
+        setUploadType('md')
+        break
+      case 'evernote':
+      case 'confluence':
+      case 'html':
+        setUploadType('html')
+        break
+      case 'quip':
+      case 'notion':
+      default:
+        setUploadType('md|html')
+        break
+    }
+    setStep('destination')
+  }, [])
+
   const content = useMemo(() => {
     switch (step) {
+      case 'source':
+        return <ImportFlowSource pickSource={onsourceCallback} />
       case 'destination':
         return (
           <ImportModalSelectFolder
@@ -167,28 +182,13 @@ const ImportModal = () => {
             onSelect={openFileExplorer}
           />
         )
-      case 'source':
-        return (
-          <ImportModalSelectSource
-            selectedService={service}
-            setUploadType={setUploadType}
-            onCancel={() => closeModal()}
-            showGuide={showGuide}
-            setStep={setStep}
-            sending={sending}
-          />
-        )
-      case 'guide':
-        return (
-          <ImportModalGuide
-            selectedService={service}
-            onCancel={() => setStep('source')}
-            setUploadType={setUploadType}
-            onContinue={() => setStep('destination')}
-          />
-        )
       case 'import':
-        return <ImportModalUpload />
+        return (
+          <div className='import__flow--uploading'>
+            <p>Uploading</p>
+            <Spinner />
+          </div>
+        )
       default:
         return null
     }
@@ -196,12 +196,8 @@ const ImportModal = () => {
     step,
     selectedWorkspaceId,
     selectedFolderId,
-    closeModal,
-    service,
-    setUploadType,
-    sending,
-    showGuide,
     openFileExplorer,
+    onsourceCallback,
   ])
 
   const accept = useMemo(() => {
@@ -218,30 +214,23 @@ const ImportModal = () => {
   }, [uploadType])
 
   return (
-    <ModalContainer>
-      <StyledImportModalContainer>
-        <ViewerRestrictedWrapper>
-          <>
-            <ImportModalHeader
-              currentStep={step === 'guide' ? 'source' : step}
-            />
-            {content}
+    <Container>
+      {content}
 
-            <form>
-              <input
-                type='file'
-                accept={accept}
-                multiple={true}
-                style={{ display: 'none' }}
-                ref={fileUploaderRef}
-                onChange={onFileUpload}
-              />
-            </form>
-          </>
-        </ViewerRestrictedWrapper>
-      </StyledImportModalContainer>
-    </ModalContainer>
+      <form>
+        <input
+          type='file'
+          accept={accept}
+          multiple={true}
+          style={{ display: 'none' }}
+          ref={fileUploaderRef}
+          onChange={onFileUpload}
+        />
+      </form>
+    </Container>
   )
 }
 
-export default ImportModal
+const Container = styled.div``
+
+export default ImportFlow

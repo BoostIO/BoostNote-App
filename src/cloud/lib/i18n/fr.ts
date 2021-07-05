@@ -446,6 +446,8 @@ const frTranslation: TranslationSource = {
   [lngKeys.SidebarSettingsAndMembers]: 'Paramètres & Membres',
   [lngKeys.GeneralInbox]: 'Boîte de réception',
   [lngKeys.SidebarNewUserDiscount]: 'Promotion pour nouvel utilisateur!',
+  [lngKeys.SettingsImportDescription]:
+    'Plutôt que démarrer à partir de rien, importez vos fichiers directement dans Boost Note en sélectionnant une des options ci-dessous.',
 }
 
 export default {

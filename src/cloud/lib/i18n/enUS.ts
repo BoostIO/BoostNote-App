@@ -437,6 +437,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.SidebarSettingsAndMembers]: 'Settings & Members',
   [lngKeys.GeneralInbox]: 'Inbox',
   [lngKeys.SidebarNewUserDiscount]: 'Get the new user discount!',
+  [lngKeys.SettingsImportDescription]:
+    'No need to start from scratch. Import data into Boost Note by selecting one of the options below.',
 }
 
 export default {

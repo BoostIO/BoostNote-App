@@ -13,10 +13,8 @@ import {
   applyItalicStyleEventEmitter,
   toggleSidebarTreeEventEmitter,
   toggleSidebarTimelineEventEmitter,
-  toggleSidebarSearchEventEmitter,
   toggleSettingsMembersEventEmitter,
-  modalImportEventEmitter,
-  modalDiscountEventEmitter,
+  toggleSidebarSearchEventEmitter,
   toggleSidebarNotificationsEventEmitter,
 } from '../utils/events'
 import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../keyboard'
@@ -146,12 +144,6 @@ const useElectronStore = (): ElectronStore => {
       return
     }
 
-    addHostListener('modal-import', () => {
-      modalImportEventEmitter.dispatch()
-    })
-    addHostListener('modal-discount', () => {
-      modalDiscountEventEmitter.dispatch()
-    })
     addHostListener('toggle-sidebar-tree', () => {
       toggleSidebarTreeEventEmitter.dispatch()
     })

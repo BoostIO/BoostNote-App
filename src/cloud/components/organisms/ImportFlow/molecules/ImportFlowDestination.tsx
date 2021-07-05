@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react'
-import { StyledImportModalContent, StyledImportModalFooter } from './styled'
-import { useNav } from '../../../../../lib/stores/nav'
-import { sortByAttributeAsc } from '../../../../../lib/utils/array'
-import { SerializedWorkspace } from '../../../../../interfaces/db/workspace'
-import WorkspaceExplorer from '../../../../molecules/WorkspaceExplorer'
-import { useI18n } from '../../../../../lib/hooks/useI18n'
-import { lngKeys } from '../../../../../lib/i18n/types'
-import Button from '../../../../../../shared/components/atoms/Button'
+import { useNav } from '../../../../lib/stores/nav'
+import { sortByAttributeAsc } from '../../../../lib/utils/array'
+import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
+import WorkspaceExplorer from '../../../molecules/WorkspaceExplorer'
+import { useI18n } from '../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../lib/i18n/types'
+import Button from '../../../../../shared/components/atoms/Button'
+import styled from '../../../../../shared/lib/styled'
 
 interface ImportModalSelectFolderProps {
   selectedWorkspaceId?: string
@@ -62,11 +62,12 @@ const ImportModalSelectFolder = ({
   }, [foldersMap])
 
   return (
-    <>
-      <StyledImportModalContent ref={wrapperRef} tabIndex={-1}>
-        <h2 style={{ margin: 0 }}>
-          {translate(lngKeys.ModalsImportDestinationTitle)}
-        </h2>
+    <Container className='import__destination'>
+      <div
+        className='import__destination__content'
+        ref={wrapperRef}
+        tabIndex={-1}
+      >
         <p>{translate(lngKeys.ModalsImportDestinationDisclaimer)}</p>
         <WorkspaceExplorer
           folders={sortedFolders}
@@ -76,8 +77,8 @@ const ImportModalSelectFolder = ({
           setSelectedFolderId={setSelectedFolderId}
           setSelectedWorkspaceId={setSelectedWorkspaceId}
         />
-      </StyledImportModalContent>
-      <StyledImportModalFooter>
+      </div>
+      <div className='import__destination__footer'>
         <Button variant='secondary' onClick={onCancel}>
           {translate(lngKeys.GeneralPrevious)}
         </Button>
@@ -88,9 +89,15 @@ const ImportModalSelectFolder = ({
         >
           {translate(lngKeys.GeneralImport)}
         </Button>
-      </StyledImportModalFooter>
-    </>
+      </div>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  .import__destination__footer {
+    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
+  }
+`
 
 export default ImportModalSelectFolder
