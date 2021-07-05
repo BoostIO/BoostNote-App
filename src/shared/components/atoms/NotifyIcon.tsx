@@ -3,9 +3,9 @@ import React from 'react'
 import styled from '../../lib/styled'
 import Icon, { IconProps } from './Icon'
 
-function NotifyIcon(props: IconProps & { count: number }) {
+function NotifyIcon(props: IconProps & { text: number | string }) {
   return (
-    <Container data-count={props.count}>
+    <Container data-text={props.text}>
       <Icon {...props} />
     </Container>
   )
@@ -16,8 +16,8 @@ const Container = styled.div`
   position: relative;
   &:after {
     position: absolute;
-    content: attr(data-count);
-    content: attr(data-count);
+    content: attr(data-text);
+    content: attr(data-text);
     width: 13px;
     height: 13px;
     text-align: center;

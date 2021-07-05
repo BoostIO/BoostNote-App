@@ -398,6 +398,7 @@ export enum lngKeys {
 
   SidebarViewOptions = 'sidebar.view.options',
   SidebarSettingsAndMembers = 'sidebar.settings.member',
+  SidebarNewUserDiscount = 'sidebar.discount',
   GeneralOrdering = 'general.ordering',
   GeneralInbox = 'general.inbox',
 }

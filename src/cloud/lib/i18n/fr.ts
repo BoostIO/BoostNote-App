@@ -445,6 +445,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.SidebarViewOptions]: "Options d'affichage",
   [lngKeys.SidebarSettingsAndMembers]: 'Paramètres & Membres',
   [lngKeys.GeneralInbox]: 'Boîte de réception',
+  [lngKeys.SidebarNewUserDiscount]: 'Promotion pour nouvel utilisateur!',
 }
 
 export default {
