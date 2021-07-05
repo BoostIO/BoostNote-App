@@ -1,6 +1,5 @@
 import { FolderDoc, NoteDoc, NoteStorage } from '../../../db/types'
 import { mdiFileDocumentOutline, mdiNoteText } from '@mdi/js'
-import { SidebarSearchResult } from '../../../../shared/components/organisms/Sidebar/molecules/SidebarSearch'
 import {
   getMatchData,
   NoteSearchData,
@@ -14,6 +13,7 @@ import {
   getDocHref,
 } from '../../../db/utils'
 import { escapeRegExp } from '../../../string'
+import { GlobalSearchResult } from '../../../../shared/components/organisms/SearchLayout'
 
 export function getSearchRegex(rawSearch: string) {
   return new RegExp(escapeRegExp(rawSearch), 'gim')
@@ -133,5 +133,5 @@ export function mapSearchResults(
       onClick: () => push(href),
     })
     return acc
-  }, [] as SidebarSearchResult[])
+  }, [] as GlobalSearchResult[])
 }

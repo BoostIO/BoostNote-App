@@ -50,7 +50,7 @@ const ContentContainer = styled.div`
   z-index: 7001;
   position: absolute;
   top: 0;
-  left: 40px;
+  left: 0px;
   right: 0;
   bottom: 0;
   display: flex;

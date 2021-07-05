@@ -7,7 +7,6 @@ import { FormFolderSelectorInput } from '../atoms/form'
 import { useToast } from '../../shared/lib/stores/toast'
 import Form from '../../shared/components/molecules/Form'
 import { openDialog } from '../../lib/exports'
-import { useGeneralStatus } from '../../lib/generalStatus'
 import { getWorkspaceHref } from '../../lib/db/utils'
 import styled from '../../shared/lib/styled'
 import Button from '../../shared/components/atoms/Button'
@@ -27,13 +26,11 @@ const FSStorageCreateForm = () => {
   const { createStorage } = useDb()
   const { pushMessage } = useToast()
   const { report } = useAnalytics()
-  const { setGeneralStatus } = useGeneralStatus()
 
   const createStorageCallback = useCallback(async () => {
     try {
       const workspace = await createStorage(name, { type: 'fs', location })
       report(analyticsEvents.createStorage)
-      setGeneralStatus({ lastSidebarStateLocalSpace: 'tree' })
       push(getWorkspaceHref(workspace))
     } catch (error) {
       pushMessage({
@@ -41,15 +38,7 @@ const FSStorageCreateForm = () => {
         description: error.toString(),
       })
     }
-  }, [
-    createStorage,
-    name,
-    location,
-    report,
-    setGeneralStatus,
-    push,
-    pushMessage,
-  ])
+  }, [createStorage, name, location, report, push, pushMessage])
 
   const openDialogAndStoreLocation = useCallback(async () => {
     const location = await openDialog()

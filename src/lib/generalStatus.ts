@@ -5,7 +5,7 @@ import { generalStatusKey } from './localStorageKeys'
 import { createStoreContext } from './context'
 import { getFolderItemId, getStorageItemId } from './nav'
 import { SerializedSubscription } from '../cloud/interfaces/db/subscription'
-import { SidebarState, SidebarTreeSortingOrder } from '../shared/lib/sidebar'
+import { SidebarTreeSortingOrder } from '../shared/lib/sidebar'
 
 export type ViewModeType = 'edit' | 'preview' | 'split'
 
@@ -26,8 +26,6 @@ export interface GeneralStatus {
   }[]
   showingNoteContextMenu: boolean
   sidebarTreeSortingOrder: SidebarTreeSortingOrder
-  lastSidebarState: SidebarState
-  lastSidebarStateLocalSpace: SidebarState
   focusOnEditorCursor: boolean
 }
 
@@ -58,8 +56,6 @@ const baseGeneralStatus: GeneralStatus = {
   boostHubTeams: [],
   showingNoteContextMenu: false,
   sidebarTreeSortingOrder: 'last-updated',
-  lastSidebarState: 'tree',
-  lastSidebarStateLocalSpace: 'tree',
   focusOnEditorCursor: false,
 }
 

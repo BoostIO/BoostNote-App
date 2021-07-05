@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ContentLayout, {
   ContentLayoutProps,
 } from '../shared/components/templates/ContentLayout'
-import { SidebarState } from '../shared/lib/sidebar'
 import { useRouter } from '../lib/router'
 import { StorageNotesRouteParams, useRouteParams } from '../lib/routeParams'
 import { mapTopBarTree } from '../lib/v2/mappers/local/topbarTree'
@@ -13,18 +12,17 @@ import { addIpcListener, removeIpcListener } from '../lib/electronOnly'
 import SearchModal from './organisms/SearchModal'
 import SidebarContainer from './organisms/SidebarContainer'
 import ApplicationLayout from '../shared/components/molecules/ApplicationLayout'
+import LocalGlobalSearch from './organisms/LocalGlobalSearch'
 
 interface ApplicationProps {
   content: ContentLayoutProps
   className?: string
-  initialSidebarState?: SidebarState
   hideSidebar?: boolean
 }
 
 const Application = ({
   content: { topbar, ...content },
   children,
-  initialSidebarState,
   hideSidebar,
 }: React.PropsWithChildren<ApplicationProps>) => {
   const { storageMap } = useDb()
@@ -32,11 +30,23 @@ const Application = ({
   const { workspaceId } = routeParams
   const storage = storageMap[workspaceId]
 
-  const { push, goBack, goForward } = useRouter()
+  const { push, goBack, goForward, pathname } = useRouter()
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const { noteViewMode, preferredEditingViewMode } = generalStatus
   const { bookmarkNote, unbookmarkNote } = useDb()
   const { showSearchModal } = useSearchModal()
+  const [showSearchScreen, setShowSearchScreen] = useState<boolean>()
+
+  const previousPathnameRef = useRef(pathname)
+  useEffect(() => {
+    if (previousPathnameRef.current === pathname) {
+      return
+    }
+    previousPathnameRef.current = pathname
+    return () => {
+      setShowSearchScreen(false)
+    }
+  }, [pathname])
 
   const note = useMemo(() => {
     if (storage == null) {
@@ -171,14 +181,17 @@ const Application = ({
       {storage != null && showSearchModal && <SearchModal storage={storage} />}
       <ApplicationLayout
         sidebar={
-          <SidebarContainer
-            hideSidebar={hideSidebar}
-            initialSidebarState={initialSidebarState}
-            workspace={storage}
-          />
+          hideSidebar ? null : (
+            <SidebarContainer
+              workspace={storage}
+              toggleSearchScreen={() => setShowSearchScreen((prev) => !prev)}
+            />
+          )
         }
         pageBody={
-          <>
+          showSearchScreen ? (
+            <LocalGlobalSearch workspace={storage} />
+          ) : (
             <ContentLayout
               {...content}
               topbar={{
@@ -192,7 +205,7 @@ const Application = ({
             >
               {children}
             </ContentLayout>
-          </>
+          )
         }
       />
     </>

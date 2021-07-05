@@ -2,8 +2,8 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { mdiFileDocumentOutline } from '@mdi/js'
 import { useDebounce } from 'react-use'
 import {
-  SidebarSearchHistory,
-  SidebarSearchResult,
+  GlobalSearchHistory,
+  GlobalSearchResult,
 } from '../../../shared/components/organisms/SearchLayout'
 import useApi from '../../../shared/lib/hooks/useApi'
 import {
@@ -34,7 +34,7 @@ const CloudGlobalSearch = ({ team }: CloudGlobalSearchProps) => {
   const { push } = useRouter()
   const { translate } = useI18n()
   const [searchQuery, setStateSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
+  const [searchResults, setSearchResults] = useState<GlobalSearchResult[]>([])
   const setSearchQuery = useCallback((val: string) => {
     setStateSearchQuery(val)
   }, [])
@@ -147,7 +147,7 @@ function mapSearchResults(
       onClick: () => push(href),
     })
     return acc
-  }, [] as SidebarSearchResult[])
+  }, [] as GlobalSearchResult[])
 }
 
 function mapHistory(
@@ -161,7 +161,7 @@ function mapHistory(
     return []
   }
 
-  const items = [] as SidebarSearchHistory[]
+  const items = [] as GlobalSearchHistory[]
 
   history.forEach((historyItem) => {
     if (historyItem.type === 'folder') {

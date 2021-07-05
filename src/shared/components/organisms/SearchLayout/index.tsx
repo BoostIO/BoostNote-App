@@ -19,15 +19,15 @@ interface SearchLayoutProps {
   searchQuery: string
   setSearchQuery: (val: string) => void
   className?: string
-  recentlyVisited?: SidebarSearchHistory[]
+  recentlyVisited?: GlobalSearchHistory[]
   recentlySearched?: string[]
-  searchResults?: SidebarSearchResult[]
-  searchState: SidebarSearchState
+  searchResults?: GlobalSearchResult[]
+  searchState: GlobalSearchState
 }
 
-export type SidebarSearchState = { isNotDebouncing: boolean; fetching: boolean }
+export type GlobalSearchState = { isNotDebouncing: boolean; fetching: boolean }
 
-export type SidebarSearchResult = {
+export type GlobalSearchResult = {
   label: string
   href: string
   contexts?: string[]
@@ -36,7 +36,7 @@ export type SidebarSearchResult = {
   defaultIcon?: string
 }
 
-export type SidebarSearchHistory = {
+export type GlobalSearchHistory = {
   emoji?: string
   defaultIcon?: string
   path?: string
@@ -82,9 +82,9 @@ const SearchLayout = ({
         contextItems: [],
         similar: [],
       } as {
-        items: SidebarSearchResult[]
-        contextItems: SidebarSearchResult[]
-        similar: SidebarSearchResult[]
+        items: GlobalSearchResult[]
+        contextItems: GlobalSearchResult[]
+        similar: GlobalSearchResult[]
       }
     )
   }, [searchResults, searchQuery])

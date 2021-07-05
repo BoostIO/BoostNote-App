@@ -84,7 +84,7 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
       onBlur={unfocusOnBlur}
     >
       <div className='sidebar__tree__item__wrapper' draggable={false}>
-        {folded != null && (
+        {folded != null && !isCategory && (
           <Button
             variant='icon'
             iconSize={16}
@@ -109,6 +109,13 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
             <Icon path={defaultIcon} size={16} />
           ) : null}
           <span className='sidebar__tree__item__label__ellipsis'>{label}</span>
+          {folded != null && isCategory && (
+            <Icon
+              size={16}
+              path={folded ? mdiChevronRight : mdiChevronDown}
+              className='sidebar__tree__item__icon'
+            />
+          )}
         </LabelTag>
         {(controls != null || contextControls != null) && (
           <div className='sidebar__tree__item__controls'>
@@ -198,13 +205,13 @@ const Container = styled.div<{ depth: number }>`
     outline: 0;
     border: 0;
     text-align: left;
-    color: ${({ theme }) => theme.colors.text.primary};
+    color: ${({ theme }) => theme.colors.text.secondary};
     padding: 2px 0;
     text-decoration: none;
     margin: 0;
     overflow: hidden;
     svg {
-      color: ${({ theme }) => theme.colors.text.link};
+      color: ${({ theme }) => theme.colors.text.subtle};
     }
     .sidebar__tree__item__label__ellipsis {
       padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
@@ -223,31 +230,32 @@ const Container = styled.div<{ depth: number }>`
     font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     &:active,
     &.sidebar__tree__item--active {
-      background-color: ${({ theme }) => theme.colors.variants.primary.base};
-      .sidebar__tree__item__label {
-        color: ${({ theme }) => theme.colors.variants.primary.text};
-      }
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
     }
 
     &:focus,
     &.focused {
-      background-color: ${({ theme }) => theme.colors.background.tertiary};
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
     }
 
     &:hover {
-      background-color: ${({ theme }) => theme.colors.background.quaternary};
+      background-color: ${({ theme }) => theme.colors.background.secondary};
     }
 
     &:hover .sidebar__tree__item__label,
     &:focus .sidebar__tree__item__label,
     &.focused .sidebar__tree__item__label {
       color: ${({ theme }) => theme.colors.text.primary};
+      svg {
+        color: inherit;
+      }
     }
   }
 
   &.sidebar__category {
     .sidebar__tree__item__label {
       font-weight: bold;
+      padding-left: ${({ theme }) => theme.sizes.spaces.df}px;
       color: ${({ theme }) => theme.colors.text.subtle};
     }
 
@@ -257,6 +265,19 @@ const Container = styled.div<{ depth: number }>`
       text-transform: uppercase !important;
     }
 
+    .sidebar__tree__item__label__ellipsis {
+      flex: 0 1 auto !important;
+      padding-left: 0;
+      padding-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
+
+    .sidebar__tree__item__icon {
+      opacity: 0;
+      transition: opacity 0.2s ease-out;
+      color: inherit !important;
+      padding-right: ${({ theme }) => theme.sizes.spaces.df}px;
+    }
+
     &.focused {
       box-shadow: 0px 0px 0px 1px
         ${({ theme }) => theme.colors.variants.primary.base};
@@ -264,6 +285,10 @@ const Container = styled.div<{ depth: number }>`
     &:hover {
       box-shadow: 0px 0px 0px 1px
         ${({ theme }) => theme.colors.variants.primary.base};
+
+      .sidebar__tree__item__icon {
+        opacity: 1;
+      }
     }
   }
 `
