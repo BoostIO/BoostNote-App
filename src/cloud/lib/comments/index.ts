@@ -5,10 +5,20 @@ const fullCapturingMentionRegex = /(:m:\S+:.*?:m:)/
 
 export function toText(comment: string, users: SerializedUser[] = []) {
   const map = new Map(users.map((user) => [user.id, user]))
+  const mentions = comment
+    .split(':m:')
+    .filter((str) => str.includes(':'))
+    .map((str) => str.split(':'))
+    .filter((tuple) => tuple.length === 2)
+    .map(([id, name]) => ({ id, name, tag: `:m:${id}:${name}:m:` }))
 
-  return comment.replace(mentionRegex, (_match, id, placeholder) => {
-    return `@${map.get(id)?.displayName || placeholder}`
-  })
+  return mentions.reduce((acc, mention) => {
+    const user = map.get(mention.id)
+    return acc.replace(
+      mention.tag,
+      `@${user != null ? user.displayName : mention.name}`
+    )
+  }, comment)
 }
 
 export function makeMentionElement(id: string, defaultName: string) {
