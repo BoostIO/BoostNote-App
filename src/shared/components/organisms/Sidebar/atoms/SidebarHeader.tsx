@@ -129,6 +129,8 @@ const Container = styled.div`
     min-width: 30px;
 
     .button__label {
+      text-align: left;
+      justify-content: left;
       flex: 1 1 auto;
       overflow: hidden;
       span {
