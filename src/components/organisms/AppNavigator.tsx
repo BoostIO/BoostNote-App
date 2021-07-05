@@ -343,7 +343,7 @@ const TopLevelNavigator = () => {
             notificationCount > 0 ? (
               <NotifyIcon
                 size={26}
-                count={notificationCounts[boosthubTeam.id]}
+                text={notificationCounts[boosthubTeam.id]}
                 path={mdiBellRingOutline}
               />
             ) : (

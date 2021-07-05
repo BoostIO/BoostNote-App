@@ -441,6 +441,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SidebarViewOptions]: 'View Options',
   [lngKeys.SidebarSettingsAndMembers]: 'Settings & Members',
   [lngKeys.GeneralInbox]: 'Inbox',
+  [lngKeys.SidebarNewUserDiscount]: 'Get the new user discount!',
 }
 
 export default {

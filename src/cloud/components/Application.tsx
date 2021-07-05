@@ -50,6 +50,7 @@ import {
   mdiCog,
   mdiDownload,
   mdiFileDocumentOutline,
+  mdiGiftOutline,
   mdiImport,
   mdiInbox,
   mdiLogoutVariant,
@@ -102,6 +103,7 @@ import SidebarHeader, {
 import SidebarButtonList from '../../shared/components/organisms/SidebarV2/molecules/SidebarButtonList'
 import NotifyIcon from '../../shared/components/atoms/NotifyIcon'
 import { getTeamLinkHref } from './atoms/Link/TeamLink'
+import SidebarButton from '../../shared/components/organisms/SidebarV2/atoms/SidebarButton'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -472,7 +474,7 @@ const Application = ({
                           team != null && counts[team.id] ? (
                             <NotifyIcon
                               size={16}
-                              count={counts[team.id]}
+                              text={counts[team.id]}
                               path={mdiInbox}
                             />
                           ) : (
@@ -524,7 +526,24 @@ const Application = ({
                       id: 'sidebar__button__import',
                     },
                   ]}
-                />
+                >
+                  {isEligibleForDiscount(team) ? (
+                    <SidebarButton
+                      variant='subtle'
+                      icon={
+                        <NotifyIcon text='!' size={16} path={mdiGiftOutline} />
+                      }
+                      id='sidebar__button__promo'
+                      label={translate(lngKeys.SidebarNewUserDiscount)}
+                      labelClick={() =>
+                        openModal(<DiscountModal />, {
+                          showCloseIcon: true,
+                          width: 'large',
+                        })
+                      }
+                    />
+                  ) : null}
+                </SidebarButtonList>
               )
             }
             users={users}
