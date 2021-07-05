@@ -1,6 +1,6 @@
 import { mdiPencilBoxMultipleOutline, mdiTextBoxPlusOutline } from '@mdi/js'
 import React from 'react'
-import SidebarButton from '../../../shared/components/organisms/SidebarV2/atoms/SidebarButton'
+import SidebarButton from '../../../shared/components/organisms/Sidebar/atoms/SidebarButton'
 import { MenuTypes } from '../../../shared/lib/stores/contextMenu'
 import { useModal } from '../../../shared/lib/stores/modal'
 import { SerializedTeam } from '../../interfaces/db/team'

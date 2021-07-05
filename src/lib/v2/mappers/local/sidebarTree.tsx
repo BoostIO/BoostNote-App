@@ -21,11 +21,6 @@ import {
 } from '@mdi/js'
 import { MenuItem, MenuTypes } from '../../../../shared/lib/stores/contextMenu'
 import { SidebarDragState } from '../../../../shared/lib/dnd'
-import {
-  SidebarNavCategory,
-  SidebarNavControls,
-  SidebarTreeChildRow,
-} from '../../../../shared/components/organisms/Sidebar/molecules/SidebarTree'
 import React from 'react'
 import {
   FolderDoc,
@@ -58,6 +53,11 @@ import {
 import { NavResource } from '../../interfaces/resources'
 import { CollapsableType } from '../../stores/sidebarCollapse'
 import { LocalExportResourceRequestBody } from '../../hooks/local/useLocalUI'
+import {
+  SidebarNavCategory,
+  SidebarNavControls,
+  SidebarTreeChildRow,
+} from '../../../../shared/components/organisms/Sidebar/molecules/SidebarTree'
 
 type LocalTreeItem = {
   id: string
@@ -189,7 +189,7 @@ export function mapTree(
     workspace: NoteStorage,
     exportSettings: LocalExportResourceRequestBody
   ) => void
-) {
+): SidebarNavCategory[] | undefined {
   if (!initialLoadDone || workspace == null) {
     return undefined
   }

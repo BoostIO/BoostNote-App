@@ -18,11 +18,6 @@ import {
   mdiTrashCanOutline,
 } from '@mdi/js'
 import { FoldingProps } from '../../../../shared/components/atoms/FoldingWrapper'
-import {
-  SidebarNavCategory,
-  SidebarNavControls,
-  SidebarTreeChildRow,
-} from '../../../../shared/components/organisms/Sidebar/molecules/SidebarTree'
 import { SidebarDragState } from '../../../../shared/lib/dnd'
 import {
   SidebarTreeSortingOrder,
@@ -63,8 +58,13 @@ import { useDialog } from '../../../../shared/lib/stores/dialog'
 import { DocStatus } from '../../../interfaces/db/doc'
 import { useI18n } from '../useI18n'
 import { lngKeys } from '../../i18n/types'
-import { SidebarControls } from '../../../../shared/components/organisms/SidebarV2/atoms/SidebarHeader'
+import { SidebarControls } from '../../../../shared/components/organisms/Sidebar/atoms/SidebarHeader'
 import { useSearch } from '../../stores/search'
+import {
+  SidebarNavCategory,
+  SidebarNavControls,
+  SidebarTreeChildRow,
+} from '../../../../shared/components/organisms/Sidebar/molecules/SidebarTree'
 
 export function useCloudSidebarTree() {
   const { team, currentUserIsCoreMember } = usePage()

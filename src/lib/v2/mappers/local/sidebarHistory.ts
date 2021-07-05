@@ -1,5 +1,5 @@
-import { SidebarSearchHistory } from '../../../../shared/components/organisms/Sidebar/molecules/SidebarSearch'
 import { mdiFileDocumentOutline } from '@mdi/js'
+import { GlobalSearchHistory } from '../../../../shared/components/organisms/SearchLayout'
 import { FolderDoc, NoteDoc, NoteStorage, ObjectMap } from '../../../db/types'
 import {
   getFolderHref,
@@ -17,7 +17,7 @@ export function mapHistory(
   foldersMap: ObjectMap<FolderDoc>,
   storage: NoteStorage
 ) {
-  const items = [] as SidebarSearchHistory[]
+  const items = [] as GlobalSearchHistory[]
 
   history.forEach((historyItem) => {
     if (historyItem.type === 'folder') {

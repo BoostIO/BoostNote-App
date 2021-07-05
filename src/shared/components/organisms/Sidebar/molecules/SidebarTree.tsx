@@ -1,23 +1,15 @@
 import React, { DragEvent, useCallback, useMemo, useRef, useState } from 'react'
 import styled from '../../../../lib/styled'
-import SidebarContextList from '../atoms/SidebarContextList'
-import SidebarHeader from '../atoms/SidebarHeader'
-import SidebarItem from '../atoms/SidebarTreeItem'
 import cc from 'classcat'
-import Button from '../../../atoms/Button'
 import { FoldingProps } from '../../../atoms/FoldingWrapper'
 import { ControlButtonProps } from '../../../../lib/types'
-import { MenuItem, MenuTypes } from '../../../../lib/stores/contextMenu/types'
+import { MenuItem } from '../../../../lib/stores/contextMenu/types'
 import SidebarTreeForm from '../atoms/SidebarTreeForm'
 import { DraggedTo, onDragLeaveCb, SidebarDragState } from '../../../../lib/dnd'
-import { mdiDotsHorizontal } from '@mdi/js'
-import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
-import { useContextMenu } from '../../../../lib/stores/contextMenu'
-import VerticalScroller from '../../../atoms/VerticalScroller'
+import SidebarItem from '../atoms/SidebarTreeItem'
 
 interface SidebarTreeProps {
   tree: SidebarNavCategory[]
-  treeControls?: ControlButtonProps[]
   topRows?: React.ReactNode
 }
 
@@ -82,65 +74,16 @@ export type SidebarNavControls =
       create: (title: string) => Promise<void>
     }
 
-const SidebarTree = ({
-  tree,
-  treeControls = [],
-  topRows,
-}: SidebarTreeProps) => {
-  const { popup } = useContextMenu()
+const SidebarTree = ({ tree, topRows }: SidebarTreeProps) => {
   const [draggingCategory, setDraggingCategory] = useState(false)
 
   return (
     <Container className='sidebar__tree'>
-      <SidebarHeader label={'Explorer'}>
-        {treeControls.map((control, i) => (
-          <Button
-            variant='icon'
-            size='sm'
-            className='sidebar__tree__viewbtn'
-            key={`tree__control__${i}`}
-            iconPath={control.icon}
-            iconSize={20}
-            onClick={control.onClick}
-            active={control.active}
-            disabled={control.disabled}
-          />
-        ))}
-        {tree.length > 0 && (
-          <Button
-            variant='icon'
-            size='sm'
-            className='sidebar__tree__viewbtn'
-            key={`tree__control__categories`}
-            iconPath={mdiDotsHorizontal}
-            iconSize={20}
-            onClick={async (event) => {
-              popup(
-                event,
-                tree.map((category) => {
-                  return {
-                    type: MenuTypes.Normal,
-                    onClick: category.toggleHidden,
-                    label: (
-                      <span>
-                        <Checkbox checked={!category.hidden} />
-                        <span style={{ paddingLeft: 6 }}>
-                          {category.title || category.label}
-                        </span>
-                      </span>
-                    ),
-                  }
-                })
-              )
-            }}
-          />
-        )}
-      </SidebarHeader>
-      <SidebarContextList className='sidebar__tree__wrapper'>
+      <div className='sidebar__tree__wrapper'>
         {topRows != null && (
           <div className='sidebar__tree__rows--top'>{topRows}</div>
         )}
-        <VerticalScroller className='sidebar__tree__scroller'>
+        <div className='sidebar__tree__scroller'>
           {tree.map((category, i) => {
             if (category.hidden) {
               return null
@@ -158,8 +101,8 @@ const SidebarTree = ({
               />
             )
           })}
-        </VerticalScroller>
-      </SidebarContextList>
+        </div>
+      </div>
     </Container>
   )
 }
@@ -521,8 +464,6 @@ const SidebarNestedTreeRow = ({
 export default SidebarTree
 
 const Container = styled.div`
-  height: 100%;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
 
@@ -548,8 +489,6 @@ const Container = styled.div`
   }
 
   .sidebar__tree__wrapper {
-    height: 100%;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
   }

@@ -1,23 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
-import {
-  mdiAccountMultiplePlusOutline,
-  mdiClockOutline,
-  mdiCog,
-  mdiDownload,
-  mdiFileDocumentMultipleOutline,
-  mdiLogin,
-  mdiLogout,
-  mdiMagnify,
-  mdiPlus,
-  mdiMenu,
-  mdiCloudOffOutline,
-  mdiGiftOutline,
-  mdiMessageQuestion,
-  mdiBellOutline,
-  mdiBellRingOutline,
-} from '@mdi/js'
+import { mdiLogin, mdiLogout, mdiPlus, mdiMessageQuestion } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
 import { usePreferences } from '../../lib/preferences'
@@ -25,9 +9,6 @@ import { openContextMenu, setBadgeCount } from '../../lib/electronOnly'
 import { osName } from '../../lib/platform'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { useBoostHub } from '../../lib/boosthub'
-import SidebarToolbar, {
-  SidebarToolbarRow,
-} from '../../shared/components/organisms/Sidebar/molecules/SidebarToolbar'
 import SidebarSpaces, {
   SidebarSpace,
   SidebarSpaceContentRow,
@@ -35,37 +16,24 @@ import SidebarSpaces, {
 import { useStorageRouter } from '../../lib/storageRouter'
 import { MenuItemConstructorOptions } from 'electron/main'
 import { useTranslation } from 'react-i18next'
-import RoundedImage from '../../shared/components/atoms/RoundedImage'
-import { values } from 'ramda'
 import {
-  boostHubOpenImportModalEventEmitter,
   boostHubSidebarStateEvent,
   boostHubSidebarStateEventEmitter,
-  boostHubToggleSettingsEventEmitter,
-  boostHubToggleSettingsMembersEventEmitter,
-  boostHubToggleSidebarSearchEventEmitter,
-  boostHubToggleSidebarTimelineEventEmitter,
-  boostHubToggleSidebarTreeEventEmitter,
-  boostHubOpenDiscountModalEventEmitter,
-  boostHubToggleSidebarNotificationsEventEmitter,
   boosthubNotificationCountsEventEmitter,
 } from '../../lib/events'
-import { useSearchModal } from '../../lib/searchModal'
 import { SidebarState } from '../../shared/lib/sidebar'
 import CloudIntroModal from './CloudIntroModal'
 import { useCloudIntroModal } from '../../lib/cloudIntroModal'
-import { isEligibleForDiscount } from '../../cloud/lib/subscription'
 import { DialogIconTypes, useDialog } from '../../shared/lib/stores/dialog'
 import BasicInputFormLocal from '../v2/organisms/BasicInputFormLocal'
 import { useModal } from '../../shared/lib/stores/modal'
 import { useToast } from '../../shared/lib/stores/toast'
 import styled from '../../shared/lib/styled'
-import NotifyIcon from '../../shared/components/atoms/NotifyIcon'
 
 const TopLevelNavigator = () => {
   const { storageMap, renameStorage, removeStorage } = useDb()
   const { push } = useRouter()
-  const { preferences, togglePreferencesModal } = usePreferences()
+  const { preferences } = usePreferences()
   const { generalStatus } = useGeneralStatus()
   const routeParams = useRouteParams()
   const { signOut } = useBoostHub()
@@ -74,16 +42,11 @@ const TopLevelNavigator = () => {
   const { openModal, closeLastModal } = useModal()
   const { pushMessage } = useToast()
   const { t } = useTranslation()
-  const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
-    'tree'
-  )
+  const [, setSidebarState] = useState<SidebarState | undefined>('tree')
   const [showSpaces, setShowSpaces] = useState(false)
   const boostHubUserInfo = preferences['cloud.user']
   const activeStorageId = useActiveStorageId()
-  const {
-    showingCloudIntroModal,
-    toggleShowingCloudIntroModal,
-  } = useCloudIntroModal()
+  const { showingCloudIntroModal } = useCloudIntroModal()
   const [notificationCounts, setNotificationCounts] = useState<
     Record<string, number>
   >({})
@@ -286,191 +249,8 @@ const TopLevelNavigator = () => {
     push,
   ])
 
-  const openState = useCallback((state: SidebarState) => {
-    setSidebarState((prev) => (prev === state ? undefined : state))
-  }, [])
-
-  const { showSearchModal, toggleShowSearchModal } = useSearchModal()
-
-  const toolbarRows = useMemo<SidebarToolbarRow[]>(() => {
-    const boosthubTeam =
-      activeBoostHubTeamDomain != null
-        ? generalStatus.boostHubTeams.find(
-            (team) => team.domain === activeBoostHubTeamDomain
-          )
-        : null
-
-    if (boosthubTeam != null) {
-      const notificationCount = notificationCounts[boosthubTeam.id] || 0
-      const rows: SidebarToolbarRow[] = [
-        {
-          tooltip: 'Spaces',
-          active: showSpaces,
-          icon: (
-            <RoundedImage
-              size={30}
-              alt={boosthubTeam.name}
-              url={boosthubTeam.iconUrl}
-            />
-          ),
-          onClick: () => setShowSpaces((prev) => !prev),
-        },
-
-        {
-          tooltip: 'Tree',
-          icon: mdiFileDocumentMultipleOutline,
-          active: sidebarState === 'tree' && !showSpaces,
-          onClick: boostHubToggleSidebarTreeEventEmitter.dispatch,
-        },
-        {
-          tooltip: 'Search',
-          active: sidebarState === 'search' && !showSpaces,
-          icon: mdiMagnify,
-          onClick: boostHubToggleSidebarSearchEventEmitter.dispatch,
-        },
-        {
-          tooltip: 'Timeline',
-          active: sidebarState === 'timeline' && !showSpaces,
-          icon: mdiClockOutline,
-          onClick: boostHubToggleSidebarTimelineEventEmitter.dispatch,
-        },
-      ]
-
-      if (!boosthubTeam.personal) {
-        rows.push({
-          tooltip: 'Notifications',
-          icon:
-            notificationCount > 0 ? (
-              <NotifyIcon
-                size={26}
-                text={notificationCounts[boosthubTeam.id]}
-                path={mdiBellRingOutline}
-              />
-            ) : (
-              mdiBellOutline
-            ),
-          onClick: boostHubToggleSidebarNotificationsEventEmitter.dispatch,
-        })
-      }
-
-      if (
-        boosthubTeam.subscription == null &&
-        isEligibleForDiscount(boosthubTeam)
-      ) {
-        rows.push({
-          position: 'bottom',
-          tooltip: 'Get the new user discount!',
-          icon: mdiGiftOutline,
-          pelletVariant: 'danger',
-          onClick: boostHubOpenDiscountModalEventEmitter.dispatch,
-        })
-      }
-
-      rows.push(
-        ...([
-          {
-            tooltip: 'Import',
-            icon: mdiDownload,
-            position: 'bottom',
-            onClick: boostHubOpenImportModalEventEmitter.dispatch,
-          },
-          {
-            tooltip: 'Members',
-            active: false,
-            icon: mdiAccountMultiplePlusOutline,
-            position: 'bottom',
-            onClick: boostHubToggleSettingsMembersEventEmitter.dispatch,
-          },
-          {
-            tooltip: 'Settings',
-            active: false,
-            icon: mdiCog,
-            position: 'bottom',
-            onClick: boostHubToggleSettingsEventEmitter.dispatch,
-          },
-        ] as SidebarToolbarRow[])
-      )
-
-      return rows
-    }
-
-    const activeStorage = values(storageMap).find(
-      (storage) => activeStorageId === storage?.id
-    )
-    if (activeStorage) {
-      return [
-        {
-          tooltip: 'Spaces',
-          active: showSpaces,
-          icon: <RoundedImage size={30} alt={activeStorage.name} />,
-          onClick: () => setShowSpaces((prev) => !prev),
-        },
-
-        {
-          tooltip: 'Tree',
-          icon: mdiFileDocumentMultipleOutline,
-          active: !showSearchModal && closed && !showSpaces,
-          onClick: undefined,
-        },
-        {
-          tooltip: 'Search',
-          active: showSearchModal && closed && !showSpaces,
-          icon: mdiMagnify,
-          onClick: toggleShowSearchModal,
-        },
-        {
-          tooltip: 'Timeline',
-          active: sidebarState === 'timeline',
-          icon: mdiClockOutline,
-          onClick: () => openState('timeline'),
-        },
-        {
-          tooltip: 'Cloud Space',
-          active: false,
-          position: 'bottom',
-          icon: mdiCloudOffOutline,
-          onClick: toggleShowingCloudIntroModal,
-        },
-        {
-          tooltip: 'Settings',
-          active: !closed && !showSpaces,
-          position: 'bottom',
-          icon: mdiCog,
-          onClick: togglePreferencesModal,
-        },
-      ] as SidebarToolbarRow[]
-    }
-
-    return [
-      {
-        tooltip: 'Spaces',
-        active: showSpaces,
-        icon: mdiMenu,
-        onClick: () => setShowSpaces((prev) => !prev),
-      },
-    ] as SidebarToolbarRow[]
-  }, [
-    notificationCounts,
-    activeBoostHubTeamDomain,
-    generalStatus.boostHubTeams,
-    storageMap,
-    showSpaces,
-    sidebarState,
-    activeStorageId,
-    showSearchModal,
-    toggleShowSearchModal,
-    toggleShowingCloudIntroModal,
-    togglePreferencesModal,
-    openState,
-  ])
-
   return (
     <Container>
-      <SidebarToolbar
-        rows={toolbarRows}
-        className='sidebar__toolbar'
-        iconSize={26}
-      />
       {showSpaces && (
         <SidebarSpaces
           className='sidebar__spaces'
@@ -486,10 +266,4 @@ const TopLevelNavigator = () => {
 
 export default TopLevelNavigator
 
-const Container = styled.div`
-  .sidebar__toolbar .sidebar__toolbar__top {
-    .sidebar__toolbar__item:first-of-type {
-      height: 32px;
-    }
-  }
-`
+const Container = styled.div``

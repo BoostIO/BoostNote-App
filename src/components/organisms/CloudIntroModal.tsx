@@ -252,7 +252,7 @@ const Container = styled.div`
   height: 100%;
   position: fixed;
   top: 0;
-  left: 40px;
+  left: 0px;
   bottom: 0;
   right: 0;
   z-index: 10000;

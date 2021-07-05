@@ -8,7 +8,7 @@ import {
   addIpcListener,
   removeIpcListener,
 } from '../../lib/electronOnly'
-import { getTimelineHref, values } from '../../lib/db/utils'
+import { values } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
 import {
@@ -17,31 +17,21 @@ import {
   StorageTagsRouteParams,
   useRouteParams,
 } from '../../lib/routeParams'
-import { mdiLogin, mdiLogout, mdiMenu, mdiPlus } from '@mdi/js'
+import {
+  mdiCloudOffOutline,
+  mdiCog,
+  mdiLogin,
+  mdiLogout,
+  mdiMagnify,
+  mdiPlus,
+} from '@mdi/js'
 import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { useTranslation } from 'react-i18next'
 import { useSearchModal } from '../../lib/searchModal'
 import styled from '../../shared/lib/styled'
-import Sidebar from '../../shared/components/organisms/Sidebar'
 import cc from 'classcat'
-import { SidebarState } from '../../shared/lib/sidebar'
-import { MenuTypes, useContextMenu } from '../../shared/lib/stores/contextMenu'
-import { SidebarToolbarRow } from '../../shared/components/organisms/Sidebar/molecules/SidebarToolbar'
-import { mapToolbarRows } from '../../lib/v2/mappers/local/sidebarRows'
 import { useGeneralStatus } from '../../lib/generalStatus'
-import { mapHistory } from '../../lib/v2/mappers/local/sidebarHistory'
-import { SidebarSearchResult } from '../../shared/components/organisms/Sidebar/molecules/SidebarSearch'
 import { AppUser } from '../../shared/lib/mappers/users'
-import useApi from '../../shared/lib/hooks/useApi'
-import { useDebounce } from 'react-use'
-import {
-  GetSearchResultsRequestQuery,
-  NoteSearchData,
-} from '../../lib/search/search'
-import {
-  getSearchResultItems,
-  mapSearchResults,
-} from '../../lib/v2/mappers/local/searchResults'
 import { useLocalUI } from '../../lib/v2/hooks/local/useLocalUI'
 import {
   mapTree,
@@ -54,24 +44,26 @@ import { useSidebarCollapse } from '../../lib/v2/stores/sidebarCollapse'
 import { useCloudIntroModal } from '../../lib/cloudIntroModal'
 import { mapLocalSpace } from '../../lib/v2/mappers/local/sidebarSpaces'
 import { osName } from '../../shared/lib/platform'
-import { mapTimelineItems } from '../../lib/v2/mappers/local/timelineRows'
 import {
   SidebarSpace,
   SidebarSpaceContentRow,
 } from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
 import { useBoostHub } from '../../lib/boosthub'
 import NewDocButton from '../molecules/NewDocButton'
+import Sidebar from '../../shared/components/organisms/Sidebar'
+import SidebarHeader, {
+  SidebarControls,
+} from '../../shared/components/organisms/Sidebar/atoms/SidebarHeader'
+import SidebarButtonList from '../../shared/components/organisms/Sidebar/molecules/SidebarButtonList'
 
 interface SidebarContainerProps {
-  hideSidebar?: boolean
-  initialSidebarState?: SidebarState
   workspace?: NoteStorage
+  toggleSearchScreen: () => void
 }
 
 const SidebarContainer = ({
-  initialSidebarState,
   workspace,
-  hideSidebar,
+  toggleSearchScreen,
 }: SidebarContainerProps) => {
   const { createNote, storageMap } = useDb()
   const { push, hash, pathname } = useRouter()
@@ -101,18 +93,11 @@ const SidebarContainer = ({
   } = useLocalUI()
   const { draggedResource, dropInDocOrFolder } = useLocalDnd()
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
-  const { popup } = useContextMenu()
   const [showSpaces, setShowSpaces] = useState(false)
-  const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
-    hideSidebar != null && hideSidebar
-      ? undefined
-      : initialSidebarState != null
-      ? initialSidebarState
-      : generalStatus.lastSidebarStateLocalSpace
-  )
-  const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
-  const { toggleShowingCloudIntroModal } = useCloudIntroModal()
-  const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
+  const {
+    toggleShowingCloudIntroModal,
+    showingCloudIntroModal,
+  } = useCloudIntroModal()
   const usersMap = new Map<string, AppUser>()
   const [initialLoadDone] = useState(true)
   const {
@@ -302,113 +287,9 @@ const SidebarContainer = ({
     }
   }, [toggleShowSearchModal])
 
-  useEffect(() => {
-    setGeneralStatus({ lastSidebarStateLocalSpace: sidebarState })
-  }, [sidebarState, setSidebarState, setGeneralStatus])
-
-  const openState = useCallback((state: SidebarState) => {
-    setSidebarState((prev) => (prev === state ? undefined : state))
-  }, [])
-
-  const toolbarRows: SidebarToolbarRow[] = useMemo(() => {
-    if (workspace != null) {
-      return mapToolbarRows(
-        showSpaces,
-        setShowSpaces,
-        openState,
-        openTab,
-        toggleShowingCloudIntroModal,
-        sidebarState,
-        workspace
-      )
-    } else {
-      return [
-        {
-          tooltip: 'Spaces',
-          active: showSpaces,
-          icon: mdiMenu,
-          onClick: () => setShowSpaces((prev) => !prev),
-        },
-      ] as SidebarToolbarRow[]
-    }
-  }, [
-    openState,
-    openTab,
-    showSpaces,
-    sidebarState,
-    workspace,
-    toggleShowingCloudIntroModal,
-  ])
-
   const sidebarResize = useCallback(
     (width: number) => setGeneralStatus({ sideBarWidth: width }),
     [setGeneralStatus]
-  )
-  const setSearchQuery = useCallback((val: string) => {
-    setSidebarSearchQuery(val)
-  }, [])
-
-  const historyItems = useMemo(() => {
-    if (workspace == null) {
-      return []
-    }
-    return mapHistory(
-      // implement history items for search
-      [],
-      push,
-      workspace.noteMap,
-      workspace.folderMap,
-      workspace
-    )
-  }, [push, workspace])
-  const { submit: submitSearch, sending: fetchingSearchResults } = useApi<
-    { query: any },
-    { results: NoteSearchData[] }
-  >({
-    api: ({ query }: { query: any }) => {
-      return Promise.resolve({
-        results: getSearchResultItems(workspace, query.query),
-      })
-    },
-    cb: ({ results }) => {
-      setSearchResults(mapSearchResults(results, push, workspace))
-    },
-  })
-
-  const [isNotDebouncing, cancel] = useDebounce(
-    async () => {
-      if (workspace == null || sidebarSearchQuery.trim() === '') {
-        return
-      }
-
-      if (fetchingSearchResults) {
-        cancel()
-      }
-
-      const searchParams = sidebarSearchQuery
-        .split(' ')
-        .reduce<GetSearchResultsRequestQuery>(
-          (params, str) => {
-            if (str === '--body') {
-              params.body = true
-              return params
-            }
-            if (str === '--title') {
-              params.title = true
-              return params
-            }
-            params.query = params.query == '' ? str : `${params.query} ${str}`
-            return params
-          },
-          { query: '' }
-        )
-
-      // todo: implement search history for local space
-      // addToSearchHistory(searchParams.query)
-      await submitSearch({ query: searchParams })
-    },
-    600,
-    [sidebarSearchQuery]
   )
 
   const getFoldEvents = useCallback(
@@ -472,6 +353,35 @@ const SidebarContainer = ({
     exportDocuments,
   ])
 
+  const sidebarHeaderControls: SidebarControls = useMemo(() => {
+    return {
+      'View Options': (tree || []).map((category) => {
+        return {
+          label: category.label,
+          checked: !sideBarOpenedLinksIdsSet.has(`hide-${category.label}`),
+          onClick: () => toggleItem('links', `hide-${category.label}`),
+        }
+      }),
+      Sorting: Object.values(SidebarTreeSortingOrders).map((sort) => {
+        return {
+          label: sort.label,
+          icon: sort.icon,
+          checked: sort.value === generalStatus.sidebarTreeSortingOrder,
+          onClick: () =>
+            setGeneralStatus({
+              sidebarTreeSortingOrder: sort.value,
+            }),
+        }
+      }),
+    }
+  }, [
+    tree,
+    generalStatus.sidebarTreeSortingOrder,
+    setGeneralStatus,
+    sideBarOpenedLinksIdsSet,
+    toggleItem,
+  ])
+
   const activeBoostHubTeamDomain = useMemo<string | null>(() => {
     if (routeParams.name !== 'boosthub.teams.show') {
       return null
@@ -488,10 +398,6 @@ const SidebarContainer = ({
       workspace: NoteStorage
     ) => {
       event.preventDefault()
-      setGeneralStatus({ lastSidebarStateLocalSpace: 'tree' })
-      if (sidebarState == undefined) {
-        setSidebarState('tree')
-      }
       navigate(workspace.id)
     }
     const onSpaceContextMenu = (
@@ -549,22 +455,13 @@ const SidebarContainer = ({
     workspace,
     localSpaces,
     generalStatus.boostHubTeams,
-    sidebarState,
     navigate,
-    setGeneralStatus,
     t,
     openWorkspaceEditForm,
     removeWorkspace,
     activeBoostHubTeamDomain,
     push,
   ])
-
-  const timelineRows = useMemo(() => {
-    if (workspace == null) {
-      return []
-    }
-    return mapTimelineItems(values(workspace.noteMap), push, workspace)
-  }, [push, workspace])
 
   const spaceBottomRows = useMemo(() => {
     const rows: SidebarSpaceContentRow[] = []
@@ -611,75 +508,70 @@ const SidebarContainer = ({
     return rows
   }, [boostHubUserInfo, push, signOut])
 
+  const activeSpace = spaces.find((space) => space.active)
   return (
     <NavigatorContainer onContextMenu={openStorageContextMenu}>
       <Sidebar
         className={cc(['application__sidebar'])}
-        showToolbar={true}
         popOver={showSpaces ? 'spaces' : null}
         onSpacesBlur={() => setShowSpaces(false)}
-        toolbarRows={toolbarRows}
         spaces={spaces}
         spaceBottomRows={spaceBottomRows}
         sidebarExpandedWidth={generalStatus.sideBarWidth}
-        sidebarState={sidebarState}
         tree={tree}
         sidebarResize={sidebarResize}
-        searchQuery={sidebarSearchQuery}
-        setSearchQuery={setSearchQuery}
-        // todo: add search history for local space (or use general search history when a shared component)
-        searchHistory={[]}
-        recentPages={historyItems}
-        treeControls={[
-          {
-            icon:
-              generalStatus.sidebarTreeSortingOrder === 'a-z'
-                ? SidebarTreeSortingOrders.aZ.icon
-                : generalStatus.sidebarTreeSortingOrder === 'z-a'
-                ? SidebarTreeSortingOrders.zA.icon
-                : generalStatus.sidebarTreeSortingOrder === 'last-updated'
-                ? SidebarTreeSortingOrders.lastUpdated.icon
-                : SidebarTreeSortingOrders.lastUpdated.icon,
-            // todo: [komediruzecki-05/06/2021] When drag and drop order is implemented enable this
-            // : SidebarTreeSortingOrders.dragDrop.icon,
-            onClick: (event) => {
-              popup(
-                event,
-                Object.values(SidebarTreeSortingOrders).map((sort) => {
-                  return {
-                    type: MenuTypes.Normal,
-                    onClick: () =>
-                      setGeneralStatus({
-                        sidebarTreeSortingOrder: sort.value,
-                      }),
-                    label: sort.label,
-                    icon: sort.icon,
-                    active:
-                      sort.value === generalStatus.sidebarTreeSortingOrder,
-                  }
-                })
-              )
-            },
-          },
-        ]}
-        treeTopRows={
-          workspace == null ? null : <NewDocButton workspace={workspace} />
-        }
-        searchResults={searchResults}
-        users={usersMap}
-        timelineRows={timelineRows}
-        timelineMore={
-          workspace != null
-            ? {
-                variant: 'primary',
-                onClick: () => push(getTimelineHref(workspace)),
+        header={
+          <>
+            <SidebarHeader
+              onSpaceClick={() => setShowSpaces(true)}
+              spaceName={activeSpace != null ? activeSpace.label : '...'}
+              spaceImage={
+                activeSpace != null && activeSpace.icon != null
+                  ? activeSpace.icon
+                  : undefined
               }
-            : undefined
+              controls={sidebarHeaderControls}
+            />
+            {workspace == null ? null : (
+              <SidebarButtonList
+                rows={[
+                  {
+                    label: 'Search',
+                    icon: mdiMagnify,
+                    variant: 'transparent',
+                    labelClick: toggleSearchScreen,
+                    id: 'sidebar__button__search',
+                    active: false,
+                  },
+                  {
+                    label: 'Settings',
+                    icon: mdiCog,
+                    variant: 'transparent',
+                    labelClick: () => openTab('about'),
+                    id: 'sidebar__button__members',
+                  },
+                ]}
+              >
+                <NewDocButton workspace={workspace} />
+              </SidebarButtonList>
+            )}
+          </>
         }
-        sidebarSearchState={{
-          fetching: fetchingSearchResults,
-          isNotDebouncing: isNotDebouncing() === true,
-        }}
+        treeBottomRows={
+          <SidebarButtonList
+            rows={[
+              {
+                label: 'Cloud Intro',
+                active: showingCloudIntroModal,
+                icon: mdiCloudOffOutline,
+                variant: 'subtle',
+                labelClick: () => toggleShowingCloudIntroModal(),
+                id: 'sidebar__button__cloud',
+              },
+            ]}
+          />
+        }
+        users={usersMap}
       />
     </NavigatorContainer>
   )

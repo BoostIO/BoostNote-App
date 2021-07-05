@@ -41,6 +41,7 @@ const SidebarPopOver = ({
 
 const SidebarPopOverContainer = styled.div`
   position: fixed;
+  left: 55px;
   top: 15px;
   background: ${({ theme }) => theme.colors.background.primary};
   z-index: 101;

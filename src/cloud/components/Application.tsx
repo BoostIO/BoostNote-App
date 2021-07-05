@@ -73,12 +73,12 @@ import { TFunction } from 'i18next'
 import { lngKeys } from '../lib/i18n/types'
 import SidebarV2, {
   PopOverState,
-} from '../../shared/components/organisms/SidebarV2'
-import SidebarHeader from '../../shared/components/organisms/SidebarV2/atoms/SidebarHeader'
-import SidebarButtonList from '../../shared/components/organisms/SidebarV2/molecules/SidebarButtonList'
+} from '../../shared/components/organisms/Sidebar'
+import SidebarHeader from '../../shared/components/organisms/Sidebar/atoms/SidebarHeader'
+import SidebarButtonList from '../../shared/components/organisms/Sidebar/molecules/SidebarButtonList'
 import NotifyIcon from '../../shared/components/atoms/NotifyIcon'
 import { getTeamLinkHref } from './atoms/Link/TeamLink'
-import SidebarButton from '../../shared/components/organisms/SidebarV2/atoms/SidebarButton'
+import SidebarButton from '../../shared/components/organisms/Sidebar/atoms/SidebarButton'
 import CloudGlobalSearch from './organisms/CloudGlobalSearch'
 
 interface ApplicationProps {
