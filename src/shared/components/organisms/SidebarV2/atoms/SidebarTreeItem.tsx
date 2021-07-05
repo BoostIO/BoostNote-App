@@ -231,9 +231,6 @@ const Container = styled.div<{ depth: number }>`
     &:active,
     &.sidebar__tree__item--active {
       background-color: ${({ theme }) => theme.colors.background.tertiary};
-      .sidebar__tree__item__label {
-        color: ${({ theme }) => theme.colors.variants.primary.text};
-      }
     }
 
     &:focus,
@@ -249,6 +246,9 @@ const Container = styled.div<{ depth: number }>`
     &:focus .sidebar__tree__item__label,
     &.focused .sidebar__tree__item__label {
       color: ${({ theme }) => theme.colors.text.primary};
+      svg {
+        color: inherit;
+      }
     }
   }
 

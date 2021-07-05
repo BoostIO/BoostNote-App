@@ -443,6 +443,8 @@ const frTranslation: TranslationSource = {
   [lngKeys.GeneralSeconds]: 'secondes',
   [lngKeys.GeneralOrdering]: 'Ordre',
   [lngKeys.SidebarViewOptions]: "Options d'affichage",
+  [lngKeys.SidebarSettingsAndMembers]: 'Paramètres & Membres',
+  [lngKeys.GeneralInbox]: 'Boîte de réception',
 }
 
 export default {

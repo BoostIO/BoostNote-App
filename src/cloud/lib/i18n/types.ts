@@ -397,7 +397,9 @@ export enum lngKeys {
   SettingsUserForum = 'settings.user.forum',
 
   SidebarViewOptions = 'sidebar.view.options',
+  SidebarSettingsAndMembers = 'sidebar.settings.member',
   GeneralOrdering = 'general.ordering',
+  GeneralInbox = 'general.inbox',
 }
 
 export type TranslationSource = {

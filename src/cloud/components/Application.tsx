@@ -27,7 +27,6 @@ import { usePathnameChangeEffect, useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
 import EventSource from './organisms/EventSource'
 import ApplicationLayout from '../../shared/components/molecules/ApplicationLayout'
-import { MenuTypes, useContextMenu } from '../../shared/lib/stores/contextMenu'
 import { useGlobalData } from '../lib/stores/globalData'
 import { getDocLinkHref } from './atoms/Link/DocLink'
 import { getFolderHref } from './atoms/Link/FolderLink'
@@ -48,10 +47,16 @@ import { SerializedDoc } from '../interfaces/db/doc'
 import { SerializedTeam } from '../interfaces/db/team'
 import { getDocTitle, getTeamURL } from '../lib/utils/patterns'
 import {
+  mdiCog,
   mdiDownload,
   mdiFileDocumentOutline,
+  mdiImport,
+  mdiInbox,
   mdiLogoutVariant,
+  mdiMagnify,
+  mdiPaperclip,
   mdiPlusCircleOutline,
+  mdiWeb,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
 import { SerializedFolder } from '../interfaces/db/folder'
@@ -94,6 +99,9 @@ import SidebarV2, {
 import SidebarHeader, {
   SidebarControls,
 } from '../../shared/components/organisms/SidebarV2/atoms/SidebarHeader'
+import SidebarButtonList from '../../shared/components/organisms/SidebarV2/molecules/SidebarButtonList'
+import NotifyIcon from '../../shared/components/atoms/NotifyIcon'
+import { getTeamLinkHref } from './atoms/Link/TeamLink'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -126,7 +134,7 @@ const Application = ({
   const {
     globalData: { teams, invites, currentUser },
   } = useGlobalData()
-  const { push, query, goBack, goForward } = useRouter()
+  const { push, query, goBack, goForward, pathname } = useRouter()
   const [showSearchScreen, setShowSearchScreen] = useState(false)
   const { history, addToSearchHistory } = useSearch()
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
@@ -141,7 +149,6 @@ const Application = ({
   const { usingElectron, sendToElectron } = useElectron()
   const { openNewFolderForm } = useCloudResourceModals()
   const [showFuzzyNavigation, setShowFuzzyNavigation] = useState(false)
-  const { popup } = useContextMenu()
   const {
     treeWithOrderedCategories,
     sidebarHeaderControls,
@@ -373,12 +380,6 @@ const Application = ({
     setPopOverState(null)
   }, [sidebarState])
 
-  const treeTopRows = useMemo(() => {
-    return team != null && currentUserIsCoreMember ? (
-      <NewDocButton team={team} />
-    ) : null
-  }, [team, currentUserIsCoreMember])
-
   const onSpacesBlurCallback = useCallback(() => {
     setPopOverState(null)
   }, [])
@@ -444,18 +445,88 @@ const Application = ({
             tree={treeWithOrderedCategories}
             sidebarResize={sidebarResize}
             header={
-              <SidebarHeader
-                onSpaceClick={() => setPopOverState('spaces')}
-                spaceName={team != null ? team.name : '...'}
-                spaceImage={
-                  team != null && team.icon != null
-                    ? buildIconUrl(team.icon.location)
-                    : undefined
-                }
-                controls={sidebarHeaderControls}
-              />
+              <>
+                <SidebarHeader
+                  onSpaceClick={() => setPopOverState('spaces')}
+                  spaceName={team != null ? team.name : '...'}
+                  spaceImage={
+                    team != null && team.icon != null
+                      ? buildIconUrl(team.icon.location)
+                      : undefined
+                  }
+                  controls={sidebarHeaderControls}
+                />
+                {team == null ? null : (
+                  <SidebarButtonList
+                    rows={[
+                      {
+                        label: translate(lngKeys.GeneralSearchVerb),
+                        icon: mdiMagnify,
+                        variant: 'transparent',
+                        labelClick: () => {},
+                        id: 'sidebar__button__search',
+                      },
+                      {
+                        label: translate(lngKeys.GeneralInbox),
+                        icon:
+                          team != null && counts[team.id] ? (
+                            <NotifyIcon
+                              size={16}
+                              count={counts[team.id]}
+                              path={mdiInbox}
+                            />
+                          ) : (
+                            mdiInbox
+                          ),
+                        variant: 'transparent',
+                        labelClick: () => setPopOverState('notifications'),
+                        id: 'sidebar__button__inbox',
+                      },
+                      {
+                        label: translate(lngKeys.SidebarSettingsAndMembers),
+                        icon: mdiCog,
+                        variant: 'transparent',
+                        labelClick: () => openSettingsTab('teamMembers'),
+                        id: 'sidebar__button__members',
+                      },
+                    ]}
+                  >
+                    {currentUserIsCoreMember && <NewDocButton team={team} />}
+                  </SidebarButtonList>
+                )}
+              </>
             }
-            treeTopRows={treeTopRows}
+            treeBottomRows={
+              team != null && (
+                <SidebarButtonList
+                  rows={[
+                    {
+                      label: translate(lngKeys.GeneralAttachments),
+                      icon: mdiPaperclip,
+                      variant: 'subtle',
+                      labelClick: () => openSettingsTab('api'),
+                      id: 'sidebar__button__attachments',
+                    },
+                    {
+                      label: translate(lngKeys.GeneralShared),
+                      icon: mdiWeb,
+                      variant: 'subtle',
+                      labelHref: getTeamLinkHref(team, 'shared'),
+                      active: getTeamLinkHref(team, 'shared') === pathname,
+                      labelClick: () => push(getTeamLinkHref(team, 'shared')),
+                      id: 'sidebar__button__shared',
+                    },
+                    {
+                      label: translate(lngKeys.GeneralImport),
+                      icon: mdiImport,
+                      variant: 'subtle',
+                      labelClick: () => openSettingsTab('api'),
+                      id: 'sidebar__button__import',
+                    },
+                  ]}
+                />
+              )
+            }
             users={users}
             notificationState={notificationState}
             getMoreNotifications={getMoreNotifications}

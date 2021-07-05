@@ -8,7 +8,6 @@ import {
   mdiFolderCogOutline,
   mdiFolderPlusOutline,
   mdiLock,
-  mdiPaperclip,
   mdiPauseCircleOutline,
   mdiPencil,
   mdiPlayCircleOutline,
@@ -17,7 +16,6 @@ import {
   mdiStarOutline,
   mdiTag,
   mdiTrashCanOutline,
-  mdiWeb,
 } from '@mdi/js'
 import { FoldingProps } from '../../../../shared/components/atoms/FoldingWrapper'
 import {
@@ -40,7 +38,6 @@ import {
 import { getDocLinkHref } from '../../../components/atoms/Link/DocLink'
 import { getFolderHref } from '../../../components/atoms/Link/FolderLink'
 import { getTagHref } from '../../../components/atoms/Link/TagLink'
-import { getTeamLinkHref } from '../../../components/atoms/Link/TeamLink'
 import { getWorkspaceHref } from '../../../components/atoms/Link/WorkspaceLink'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { useRouter } from '../../router'
@@ -768,31 +765,6 @@ export function useCloudSidebarTree() {
         rows: labels,
       })
     }
-
-    tree.push({
-      label: 'More',
-      title: translate(lngKeys.GeneralMore),
-      rows: [
-        {
-          id: 'sidenav-attachment',
-          label: translate(lngKeys.GeneralAttachments),
-          defaultIcon: mdiPaperclip,
-          href: getTeamLinkHref(team, 'uploads'),
-          active: getTeamLinkHref(team, 'uploads') === pathname,
-          navigateTo: () => push(getTeamLinkHref(team, 'uploads')),
-          depth: 0,
-        },
-        {
-          id: 'sidenav-shared',
-          label: translate(lngKeys.GeneralShared),
-          defaultIcon: mdiWeb,
-          href: getTeamLinkHref(team, 'shared'),
-          active: getTeamLinkHref(team, 'shared') === pathname,
-          navigateTo: () => push(getTeamLinkHref(team, 'shared')),
-          depth: 0,
-        },
-      ],
-    })
 
     tree.push({
       label: 'Status',
