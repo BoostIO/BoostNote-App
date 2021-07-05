@@ -17,11 +17,9 @@ import { useStorageRouter } from '../../lib/storageRouter'
 import { MenuItemConstructorOptions } from 'electron/main'
 import { useTranslation } from 'react-i18next'
 import {
-  boostHubSidebarStateEvent,
-  boostHubSidebarStateEventEmitter,
   boosthubNotificationCountsEventEmitter,
+  boostHubSidebarSpaceEventEmitter,
 } from '../../lib/events'
-import { SidebarState } from '../../shared/lib/sidebar'
 import CloudIntroModal from './CloudIntroModal'
 import { useCloudIntroModal } from '../../lib/cloudIntroModal'
 import { DialogIconTypes, useDialog } from '../../shared/lib/stores/dialog'
@@ -29,6 +27,7 @@ import BasicInputFormLocal from '../v2/organisms/BasicInputFormLocal'
 import { useModal } from '../../shared/lib/stores/modal'
 import { useToast } from '../../shared/lib/stores/toast'
 import styled from '../../shared/lib/styled'
+import SidebarPopOver from '../../shared/components/organisms/Sidebar/atoms/SidebarPopOver'
 
 const TopLevelNavigator = () => {
   const { storageMap, renameStorage, removeStorage } = useDb()
@@ -42,7 +41,6 @@ const TopLevelNavigator = () => {
   const { openModal, closeLastModal } = useModal()
   const { pushMessage } = useToast()
   const { t } = useTranslation()
-  const [, setSidebarState] = useState<SidebarState | undefined>('tree')
   const [showSpaces, setShowSpaces] = useState(false)
   const boostHubUserInfo = preferences['cloud.user']
   const activeStorageId = useActiveStorageId()
@@ -50,21 +48,6 @@ const TopLevelNavigator = () => {
   const [notificationCounts, setNotificationCounts] = useState<
     Record<string, number>
   >({})
-
-  useEffect(() => {
-    const boostHubSidebarStateEventHandler = (
-      event: boostHubSidebarStateEvent
-    ) => {
-      setSidebarState(event.detail.state)
-    }
-
-    boostHubSidebarStateEventEmitter.listen(boostHubSidebarStateEventHandler)
-    return () => {
-      boostHubSidebarStateEventEmitter.unlisten(
-        boostHubSidebarStateEventHandler
-      )
-    }
-  }, [])
 
   useEffect(() => {
     const handler = (event: CustomEvent<Record<string, number>>) => {
@@ -131,6 +114,20 @@ const TopLevelNavigator = () => {
 
     return rows
   }, [boostHubUserInfo, push, signOut])
+
+  useEffect(() => {
+    const boostHubSidebarSpaceEventHandler = () => {
+      setShowSpaces(true)
+      console.log('in here buddy')
+    }
+
+    boostHubSidebarSpaceEventEmitter.listen(boostHubSidebarSpaceEventHandler)
+    return () => {
+      boostHubSidebarSpaceEventEmitter.unlisten(
+        boostHubSidebarSpaceEventHandler
+      )
+    }
+  }, [])
 
   const inputRef = useRef<HTMLInputElement>(null)
   const spaces = useMemo(() => {
@@ -252,12 +249,14 @@ const TopLevelNavigator = () => {
   return (
     <Container>
       {showSpaces && (
-        <SidebarSpaces
-          className='sidebar__spaces'
-          spaces={spaces}
-          spaceBottomRows={spaceBottomRows}
-          onSpacesBlur={() => setShowSpaces(false)}
-        />
+        <SidebarPopOver onClose={() => setShowSpaces(false)}>
+          <SidebarSpaces
+            className='sidebar__spaces'
+            spaces={spaces}
+            spaceBottomRows={spaceBottomRows}
+            onSpacesBlur={() => setShowSpaces(false)}
+          />
+        </SidebarPopOver>
       )}
       {showingCloudIntroModal && <CloudIntroModal />}
     </Container>

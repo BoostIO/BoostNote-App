@@ -1,6 +1,5 @@
 import { ChangeEventHandler } from 'react'
 import { SerializedSubscription } from '../cloud/interfaces/db/subscription'
-import { SidebarState } from '../shared/lib/sidebar'
 
 export type SelectChangeEventHandler = ChangeEventHandler<HTMLSelectElement>
 
@@ -135,15 +134,6 @@ export const boostHubToggleSettingsMembersEventEmitter = createCustomEventEmitte
   'BoostHub:toggleSettingsMembers'
 )
 
-export const boostHubOpenImportModalEventEmitter = createCustomEventEmitter(
-  'BoostHub:openImportModal'
-)
-
-export type boostHubSidebarStateEvent = CustomEvent<{ state: SidebarState }>
-export const boostHubSidebarStateEventEmitter = createCustomEventEmitter<{
-  state: SidebarState
-}>('BoostHub:sidebarStateUpdate')
-
 export const boostHubOpenDiscountModalEventEmitter = createCustomEventEmitter(
   'BoostHub:openDiscountModal'
 )
@@ -160,9 +150,14 @@ export type BoostHubSubscriptionUpdateEvent = CustomEvent<
 export const boostHubSubscriptionUpdateEventEmitter = createCustomEventEmitter<
   BoostHubSubscriptionEventDetail
 >('BoostHub:subscriptionUpdate')
+
 export type BoostHubSubscriptionDeleteEvent = CustomEvent<
   BoostHubSubscriptionEventDetail
 >
 export const boostHubSubscriptionDeleteEventEmitter = createCustomEventEmitter<
   BoostHubSubscriptionEventDetail
 >('BoostHub:subscriptionDelete')
+
+export const boostHubSidebarSpaceEventEmitter = createCustomEventEmitter(
+  'BoostHub:sidebarSpace'
+)

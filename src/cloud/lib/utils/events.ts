@@ -65,14 +65,6 @@ export const applyItalicStyleEventEmitter = createCustomEventEmitter(
   'apply-italic-style'
 )
 
-export const toggleSidebarTreeEventEmitter = createCustomEventEmitter(
-  'sidebar-tree'
-)
-
-export const toggleSidebarTimelineEventEmitter = createCustomEventEmitter(
-  'sidebar-timeline'
-)
-
 export const toggleSidebarSearchEventEmitter = createCustomEventEmitter(
   'sidebar-search'
 )

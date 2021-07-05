@@ -23,7 +23,6 @@ interface ApplicationProps {
 const Application = ({
   content: { topbar, ...content },
   children,
-  hideSidebar,
 }: React.PropsWithChildren<ApplicationProps>) => {
   const { storageMap } = useDb()
   const routeParams = useRouteParams() as StorageNotesRouteParams
@@ -181,12 +180,10 @@ const Application = ({
       {storage != null && showSearchModal && <SearchModal storage={storage} />}
       <ApplicationLayout
         sidebar={
-          hideSidebar ? null : (
-            <SidebarContainer
-              workspace={storage}
-              toggleSearchScreen={() => setShowSearchScreen((prev) => !prev)}
-            />
-          )
+          <SidebarContainer
+            workspace={storage}
+            toggleSearchScreen={() => setShowSearchScreen((prev) => !prev)}
+          />
         }
         pageBody={
           showSearchScreen ? (

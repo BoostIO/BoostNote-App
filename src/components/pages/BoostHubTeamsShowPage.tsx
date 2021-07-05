@@ -5,7 +5,6 @@ import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
 import {
   boostHubOpenDiscountModalEventEmitter,
-  boostHubOpenImportModalEventEmitter,
   boostHubToggleSettingsEventEmitter,
   boostHubToggleSettingsMembersEventEmitter,
   boostHubToggleSidebarSearchEventEmitter,
@@ -47,11 +46,6 @@ const BoostHubTeamsShowPage = ({
     if (!active) {
       return
     }
-
-    const toggleOpenImportModalHandler = () => {
-      webviewControlRef.current!.sendMessage('modal-import')
-    }
-    boostHubOpenImportModalEventEmitter.listen(toggleOpenImportModalHandler)
 
     const toggleOpenDiscountModalHandler = () => {
       webviewControlRef.current!.sendMessage('modal-discount')
@@ -145,7 +139,6 @@ const BoostHubTeamsShowPage = ({
       boostHubOpenDiscountModalEventEmitter.unlisten(
         toggleOpenDiscountModalHandler
       )
-      boostHubOpenImportModalEventEmitter.unlisten(toggleOpenImportModalHandler)
       boostHubToggleSettingsEventEmitter.unlisten(toggleSettingsHandler)
       boostHubToggleSettingsMembersEventEmitter.unlisten(
         toggleSettingsMembersHandler
