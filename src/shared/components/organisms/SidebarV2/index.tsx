@@ -18,6 +18,8 @@ import SidebarPopOver from '../Sidebar/atoms/SidebarPopOver'
 import SidebarSpaces, {
   SidebarSpaceProps,
 } from '../Sidebar/molecules/SidebarSpaces'
+import SidebarContextList from '../Sidebar/atoms/SidebarContextList'
+import VerticalScroller from '../../atoms/VerticalScroller'
 
 export type PopOverState = null | 'spaces' | 'notifications'
 
@@ -54,7 +56,7 @@ const Sidebar = ({
   return (
     <SidebarContainer className={cc(['sidebar', className])}>
       {popOver === 'spaces' ? (
-        <SidebarPopOver className='sidebar__popover__indent'>
+        <SidebarPopOver>
           <SidebarSpaces
             spaces={spaces}
             spaceBottomRows={spaceBottomRows}
@@ -62,10 +64,7 @@ const Sidebar = ({
           />
         </SidebarPopOver>
       ) : popOver === 'notifications' && notificationState != null ? (
-        <SidebarPopOver
-          onClose={onPopOverBlur}
-          className={cc(['sidebar__popover__indent'])}
-        >
+        <SidebarPopOver onClose={onPopOverBlur}>
           <NotificationList
             state={notificationState}
             getMore={getMoreNotifications!}
@@ -81,14 +80,16 @@ const Sidebar = ({
         onResizeEnd={sidebarResize}
         className={cc(['sidebar--expanded'])}
       >
-        <div className='sidebar--expanded__wrapper'>
-          {header}
-          {tree == null ? (
-            <Spinner className='sidebar__loader' />
-          ) : (
-            <SidebarTree tree={tree} topRows={treeTopRows} />
-          )}
-        </div>
+        <SidebarContextList className='sidebar--expanded__wrapper'>
+          <div className='sidebar--expanded__wrapper__header'>{header}</div>
+          <VerticalScroller className='sidebar--expanded__wrapper__content'>
+            {tree == null ? (
+              <Spinner className='sidebar__loader' />
+            ) : (
+              <SidebarTree tree={tree} topRows={treeTopRows} />
+            )}
+          </VerticalScroller>
+        </SidebarContextList>
       </WidthEnlarger>
     </SidebarContainer>
   )
@@ -104,6 +105,12 @@ const SidebarContainer = styled.div`
   flex: 0 0 auto;
   height: 100vh;
 
+  .sidebar--expanded,
+  .width__enlarger__content,
+  .sidebar--expanded__wrapper {
+    height: 100% !important;
+  }
+
   .sidebar__loader {
     margin: auto;
     position: absolute;
@@ -113,8 +120,13 @@ const SidebarContainer = styled.div`
     right: 0;
   }
 
-  .application__sidebar--electron .sidebar__context__icons {
-    display: none;
+  .sidebar--expanded__wrapper__header {
+    flex: 0 0 auto;
+  }
+
+  .sidebar--expanded__wrapper__content {
+    flex: 1 1 auto;
+    position: relative;
   }
 
   .sidebar--expanded {
@@ -122,14 +134,13 @@ const SidebarContainer = styled.div`
     height: 100%;
     max-height: 100%;
     position: relative;
+    display: flex;
+    flex-direction: column;
   }
 
   .sidebar--expanded__wrapper {
-    height: 100%;
-    overflow: auto;
-  }
-
-  .sidebar__popover__indent {
-    left: 35px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 `

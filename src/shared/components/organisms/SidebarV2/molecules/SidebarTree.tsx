@@ -1,13 +1,11 @@
 import React, { DragEvent, useCallback, useMemo, useRef, useState } from 'react'
 import styled from '../../../../lib/styled'
-import SidebarContextList from '../atoms/SidebarContextList'
 import cc from 'classcat'
 import { FoldingProps } from '../../../atoms/FoldingWrapper'
 import { ControlButtonProps } from '../../../../lib/types'
 import { MenuItem } from '../../../../lib/stores/contextMenu/types'
 import SidebarTreeForm from '../atoms/SidebarTreeForm'
 import { DraggedTo, onDragLeaveCb, SidebarDragState } from '../../../../lib/dnd'
-import VerticalScroller from '../../../atoms/VerticalScroller'
 import SidebarItem from '../atoms/SidebarTreeItem'
 
 interface SidebarTreeProps {
@@ -81,11 +79,11 @@ const SidebarTree = ({ tree, topRows }: SidebarTreeProps) => {
 
   return (
     <Container className='sidebar__tree'>
-      <SidebarContextList className='sidebar__tree__wrapper'>
+      <div className='sidebar__tree__wrapper'>
         {topRows != null && (
           <div className='sidebar__tree__rows--top'>{topRows}</div>
         )}
-        <VerticalScroller className='sidebar__tree__scroller'>
+        <div className='sidebar__tree__scroller'>
           {tree.map((category, i) => {
             if (category.hidden) {
               return null
@@ -103,8 +101,8 @@ const SidebarTree = ({ tree, topRows }: SidebarTreeProps) => {
               />
             )
           })}
-        </VerticalScroller>
-      </SidebarContextList>
+        </div>
+      </div>
     </Container>
   )
 }
@@ -466,8 +464,6 @@ const SidebarNestedTreeRow = ({
 export default SidebarTree
 
 const Container = styled.div`
-  height: 100%;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
 
@@ -493,8 +489,6 @@ const Container = styled.div`
   }
 
   .sidebar__tree__wrapper {
-    height: 100%;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
   }
