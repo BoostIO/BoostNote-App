@@ -44,6 +44,7 @@ import { lngKeys } from '../../../lib/i18n/types'
 import GithubIntegration from './GithubIntegration'
 import SlackIntegration from './SlackIntegration'
 import AttachmentsTab from './AttachmentsTab'
+import ImportTab from './ImportTab'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -132,9 +133,8 @@ const SettingsComponent = () => {
         )
       case 'attachments':
         return <AttachmentsTab />
-        return
       case 'import':
-        return
+        return <ImportTab />
       default:
         return
     }
@@ -226,6 +226,12 @@ const SettingsComponent = () => {
                 active={settingsTab === 'api'}
                 id='settings-apiTab-btn'
                 onClick={() => openSettingsTab('api')}
+              />
+              <SettingNavButtonItem
+                label={t(lngKeys.GeneralImport)}
+                active={settingsTab === 'import'}
+                id='settings-importTab-btn'
+                onClick={() => openSettingsTab('import')}
               />
               <SettingNavButtonItem
                 label={t(lngKeys.GeneralAttachments)}

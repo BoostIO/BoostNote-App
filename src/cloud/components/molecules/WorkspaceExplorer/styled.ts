@@ -1,10 +1,10 @@
-import styled from '../../../lib/styled'
+import styled from '../../../../shared/lib/styled'
 
 export const StyledWorkspaceExplorer = styled.div`
   width: 100%;
   display: block;
   height: 300px;
-  border: 1px solid ${({ theme }) => theme.baseBorderColor};
+  border: 1px solid ${({ theme }) => theme.colors.border.main};
 `
 export const StyledWorkspaceExplorerWrapper = styled.div`
   display: flex;
@@ -25,14 +25,14 @@ export const StyledExplorerDepth = styled.div`
   overflow: auto;
 
   &:not(.last) {
-    border-right: 1px solid ${({ theme }) => theme.baseBorderColor};
+    border-right: 1px solid ${({ theme }) => theme.colors.border.main};
   }
 `
 
 export const StyledExplorerListItem = styled.div`
   display: flex;
-  padding: ${({ theme }) => theme.space.xsmall}px
-    ${({ theme }) => theme.space.small}px;
+  padding: ${({ theme }) => theme.sizes.spaces.xsm}px
+    ${({ theme }) => theme.sizes.spaces.sm}px;
   position: relative;
   cursor: pointer;
 
@@ -44,13 +44,13 @@ export const StyledExplorerListItem = styled.div`
   }
 
   &.selected {
-    background: ${({ theme }) => theme.subtleBackgroundColor};
-    color: ${({ theme }) => theme.emphasizedTextColor};
+    background: ${({ theme }) => theme.colors.background.tertiary};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 
   &.current {
-    background: ${({ theme }) => theme.primaryBackgroundColor};
-    color: ${({ theme }) => theme.whiteTextColor};
+    background: ${({ theme }) => theme.colors.variants.primary.base};
+    color: ${({ theme }) => theme.colors.variants.primary.text};
   }
 `
 
@@ -64,7 +64,7 @@ export const StyledExplorerListItemIcon = styled.div`
   &.subtle:not(.emphasized) {
     svg,
     .icon {
-      color: ${({ theme }) => theme.subtleIconColor} !important;
+      color: ${({ theme }) => theme.colors.text.subtle} !important;
     }
   }
 `
