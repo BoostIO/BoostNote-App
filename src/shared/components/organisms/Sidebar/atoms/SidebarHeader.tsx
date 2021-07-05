@@ -3,7 +3,6 @@ import styled from '../../../../lib/styled'
 import { AppComponent } from '../../../../lib/types'
 import cc from 'classcat'
 import Button from '../../../atoms/Button'
-import ButtonGroup from '../../../atoms/ButtonGroup'
 import RoundedImage from '../../../atoms/RoundedImage'
 import { mdiDotsHorizontal } from '@mdi/js'
 import {
@@ -12,6 +11,7 @@ import {
   useContextMenu,
 } from '../../../../lib/stores/contextMenu'
 import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
+import { overflowEllipsis } from '../../../../lib/styled/styleFunctions'
 
 interface SidebarHeaderProps {
   spaceImage?: string
@@ -41,7 +41,6 @@ const SidebarHeader: AppComponent<SidebarHeaderProps> = ({
 
   return (
     <Container className={cc(['sidebar__header', className])}>
-      <ButtonGroup></ButtonGroup>
       <Button
         variant='transparent'
         className='sidebar__header__space'
@@ -56,7 +55,7 @@ const SidebarHeader: AppComponent<SidebarHeaderProps> = ({
           />
         }
       >
-        {spaceName}
+        <span>{spaceName}</span>
       </Button>
       {controls != null && (
         <Button
@@ -127,6 +126,15 @@ const Container = styled.div`
   .sidebar__header__space {
     flex: 1 1 auto;
     justify-content: left;
+    min-width: 30px;
+
+    .button__label {
+      flex: 1 1 auto;
+      overflow: hidden;
+      span {
+        ${overflowEllipsis}
+      }
+    }
   }
 `
 
