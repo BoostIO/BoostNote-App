@@ -205,13 +205,13 @@ const Container = styled.div<{ depth: number }>`
     outline: 0;
     border: 0;
     text-align: left;
-    color: ${({ theme }) => theme.colors.text.primary};
+    color: ${({ theme }) => theme.colors.text.secondary};
     padding: 2px 0;
     text-decoration: none;
     margin: 0;
     overflow: hidden;
     svg {
-      color: ${({ theme }) => theme.colors.text.link};
+      color: ${({ theme }) => theme.colors.text.subtle};
     }
     .sidebar__tree__item__label__ellipsis {
       padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
@@ -230,7 +230,7 @@ const Container = styled.div<{ depth: number }>`
     font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     &:active,
     &.sidebar__tree__item--active {
-      background-color: ${({ theme }) => theme.colors.variants.primary.base};
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
       .sidebar__tree__item__label {
         color: ${({ theme }) => theme.colors.variants.primary.text};
       }
@@ -238,11 +238,11 @@ const Container = styled.div<{ depth: number }>`
 
     &:focus,
     &.focused {
-      background-color: ${({ theme }) => theme.colors.background.tertiary};
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
     }
 
     &:hover {
-      background-color: ${({ theme }) => theme.colors.background.quaternary};
+      background-color: ${({ theme }) => theme.colors.background.secondary};
     }
 
     &:hover .sidebar__tree__item__label,
