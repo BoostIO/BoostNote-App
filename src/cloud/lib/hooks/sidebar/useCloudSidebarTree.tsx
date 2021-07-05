@@ -64,6 +64,7 @@ import { DocStatus } from '../../../interfaces/db/doc'
 import { useI18n } from '../useI18n'
 import { lngKeys } from '../../i18n/types'
 import { SidebarControls } from '../../../../shared/components/organisms/SidebarV2/atoms/SidebarHeader'
+import { useSearch } from '../../stores/search'
 
 export function useCloudSidebarTree() {
   const { team, currentUserIsCoreMember } = usePage()
@@ -72,6 +73,7 @@ export function useCloudSidebarTree() {
   const { preferences, setPreferences } = usePreferences()
   const { messageBox } = useDialog()
   const { translate } = useI18n()
+  const { showSearchScreen } = useSearch()
 
   const {
     initialLoadDone,
@@ -285,7 +287,7 @@ export function useCloudSidebarTree() {
         folded: !sideBarOpenedWorkspaceIdsSet.has(wp.id),
         folding: getFoldEvents('workspaces', wp.id),
         href,
-        active: href === currentPathWithDomain,
+        active: !showSearchScreen && href === currentPathWithDomain,
         navigateTo: () => push(href),
         ...coreRestrictedFeatures,
       })
@@ -390,7 +392,7 @@ export function useCloudSidebarTree() {
         folded: !sideBarOpenedFolderIdsSet.has(folder.id),
         folding: getFoldEvents('folders', folder.id),
         href,
-        active: href === currentPathWithDomain,
+        active: !showSearchScreen && href === currentPathWithDomain,
         navigateTo: () => push(href),
         ...coreRestrictedFeatures,
         parentId:
@@ -476,7 +478,7 @@ export function useCloudSidebarTree() {
           doc.status === 'completed',
         children: [],
         href,
-        active: href === currentPathWithDomain,
+        active: !showSearchScreen && href === currentPathWithDomain,
         ...coreRestrictedFeatures,
         parentId:
           doc.parentFolderId == null ? doc.workspaceId : doc.parentFolderId,
@@ -568,7 +570,7 @@ export function useCloudSidebarTree() {
           label: val.text,
           defaultIcon: mdiTag,
           href,
-          active: href === currentPathWithDomain,
+          active: !showSearchScreen && href === currentPathWithDomain,
           navigateTo: () => push(href),
         })
         return acc
@@ -596,7 +598,7 @@ export function useCloudSidebarTree() {
           label: smartFolder.name,
           defaultIcon: mdiFolderCogOutline,
           depth: 0,
-          active: href === currentPathWithDomain,
+          active: !showSearchScreen && href === currentPathWithDomain,
           navigateTo: () => push(href),
           contextControls: !currentUserIsCoreMember
             ? undefined
@@ -775,7 +777,9 @@ export function useCloudSidebarTree() {
           label: 'In Progress',
           defaultIcon: mdiPlayCircleOutline,
           href: getDocStatusHref(team, 'in-progress'),
-          active: getDocStatusHref(team, 'in-progress') === pathname,
+          active:
+            !showSearchScreen &&
+            getDocStatusHref(team, 'in-progress') === pathname,
           navigateTo: () => push(getDocStatusHref(team, 'in-progress')),
           depth: 0,
         },
@@ -784,7 +788,8 @@ export function useCloudSidebarTree() {
           label: 'Paused',
           defaultIcon: mdiPauseCircleOutline,
           href: getDocStatusHref(team, 'paused'),
-          active: getDocStatusHref(team, 'paused') === pathname,
+          active:
+            !showSearchScreen && getDocStatusHref(team, 'paused') === pathname,
           navigateTo: () => push(getDocStatusHref(team, 'paused')),
           depth: 0,
         },
@@ -793,7 +798,9 @@ export function useCloudSidebarTree() {
           label: 'Completed',
           defaultIcon: mdiCheckCircleOutline,
           href: getDocStatusHref(team, 'completed'),
-          active: getDocStatusHref(team, 'completed') === pathname,
+          active:
+            !showSearchScreen &&
+            getDocStatusHref(team, 'completed') === pathname,
           navigateTo: () => push(getDocStatusHref(team, 'completed')),
           depth: 0,
         },
@@ -802,7 +809,9 @@ export function useCloudSidebarTree() {
           label: 'Archived',
           defaultIcon: mdiArchiveOutline,
           href: getDocStatusHref(team, 'archived'),
-          active: getDocStatusHref(team, 'archived') === pathname,
+          active:
+            !showSearchScreen &&
+            getDocStatusHref(team, 'archived') === pathname,
           navigateTo: () => push(getDocStatusHref(team, 'archived')),
           depth: 0,
         },
@@ -821,6 +830,7 @@ export function useCloudSidebarTree() {
 
     return tree as SidebarNavCategory[]
   }, [
+    showSearchScreen,
     translate,
     initialLoadDone,
     team,

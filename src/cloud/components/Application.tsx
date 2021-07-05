@@ -133,7 +133,6 @@ const Application = ({
   } = useCloudSidebarTree()
   const { counts } = useNotifications()
   const { translate } = useI18n()
-  const [showSearchScreen, setShowSearchScreen] = useState(true)
 
   usePathnameChangeEffect(() => {
     setShowFuzzyNavigation(false)
@@ -337,7 +336,7 @@ const Application = ({
     [push, setViewed]
   )
 
-  const { history } = useSearch()
+  const { history, showSearchScreen, setShowSearchScreen } = useSearch()
   return (
     <>
       {team != null && <EventSource teamId={team.id} />}
