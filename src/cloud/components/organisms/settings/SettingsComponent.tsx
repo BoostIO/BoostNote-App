@@ -43,6 +43,7 @@ import { intercomAppId } from '../../../lib/consts'
 import { lngKeys } from '../../../lib/i18n/types'
 import GithubIntegration from './GithubIntegration'
 import SlackIntegration from './SlackIntegration'
+import AttachmentsTab from './AttachmentsTab'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -129,6 +130,11 @@ const SettingsComponent = () => {
             body={<AppFeedbackForm />}
           />
         )
+      case 'attachments':
+        return <AttachmentsTab />
+        return
+      case 'import':
+        return
       default:
         return
     }
@@ -220,6 +226,12 @@ const SettingsComponent = () => {
                 active={settingsTab === 'api'}
                 id='settings-apiTab-btn'
                 onClick={() => openSettingsTab('api')}
+              />
+              <SettingNavButtonItem
+                label={t(lngKeys.GeneralAttachments)}
+                active={settingsTab === 'attachments'}
+                id='settings-attachmentsTab-btn'
+                onClick={() => openSettingsTab('attachments')}
               />
             </>
           )}

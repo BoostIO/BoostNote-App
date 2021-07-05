@@ -35,7 +35,6 @@ import ArchivedPage from '../pages/[teamId]/archived'
 import SharedDocsListPage from '../pages/[teamId]/shared'
 import DeleteTeamPage from '../pages/[teamId]/delete'
 import TimelinePage from '../pages/[teamId]/timeline'
-import UploadListPage from '../pages/[teamId]/uploads'
 import BookmarksListPage from '../pages/[teamId]/bookmarks'
 import CooperatePage from '../pages/cooperate'
 import { useRealtimeConn } from '../lib/stores/realtimeConn'
@@ -406,11 +405,6 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: TimelinePage,
           getInitialProps: TimelinePage.getInitialProps,
-        }
-      case 'uploads':
-        return {
-          Component: UploadListPage,
-          getInitialProps: UploadListPage.getInitialProps,
         }
       case 'bookmarks':
         return {
