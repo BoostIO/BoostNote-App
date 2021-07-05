@@ -134,8 +134,6 @@ const SidebarContainer = styled.div`
     height: 100%;
     max-height: 100%;
     position: relative;
-    display: flex;
-    flex-direction: column;
   }
 
   .sidebar--expanded__wrapper {
