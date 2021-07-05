@@ -17,8 +17,6 @@ import {
   newFolderEventEmitter,
   searchEventEmitter,
   toggleSidebarSearchEventEmitter,
-  toggleSidebarTimelineEventEmitter,
-  toggleSidebarTreeEventEmitter,
   toggleSidebarNotificationsEventEmitter,
 } from '../lib/utils/events'
 import { usePathnameChangeEffect, useRouter } from '../lib/router'
@@ -26,7 +24,6 @@ import { useNav } from '../lib/stores/nav'
 import EventSource from './organisms/EventSource'
 import ApplicationLayout from '../../shared/components/molecules/ApplicationLayout'
 import { useGlobalData } from '../lib/stores/globalData'
-import { SidebarState } from '../../shared/lib/sidebar'
 import { mapUsers } from '../../shared/lib/mappers/users'
 import { SerializedTeam } from '../interfaces/db/team'
 import { getTeamURL } from '../lib/utils/patterns'
@@ -71,7 +68,7 @@ import '../lib/i18n'
 import { useI18n } from '../lib/hooks/useI18n'
 import { TFunction } from 'i18next'
 import { lngKeys } from '../lib/i18n/types'
-import SidebarV2, {
+import Sidebar, {
   PopOverState,
 } from '../../shared/components/organisms/Sidebar'
 import SidebarHeader from '../../shared/components/organisms/Sidebar/atoms/SidebarHeader'
@@ -84,13 +81,11 @@ import CloudGlobalSearch from './organisms/CloudGlobalSearch'
 interface ApplicationProps {
   content: ContentLayoutProps
   className?: string
-  initialSidebarState?: SidebarState
 }
 
 const Application = ({
   content: { topbar, ...content },
   children,
-  initialSidebarState,
 }: React.PropsWithChildren<ApplicationProps>) => {
   const { preferences, setPreferences } = usePreferences()
   const {
@@ -113,11 +108,6 @@ const Application = ({
   } = useGlobalData()
   const { push, query, goBack, goForward, pathname } = useRouter()
   const [popOverState, setPopOverState] = useState<PopOverState>(null)
-  const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
-    initialSidebarState != null
-      ? initialSidebarState
-      : preferences.lastSidebarState
-  )
   const { openSettingsTab, closeSettingsTab } = useSettings()
   const { usingElectron, sendToElectron } = useElectron()
   const { openNewFolderForm } = useCloudResourceModals()
@@ -142,10 +132,6 @@ const Application = ({
       openSettingsTab('teamUpgrade')
     }
   })
-
-  useEffect(() => {
-    setPreferences({ lastSidebarState: sidebarState })
-  }, [sidebarState, setPreferences])
 
   useEffect(() => {
     const handler = () => {
@@ -226,19 +212,6 @@ const Application = ({
   )
   useGlobalKeyDownHandler(overrideBrowserCtrlsHandler)
 
-  const toggleSidebarTree = useCallback(() => {
-    closeSettingsTab()
-    setSidebarState((prev) => {
-      return prev === 'tree' ? undefined : 'tree'
-    })
-  }, [closeSettingsTab])
-  useEffect(() => {
-    toggleSidebarTreeEventEmitter.listen(toggleSidebarTree)
-    return () => {
-      toggleSidebarTreeEventEmitter.unlisten(toggleSidebarTree)
-    }
-  }, [toggleSidebarTree])
-
   const toggleSidebarSearch = useCallback(() => {
     closeSettingsTab()
     setShowSearchScreen((prev) => !prev)
@@ -251,19 +224,6 @@ const Application = ({
     }
   }, [toggleSidebarSearch])
 
-  const toggleSidebarTimeline = useCallback(() => {
-    closeSettingsTab()
-    setSidebarState((prev) => {
-      return prev === 'timeline' ? undefined : 'timeline'
-    })
-  }, [closeSettingsTab])
-  useEffect(() => {
-    toggleSidebarTimelineEventEmitter.listen(toggleSidebarTimeline)
-    return () => {
-      toggleSidebarTimelineEventEmitter.unlisten(toggleSidebarTimeline)
-    }
-  }, [toggleSidebarTimeline])
-
   useEffect(() => {
     const handler = () =>
       setPopOverState((prev) =>
@@ -272,17 +232,6 @@ const Application = ({
     toggleSidebarNotificationsEventEmitter.listen(handler)
     return () => toggleSidebarNotificationsEventEmitter.unlisten(handler)
   }, [])
-
-  useEffect(() => {
-    if (!usingElectron) {
-      return
-    }
-    sendToElectron('sidebar--state', { state: sidebarState })
-  }, [usingElectron, , sendToElectron, sidebarState])
-
-  useEffect(() => {
-    setPopOverState(null)
-  }, [sidebarState])
 
   const onSpacesBlurCallback = useCallback(() => {
     setPopOverState(null)
@@ -298,6 +247,7 @@ const Application = ({
     getMore: getMoreNotifications,
     setViewed,
   } = useNotificationState(team?.id)
+
   const notificationClick = useCallback(
     (notification: UserNotification) => {
       setPopOverState(null)
@@ -306,6 +256,17 @@ const Application = ({
     },
     [push, setViewed]
   )
+
+  const onSpaceClick = useCallback(() => {
+    if (!usingElectron) {
+      setPopOverState('spaces')
+      return
+    }
+
+    setPopOverState(null)
+    sendToElectron('sidebar-spaces')
+  }, [usingElectron, sendToElectron])
+
   return (
     <>
       {team != null && <EventSource teamId={team.id} />}
@@ -331,7 +292,7 @@ const Application = ({
       )}
       <ApplicationLayout
         sidebar={
-          <SidebarV2
+          <Sidebar
             className={cc(['application__sidebar'])}
             popOver={popOverState}
             onSpacesBlur={onSpacesBlurCallback}
@@ -343,7 +304,7 @@ const Application = ({
             header={
               <>
                 <SidebarHeader
-                  onSpaceClick={() => setPopOverState('spaces')}
+                  onSpaceClick={onSpaceClick}
                   spaceName={team != null ? team.name : '...'}
                   spaceImage={
                     team != null && team.icon != null

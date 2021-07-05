@@ -27,10 +27,10 @@ import {
   boostHubAccountDeleteEventEmitter,
   boostHubReloadAllWebViewsEventEmitter,
   boostHubCreateLocalSpaceEventEmitter,
-  boostHubSidebarStateEventEmitter,
   boostHubSubscriptionDeleteEventEmitter,
   boostHubSubscriptionUpdateEventEmitter,
   boosthubNotificationCountsEventEmitter,
+  boostHubSidebarSpaceEventEmitter,
 } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu, openExternal } from '../../lib/electronOnly'
@@ -142,6 +142,9 @@ const BoostHubWebview = ({
 
     const ipcMessageEventHandler = (event: IpcMessageEvent) => {
       switch (event.channel) {
+        case 'sidebar-spaces':
+          boostHubSidebarSpaceEventEmitter.dispatch()
+          break
         case 'request-app-navigate':
           boostHubNavigateRequestEventEmitter.dispatch({ url: event.args[0] })
           break
@@ -153,9 +156,6 @@ const BoostHubWebview = ({
           break
         case 'team-update':
           boostHubTeamUpdateEventEmitter.dispatch({ team: event.args[0] })
-          break
-        case 'sidebar--state':
-          boostHubSidebarStateEventEmitter.dispatch(event.args[0])
           break
         case 'notification-counts':
           boosthubNotificationCountsEventEmitter.dispatch(event.args[0])

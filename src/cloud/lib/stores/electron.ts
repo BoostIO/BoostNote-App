@@ -11,8 +11,6 @@ import {
   toggleSplitEditModeEventEmitter,
   applyBoldStyleEventEmitter,
   applyItalicStyleEventEmitter,
-  toggleSidebarTreeEventEmitter,
-  toggleSidebarTimelineEventEmitter,
   toggleSettingsMembersEventEmitter,
   toggleSidebarSearchEventEmitter,
   toggleSidebarNotificationsEventEmitter,
@@ -144,12 +142,6 @@ const useElectronStore = (): ElectronStore => {
       return
     }
 
-    addHostListener('toggle-sidebar-tree', () => {
-      toggleSidebarTreeEventEmitter.dispatch()
-    })
-    addHostListener('toggle-sidebar-timeline', () => {
-      toggleSidebarTimelineEventEmitter.dispatch()
-    })
     addHostListener('toggle-sidebar-search', () => {
       toggleSidebarSearchEventEmitter.dispatch()
     })

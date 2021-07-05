@@ -16,7 +16,7 @@ interface WorkspacePage {
 const WorkspacePage = ({ workspace }: WorkspacePage) => {
   const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, foldersMap } = useNav()
-  const { query, push } = useRouter()
+  const { push } = useRouter()
   const {
     openNewFolderForm,
     openNewDocForm,
@@ -89,7 +89,6 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
 
   return (
     <Application
-      initialSidebarState={query.onboarding != null ? 'tree' : undefined}
       content={{
         topbar: {
           breadcrumbs: topbarBreadcrumbs,
