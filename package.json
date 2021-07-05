@@ -172,6 +172,7 @@
     "mermaid": "^8.9.0",
     "mixpanel-browser": "^2.40.1",
     "nprogress": "^0.2.0",
+    "overlayscrollbars-react": "^0.2.3",
     "ow": "^0.13.2",
     "pako": "^1.0.11",
     "path-parse": "^1.0.6",
