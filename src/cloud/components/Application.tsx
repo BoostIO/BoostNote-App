@@ -432,7 +432,7 @@ const Application = ({
                       label: translate(lngKeys.GeneralAttachments),
                       icon: mdiPaperclip,
                       variant: 'subtle',
-                      labelClick: () => openSettingsTab('api'),
+                      labelClick: () => openSettingsTab('attachments'),
                       id: 'sidebar__button__attachments',
                     },
                     {

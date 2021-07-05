@@ -35,6 +35,8 @@ export type SettingsTab =
   | 'teamSubscription'
   | 'api'
   | 'feedback'
+  | 'import'
+  | 'attachments'
 
 export type SettingsTabOpeningOptions = UpgradeTabOpeningOptions
 
