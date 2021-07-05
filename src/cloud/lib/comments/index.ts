@@ -1,24 +1,21 @@
 import { SerializedUser } from '../../interfaces/db/user'
 
-const mentionRegex = /:m:(\S+):(.*?):m:/g
-const fullCapturingMentionRegex = /(:m:\S+:.*?:m:)/
+type CommentNode =
+  | { type: 'text'; value: string }
+  | { type: 'mention'; id: string; name: string }
 
 export function toText(comment: string, users: SerializedUser[] = []) {
   const map = new Map(users.map((user) => [user.id, user]))
-  const mentions = comment
-    .split(':m:')
-    .filter((str) => str.includes(':'))
-    .map((str) => str.split(':'))
-    .filter((tuple) => tuple.length === 2)
-    .map(([id, name]) => ({ id, name, tag: `:m:${id}:${name}:m:` }))
-
-  return mentions.reduce((acc, mention) => {
-    const user = map.get(mention.id)
-    return acc.replace(
-      mention.tag,
-      `@${user != null ? user.displayName : mention.name}`
-    )
-  }, comment)
+  return parse(comment).map((node) => {
+    switch (node.type) {
+      case 'text':
+        return node.value
+      case 'mention': {
+        const user = map.get(node.id)
+        return `@${user != null ? user.displayName : node.name}`
+      }
+    }
+  })
 }
 
 export function makeMentionElement(id: string, defaultName: string) {
@@ -34,13 +31,12 @@ export function toFragment(comment: string) {
   const fragment = document.createDocumentFragment()
   for (const line of comment.split('\n')) {
     const child = document.createElement('div')
-    const content = line.split(fullCapturingMentionRegex)
-    for (const part of content) {
-      const match = mentionRegex.exec(part)
-      if (match == null) {
-        child.appendChild(document.createTextNode(part))
+    const content = parse(line)
+    for (const node of content) {
+      if (node.type == 'text') {
+        child.appendChild(document.createTextNode(node.value))
       } else {
-        child.appendChild(makeMentionElement(match[1], match[2]))
+        child.appendChild(makeMentionElement(node.id, node.name))
       }
     }
 
@@ -88,4 +84,20 @@ export function isMention(node: Node) {
 
 function isElement(node: Node): node is Element {
   return node.nodeType === Node.ELEMENT_NODE
+}
+
+function parse(text: string): CommentNode[] {
+  return text.split(':m:').map((str) => {
+    if (str.includes(':')) {
+      const split = str.split(':')
+      if (split.length === 2) {
+        return {
+          type: 'mention',
+          id: split[0],
+          name: split[1],
+        }
+      }
+    }
+    return { type: 'text', value: str }
+  })
 }
