@@ -20,6 +20,7 @@ type LocallyStoredSearchHistoryProps = {
 }
 
 function useSearchStore(): SearchContext {
+  const [showSearchScreen, setShowSearchScreen] = useState(true)
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [searchHistory, setSearchHistory] = useState<string[]>([])
   const { team, pageFolder, pageDoc } = usePage()
@@ -138,6 +139,8 @@ function useSearchStore(): SearchContext {
     history,
     searchHistory,
     addToSearchHistory,
+    showSearchScreen,
+    setShowSearchScreen,
   }
 }
 
