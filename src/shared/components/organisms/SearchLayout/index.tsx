@@ -12,6 +12,7 @@ import { overflowEllipsis } from '../../../lib/styled/styleFunctions'
 import FormInput from '../../molecules/Form/atoms/FormInput'
 import { mdiMagnify } from '@mdi/js'
 import Icon from '../../atoms/Icon'
+import VerticalScroller from '../../atoms/VerticalScroller'
 
 interface SearchLayoutProps {
   searchPlaceholder: string
@@ -112,7 +113,7 @@ const SearchLayout = ({
             />
           </CloseButtonWrapper>
         </div>
-        <div className='sidebar__search__results'>
+        <VerticalScroller className='sidebar__search__results'>
           <div className='sidebar__search__results__wrapper'>
             {searchQuery.trim() === '' && (
               <>
@@ -325,7 +326,7 @@ const SearchLayout = ({
                 </>
               )}
           </div>
-        </div>
+        </VerticalScroller>
       </UpDownList>
     </Container>
   )

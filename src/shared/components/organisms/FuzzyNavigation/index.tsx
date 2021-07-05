@@ -10,8 +10,8 @@ import FuzzyNavigationItem, {
 } from './molecules/FuzzyNavigationItem'
 import Fuse from 'fuse.js'
 import CloseButtonWrapper from '../../molecules/CloseButtonWrapper'
-import { scrollbarOverlay } from '../../../lib/styled/styleFunctions'
 import cc from 'classcat'
+import VerticalScroller from '../../atoms/VerticalScroller'
 
 interface FuzzyNavigationProps {
   recentItems: FuzzyNavigationItemAttrbs[]
@@ -26,8 +26,6 @@ const FuzzyNavigation = ({
 }: FuzzyNavigationProps) => {
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
-  const [inScroll, setInScroll] = useState(false)
-  const scrollTimer = useRef<any>()
 
   useEffectOnce(() => {
     if (inputRef.current != null) {
@@ -44,13 +42,6 @@ const FuzzyNavigation = ({
     [close]
   )
   useGlobalKeyDownHandler(keydownHandler)
-
-  const onScrollHandler: React.UIEventHandler<HTMLDivElement> = useCallback(() => {
-    setInScroll(true)
-    scrollTimer.current = setTimeout(() => {
-      setInScroll(false)
-    }, 600)
-  }, [])
 
   const filteredItems = useMemo(() => {
     if (query === '') return []
@@ -97,13 +88,7 @@ const FuzzyNavigation = ({
             }}
           />
         </CloseButtonWrapper>
-        <div
-          className={cc([
-            'fuzzy__scroller',
-            inScroll && 'fuzzy__scroller--scrolling',
-          ])}
-          onScroll={onScrollHandler}
-        >
+        <VerticalScroller className={cc(['fuzzy__scroller'])}>
           {query === '' ? (
             <>
               <span className='fuzzy__label'>
@@ -136,7 +121,7 @@ const FuzzyNavigation = ({
               ))}
             </>
           )}
-        </div>
+        </VerticalScroller>
       </UpDownList>
     </Container>
   )
@@ -176,7 +161,6 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     max-height: calc(80vh - 80px);
-    ${(theme) => scrollbarOverlay(theme, 'y', 'fuzzy__scroller--scrolling')}
   }
 
   .fuzzy__background {

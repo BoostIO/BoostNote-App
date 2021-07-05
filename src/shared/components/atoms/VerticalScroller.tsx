@@ -1,8 +1,7 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React from 'react'
 import { AppComponent } from '../../lib/types'
 import cc from 'classcat'
-import styled from '../../lib/styled'
-import { scrollbarOverlay } from '../../lib/styled/styleFunctions'
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 
 interface VerticalScrollerProps {
   onClick?: React.MouseEventHandler
@@ -12,33 +11,15 @@ const VerticalScroller: AppComponent<VerticalScrollerProps> = ({
   className,
   onClick,
 }) => {
-  const [inScroll, setInScroll] = useState(false)
-  const scrollTimer = useRef<any>()
-
-  const onScrollHandler: React.UIEventHandler<HTMLDivElement> = useCallback(() => {
-    setInScroll(true)
-    scrollTimer.current = setTimeout(() => {
-      setInScroll(false)
-    }, 600)
-  }, [])
-
   return (
-    <Container
-      className={cc([
-        'vertical__scroller',
-        inScroll && 'vertical__scroller--scrolling',
-        className,
-      ])}
+    <OverlayScrollbarsComponent
+      className={cc(['vertical__scroller', className])}
+      options={{ scrollbars: { autoHide: 'scroll', autoHideDelay: 300 } }}
       onClick={onClick}
-      onScroll={onScrollHandler}
     >
       {children}
-    </Container>
+    </OverlayScrollbarsComponent>
   )
 }
-
-const Container = styled.div`
-  ${(theme) => scrollbarOverlay(theme, 'y', 'vertical__scroller--scrolling')}
-`
 
 export default VerticalScroller
