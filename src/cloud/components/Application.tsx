@@ -8,8 +8,8 @@ import {
   isSingleKeyEvent,
 } from '../lib/keyboard'
 import { isActiveElementAnInput, InputableDomElement } from '../lib/dom'
-import { useDebounce, useEffectOnce } from 'react-use'
-import { SettingsTab, useSettings } from '../lib/stores/settings'
+import { useEffectOnce } from 'react-use'
+import { useSettings } from '../lib/stores/settings'
 import { shortcuts } from '../lib/shortcuts'
 import { useSearch } from '../lib/stores/search'
 import AnnouncementAlert from './atoms/AnnouncementAlert'
@@ -28,28 +28,13 @@ import { useNav } from '../lib/stores/nav'
 import EventSource from './organisms/EventSource'
 import ApplicationLayout from '../../shared/components/molecules/ApplicationLayout'
 import { useGlobalData } from '../lib/stores/globalData'
-import { getDocLinkHref } from './atoms/Link/DocLink'
-import { getFolderHref } from './atoms/Link/FolderLink'
-import {
-  SidebarSearchHistory,
-  SidebarSearchResult,
-} from '../../shared/components/organisms/Sidebar/molecules/SidebarSearch'
 import { SidebarState } from '../../shared/lib/sidebar'
-import useApi from '../../shared/lib/hooks/useApi'
-import {
-  GetSearchResultsRequestQuery,
-  getSearchResultsV2,
-  HistoryItem,
-  SearchResult,
-} from '../api/search'
 import { mapUsers } from '../../shared/lib/mappers/users'
-import { SerializedDoc } from '../interfaces/db/doc'
 import { SerializedTeam } from '../interfaces/db/team'
-import { getDocTitle, getTeamURL } from '../lib/utils/patterns'
+import { getTeamURL } from '../lib/utils/patterns'
 import {
   mdiCog,
   mdiDownload,
-  mdiFileDocumentOutline,
   mdiGiftOutline,
   mdiImport,
   mdiInbox,
@@ -60,7 +45,6 @@ import {
   mdiWeb,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
-import { SerializedFolder } from '../interfaces/db/folder'
 import ImportModal from './organisms/Modal/contents/Import/ImportModal'
 import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
 import { getHexFromUUID } from '../lib/utils/string'
@@ -78,15 +62,13 @@ import {
   mapFuzzyNavigationItems,
   mapFuzzyNavigationRecentItems,
 } from '../lib/mappers/fuzzyNavigation'
-import { ModalOpeningOptions, useModal } from '../../shared/lib/stores/modal'
+import { useModal } from '../../shared/lib/stores/modal'
 import NewDocButton from './molecules/NewDocButton'
 import { useCloudSidebarTree } from '../lib/hooks/sidebar/useCloudSidebarTree'
-import { SerializedSubscription } from '../interfaces/db/subscription'
 import { isEligibleForDiscount } from '../lib/subscription'
 import { trackEvent } from '../api/track'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 import DiscountModal from './organisms/Modal/contents/DiscountModal'
-import { SidebarTreeControl } from '../../shared/components/organisms/Sidebar/molecules/SidebarTree'
 import { Notification as UserNotification } from '../interfaces/db/notifications'
 import useNotificationState from '../../shared/lib/hooks/useNotificationState'
 import { useNotifications } from '../../shared/lib/stores/notifications'
@@ -97,13 +79,12 @@ import { lngKeys } from '../lib/i18n/types'
 import SidebarV2, {
   PopOverState,
 } from '../../shared/components/organisms/SidebarV2'
-import SidebarHeader, {
-  SidebarControls,
-} from '../../shared/components/organisms/SidebarV2/atoms/SidebarHeader'
+import SidebarHeader from '../../shared/components/organisms/SidebarV2/atoms/SidebarHeader'
 import SidebarButtonList from '../../shared/components/organisms/SidebarV2/molecules/SidebarButtonList'
 import NotifyIcon from '../../shared/components/atoms/NotifyIcon'
 import { getTeamLinkHref } from './atoms/Link/TeamLink'
 import SidebarButton from '../../shared/components/organisms/SidebarV2/atoms/SidebarButton'
+import CloudGlobalSearch from './organisms/CloudGlobalSearch'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -129,7 +110,6 @@ const Application = ({
     team,
     permissions = [],
     currentUserPermissions,
-    subscription,
     currentUserIsCoreMember,
   } = usePage()
   const { openModal } = useModal()
@@ -137,11 +117,7 @@ const Application = ({
     globalData: { teams, invites, currentUser },
   } = useGlobalData()
   const { push, query, goBack, goForward, pathname } = useRouter()
-  const [showSearchScreen, setShowSearchScreen] = useState(false)
-  const { history, addToSearchHistory } = useSearch()
-  const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
   const [popOverState, setPopOverState] = useState<PopOverState>(null)
-  const [searchResults, setSearchResults] = useState<SidebarSearchResult[]>([])
   const [sidebarState, setSidebarState] = useState<SidebarState | undefined>(
     initialSidebarState != null
       ? initialSidebarState
@@ -157,9 +133,11 @@ const Application = ({
   } = useCloudSidebarTree()
   const { counts } = useNotifications()
   const { translate } = useI18n()
+  const [showSearchScreen, setShowSearchScreen] = useState(true)
 
   usePathnameChangeEffect(() => {
     setShowFuzzyNavigation(false)
+    setShowSearchScreen(false)
   })
 
   useEffectOnce(() => {
@@ -209,52 +187,6 @@ const Application = ({
   const spaces = useMemo(() => {
     return mapSpaces(push, teams, invites, counts, team)
   }, [teams, team, invites, push, counts])
-
-  const setSearchQuery = useCallback((val: string) => {
-    setSidebarSearchQuery(val)
-  }, [])
-
-  const { submit: submitSearch, sending: fetchingSearchResults } = useApi({
-    api: ({ teamId, query }: { teamId: string; query: any }) =>
-      getSearchResultsV2({ teamId, query }),
-    cb: ({ results }) =>
-      setSearchResults(mapSearchResults(results, push, team)),
-  })
-
-  const [isNotDebouncing, cancel] = useDebounce(
-    async () => {
-      if (team == null || sidebarSearchQuery.trim() === '') {
-        return
-      }
-
-      if (fetchingSearchResults) {
-        cancel()
-      }
-
-      const searchParams = sidebarSearchQuery
-        .split(' ')
-        .reduce<GetSearchResultsRequestQuery>(
-          (params, str) => {
-            if (str === '--body') {
-              params.body = true
-              return params
-            }
-            if (str === '--title') {
-              params.title = true
-              return params
-            }
-            params.query = params.query == '' ? str : `${params.query} ${str}`
-            return params
-          },
-          { query: '' }
-        )
-
-      addToSearchHistory(searchParams.query)
-      await submitSearch({ teamId: team.id, query: searchParams })
-    },
-    600,
-    [sidebarSearchQuery]
-  )
 
   const openCreateFolderModal = useCallback(() => {
     openNewFolderForm({
@@ -391,13 +323,6 @@ const Application = ({
     [push, translate]
   )
 
-  const sidebarSearchState = useMemo(() => {
-    return {
-      fetching: fetchingSearchResults,
-      isNotDebouncing: isNotDebouncing() === true,
-    }
-  }, [isNotDebouncing, fetchingSearchResults])
-
   const {
     state: notificationState,
     getMore: getMoreNotifications,
@@ -412,6 +337,7 @@ const Application = ({
     [push, setViewed]
   )
 
+  const { history } = useSearch()
   return (
     <>
       {team != null && <EventSource teamId={team.id} />}
@@ -465,8 +391,9 @@ const Application = ({
                         label: translate(lngKeys.GeneralSearchVerb),
                         icon: mdiMagnify,
                         variant: 'transparent',
-                        labelClick: () => {},
+                        labelClick: () => setShowSearchScreen((prev) => !prev),
                         id: 'sidebar__button__search',
+                        active: showSearchScreen,
                       },
                       {
                         label: translate(lngKeys.GeneralInbox),
@@ -553,7 +480,9 @@ const Application = ({
           />
         }
         pageBody={
-          <>
+          showSearchScreen ? (
+            <CloudGlobalSearch team={team} />
+          ) : (
             <ContentLayout
               {...content}
               topbar={{
@@ -567,7 +496,7 @@ const Application = ({
             >
               {children}
             </ContentLayout>
-          </>
+          )
         }
       />
       <AnnouncementAlert />
@@ -576,99 +505,6 @@ const Application = ({
 }
 
 export default Application
-
-function mapSearchResults(
-  results: SearchResult[],
-  push: (url: string) => void,
-  team?: SerializedTeam
-) {
-  if (team == null) {
-    return []
-  }
-
-  return results.reduce((acc, item) => {
-    if (item.type === 'folder') {
-      const href = `${process.env.BOOST_HUB_BASE_URL}${getFolderHref(
-        item.result,
-        team,
-        'index'
-      )}`
-      acc.push({
-        label: item.result.name,
-        href,
-        emoji: item.result.emoji,
-        onClick: () => push(href),
-      })
-      return acc
-    }
-
-    const href = `${process.env.BOOST_HUB_BASE_URL}${getDocLinkHref(
-      item.result,
-      team,
-      'index'
-    )}`
-    acc.push({
-      label: getDocTitle(item.result, 'Untitled'),
-      href,
-      defaultIcon: mdiFileDocumentOutline,
-      emoji: item.result.emoji,
-      contexts: item.type === 'docContent' ? [item.context] : undefined,
-      onClick: () => push(href),
-    })
-    return acc
-  }, [] as SidebarSearchResult[])
-}
-
-function mapHistory(
-  history: HistoryItem[],
-  push: (href: string) => void,
-  docsMap: Map<string, SerializedDoc>,
-  foldersMap: Map<string, SerializedFolder>,
-  team?: SerializedTeam
-) {
-  if (team == null) {
-    return []
-  }
-
-  const items = [] as SidebarSearchHistory[]
-
-  history.forEach((historyItem) => {
-    if (historyItem.type === 'folder') {
-      const item = foldersMap.get(historyItem.item)
-      if (item != null) {
-        const href = `${process.env.BOOST_HUB_BASE_URL}${getFolderHref(
-          item,
-          team,
-          'index'
-        )}`
-        items.push({
-          emoji: item.emoji,
-          label: item.name,
-          href,
-          onClick: () => push(href),
-        })
-      }
-    } else {
-      const item = docsMap.get(historyItem.item)
-      if (item != null) {
-        const href = `${process.env.BOOST_HUB_BASE_URL}${getDocLinkHref(
-          item,
-          team,
-          'index'
-        )}`
-        items.push({
-          emoji: item.emoji,
-          defaultIcon: mdiFileDocumentOutline,
-          label: getDocTitle(item, 'Untitled'),
-          href,
-          onClick: () => push(href),
-        })
-      }
-    }
-  })
-
-  return items
-}
 
 function mapSpaces(
   push: (url: string) => void,
