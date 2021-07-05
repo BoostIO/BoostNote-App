@@ -127,6 +127,7 @@ const SidebarContainer = styled.div`
   .sidebar--expanded__wrapper__content {
     flex: 1 1 auto;
     position: relative;
+    padding-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 
   .sidebar--expanded {
