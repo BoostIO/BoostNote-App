@@ -45,6 +45,7 @@ const SidebarHeader: AppComponent<SidebarHeaderProps> = ({
       <Button
         variant='transparent'
         className='sidebar__header__space'
+        id='sidebar__active__space'
         onClick={onSpaceClick}
         icon={
           <RoundedImage

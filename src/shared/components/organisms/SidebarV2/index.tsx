@@ -14,7 +14,7 @@ import NotificationList, {
 } from '../../molecules/NotificationList'
 import { Notification } from '../../../../cloud/interfaces/db/notifications'
 import SidebarTree, { SidebarNavCategory } from './molecules/SidebarTree'
-import SidebarPopOver from '../Sidebar/atoms/SidebarPopOver'
+import SidebarPopOver from './atoms/SidebarPopOver'
 import SidebarSpaces, {
   SidebarSpaceProps,
 } from '../Sidebar/molecules/SidebarSpaces'
@@ -30,7 +30,6 @@ type SidebarProps = {
   className?: string
   header?: React.ReactNode
   tree?: SidebarNavCategory[]
-  treeTopRows?: React.ReactNode
   treeBottomRows?: React.ReactNode
   users: Map<string, AppUser>
   notificationState?: NotificationState
@@ -47,7 +46,7 @@ const Sidebar = ({
   sidebarResize,
   tree,
   header,
-  treeTopRows,
+  treeBottomRows,
   className,
   notificationState,
   getMoreNotifications,
@@ -86,8 +85,9 @@ const Sidebar = ({
             {tree == null ? (
               <Spinner className='sidebar__loader' />
             ) : (
-              <SidebarTree tree={tree} topRows={treeTopRows} />
+              <SidebarTree tree={tree} />
             )}
+            {treeBottomRows}
           </VerticalScroller>
         </SidebarContextList>
       </WidthEnlarger>

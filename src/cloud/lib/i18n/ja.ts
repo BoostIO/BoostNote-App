@@ -439,6 +439,8 @@ const jpTranslation: TranslationSource = {
 
   [lngKeys.GeneralOrdering]: 'Ordering',
   [lngKeys.SidebarViewOptions]: 'View Options',
+  [lngKeys.SidebarSettingsAndMembers]: 'Settings & Members',
+  [lngKeys.GeneralInbox]: 'Inbox',
 }
 
 export default {

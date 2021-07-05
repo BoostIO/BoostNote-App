@@ -17,13 +17,15 @@ const Container = styled.div`
   &:after {
     position: absolute;
     content: attr(data-count);
-    width: 18px;
-    height: 18px;
-    font-size: 14px;
-    color: ${({ theme }) => theme.colors.text.primary};
+    content: attr(data-count);
+    width: 13px;
+    height: 13px;
+    text-align: center;
+    font-size: 10px;
+    color: #fff;
     background-color: #cd4400;
-    top: 0px;
-    right: 0px;
+    top: 1px;
+    right: -1px;
     border-radius: 50%;
     transform: translate3d(25%, -25%, 0);
   }
