@@ -28,9 +28,7 @@
     "test-api": "jest -c jest.json",
     "test-api:watch": "jest -c jest.json --watch",
     "tsc": "tsc --watch --noEmit",
-    "ico": "png2icons static/logo.png static/icon -allwe",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "ico": "png2icons static/logo.png static/icon -allwe"
   },
   "keywords": [
     "markdown",
@@ -47,11 +45,6 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.12.1",
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.6.0",
-    "@storybook/addon-actions": "^6.1.10",
-    "@storybook/addon-essentials": "^6.2.9",
-    "@storybook/addon-links": "^6.1.10",
-    "@storybook/react": "^6.2.9",
     "@testing-library/react-hooks": "^2.0.1",
     "@types/codemirror": "0.0.108",
     "@types/dashify": "^1.0.0",
@@ -132,6 +125,7 @@
     "@mdi/react": "^1.2.1",
     "@stripe/react-stripe-js": "^1.2.0",
     "@stripe/stripe-js": "^1.11.0",
+    "@types/overlayscrollbars": "^1.12.0",
     "@types/react-color": "^3.0.4",
     "aws-amplify": "^4.0.3",
     "chart.js": "^2.9.4",
@@ -172,6 +166,7 @@
     "mermaid": "^8.9.0",
     "mixpanel-browser": "^2.40.1",
     "nprogress": "^0.2.0",
+    "overlayscrollbars-react": "^0.2.3",
     "ow": "^0.13.2",
     "pako": "^1.0.11",
     "path-parse": "^1.0.6",
