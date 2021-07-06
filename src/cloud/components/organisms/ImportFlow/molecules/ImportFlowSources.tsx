@@ -127,7 +127,7 @@ const Container = styled.div`
     display: flex;
     width: 33%;
     flex: 1 1 auto;
-    max-width: 33%;
+    max-width: 32%;
     align-items: center;
     border: 1px solid ${({ theme }) => theme.colors.border.main};
     border-radius: ${({ theme }) => theme.borders.radius}px;
