@@ -21,7 +21,7 @@ interface SimpleSearchItemProps {
   labelHref?: string
   highlighted?: string
   path?: string
-  contexts?: string[]
+  contexts?: React.ReactNode[]
   labelClick?: () => void
 }
 
@@ -124,7 +124,9 @@ const SimpleSearchItem: AppComponent<SimpleSearchItemProps & SharedProps> = ({
                 >
                   {highlighted == null
                     ? context
-                    : highlightMatch(context, highlighted)}
+                    : typeof context === 'string'
+                    ? highlightMatch(context, highlighted)
+                    : context}
                 </div>
               ))}
             </div>

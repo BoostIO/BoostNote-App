@@ -31,7 +31,7 @@ export type GlobalSearchState = { isNotDebouncing: boolean; fetching: boolean }
 export type GlobalSearchResult = {
   label: string
   href: string
-  contexts?: string[]
+  contexts?: React.ReactNode[]
   onClick: () => void
   emoji?: string
   defaultIcon?: string

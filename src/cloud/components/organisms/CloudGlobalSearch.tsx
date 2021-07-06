@@ -25,6 +25,9 @@ import { useNav } from '../../lib/stores/nav'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 
+const contextHighlightStart = '<zxNptFF>'
+const contextHightlightEnd = '</zxNptFF>'
+
 interface CloudGlobalSearchProps {
   team?: SerializedTeam
 }
@@ -149,11 +152,35 @@ function mapSearchResults(
       href,
       defaultIcon: mdiFileDocumentOutline,
       emoji: item.result.emoji,
-      contexts: item.type === 'docContent' ? [item.context] : undefined,
+      contexts:
+        item.type === 'docContent' ? [highlightMatch(item.context)] : undefined,
       onClick: () => push(href),
     })
     return acc
   }, [] as GlobalSearchResult[])
+}
+
+function highlightMatch(context: string) {
+  const delimiters = [contextHighlightStart, contextHightlightEnd]
+  const parts = context.split(
+    new RegExp(`(${contextHighlightStart}|${contextHightlightEnd})`, 'g')
+  )
+  return (
+    <span>
+      {parts.map((part: string, i: number) =>
+        delimiters.includes(part) ? (
+          ''
+        ) : parts[i - 1] === contextHighlightStart &&
+          parts[i + 1] === contextHightlightEnd ? (
+          <span className='search__highlight' key={i}>
+            {part}
+          </span>
+        ) : (
+          part
+        )
+      )}
+    </span>
+  )
 }
 
 function mapHistory(
