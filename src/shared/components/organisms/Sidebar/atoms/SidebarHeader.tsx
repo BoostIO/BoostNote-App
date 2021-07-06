@@ -139,6 +139,7 @@ const Container = styled.div`
     flex: 1 1 auto;
     justify-content: left;
     min-width: 30px;
+    color: ${({ theme }) => theme.colors.text.secondary};
 
     .button__label {
       text-align: left;
