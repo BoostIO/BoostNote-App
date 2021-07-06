@@ -1,4 +1,4 @@
-import { mdiTextBoxPlusOutline } from '@mdi/js'
+import { mdiTextBoxPlus } from '@mdi/js'
 import React from 'react'
 import { useLocalUI } from '../../lib/v2/hooks/local/useLocalUI'
 import { NoteStorage } from '../../lib/db/types'
@@ -10,7 +10,7 @@ const NewDocButton = ({ workspace }: { workspace: NoteStorage }) => {
   return (
     <SidebarButton
       variant='primary'
-      icon={mdiTextBoxPlusOutline}
+      icon={mdiTextBoxPlus}
       id='sidebar-newdoc-btn'
       label='Create new doc'
       labelClick={() =>

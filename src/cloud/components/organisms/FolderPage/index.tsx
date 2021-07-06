@@ -14,7 +14,7 @@ import {
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
 import {
   // mdiFolderOutline,
-  // mdiTextBoxPlusOutline,
+  // mdiTextBoxPlus,
   // mdiFolderMultiplePlusOutline,
   mdiStarOutline,
   mdiStar,

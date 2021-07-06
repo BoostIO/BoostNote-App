@@ -1,4 +1,4 @@
-import { mdiPencilBoxMultipleOutline, mdiTextBoxPlusOutline } from '@mdi/js'
+import { mdiPencilBoxMultipleOutline, mdiTextBoxPlus } from '@mdi/js'
 import React from 'react'
 import SidebarButton from '../../../shared/components/organisms/Sidebar/atoms/SidebarButton'
 import { MenuTypes } from '../../../shared/lib/stores/contextMenu'
@@ -24,7 +24,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
   return (
     <SidebarButton
       variant='primary'
-      icon={mdiTextBoxPlusOutline}
+      icon={mdiTextBoxPlus}
       id='sidebar-newdoc-btn'
       label={translate(lngKeys.CreateNewDoc)}
       labelClick={() =>

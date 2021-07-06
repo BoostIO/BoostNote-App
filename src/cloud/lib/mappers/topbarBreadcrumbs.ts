@@ -4,7 +4,7 @@ import {
   mdiFolderPlusOutline,
   mdiLock,
   mdiPencil,
-  mdiTextBoxPlusOutline,
+  mdiTextBoxPlus,
   mdiTrashCanOutline,
 } from '@mdi/js'
 import { TFunction } from 'i18next'
@@ -276,7 +276,7 @@ function getFolderBreadcrumb(
       ...(openNewDocForm != null
         ? [
             {
-              icon: mdiTextBoxPlusOutline,
+              icon: mdiTextBoxPlus,
               label: t(lngKeys.ModalsCreateNewDocument),
               onClick: () =>
                 openNewDocForm(newResourceBody, {
@@ -363,7 +363,7 @@ export function mapWorkspaceBreadcrumb(
       ...(openNewDocForm != null
         ? [
             {
-              icon: mdiTextBoxPlusOutline,
+              icon: mdiTextBoxPlus,
               label: t(lngKeys.ModalsCreateNewDocument),
               onClick: () =>
                 openNewDocForm(newResourceBody, {

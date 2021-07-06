@@ -28,7 +28,7 @@ import ContentmanagerFolderRow from './Rows/ContentManagerFolderRow'
 import { difference } from 'ramda'
 import ContentManagerBulkActions from './Actions/ContentManagerBulkActions'
 import {
-  mdiFilePlusOutline,
+  mdiTextBoxPlus,
   mdiFolderPlusOutline,
   mdiFormatListChecks,
 } from '@mdi/js'
@@ -419,7 +419,7 @@ const ContentManager = ({
                   <LoadingButton
                     variant='transparent'
                     className='header__control__button'
-                    iconPath={mdiFilePlusOutline}
+                    iconPath={mdiTextBoxPlus}
                     iconSize={16}
                     spinning={sendingAction === 'new-doc'}
                     disabled={sendingAction != null}
