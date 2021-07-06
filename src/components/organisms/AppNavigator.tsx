@@ -118,7 +118,6 @@ const TopLevelNavigator = () => {
   useEffect(() => {
     const boostHubSidebarSpaceEventHandler = () => {
       setShowSpaces(true)
-      console.log('in here buddy')
     }
 
     boostHubSidebarSpaceEventEmitter.listen(boostHubSidebarSpaceEventHandler)
