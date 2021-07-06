@@ -4,7 +4,7 @@ import {
   mdiFileDocumentOutline,
   mdiFolderPlusOutline,
   mdiPencil,
-  mdiTextBoxPlusOutline,
+  mdiTextBoxPlus,
   mdiTrashCanOutline,
 } from '@mdi/js'
 import {
@@ -298,7 +298,7 @@ function getFolderBreadcrumb(
       ...(openNewNoteForm != null
         ? [
             {
-              icon: mdiTextBoxPlusOutline,
+              icon: mdiTextBoxPlus,
               label: 'Create a document',
               onClick: () =>
                 openNewNoteForm(newResourceBody, [
@@ -377,7 +377,7 @@ export function mapStorageBreadcrumb(
       ...(openNewDocForm != null
         ? [
             {
-              icon: mdiTextBoxPlusOutline,
+              icon: mdiTextBoxPlus,
               label: 'Create a document',
               onClick: () =>
                 openNewDocForm(newResourceBody, [

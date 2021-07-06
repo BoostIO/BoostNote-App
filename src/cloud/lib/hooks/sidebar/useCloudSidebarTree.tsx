@@ -4,7 +4,7 @@ import {
   mdiArchiveOutline,
   mdiCheckCircleOutline,
   mdiFileDocumentOutline,
-  mdiFilePlusOutline,
+  mdiTextBoxPlus,
   mdiFolderCogOutline,
   mdiFolderPlusOutline,
   mdiLock,
@@ -238,7 +238,7 @@ export function useCloudSidebarTree() {
             onDrop: () => dropInWorkspace(wp.id, updateFolder, updateDoc),
             controls: [
               {
-                icon: mdiFilePlusOutline,
+                icon: mdiTextBoxPlus,
                 onClick: undefined,
                 placeholder: translate(lngKeys.DocTitlePlaceholder),
                 create: (title: string) =>
@@ -322,7 +322,7 @@ export function useCloudSidebarTree() {
             dropAround: sortingOrder === 'drag' ? true : false,
             controls: [
               {
-                icon: mdiFilePlusOutline,
+                icon: mdiTextBoxPlus,
                 onClick: undefined,
                 placeholder: translate(lngKeys.DocTitlePlaceholder),
                 create: (title: string) =>
@@ -700,7 +700,7 @@ export function useCloudSidebarTree() {
             : [],
         controls: [
           {
-            icon: mdiFilePlusOutline,
+            icon: mdiTextBoxPlus,
             onClick: undefined,
             placeholder: translate(lngKeys.DocTitlePlaceholder),
             create: async (title: string) => {

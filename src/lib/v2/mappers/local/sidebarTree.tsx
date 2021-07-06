@@ -7,7 +7,7 @@ import {
   mdiArchiveOutline,
   mdiExport,
   mdiFileDocumentOutline,
-  mdiFilePlusOutline,
+  mdiTextBoxPlus,
   mdiFolderPlusOutline,
   mdiPaperclip,
   mdiPencil,
@@ -236,7 +236,7 @@ export function mapTree(
       dropAround: sortingOrder === 'drag',
       controls: [
         {
-          icon: mdiFilePlusOutline,
+          icon: mdiTextBoxPlus,
           onClick: undefined,
           placeholder: 'Note title..',
           create: (title: string) =>
@@ -451,7 +451,7 @@ export function mapTree(
     rows: navTree,
     controls: [
       {
-        icon: mdiFilePlusOutline,
+        icon: mdiTextBoxPlus,
         onClick: undefined,
         placeholder: 'Note title..',
         create: (title: string) =>
