@@ -145,31 +145,37 @@ export function useCloudSidebarTree() {
     return {
       [translate(lngKeys.SidebarViewOptions)]: [
         {
+          type: 'check',
           label: translate(lngKeys.GeneralBookmarks),
           checked: !sideBarOpenedLinksIdsSet.has('hide-bookmarks'),
           onClick: () => toggleItem('links', 'hide-bookmarks'),
         },
         {
+          type: 'check',
           label: translate(lngKeys.GeneralFolders),
           checked: !sideBarOpenedLinksIdsSet.has('hide-folders'),
           onClick: () => toggleItem('links', 'hide-folders'),
         },
         {
+          type: 'check',
           label: translate(lngKeys.GeneralLabels),
           checked: !sideBarOpenedLinksIdsSet.has('hide-labels'),
           onClick: () => toggleItem('links', 'hide-labels'),
         },
         {
+          type: 'check',
           label: translate(lngKeys.GeneralPrivate),
           checked: !sideBarOpenedLinksIdsSet.has('hide-private'),
           onClick: () => toggleItem('links', 'hide-private'),
         },
         {
+          type: 'check',
           label: translate(lngKeys.GeneralSmartFolders),
           checked: !sideBarOpenedLinksIdsSet.has('hide-smart folders'),
           onClick: () => toggleItem('links', 'hide-smart folders'),
         },
         {
+          type: 'check',
           label: translate(lngKeys.GeneralStatus),
           checked: !sideBarOpenedLinksIdsSet.has('hide-status'),
           onClick: () => toggleItem('links', 'hide-status'),
@@ -179,6 +185,7 @@ export function useCloudSidebarTree() {
         SidebarTreeSortingOrders
       ).map((sort) => {
         return {
+          type: 'radio',
           label: translate(`sort.${sort.value}`),
           checked: sort.value === preferences.sidebarTreeSortingOrder,
           onClick: () =>
