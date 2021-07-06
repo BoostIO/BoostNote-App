@@ -326,19 +326,14 @@ const Application = ({
                       },
                       {
                         label: translate(lngKeys.GeneralInbox),
-                        icon:
-                          team != null && counts[team.id] ? (
-                            <NotifyIcon
-                              size={16}
-                              text={counts[team.id]}
-                              path={mdiInbox}
-                            />
-                          ) : (
-                            mdiInbox
-                          ),
+                        icon: mdiInbox,
                         variant: 'transparent',
                         labelClick: () => setPopOverState('notifications'),
                         id: 'sidebar__button__inbox',
+                        pastille:
+                          team != null && counts[team.id]
+                            ? counts[team.id]
+                            : undefined,
                       },
                       {
                         label: translate(lngKeys.SidebarSettingsAndMembers),
