@@ -4,7 +4,7 @@ import { AppComponent } from '../../../../lib/types'
 import cc from 'classcat'
 import Button from '../../../atoms/Button'
 import RoundedImage from '../../../atoms/RoundedImage'
-import { mdiDotsHorizontal } from '@mdi/js'
+import { mdiChevronDown, mdiDotsHorizontal } from '@mdi/js'
 import {
   MenuItem,
   MenuTypes,
@@ -13,6 +13,7 @@ import {
 import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
 import { overflowEllipsis } from '../../../../lib/styled/styleFunctions'
 import Radio from '../../../molecules/Form/atoms/FormRadio'
+import Icon from '../../../atoms/Icon'
 
 interface SidebarHeaderProps {
   spaceImage?: string
@@ -58,6 +59,11 @@ const SidebarHeader: AppComponent<SidebarHeaderProps> = ({
         }
       >
         <span>{spaceName}</span>
+        <Icon
+          className='sidebar__space__dropdown'
+          size={16}
+          path={mdiChevronDown}
+        />
       </Button>
       {controls != null && (
         <Button
@@ -137,10 +143,14 @@ const Container = styled.div`
     .button__label {
       text-align: left;
       justify-content: left;
-      flex: 1 1 auto;
+      flex: 0 1 auto;
       overflow: hidden;
       span {
         ${overflowEllipsis}
+      }
+
+      .sidebar__space__dropdown {
+        flex: 0 0 auto;
       }
     }
   }
