@@ -7,14 +7,16 @@ import Button from '../../../atoms/Button'
 import { mdiDotsHorizontal } from '@mdi/js'
 import Icon from '../../../atoms/Icon'
 import { MenuItem, useContextMenu } from '../../../../lib/stores/contextMenu'
+import Pastille from '../../../atoms/Pastille'
 
 export interface SidebarButtonProps {
   variant: 'primary' | 'transparent' | 'subtle'
   icon: string | React.ReactNode
   id: string
-  label: string
+  label: string | React.ReactNode
   labelHref?: string
   labelClick?: () => void
+  pastille?: string | number
   contextControls?: MenuItem[]
   active?: boolean
 }
@@ -29,6 +31,7 @@ const SidebarButton: AppComponent<SidebarButtonProps> = ({
   active,
   icon,
   variant,
+  pastille,
 }) => {
   const { popup } = useContextMenu()
   const LabelTag = labelHref != null ? 'a' : 'button'
@@ -79,6 +82,11 @@ const SidebarButton: AppComponent<SidebarButtonProps> = ({
             icon
           )}
           <span className='sidebar__button__label__ellipsis'>{label}</span>
+          {pastille != null && (
+            <Pastille variant='danger' size={13}>
+              {pastille}
+            </Pastille>
+          )}
         </LabelTag>
         {contextControls != null && (
           <div className='sidebar__button__controls'>
@@ -172,6 +180,10 @@ const Container = styled.div`
         color: inherit;
       }
     }
+  }
+
+  .pastille {
+    flex: 0 0 auto;
   }
 
   .sidebar__button__controls {
