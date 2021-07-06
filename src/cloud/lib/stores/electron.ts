@@ -19,7 +19,7 @@ import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../keyboard'
 import { IpcRendererEvent } from 'electron'
 import { useEffectOnce } from 'react-use'
 import { nodeEnv } from '../consts'
-import lteSemver from 'semver/functions/lte'
+import ltSemver from 'semver/functions/lt'
 
 export function sendToHost(channel: string, ...args: any[]) {
   ;(window as any).__ELECTRON_ONLY__.sendToHost(channel, ...args)
@@ -53,7 +53,7 @@ export function getCurrentDesktopAppVersion() {
 const currentDesktopAppVersion = getCurrentDesktopAppVersion()
 export const usingLegacyElectron =
   currentDesktopAppVersion != null
-    ? lteSemver(currentDesktopAppVersion, '0.12.4')
+    ? ltSemver(currentDesktopAppVersion, '0.20.0')
     : false
 
 export function openInBrowser(url: string) {
