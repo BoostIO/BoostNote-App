@@ -7,12 +7,12 @@ import { mdiAlertOutline, mdiClose } from '@mdi/js'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { PageStoreWithTeam } from '../../interfaces/pageStore'
 import UpgradeButton from '../UpgradeButton'
-import ltSemver from 'semver/functions/lt'
-import {
-  usingElectron,
-  getCurrentDesktopAppVersion,
-} from '../../lib/stores/electron'
 import UpgradeIntroButton from '../UpgradeIntroButton'
+import {
+  getCurrentDesktopAppVersion,
+  useElectron,
+  usingLegacyElectron,
+} from '../../lib/stores/electron'
 
 const AnnouncementAlert = () => {
   const { currentSubInfo } = usePage()
@@ -25,6 +25,7 @@ const AnnouncementAlert = () => {
     hidingOutdatedDesktopClientAlert,
     setHidingOutdatedDesktopClientAlert,
   ] = useState(false)
+  const { usingElectron } = useElectron()
 
   const currentUserPermissions = useMemo(() => {
     try {
@@ -35,14 +36,13 @@ const AnnouncementAlert = () => {
       return undefined
     }
   }, [currentUser, permissions])
-  const currentDesktopAppVersion = getCurrentDesktopAppVersion()
 
   if (
     usingElectron &&
-    currentDesktopAppVersion != null &&
-    ltSemver(currentDesktopAppVersion, '0.16.0') &&
+    !usingLegacyElectron &&
     !hidingOutdatedDesktopClientAlert
   ) {
+    const currentDesktopAppVersion = getCurrentDesktopAppVersion()
     return (
       <Container>
         <div className='alert'>
@@ -51,7 +51,7 @@ const AnnouncementAlert = () => {
           </span>
           <p className='alert__text'>
             Please update the desktop app. This version is outdated (current
-            version: {currentDesktopAppVersion}, required version: &gt;=0.16.0).
+            version: {currentDesktopAppVersion}, required version: &gt;=0.20.0).
           </p>
           <button
             className='alert__btn--close'
@@ -166,18 +166,18 @@ const Container = styled.div`
   .alert {
     display: flex;
     justify-content: space-between;
-    align-items: center
+    align-items: center;
     width: 330px;
     padding: ${({ theme }) => theme.sizes.spaces.df}px;
     background-color: ${({ theme }) => theme.colors.variants.danger.base};
-    border-left: 3px solid #FF425E;
+    border-left: 3px solid #ff425e;
     border-radius: 3px;
     color: ${({ theme }) => theme.colors.variants.danger.text};
   }
 
   .alert__icon {
     margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
-    color: #FF425E;
+    color: #ff425e;
   }
 
   .alert__text {
