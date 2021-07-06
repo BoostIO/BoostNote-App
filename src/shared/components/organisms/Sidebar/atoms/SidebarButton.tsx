@@ -73,7 +73,11 @@ const SidebarButton: AppComponent<SidebarButtonProps> = ({
           id={`tree-${id}`}
           tabIndex={1}
         >
-          {typeof icon === 'string' ? <Icon path={icon} size={16} /> : icon}
+          {typeof icon === 'string' ? (
+            <Icon path={icon} className='sidebar__button__icon' size={16} />
+          ) : (
+            icon
+          )}
           <span className='sidebar__button__label__ellipsis'>{label}</span>
         </LabelTag>
         {contextControls != null && (
@@ -114,7 +118,8 @@ const Container = styled.div`
     .sidebar__button__wrapper {
       background-color: ${({ theme }) => theme.colors.variants.primary.base};
     }
-    .sidebar__button__label {
+    .sidebar__button__label,
+    .sidebar__button__icon {
       color: ${({ theme }) => theme.colors.variants.primary.text};
     }
 
