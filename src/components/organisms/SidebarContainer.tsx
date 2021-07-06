@@ -357,6 +357,7 @@ const SidebarContainer = ({
     return {
       'View Options': (tree || []).map((category) => {
         return {
+          type: 'check',
           label: category.label,
           checked: !sideBarOpenedLinksIdsSet.has(`hide-${category.label}`),
           onClick: () => toggleItem('links', `hide-${category.label}`),
@@ -364,6 +365,7 @@ const SidebarContainer = ({
       }),
       Sorting: Object.values(SidebarTreeSortingOrders).map((sort) => {
         return {
+          type: 'radio',
           label: sort.label,
           icon: sort.icon,
           checked: sort.value === generalStatus.sidebarTreeSortingOrder,

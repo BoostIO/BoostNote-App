@@ -12,6 +12,7 @@ import {
 } from '../../../../lib/stores/contextMenu'
 import Checkbox from '../../../molecules/Form/atoms/FormCheckbox'
 import { overflowEllipsis } from '../../../../lib/styled/styleFunctions'
+import Radio from '../../../molecules/Form/atoms/FormRadio'
 
 interface SidebarHeaderProps {
   spaceImage?: string
@@ -25,6 +26,7 @@ export type SidebarControls = {
 }
 
 export interface SidebarControl {
+  type: 'check' | 'radio'
   label: string
   checked: boolean
   onClick: () => void
@@ -87,7 +89,11 @@ function mapControlsToPopup(controls: SidebarControls) {
         onClick: option.onClick,
         label: (
           <span>
-            <Checkbox checked={option.checked} />
+            {option.type === 'check' ? (
+              <Checkbox checked={option.checked} />
+            ) : (
+              <Radio checked={option.checked} />
+            )}
             <span style={{ paddingLeft: 6 }}>{option.label}</span>
           </span>
         ),
