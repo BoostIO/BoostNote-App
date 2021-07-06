@@ -23,6 +23,7 @@ interface SearchLayoutProps {
   recentlySearched?: string[]
   searchResults?: GlobalSearchResult[]
   searchState: GlobalSearchState
+  closeSearch: () => void
 }
 
 export type GlobalSearchState = { isNotDebouncing: boolean; fetching: boolean }
@@ -54,6 +55,7 @@ const SearchLayout = ({
   recentlySearched = [],
   recentlyVisited = [],
   searchState: { isNotDebouncing, fetching },
+  closeSearch,
 }: SearchLayoutProps) => {
   const [, { has, add, remove, toggle }] = useSet<string>(new Set())
   const inputRef = useRef<HTMLInputElement>(null)
@@ -159,7 +161,10 @@ const SearchLayout = ({
                           label={item.label}
                           labelHref={item.href}
                           path={item.path}
-                          labelClick={item.onClick}
+                          labelClick={() => {
+                            item.onClick()
+                            closeSearch()
+                          }}
                           defaultIcon={item.defaultIcon}
                           emoji={item.emoji}
                           key={`recently-visited-${i}`}
@@ -238,7 +243,10 @@ const SearchLayout = ({
                                 key={`sidebar__result--matches__${i}`}
                                 label={result.label}
                                 labelHref={result.href}
-                                labelClick={result.onClick}
+                                labelClick={() => {
+                                  result.onClick()
+                                  closeSearch()
+                                }}
                                 emoji={result.emoji}
                                 defaultIcon={result.defaultIcon}
                                 highlighted={searchQuery}
@@ -267,7 +275,10 @@ const SearchLayout = ({
                                 key={`sidebar__result__${i}`}
                                 label={result.label}
                                 labelHref={result.href}
-                                labelClick={result.onClick}
+                                labelClick={() => {
+                                  result.onClick()
+                                  closeSearch()
+                                }}
                                 contexts={result.contexts}
                                 emoji={result.emoji}
                                 defaultIcon={result.defaultIcon}
@@ -315,7 +326,10 @@ const SearchLayout = ({
                             key={`sidebar__result--similar__${i}`}
                             label={result.label}
                             labelHref={result.href}
-                            labelClick={result.onClick}
+                            labelClick={() => {
+                              result.onClick()
+                              closeSearch()
+                            }}
                             emoji={result.emoji}
                             defaultIcon={result.defaultIcon}
                             highlighted={searchQuery}

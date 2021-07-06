@@ -187,7 +187,10 @@ const Application = ({
         }
         pageBody={
           showSearchScreen ? (
-            <LocalGlobalSearch workspace={storage} />
+            <LocalGlobalSearch
+              workspace={storage}
+              closeSearch={() => setShowSearchScreen(false)}
+            />
           ) : (
             <ContentLayout
               {...content}
