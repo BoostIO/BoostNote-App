@@ -30,7 +30,12 @@ interface CloudGlobalSearchProps {
 }
 
 const CloudGlobalSearch = ({ team }: CloudGlobalSearchProps) => {
-  const { addToSearchHistory, searchHistory, history } = useSearch()
+  const {
+    addToSearchHistory,
+    searchHistory,
+    history,
+    setShowSearchScreen,
+  } = useSearch()
   const { push } = useRouter()
   const { translate } = useI18n()
   const [searchQuery, setStateSearchQuery] = useState('')
@@ -102,6 +107,7 @@ const CloudGlobalSearch = ({ team }: CloudGlobalSearchProps) => {
       setSearchQuery={setSearchQuery}
       searchResults={searchResults}
       searchState={sidebarSearchState}
+      closeSearch={() => setShowSearchScreen(false)}
     />
   )
 }

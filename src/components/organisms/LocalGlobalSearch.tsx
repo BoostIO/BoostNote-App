@@ -18,9 +18,13 @@ import { NoteStorage } from '../../lib/db/types'
 
 interface LocalGlobalSearchProps {
   workspace?: NoteStorage
+  closeSearch: () => void
 }
 
-const LocalGlobalSearch = ({ workspace }: LocalGlobalSearchProps) => {
+const LocalGlobalSearch = ({
+  workspace,
+  closeSearch,
+}: LocalGlobalSearchProps) => {
   const { push } = useRouter()
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<GlobalSearchResult[]>([])
@@ -108,6 +112,7 @@ const LocalGlobalSearch = ({ workspace }: LocalGlobalSearchProps) => {
       setSearchQuery={setSearchQuery}
       searchResults={searchResults}
       searchState={sidebarSearchState}
+      closeSearch={closeSearch}
     />
   )
 }
