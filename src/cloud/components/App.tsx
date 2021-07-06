@@ -6,7 +6,6 @@ import {
   usingElectron,
   sendToHost,
   useElectron,
-  usingLegacyElectron,
   globalContextMenuIsConfigured,
 } from '../lib/stores/electron'
 import { GlobalDataProvider } from '../lib/stores/globalData'
@@ -22,9 +21,7 @@ const App = () => {
 
   useEffectOnce(() => {
     ;(async () => {
-      if (nodeEnv !== 'production' || !usingLegacyElectron) {
-        await initAccessToken()
-      }
+      await initAccessToken()
       setAccessTokenInitialized(true)
     })()
   })
