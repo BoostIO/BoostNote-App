@@ -144,7 +144,7 @@
     "dashify": "^2.0.0",
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
-    "electron": "^12.0.2",
+    "electron": "^12.0.14",
     "electron-log": "^4.0.0",
     "electron-updater": "^4.2.0",
     "emoji-mart": "^3.0.0",
