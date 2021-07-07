@@ -109,7 +109,7 @@ const zhTranslation: TranslationSource = {
     '您的反馈是非常感谢的！谢谢你伸出援手。',
   [lngKeys.CommunityFeedbackType]: '反馈类型',
   [lngKeys.CommunityFeedbackFreeForm]: 'Free Form',
-  [lngKeys.ManageApi]: '这些令牌仅对{{space}可用',
+  [lngKeys.ManageApi]: '这些令牌仅对{{space}}可用',
   [lngKeys.AccessTokens]: '访问令牌',
   [lngKeys.GenerateToken]: '生成令牌',
   [lngKeys.CreateTokens]: '创建新令牌',
@@ -146,7 +146,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.PlanStandardPerk1]: '{{viewersSize}}免费观看者',
   [lngKeys.PlanStandardPerk2]: '支持开发',
   [lngKeys.PlanStandardPerk3]: 'Unlimited documents',
-  [lngKeys.PlanStandardPerk4]: '文档修订历史的最后{天}}天',
+  [lngKeys.PlanStandardPerk4]: '文档修订历史的最后{{days}}天',
   [lngKeys.PlanProPerk1]: '免费无限制查看',
   [lngKeys.PlanProPerk2]: '共享时的密码和过期日期',
   [lngKeys.PlanProPerk3]: '完全访问文档的修订历史记录',
@@ -305,7 +305,7 @@ const zhTranslation: TranslationSource = {
 
   [lngKeys.AttachmentsDeleteDisclaimer]:
     '是否确实删除此文件？它将不再在您的文档中可见。',
-  [lngKeys.AttachmentsLimitDisclaimer]: '使用了{{limit}}的{current}}。',
+  [lngKeys.AttachmentsLimitDisclaimer]: '使用了{{limit}}的{{current}}。',
   [lngKeys.AttachmentsPlanUpgradeDisclaimer]: '如果你需要更多的空间，请',
   [lngKeys.AttachmentsUpgradeLink]: '升级你的计划。',
 
