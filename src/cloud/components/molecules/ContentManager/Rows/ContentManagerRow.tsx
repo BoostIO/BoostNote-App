@@ -97,7 +97,7 @@ const StyledContentManagerRow = styled.div`
   }
 
   .emoji-icon {
-    color: ${({ theme }) => theme.colors.text.link};
+    color: ${({ theme }) => theme.colors.text.subtle};
   }
 
   a {
