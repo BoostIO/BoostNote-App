@@ -127,7 +127,7 @@ const Container = styled.div<{ depth: number }>`
     margin: 0;
     overflow: hidden;
     svg {
-      color: ${({ theme }) => theme.colors.text.link};
+      color: ${({ theme }) => theme.colors.text.subtle};
     }
     .topbar__tree__item__label__ellipsis {
       padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
