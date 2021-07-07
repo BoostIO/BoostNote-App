@@ -191,10 +191,10 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
   }
 
   return (
-    <Form
-      onSubmit={onSubmit}
-      rows={[
-        {
+    <Form onSubmit={onSubmit} fullWidth={true}>
+      <FormRow
+        fullWidth={true}
+        row={{
           title: translate(lngKeys.GeneralName),
           items: [
             {
@@ -207,9 +207,8 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
               },
             },
           ],
-        },
-      ]}
-    >
+        }}
+      />
       {workspace != null && workspace.default ? (
         <FormRow
           row={{
