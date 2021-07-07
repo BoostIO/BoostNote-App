@@ -39,7 +39,7 @@ const AnnouncementAlert = () => {
 
   if (
     usingElectron &&
-    !usingLegacyElectron &&
+    usingLegacyElectron &&
     !hidingOutdatedDesktopClientAlert
   ) {
     const currentDesktopAppVersion = getCurrentDesktopAppVersion()
