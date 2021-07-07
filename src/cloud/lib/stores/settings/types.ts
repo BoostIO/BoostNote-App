@@ -1,7 +1,7 @@
 export type GeneralThemeOptions = 'light' | 'dark'
 export type GeneralEditorIndentType = 'spaces' | 'tab'
 export type GeneralEditorIndentSize = 2 | 4 | 8
-export type GeneralLanguageOptions = 'en-US' | 'ja' | 'fr' | 'kr'
+export type GeneralLanguageOptions = 'en-US' | 'ja' | 'fr' | 'kr' | 'zh-CN'
 
 export interface UserSettings {
   // General

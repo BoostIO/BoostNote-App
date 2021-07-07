@@ -116,6 +116,7 @@ const UserPreferencesForm = () => {
                       value: 'en-US',
                     },
                     { label: '日本語', value: 'ja' },
+                    { label: '漢語', value: 'zh-CN' },
                     { label: 'Français', value: 'fr' },
                   ]}
                   value={{
@@ -126,6 +127,8 @@ const UserPreferencesForm = () => {
                         ? 'Français'
                         : settings['general.language'] === 'ja'
                         ? '日本語'
+                        : settings['general.language'] === 'zh-CN'
+                        ? '漢語'
                         : '',
                     value: settings['general.language'],
                   }}
