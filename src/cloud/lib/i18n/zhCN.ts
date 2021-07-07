@@ -57,47 +57,43 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SettingsUserForum]: '用户论坛（新！）',
   [lngKeys.ManagePreferences]: '管理您的首选项。',
   [lngKeys.ManageProfile]: '管理你的档案。',
-  [lngKeys.ManageSpaceSettings]: "管理共享空间的设置。",
+  [lngKeys.ManageSpaceSettings]: '管理共享空间的设置。',
   [lngKeys.ManageTeamMembers]: '管理谁有权访问此空间。',
-  [lngKeys.ManageIntegrations]:
-    '将第三方内容连接到Boost Note文档。',
+  [lngKeys.ManageIntegrations]: '将第三方内容连接到Boost Note文档。',
   [lngKeys.CurrentMembers]: '当前成员',
   [lngKeys.MembersAccessLevel]: '访问级别',
   [lngKeys.AddMembers]: '添加成员',
   [lngKeys.TeamCreate]: '创建团队空间',
-  [lngKeys.TeamCreateSubtitle]:
-    '转换到一个团队空间来邀请你的队友',
+  [lngKeys.TeamCreateSubtitle]: '转换到一个团队空间来邀请你的队友',
   [lngKeys.TeamName]: '团队名字',
   [lngKeys.TeamDomain]: '团队域名',
   [lngKeys.SpaceName]: '命名空间名字',
   [lngKeys.SpaceDomain]: '命名空间域名',
   [lngKeys.TeamDomainShow]: '您的url如下所示：',
-  [lngKeys.TeamDomainWarning]: "注意：此步骤后不能更改。",
+  [lngKeys.TeamDomainWarning]: '注意：此步骤后不能更改。',
   [lngKeys.InviteWithOpenLink]: '使用打开的链接邀请',
   [lngKeys.InviteEmail]: '通过电子邮件邀请',
   [lngKeys.RoleMemberDescription]:
     '成员可以访问除团队管理、计费之外的所有功能。',
-  [lngKeys.RoleAdminDescription]:
-    '管理员可以处理计费、删除或升级/降级成员。',
+  [lngKeys.RoleAdminDescription]: '管理员可以处理计费、删除或升级/降级成员。',
   [lngKeys.RoleViewerDescription]:
     '查看者只能浏览文档、文件夹、撰写评论并邀请更多查看者加入团队。',
   [lngKeys.CancelInvite]: '取消邀请？',
   [lngKeys.CancelInviteOpenLinkMessage]:
     '确定要取消此邀请吗？当前链接将被折旧。',
   [lngKeys.CancelInviteEmailMessage]:
-    "你确定要撤消此邀请吗？用户将无法再加入团队。",
+    '你确定要撤消此邀请吗？用户将无法再加入团队。',
   [lngKeys.RoleAdminPromote]:
-    "此操作将{{user}}提升为管理员，他们将被授予访问团队管理和帐单信息的权限。你确定吗？",
+    '此操作将{{user}}提升为管理员，他们将被授予访问团队管理和帐单信息的权限。你确定吗？',
   [lngKeys.RoleMemberChange]:
-    "此操作将{{user}}的角色更改为常规成员，他们将在订阅中进行说明，并可以在团队中积极参与。但是，他们将无法访问任何帐单信息。你确定吗？",
+    '此操作将{{user}}的角色更改为常规成员，他们将在订阅中进行说明，并可以在团队中积极参与。但是，他们将无法访问任何帐单信息。你确定吗？',
   [lngKeys.RoleViewerDemote]:
-    "此操作将{{user}}的角色更改为查看器。它们将从订阅金额中删除。他们将无法以任何方式编辑文件夹和文档，但仍然可以阅读和发表评论。你确定吗？",
+    '此操作将{{user}}的角色更改为查看器。它们将从订阅金额中删除。他们将无法以任何方式编辑文件夹和文档，但仍然可以阅读和发表评论。你确定吗？',
   [lngKeys.TeamLeave]: 'Leave the team',
   [lngKeys.TeamLeaveWarning]:
     '你确定要离开团队并且不能再访问它的任何内容了吗？最后一个团队成员必须完全删除团队。',
   [lngKeys.RemovingMember]: '删除成员',
-  [lngKeys.RemovingMemberWarning]:
-    '您将从此团队中删除{{user}}。你确定吗？',
+  [lngKeys.RemovingMemberWarning]: '您将从此团队中删除{{user}}。你确定吗？',
   [lngKeys.ExternalEntity]: '外部实体',
   [lngKeys.ExternalEntityOpenInBrowser]: '在浏览器中打开以启用',
   [lngKeys.ExternalEntityDescription]:
@@ -128,24 +124,19 @@ const zhTranslation: TranslationSource = {
 
   [lngKeys.SettingsSubLimitTrialTitle]: '升级到unlimited',
   [lngKeys.SettingsSubLimitTrialDate]:
-    "您的工作区对Pro计划的试用持续到{{date}}",
-  [lngKeys.SettingsSubLimitTrialUpgrade]:
-    '您可以在试用期间随时升级。',
+    '您的工作区对Pro计划的试用持续到{{date}}',
+  [lngKeys.SettingsSubLimitTrialUpgrade]: '您可以在试用期间随时升级。',
   [lngKeys.SettingsSubLimitUsed]: '{{docsNb}}使用的文档',
-  [lngKeys.SettingsSubLimitTrialEnd]:
-    '你的pro计划试用已经结束。请立即升级',
+  [lngKeys.SettingsSubLimitTrialEnd]: '你的pro计划试用已经结束。请立即升级',
   [lngKeys.SettingsSubLimitUnderFreePlan]:
     '在自由计划下，您最多可以创建{{limit}}个文档。',
 
   [lngKeys.PlanChoose]: '选择你的计划。',
-  [lngKeys.PlanDiscountUntil]:
-    '只要您在预订之前就可以享受折扣',
+  [lngKeys.PlanDiscountUntil]: '只要您在预订之前就可以享受折扣',
   [lngKeys.PlanDiscountDetail]: '{{month}}个月{{off}}%的折扣',
   [lngKeys.PlanDiscountLabel]: '{{month}}个月折扣',
-  [lngKeys.PlanDiscountCouponWarning]:
-    '应用促销代码将阻止您获得其他折扣',
-  [lngKeys.PlanBusinessIntro]:
-    '对于大型企业或高度管制行业，请',
+  [lngKeys.PlanDiscountCouponWarning]: '应用促销代码将阻止您获得其他折扣',
+  [lngKeys.PlanBusinessIntro]: '对于大型企业或高度管制行业，请',
   [lngKeys.PlanBusinessLink]: '联系我们的销售部',
   [lngKeys.PlanPerMember]: '每个成员',
   [lngKeys.PlanPerMonth]: '每月',
@@ -155,11 +146,10 @@ const zhTranslation: TranslationSource = {
   [lngKeys.PlanStandardPerk1]: '{{viewersSize}}免费观看者',
   [lngKeys.PlanStandardPerk2]: '支持开发',
   [lngKeys.PlanStandardPerk3]: 'Unlimited documents',
-  [lngKeys.PlanStandardPerk4]:
-    "文档修订历史的最后{天}}天",
+  [lngKeys.PlanStandardPerk4]: '文档修订历史的最后{天}}天',
   [lngKeys.PlanProPerk1]: '免费无限制查看',
   [lngKeys.PlanProPerk2]: '共享时的密码和过期日期',
-  [lngKeys.PlanProPerk3]: "完全访问文档的修订历史记录",
+  [lngKeys.PlanProPerk3]: '完全访问文档的修订历史记录',
   [lngKeys.PlanTrial]: '{{days}}天免费试用',
   [lngKeys.PlanInTrial]: '免费试用（剩余{{remaining}}）',
   [lngKeys.UpgradeSubtitle]: '确认并输入您的付款信息',
@@ -171,8 +161,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.ApplyCoupon]: '申请优惠券',
   [lngKeys.PromoCode]: '促销代码',
   [lngKeys.Subscribe]: '订阅',
-  [lngKeys.PaymentMethodJpy]:
-    '用JCB卡付款时，我们只能接受日元。',
+  [lngKeys.PaymentMethodJpy]: '用JCB卡付款时，我们只能接受日元。',
   [lngKeys.UnlimitedViewers]: '无限查看者',
 
   [lngKeys.BillingActionRequired]: '您的付款可能需要采取行动！',
@@ -181,8 +170,7 @@ const zhTranslation: TranslationSource = {
     '请检查您的帐单历史，以处理任何未付或失败的费用。',
   [lngKeys.BillingCancelledAt]:
     '收到最后一张发票后，您的订阅将于{{date}}取消。',
-  [lngKeys.BillingToCard]:
-    '将向{{cardEnd}}结束于{{date}}的信用卡付款。',
+  [lngKeys.BillingToCard]: '将向{{cardEnd}}结束于{{date}}的信用卡付款。',
   [lngKeys.BillingEditCard]: '编辑卡',
   [lngKeys.BillingEmail]: '帐单电子邮件是{{email}}',
   [lngKeys.BillingEditEmail]: '编辑电子邮箱',
@@ -194,14 +182,12 @@ const zhTranslation: TranslationSource = {
   [lngKeys.BillingCurrentEmail]: '当前电子邮件',
   [lngKeys.BillingChangeJCB]:
     '将付款方式从/切换到JCB卡需要取消现有的活动订阅。请取消现有卡，并用新卡重新订阅。',
-  [lngKeys.BillingApplyPromoWarning]:
-    '应用促销代码将结束您当前的折扣',
+  [lngKeys.BillingApplyPromoWarning]: '应用促销代码将结束您当前的折扣',
   [lngKeys.BillingApplyPromo]: '应用促销代码',
 
-  [lngKeys.BillingChangePlanDiscountStop]:
-    '更改计划将结束您当前的折扣。',
+  [lngKeys.BillingChangePlanDiscountStop]: '更改计划将结束您当前的折扣。',
   [lngKeys.BillingChangePlanStripeProration]:
-    "费用变更通过Stripe的按比例分配处理。",
+    '费用变更通过Stripe的按比例分配处理。',
   [lngKeys.BillingChangePlanFreeDisclaimer]:
     '您将立即无法访问高级功能，如无限文档、文档修订历史记录、更大的存储大小等...',
   [lngKeys.BillingChangePlanProDisclaimer]:
@@ -216,9 +202,8 @@ const zhTranslation: TranslationSource = {
 
   [lngKeys.FreeTrialModalTitle]: '免费尝试专业计划',
   [lngKeys.FreeTrialModalBody]:
-    "您将可以访问付费专业计划的大多数功能，如无限文档、修订历史等。。。{{days}}天。",
-  [lngKeys.FreeTrialModalDisclaimer]:
-    '目前不需要信用卡信息。',
+    '您将可以访问付费专业计划的大多数功能，如无限文档、修订历史等。。。{{days}}天。',
+  [lngKeys.FreeTrialModalDisclaimer]: '目前不需要信用卡信息。',
   [lngKeys.FreeTrialModalCTA]: '开始免费试用',
 
   [lngKeys.LogOut]: '注销',
@@ -248,8 +233,7 @@ const zhTranslation: TranslationSource = {
     '确定要删除此文件夹吗？您将无法恢复此操作。',
 
   [lngKeys.ModalsDeleteDocFolderTitle]: '删除 {{label}}',
-  [lngKeys.ModalsDeleteDocDisclaimer]:
-    '确定要永久删除此文档吗？',
+  [lngKeys.ModalsDeleteDocDisclaimer]: '确定要永久删除此文档吗？',
   [lngKeys.ModalsDeleteFolderDisclaimer]:
     '确实要删除此文件夹并完全删除其文档吗？',
 
@@ -259,12 +243,11 @@ const zhTranslation: TranslationSource = {
   [lngKeys.ModalsWorkspaceMakePrivate]: '保密',
   [lngKeys.ModalsWorkspaceAccess]: '访问',
   [lngKeys.ModalsWorkspaceDefaultDisclaimer]:
-    "此默认工作区是公共的，无法修改其访问权限。",
+    '此默认工作区是公共的，无法修改其访问权限。',
   [lngKeys.ModalsWorkspacePublicDisclaimer]:
     '此工作区是公用的。团队中的任何人都可以访问它。',
   [lngKeys.ModalsWorkspacePrivateDisclaimer]: '此文件夹是专用的。',
-  [lngKeys.ModalsWorkspacePrivateOwner]:
-    '您可以在下面设置单个成员访问权限。',
+  [lngKeys.ModalsWorkspacePrivateOwner]: '您可以在下面设置单个成员访问权限。',
 
   [lngKeys.ModalsWorkspaceSetAccess]: '设置访问',
   [lngKeys.ModalsWorkspacesSetAccessMembers]: '添加成员',
@@ -276,10 +259,8 @@ const zhTranslation: TranslationSource = {
     '只有文件夹所有者才能更改其访问权限。',
 
   [lngKeys.ModalsImportDestinationTitle]: '选择文件夹',
-  [lngKeys.ModalsImportDestinationDisclaimer]:
-    '选择要导入文档的文件夹',
-  [lngKeys.ModalsImportDisclaimer]:
-    '选择导入文件的方式（每个文件最多5Mb）',
+  [lngKeys.ModalsImportDestinationDisclaimer]: '选择要导入文档的文件夹',
+  [lngKeys.ModalsImportDisclaimer]: '选择导入文件的方式（每个文件最多5Mb）',
 
   [lngKeys.ModalsSmartFolderCreateTitle]: '创建智能文件夹',
   [lngKeys.ModalsSmartFolderEditTitle]: '编辑智能文件夹',
@@ -306,16 +287,14 @@ const zhTranslation: TranslationSource = {
 
   [lngKeys.EditorReconnectAttempt]: '连接中...',
   [lngKeys.EditorReconnectAttempt1]: '正在尝试自动重新连接',
-  [lngKeys.EditorReconnectAttempt2]:
-    '在重新连接之前，更改不会与服务器同步',
+  [lngKeys.EditorReconnectAttempt2]: '在重新连接之前，更改不会与服务器同步',
   [lngKeys.EditorReconnectDisconnected]: '重新连接',
   [lngKeys.EditorReconnectDisconnected1]: '请尝试重新连接。',
   [lngKeys.EditorReconnectDisconnected2]:
     '在重新连接之前，更改不会与服务器同步',
   [lngKeys.EditorReconnectSyncing]: '同步...',
   [lngKeys.EditorReconnectSyncing1]: '与云同步。',
-  [lngKeys.EditorReconnectSyncing2]:
-    '检查更改并实时更新文档',
+  [lngKeys.EditorReconnectSyncing2]: '检查更改并实时更新文档',
 
   [lngKeys.DocSaveAsTemplate]: '另存为模板',
   [lngKeys.DocExportPdf]: '导出PDF',
@@ -325,7 +304,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.GeneralPickYourDestination]: '选择您的目的地',
 
   [lngKeys.AttachmentsDeleteDisclaimer]:
-    "是否确实删除此文件？它将不再在您的文档中可见。",
+    '是否确实删除此文件？它将不再在您的文档中可见。',
   [lngKeys.AttachmentsLimitDisclaimer]: '使用了{{limit}}的{current}}。',
   [lngKeys.AttachmentsPlanUpgradeDisclaimer]: '如果你需要更多的空间，请',
   [lngKeys.AttachmentsUpgradeLink]: '升级你的计划。',
@@ -432,6 +411,14 @@ const zhTranslation: TranslationSource = {
   [lngKeys.GeneralHours]: '小时',
   [lngKeys.GeneralMinutes]: '分钟',
   [lngKeys.GeneralSeconds]: '秒',
+
+  [lngKeys.GeneralOrdering]: 'Ordering',
+  [lngKeys.SidebarViewOptions]: 'View Options',
+  [lngKeys.SidebarSettingsAndMembers]: 'Settings & Members',
+  [lngKeys.GeneralInbox]: 'Inbox',
+  [lngKeys.SidebarNewUserDiscount]: 'Get the new user discount!',
+  [lngKeys.SettingsImportDescription]:
+    'No need to start from scratch. Import data into Boost Note by selecting one of the options below.',
 }
 
 export default {
