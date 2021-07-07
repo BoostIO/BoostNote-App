@@ -19,6 +19,8 @@ import { SerializedDoc } from '../interfaces/db/doc'
 import { SerializedOpenInvite } from '../interfaces/db/openInvite'
 import { boostHubBaseUrl } from '../lib/consts'
 import { getOpenInviteURL, getTeamURL } from '../lib/utils/patterns'
+import { mdiClose } from '@mdi/js'
+import Button from '../../shared/components/atoms/Button'
 
 const CooperatePage = () => {
   const [name, setName] = useState<string>('')
@@ -161,7 +163,24 @@ const CooperatePage = () => {
   }
 
   if (state === 'usage') {
-    return <UsagePage onUsage={onUsageCallback} sending={sending} />
+    return (
+      <>
+        {usingElectron && (
+          <ElectronButtonContainer>
+            <Button
+              variant='icon'
+              iconSize={34}
+              iconPath={mdiClose}
+              onClick={() => {
+                sendToElectron('router', 'back')
+              }}
+              className='electron__goback'
+            />
+          </ElectronButtonContainer>
+        )}
+        <UsagePage onUsage={onUsageCallback} sending={sending} />
+      </>
+    )
   }
 
   return (
@@ -170,6 +189,19 @@ const CooperatePage = () => {
       subtitle='Please tell us your team information.'
       contentWidth={600}
     >
+      {usingElectron && (
+        <ElectronButtonContainer>
+          <Button
+            variant='icon'
+            iconSize={34}
+            iconPath={mdiClose}
+            onClick={() => {
+              sendToElectron('router', 'back')
+            }}
+            className='electron__goback'
+          />
+        </ElectronButtonContainer>
+      )}
       <Container>
         <CreateTeamForm
           fullPage={true}
@@ -195,6 +227,15 @@ CooperatePage.getInitialProps = async (_params: GetInitialPropsParameters) => {
 }
 
 export default CooperatePage
+
+const ElectronButtonContainer = styled.div`
+  .electron__goback {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+  }
+`
 
 const Container = styled.div`
   text-align: left;
