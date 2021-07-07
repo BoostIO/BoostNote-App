@@ -31,6 +31,7 @@ import {
   boostHubSubscriptionUpdateEventEmitter,
   boosthubNotificationCountsEventEmitter,
   boostHubSidebarSpaceEventEmitter,
+  boostHubAppRouterEventEmitter,
 } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu, openExternal } from '../../lib/electronOnly'
@@ -142,6 +143,9 @@ const BoostHubWebview = ({
 
     const ipcMessageEventHandler = (event: IpcMessageEvent) => {
       switch (event.channel) {
+        case 'router':
+          boostHubAppRouterEventEmitter.dispatch({ target: event.args[0] })
+          break
         case 'sidebar-spaces':
           boostHubSidebarSpaceEventEmitter.dispatch()
           break

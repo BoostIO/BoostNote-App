@@ -10,8 +10,10 @@ import BoostHubTeamsShowPage from './pages/BoostHubTeamsShowPage'
 import BoostHubTeamsCreatePage from './pages/BoostHubTeamsCreatePage'
 import BoostHubAccountDeletePage from './pages/BoostHubAccountDeletePage'
 import {
+  boostHubAppRouterEventEmitter,
   BoostHubNavigateRequestEvent,
   boostHubNavigateRequestEventEmitter,
+  BoostHubAppRouterEvent,
 } from '../lib/events'
 import { parse as parseUrl } from 'url'
 import { openNew } from '../lib/platform'
@@ -27,8 +29,27 @@ import NotFoundErrorPage from './pages/NotFoundErrorPage'
 const Router = () => {
   const routeParams = useRouteParams()
   const { storageMap } = useDb()
-  const { push } = useRouter()
+  const { push, goBack, goForward } = useRouter()
   const { generalStatus } = useGeneralStatus()
+
+  useEffect(() => {
+    const boostHubAppRouterEventHandler = (event: BoostHubAppRouterEvent) => {
+      switch (event.detail.target) {
+        case 'forward':
+          goForward()
+          return
+        case 'back':
+        default:
+          goBack()
+          return
+      }
+    }
+
+    boostHubAppRouterEventEmitter.listen(boostHubAppRouterEventHandler)
+    return () => {
+      boostHubAppRouterEventEmitter.unlisten(boostHubAppRouterEventHandler)
+    }
+  }, [goBack, goForward])
 
   useEffect(() => {
     const boostHubNavigateRequestHandler = (

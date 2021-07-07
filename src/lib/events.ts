@@ -161,3 +161,9 @@ export const boostHubSubscriptionDeleteEventEmitter = createCustomEventEmitter<
 export const boostHubSidebarSpaceEventEmitter = createCustomEventEmitter(
   'BoostHub:sidebarSpace'
 )
+
+export type BoostHubAppRouterEventDetail = { target: 'back' | 'forward' }
+export type BoostHubAppRouterEvent = CustomEvent<BoostHubAppRouterEventDetail>
+export const boostHubAppRouterEventEmitter = createCustomEventEmitter<
+  BoostHubAppRouterEventDetail
+>('BoostHub:appRouter')
