@@ -511,6 +511,69 @@ const SidebarContainer = ({
   }, [boostHubUserInfo, push, signOut])
 
   const activeSpace = spaces.find((space) => space.active)
+  const sidebarHeader = useMemo(() => {
+    return (
+      <>
+        <SidebarHeader
+          onSpaceClick={() => setShowSpaces(true)}
+          spaceName={activeSpace != null ? activeSpace.label : '...'}
+          spaceImage={
+            activeSpace != null && activeSpace.icon != null
+              ? activeSpace.icon
+              : undefined
+          }
+          controls={sidebarHeaderControls}
+        />
+        {workspace == null ? null : (
+          <SidebarButtonList
+            rows={[
+              {
+                label: 'Search',
+                icon: mdiMagnify,
+                variant: 'transparent',
+                labelClick: toggleSearchScreen,
+                id: 'sidebar__button__search',
+                active: false,
+              },
+              {
+                label: 'Settings',
+                icon: mdiCog,
+                variant: 'transparent',
+                labelClick: () => openTab('about'),
+                id: 'sidebar__button__members',
+              },
+            ]}
+          >
+            <NewDocButton workspace={workspace} />
+          </SidebarButtonList>
+        )}
+      </>
+    )
+  }, [
+    activeSpace,
+    openTab,
+    sidebarHeaderControls,
+    toggleSearchScreen,
+    workspace,
+  ])
+
+  const sidebarFooter = useMemo(() => {
+    return (
+      <SidebarButtonList
+        rows={[
+          {
+            label: 'Cloud Intro',
+            active: showingCloudIntroModal,
+            icon: mdiCloudOffOutline,
+            variant: 'subtle',
+            labelClick: () => toggleShowingCloudIntroModal(),
+            id: 'sidebar__button__cloud',
+          },
+        ]}
+      />
+    )
+  }, [showingCloudIntroModal, toggleShowingCloudIntroModal])
+
   return (
     <NavigatorContainer onContextMenu={openStorageContextMenu}>
       <Sidebar
@@ -522,57 +585,8 @@ const SidebarContainer = ({
         sidebarExpandedWidth={generalStatus.sideBarWidth}
         tree={tree}
         sidebarResize={sidebarResize}
-        header={
-          <>
-            <SidebarHeader
-              onSpaceClick={() => setShowSpaces(true)}
-              spaceName={activeSpace != null ? activeSpace.label : '...'}
-              spaceImage={
-                activeSpace != null && activeSpace.icon != null
-                  ? activeSpace.icon
-                  : undefined
-              }
-              controls={sidebarHeaderControls}
-            />
-            {workspace == null ? null : (
-              <SidebarButtonList
-                rows={[
-                  {
-                    label: 'Search',
-                    icon: mdiMagnify,
-                    variant: 'transparent',
-                    labelClick: toggleSearchScreen,
-                    id: 'sidebar__button__search',
-                    active: false,
-                  },
-                  {
-                    label: 'Settings',
-                    icon: mdiCog,
-                    variant: 'transparent',
-                    labelClick: () => openTab('about'),
-                    id: 'sidebar__button__members',
-                  },
-                ]}
-              >
-                <NewDocButton workspace={workspace} />
-              </SidebarButtonList>
-            )}
-          </>
-        }
-        treeBottomRows={
-          <SidebarButtonList
-            rows={[
-              {
-                label: 'Cloud Intro',
-                active: showingCloudIntroModal,
-                icon: mdiCloudOffOutline,
-                variant: 'subtle',
-                labelClick: () => toggleShowingCloudIntroModal(),
-                id: 'sidebar__button__cloud',
-              },
-            ]}
-          />
-        }
+        header={sidebarHeader}
+        treeBottomRows={sidebarFooter}
         users={usersMap}
       />
     </NavigatorContainer>

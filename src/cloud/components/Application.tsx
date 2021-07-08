@@ -267,6 +267,112 @@ const Application = ({
     sendToElectron('sidebar-spaces')
   }, [usingElectron, sendToElectron])
 
+  const sidebarHeader = useMemo(() => {
+    return (
+      <>
+        <SidebarHeader
+          onSpaceClick={onSpaceClick}
+          spaceName={team != null ? team.name : '...'}
+          spaceImage={
+            team != null && team.icon != null
+              ? buildIconUrl(team.icon.location)
+              : undefined
+          }
+          controls={sidebarHeaderControls}
+        />
+        {team == null ? null : (
+          <SidebarButtonList
+            rows={[
+              {
+                label: translate(lngKeys.GeneralSearchVerb),
+                icon: mdiMagnify,
+                variant: 'transparent',
+                labelClick: () => setShowSearchScreen((prev) => !prev),
+                id: 'sidebar__button__search',
+                active: showSearchScreen,
+              },
+              {
+                label: translate(lngKeys.GeneralInbox),
+                icon: mdiInbox,
+                variant: 'transparent',
+                labelClick: () => setPopOverState('notifications'),
+                id: 'sidebar__button__inbox',
+                pastille:
+                  team != null && counts[team.id] ? counts[team.id] : undefined,
+              },
+              {
+                label: translate(lngKeys.SidebarSettingsAndMembers),
+                icon: mdiCog,
+                variant: 'transparent',
+                labelClick: () => openSettingsTab('teamMembers'),
+                id: 'sidebar__button__members',
+              },
+            ]}
+          >
+            {currentUserIsCoreMember && <NewDocButton team={team} />}
+          </SidebarButtonList>
+        )}
+      </>
+    )
+  }, [
+    counts,
+    currentUserIsCoreMember,
+    onSpaceClick,
+    openSettingsTab,
+    setShowSearchScreen,
+    sidebarHeaderControls,
+    team,
+    translate,
+    showSearchScreen,
+  ])
+
+  const sidebarFooter = useMemo(() => {
+    return team != null ? (
+      <SidebarButtonList
+        rows={[
+          {
+            label: translate(lngKeys.GeneralAttachments),
+            icon: mdiPaperclip,
+            variant: 'subtle',
+            labelClick: () => openSettingsTab('attachments'),
+            id: 'sidebar__button__attachments',
+          },
+          {
+            label: translate(lngKeys.GeneralShared),
+            icon: mdiWeb,
+            variant: 'subtle',
+            labelHref: getTeamLinkHref(team, 'shared'),
+            active: getTeamLinkHref(team, 'shared') === pathname,
+            labelClick: () => push(getTeamLinkHref(team, 'shared')),
+            id: 'sidebar__button__shared',
+          },
+          {
+            label: translate(lngKeys.GeneralImport),
+            icon: mdiImport,
+            variant: 'subtle',
+            labelClick: () => openSettingsTab('import'),
+            id: 'sidebar__button__import',
+          },
+        ]}
+      >
+        {isEligibleForDiscount(team) ? (
+          <SidebarButton
+            variant='subtle'
+            icon={<NotifyIcon text='!' size={16} path={mdiGiftOutline} />}
+            id='sidebar__button__promo'
+            label={translate(lngKeys.SidebarNewUserDiscount)}
+            labelClick={() =>
+              openModal(<DiscountModal />, {
+                showCloseIcon: true,
+                width: 'large',
+              })
+            }
+          />
+        ) : null}
+      </SidebarButtonList>
+    ) : null
+  }, [openModal, openSettingsTab, team, pathname, push, translate])
+
   return (
     <>
       {team != null && <EventSource teamId={team.id} />}
@@ -301,102 +407,8 @@ const Application = ({
             sidebarExpandedWidth={preferences.sideBarWidth}
             tree={treeWithOrderedCategories}
             sidebarResize={sidebarResize}
-            header={
-              <>
-                <SidebarHeader
-                  onSpaceClick={onSpaceClick}
-                  spaceName={team != null ? team.name : '...'}
-                  spaceImage={
-                    team != null && team.icon != null
-                      ? buildIconUrl(team.icon.location)
-                      : undefined
-                  }
-                  controls={sidebarHeaderControls}
-                />
-                {team == null ? null : (
-                  <SidebarButtonList
-                    rows={[
-                      {
-                        label: translate(lngKeys.GeneralSearchVerb),
-                        icon: mdiMagnify,
-                        variant: 'transparent',
-                        labelClick: () => setShowSearchScreen((prev) => !prev),
-                        id: 'sidebar__button__search',
-                        active: showSearchScreen,
-                      },
-                      {
-                        label: translate(lngKeys.GeneralInbox),
-                        icon: mdiInbox,
-                        variant: 'transparent',
-                        labelClick: () => setPopOverState('notifications'),
-                        id: 'sidebar__button__inbox',
-                        pastille:
-                          team != null && counts[team.id]
-                            ? counts[team.id]
-                            : undefined,
-                      },
-                      {
-                        label: translate(lngKeys.SidebarSettingsAndMembers),
-                        icon: mdiCog,
-                        variant: 'transparent',
-                        labelClick: () => openSettingsTab('teamMembers'),
-                        id: 'sidebar__button__members',
-                      },
-                    ]}
-                  >
-                    {currentUserIsCoreMember && <NewDocButton team={team} />}
-                  </SidebarButtonList>
-                )}
-              </>
-            }
-            treeBottomRows={
-              team != null && (
-                <SidebarButtonList
-                  rows={[
-                    {
-                      label: translate(lngKeys.GeneralAttachments),
-                      icon: mdiPaperclip,
-                      variant: 'subtle',
-                      labelClick: () => openSettingsTab('attachments'),
-                      id: 'sidebar__button__attachments',
-                    },
-                    {
-                      label: translate(lngKeys.GeneralShared),
-                      icon: mdiWeb,
-                      variant: 'subtle',
-                      labelHref: getTeamLinkHref(team, 'shared'),
-                      active: getTeamLinkHref(team, 'shared') === pathname,
-                      labelClick: () => push(getTeamLinkHref(team, 'shared')),
-                      id: 'sidebar__button__shared',
-                    },
-                    {
-                      label: translate(lngKeys.GeneralImport),
-                      icon: mdiImport,
-                      variant: 'subtle',
-                      labelClick: () => openSettingsTab('import'),
-                      id: 'sidebar__button__import',
-                    },
-                  ]}
-                >
-                  {isEligibleForDiscount(team) ? (
-                    <SidebarButton
-                      variant='subtle'
-                      icon={
-                        <NotifyIcon text='!' size={16} path={mdiGiftOutline} />
-                      }
-                      id='sidebar__button__promo'
-                      label={translate(lngKeys.SidebarNewUserDiscount)}
-                      labelClick={() =>
-                        openModal(<DiscountModal />, {
-                          showCloseIcon: true,
-                          width: 'large',
-                        })
-                      }
-                    />
-                  ) : null}
-                </SidebarButtonList>
-              )
-            }
+            header={sidebarHeader}
+            treeBottomRows={sidebarFooter}
             users={users}
             notificationState={notificationState}
             getMoreNotifications={getMoreNotifications}
