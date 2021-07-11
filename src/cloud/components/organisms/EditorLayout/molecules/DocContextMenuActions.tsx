@@ -72,12 +72,11 @@ export function DocContextMenuActions({
   restoreRevision,
 }: DocContextMenuActionsProps) {
   const { translate } = useI18n()
-  const { updateDocHandler } = useNav()
-  const { sendingMap, toggleDocBookmark, send } = useCloudApi()
+  const { sendingMap, toggleDocBookmark, send, updateDoc } = useCloudApi()
   const { deleteDoc } = useCloudResourceModals()
   const { openModal } = useModal()
   const { settings } = useSettings()
-  const { pushMessage, pushApiErrorMessage } = useToast()
+  const { pushMessage } = useToast()
   const { convertHtmlStringToPdfBlob } = useElectron()
   const { updateTemplatesMap } = useNav()
   const { subscription } = usePage()
@@ -177,37 +176,15 @@ export function DocContextMenuActions({
     })
   }, [team.id, doc.id, updateTemplatesMap, send])
 
-  const [sendingMove, setSendingMove] = useState(false)
-
-  const moveDoc = useCallback(
-    async (
-      doc: SerializedDocWithBookmark,
-      workspaceId: string,
-      parentFolderId?: string
-    ) => {
-      if (sendingMove) {
-        return
-      }
-      setSendingMove(true)
-      try {
-        await updateDocHandler(doc, { workspaceId, parentFolderId })
-      } catch (error) {
-        pushApiErrorMessage(error)
-      }
-      setSendingMove(false)
-    },
-    [updateDocHandler, pushApiErrorMessage, sendingMove]
-  )
-
   const openMoveForm = useCallback(() => {
     openModal(
       <MoveItemModal
         onSubmit={(workspaceId, parentFolderId) =>
-          moveDoc(doc, workspaceId, parentFolderId)
+          updateDoc(doc, { workspaceId, parentFolderId })
         }
       />
     )
-  }, [doc, openModal, moveDoc])
+  }, [doc, openModal, updateDoc])
 
   const revisionNavigateCallback = useCallback(() => {
     openModal(
@@ -355,6 +332,8 @@ export function DocContextMenuActions({
             row={{
               type: 'button',
               props: {
+                disabled: sendingMap.has(doc.id),
+                spinning: sendingMap.get(doc.id) === 'update',
                 id: 'metadata-move',
                 label: translate(lngKeys.GeneralMoveVerb),
                 iconPath: mdiArrowRight,
@@ -366,6 +345,8 @@ export function DocContextMenuActions({
             row={{
               type: 'button',
               props: {
+                disabled: sendingMap.has(doc.id),
+                spinning: sendingMap.get(doc.id) === 'delete',
                 id: 'metadata-delete',
                 label: translate(lngKeys.GeneralDelete),
                 iconPath: mdiTrashCanOutline,
