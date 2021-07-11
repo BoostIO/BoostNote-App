@@ -23,7 +23,12 @@ const Modal = () => {
   if (modals.length === 0) return null
 
   return (
-    <Container className='modal'>
+    <Container
+      className={cc([
+        'modal',
+        modals.length === 1 && modals[0].position != null && 'modal--context',
+      ])}
+    >
       {modals.map((modal, i) => (
         <ModalItem
           key={`modal-${i}`}
@@ -105,6 +110,12 @@ const Container = styled.div`
     opacity: 0.7;
   }
 
+  &.modal--context {
+    &::before {
+      background-color: transparent;
+    }
+  }
+
   .modal__window__scroller {
     z-index: ${zIndexModals + 2};
     position: fixed;
@@ -129,6 +140,10 @@ const Container = styled.div`
     margin: 1.75rem auto;
     display: block;
     float: center;
+
+    &.modal__window__width--fit {
+      width: fit-content;
+    }
 
     &.modal__window__width--small {
       width: 600px;

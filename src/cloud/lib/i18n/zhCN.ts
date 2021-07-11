@@ -419,6 +419,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SidebarNewUserDiscount]: 'Get the new user discount!',
   [lngKeys.SettingsImportDescription]:
     'No need to start from scratch. Import data into Boost Note by selecting one of the options below.',
+  [lngKeys.GeneralPassword]: '密码',
 }
 
 export default {

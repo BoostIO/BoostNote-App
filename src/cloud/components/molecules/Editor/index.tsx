@@ -91,6 +91,7 @@ import throttle from 'lodash.throttle'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
 import { parse } from 'querystring'
+import DocShare from '../DocShare'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -648,7 +649,7 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     [realtime, setEditorRefContent]
   )
 
-  const { openModal } = useModal()
+  const { openModal, openContextModal } = useModal()
   const onEditorTemplateToolClick = useCallback(() => {
     openModal(<TemplatesModal callback={onTemplatePickCallback} />, {
       width: 'large',
@@ -942,6 +943,16 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
             },
             {
               type: 'separator',
+            },
+            {
+              type: 'button',
+              variant: 'secondary',
+              label: translate(lngKeys.Share),
+              onClick: (event) =>
+                openContextModal(
+                  event,
+                  <DocShare currentDoc={doc} team={team} />
+                ),
             },
             {
               type: 'button',

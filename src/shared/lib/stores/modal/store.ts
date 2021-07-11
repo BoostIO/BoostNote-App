@@ -6,6 +6,24 @@ export * from './types'
 function useModalStore(): ModalsContext {
   const [modals, setModals] = useState<ModalElement[]>([])
 
+  const openContextModal = useCallback(
+    (
+      event: React.MouseEvent<Element>,
+      content: React.ReactNode,
+      options: ModalOpeningOptions = {}
+    ) => {
+      const currentTargetRect = event.currentTarget.getBoundingClientRect()
+      const modal: ModalElement = {
+        content,
+        ...options,
+        width: options.width || 'fit',
+        position: { x: currentTargetRect.right, y: currentTargetRect.bottom },
+      }
+      setModals([modal])
+    },
+    []
+  )
+
   const openModal = useCallback(
     (content: React.ReactNode, options: ModalOpeningOptions = {}) => {
       const modal: ModalElement = {
@@ -51,6 +69,7 @@ function useModalStore(): ModalsContext {
 
   return {
     modals,
+    openContextModal,
     closeModal,
     closeAllModals,
     closeLastModal,
