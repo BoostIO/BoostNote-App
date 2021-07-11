@@ -47,7 +47,6 @@ import {
   mdiEyeOutline,
   mdiViewSplitVertical,
   mdiCommentTextOutline,
-  mdiDotsHorizontal,
   mdiFormatListBulleted,
 } from '@mdi/js'
 import EditorToolButton from './EditorToolButton'
@@ -61,7 +60,8 @@ import EditorSelectionStatus from './EditorSelectionStatus'
 import EditorIndentationStatus from './EditorIndentationStatus'
 import EditorKeyMapSelect from './EditorKeyMapSelect'
 import EditorThemeSelect from './EditorThemeSelect'
-import DocContextMenu from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
+//import DocContextMenu from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
+import DocContextMenu from '../../organisms/EditorLayout/NewDocContextMenu'
 import {
   focusTitleEventEmitter,
   focusEditorEventEmitter,
@@ -82,7 +82,6 @@ import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import PresenceIcons from '../../organisms/Topbar/PresenceIcons'
 import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
-import { useDocActionContextMenu } from './useDocActionContextMenu'
 import Icon from '../../atoms/Icon'
 import CommentManager from '../../organisms/CommentManager'
 import useCommentManagerState from '../../../lib/hooks/useCommentManagerState'
@@ -117,14 +116,7 @@ interface SelectionState {
   }[]
 }
 
-const Editor = ({
-  doc,
-  team,
-  user,
-  contributors,
-  backLinks,
-  revisionHistory,
-}: EditorProps) => {
+const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
   const { translate } = useI18n()
   const { currentUserPermissions, permissions } = usePage()
   const { pushMessage, pushApiErrorMessage } = useToast()
@@ -841,14 +833,6 @@ const Editor = ({
     toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
   }, [toggleDocBookmark, doc.teamId, doc.id, doc.bookmarked])
 
-  const { open: openDocActionContextMenu } = useDocActionContextMenu({
-    doc,
-    team,
-    currentUserIsCoreMember: true,
-    editorRef,
-    toggleBookmarkForDoc,
-  })
-
   if (!initialLoadDone) {
     return (
       <Application content={{}}>
@@ -962,12 +946,6 @@ const Editor = ({
             {
               type: 'button',
               variant: 'icon',
-              iconPath: mdiDotsHorizontal,
-              onClick: openDocActionContextMenu,
-            },
-            {
-              type: 'button',
-              variant: 'icon',
               iconPath: mdiCommentTextOutline,
               active: preferences.docContextMode === 'comment',
               onClick: () =>
@@ -996,7 +974,7 @@ const Editor = ({
               backLinks={backLinks}
               team={team}
               restoreRevision={onRestoreRevisionCallback}
-              revisionHistory={revisionHistory}
+              editorRef={editorRef}
             />
           ) : preferences.docContextMode === 'comment' ? (
             <CommentManager

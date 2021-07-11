@@ -502,6 +502,7 @@ export function useCloudApi() {
   )
 
   return {
+    send,
     sendingMap,
     createWorkspace: createWorkspaceApi,
     createDoc: createDocApi,

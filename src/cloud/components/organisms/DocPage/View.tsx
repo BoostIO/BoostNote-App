@@ -19,7 +19,6 @@ import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import {
   mdiCommentTextOutline,
-  mdiDotsHorizontal,
   mdiFormatListBulleted,
   mdiStar,
   mdiStarOutline,
@@ -39,7 +38,6 @@ import { HighlightRange } from '../../../lib/rehypeHighlight'
 import Spinner from '../../../../shared/components/atoms/Spinner'
 import Icon from '../../atoms/Icon'
 import PresenceIcons from '../Topbar/PresenceIcons'
-import { useDocActionContextMenu } from '../../molecules/Editor/useDocActionContextMenu'
 import CommentManager from '../CommentManager'
 import { SerializedRevision } from '../../../interfaces/db/revision'
 import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
@@ -277,17 +275,6 @@ const ViewPage = ({
     [commentState, commentActions, setPreferences]
   )
 
-  const toggleBookmarkForDoc = useCallback(() => {
-    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
-  }, [toggleDocBookmark, doc.teamId, doc.id, doc.bookmarked])
-
-  const { open: openDocActionContextMenu } = useDocActionContextMenu({
-    doc,
-    team,
-    currentUserIsCoreMember,
-    toggleBookmarkForDoc,
-  })
-
   useEffect(() => {
     if (connState === 'synced' || connState === 'loaded') {
       setInitialLoadDone(true)
@@ -435,12 +422,6 @@ const ViewPage = ({
                   },
                 ]
               : []),
-            {
-              type: 'button',
-              variant: 'icon',
-              iconPath: mdiDotsHorizontal,
-              onClick: openDocActionContextMenu,
-            },
             {
               type: 'button',
               variant: 'icon',
