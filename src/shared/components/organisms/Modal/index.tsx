@@ -8,6 +8,7 @@ import styled from '../../../lib/styled'
 import Button from '../../atoms/Button'
 import VerticalScroller from '../../atoms/VerticalScroller'
 import { useWindow } from '../../../lib/stores/window'
+import { useEffectOnce } from 'react-use'
 
 const Modal = () => {
   const { modals, closeLastModal } = useModal()
@@ -66,6 +67,8 @@ const ContextModalItem = ({
   } = useWindow()
   const modalWidth = typeof modal.width === 'string' ? 400 : modal.width
 
+  useEffectOnce(() => contentRef.current?.focus())
+
   const style: CSSProperties | undefined = useMemo(() => {
     const properties: CSSProperties = {
       width: modalWidth,
@@ -107,7 +110,7 @@ const ContextModalItem = ({
         ])}
         style={style}
       >
-        <div className='modal__wrapper' ref={contentRef}>
+        <div className='modal__wrapper' ref={contentRef} tabIndex={0}>
           {modal.title != null && (
             <h3 className='modal__title'>{modal.title}</h3>
           )}
