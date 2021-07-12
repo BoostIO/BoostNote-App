@@ -32,6 +32,7 @@ import FormInput from '../../../shared/components/molecules/Form/atoms/FormInput
 import cc from 'classcat'
 import Form from '../../../shared/components/molecules/Form'
 import FormDatePicker from '../../../shared/components/molecules/Form/atoms/FormDatePicker'
+import Portal from '../../../shared/components/atoms/Portal'
 
 type SendingState =
   | 'idle'
@@ -438,6 +439,7 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
                     )}
                     minDate={new Date()}
                     autoComplete='off'
+                    popperContainer={CalendarContainer}
                   />
                   <LoadingButton
                     variant='primary'
@@ -455,6 +457,13 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
       </Container>
     </>
   )
+}
+
+const CalendarContainer = ({ children }: { children: any }) => {
+  const portalContainer = document.getElementsByClassName(
+    'modal__window__anchor'
+  )[0]!
+  return <Portal target={portalContainer}>{children}</Portal>
 }
 
 const Container = styled.div`
@@ -537,42 +546,5 @@ const Container = styled.div`
     color: ${({ theme }) => theme.colors.text.subtle};
   }
 `
-
-/* 
-
-            {showSettings && (
-              <>
-                {(shareLink.expireAt != null || showExpireForm) && (
-                  <form
-                    className='share__row share__form'
-                    onSubmit={onSubmitExpire}
-                  >
-                    <DatePicker
-                      id='share__link__expire'
-                      selected={expireDate}
-                      onChange={(date) => {
-                        if (!isArray(date)) {
-                          setExpireDate(date)
-                        }
-                      }}
-                      disabled={sending === 'expireDate'}
-                      minDate={new Date()}
-                      autoComplete='off'
-                    />
-                    <button type='submit'>
-                      {sending === 'expireDate' ? (
-                        <Spinner className='relative' />
-                      ) : (
-                        capitalize(translate(lngKeys.GeneralSaveVerb))
-                      )}
-                    </button>
-                  </form>
-                )}
-              </>
-            )}
-            <div className='share__break' />
-          </>
-        )}
-*/
 
 export default React.memo(WrappedDocShare)

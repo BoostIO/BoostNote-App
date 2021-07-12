@@ -86,38 +86,28 @@ const ContextModalItem = ({
     return properties
   }, [modal.position, windowWidth, modalWidth, windowHeight])
 
-  const onScrollClickHandler: React.MouseEventHandler = useCallback(
-    (event) => {
-      if (
-        contentRef.current != null &&
-        contentRef.current.contains(event.target as Node)
-      ) {
-        return
-      }
-
-      closeModal()
-    },
-    [closeModal]
-  )
-
   return (
-    <div className='modal__window__scroller' onClick={onScrollClickHandler}>
-      <VerticalScroller
-        className={cc([
-          'modal__window',
-          `modal__window__width--${modal.width}`,
-          modal.position != null && `modal__window--context`,
-        ])}
-        style={style}
-      >
-        <div className='modal__wrapper' ref={contentRef} tabIndex={0}>
-          {modal.title != null && (
-            <h3 className='modal__title'>{modal.title}</h3>
-          )}
-          <div className='modal__content'>{modal.content}</div>
-        </div>
-      </VerticalScroller>
-    </div>
+    <>
+      <div className='modal__window__scroller'>
+        <div className='modal__bg__hidden' onClick={closeModal}></div>
+        <div className='modal__window__anchor' />
+        <VerticalScroller
+          className={cc([
+            'modal__window',
+            `modal__window__width--${modal.width}`,
+            modal.position != null && `modal__window--context`,
+          ])}
+          style={style}
+        >
+          <div className='modal__wrapper' ref={contentRef} tabIndex={0}>
+            {modal.title != null && (
+              <h3 className='modal__title'>{modal.title}</h3>
+            )}
+            <div className='modal__content'>{modal.content}</div>
+          </div>
+        </VerticalScroller>
+      </div>
+    </>
   )
 }
 
@@ -181,7 +171,7 @@ export const zIndexModals = 8001
 const Container = styled.div`
   z-index: ${zIndexModals};
 
-  &::before {
+  &:not(.modal--context)::before {
     content: '';
     z-index: ${zIndexModals + 1};
     position: fixed;
@@ -193,10 +183,18 @@ const Container = styled.div`
     opacity: 0.7;
   }
 
-  &.modal--context {
-    &::before {
-      background-color: transparent;
-    }
+  .modal__bg__hidden {
+    z-index: ${zIndexModals + 1};
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+  }
+
+  .modal__window__anchor {
+    position: relative;
+    z-index: ${zIndexModals + 3};
   }
 
   .modal__window__scroller {
