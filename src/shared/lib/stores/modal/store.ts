@@ -16,8 +16,11 @@ function useModalStore(): ModalsContext {
       const modal: ModalElement = {
         content,
         ...options,
-        width: options.width || 'fit',
-        position: { x: currentTargetRect.right, y: currentTargetRect.bottom },
+        width: options.width || 400,
+        position: {
+          x: currentTargetRect.right,
+          y: currentTargetRect.bottom + 6,
+        },
       }
       setModals([modal])
     },

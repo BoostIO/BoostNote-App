@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react'
+import React, { CSSProperties, useCallback, useMemo, useRef } from 'react'
 import { mdiClose } from '@mdi/js'
 import cc from 'classcat'
 import { ModalElement, useModal } from '../../../lib/stores/modal'
@@ -7,6 +7,7 @@ import { useGlobalKeyDownHandler } from '../../../lib/keyboard'
 import styled from '../../../lib/styled'
 import Button from '../../atoms/Button'
 import VerticalScroller from '../../atoms/VerticalScroller'
+import { useWindow } from '../../../lib/stores/window'
 
 const Modal = () => {
   const { modals, closeLastModal } = useModal()
@@ -29,25 +30,69 @@ const Modal = () => {
         modals.length === 1 && modals[0].position != null && 'modal--context',
       ])}
     >
-      {modals.map((modal, i) => (
-        <ModalItem
-          key={`modal-${i}`}
-          modal={modal}
-          closeModal={closeLastModal}
-        />
-      ))}
+      {modals.map((modal, i) => {
+        if (modal.position != null) {
+          return (
+            <ContextModalItem
+              key={`modal-${i}`}
+              modal={modal}
+              closeModal={closeLastModal}
+            />
+          )
+        }
+
+        return (
+          <ModalItem
+            key={`modal-${i}`}
+            modal={modal}
+            closeModal={closeLastModal}
+          />
+        )
+      })}
     </Container>
   )
 }
 
-const ModalItem = ({
+const ContextModalItem = ({
   closeModal,
   modal,
 }: {
   closeModal: () => void
   modal: ModalElement
 }) => {
+  const {
+    windowSize: { width: windowWidth },
+  } = useWindow()
+  const modalWidth = typeof modal.width === 'string' ? 400 : modal.width
+
+  const style: CSSProperties | undefined = useMemo(() => {
+    const properties: CSSProperties = { width: modalWidth }
+
+    if (modal.position != null) {
+      properties.left =
+        modal.position.x < windowWidth
+          ? modal.position.x - modalWidth
+          : windowWidth - modalWidth
+      properties.top = modal.position.y
+    }
+
+    return properties
+  }, [modal.position, windowWidth, modalWidth])
+
+  return <ModalItem style={style} closeModal={closeModal} modal={modal} />
+}
+
+const ModalItem = ({
+  closeModal,
+  modal,
+  style,
+}: {
+  closeModal: () => void
+  modal: ModalElement
+  style?: React.CSSProperties
+}) => {
   const contentRef = useRef<HTMLDivElement>(null)
+
   const onScrollClickHandler: React.MouseEventHandler = useCallback(
     (event) => {
       if (
@@ -72,7 +117,9 @@ const ModalItem = ({
         className={cc([
           'modal__window',
           `modal__window__width--${modal.width}`,
+          modal.position != null && `modal__window--context`,
         ])}
+        style={style}
       >
         {modal.showCloseIcon && (
           <Button
@@ -126,6 +173,14 @@ const Container = styled.div`
     overflow-x: hidden;
     overflow-y: auto;
     outline: 0;
+  }
+
+  .modal__window--context {
+    border: 1px solid ${({ theme }) => theme.colors.border.main};
+    margin: 0 !important;
+    bottom: 0;
+    right: 0;
+    left: 0;
   }
 
   .modal__window {
@@ -183,4 +238,4 @@ const Container = styled.div`
     flex: 1 1 10px;
   }
 `
-export default Modal
+export default React.memo(Modal)

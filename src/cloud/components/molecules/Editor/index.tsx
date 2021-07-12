@@ -951,7 +951,8 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
               onClick: (event) =>
                 openContextModal(
                   event,
-                  <DocShare currentDoc={doc} team={team} />
+                  <DocShare currentDoc={doc} team={team} />,
+                  { width: 440 }
                 ),
             },
             {

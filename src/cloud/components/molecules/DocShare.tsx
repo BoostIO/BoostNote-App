@@ -458,7 +458,6 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
 }
 
 const Container = styled.div`
-  width: 440px;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 
   .doc__share__form {
