@@ -77,9 +77,9 @@ const ContextModalItem = ({
 
     if (modal.position != null) {
       properties.left =
-        modal.position.x < windowWidth
+        modal.position.x < windowWidth - 10
           ? modal.position.x - modalWidth
-          : windowWidth - modalWidth
+          : windowWidth - modalWidth - 10
       properties.top = modal.position.y
     }
 
