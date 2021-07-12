@@ -45,6 +45,8 @@ import { getDocLinkHref } from '../../atoms/Link/DocLink'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
 import { parse } from 'querystring'
+import DocShare from '../../molecules/DocShare'
+import { useModal } from '../../../../shared/lib/stores/modal'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -87,6 +89,7 @@ const ViewPage = ({
   const [color] = useState(() => getColorFromString(user.id))
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const { translate } = useI18n()
+  const { openContextModal } = useModal()
 
   const userInfo = useMemo(() => {
     return {
@@ -424,14 +427,14 @@ const ViewPage = ({
               : []),
             {
               type: 'button',
-              variant: 'icon',
-              iconPath: mdiCommentTextOutline,
-              active: preferences.docContextMode === 'comment',
-              onClick: () =>
-                setPreferences(({ docContextMode }) => ({
-                  docContextMode:
-                    docContextMode === 'comment' ? 'hidden' : 'comment',
-                })),
+              variant: 'secondary',
+              label: translate(lngKeys.Share),
+              onClick: (event) =>
+                openContextModal(
+                  event,
+                  <DocShare currentDoc={doc} team={team} />,
+                  { width: 440 }
+                ),
             },
             {
               variant: 'icon',

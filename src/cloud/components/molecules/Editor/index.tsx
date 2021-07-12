@@ -956,17 +956,6 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
                 ),
             },
             {
-              type: 'button',
-              variant: 'icon',
-              iconPath: mdiCommentTextOutline,
-              active: preferences.docContextMode === 'comment',
-              onClick: () =>
-                setPreferences(({ docContextMode }) => ({
-                  docContextMode:
-                    docContextMode === 'comment' ? 'hidden' : 'comment',
-                })),
-            },
-            {
               variant: 'icon',
               iconPath: mdiFormatListBulleted,
               active: preferences.docContextMode === 'context',
