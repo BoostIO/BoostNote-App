@@ -95,4 +95,4 @@ const Container = styled.div`
   }
 `
 
-export default EditorLayout
+export default React.memo(EditorLayout)
