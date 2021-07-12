@@ -1,17 +1,17 @@
 import React, { useMemo, useCallback, useState } from 'react'
-import { usePage } from '../../../../../../lib/stores/pageStore'
-import { SerializedUser } from '../../../../../../interfaces/db/user'
-import { FormSelectOption } from '../../../../../../../shared/components/molecules/Form/atoms/FormSelect'
-import styled from '../../../../../../../shared/lib/styled'
-import UserIcon from '../../../../../atoms/UserIcon'
+import { usePage } from '../../../../lib/stores/pageStore'
+import { SerializedUser } from '../../../../interfaces/db/user'
+import { FormSelectOption } from '../../../../../shared/components/molecules/Form/atoms/FormSelect'
+import styled from '../../../../../shared/lib/styled'
+import UserIcon from '../../../atoms/UserIcon'
 import Select from 'react-select'
 import cc from 'classcat'
 import {
   contextMenuFormItem,
   textOverflow,
-} from '../../../../../../../shared/lib/styled/styleFunctions'
-import { useI18n } from '../../../../../../lib/hooks/useI18n'
-import { lngKeys } from '../../../../../../lib/i18n/types'
+} from '../../../../../shared/lib/styled/styleFunctions'
+import { useI18n } from '../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../lib/i18n/types'
 
 interface DocAssigneeSelectProps {
   disabled?: boolean
@@ -127,7 +127,7 @@ const SelectContainer = styled.div`
   }
 
   .form__select .form__select__control {
-    width: 100%;
+    width: auto;
     position: relative;
     &:hover,
     &.form__select__control--is-focused {

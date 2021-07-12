@@ -14,7 +14,6 @@ import { rightSideTopBarHeight } from '../RightSideTopBar/styled'
 import { rightSidePageLayout } from '../../../lib/styled/styleFunctions'
 import { SerializedUser } from '../../../interfaces/db/user'
 import MarkdownView, { SelectionContext } from '../../atoms/MarkdownView'
-import DocContextMenu from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import {
@@ -47,6 +46,7 @@ import { lngKeys } from '../../../lib/i18n/types'
 import { parse } from 'querystring'
 import DocShare from '../../molecules/DocShare'
 import { useModal } from '../../../../shared/lib/stores/modal'
+import NewDocContextMenu from '../EditorLayout/NewDocContextMenu'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -65,7 +65,6 @@ const ViewPage = ({
   contributors,
   backLinks,
   user,
-  revisionHistory,
 }: ViewPageProps) => {
   const { preferences, setPreferences } = usePreferences()
   const { foldersMap, workspacesMap, loadDoc } = useNav()
@@ -450,12 +449,11 @@ const ViewPage = ({
         },
         right:
           preferences.docContextMode === 'context' ? (
-            <DocContextMenu
+            <NewDocContextMenu
               currentDoc={doc}
               contributors={contributors}
               backLinks={backLinks}
               team={team}
-              revisionHistory={revisionHistory}
             />
           ) : preferences.docContextMode === 'comment' ? (
             <CommentManager

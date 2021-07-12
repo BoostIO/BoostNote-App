@@ -216,7 +216,7 @@ const Container = styled.div`
     right: 0;
     left: 0;
     background-color: ${({ theme }) =>
-      theme.colors.background.secondary} !important;
+      theme.colors.background.primary} !important;
   }
 
   .modal__window {

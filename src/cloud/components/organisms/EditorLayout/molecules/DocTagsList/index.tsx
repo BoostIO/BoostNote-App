@@ -1,19 +1,19 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
-import { SerializedTeam } from '../../../interfaces/db/team'
+import { SerializedDocWithBookmark } from '../../../../../interfaces/db/doc'
+import { SerializedTeam } from '../../../../../interfaces/db/team'
 import {
   StyledDocTagsList,
   StyledToolbarExpandTag,
   StyledDocTagsListContainer,
 } from './styled'
 import TagsAutoCompleteInput from './TagsAutoCompleteInput'
-import { deleteTagFromDoc } from '../../../api/teams/docs/tags'
-import { useNav } from '../../../lib/stores/nav'
+import { deleteTagFromDoc } from '../../../../../api/teams/docs/tags'
+import { useNav } from '../../../../../lib/stores/nav'
 import DocTagsListItem from './DocTagsListItem'
-import { SerializedTag } from '../../../interfaces/db/tag'
-import IconMdi from '../../atoms/IconMdi'
+import { SerializedTag } from '../../../../../interfaces/db/tag'
+import IconMdi from '../../../../atoms/IconMdi'
 import { mdiChevronRight, mdiChevronDown } from '@mdi/js'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../../../shared/lib/stores/toast'
 import cc from 'classcat'
 
 interface DocTagsListProps {

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react'
 import DatePicker from 'react-datepicker'
 import DocPropertyValueButton from './DocPropertyValueButton'
 import { format as formatDate } from 'date-fns'
-import styled from '../../../../../../../shared/lib/styled'
-import Button from '../../../../../../../shared/components/atoms/Button'
+import styled from '../../../../../shared/lib/styled'
+import Button from '../../../../../shared/components/atoms/Button'
 import { mdiClose } from '@mdi/js'
-import { useI18n } from '../../../../../../lib/hooks/useI18n'
-import { lngKeys } from '../../../../../../lib/i18n/types'
+import { useI18n } from '../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../lib/i18n/types'
 
 interface DocDueDateSelectProps {
   className?: string

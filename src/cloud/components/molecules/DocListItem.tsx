@@ -24,7 +24,7 @@ import {
 } from '../../lib/keyboard'
 import { shortcuts } from '../../lib/shortcuts'
 import SideNavIcon from '../organisms/Sidebar/SideNavigator/SideNavIcon'
-import { StyledTag } from './DocTagsList/styled'
+import { StyledTag } from '../organisms/EditorLayout/molecules/DocTagsList/styled'
 
 interface DocListItemProps {
   className?: string

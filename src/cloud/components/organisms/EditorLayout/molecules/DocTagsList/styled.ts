@@ -1,5 +1,5 @@
-import styled from '../../../lib/styled'
-import { subtleBackgroundColor } from '../../../lib/styled/styleFunctions'
+import styled from '../../../../../lib/styled'
+import { subtleBackgroundColor } from '../../../../../lib/styled/styleFunctions'
 
 export const StyledDocTagsListWrapper = styled.div`
   display: flex;
@@ -25,12 +25,6 @@ export const StyledDocTagsList = styled.div`
   flex-wrap: wrap;
   height: 100%;
   box-sizing: content-box;
-  padding-bottom: 6px;
-
-  &:not(.list--empty) > div + div,
-  &:not(.list--empty) > div:first-child {
-    margin-top: 6px !important;
-  }
 
   &.list--empty {
     width: 100%;

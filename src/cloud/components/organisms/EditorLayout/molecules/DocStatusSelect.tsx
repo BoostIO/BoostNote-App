@@ -3,8 +3,8 @@ import {
   useContextMenu,
   MenuTypes,
   MenuItem,
-} from '../../../../../../../shared/lib/stores/contextMenu'
-import Icon from '../../../../../../../shared/components/atoms/Icon'
+} from '../../../../../shared/lib/stores/contextMenu'
+import Icon from '../../../../../shared/components/atoms/Icon'
 import {
   mdiPlayCircleOutline,
   mdiPauseCircleOutline,
@@ -12,11 +12,11 @@ import {
   mdiArchiveOutline,
   mdiCheckCircleOutline,
 } from '@mdi/js'
-import styled from '../../../../../../lib/styled'
-import { DocStatus } from '../../../../../../interfaces/db/doc'
+import styled from '../../../../lib/styled'
+import { DocStatus } from '../../../../interfaces/db/doc'
 import DocPropertyValueButton from './DocPropertyValueButton'
-import { useI18n } from '../../../../../../lib/hooks/useI18n'
-import { lngKeys } from '../../../../../../lib/i18n/types'
+import { useI18n } from '../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../lib/i18n/types'
 
 interface DocStatusSelectProps {
   sending?: boolean

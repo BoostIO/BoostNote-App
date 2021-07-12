@@ -1,12 +1,12 @@
 import React from 'react'
-import { SerializedTeam } from '../../../interfaces/db/team'
+import { SerializedTeam } from '../../../../../interfaces/db/team'
 import { StyledTag } from './styled'
-import IconMdi from '../../atoms/IconMdi'
+import IconMdi from '../../../../atoms/IconMdi'
 import { mdiClose } from '@mdi/js'
 import cc from 'classcat'
-import { Spinner } from '../../atoms/Spinner'
-import TagLink from '../../atoms/Link/TagLink'
-import { SerializedTag } from '../../../interfaces/db/tag'
+import { Spinner } from '../../../../atoms/Spinner'
+import TagLink from '../../../../atoms/Link/TagLink'
+import { SerializedTag } from '../../../../../interfaces/db/tag'
 
 interface DocTagsListItemProps {
   tag: SerializedTag

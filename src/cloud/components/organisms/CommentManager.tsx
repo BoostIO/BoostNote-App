@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import { docContextWidth } from './Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import { Thread, Comment } from '../../interfaces/db/comments'
 import Spinner from '../../../shared/components/atoms/Spinner'
 import { mdiPlusBoxOutline, mdiArrowLeft } from '@mdi/js'
@@ -225,8 +224,8 @@ function CommentManager({
 
 const Container = styled.div`
   margin: auto;
-  width: ${docContextWidth}px;
   height: 100vh;
+  width: 350px;
   display: flex;
   flex-direction: column;
   border-left: 1px solid ${({ theme }) => theme.colors.border.main};

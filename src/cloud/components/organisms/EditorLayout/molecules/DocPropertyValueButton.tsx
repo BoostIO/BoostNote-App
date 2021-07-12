@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react'
-import styled from '../../../../../../../shared/lib/styled'
-import Spinner from '../../../../../../../shared/components/atoms/Spinner'
-import { contextMenuFormItem } from '../../../../../../../shared/lib/styled/styleFunctions'
+import styled from '../../../../../shared/lib/styled'
+import Spinner from '../../../../../shared/components/atoms/Spinner'
+import { contextMenuFormItem } from '../../../../../shared/lib/styled/styleFunctions'
 import cc from 'classcat'
 
 interface DocPropertyValueButtonProps {
