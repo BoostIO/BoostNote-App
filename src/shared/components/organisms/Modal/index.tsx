@@ -72,7 +72,7 @@ const ContextModalItem = ({
   const style: CSSProperties | undefined = useMemo(() => {
     const properties: CSSProperties = {
       width: modalWidth,
-      maxHeight: windowHeight - (modal.position?.y || 0),
+      maxHeight: windowHeight - (modal.position?.y || 0) - 10,
     }
 
     if (modal.position != null) {
