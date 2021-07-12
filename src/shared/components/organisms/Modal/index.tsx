@@ -60,13 +60,17 @@ const ContextModalItem = ({
   closeModal: () => void
   modal: ModalElement
 }) => {
+  const contentRef = useRef<HTMLDivElement>(null)
   const {
-    windowSize: { width: windowWidth },
+    windowSize: { width: windowWidth, height: windowHeight },
   } = useWindow()
   const modalWidth = typeof modal.width === 'string' ? 400 : modal.width
 
   const style: CSSProperties | undefined = useMemo(() => {
-    const properties: CSSProperties = { width: modalWidth }
+    const properties: CSSProperties = {
+      width: modalWidth,
+      maxHeight: windowHeight - (modal.position?.y || 0),
+    }
 
     if (modal.position != null) {
       properties.left =
@@ -77,19 +81,49 @@ const ContextModalItem = ({
     }
 
     return properties
-  }, [modal.position, windowWidth, modalWidth])
+  }, [modal.position, windowWidth, modalWidth, windowHeight])
 
-  return <ModalItem style={style} closeModal={closeModal} modal={modal} />
+  const onScrollClickHandler: React.MouseEventHandler = useCallback(
+    (event) => {
+      if (
+        contentRef.current != null &&
+        contentRef.current.contains(event.target as Node)
+      ) {
+        return
+      }
+
+      closeModal()
+    },
+    [closeModal]
+  )
+
+  return (
+    <div className='modal__window__scroller' onClick={onScrollClickHandler}>
+      <VerticalScroller
+        className={cc([
+          'modal__window',
+          `modal__window__width--${modal.width}`,
+          modal.position != null && `modal__window--context`,
+        ])}
+        style={style}
+      >
+        <div className='modal__wrapper' ref={contentRef}>
+          {modal.title != null && (
+            <h3 className='modal__title'>{modal.title}</h3>
+          )}
+          <div className='modal__content'>{modal.content}</div>
+        </div>
+      </VerticalScroller>
+    </div>
+  )
 }
 
 const ModalItem = ({
   closeModal,
   modal,
-  style,
 }: {
   closeModal: () => void
   modal: ModalElement
-  style?: React.CSSProperties
 }) => {
   const contentRef = useRef<HTMLDivElement>(null)
 
@@ -119,7 +153,6 @@ const ModalItem = ({
           `modal__window__width--${modal.width}`,
           modal.position != null && `modal__window--context`,
         ])}
-        style={style}
       >
         {modal.showCloseIcon && (
           <Button
@@ -181,6 +214,8 @@ const Container = styled.div`
     bottom: 0;
     right: 0;
     left: 0;
+    background-color: ${({ theme }) =>
+      theme.colors.background.secondary} !important;
   }
 
   .modal__window {
