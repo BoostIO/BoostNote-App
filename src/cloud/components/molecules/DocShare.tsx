@@ -497,7 +497,6 @@ const Container = styled.div`
     display: flex;
     width: 100%;
     align-items: center;
-    transition: margin 200ms;
   }
 
   .doc__share__row--secondary:not(.doc__share__row--opened)
