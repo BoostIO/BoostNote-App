@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo, useRef } from 'react'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import {
-  mdiHistory,
+  // mdiHistory,
   mdiClockOutline,
   mdiLabelMultipleOutline,
   mdiArrowBottomLeft,
@@ -24,8 +24,8 @@ import {
   updateDocAssignees,
 } from '../../../../cloud/api/teams/docs'
 import { SerializedRevision } from '../../../../cloud/interfaces/db/revision'
-import { MixpanelActionTrackTypes } from '../../../../cloud/interfaces/analytics/mixpanel'
-import { trackEvent } from '../../../../cloud/api/track'
+// import { MixpanelActionTrackTypes } from '../../../../cloud/interfaces/analytics/mixpanel'
+// import { trackEvent } from '../../../../cloud/api/track'
 import { SerializedUser } from '../../../../cloud/interfaces/db/user'
 import Flexbox from '../../../../cloud/components/atoms/Flexbox'
 import UserIcon from '../../../../cloud/components/atoms/UserIcon'
@@ -38,20 +38,20 @@ import cc from 'classcat'
 import Icon from '../../../../shared/components/atoms/Icon'
 import DocShare from '../../../../cloud/components/molecules/DocShare'
 import plur from 'plur'
-import Button from '../../../../shared/components/atoms/Button'
-import { revisionHistoryStandardDays } from '../../../../cloud/lib/subscription'
+// import Button from '../../../../shared/components/atoms/Button'
+// import { revisionHistoryStandardDays } from '../../../../cloud/lib/subscription'
 import { useToast } from '../../../../shared/lib/stores/toast'
-import { useModal } from '../../../../shared/lib/stores/modal'
+// import { useModal } from '../../../../shared/lib/stores/modal'
 import styled from '../../../../shared/lib/styled'
 import { format as formatDate } from 'date-fns'
 import { useI18n } from '../../../../cloud/lib/hooks/useI18n'
 import { lngKeys } from '../../../../cloud/lib/i18n/types'
-import RevisionsModal from '../../../../cloud/components/organisms/Modal/contents/Doc/RevisionsModal'
-import UpgradeIntroButton from '../../../../cloud/components/UpgradeIntroButton'
+// import UpgradeIntroModalButton from '../../atoms/UpgradeIntroModalButton'
 import DocDueDateSelect from '../../../../cloud/components/organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu/DocDueDateSelect'
 import DocStatusSelect from '../../../../cloud/components/organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu/DocStatusSelect'
 import DocAssigneeSelect from '../../../../cloud/components/organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu/DocAssigneeSelect'
 import ModalContainer from './atoms/ModalContainer'
+// import MobileDocRevisionsModal from './MobileDocRevisionsModal'
 
 interface DocInfoModalProps {
   currentDoc: SerializedDocWithBookmark
@@ -67,20 +67,20 @@ const DocInfoModal = ({
   currentDoc: _currentDoc,
   contributors,
   backLinks,
-  restoreRevision,
-}: DocInfoModalProps) => {
+}: // restoreRevision,
+DocInfoModalProps) => {
   const [sendingUpdateStatus, setSendingUpdateStatus] = useState(false)
   const [sendingDueDate, setSendingDueDate] = useState(false)
   const { updateDocsMap, docsMap } = useNav()
   const {
     setPartialPageData,
-    subscription,
+    // subscription,
     permissions = [],
     currentUserPermissions,
     currentUserIsCoreMember,
   } = usePage()
   const { pushMessage } = useToast()
-  const { openModal } = useModal()
+  // const { openModal } = useModal()
   const [sliceContributors, setSliceContributors] = useState(true)
   const { preferences } = usePreferences()
   const menuRef = useRef<HTMLDivElement>(null)
@@ -111,20 +111,18 @@ const DocInfoModal = ({
     }
   }, [contributors, sliceContributors])
 
-  const revisionNavigateCallback = useCallback(() => {
-    openModal(
-      <RevisionsModal
-        currentDoc={currentDoc}
-        restoreRevision={currentUserIsCoreMember ? restoreRevision : undefined}
-      />,
-      {
-        width: 'large',
-      }
-    )
-    trackEvent(MixpanelActionTrackTypes.RevisionHistoryOpen, {
-      docId: currentDoc.id,
-    })
-  }, [currentDoc, openModal, restoreRevision, currentUserIsCoreMember])
+  // const revisionNavigateCallback = useCallback(() => {
+  //   openModal(
+  //     <MobileDocRevisionsModal
+  //       currentDoc={currentDoc}
+  //       restoreRevision={currentUserIsCoreMember ? restoreRevision : undefined}
+  //     />,
+  //     {}
+  //   )
+  //   trackEvent(MixpanelActionTrackTypes.RevisionHistoryOpen, {
+  //     docId: currentDoc.id,
+  //   })
+  // }, [currentDoc, openModal, restoreRevision, currentUserIsCoreMember])
 
   const sendUpdateStatus = useCallback(
     async (newStatus: DocStatus | null) => {
@@ -473,7 +471,7 @@ const DocInfoModal = ({
                     </div>
                   </div>
                 )}
-                <Flexbox
+                {/* <Flexbox
                   className='context__row'
                   justifyContent='space-between'
                 >
@@ -490,7 +488,7 @@ const DocInfoModal = ({
                     justifyContent='flex-end'
                   >
                     {subscription == null ? (
-                      <UpgradeIntroButton
+                      <UpgradeIntroModalButton
                         className='context__badge'
                         origin='revision'
                         variant='secondary'
@@ -512,7 +510,7 @@ const DocInfoModal = ({
                       </Button>
                     )}
                   </Flexbox>
-                </Flexbox>
+                </Flexbox> */}
                 <div className='context__break' />
                 {currentUserPermissions != null && (
                   <>
