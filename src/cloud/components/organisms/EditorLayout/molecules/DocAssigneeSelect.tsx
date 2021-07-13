@@ -92,6 +92,7 @@ const Container = styled.div`
   .doc__assignee {
     width: 22px;
     height: 22px;
+    line-height: 19px;
   }
 `
 
@@ -207,6 +208,7 @@ const ModalContainer = styled.div`
       margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
       width: 22px;
       height: 22px;
+      line-height: 19px;
     }
 
     .assignee__checkbox {
