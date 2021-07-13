@@ -55,15 +55,15 @@ const Container = styled.div<{ offsetRight: number }>`
     background: ${({ theme }) => theme.colors.background.tertiary};
     color: ${({ theme }) => theme.colors.text.primary};
     border: 1px solid transparent;
-    z-index: 1
+    z-index: 1;
 
     &:hover {
       background: ${({ theme }) => theme.colors.background.quaternary};
     }
 
     &:focus {
-      border: 1px solid ${({ theme }) => theme.colors.text.link};
-      background: ${({ theme }) => theme.colors.variants.primary.base};
+      border: 1px solid ${({ theme }) => theme.colors.variants.primary.base};
+      background: ${({ theme }) => theme.colors.background.quaternary};
     }
   }
 `
