@@ -44,6 +44,7 @@ import Icon from '../../../../shared/components/atoms/Icon'
 import styled from '../../../../shared/lib/styled'
 import throttle from 'lodash.throttle'
 import CodeFence from '../../../../shared/components/atoms/markdown/CodeFence'
+import { agentType, sendPostMessage } from '../../../../mobile/lib/nativeMobile'
 
 const remarkAdmonitionOptions = {
   tag: ':::',
@@ -161,6 +162,25 @@ const MarkdownView = ({
               .startsWith((boostHubBaseUrl || '').toLocaleLowerCase())
           ) {
             return <a href={href}>{children}</a>
+          }
+
+          if (agentType === 'ios-native' || agentType === 'android-native') {
+            return (
+              <a
+                href={href}
+                onClick={(event) => {
+                  event.preventDefault()
+                  console.log(event, href)
+                  sendPostMessage({
+                    type: 'open-link',
+                    url: href,
+                  })
+                }}
+                rel='noopener noreferrer'
+              >
+                {children}
+              </a>
+            )
           }
 
           return (
