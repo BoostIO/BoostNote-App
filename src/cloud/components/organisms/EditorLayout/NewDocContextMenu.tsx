@@ -23,6 +23,7 @@ import { usePage } from '../../../lib/stores/pageStore'
 import SmallButton from '../../atoms/SmallButton'
 import UserIcon from '../../atoms/UserIcon'
 import BackLinksList from './molecules/BackLinksList'
+import ContextMenuClose from './molecules/ContextMenuClose'
 import DocContextMenuActions from './molecules/DocContextMenuActions'
 
 interface DocContextMenuProps {
@@ -75,6 +76,7 @@ const DocContextMenu = ({
     <MetadataContainer
       rows={[{ type: 'header', content: translate(lngKeys.DocInfo) }]}
     >
+      <ContextMenuClose />
       <MetadataContainerRow
         row={{
           label: translate(lngKeys.CreationDate),

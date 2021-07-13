@@ -43,7 +43,11 @@ const ContentLayout: AppComponent<ContentLayoutProps> = ({
   return (
     <Container className='layout' ref={rightSideContentRef}>
       <PageHelmet title={helmet?.title} indexing={helmet?.indexing} />
-      <DoublePane className='two__pane' right={right}>
+      <DoublePane
+        className='two__pane content__layout'
+        right={right}
+        idRight='content__layout__right'
+      >
         {topbar != null ? (
           <Topbar
             tree={topbar.tree}

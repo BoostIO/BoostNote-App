@@ -17,6 +17,7 @@ import ThreadStatusFilterControl, {
 import { partitionOnStatus } from '../../../shared/lib/utils/comments'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
+import ContextMenuClose from './EditorLayout/molecules/ContextMenuClose'
 
 export type State =
   | { mode: 'list_loading'; thread?: { id: string } }
@@ -191,6 +192,7 @@ function CommentManager({
 
   return (
     <Container>
+      <ContextMenuClose />
       <div className='header'>
         {(state.mode !== 'list' || state.filter != null) && (
           <div

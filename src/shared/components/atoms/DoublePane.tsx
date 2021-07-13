@@ -5,16 +5,26 @@ import cc from 'classcat'
 
 interface DoublePaneProps {
   right?: React.ReactNode
+  idLeft?: string
+  idRight?: string
 }
 
 const DoublePane: AppComponent<DoublePaneProps> = ({
   children,
   className,
   right,
+  idLeft,
+  idRight,
 }) => (
   <Container className={cc(['two__pane', className])}>
-    <div className='two__pane__left'>{children}</div>
-    {right != null && <div className='two__pane__right'>{right}</div>}
+    <div className='two__pane__left' id={idLeft}>
+      {children}
+    </div>
+    {right != null && (
+      <div className='two__pane__right' id={idRight}>
+        {right}
+      </div>
+    )}
   </Container>
 )
 
