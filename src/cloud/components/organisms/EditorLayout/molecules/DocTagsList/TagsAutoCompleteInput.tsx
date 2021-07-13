@@ -290,12 +290,13 @@ const Container = styled.div`
       background: ${({ theme }) => theme.colors.background.quaternary};
       color: ${({ theme }) => theme.colors.text.primary};
     }
+  }
 
-    .tag__add__input__spinner {
-      border-color: ${({ theme }) => theme.colors.variants.primary.text};
-      border-right-color: transparent;
-      display: inline-flex;
-    }
+  .tag__add__input__spinner {
+    border-color: ${({ theme }) => theme.colors.variants.primary.text};
+    border-right-color: transparent;
+    display: inline-flex;
+    margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 `
 
