@@ -16,16 +16,18 @@ class ViewController: UIViewController,WKNavigationDelegate, WKScriptMessageHand
     var webView: WKWebView!
     var safariViewController: SFSafariViewController? = nil
     var session: ASWebAuthenticationSession? = nil
-    var mobileBaseUrl = "https://mobile-hubfriend123-staging.boostnote.io"
-//    var mobileBaseUrl = "http://localhost:3005"
+   var mobileBaseUrl = "https://m.boostnote.io"
+    // var mobileBaseUrl = "http://localhost:3005"
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let body = message.body as? NSDictionary else { return }
         guard let type = body.value(forKey: "type") as? String else {return }
-        guard let state = body.value(forKey: "state") as? String else {return }
 
         if (type == "open-auth-link") {
+            guard let state = body.value(forKey: "state") as? String else {return }
+
             guard let urlString = body.value(forKey: "url") as? String else { return }
+
             guard let url = URL(string: urlString) else { return }
 
             let scheme = "boostnote"
@@ -54,6 +56,7 @@ class ViewController: UIViewController,WKNavigationDelegate, WKScriptMessageHand
             session!.start()
         }
         if (type == "open-link") {
+            print("open popeneponeopen")
             guard let urlString = body.value(forKey: "url") as? String else { return }
             guard let url = URL(string: urlString) else { return }
 
