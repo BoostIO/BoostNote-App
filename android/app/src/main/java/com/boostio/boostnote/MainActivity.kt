@@ -10,7 +10,7 @@
 //    }
 //}
 
-package com.boostio.boostnote
+package com.boostio.boostnote2021
 
 import android.content.ComponentName
 import android.content.Context
@@ -31,8 +31,8 @@ class MainActivity : AppCompatActivity() {
     val ctx: AppCompatActivity = this
 
     val authStatePreferencesKey = "com.boostio.boostnote.authState"
-//    val mobileBaseUrl = "http://localhost:3005"
-    val mobileBaseUrl = "https://mobile-hubfriend123-staging.boostnote.io"
+    // val mobileBaseUrl = "http://localhost:3005"
+   val mobileBaseUrl = "https://m.boostnote.io"
 
     class WebAppInterface(private val mContext: MainActivity) {
 
