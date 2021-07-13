@@ -93,6 +93,7 @@ const Container = styled.div`
     width: 22px;
     height: 22px;
     line-height: 19px;
+    margin-right: 0;
   }
 `
 
