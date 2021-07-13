@@ -3,6 +3,7 @@ import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
 import RoundedImage from '../../../../shared/components/atoms/RoundedImage'
 import styled from '../../../../shared/lib/styled'
 import { buildIconUrl } from '../../../../cloud/api/files'
+import { boostHubBaseUrl } from '../../../../cloud/lib/consts'
 
 interface SpaceMenuItemLabelProps {
   team: SerializedTeam
@@ -15,7 +16,11 @@ const SpaceMenuItemLabel = ({ team }: SpaceMenuItemLabelProps) => {
     <Container>
       <RoundedImage
         className='space-menu-item-label__icon'
-        url={iconLocation != null ? buildIconUrl(iconLocation) : undefined}
+        url={
+          iconLocation != null
+            ? `${boostHubBaseUrl}${buildIconUrl(iconLocation)}`
+            : undefined
+        }
         size={22}
         alt={team.name}
       />
