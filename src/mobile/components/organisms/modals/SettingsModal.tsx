@@ -7,9 +7,9 @@ import AccountSettingsTab from './AccountSettingsTab'
 import SpaceMembersTab from './SpaceMembersTab'
 import SpaceSettingsTab from './SpaceSettingsTab'
 import SpaceUpgradeTab from './SpaceUpgradeTab'
-import SpaceUpgradeConfirmTab from './SpaceUpgradeConfirmTab'
+// import SpaceUpgradeConfirmTab from './SpaceUpgradeConfirmTab'
 import { SettingsTabTypes } from './types'
-import SpaceBillingsTab from './SpaceBillingsTab'
+// import SpaceBillingsTab from './SpaceBillingsTab'
 
 interface SettingsModalProps {
   initialTab?: SettingsTabTypes | null
@@ -30,15 +30,19 @@ const SettingsModal = ({ initialTab = null }: SettingsModalProps) => {
     case 'space-upgrade':
       return <SpaceUpgradeTab setActiveTab={setActiveTab} />
     case 'space-upgrade-confirm-free':
-      return <SpaceUpgradeConfirmTab plan={null} setActiveTab={setActiveTab} />
+      return <SpaceUpgradeTab setActiveTab={setActiveTab} />
+    // return <SpaceUpgradeConfirmTab plan={null} setActiveTab={setActiveTab} />
     case 'space-upgrade-confirm-standard':
-      return (
-        <SpaceUpgradeConfirmTab plan='standard' setActiveTab={setActiveTab} />
-      )
+      return <SpaceUpgradeTab setActiveTab={setActiveTab} />
+    // return (
+    //   <SpaceUpgradeConfirmTab plan='standard' setActiveTab={setActiveTab} />
+    // )
     case 'space-upgrade-confirm-pro':
-      return <SpaceUpgradeConfirmTab plan='pro' setActiveTab={setActiveTab} />
+      return <SpaceUpgradeTab setActiveTab={setActiveTab} />
+    // return <SpaceUpgradeConfirmTab plan='pro' setActiveTab={setActiveTab} />
     case 'space-billings':
-      return <SpaceBillingsTab setActiveTab={setActiveTab} />
+      return <SpaceUpgradeTab setActiveTab={setActiveTab} />
+    // return <SpaceBillingsTab setActiveTab={setActiveTab} />
     default:
       return (
         <ModalContainer title='Settings' closeLabel='Done'>
