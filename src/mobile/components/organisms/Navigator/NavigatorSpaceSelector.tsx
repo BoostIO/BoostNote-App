@@ -15,6 +15,8 @@ import { mdiUnfoldMoreHorizontal } from '@mdi/js'
 import styled from '../../../../shared/lib/styled'
 import SpaceMenuItemLabel from './SpaceMenuItemLabel'
 import useSignOut from '../../../lib/signOut'
+import { buildIconUrl } from '../../../../cloud/api/files'
+import { boostHubBaseUrl } from '../../../../cloud/lib/consts'
 
 interface NavigatorSpaceSelectorProps {
   currentTeam?: SerializedTeam
@@ -82,13 +84,18 @@ const NavigatorSpaceSelector = ({
     },
     [popup, teams, invites, currentTeam, push, signOut]
   )
+
   return (
     <Container className='space-selector' onClick={popupSpaceSelect}>
       {currentTeam != null ? (
         <>
           <RoundedImage
             className='space-selector__icon'
-            url={currentTeam.icon?.location}
+            url={
+              currentTeam.icon != null
+                ? `${boostHubBaseUrl}${buildIconUrl(currentTeam.icon.location)}`
+                : undefined
+            }
             alt={currentTeam.name}
             size={22}
           />
