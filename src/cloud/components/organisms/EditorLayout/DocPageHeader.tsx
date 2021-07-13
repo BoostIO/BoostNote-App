@@ -122,78 +122,80 @@ const DocPageHeader = ({
 
   return (
     <Container className={cc(['doc__page__header', className])}>
-      {docIsEditable ? (
-        <Button
-          variant='transparent'
-          className={cc([
-            'doc__page__header__title',
-            'doc__page__header__title--button',
-          ])}
-          onClick={() => openRenameDocForm(doc)}
-        >
-          <span className='doc__page__header__label'>{doc.title}</span>
-          <Icon path={mdiPencil} className='doc__page__header__icon' />
-        </Button>
-      ) : (
-        <div className={cc(['doc__page__header__title'])}>
-          <span className='doc__page__header__label'>{doc.title}</span>
-        </div>
-      )}
+      <div className='doc__page__padding'>
+        {docIsEditable ? (
+          <Button
+            variant='transparent'
+            className={cc([
+              'doc__page__header__title',
+              'doc__page__header__title--button',
+            ])}
+            onClick={() => openRenameDocForm(doc)}
+          >
+            <span className='doc__page__header__label'>{doc.title}</span>
+            <Icon path={mdiPencil} className='doc__page__header__icon' />
+          </Button>
+        ) : (
+          <div className={cc(['doc__page__header__title'])}>
+            <span className='doc__page__header__label'>{doc.title}</span>
+          </div>
+        )}
 
-      <div className='doc__page__header__wrapper'>
-        <div className='doc__page__header__props'>
-          <div className='doc__page__header__property'>
-            <DocAssigneeSelect
-              isLoading={sendingAssignees}
-              disabled={sendingAssignees || !currentUserIsCoreMember}
-              defaultValue={
-                doc.assignees != null
-                  ? doc.assignees.map((assignee) => assignee.userId)
-                  : []
-              }
-              readOnly={!currentUserIsCoreMember}
-              update={sendUpdateDocAssignees}
-            />
+        <div className='doc__page__header__wrapper'>
+          <div className='doc__page__header__props'>
+            <div className='doc__page__header__property'>
+              <DocAssigneeSelect
+                isLoading={sendingAssignees}
+                disabled={sendingAssignees || !currentUserIsCoreMember}
+                defaultValue={
+                  doc.assignees != null
+                    ? doc.assignees.map((assignee) => assignee.userId)
+                    : []
+                }
+                readOnly={!currentUserIsCoreMember}
+                update={sendUpdateDocAssignees}
+              />
+            </div>
+            <div className='doc__page__header__property'>
+              <DocStatusSelect
+                status={doc.status}
+                sending={sendingUpdateStatus}
+                onStatusChange={sendUpdateStatus}
+                disabled={!currentUserIsCoreMember}
+                isReadOnly={!currentUserIsCoreMember}
+              />
+            </div>
+            <div className='doc__page__header__property'>
+              <DocDueDateSelect
+                className='context__content__date_select'
+                sending={sendingDueDate}
+                dueDate={doc.dueDate}
+                onDueDateChange={sendUpdateDocDueDate}
+                disabled={!currentUserIsCoreMember}
+                isReadOnly={!currentUserIsCoreMember}
+              />
+            </div>
+            <div className='doc__page__header__property'>
+              <DocTagsList
+                team={team}
+                doc={doc}
+                readOnly={!currentUserIsCoreMember}
+              />
+            </div>
           </div>
-          <div className='doc__page__header__property'>
-            <DocStatusSelect
-              status={doc.status}
-              sending={sendingUpdateStatus}
-              onStatusChange={sendUpdateStatus}
-              disabled={!currentUserIsCoreMember}
-              isReadOnly={!currentUserIsCoreMember}
-            />
-          </div>
-          <div className='doc__page__header__property'>
-            <DocDueDateSelect
-              className='context__content__date_select'
-              sending={sendingDueDate}
-              dueDate={doc.dueDate}
-              onDueDateChange={sendUpdateDocDueDate}
-              disabled={!currentUserIsCoreMember}
-              isReadOnly={!currentUserIsCoreMember}
-            />
-          </div>
-          <div className='doc__page__header__property'>
-            <DocTagsList
-              team={team}
-              doc={doc}
-              readOnly={!currentUserIsCoreMember}
-            />
-          </div>
+          <Button
+            className='doc__page__header__comments'
+            variant='icon'
+            iconPath={mdiCommentTextOutline}
+            active={preferences.docContextMode === 'comment'}
+            onClick={() =>
+              setPreferences(({ docContextMode }) => ({
+                docContextMode:
+                  docContextMode === 'comment' ? 'hidden' : 'comment',
+              }))
+            }
+          />
         </div>
-        <Button
-          className='doc__page__header__comments'
-          variant='icon'
-          iconPath={mdiCommentTextOutline}
-          active={preferences.docContextMode === 'comment'}
-          onClick={() =>
-            setPreferences(({ docContextMode }) => ({
-              docContextMode:
-                docContextMode === 'comment' ? 'hidden' : 'comment',
-            }))
-          }
-        />
       </div>
     </Container>
   )
@@ -203,6 +205,14 @@ const Container = styled.div`
   display: flex;
   width: 100%;
   flex-direction: column;
+
+  .doc__page__padding {
+    margin: 0 ${({ theme }) => theme.sizes.spaces.md}px;
+    width: 100%;
+    padding-top: ${({ theme }) => theme.sizes.spaces.df}px;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
+    padding-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
+  }
 
   .prop__margin {
     margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px !important;

@@ -59,11 +59,6 @@ const Container = styled.div`
 
   .editor__layout__header {
     flex: 0 0 auto;
-    padding-top: ${({ theme }) => theme.sizes.spaces.df}px;
-    padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
-    padding-right: ${({ theme }) => theme.sizes.spaces.l}px;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
-    padding-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 
   .editor__layout__content {
@@ -81,8 +76,6 @@ const Container = styled.div`
     .editor__layout__header {
       max-width: 920px;
       margin: auto;
-      padding-left: 0;
-      padding-right: 0;
       height: auto;
     }
 
