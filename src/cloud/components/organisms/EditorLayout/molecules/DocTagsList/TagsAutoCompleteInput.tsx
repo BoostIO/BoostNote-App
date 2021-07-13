@@ -277,8 +277,10 @@ const Container = styled.div`
 
   .autocomplete__option {
     width: 100%;
+    display: block;
     flex-shrink: 0;
-    padding: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
+    padding: ${({ theme }) => theme.sizes.spaces.sm}px
+      ${({ theme }) => theme.sizes.spaces.df}px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

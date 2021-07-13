@@ -210,7 +210,6 @@ const Container = styled.div`
     margin: 0 ${({ theme }) => theme.sizes.spaces.md}px;
     width: auto;
     padding-top: ${({ theme }) => theme.sizes.spaces.df}px;
-    padding-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
     border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
   }
 

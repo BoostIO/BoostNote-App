@@ -45,13 +45,13 @@ const DocAssigneeSelect = ({
     }
 
     return (
-      <>
+      <div className='doc__assignees__wrapper'>
         {permissions
           .filter((p) => defaultValue.includes(p.userId) && p.user != null)
           .map((p) => (
             <UserIcon user={p.user} className='doc__assignee' key={p.id} />
           ))}
-      </>
+      </div>
     )
   }, [defaultValue, permissions])
 
@@ -89,7 +89,14 @@ const DocAssigneeSelect = ({
 }
 
 const Container = styled.div`
+  .doc__assignees__wrapper {
+    display: flex;
+    width: auto;
+    align-items: center;
+  }
+
   .doc__assignee {
+    display: inline-flex;
     width: 22px;
     height: 22px;
     line-height: 19px;
