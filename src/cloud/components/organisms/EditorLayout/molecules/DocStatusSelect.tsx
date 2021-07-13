@@ -3,20 +3,21 @@ import {
   useContextMenu,
   MenuTypes,
   MenuItem,
-} from '../../../../../../../shared/lib/stores/contextMenu'
-import Icon from '../../../../../../../shared/components/atoms/Icon'
+} from '../../../../../shared/lib/stores/contextMenu'
+import Icon from '../../../../../shared/components/atoms/Icon'
 import {
   mdiPlayCircleOutline,
   mdiPauseCircleOutline,
   mdiClose,
   mdiArchiveOutline,
   mdiCheckCircleOutline,
+  mdiListStatus,
 } from '@mdi/js'
-import styled from '../../../../../../lib/styled'
-import { DocStatus } from '../../../../../../interfaces/db/doc'
+import styled from '../../../../lib/styled'
+import { DocStatus } from '../../../../interfaces/db/doc'
 import DocPropertyValueButton from './DocPropertyValueButton'
-import { useI18n } from '../../../../../../lib/hooks/useI18n'
-import { lngKeys } from '../../../../../../lib/i18n/types'
+import { useI18n } from '../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../lib/i18n/types'
 
 interface DocStatusSelectProps {
   sending?: boolean
@@ -35,12 +36,13 @@ const DocStatusSelect = ({
 }: DocStatusSelectProps) => {
   const { popup } = useContextMenu()
   return (
-    <Container>
+    <Container className='prop__margin'>
       <DocPropertyValueButton
         sending={sending}
         isReadOnly={isReadOnly}
         empty={status == null}
         disabled={disabled}
+        iconPath={status == null ? mdiListStatus : undefined}
         onClick={(event) => {
           popup(event, [
             {

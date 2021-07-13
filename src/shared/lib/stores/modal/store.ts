@@ -1,10 +1,39 @@
 import { createStoreContext } from '../../utils/context'
 import { useState, useCallback } from 'react'
-import { ModalsContext, ModalOpeningOptions, ModalElement } from './types'
+import {
+  ModalsContext,
+  ModalOpeningOptions,
+  ModalElement,
+  ContextModalOpeningOptions,
+} from './types'
 export * from './types'
 
 function useModalStore(): ModalsContext {
   const [modals, setModals] = useState<ModalElement[]>([])
+
+  const openContextModal = useCallback(
+    (
+      event: React.MouseEvent<Element>,
+      content: React.ReactNode,
+      options: ContextModalOpeningOptions = {}
+    ) => {
+      const currentTargetRect = event.currentTarget.getBoundingClientRect()
+      const modal: ModalElement = {
+        content,
+        ...options,
+        width: options.width || 400,
+        position: {
+          left: currentTargetRect.left,
+          right: currentTargetRect.right,
+          top: currentTargetRect.top,
+          bottom: currentTargetRect.bottom,
+          alignment: options.alignment || 'bottom-left',
+        },
+      }
+      setModals([modal])
+    },
+    []
+  )
 
   const openModal = useCallback(
     (content: React.ReactNode, options: ModalOpeningOptions = {}) => {
@@ -51,6 +80,7 @@ function useModalStore(): ModalsContext {
 
   return {
     modals,
+    openContextModal,
     closeModal,
     closeAllModals,
     closeLastModal,

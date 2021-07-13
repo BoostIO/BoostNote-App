@@ -1,20 +1,21 @@
 import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react'
-import { mdiPlus } from '@mdi/js'
-import IconMdi from '../../atoms/IconMdi'
-import { useNav } from '../../../lib/stores/nav'
-import { createTag } from '../../../api/teams/tags'
-import { SerializedTeam } from '../../../interfaces/db/team'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
-import { Spinner } from '../../atoms/Spinner'
-import { useUpDownNavigationListener } from '../../../lib/keyboard'
-import { isChildNode } from '../../../lib/dom'
-import { useToast } from '../../../../shared/lib/stores/toast'
-import { contextMenuFormItem } from '../../../../shared/lib/styled/styleFunctions'
-import styled from '../../../../shared/lib/styled'
-import FormInput from '../../../../shared/components/molecules/Form/atoms/FormInput'
+import { mdiLabelOutline, mdiPlus } from '@mdi/js'
+import IconMdi from '../../../../atoms/IconMdi'
+import { useNav } from '../../../../../lib/stores/nav'
+import { createTag } from '../../../../../api/teams/tags'
+import { SerializedTeam } from '../../../../../interfaces/db/team'
+import { SerializedDocWithBookmark } from '../../../../../interfaces/db/doc'
+import { useUpDownNavigationListener } from '../../../../../lib/keyboard'
+import { isChildNode } from '../../../../../lib/dom'
+import { useToast } from '../../../../../../shared/lib/stores/toast'
+import styled from '../../../../../../shared/lib/styled'
+import FormInput from '../../../../../../shared/components/molecules/Form/atoms/FormInput'
 import cc from 'classcat'
-import { lngKeys } from '../../../lib/i18n/types'
-import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../../lib/i18n/types'
+import { useI18n } from '../../../../../lib/hooks/useI18n'
+import Spinner from '../../../../../../shared/components/atoms/Spinner'
+import Flexbox from '../../../../../../shared/components/atoms/Flexbox'
+import DocPropertyValueButton from '../DocPropertyValueButton'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface TagsAutoCompleteInputProps {
@@ -155,16 +156,23 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
   })
 
   return (
-    <Container className={cc([(doc.tags || []).length === 0 && 'empty'])}>
+    <Container
+      className={cc([
+        'doc__tags__create',
+        (doc.tags || []).length === 0 && 'doc__tags__create--empty',
+      ])}
+    >
       {!showInput ? (
         (doc.tags || []).length === 0 ? (
-          <button
-            className='tag__add--empty'
+          <DocPropertyValueButton
+            iconPath={mdiLabelOutline}
             id='tag__add__btn'
+            empty={true}
             onClick={activateAndFocus}
+            isReadOnly={false}
           >
             {translate(lngKeys.AddALabel)}
-          </button>
+          </DocPropertyValueButton>
         ) : (
           <button
             className='tag__add'
@@ -175,79 +183,52 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
           </button>
         )
       ) : (
-        <div
-          className='tag__add__input__container'
-          onBlur={onBlurHandler}
-          ref={containerRef}
-        >
-          {sending && (
-            <Spinner
-              size={12}
-              className='relative tag-spinner'
-              style={{ marginTop: '-6px' }}
+        <Flexbox alignItems='center'>
+          <div
+            className='tag__add__input__container'
+            onBlur={onBlurHandler}
+            ref={containerRef}
+          >
+            <FormInput
+              id='autocomplete-tags'
+              ref={inputRef}
+              className='autocomplete__input'
+              placeholder='Add New Label...'
+              value={tagText}
+              onChange={inputOnChangeEvent}
+              disabled={sending}
+              autoComplete='off'
             />
-          )}
-          <FormInput
-            id='autocomplete-tags'
-            ref={inputRef}
-            className='autocomplete__input'
-            placeholder='Add New Label...'
-            value={tagText}
-            onChange={inputOnChangeEvent}
-            disabled={sending}
-            autoComplete='off'
-          />
-          {autoCompleteOptions.length > 0 && (
-            <div className='autocomplete__container' ref={autocompleteRef}>
-              {autoCompleteOptions.map((option, i) => (
-                <a
-                  className='autocomplete__option'
-                  key={`option-autocomplete=${i}`}
-                  id={`option--autocomplete=${i}`}
-                  href='#'
-                  onClick={(e: any) => selectOptionHandler(e, option.value)}
-                >
-                  {option.label}
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
+            {autoCompleteOptions.length > 0 && (
+              <div className='autocomplete__container' ref={autocompleteRef}>
+                {autoCompleteOptions.map((option, i) => (
+                  <a
+                    className='autocomplete__option'
+                    key={`option-autocomplete=${i}`}
+                    id={`option--autocomplete=${i}`}
+                    href='#'
+                    onClick={(e: any) => selectOptionHandler(e, option.value)}
+                  >
+                    {option.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+          {sending && <Spinner className='tag__add__input__spinner' />}
+        </Flexbox>
       )}
     </Container>
   )
 }
 
 const Container = styled.div`
-  margin-top: 6px;
-
-  &.empty {
-    width: 100%;
-    margin: 0 !important;
-  }
-
-  .tag__add--empty {
-    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
-    background: transparent;
-    outline: 0;
-    width: 100%;
-    display: block;
-    color: ${({ theme }) => theme.colors.text.subtle};
-    height: 32px;
-    border-radius: 4px;
-    &:hover {
-      color: ${({ theme }) => theme.colors.text.primary};
-    }
-    ${({ theme }) => contextMenuFormItem({ theme }, ':focus')};
-    text-align: left;
-  }
-
   .tag__add {
     font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     border-radius: 100%;
     width: 25px;
     height: 25px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     background: none;
@@ -271,7 +252,6 @@ const Container = styled.div`
     line-height: inherit !important;
     height: 28px !important;
     width: 100%;
-    margin-top: 4px;
   }
 
   .autocomplete__container {
@@ -286,7 +266,7 @@ const Container = styled.div`
     border-style: solid;
     border-width: 1px;
     border-radius: 4px;
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     border: none;
     left: 0;
@@ -297,8 +277,10 @@ const Container = styled.div`
 
   .autocomplete__option {
     width: 100%;
+    display: block;
     flex-shrink: 0;
-    padding: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
+    padding: ${({ theme }) => theme.sizes.spaces.sm}px
+      ${({ theme }) => theme.sizes.spaces.df}px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -310,6 +292,13 @@ const Container = styled.div`
       background: ${({ theme }) => theme.colors.background.quaternary};
       color: ${({ theme }) => theme.colors.text.primary};
     }
+  }
+
+  .tag__add__input__spinner {
+    border-color: ${({ theme }) => theme.colors.variants.primary.text};
+    border-right-color: transparent;
+    display: inline-flex;
+    margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 `
 

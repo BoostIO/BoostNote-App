@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import { docContextWidth } from './Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import { Thread, Comment } from '../../interfaces/db/comments'
 import Spinner from '../../../shared/components/atoms/Spinner'
 import { mdiPlusBoxOutline, mdiArrowLeft } from '@mdi/js'
@@ -18,6 +17,7 @@ import ThreadStatusFilterControl, {
 import { partitionOnStatus } from '../../../shared/lib/utils/comments'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
+import ContextMenuClose from './EditorLayout/molecules/ContextMenuClose'
 
 export type State =
   | { mode: 'list_loading'; thread?: { id: string } }
@@ -192,6 +192,7 @@ function CommentManager({
 
   return (
     <Container>
+      <ContextMenuClose />
       <div className='header'>
         {(state.mode !== 'list' || state.filter != null) && (
           <div
@@ -225,8 +226,8 @@ function CommentManager({
 
 const Container = styled.div`
   margin: auto;
-  width: ${docContextWidth}px;
   height: 100vh;
+  width: 350px;
   display: flex;
   flex-direction: column;
   border-left: 1px solid ${({ theme }) => theme.colors.border.main};

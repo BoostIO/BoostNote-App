@@ -444,6 +444,8 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SidebarNewUserDiscount]: 'Get the new user discount!',
   [lngKeys.SettingsImportDescription]:
     'No need to start from scratch. Import data into Boost Note by selecting one of the options below.',
+
+  [lngKeys.GeneralPassword]: 'パスワード',
 }
 
 export default {
