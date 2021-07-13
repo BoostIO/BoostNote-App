@@ -221,6 +221,7 @@ const Container = styled.div`
   .doc__page__header__title {
     font-size: ${({ theme }) => theme.sizes.fonts.xl}px;
     color: ${({ theme }) => theme.colors.text.primary};
+    width: fit-content;
 
     &.doc__page__header__title--button {
       justify-content: flex-start;
