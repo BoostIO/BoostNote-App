@@ -208,10 +208,10 @@ const Container = styled.div`
 
   .doc__page__padding {
     margin: 0 ${({ theme }) => theme.sizes.spaces.md}px;
-    width: 100%;
+    width: auto;
     padding-top: ${({ theme }) => theme.sizes.spaces.df}px;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
     padding-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
   }
 
   .prop__margin {

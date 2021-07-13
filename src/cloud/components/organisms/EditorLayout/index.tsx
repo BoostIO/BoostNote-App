@@ -67,6 +67,15 @@ const Container = styled.div`
     height: 0px;
   }
 
+  &:not(.editor__layout--minimized) {
+    .editor__layout__header {
+      border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
+      .doc__page__padding {
+        border: 0;
+      }
+    }
+  }
+
   &.editor__layout--minimized {
     .editor__layout__scroll {
       height: 100%;
