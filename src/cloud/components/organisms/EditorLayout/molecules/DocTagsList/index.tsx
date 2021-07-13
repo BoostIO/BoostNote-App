@@ -1,20 +1,16 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import { SerializedDocWithBookmark } from '../../../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../../../interfaces/db/team'
-import {
-  StyledDocTagsList,
-  StyledToolbarExpandTag,
-  StyledDocTagsListContainer,
-} from './styled'
 import TagsAutoCompleteInput from './TagsAutoCompleteInput'
 import { deleteTagFromDoc } from '../../../../../api/teams/docs/tags'
 import { useNav } from '../../../../../lib/stores/nav'
 import DocTagsListItem from './DocTagsListItem'
 import { SerializedTag } from '../../../../../interfaces/db/tag'
-import IconMdi from '../../../../atoms/IconMdi'
-import { mdiChevronRight, mdiChevronDown } from '@mdi/js'
+import { mdiChevronRight, mdiChevronDown, mdiLabelOutline } from '@mdi/js'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
 import cc from 'classcat'
+import styled from '../../../../../../shared/lib/styled'
+import Icon from '../../../../../../shared/components/atoms/Icon'
 
 interface DocTagsListProps {
   doc: SerializedDocWithBookmark
@@ -82,30 +78,92 @@ const DocTagsList = ({ doc, team, readOnly }: DocTagsListProps) => {
   const tags = doc.tags || []
 
   return (
-    <StyledDocTagsListContainer>
-      <StyledDocTagsList
-        className={cc([(doc.tags || []).length === 0 && 'list--empty'])}
+    <ListContainer className='doc__tags'>
+      <div
+        className={cc([
+          'doc__tags__wrapper',
+          (doc.tags || []).length === 0
+            ? 'doc__tags__wrapper--empty'
+            : 'doc__tags__wrapper--full',
+        ])}
       >
+        {(doc.tags || []).length !== 0 && (
+          <Icon path={mdiLabelOutline} size={16} className='doc__tags__icon' />
+        )}
         {listContent}{' '}
         {tags.length > maxTagsDisplayed && (
-          <StyledToolbarExpandTag
+          <button
+            className='doc__tags__expand'
             tabIndex={-1}
             onClick={() => setExpanded((val) => !val)}
           >
             {!expanded ? (
-              <span style={{ whiteSpace: 'nowrap' }}>
+              <div className='doc__tags__expand__wrapper'>
                 +{tags.length - maxTagsDisplayed}
-                <IconMdi path={mdiChevronRight} size={14} />
-              </span>
+                <Icon path={mdiChevronRight} size={16} />
+              </div>
             ) : (
-              <IconMdi path={mdiChevronDown} size={14} />
+              <div className='doc__tags__expand__wrapper'>
+                <Icon path={mdiChevronDown} size={16} />
+              </div>
             )}
-          </StyledToolbarExpandTag>
+          </button>
         )}
         {!readOnly && <TagsAutoCompleteInput team={team} doc={doc} />}
-      </StyledDocTagsList>
-    </StyledDocTagsListContainer>
+      </div>
+    </ListContainer>
   )
 }
+
+const ListContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  flex: 2 2 auto;
+  align-items: center;
+  position: relative;
+  height: 100%;
+  min-width: 0;
+
+  .doc__tags__icon {
+    color: ${({ theme }) => theme.colors.text.subtle};
+    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  .doc__tags__wrapper {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 100%;
+    box-sizing: content-box;
+    &.doc__tags__wrapper--full {
+      padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
+    > * {
+      margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px !important;
+    }
+  }
+
+  .doc__tags__expand {
+    height: 24px;
+    color: ${({ theme }) => theme.colors.text.subtle};
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    background: none;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+
+    .doc__tags__expand__wrapper {
+      display: inline-flex;
+      align-items: center;
+      white-space: none;
+    }
+
+    &:hover,
+    &:focus {
+      color: ${({ theme }) => theme.colors.text.primary};
+    }
+  }
+`
 
 export default DocTagsList

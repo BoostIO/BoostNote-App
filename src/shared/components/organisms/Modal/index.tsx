@@ -72,15 +72,28 @@ const ContextModalItem = ({
   const style: CSSProperties | undefined = useMemo(() => {
     const properties: CSSProperties = {
       width: modalWidth,
-      maxHeight: windowHeight - (modal.position?.y || 0) - 10,
+      maxHeight: windowHeight - (modal.position?.bottom || 0) - 10,
     }
 
     if (modal.position != null) {
-      properties.left =
-        modal.position.x < windowWidth - 10
-          ? modal.position.x - modalWidth
-          : windowWidth - modalWidth - 10
-      properties.top = modal.position.y
+      switch (modal.position.alignment) {
+        case 'bottom-right':
+          properties.left =
+            modal.position.right < windowWidth - 10
+              ? modal.position.right - modalWidth
+              : windowWidth - modalWidth - 10
+          properties.top = modal.position.bottom + 6
+          break
+        case 'bottom-left':
+          properties.left =
+            modal.position.left + modalWidth < windowWidth - 10
+              ? modal.position.left
+              : windowWidth - modalWidth - 10
+          properties.top = modal.position.bottom + 6
+          break
+        default:
+          break
+      }
     }
 
     return properties

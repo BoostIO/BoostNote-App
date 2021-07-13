@@ -3,10 +3,17 @@ export interface ModalElement {
   content: React.ReactNode
   showCloseIcon?: boolean
   width: 'large' | 'default' | 'small' | number
-  position?: { x: number; y: number }
+  position?: {
+    left: number
+    right: number
+    top: number
+    bottom: number
+    alignment: ContextModalAlignment
+  }
   onClose?: () => void
 }
 
+export type ContextModalAlignment = 'bottom-left' | 'bottom-right'
 export type ModalOpeningOptions = {
   showCloseIcon?: boolean
   keepAll?: boolean
@@ -15,12 +22,16 @@ export type ModalOpeningOptions = {
   onClose?: () => void
 }
 
+export type ContextModalOpeningOptions = ModalOpeningOptions & {
+  alignment?: ContextModalAlignment
+}
+
 export interface ModalsContext {
   modals: ModalElement[]
   openContextModal: (
     event: React.MouseEvent<Element>,
     modalContent: JSX.Element,
-    options?: ModalOpeningOptions
+    options?: ContextModalOpeningOptions
   ) => void
   openModal: (modalContent: JSX.Element, options?: ModalOpeningOptions) => void
   closeModal: (index: number, collapse?: boolean) => void

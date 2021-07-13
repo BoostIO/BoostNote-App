@@ -4,7 +4,7 @@ import DocPropertyValueButton from './DocPropertyValueButton'
 import { format as formatDate } from 'date-fns'
 import styled from '../../../../../shared/lib/styled'
 import Button from '../../../../../shared/components/atoms/Button'
-import { mdiClose } from '@mdi/js'
+import { mdiCalendarMonthOutline, mdiClose } from '@mdi/js'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
 
@@ -35,7 +35,7 @@ const DocDueDateSelect = ({
   }, [dueDateString])
 
   return (
-    <Container>
+    <Container className='prop__margin'>
       <DatePicker
         wrapperClassName={className}
         disabled={sending || disabled}
@@ -47,6 +47,7 @@ const DocDueDateSelect = ({
             sending={sending}
             empty={dueDate == null}
             isReadOnly={isReadOnly}
+            iconPath={mdiCalendarMonthOutline}
           >
             {dueDate != null
               ? formatDate(dueDate, 'MMM dd, yyyy')
@@ -76,9 +77,9 @@ const Container = styled.div`
   .due__date__clear {
     display: none;
     position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    right: -8px;
+    top: 0;
+    transform: translateY(-15%);
   }
 
   &:hover {

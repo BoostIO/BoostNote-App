@@ -1,6 +1,11 @@
 import { createStoreContext } from '../../utils/context'
 import { useState, useCallback } from 'react'
-import { ModalsContext, ModalOpeningOptions, ModalElement } from './types'
+import {
+  ModalsContext,
+  ModalOpeningOptions,
+  ModalElement,
+  ContextModalOpeningOptions,
+} from './types'
 export * from './types'
 
 function useModalStore(): ModalsContext {
@@ -10,7 +15,7 @@ function useModalStore(): ModalsContext {
     (
       event: React.MouseEvent<Element>,
       content: React.ReactNode,
-      options: ModalOpeningOptions = {}
+      options: ContextModalOpeningOptions = {}
     ) => {
       const currentTargetRect = event.currentTarget.getBoundingClientRect()
       const modal: ModalElement = {
@@ -18,8 +23,11 @@ function useModalStore(): ModalsContext {
         ...options,
         width: options.width || 400,
         position: {
-          x: currentTargetRect.right,
-          y: currentTargetRect.bottom + 6,
+          left: currentTargetRect.left,
+          right: currentTargetRect.right,
+          top: currentTargetRect.top,
+          bottom: currentTargetRect.bottom,
+          alignment: options.alignment || 'bottom-left',
         },
       }
       setModals([modal])

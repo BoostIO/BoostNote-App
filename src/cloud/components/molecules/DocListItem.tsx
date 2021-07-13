@@ -13,7 +13,10 @@ import cc from 'classcat'
 import { mdiTrashCan, mdiStar, mdiStarOutline } from '@mdi/js'
 import IconMdi from '../atoms/IconMdi'
 import { mdiCardTextOutline } from '@mdi/js'
-import { baseIconStyle } from '../../lib/styled/styleFunctions'
+import {
+  baseIconStyle,
+  subtleBackgroundColor,
+} from '../../lib/styled/styleFunctions'
 import styled from '../../lib/styled'
 import { getDocTitle } from '../../lib/utils/patterns'
 import { getFormattedBoosthubDate } from '../../lib/date'
@@ -24,7 +27,6 @@ import {
 } from '../../lib/keyboard'
 import { shortcuts } from '../../lib/shortcuts'
 import SideNavIcon from '../organisms/Sidebar/SideNavigator/SideNavIcon'
-import { StyledTag } from '../organisms/EditorLayout/molecules/DocTagsList/styled'
 
 interface DocListItemProps {
   className?: string
@@ -174,6 +176,79 @@ const Icon = styled.button`
     vertical-align: middle;
     margin-left: ${({ theme }) => theme.space.xxsmall}px;
     transform: 0 !important;
+  }
+`
+
+const StyledTag = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 2px 5px;
+  ${subtleBackgroundColor}
+  position: relative;
+  margin: 0 ${({ theme }) => theme.space.xxsmall}px;
+  color: ${({ theme }) => theme.baseTextColor};
+  font-size: ${({ theme }) => theme.fontSizes.small}px;
+  border-radius: 3px;
+  vertical-align: middle;
+  height: 25px;
+  line-height: 20px;
+
+  &.toolbar-tag {
+    align-items: center;
+  }
+
+  .removeTag {
+    display: inline-block;
+    cursor: pointer;
+    margin-left: ${({ theme }) => theme.space.xxsmall}px;
+    &:hover,
+    &:focus {
+      color: ${({ theme }) => theme.emphasizedTextColor};
+    }
+
+    &disabled {
+      pointer-events: none;
+    }
+  }
+
+  .tag-link {
+    display: inline-block;
+    max-width: 120px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    color: ${({ theme }) => theme.baseTextColor};
+    text-decoration: none;
+    &:hover,
+    &:focus {
+      opacity: 0.8;
+    }
+  }
+
+  .tag-spinner {
+    margin-top: -3px;
+    margin-right: ${({ theme }) => theme.space.xxsmall}px;
+  }
+
+  &.bg-none {
+    background: none;
+  }
+
+  &.mb-0 {
+    margin-bottom: 0;
+  }
+
+  &.size-s {
+    height: 100%;
+    padding: ${({ theme }) => theme.space.xxsmall}px
+      ${({ theme }) => theme.space.xsmall}px;
+    font-size: ${({ theme }) => theme.fontSizes.xsmall}px;
+    line-height: 1;
+  }
+
+  &.ml-xsmall {
+    margin-left: ${({ theme }) => theme.space.xsmall}px;
   }
 `
 

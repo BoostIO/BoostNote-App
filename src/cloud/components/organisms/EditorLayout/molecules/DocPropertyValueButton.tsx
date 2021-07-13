@@ -3,46 +3,76 @@ import styled from '../../../../../shared/lib/styled'
 import Spinner from '../../../../../shared/components/atoms/Spinner'
 import { contextMenuFormItem } from '../../../../../shared/lib/styled/styleFunctions'
 import cc from 'classcat'
+import Icon from '../../../../../shared/components/atoms/Icon'
 
 interface DocPropertyValueButtonProps {
   children: React.ReactNode
+  iconPath?: string
   disabled?: boolean
   sending?: boolean
   empty?: boolean
   isReadOnly: boolean
+  id?: string
+  className?: string
   onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
 const DocPropertyValueButton = forwardRef<
   HTMLButtonElement,
   DocPropertyValueButtonProps
->(({ sending, children, disabled, empty, onClick, isReadOnly }, ref) => {
-  return (
-    <ButtonContainer
-      ref={ref}
-      disabled={disabled}
-      onClick={onClick}
-      className={cc([
-        empty && 'doc__property__button--empty',
-        isReadOnly && 'doc__property__button--readOnly',
-      ])}
-    >
-      {sending != null ? (
-        children
-      ) : (
-        <>
-          <Spinner className='button__spinner' /> Sending...
-        </>
-      )}
-    </ButtonContainer>
-  )
-})
+>(
+  (
+    {
+      iconPath,
+      sending,
+      children,
+      disabled,
+      empty,
+      onClick,
+      isReadOnly,
+      className,
+      id,
+    },
+    ref
+  ) => {
+    return (
+      <ButtonContainer
+        ref={ref}
+        disabled={disabled}
+        onClick={onClick}
+        id={id}
+        className={cc([
+          empty && 'doc__property__button--empty',
+          isReadOnly && 'doc__property__button--readOnly',
+          className,
+        ])}
+      >
+        {sending ? (
+          <>
+            <Spinner className='button__spinner' /> Sending...
+          </>
+        ) : (
+          <>
+            {iconPath != null && (
+              <Icon
+                path={iconPath}
+                size={16}
+                className='doc__property__button__icon'
+              />
+            )}
+            <span className='doc__property__button__label'>{children}</span>
+          </>
+        )}
+      </ButtonContainer>
+    )
+  }
+)
 
 export default DocPropertyValueButton
 
 const ButtonContainer = styled.button`
   display: flex;
-  width: 100%;
+  width: fit-content;
   height: 32px;
   display: flex;
   justify-content: left;
@@ -60,6 +90,11 @@ const ButtonContainer = styled.button`
   color: ${({ theme }) => theme.colors.text.primary};
   ${({ theme }) => contextMenuFormItem({ theme }, ':focus')}
 
+  .doc__property__button__icon {
+    margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    color: ${({ theme }) => theme.colors.text.subtle};
+  }
+
   &.doc__property__button--readOnly {
     cursor: not-allowed;
     &:hover {
@@ -72,6 +107,7 @@ const ButtonContainer = styled.button`
   }
 
   .button__spinner {
+    margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
     border-color: ${({ theme }) => theme.colors.variants.primary.text};
     border-right-color: transparent;
   }
@@ -81,7 +117,13 @@ const ButtonContainer = styled.button`
     &:active,
     &:focus,
     &.button__state--active {
+      background: ${({ theme }) =>
+        theme.colors.background.secondary} !important;
       color: ${({ theme }) => theme.colors.text.primary};
+
+      .doc__property__button__icon {
+        color: ${({ theme }) => theme.colors.text.primary};
+      }
     }
   }
 `

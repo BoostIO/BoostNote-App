@@ -203,6 +203,10 @@ const Container = styled.div`
   width: 100%;
   flex-direction: column;
 
+  .prop__margin {
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px !important;
+  }
+
   .doc__page__header__comments {
     flex: 0 0 auto;
   }

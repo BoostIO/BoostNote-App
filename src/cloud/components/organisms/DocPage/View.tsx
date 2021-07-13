@@ -432,7 +432,7 @@ const ViewPage = ({
                 openContextModal(
                   event,
                   <DocShare currentDoc={doc} team={team} />,
-                  { width: 440 }
+                  { width: 440, alignment: 'bottom-right' }
                 ),
             },
             {

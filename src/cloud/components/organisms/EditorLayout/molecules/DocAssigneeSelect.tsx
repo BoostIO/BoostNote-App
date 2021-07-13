@@ -1,17 +1,16 @@
-import React, { useMemo, useCallback, useState } from 'react'
+import React, { useCallback, useState, useMemo } from 'react'
 import { usePage } from '../../../../lib/stores/pageStore'
-import { SerializedUser } from '../../../../interfaces/db/user'
-import { FormSelectOption } from '../../../../../shared/components/molecules/Form/atoms/FormSelect'
 import styled from '../../../../../shared/lib/styled'
 import UserIcon from '../../../atoms/UserIcon'
-import Select from 'react-select'
-import cc from 'classcat'
-import {
-  contextMenuFormItem,
-  textOverflow,
-} from '../../../../../shared/lib/styled/styleFunctions'
+import { textOverflow } from '../../../../../shared/lib/styled/styleFunctions'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
+import DocPropertyValueButton from './DocPropertyValueButton'
+import { mdiAccountCircleOutline } from '@mdi/js'
+import { useModal } from '../../../../../shared/lib/stores/modal'
+import Checkbox from '../../../../../shared/components/molecules/Form/atoms/FormCheckbox'
+import Form from '../../../../../shared/components/molecules/Form'
+import FormRow from '../../../../../shared/components/molecules/Form/templates/FormRow'
 
 interface DocAssigneeSelectProps {
   disabled?: boolean
@@ -28,234 +27,199 @@ const DocAssigneeSelect = ({
   readOnly,
   update,
 }: DocAssigneeSelectProps) => {
-  const { permissions } = usePage()
-  const [focused, setFocused] = useState(false)
-  const [value, setValue] = useState(defaultValue)
   const { translate } = useI18n()
-
-  const options = useMemo(() => {
-    if (permissions == null) {
-      return []
-    }
-    return permissions.map((permission) => {
-      return getOptionByUser(permission.user)
-    })
-  }, [permissions])
-
-  const selectedOptions = useMemo(() => {
-    if (permissions == null) {
-      return []
-    }
-    const userMap = permissions.reduce((map, permission) => {
-      const { user } = permission
-      map.set(user.id, user)
-      return map
-    }, new Map())
-
-    return getSelectedOptionsByUserId(value, userMap)
-  }, [permissions, value])
+  const { openContextModal, closeAllModals } = useModal()
+  const { permissions = [] } = usePage()
 
   const updateAssignees = useCallback(
-    (selectedOptions: any) => {
-      const value = (selectedOptions as FormSelectOption[]).map(
-        (option) => option.value
-      )
-      setValue(value)
-      update(value)
+    (selectedUserIds: string[]) => {
+      update(selectedUserIds)
+      closeAllModals()
     },
-    [update, setValue]
+    [update, closeAllModals]
   )
 
+  const selectedUsers = useMemo(() => {
+    if (defaultValue.length === 0) {
+      return null
+    }
+
+    return (
+      <>
+        {permissions
+          .filter((p) => defaultValue.includes(p.userId) && p.user != null)
+          .map((p) => (
+            <UserIcon user={p.user} className='doc__assignee' key={p.id} />
+          ))}
+      </>
+    )
+  }, [defaultValue, permissions])
+
   return (
-    <SelectContainer>
-      <Select
-        isMulti
-        className={cc([
-          'form__select',
-          focused && 'form__select--focused',
-          disabled && 'form__select--disabled',
-          readOnly && 'form__select--readOnly',
-        ])}
-        id='assignee-select'
-        classNamePrefix='form__select'
-        isDisabled={disabled}
-        options={options}
-        value={selectedOptions}
-        isClearable={false}
-        onChange={updateAssignees}
-        placeholder={translate(lngKeys.Unassigned)}
-        isLoading={isLoading}
-        isSearchable={false}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-      />
-    </SelectContainer>
+    <Container className='prop__margin'>
+      <DocPropertyValueButton
+        disabled={disabled}
+        sending={isLoading}
+        empty={defaultValue.length === 0}
+        isReadOnly={readOnly}
+        iconPath={
+          defaultValue.length === 0 ? mdiAccountCircleOutline : undefined
+        }
+        onClick={(e) =>
+          openContextModal(
+            e,
+            <DocAssigneeModal
+              selectedUsers={defaultValue}
+              submitUpdate={updateAssignees}
+              closeModal={closeAllModals}
+            />,
+            {
+              alignment: 'bottom-left',
+              width: 300,
+            }
+          )
+        }
+      >
+        {defaultValue.length !== 0
+          ? selectedUsers
+          : translate(lngKeys.Unassigned)}
+      </DocPropertyValueButton>
+    </Container>
   )
 }
 
-const SelectContainer = styled.div`
-  .form__select--readOnly .form__select__multi-value__remove {
-    display: none;
+const Container = styled.div`
+  .doc__assignee {
+    width: 22px;
+    height: 22px;
   }
+`
 
-  .form__select .form__select__indicator-separator {
-    width: 0;
-  }
+const DocAssigneeModal = ({
+  selectedUsers,
+  submitUpdate,
+  closeModal,
+}: {
+  selectedUsers: string[]
+  submitUpdate: (val: string[]) => void
+  closeModal: () => void
+}) => {
+  const { permissions = [] } = usePage()
+  const [value, setValue] = useState<string[]>(selectedUsers)
+  const { translate } = useI18n()
 
-  .form__select .form__select__dropdown-indicator {
-    display: none;
-  }
-
-  .form__select .form__select__indicators {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .form__select .form__select__control,
-  .form__select .form__select__value-container {
-    height: 30px !important;
-    min-height: 30px !important;
-    background: none !important;
-    border: 1px solid transparent !important;
-  }
-
-  .form__select .form__select__placeholder {
-    color: ${({ theme }) => theme.colors.text.subtle};
-    margin: 0;
-  }
-
-  .form__select .form__select__control {
-    width: auto;
-    position: relative;
-    &:hover,
-    &.form__select__control--is-focused {
-      .form__select__placeholder {
-        color: ${({ theme }) => theme.colors.text.primary};
+  const toggleUser = useCallback((userId: string) => {
+    setValue((prev) => {
+      const newValue = prev.slice()
+      if (newValue.includes(userId)) {
+        return newValue.filter((id) => id !== userId)
+      } else {
+        newValue.push(userId)
+        return newValue
       }
-    }
-    ${({ theme }) =>
-      contextMenuFormItem({ theme }, '.form__select__control--is-focused')}
-  }
+    })
+  }, [])
 
-  .form__select .form__select__value-container {
-    align-items: flex-start !important;
-    flex-wrap: wrap;
-    padding: 0 !important;
-    top: 0;
-    left: 5px;
-    position: absolute;
+  return (
+    <ModalContainer>
+      <Form
+        onSubmit={() => submitUpdate(value)}
+        onCancel={closeModal}
+        className='assignee__form'
+        submitButton={{
+          label: translate(lngKeys.GeneralSaveVerb),
+          variant: 'primary',
+          id: 'assignee-submit-button',
+          tabIndex: 0,
+        }}
+      >
+        {permissions.map((p) => {
+          return (
+            <FormRow row={{}} className='assignee__item' key={p.userId}>
+              <button
+                className='assignee__item__wrapper'
+                onClick={() => toggleUser(p.userId)}
+                id={`assignee__item__${p.userId}`}
+                tabIndex={0}
+                type='button'
+              >
+                <UserIcon user={p.user} className='assignee__item__icon' />
+                <span className='assignee__item__label'>
+                  {p.user.displayName}
+                </span>
+                <Checkbox
+                  checked={value.includes(p.userId)}
+                  className='assignee__checkbox'
+                />
+              </button>
+            </FormRow>
+          )
+        })}
+      </Form>
+    </ModalContainer>
+  )
+}
+
+const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  .assignee__form,
+  .assignee__item,
+  .assignee__item__wrapper {
     width: 100%;
+    flex: 1 1 auto;
   }
 
-  .form__select .form__select__multi-value {
-    position: relative;
-    height: 100%;
+  .assignee__checkbox {
+    flex: 0 0 auto;
+  }
+
+  .assignee__item__wrapper {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    height: 30px;
+    cursor: pointer;
     background: none;
-    margin: 0;
-  }
-
-  .form__select .form__select__multi-value__remove {
-    height: auto;
-    position: absolute;
-    top: 0px;
-    right: -16px;
-    background: none !important;
-    &:hover {
-      color: ${({ theme }) => theme.colors.variants.primary.text};
-    }
-  }
-
-  .form__select .form__select__value-container,
-  .form__select .form__select__multi-value__label,
-  .form__select .form__select__multi-value__remove {
+    transition: background 200ms;
     color: ${({ theme }) => theme.colors.text.primary};
-  }
+    justify-content: flex-start;
+    text-align: left;
+    border-radius: ${({ theme }) => theme.borders.radius}px;
+    padding: ${({ theme }) => theme.sizes.spaces.xsm}px
+      ${({ theme }) => theme.sizes.spaces.sm}px;
 
-  .form__select .form__select__menu {
-    background-color: ${({ theme }) => theme.colors.background.primary};
-    border: 1px solid ${({ theme }) => theme.colors.border.main};
-  }
-
-  .form__select .form__select__option {
-    color: ${({ theme }) => theme.colors.text.secondary};
-    cursor: default;
-    &.form__select__option--is-disabled {
-      color: ${({ theme }) => theme.colors.text.subtle};
-      cursor: not-allowed;
-    }
-
-    &.form__select__option--is-selected,
-    &:active:not(.form__select__option--is-disabled) {
-      background-color: ${({ theme }) => theme.colors.variants.primary.base};
-      color: ${({ theme }) => theme.colors.variants.primary.text};
-    }
-
-    &.form__select__option--is-focused {
-      transition: 0.2s;
-      color: ${({ theme }) => theme.colors.text.primary};
-      background-color: ${({ theme }) => theme.colors.background.tertiary};
+    &:focus {
+      background: ${({ theme }) => theme.colors.background.tertiary};
     }
 
     &:hover {
-      background-color: ${({ theme }) => theme.colors.background.quaternary};
-      transition: 0.2s;
+      background: ${({ theme }) => theme.colors.background.secondary};
     }
-  }
 
-  .form__select__multi-value__label {
-    margin: 0;
-    padding: 0;
     .assignee__item__label {
-      display: none;
+      flex: 1 1 auto;
+      ${textOverflow}
+    }
+
+    .assignee__item__icon {
+      margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
+      width: 22px;
+      height: 22px;
+    }
+
+    .assignee__checkbox {
+      margin-left: ${({ theme }) => theme.sizes.spaces.df}px;
+      pointer-events: none;
+    }
+
+    .assignee__item__icon,
+    .assignee__checkbox {
+      flex: 0 0 auto;
+      flex-shrink: 0;
     }
   }
 `
 
 export default DocAssigneeSelect
-
-const ItemContainer = styled.div`
-  display: flex;
-  align-items: center;
-  height: 30px;
-  .assignee__item__label {
-    ${textOverflow}
-  }
-
-  .assignee__item__icon {
-    width: 20px;
-    height: 20px;
-    font-size: 12px;
-    line-height: 18px;
-    margin-right: 4px;
-    flex-shrink: 0;
-  }
-`
-
-function getOptionByUser(user: SerializedUser): FormSelectOption {
-  return {
-    label: (
-      <ItemContainer>
-        <UserIcon user={user} className='assignee__item__icon' />
-        <div className='assignee__item__label'>{user.displayName}</div>
-      </ItemContainer>
-    ),
-    value: user.id,
-  }
-}
-
-function getSelectedOptionsByUserId(
-  value: string[],
-  userMap: Map<string, SerializedUser>
-): FormSelectOption[] {
-  return value.reduce<FormSelectOption[]>((options, userId) => {
-    const user = userMap.get(userId)
-    if (user == null) {
-      console.warn(`User Id ${userId} does not exist in page props`)
-      return options
-    }
-    options.push(getOptionByUser(user))
-    return options
-  }, [])
-}

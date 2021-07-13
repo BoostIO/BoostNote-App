@@ -11,6 +11,7 @@ import {
   mdiClose,
   mdiArchiveOutline,
   mdiCheckCircleOutline,
+  mdiListStatus,
 } from '@mdi/js'
 import styled from '../../../../lib/styled'
 import { DocStatus } from '../../../../interfaces/db/doc'
@@ -35,12 +36,13 @@ const DocStatusSelect = ({
 }: DocStatusSelectProps) => {
   const { popup } = useContextMenu()
   return (
-    <Container>
+    <Container className='prop__margin'>
       <DocPropertyValueButton
         sending={sending}
         isReadOnly={isReadOnly}
         empty={status == null}
         disabled={disabled}
+        iconPath={status == null ? mdiListStatus : undefined}
         onClick={(event) => {
           popup(event, [
             {
