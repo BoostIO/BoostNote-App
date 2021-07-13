@@ -24,6 +24,7 @@ import { SerializedTeam } from '../../../interfaces/db/team'
 import DocStatusSelect from './molecules/DocStatusSelect'
 import DocDueDateSelect from './molecules/DocDueDateSelect'
 import { usePreferences } from '../../../lib/stores/preferences'
+import { overflowEllipsis } from '../../../../shared/lib/styled/styleFunctions'
 
 interface DocPageHeaderProps {
   docIsEditable?: boolean
@@ -222,6 +223,15 @@ const Container = styled.div`
     font-size: ${({ theme }) => theme.sizes.fonts.xl}px;
     color: ${({ theme }) => theme.colors.text.primary};
     width: fit-content;
+    max-width: 100%;
+
+    .button__label {
+      max-width: 100%;
+    }
+
+    .doc__page__header__label {
+      ${overflowEllipsis}
+    }
 
     &.doc__page__header__title--button {
       justify-content: flex-start;
