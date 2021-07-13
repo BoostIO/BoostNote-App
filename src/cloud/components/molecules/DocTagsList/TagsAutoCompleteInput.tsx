@@ -70,6 +70,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
 
   const onBlurHandler = (event: any) => {
     if (
+      containerRef.current !== event.relatedTarget &&
       !isChildNode(
         containerRef.current,
         event.relatedTarget as HTMLElement | null
@@ -179,6 +180,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
           className='tag__add__input__container'
           onBlur={onBlurHandler}
           ref={containerRef}
+          tabIndex={-1}
         >
           {sending && (
             <Spinner
