@@ -16,14 +16,13 @@ import {
 import { SerializedRevision } from '../../../interfaces/db/revision'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedUser } from '../../../interfaces/db/user'
+import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
 import { getFormattedDateTime } from '../../../lib/date'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
-import { usePage } from '../../../lib/stores/pageStore'
 import SmallButton from '../../atoms/SmallButton'
 import UserIcon from '../../atoms/UserIcon'
 import BackLinksList from './molecules/BackLinksList'
-import ContextMenuClose from './molecules/ContextMenuClose'
 import DocContextMenuActions from './molecules/DocContextMenuActions'
 
 interface DocContextMenuProps {
@@ -31,6 +30,8 @@ interface DocContextMenuProps {
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
   team: SerializedTeam
+  permissions: SerializedUserTeamPermissions[]
+  currentUserIsCoreMember: boolean
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
   restoreRevision?: (revision: SerializedRevision) => void
 }
@@ -40,9 +41,10 @@ const DocContextMenu = ({
   currentDoc,
   contributors,
   backLinks,
+  permissions,
+  currentUserIsCoreMember,
   editorRef,
 }: DocContextMenuProps) => {
-  const { permissions = [], currentUserIsCoreMember } = usePage()
   const [sliceContributors, setSliceContributors] = useState(true)
   const { translate } = useI18n()
 
@@ -76,7 +78,6 @@ const DocContextMenu = ({
     <MetadataContainer
       rows={[{ type: 'header', content: translate(lngKeys.DocInfo) }]}
     >
-      <ContextMenuClose />
       <MetadataContainerRow
         row={{
           label: translate(lngKeys.CreationDate),

@@ -60,7 +60,6 @@ import EditorSelectionStatus from './EditorSelectionStatus'
 import EditorIndentationStatus from './EditorIndentationStatus'
 import EditorKeyMapSelect from './EditorKeyMapSelect'
 import EditorThemeSelect from './EditorThemeSelect'
-//import DocContextMenu from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import DocContextMenu from '../../organisms/EditorLayout/NewDocContextMenu'
 import {
   focusTitleEventEmitter,
@@ -93,6 +92,7 @@ import { lngKeys } from '../../../lib/i18n/types'
 import { parse } from 'querystring'
 import DocShare from '../DocShare'
 import EditorLayout from '../../organisms/EditorLayout'
+import PreferencesContextMenuWrapper from '../../molecules/PreferencesContextMenuWrapper'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -120,7 +120,11 @@ interface SelectionState {
 
 const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
   const { translate } = useI18n()
-  const { currentUserPermissions, permissions } = usePage()
+  const {
+    currentUserPermissions,
+    permissions,
+    currentUserIsCoreMember,
+  } = usePage()
   const { pushMessage, pushApiErrorMessage } = useToast()
   const [color] = useState(() => getColorFromString(user.id))
   const { preferences, setPreferences } = usePreferences()
@@ -970,21 +974,27 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
         },
         right:
           preferences.docContextMode === 'context' ? (
-            <DocContextMenu
-              currentDoc={doc}
-              contributors={contributors}
-              backLinks={backLinks}
-              team={team}
-              restoreRevision={onRestoreRevisionCallback}
-              editorRef={editorRef}
-            />
+            <PreferencesContextMenuWrapper>
+              <DocContextMenu
+                currentDoc={doc}
+                contributors={contributors}
+                backLinks={backLinks}
+                team={team}
+                restoreRevision={onRestoreRevisionCallback}
+                editorRef={editorRef}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+                permissions={permissions || []}
+              />
+            </PreferencesContextMenuWrapper>
           ) : preferences.docContextMode === 'comment' ? (
-            <CommentManager
-              state={normalizedCommentState}
-              user={user}
-              users={users}
-              {...commentActions}
-            />
+            <PreferencesContextMenuWrapper>
+              <CommentManager
+                state={normalizedCommentState}
+                user={user}
+                users={users}
+                {...commentActions}
+              />
+            </PreferencesContextMenuWrapper>
           ) : null,
       }}
     >
