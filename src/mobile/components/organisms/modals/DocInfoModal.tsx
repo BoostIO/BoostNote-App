@@ -36,7 +36,6 @@ import { getDocTitle } from '../../../../cloud/lib/utils/patterns'
 import { usePreferences } from '../../../lib/preferences'
 import cc from 'classcat'
 import Icon from '../../../../shared/components/atoms/Icon'
-import DocShare from '../../../../cloud/components/molecules/DocShare'
 import plur from 'plur'
 // import Button from '../../../../shared/components/atoms/Button'
 // import { revisionHistoryStandardDays } from '../../../../cloud/lib/subscription'
@@ -51,6 +50,7 @@ import DocDueDateSelect from '../../../../cloud/components/organisms/Topbar/Cont
 import DocStatusSelect from '../../../../cloud/components/organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu/DocStatusSelect'
 import DocAssigneeSelect from '../../../../cloud/components/organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu/DocAssigneeSelect'
 import ModalContainer from './atoms/ModalContainer'
+import DocInfoModalShareSection from './organisms/DocInfoModalShareSection'
 // import MobileDocRevisionsModal from './MobileDocRevisionsModal'
 
 interface DocInfoModalProps {
@@ -519,7 +519,10 @@ DocInfoModalProps) => {
                         {translate(lngKeys.Share)}
                       </div>
                     </div>
-                    <DocShare currentDoc={currentDoc} team={team} />
+                    <DocInfoModalShareSection
+                      currentDoc={currentDoc}
+                      team={team}
+                    />
                     {backLinks.length > 0 && (
                       <>
                         <div className='context__break' />
