@@ -92,7 +92,7 @@ import { lngKeys } from '../../../lib/i18n/types'
 import { parse } from 'querystring'
 import DocShare from '../DocShare'
 import EditorLayout from '../../organisms/EditorLayout'
-import PreferencesContextMenuWrapper from '../../organisms/EditorLayout/molecules/PreferencesContextMenuWrapper'
+import PreferencesContextMenuWrapper from '../../molecules/PreferencesContextMenuWrapper'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 

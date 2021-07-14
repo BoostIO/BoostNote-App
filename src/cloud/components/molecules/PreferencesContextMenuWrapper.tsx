@@ -1,8 +1,8 @@
-import { mdiChevronRight } from '@mdi/js'
 import React, { useEffect, useRef, useState } from 'react'
-import Button from '../../../../../shared/components/atoms/Button'
-import styled from '../../../../../shared/lib/styled'
-import { usePreferences } from '../../../../lib/stores/preferences'
+import styled from '../../../shared/lib/styled'
+import { mdiChevronRight } from '@mdi/js'
+import Button from '../../../shared/components/atoms/Button'
+import { usePreferences } from '../../lib/stores/preferences'
 
 const ContextMenuClose = () => {
   const { setPreferences } = usePreferences()
@@ -32,18 +32,18 @@ const ContextMenuClose = () => {
   }, [])
 
   return (
-    <Container offset={offsetRight}>
+    <ButtonContainer offset={offsetRight}>
       <Button
         variant='icon'
         iconPath={mdiChevronRight}
         className='context__menu__close'
         onClick={() => setPreferences({ docContextMode: undefined })}
       />
-    </Container>
+    </ButtonContainer>
   )
 }
 
-const Container = styled.div<{ offsetRight: number }>`
+const ButtonContainer = styled.div<{ offsetRight: number }>`
   .context__menu__close {
     position: fixed;
     top: 60px;
@@ -68,4 +68,17 @@ const Container = styled.div<{ offsetRight: number }>`
   }
 `
 
-export default ContextMenuClose
+const PreferencesContextMenuWrapper: React.FC = ({ children }) => (
+  <Container>
+    <ContextMenuClose />
+    {children}
+  </Container>
+)
+
+const Container = styled.div`
+  position: relative;
+  width: fit-content;
+  height: auto;
+`
+
+export default PreferencesContextMenuWrapper

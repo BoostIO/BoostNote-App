@@ -47,7 +47,7 @@ import { parse } from 'querystring'
 import DocShare from '../../molecules/DocShare'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import NewDocContextMenu from '../EditorLayout/NewDocContextMenu'
-import PreferencesContextMenuWrapper from '../EditorLayout/molecules/PreferencesContextMenuWrapper'
+import PreferencesContextMenuWrapper from '../../molecules/PreferencesContextMenuWrapper'
 
 interface ViewPageProps {
   team: SerializedTeam
