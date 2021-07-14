@@ -454,6 +454,8 @@ const ViewPage = ({
               contributors={contributors}
               backLinks={backLinks}
               team={team}
+              currentUserIsCoreMember={currentUserIsCoreMember}
+              permissions={permissions || []}
             />
           ) : preferences.docContextMode === 'comment' ? (
             <CommentManager

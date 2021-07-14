@@ -60,7 +60,6 @@ import EditorSelectionStatus from './EditorSelectionStatus'
 import EditorIndentationStatus from './EditorIndentationStatus'
 import EditorKeyMapSelect from './EditorKeyMapSelect'
 import EditorThemeSelect from './EditorThemeSelect'
-//import DocContextMenu from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import DocContextMenu from '../../organisms/EditorLayout/NewDocContextMenu'
 import {
   focusTitleEventEmitter,
@@ -120,7 +119,11 @@ interface SelectionState {
 
 const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
   const { translate } = useI18n()
-  const { currentUserPermissions, permissions } = usePage()
+  const {
+    currentUserPermissions,
+    permissions,
+    currentUserIsCoreMember,
+  } = usePage()
   const { pushMessage, pushApiErrorMessage } = useToast()
   const [color] = useState(() => getColorFromString(user.id))
   const { preferences, setPreferences } = usePreferences()
@@ -977,6 +980,8 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
               team={team}
               restoreRevision={onRestoreRevisionCallback}
               editorRef={editorRef}
+              currentUserIsCoreMember={currentUserIsCoreMember}
+              permissions={permissions || []}
             />
           ) : preferences.docContextMode === 'comment' ? (
             <CommentManager

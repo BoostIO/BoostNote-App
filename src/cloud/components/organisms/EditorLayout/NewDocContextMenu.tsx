@@ -16,21 +16,23 @@ import {
 import { SerializedRevision } from '../../../interfaces/db/revision'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedUser } from '../../../interfaces/db/user'
+import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
 import { getFormattedDateTime } from '../../../lib/date'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
-import { usePage } from '../../../lib/stores/pageStore'
 import SmallButton from '../../atoms/SmallButton'
 import UserIcon from '../../atoms/UserIcon'
 import BackLinksList from './molecules/BackLinksList'
-import ContextMenuClose from './molecules/ContextMenuClose'
 import DocContextMenuActions from './molecules/DocContextMenuActions'
+import PreferencesContextMenuWrapper from './molecules/PreferencesContextMenuWrapper'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
   team: SerializedTeam
+  permissions: SerializedUserTeamPermissions[]
+  currentUserIsCoreMember: boolean
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
   restoreRevision?: (revision: SerializedRevision) => void
 }
@@ -40,9 +42,10 @@ const DocContextMenu = ({
   currentDoc,
   contributors,
   backLinks,
+  permissions,
+  currentUserIsCoreMember,
   editorRef,
 }: DocContextMenuProps) => {
-  const { permissions = [], currentUserIsCoreMember } = usePage()
   const [sliceContributors, setSliceContributors] = useState(true)
   const { translate } = useI18n()
 
@@ -73,122 +76,127 @@ const DocContextMenu = ({
     currentDoc.userId != null ? usersMap.get(currentDoc.userId) : undefined
 
   return (
-    <MetadataContainer
-      rows={[{ type: 'header', content: translate(lngKeys.DocInfo) }]}
-    >
-      <ContextMenuClose />
-      <MetadataContainerRow
-        row={{
-          label: translate(lngKeys.CreationDate),
-          type: 'content',
-          icon: mdiClockOutline,
-          content: getFormattedDateTime(
-            currentDoc.createdAt,
-            undefined,
-            'MMM dd, yyyy, HH:mm'
-          ),
-        }}
-      />
-      {!team.personal && creator != null && (
+    <PreferencesContextMenuWrapper>
+      <MetadataContainer
+        rows={[{ type: 'header', content: translate(lngKeys.DocInfo) }]}
+      >
         <MetadataContainerRow
           row={{
-            label: translate(lngKeys.CreatedBy),
+            label: translate(lngKeys.CreationDate),
             type: 'content',
-            icon: mdiAccountCircleOutline,
-            content: (
-              <Flexbox wrap='wrap'>
-                <UserIcon key={creator.id} user={creator} className='subtle' />
-              </Flexbox>
+            icon: mdiClockOutline,
+            content: getFormattedDateTime(
+              currentDoc.createdAt,
+              undefined,
+              'MMM dd, yyyy, HH:mm'
             ),
           }}
         />
-      )}
-      <MetadataContainerRow
-        row={{
-          label: translate(lngKeys.UpdateDate),
-          type: 'content',
-          icon: mdiContentSaveOutline,
-          content:
-            currentDoc.head != null
-              ? getFormattedDateTime(
-                  currentDoc.head.created,
-                  undefined,
-                  'MMM dd, yyyy, HH:mm'
-                )
-              : getFormattedDateTime(
-                  currentDoc.updatedAt,
-                  undefined,
-                  'MMM dd, yyyy, HH:mm'
-                ),
-        }}
-      />
-      {!team.personal && (
-        <MetadataContainerRow
-          row={{
-            label: translate(lngKeys.UpdatedBy),
-            type: 'content',
-            icon: mdiAccountCircleOutline,
-            content: (
-              <Flexbox wrap='wrap'>
-                {currentDoc.head != null &&
-                (currentDoc.head.creators || []).length > 0 ? (
-                  <>
-                    {(currentDoc.head.creators || []).map((user) => (
-                      <UserIcon
-                        key={user.id}
-                        user={usersMap.get(user.id) || user}
-                        className='subtle'
-                      />
-                    ))}
-                  </>
-                ) : (
-                  ''
-                )}
-              </Flexbox>
-            ),
-          }}
-        />
-      )}
-      {!team.personal && (
-        <MetadataContainerRow
-          row={{
-            label: translate(lngKeys.Contributors),
-            type: 'content',
-            icon: mdiAccountMultiple,
-            content: (
-              <Flexbox wrap='wrap'>
-                {contributorsState.contributors.map((contributor) => (
+        {!team.personal && creator != null && (
+          <MetadataContainerRow
+            row={{
+              label: translate(lngKeys.CreatedBy),
+              type: 'content',
+              icon: mdiAccountCircleOutline,
+              content: (
+                <Flexbox wrap='wrap'>
                   <UserIcon
-                    key={contributor.id}
-                    user={usersMap.get(contributor.id) || contributor}
+                    key={creator.id}
+                    user={creator}
                     className='subtle'
                   />
-                ))}
-
-                {contributors.length > 5 && (
-                  <SmallButton
-                    variant='transparent'
-                    onClick={() => setSliceContributors((prev) => !prev)}
-                  >
-                    {contributorsState.sliced > 0
-                      ? `+${contributorsState.sliced}`
-                      : '-'}
-                  </SmallButton>
-                )}
-              </Flexbox>
-            ),
+                </Flexbox>
+              ),
+            }}
+          />
+        )}
+        <MetadataContainerRow
+          row={{
+            label: translate(lngKeys.UpdateDate),
+            type: 'content',
+            icon: mdiContentSaveOutline,
+            content:
+              currentDoc.head != null
+                ? getFormattedDateTime(
+                    currentDoc.head.created,
+                    undefined,
+                    'MMM dd, yyyy, HH:mm'
+                  )
+                : getFormattedDateTime(
+                    currentDoc.updatedAt,
+                    undefined,
+                    'MMM dd, yyyy, HH:mm'
+                  ),
           }}
         />
-      )}
-      <BackLinksList team={team} docs={backLinks} />
-      <MetadataContainerBreak />
-      <DocContextMenuActions
-        team={team}
-        doc={currentDoc}
-        editorRef={editorRef}
-        currentUserIsCoreMember={currentUserIsCoreMember}
-      />
-    </MetadataContainer>
+        {!team.personal && (
+          <MetadataContainerRow
+            row={{
+              label: translate(lngKeys.UpdatedBy),
+              type: 'content',
+              icon: mdiAccountCircleOutline,
+              content: (
+                <Flexbox wrap='wrap'>
+                  {currentDoc.head != null &&
+                  (currentDoc.head.creators || []).length > 0 ? (
+                    <>
+                      {(currentDoc.head.creators || []).map((user) => (
+                        <UserIcon
+                          key={user.id}
+                          user={usersMap.get(user.id) || user}
+                          className='subtle'
+                        />
+                      ))}
+                    </>
+                  ) : (
+                    ''
+                  )}
+                </Flexbox>
+              ),
+            }}
+          />
+        )}
+        {!team.personal && (
+          <MetadataContainerRow
+            row={{
+              label: translate(lngKeys.Contributors),
+              type: 'content',
+              icon: mdiAccountMultiple,
+              content: (
+                <Flexbox wrap='wrap'>
+                  {contributorsState.contributors.map((contributor) => (
+                    <UserIcon
+                      key={contributor.id}
+                      user={usersMap.get(contributor.id) || contributor}
+                      className='subtle'
+                    />
+                  ))}
+
+                  {contributors.length > 5 && (
+                    <SmallButton
+                      variant='transparent'
+                      onClick={() => setSliceContributors((prev) => !prev)}
+                    >
+                      {contributorsState.sliced > 0
+                        ? `+${contributorsState.sliced}`
+                        : '-'}
+                    </SmallButton>
+                  )}
+                </Flexbox>
+              ),
+            }}
+          />
+        )}
+        <BackLinksList team={team} docs={backLinks} />
+        <MetadataContainerBreak />
+        <DocContextMenuActions
+          team={team}
+          doc={currentDoc}
+          editorRef={editorRef}
+          currentUserIsCoreMember={currentUserIsCoreMember}
+        />
+      </MetadataContainer>
+    </PreferencesContextMenuWrapper>
   )
 }
 
