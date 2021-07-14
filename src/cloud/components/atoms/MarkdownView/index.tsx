@@ -156,14 +156,6 @@ const MarkdownView = ({
       Fragment: React.Fragment,
       components: {
         a: ({ href, children }: any) => {
-          if (
-            (href || '')
-              .toLocaleLowerCase()
-              .startsWith((boostHubBaseUrl || '').toLocaleLowerCase())
-          ) {
-            return <a href={href}>{children}</a>
-          }
-
           if (agentType === 'ios-native' || agentType === 'android-native') {
             return (
               <a
@@ -181,6 +173,14 @@ const MarkdownView = ({
                 {children}
               </a>
             )
+          }
+
+          if (
+            (href || '')
+              .toLocaleLowerCase()
+              .startsWith((boostHubBaseUrl || '').toLocaleLowerCase())
+          ) {
+            return <a href={href}>{children}</a>
           }
 
           return (
