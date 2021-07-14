@@ -92,6 +92,7 @@ import { lngKeys } from '../../../lib/i18n/types'
 import { parse } from 'querystring'
 import DocShare from '../DocShare'
 import EditorLayout from '../../organisms/EditorLayout'
+import PreferencesContextMenuWrapper from '../../organisms/EditorLayout/molecules/PreferencesContextMenuWrapper'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -973,23 +974,27 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
         },
         right:
           preferences.docContextMode === 'context' ? (
-            <DocContextMenu
-              currentDoc={doc}
-              contributors={contributors}
-              backLinks={backLinks}
-              team={team}
-              restoreRevision={onRestoreRevisionCallback}
-              editorRef={editorRef}
-              currentUserIsCoreMember={currentUserIsCoreMember}
-              permissions={permissions || []}
-            />
+            <PreferencesContextMenuWrapper>
+              <DocContextMenu
+                currentDoc={doc}
+                contributors={contributors}
+                backLinks={backLinks}
+                team={team}
+                restoreRevision={onRestoreRevisionCallback}
+                editorRef={editorRef}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+                permissions={permissions || []}
+              />
+            </PreferencesContextMenuWrapper>
           ) : preferences.docContextMode === 'comment' ? (
-            <CommentManager
-              state={normalizedCommentState}
-              user={user}
-              users={users}
-              {...commentActions}
-            />
+            <PreferencesContextMenuWrapper>
+              <CommentManager
+                state={normalizedCommentState}
+                user={user}
+                users={users}
+                {...commentActions}
+              />
+            </PreferencesContextMenuWrapper>
           ) : null,
       }}
     >

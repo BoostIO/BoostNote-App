@@ -17,7 +17,6 @@ import ThreadStatusFilterControl, {
 import { partitionOnStatus } from '../../../shared/lib/utils/comments'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
-import PreferencesContextMenuWrapper from './EditorLayout/molecules/PreferencesContextMenuWrapper'
 
 export type State =
   | { mode: 'list_loading'; thread?: { id: string } }
@@ -191,37 +190,35 @@ function CommentManager({
   ])
 
   return (
-    <PreferencesContextMenuWrapper>
-      <Container>
-        <div className='header'>
-          {(state.mode !== 'list' || state.filter != null) && (
-            <div
-              className='icon__wrapper'
-              onClick={() => setMode({ mode: 'list' })}
-            >
-              <Icon size={20} path={mdiArrowLeft} />
-            </div>
-          )}
-          <h4>{translate(lngKeys.ThreadsTitle)}</h4>
-          {state.mode === 'list' && (
-            <ThreadStatusFilterControl
-              value={statusFilter}
-              onChange={setStatusFitler}
-              counts={counts}
-            />
-          )}
-          {state.mode === 'thread' && (
-            <ThreadActionButton
-              thread={state.thread}
-              onClose={closeThread}
-              onOpen={reopenThread}
-              onDelete={deleteThread}
-            />
-          )}
-        </div>
-        {content}
-      </Container>
-    </PreferencesContextMenuWrapper>
+    <Container>
+      <div className='header'>
+        {(state.mode !== 'list' || state.filter != null) && (
+          <div
+            className='icon__wrapper'
+            onClick={() => setMode({ mode: 'list' })}
+          >
+            <Icon size={20} path={mdiArrowLeft} />
+          </div>
+        )}
+        <h4>{translate(lngKeys.ThreadsTitle)}</h4>
+        {state.mode === 'list' && (
+          <ThreadStatusFilterControl
+            value={statusFilter}
+            onChange={setStatusFitler}
+            counts={counts}
+          />
+        )}
+        {state.mode === 'thread' && (
+          <ThreadActionButton
+            thread={state.thread}
+            onClose={closeThread}
+            onOpen={reopenThread}
+            onDelete={deleteThread}
+          />
+        )}
+      </div>
+      {content}
+    </Container>
   )
 }
 

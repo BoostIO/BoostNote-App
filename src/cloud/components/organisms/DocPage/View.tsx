@@ -47,6 +47,7 @@ import { parse } from 'querystring'
 import DocShare from '../../molecules/DocShare'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import NewDocContextMenu from '../EditorLayout/NewDocContextMenu'
+import PreferencesContextMenuWrapper from '../EditorLayout/molecules/PreferencesContextMenuWrapper'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -449,21 +450,25 @@ const ViewPage = ({
         },
         right:
           preferences.docContextMode === 'context' ? (
-            <NewDocContextMenu
-              currentDoc={doc}
-              contributors={contributors}
-              backLinks={backLinks}
-              team={team}
-              currentUserIsCoreMember={currentUserIsCoreMember}
-              permissions={permissions || []}
-            />
+            <PreferencesContextMenuWrapper>
+              <NewDocContextMenu
+                currentDoc={doc}
+                contributors={contributors}
+                backLinks={backLinks}
+                team={team}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+                permissions={permissions || []}
+              />
+            </PreferencesContextMenuWrapper>
           ) : preferences.docContextMode === 'comment' ? (
-            <CommentManager
-              state={normalizedCommentState}
-              user={user}
-              users={users}
-              {...commentActions}
-            />
+            <PreferencesContextMenuWrapper>
+              <CommentManager
+                state={normalizedCommentState}
+                user={user}
+                users={users}
+                {...commentActions}
+              />
+            </PreferencesContextMenuWrapper>
           ) : null,
       }}
     >
