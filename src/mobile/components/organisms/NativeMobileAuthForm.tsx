@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { generateId } from '../../../lib/string'
 import Button from '../../../shared/components/atoms/Button'
-import { sendPostMessage } from '../../lib/nativeMobile'
+import { sendPostMessage, agentType } from '../../lib/nativeMobile'
 import { boostHubBaseUrl } from '../../../cloud/lib/consts'
 import { loginWithStateAndCode } from '../../../cloud/api/desktop/login'
 import { createCustomEventEmitter } from '../../../cloud/lib/utils/events'
@@ -9,6 +9,7 @@ import MobileFormControl from '../atoms/MobileFormControl'
 import { useEffectOnce } from 'react-use'
 import { useRouter } from '../../../cloud/lib/router'
 import Spinner from '../../../shared/components/atoms/Spinner'
+import { osName } from '../../../lib/platform'
 
 export const nativeMobileAuthEventEmitter = createCustomEventEmitter<{
   state: string
@@ -16,15 +17,16 @@ export const nativeMobileAuthEventEmitter = createCustomEventEmitter<{
 }>('native-mobile-auth')
 
 const NativeMobileAuthForm = () => {
-  const requestGithubLogin = useCallback(() => {
+  const usingIOS = agentType === 'ios-native' || osName === 'ios'
+  const openLoginLink = useCallback(() => {
     const newAuthState = generateId()
 
     sendPostMessage({
       type: 'open-auth-link',
       state: newAuthState,
-      url: `${boostHubBaseUrl}/desktop/login?state=${newAuthState}`,
+      url: `${boostHubBaseUrl}/desktop/login?state=${newAuthState}&ios=${usingIOS}`,
     })
-  }, [])
+  }, [usingIOS])
 
   useEffect(() => {
     const handler = (event: CustomEvent<{ state: string; code: string }>) => {
@@ -71,9 +73,13 @@ const NativeMobileAuthForm = () => {
   return (
     <>
       <MobileFormControl>
-        <Button onClick={requestGithubLogin}>Sign Up</Button>
+        <Button onClick={openLoginLink}>Sign Up</Button>
       </MobileFormControl>
-      <p>You can sign in via Google, Github and E-mail</p>
+      {usingIOS ? (
+        <p>You can sign in via E-mail.</p>
+      ) : (
+        <p>You can sign in via Google, Github and E-mail</p>
+      )}
     </>
   )
 }
