@@ -126,7 +126,6 @@ const frTranslation: TranslationSource = {
     "Votre essai gratuit du plan pro est actif jusqu'à: {{date}}",
   [lngKeys.SettingsSubLimitTrialUpgrade]:
     "Vous pouvez mettre à niveau à tout moment durant l'essai gratuit.",
-  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} documents utilisés',
   [lngKeys.SettingsSubLimitTrialEnd]:
     'Votre essai gratuit a expiré. Veuillez mettre à niveau votre espace',
   [lngKeys.SettingsSubLimitUnderFreePlan]:
@@ -144,17 +143,17 @@ const frTranslation: TranslationSource = {
   [lngKeys.PlanBusinessLink]: 'contacter notre département de ventes',
   [lngKeys.PlanPerMember]: 'par membre',
   [lngKeys.PlanPerMonth]: 'par mois',
-  [lngKeys.PlanFreePerk1]: 'Membres illimités',
-  [lngKeys.PlanFreePerk2]: '{{docs}} documents par espace',
+  [lngKeys.PlanFreePerk1]: 'Observateurs illimités',
+  [lngKeys.PlanFreePerk2]: '1 Membre',
+  [lngKeys.PlanFreePerk3]: 'Documents illimités',
   [lngKeys.PlanStoragePerk]: '{{storageSize}} par membre',
-  [lngKeys.PlanStandardPerk1]: '{{viewersSize}} observateurs sans frais',
+  [lngKeys.PlanStandardPerk1]: 'Membres illimités',
   [lngKeys.PlanStandardPerk2]: 'Soutenir le dévelopement',
-  [lngKeys.PlanStandardPerk3]: 'Documents illimités',
-  [lngKeys.PlanStandardPerk4]:
+  [lngKeys.PlanStandardPerk3]:
     "Derniers {{days}} jours d'historique des révisions de vos documents",
-  [lngKeys.PlanProPerk1]: 'Observateurs illimités sans frais',
-  [lngKeys.PlanProPerk2]: "Mot de passe et date d'expiration lors de partage",
-  [lngKeys.PlanProPerk3]:
+  [lngKeys.PlanProPerk3]: 'Prioritée lors de demande de support',
+  [lngKeys.PlanProPerk1]: "Mot de passe et date d'expiration lors de partage",
+  [lngKeys.PlanProPerk2]:
     "Accès complet à l'historique des revisions de vos documents",
   [lngKeys.PlanTrial]: 'Essai gratuit de {{days}} jours',
   [lngKeys.PlanInTrial]: 'En essai gratuit ({{remaining}} left)',
@@ -457,6 +456,9 @@ const frTranslation: TranslationSource = {
   [lngKeys.SpaceIntent]: 'Dans quel but allez vous utiliser cet espace?',
   [lngKeys.SpaceIntentPersonal]: 'Pour mon propre usage',
   [lngKeys.SpaceIntentTeam]: 'Pour collaborer avec mon équipe',
+  [lngKeys.PlanViewersMembersIntro]:
+    'Quelle est la différence entre un membre et un observateur? Veuillez lire',
+  [lngKeys.PlanViewersMembersLink]: 'cet article',
 }
 
 export default {

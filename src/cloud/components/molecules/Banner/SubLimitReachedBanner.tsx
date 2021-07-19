@@ -1,7 +1,6 @@
 import React from 'react'
 import { useSettings } from '../../../lib/stores/settings'
 import { usePage } from '../../../lib/stores/pageStore'
-import { freePlanDocLimit } from '../../../lib/subscription'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 import Banner from '../../../../shared/components/atoms/Banner'
@@ -9,7 +8,7 @@ import Button from '../../../../shared/components/atoms/Button'
 import styled from '../../../../shared/lib/styled'
 
 const DocLimitReachedBanner = () => {
-  const { subscription, currentUserIsCoreMember } = usePage()
+  const { subscription, currentUserIsCoreMember, permissions = [] } = usePage()
   const { openSettingsTab } = useSettings()
 
   if (!currentUserIsCoreMember) {
@@ -29,7 +28,9 @@ const DocLimitReachedBanner = () => {
       <Banner variant='warning' className='doc__edit__limit'>
         <span className='limit__reached__banner__label'>
           {subscription == null &&
-            `Your space exceeds the limit of your current plan. (${freePlanDocLimit} created documents)`}
+            `Your space exceeds the limit of your current plan. (${
+              permissions.filter((p) => p.role !== 'viewer').length
+            } members)`}
         </span>
         <Button
           variant='primary'

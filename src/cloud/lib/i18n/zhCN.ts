@@ -126,7 +126,6 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SettingsSubLimitTrialDate]:
     '您的工作区对Pro计划的试用持续到{{date}}',
   [lngKeys.SettingsSubLimitTrialUpgrade]: '您可以在试用期间随时升级。',
-  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}}使用的文档',
   [lngKeys.SettingsSubLimitTrialEnd]: '你的pro计划试用已经结束。请立即升级',
   [lngKeys.SettingsSubLimitUnderFreePlan]:
     '在自由计划下，您最多可以创建{{limit}}个文档。',
@@ -140,16 +139,6 @@ const zhTranslation: TranslationSource = {
   [lngKeys.PlanBusinessLink]: '联系我们的销售部',
   [lngKeys.PlanPerMember]: '每个成员',
   [lngKeys.PlanPerMonth]: '每月',
-  [lngKeys.PlanFreePerk1]: '无限成员',
-  [lngKeys.PlanFreePerk2]: '每个团队{{docs}}个文档',
-  [lngKeys.PlanStoragePerk]: ' 每个成员{{storageSize}}',
-  [lngKeys.PlanStandardPerk1]: '{{viewersSize}}免费观看者',
-  [lngKeys.PlanStandardPerk2]: '支持开发',
-  [lngKeys.PlanStandardPerk3]: 'Unlimited documents',
-  [lngKeys.PlanStandardPerk4]: '文档修订历史的最后{{days}}天',
-  [lngKeys.PlanProPerk1]: '免费无限制查看',
-  [lngKeys.PlanProPerk2]: '共享时的密码和过期日期',
-  [lngKeys.PlanProPerk3]: '完全访问文档的修订历史记录',
   [lngKeys.PlanTrial]: '{{days}}天免费试用',
   [lngKeys.PlanInTrial]: '免费试用（剩余{{remaining}}）',
   [lngKeys.UpgradeSubtitle]: '确认并输入您的付款信息',
@@ -428,6 +417,20 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SpaceIntent]: 'For what purpose are you going to use this space?',
   [lngKeys.SpaceIntentPersonal]: 'For my personal use',
   [lngKeys.SpaceIntentTeam]: 'To collaborate with my team',
+  [lngKeys.PlanFreePerk1]: 'Unlimited Viewers',
+  [lngKeys.PlanFreePerk2]: '1 Member',
+  [lngKeys.PlanFreePerk3]: 'Unlimited documents',
+  [lngKeys.PlanStoragePerk]: '{{storageSize}} per member',
+  [lngKeys.PlanStandardPerk1]: 'Unlimited members',
+  [lngKeys.PlanStandardPerk2]: 'Support development',
+  [lngKeys.PlanStandardPerk3]:
+    "Last {{days}} days of your docs's revision history",
+  [lngKeys.PlanProPerk3]: 'Priority Support',
+  [lngKeys.PlanProPerk1]: 'Password and expiration date when sharing',
+  [lngKeys.PlanProPerk2]: "Full access to your docs' revision history",
+  [lngKeys.PlanViewersMembersIntro]:
+    "What's the difference between viewers and members? Please take a look at",
+  [lngKeys.PlanViewersMembersLink]: 'this article',
 }
 
 export default {

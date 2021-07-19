@@ -13,7 +13,7 @@ const TeamSubLimit = ({
   padded?: boolean
   onLimitClick?: () => void
 }) => {
-  const { subscription, team, currentSubInfo } = usePage()
+  const { subscription, team, currentSubInfo, permissions = [] } = usePage()
   const { openSettingsTab } = useSettings()
   const { translate } = useI18n()
 
@@ -56,6 +56,10 @@ const TeamSubLimit = ({
     )
   }
 
+  if (permissions.filter((p) => p.role !== 'viewer').length === 1) {
+    return null
+  }
+
   return (
     <Container
       className={cc(['sub__limit', !padded && 'sub__limit--stripped'])}
@@ -73,26 +77,17 @@ const TeamSubLimit = ({
         }}
       >
         <p className='note-limit'>
-          {translate(lngKeys.SettingsSubLimitUsed, {
-            docsNb: currentSubInfo.info.progressLabel,
-          })}
+          {team.permissions.length}/1 {translate(lngKeys.GeneralMembers)}
         </p>
         <div className='progress-sm'>
           <div
             className={cc([
               'progress-bar',
-              currentSubInfo.info.overLimit && 'over-limit',
+              team.permissions.length > 1 && 'over-limit',
             ])}
-            style={{ width: `${currentSubInfo.info.rate}%` }}
+            style={{ width: `${team.permissions.length - 1}%` }}
           />
         </div>
-        {currentSubInfo.info.docLimit != null && (
-          <p>
-            {translate(lngKeys.SettingsSubLimitUnderFreePlan, {
-              limit: currentSubInfo.info.docLimit,
-            })}
-          </p>
-        )}
         {currentSubInfo.info.trialIsOver && (
           <p className='text-danger'>
             {translate(lngKeys.SettingsSubLimitTrialEnd)}

@@ -7,7 +7,6 @@ import { mdiAlertOutline, mdiClose } from '@mdi/js'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { PageStoreWithTeam } from '../../interfaces/pageStore'
 import UpgradeButton from '../UpgradeButton'
-import UpgradeIntroButton from '../UpgradeIntroButton'
 import {
   getCurrentDesktopAppVersion,
   useElectron,
@@ -129,29 +128,7 @@ const AnnouncementAlert = () => {
     )
   }
 
-  if (!currentSubInfo.info.overLimit) {
-    return null
-  }
-
-  return (
-    <Container>
-      <div className='alert'>
-        <span className='alert__icon'>
-          <IconMdi path={mdiAlertOutline} size={21} />
-        </span>
-        <p className='alert__text'>
-          Your number of documents exceeds the capacity of the free plan.
-          <UpgradeIntroButton
-            origin='limit'
-            variant='link'
-            label='Start your free trial'
-            popupVariant='doc-limit'
-          />
-          now.
-        </p>
-      </div>
-    </Container>
-  )
+  return null
 }
 
 export default AnnouncementAlert

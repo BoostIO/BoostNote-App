@@ -190,7 +190,6 @@ export enum lngKeys {
   SettingsSubLimitTrialTitle = 'settings.sub.limit.trial.title',
   SettingsSubLimitTrialDate = 'settings.sub.limit.trial.date',
   SettingsSubLimitTrialUpgrade = 'settings.sub.limit.trial.upgrade',
-  SettingsSubLimitUsed = 'settings.sub.limit.used',
   SettingsSubLimitTrialEnd = 'settings.sub.limit.trial.end',
   SettingsSubLimitUnderFreePlan = 'settings.sub.limit.free',
 
@@ -205,11 +204,11 @@ export enum lngKeys {
   PlanPerMonth = 'plan.per.month',
   PlanFreePerk1 = 'plan.free.perk.1',
   PlanFreePerk2 = 'plan.free.perk.2',
-  PlanStoragePerk = 'plan.free.perk.3',
+  PlanFreePerk3 = 'plan.free.perk.3',
+  PlanStoragePerk = 'plan.storage.perk',
   PlanStandardPerk1 = 'plan.standard.perk.1',
   PlanStandardPerk2 = 'plan.standard.perk.2',
   PlanStandardPerk3 = 'plan.standard.perk.3',
-  PlanStandardPerk4 = 'plan.standard.perk.4',
   PlanProPerk1 = 'plan.pro.perk.1',
   PlanProPerk2 = 'plan.pro.perk.2',
   PlanProPerk3 = 'plan.pro.perk.3',
@@ -412,6 +411,8 @@ export enum lngKeys {
   SpaceIntentTeam = 'space.intent.team',
   PictureAdd = 'picture.add.verb',
   PictureChange = 'picture.change.verb',
+  PlanViewersMembersIntro = 'plan.viewersmembers.intro',
+  PlanViewersMembersLink = 'plan.viewersmembers.link',
 }
 
 export type TranslationSource = {

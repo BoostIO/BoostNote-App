@@ -131,7 +131,6 @@ const enTranslation: TranslationSource = {
     "Your workspace's trial of the Pro plan lasts through {{date}}",
   [lngKeys.SettingsSubLimitTrialUpgrade]:
     'You can upgrade at anytime during your trial.',
-  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} docs used',
   [lngKeys.SettingsSubLimitTrialEnd]:
     'Your pro plan trial has ended. Please upgrade now',
   [lngKeys.SettingsSubLimitUnderFreePlan]:
@@ -149,17 +148,18 @@ const enTranslation: TranslationSource = {
   [lngKeys.PlanBusinessLink]: 'contact our sales department',
   [lngKeys.PlanPerMember]: 'per member',
   [lngKeys.PlanPerMonth]: 'per month',
-  [lngKeys.PlanFreePerk1]: 'Unlimited members',
-  [lngKeys.PlanFreePerk2]: '{{docs}} docs per team',
+
+  [lngKeys.PlanFreePerk1]: 'Unlimited Viewers',
+  [lngKeys.PlanFreePerk2]: '1 Member',
+  [lngKeys.PlanFreePerk3]: 'Unlimited documents',
   [lngKeys.PlanStoragePerk]: '{{storageSize}} per member',
-  [lngKeys.PlanStandardPerk1]: '{{viewersSize}} viewers for free',
+  [lngKeys.PlanStandardPerk1]: 'Unlimited members',
   [lngKeys.PlanStandardPerk2]: 'Support development',
-  [lngKeys.PlanStandardPerk3]: 'Unlimited documents',
-  [lngKeys.PlanStandardPerk4]:
+  [lngKeys.PlanStandardPerk3]:
     "Last {{days}} days of your docs's revision history",
-  [lngKeys.PlanProPerk1]: 'Unlimited viewers for free',
-  [lngKeys.PlanProPerk2]: 'Password and expiration date when sharing',
-  [lngKeys.PlanProPerk3]: "Full access to your docs' revision history",
+  [lngKeys.PlanProPerk3]: 'Priority Support',
+  [lngKeys.PlanProPerk1]: 'Password and expiration date when sharing',
+  [lngKeys.PlanProPerk2]: "Full access to your docs' revision history",
   [lngKeys.PlanTrial]: '{{days}} days free trial',
   [lngKeys.PlanInTrial]: 'In free trial ({{remaining}} left)',
   [lngKeys.UpgradeSubtitle]: 'Confirm and enter your payment information',
@@ -449,6 +449,9 @@ const enTranslation: TranslationSource = {
   [lngKeys.SpaceIntent]: 'For what purpose are you going to use this space?',
   [lngKeys.SpaceIntentPersonal]: 'For my personal use',
   [lngKeys.SpaceIntentTeam]: 'To collaborate with my team',
+  [lngKeys.PlanViewersMembersIntro]:
+    "What's the difference between viewers and members? Please take a look at",
+  [lngKeys.PlanViewersMembersLink]: 'this article',
 }
 
 export default {

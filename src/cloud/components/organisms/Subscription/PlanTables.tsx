@@ -10,12 +10,10 @@ import {
   UpgradePlans,
 } from '../../../lib/stripe'
 import {
-  freePlanDocLimit,
   freePlanStorageMb,
   proPlanStorageMb,
   revisionHistoryStandardDays,
   standardPlanStorageMb,
-  viewerStandardPlanLimit,
 } from '../../../lib/subscription'
 import cc from 'classcat'
 import Button from '../../../../shared/components/atoms/Button'
@@ -104,9 +102,11 @@ const PlanTables = ({
             <span>{translate(lngKeys.PlanFreePerk1)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>
-              {translate(lngKeys.PlanFreePerk2, { docs: freePlanDocLimit })}
-            </span>
+            <span>{translate(lngKeys.PlanFreePerk2)}</span>
+          </div>
+
+          <div className='plan__item__perk'>
+            <span>{translate(lngKeys.PlanFreePerk3)}</span>
           </div>
           <div className='plan__item__perk'>
             <span>
@@ -174,21 +174,14 @@ const PlanTables = ({
         )}
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
-            <span>
-              {translate(lngKeys.PlanStandardPerk1, {
-                viewersSize: viewerStandardPlanLimit,
-              })}
-            </span>
+            <span>{translate(lngKeys.PlanStandardPerk1)}</span>
           </div>
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanStandardPerk2)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>{translate(lngKeys.PlanStandardPerk3)}</span>
-          </div>
-          <div className='plan__item__perk'>
             <span>
-              {translate(lngKeys.PlanStandardPerk4, {
+              {translate(lngKeys.PlanStandardPerk3, {
                 days: revisionHistoryStandardDays,
               })}
             </span>
