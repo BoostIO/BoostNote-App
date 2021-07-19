@@ -404,6 +404,14 @@ export enum lngKeys {
   SettingsImportDescription = 'settings.import.description',
 
   GeneralPassword = 'general.password',
+
+  CooperateTitle = 'cooperate.title',
+  CooperateSubtitle = 'cooperate.subtitle',
+  SpaceIntent = 'space.intent',
+  SpaceIntentPersonal = 'space.intent.personal',
+  SpaceIntentTeam = 'space.intent.team',
+  PictureAdd = 'picture.add.verb',
+  PictureChange = 'picture.change.verb',
 }
 
 export type TranslationSource = {

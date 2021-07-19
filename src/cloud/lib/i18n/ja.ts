@@ -446,6 +446,14 @@ const jpTranslation: TranslationSource = {
     'No need to start from scratch. Import data into Boost Note by selecting one of the options below.',
 
   [lngKeys.GeneralPassword]: 'パスワード',
+
+  [lngKeys.CooperateTitle]: 'Create a new space',
+  [lngKeys.CooperateSubtitle]: 'Please set up your space information',
+  [lngKeys.PictureAdd]: 'Add a picture',
+  [lngKeys.PictureChange]: 'Change your picture',
+  [lngKeys.SpaceIntent]: 'For what purpose are you going to use this space?',
+  [lngKeys.SpaceIntentPersonal]: 'For my personal use',
+  [lngKeys.SpaceIntentTeam]: 'To collaborate with my team',
 }
 
 export default {

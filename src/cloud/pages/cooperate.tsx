@@ -8,7 +8,6 @@ import { useSidebarCollapse } from '../lib/stores/sidebarCollapse'
 import { useGlobalData } from '../lib/stores/globalData'
 import { GetInitialPropsParameters } from '../interfaces/pages'
 import { getDocLinkHref } from '../components/atoms/Link/DocLink'
-import UsagePage from '../components/organisms/Onboarding/UsagePage'
 import styled from '../../shared/lib/styled'
 import OnboardingLayout from '../components/organisms/Onboarding/layouts/OnboardingLayout'
 import BulkInvitesForm from '../components/organisms/Onboarding/molecules/BulkInvitesForm'
@@ -21,11 +20,18 @@ import { boostHubBaseUrl } from '../lib/consts'
 import { getOpenInviteURL, getTeamURL } from '../lib/utils/patterns'
 import { mdiClose } from '@mdi/js'
 import Button from '../../shared/components/atoms/Button'
+import { useI18n } from '../lib/hooks/useI18n'
+import { lngKeys } from '../lib/i18n/types'
+import { SpaceUsageIntent } from '../components/organisms/Onboarding/molecules/UsageFormRow'
+import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
+import { trackEvent } from '../api/track'
 
 const CooperatePage = () => {
+  const [intent, setIntent] = useState<SpaceUsageIntent>()
   const [name, setName] = useState<string>('')
   const [domain, setDomain] = useState<string>('')
   const [sending, setSending] = useState<boolean>(false)
+  const { translate } = useI18n()
   const { usingElectron, sendToElectron } = useElectron()
   const { updateDocsMap } = useNav()
   const { setTeamInGlobal } = useGlobalData()
@@ -33,7 +39,6 @@ const CooperatePage = () => {
   const { setToLocalStorage } = useSidebarCollapse()
   const [iconFile, setIconFile] = useState<File | null>(null)
   const [fileUrl, setFileUrl] = useState<string | null>(null)
-  const [state, setState] = useState<'usage' | 'create'>('usage')
   const { pushApiErrorMessage } = useToast()
   const [createTeamReturn, setCreateTeamReturn] = useState<{
     team: SerializedTeam
@@ -46,89 +51,83 @@ const CooperatePage = () => {
     setFileUrl(URL.createObjectURL(file))
   }, [])
 
-  const createTeamCallback = useCallback(
-    async (personal: boolean) => {
-      setSending(true)
-      try {
-        const body = personal ? { personal: true } : { name, domain }
+  const createTeamCallback = useCallback(async () => {
+    setSending(true)
+    try {
+      const body = { name, domain }
 
-        const { team, doc, openInvite, initialFolders } = await createTeam(body)
+      const { team, doc, openInvite, initialFolders } = await createTeam(body)
 
-        if (usingElectron) {
-          sendToElectron('team-create', {
-            id: team.id,
-            domain: team.domain,
-            name: team.name,
-          })
-          return
-        }
-
-        if (!personal && iconFile != null) {
-          const { icon } = await updateTeamIcon(team, iconFile)
-          team.icon = icon
-        }
-        setTeamInGlobal(team)
-
-        if (doc != null) {
-          updateDocsMap([doc.id, doc])
-          setPartialPageData({ pageDoc: doc, team })
-        }
-
-        setToLocalStorage(team.id, {
-          folders: initialFolders
-            .filter((f) => f.parentFolder == null)
-            .map((folder) => folder.id),
-          workspaces: [
-            ...new Set(initialFolders.map((folder) => folder.workspaceId)),
-          ],
-          links: [],
+      if (usingElectron) {
+        sendToElectron('team-create', {
+          id: team.id,
+          domain: team.domain,
+          name: team.name,
         })
-
-        if (personal && doc != null) {
-          window.location.href = getDocLinkHref(doc, team, 'index', {
-            onboarding: true,
-          })
-        } else if (doc != null && openInvite != null) {
-          setCreateTeamReturn({ team, doc, openInvite })
-        } else {
-          window.location.href = getTeamLinkHref(team, 'index', {
-            onboarding: true,
-          })
-        }
-      } catch (error) {
-        setSending(false)
-        pushApiErrorMessage(error)
+        return
       }
-    },
-    [
-      name,
-      domain,
-      usingElectron,
-      iconFile,
-      setTeamInGlobal,
-      sendToElectron,
-      updateDocsMap,
-      setPartialPageData,
-      pushApiErrorMessage,
-      setToLocalStorage,
-    ]
-  )
+
+      if (iconFile != null) {
+        const { icon } = await updateTeamIcon(team, iconFile)
+        team.icon = icon
+      }
+      setTeamInGlobal(team)
+
+      if (doc != null) {
+        updateDocsMap([doc.id, doc])
+        setPartialPageData({ pageDoc: doc, team })
+      }
+
+      setToLocalStorage(team.id, {
+        folders: initialFolders
+          .filter((f) => f.parentFolder == null)
+          .map((folder) => folder.id),
+        workspaces: [
+          ...new Set(initialFolders.map((folder) => folder.workspaceId)),
+        ],
+        links: [],
+      })
+
+      if (intent != null) {
+        await trackEvent(
+          intent === 'personal'
+            ? MixpanelActionTrackTypes.SpaceIntentPersonal
+            : MixpanelActionTrackTypes.SpaceIntentTeam,
+          {
+            teamId: team.id,
+          }
+        )
+      }
+
+      if (doc != null && openInvite != null) {
+        setCreateTeamReturn({ team, doc, openInvite })
+      } else {
+        window.location.href = getTeamLinkHref(team, 'index', {
+          onboarding: true,
+        })
+      }
+    } catch (error) {
+      setSending(false)
+      pushApiErrorMessage(error)
+    }
+  }, [
+    name,
+    intent,
+    domain,
+    usingElectron,
+    iconFile,
+    setTeamInGlobal,
+    sendToElectron,
+    updateDocsMap,
+    setPartialPageData,
+    pushApiErrorMessage,
+    setToLocalStorage,
+  ])
 
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
       event.preventDefault()
-      createTeamCallback(false)
-    },
-    [createTeamCallback]
-  )
-
-  const onUsageCallback = useCallback(
-    (val: 'personal' | 'team') => {
-      if (val === 'personal') {
-        return createTeamCallback(true)
-      }
-      setState('create')
-      return
+      createTeamCallback()
     },
     [createTeamCallback]
   )
@@ -162,31 +161,10 @@ const CooperatePage = () => {
     )
   }
 
-  if (state === 'usage') {
-    return (
-      <>
-        {usingElectron && (
-          <ElectronButtonContainer>
-            <Button
-              variant='icon'
-              iconSize={34}
-              iconPath={mdiClose}
-              onClick={() => {
-                sendToElectron('router', 'back')
-              }}
-              className='electron__goback'
-            />
-          </ElectronButtonContainer>
-        )}
-        <UsagePage onUsage={onUsageCallback} sending={sending} />
-      </>
-    )
-  }
-
   return (
     <OnboardingLayout
-      title='Create a team space'
-      subtitle='Please tell us your team information.'
+      title={translate(lngKeys.CooperateTitle)}
+      subtitle={translate(lngKeys.CooperateSubtitle)}
       contentWidth={600}
     >
       {usingElectron && (
@@ -205,6 +183,8 @@ const CooperatePage = () => {
       <Container>
         <CreateTeamForm
           fullPage={true}
+          intent={intent}
+          setIntent={setIntent}
           name={name}
           domain={domain}
           setName={setName}
@@ -215,7 +195,6 @@ const CooperatePage = () => {
           fileUrl={fileUrl != null ? fileUrl : undefined}
           onFileChange={changeHandler}
           showSubmitButton={true}
-          goBack={() => setState('usage')}
         />
       </Container>
     </OnboardingLayout>

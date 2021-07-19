@@ -449,6 +449,14 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsImportDescription]:
     'Plutôt que démarrer à partir de rien, importez vos fichiers directement dans Boost Note en sélectionnant une des options ci-dessous.',
   [lngKeys.GeneralPassword]: 'Mot de passe',
+
+  [lngKeys.CooperateTitle]: 'Créez un nouvel espace',
+  [lngKeys.CooperateSubtitle]: 'Veuillez configurer votre nouvel espace',
+  [lngKeys.PictureAdd]: 'Ajouter une image',
+  [lngKeys.PictureChange]: "Changer l'image",
+  [lngKeys.SpaceIntent]: 'Dans quel but allez vous utiliser cet espace?',
+  [lngKeys.SpaceIntentPersonal]: 'Pour mon propre usage',
+  [lngKeys.SpaceIntentTeam]: 'Pour collaborer avec mon équipe',
 }
 
 export default {
