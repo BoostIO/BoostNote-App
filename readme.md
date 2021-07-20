@@ -5,9 +5,11 @@
 
 </div>
 
-![uiimage](./static/img_ui.jpg)
+![uiimage](./static/img_ui.png)
 
-<h2 align='center'>Boost Note is a powerful, lightspeed collaborative workspace for developer teams.</h2>
+<h2 align='center'>A collaborative real-time markdown note app for developer teams</h2>
+
+<br />
 
 BoostNote.next is a renewal of the [Boostnote app](https://github.com/BoostIO/Boostnote).
 
@@ -18,11 +20,17 @@ BoostNote.next is a renewal of the [Boostnote app](https://github.com/BoostIO/Bo
 
 ## Community
 
-- [Facebook Group](https://www.facebook.com/groups/boostnote/)
+- [Forum (New!)](https://forum.boostnote.io/)
+- [Release Notes](https://forum.boostnote.io/c/announcements/5)
 - [Twitter](https://twitter.com/boostnoteapp)
 - [Slack Group](https://join.slack.com/t/boostnote-group/shared_invite/zt-cun7pas3-WwkaezxHBB1lCbUHrwQLXw)
 - [Blog](https://medium.com/boostnote)
 - [Reddit](https://www.reddit.com/r/Boostnote/)
+
+## App
+- [Desktop app](https://boostnote.io/#download)
+- [iOS](https://apps.apple.com/gb/app/boost-note-mobile/id1576176505)
+- [Android](https://play.google.com/store/apps/details?id=com.boostio.boostnote2021)
 
 ## Development
 
