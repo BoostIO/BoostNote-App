@@ -11,6 +11,7 @@ import {
 } from '../../utils/events'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import { UpgradeTabOpeningOptions } from '../../../components/organisms/settings/UpgradeTab'
+import { isEqual } from 'lodash'
 
 export const baseUserSettings: UserSettings = {
   'general.language': 'en-US',
@@ -49,7 +50,6 @@ function useSettingsStore() {
   >()
 
   const { pushMessage } = useToast()
-  const { t } = useTranslation()
 
   const saveTimer = useRef<any>()
 
@@ -68,9 +68,10 @@ function useSettingsStore() {
     if (currentUserId == null) {
       return
     }
-    if (previousSettingsRef.current === settings) {
+    if (isEqual(previousSettingsRef.current, settings)) {
       return
     }
+
     previousSettingsRef.current = settings
     saveTimer.current = setTimeout(() => {
       saveUserSettings({
@@ -83,12 +84,12 @@ function useSettingsStore() {
           // eslint-disable-next-line no-console
           console.error(error)
           pushMessage({
-            title: t('general.error'),
+            title: 'Error',
             description: `An error occurred while saving your settings.`,
           })
         })
     }, 2000)
-  }, [settings, setPartialGlobalData, t, pushMessage, currentUserId])
+  }, [settings, setPartialGlobalData, pushMessage, currentUserId])
 
   const mergedUserSettings = useMemo(() => {
     return {
