@@ -59,7 +59,7 @@ import {
 import { useModal } from '../../shared/lib/stores/modal'
 import NewDocButton from './molecules/NewDocButton'
 import { useCloudSidebarTree } from '../lib/hooks/sidebar/useCloudSidebarTree'
-import { isEligibleForDiscount } from '../lib/subscription'
+import { isTimeEligibleForDiscount } from '../lib/subscription'
 import DiscountModal from './organisms/Modal/contents/DiscountModal'
 import { Notification as UserNotification } from '../interfaces/db/notifications'
 import useNotificationState from '../../shared/lib/hooks/useNotificationState'
@@ -102,6 +102,7 @@ const Application = ({
     permissions = [],
     currentUserPermissions,
     currentUserIsCoreMember,
+    subscription,
   } = usePage()
   const { openModal } = useModal()
   const {
@@ -360,7 +361,7 @@ const Application = ({
             },
           ]}
         >
-          {isEligibleForDiscount(team) ? (
+          {isTimeEligibleForDiscount(team) && subscription == null ? (
             <SidebarButton
               variant='subtle'
               icon={<NotifyIcon text='!' size={16} path={mdiGiftOutline} />}
@@ -378,7 +379,15 @@ const Application = ({
         <ViewerDisclaimer />
       </>
     )
-  }, [openModal, openSettingsTab, team, pathname, push, translate])
+  }, [
+    openModal,
+    openSettingsTab,
+    team,
+    pathname,
+    push,
+    translate,
+    subscription,
+  ])
 
   return (
     <>

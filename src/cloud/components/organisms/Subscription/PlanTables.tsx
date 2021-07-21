@@ -86,7 +86,7 @@ const PlanTables = ({
 
   return (
     <Container className={cc(['plans', isTabletOrMobile && 'plans--mobile'])}>
-      <div className='plan__item'>
+      <div className='plan__item plan__item--free'>
         <div className='plan__item__header'>
           <label className='plan__item__title'>Free</label>
           <div className='plan__item__price'>
@@ -136,7 +136,7 @@ const PlanTables = ({
           )}
         </div>
       </div>
-      <div className='plan__item'>
+      <div className='plan__item plan__item--standard'>
         <div className='plan__item__header'>
           <label className='plan__item__title'>Standard</label>
           <div
@@ -204,13 +204,17 @@ const PlanTables = ({
               Current Plan
             </Button>
           ) : (
-            <Button onClick={onStandardCallback} className='upgrade__btn'>
+            <Button
+              onClick={onStandardCallback}
+              className='upgrade__btn'
+              disabled={onStandardCallback == null}
+            >
               {selectedPlan === 'free' ? 'Upgrade' : 'Downgrade'}
             </Button>
           )}
         </div>
       </div>
-      <div className='plan__item'>
+      <div className='plan__item plan__item--pro'>
         <div className='plan__item__header'>
           <label className='plan__item__title'>Pro</label>
           <div
@@ -274,7 +278,11 @@ const PlanTables = ({
               Current Plan
             </Button>
           ) : (
-            <Button onClick={onProCallback} className='upgrade__btn'>
+            <Button
+              onClick={onProCallback}
+              className='upgrade__btn'
+              disabled={onProCallback == null}
+            >
               Upgrade
             </Button>
           )}

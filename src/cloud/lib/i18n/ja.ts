@@ -1,3 +1,4 @@
+import { membersForDiscount } from '../subscription'
 import { lngKeys, TranslationSource } from './types'
 
 const jpTranslation: TranslationSource = {
@@ -196,12 +197,6 @@ const jpTranslation: TranslationSource = {
     '無制限ドキュメントやドキュメント履歴変更、大きな容量サイズ等、特別な機能を利用することが出来ます。',
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     '無制限ドキュメントやドキュメント履歴変更、大きな容量サイズ等、特別な機能へのアクセスを失います。',
-
-  [lngKeys.DiscountModalTitle]: '有料プランを購読し、割引を受け取りましょう！',
-  [lngKeys.DiscountModalAlreadySubscribed]:
-    'あなたは既に有料プランに加入しています。',
-  [lngKeys.DiscountModalTimeRemaining]: 'タイムリミット',
-  [lngKeys.DiscountModalExpired]: '割引への有効期限の期限が切れました。',
 
   [lngKeys.FreeTrialModalTitle]: 'プロプランを無料で試してみましょう',
   [lngKeys.FreeTrialModalBody]:
@@ -459,6 +454,17 @@ const jpTranslation: TranslationSource = {
   [lngKeys.ViewerDisclaimerIntro]: 'You are a',
   [lngKeys.ViewerDisclaimerDescription]:
     'Please ask your admin to give you a member role so that you can participate as well.',
+
+  [lngKeys.DiscountModalTitle]:
+    'Invitez {{membersNb}} personnes pour recevoir une promotion!',
+  [lngKeys.DiscountModalSubtitle]: `You can receive a one-month free reduction if ${
+    membersForDiscount - 1
+  } people join this space before the timer's end.`,
+  [lngKeys.DiscountModalAlreadySubscribed]:
+    'あなたは既に有料プランに加入しています。',
+  [lngKeys.DiscountModalTimeRemaining]: 'タイムリミット',
+  [lngKeys.DiscountModalExpired]: '割引への有効期限の期限が切れました。',
+  [lngKeys.GeneralInvite]: 'Invite',
 }
 
 export default {

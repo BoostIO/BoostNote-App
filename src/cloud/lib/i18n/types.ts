@@ -251,6 +251,7 @@ export enum lngKeys {
   BillingChangePlanStripeProration = 'billing.plan.change.stripe.proration',
 
   DiscountModalTitle = 'modals.discount.title',
+  DiscountModalSubtitle = 'modals.discount.subtitle',
   DiscountModalAlreadySubscribed = 'modals.discount.subscribed',
   DiscountModalTimeRemaining = 'modals.discount.remaining',
   DiscountModalExpired = 'modals.discount.expired',
@@ -416,6 +417,8 @@ export enum lngKeys {
   SeeRoleDetails = 'settings.roles.see.details',
   ViewerDisclaimerIntro = 'viewer.disclaimer.intro',
   ViewerDisclaimerDescription = 'viewer.disclaimer.description',
+
+  GeneralInvite = 'general.invite',
 }
 
 export type TranslationSource = {

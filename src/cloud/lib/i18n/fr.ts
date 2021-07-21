@@ -1,3 +1,4 @@
+import { membersForDiscount } from '../subscription'
 import { TranslationSource, lngKeys } from './types'
 
 const frTranslation: TranslationSource = {
@@ -204,12 +205,7 @@ const frTranslation: TranslationSource = {
     "Vous allez immédiatement gagner accès à des fonctionnalités avancées tel que l'accès complet à l'historique de révisions pour vos documents, choisir et installer des mots de passe ou des dates d'expiration pour vos documents partagés, nombre illimité d'observateurs etc...",
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     "Vous allez immédiatement perdre accès à des fonctionnalités avancées tel que l'accès complet à l'historique de révisions pour vos documents, choisir et installer des mots de passe ou des dates d'expiration pour vos documents partagés, nombre illimité d'observateurs etc...",
-  [lngKeys.DiscountModalTitle]:
-    'Abonnez vous dès maintenant pour recevoir une promotion!',
-  [lngKeys.DiscountModalAlreadySubscribed]: 'Vous êtes déjà abonné',
-  [lngKeys.DiscountModalTimeRemaining]: 'Temps restant',
-  [lngKeys.DiscountModalExpired]:
-    "Vous n'êtes plus apte à recevoir cette promotion",
+
   [lngKeys.FreeTrialModalTitle]: 'Pro Plan: Essai gratuit',
   [lngKeys.FreeTrialModalBody]:
     'Vous allez pouvoir accéder à toutes les fonctionnalités du pro plan tel que documents illimités, historique de révisions etc... durant {{days}} jours.',
@@ -463,6 +459,16 @@ const frTranslation: TranslationSource = {
   [lngKeys.ViewerDisclaimerIntro]: 'Vous êtes un',
   [lngKeys.ViewerDisclaimerDescription]:
     'Veuillez demander à vos admins de vous promouvoir au rôle de membre afin de participer.',
+  [lngKeys.DiscountModalTitle]:
+    'Invitez {{membersNb}} personnes pour recevoir une promotion!',
+  [lngKeys.DiscountModalSubtitle]: `Vous pouvez recevoir un mois d'abonnement gratuit si ${
+    membersForDiscount - 1
+  } personnes vous rejoignent dans cet espace avant la date butôire.`,
+  [lngKeys.DiscountModalAlreadySubscribed]: 'Vous êtes déjà abonné',
+  [lngKeys.DiscountModalTimeRemaining]: 'Temps restant',
+  [lngKeys.DiscountModalExpired]:
+    "Vous n'êtes plus apte à recevoir cette promotion",
+  [lngKeys.GeneralInvite]: 'Inviter',
 }
 
 export default {

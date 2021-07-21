@@ -47,6 +47,7 @@ const UpgradeTab = ({
     subscription,
     updateTeamSubscription,
     currentUserPermissions,
+    permissions = [],
   } = usePage<PageStoreWithTeam>()
   const { usingElectron, sendToElectron } = useElectron()
   const [tabState, setTabState] = useState<UpgradeTabs>(defaultTabState)
@@ -96,7 +97,7 @@ const UpgradeTab = ({
 
   const eligibilityEnd = new Date(team.createdAt)
   eligibilityEnd.setDate(eligibilityEnd.getDate() + newTeamDiscountDays)
-  const teamIsEligibleForDiscount = isEligibleForDiscount(team)
+  const teamIsEligibleForDiscount = isEligibleForDiscount(team, permissions)
   if (tabState === 'plans') {
     return (
       <SettingTabContent
