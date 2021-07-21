@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react'
 import styled from '../../../../shared/lib/styled'
-import { useSet } from 'react-use'
+// import { useSet } from 'react-use'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { PageStoreWithTeam } from '../../../../cloud/interfaces/pageStore'
-import Icon from '../../../../shared/components/atoms/Icon'
-import { mdiChevronRight, mdiCheck, mdiChevronDown } from '@mdi/js'
-import Banner from '../../../../shared/components/atoms/Banner'
+// import Icon from '../../../../shared/components/atoms/Icon'
+// import { mdiChevronRight, mdiCheck, mdiChevronDown } from '@mdi/js'
+// import Banner from '../../../../shared/components/atoms/Banner'
 import { SettingsTabTypes } from './types'
 import ModalContainer from './atoms/ModalContainer'
 import NavigationBarBackButton from '../../atoms/NavigationBarBackButton'
@@ -14,7 +14,7 @@ import { sendPostMessage } from '../../../lib/nativeMobile'
 import { boostHubBaseUrl } from '../../../../cloud/lib/consts'
 import MobileFormControl from '../../atoms/MobileFormControl'
 
-type TabType = 'free' | 'standard' | 'pro'
+// type TabType = 'free' | 'standard' | 'pro'
 
 interface SpaceUpgradeTabProps {
   setActiveTab: (tabType: SettingsTabTypes | null) => void
