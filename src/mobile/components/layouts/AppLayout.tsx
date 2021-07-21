@@ -81,15 +81,15 @@ export default AppLayout
 
 const Container = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: env(safe-area-inset-top);
+  left: env(safe-area-inset-left);
+  right: env(safe-area-inset-right);
+  bottom: env(safe-area-inset-bottom);
   width: 100%;
   height: 100%;
   overflow: hidden;
   .nav {
-    position: fixed;
+    position: absolute;
     left: -360px;
     width: 360px;
     bottom: 0;
@@ -97,7 +97,7 @@ const Container = styled.div`
     transition: left 200ms ease-in-out;
   }
   .main {
-    position: fixed;
+    position: absolute;
     left: 0;
     height: 100%;
     width: 100%;

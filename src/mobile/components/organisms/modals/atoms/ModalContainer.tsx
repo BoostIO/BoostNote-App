@@ -42,8 +42,10 @@ const zIndexModals = 8001
 
 const Container = styled.div`
   &.modal-container {
-    width: 100%;
-    height: 100%;
+    top: env(safe-area-inset-top);
+    left: env(safe-area-inset-left);
+    right: env(safe-area-inset-right);
+    bottom: env(safe-area-inset-bottom);
     position: fixed;
     z-index: ${zIndexModals};
   }

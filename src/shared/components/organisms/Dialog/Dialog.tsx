@@ -70,9 +70,9 @@ const Container = styled.div`
     outline: none;
     display: flex;
     position: absolute;
-    right: 0;
-    left: 0;
-    top: ${({ theme }) => theme.sizes.spaces.sm}px;
+    top: env(safe-area-inset-top, 0px);
+    left: env(safe-area-inset-left, 0px);
+    right: env(safe-area-inset-right, 0px);
     z-index: ${dialogZIndex + 1};
     margin: auto;
   }
