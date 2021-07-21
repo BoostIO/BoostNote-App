@@ -65,6 +65,22 @@ export function getFormattedBoosthubDateTime(date: string, prefixed = false) {
       return `${prefixed ? 'on ' : ''}${format(converted, 'HH:mm, dd MMMM u')}`
   }
 }
+export function getShortFormattedBoosthubDateTime(date: string) {
+  const converted = new Date(date)
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+
+  if (!isValid(converted)) {
+    return 'Invalid Date'
+  }
+
+  switch (converted > yesterday) {
+    case true:
+      return `${formatDistanceToNowStrict(converted)} ago`
+    default:
+      return `${format(converted, 'dd MMM u')}`
+  }
+}
 
 export function getUnixtimestamp(date: Date) {
   return date.getTime() / 1000

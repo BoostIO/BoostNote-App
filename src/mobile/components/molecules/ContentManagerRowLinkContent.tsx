@@ -1,6 +1,6 @@
 import React from 'react'
 import Flexbox from '../../../cloud/components/atoms/Flexbox'
-import { getFormattedBoosthubDateTime } from '../../../cloud/lib/date'
+import { getShortFormattedBoosthubDateTime } from '../../../cloud/lib/date'
 import EmojiIcon from '../../../cloud/components/atoms/EmojiIcon'
 import { SerializedUser } from '../../../cloud/interfaces/db/user'
 import EditorsIcons from '../../../cloud/components/atoms/EditorsIcons'
@@ -57,8 +57,8 @@ const ContentManagerRowLinkContent = ({
       )}
     </Flexbox>
 
-    <Flexbox flex='0 2 auto' className='date'>
-      {getFormattedBoosthubDateTime(date)}
+    <Flexbox flex='0 2 auto' shrink={0} className='date'>
+      {getShortFormattedBoosthubDateTime(date)}
       {editors != null && editors.length > 0 && (
         <EditorsIcons editors={editors} />
       )}
