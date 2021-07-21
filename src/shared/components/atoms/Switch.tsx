@@ -35,7 +35,7 @@ const Switch = ({
       <ReactSwitch
         disabled={disabled}
         className={cc([`switch`, className])}
-        type='switch'
+        type='checkbox'
         id={id}
         onChange={onChange}
         checked={checked}
