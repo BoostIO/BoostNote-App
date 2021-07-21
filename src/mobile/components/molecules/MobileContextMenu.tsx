@@ -84,7 +84,7 @@ const MobileContextMenu = () => {
 export default MobileContextMenu
 
 const Container = styled.div`
-  max-height: 100vh;
+  max-height: 480px;
   overflow-y: auto;
   min-width: 180px;
   position: fixed;
