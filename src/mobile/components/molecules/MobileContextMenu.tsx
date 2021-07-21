@@ -87,7 +87,7 @@ const Container = styled.div`
   max-height: 480px;
   overflow-y: auto;
   min-width: 180px;
-  position: fixed;
+  position: absolute;
   z-index: ${menuZIndex};
   background-color: ${({ theme }) => theme.colors.background.primary};
   border: 1px solid ${({ theme }) => theme.colors.border.main};

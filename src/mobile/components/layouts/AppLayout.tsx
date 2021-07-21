@@ -85,8 +85,8 @@ const Container = styled.div`
   left: env(safe-area-inset-left);
   right: env(safe-area-inset-right);
   bottom: env(safe-area-inset-bottom);
-  width: 100%;
-  height: 100%;
+  width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right));
+  height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   overflow: hidden;
   .nav {
     position: absolute;
@@ -98,9 +98,10 @@ const Container = styled.div`
   }
   .main {
     position: absolute;
+    top: 0;
     left: 0;
-    height: 100%;
     width: 100%;
+    height: 100%;
     transition: left 200ms ease-in-out;
   }
   .main__navigator-curtain {
