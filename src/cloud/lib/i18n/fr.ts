@@ -459,6 +459,10 @@ const frTranslation: TranslationSource = {
   [lngKeys.PlanViewersMembersIntro]:
     'Quelle est la différence entre un membre et un observateur? Veuillez lire',
   [lngKeys.PlanViewersMembersLink]: 'cet article',
+  [lngKeys.SeeRoleDetails]: 'Voir les détails concernant les rôles',
+  [lngKeys.ViewerDisclaimerIntro]: 'Vous êtes un',
+  [lngKeys.ViewerDisclaimerDescription]:
+    'Veuillez demander à vos admins de vous promouvoir au rôle de membre afin de participer.',
 }
 
 export default {

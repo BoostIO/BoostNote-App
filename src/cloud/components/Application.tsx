@@ -77,6 +77,7 @@ import NotifyIcon from '../../shared/components/atoms/NotifyIcon'
 import { getTeamLinkHref } from './atoms/Link/TeamLink'
 import SidebarButton from '../../shared/components/organisms/Sidebar/atoms/SidebarButton'
 import CloudGlobalSearch from './organisms/CloudGlobalSearch'
+import ViewerDisclaimer from './molecules/ViewerDisclaimer'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -327,50 +328,56 @@ const Application = ({
   ])
 
   const sidebarFooter = useMemo(() => {
-    return team != null ? (
-      <SidebarButtonList
-        rows={[
-          {
-            label: translate(lngKeys.GeneralAttachments),
-            icon: mdiPaperclip,
-            variant: 'subtle',
-            labelClick: () => openSettingsTab('attachments'),
-            id: 'sidebar__button__attachments',
-          },
-          {
-            label: translate(lngKeys.GeneralShared),
-            icon: mdiWeb,
-            variant: 'subtle',
-            labelHref: getTeamLinkHref(team, 'shared'),
-            active: getTeamLinkHref(team, 'shared') === pathname,
-            labelClick: () => push(getTeamLinkHref(team, 'shared')),
-            id: 'sidebar__button__shared',
-          },
-          {
-            label: translate(lngKeys.GeneralImport),
-            icon: mdiImport,
-            variant: 'subtle',
-            labelClick: () => openSettingsTab('import'),
-            id: 'sidebar__button__import',
-          },
-        ]}
-      >
-        {isEligibleForDiscount(team) ? (
-          <SidebarButton
-            variant='subtle'
-            icon={<NotifyIcon text='!' size={16} path={mdiGiftOutline} />}
-            id='sidebar__button__promo'
-            label={translate(lngKeys.SidebarNewUserDiscount)}
-            labelClick={() =>
-              openModal(<DiscountModal />, {
-                showCloseIcon: true,
-                width: 'large',
-              })
-            }
-          />
-        ) : null}
-      </SidebarButtonList>
-    ) : null
+    if (team == null) {
+      return null
+    }
+    return (
+      <>
+        <SidebarButtonList
+          rows={[
+            {
+              label: translate(lngKeys.GeneralAttachments),
+              icon: mdiPaperclip,
+              variant: 'subtle',
+              labelClick: () => openSettingsTab('attachments'),
+              id: 'sidebar__button__attachments',
+            },
+            {
+              label: translate(lngKeys.GeneralShared),
+              icon: mdiWeb,
+              variant: 'subtle',
+              labelHref: getTeamLinkHref(team, 'shared'),
+              active: getTeamLinkHref(team, 'shared') === pathname,
+              labelClick: () => push(getTeamLinkHref(team, 'shared')),
+              id: 'sidebar__button__shared',
+            },
+            {
+              label: translate(lngKeys.GeneralImport),
+              icon: mdiImport,
+              variant: 'subtle',
+              labelClick: () => openSettingsTab('import'),
+              id: 'sidebar__button__import',
+            },
+          ]}
+        >
+          {isEligibleForDiscount(team) ? (
+            <SidebarButton
+              variant='subtle'
+              icon={<NotifyIcon text='!' size={16} path={mdiGiftOutline} />}
+              id='sidebar__button__promo'
+              label={translate(lngKeys.SidebarNewUserDiscount)}
+              labelClick={() =>
+                openModal(<DiscountModal />, {
+                  showCloseIcon: true,
+                  width: 'large',
+                })
+              }
+            />
+          ) : null}
+        </SidebarButtonList>
+        <ViewerDisclaimer />
+      </>
+    )
   }, [openModal, openSettingsTab, team, pathname, push, translate])
 
   return (

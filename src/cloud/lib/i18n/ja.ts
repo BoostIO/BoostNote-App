@@ -455,6 +455,10 @@ const jpTranslation: TranslationSource = {
   [lngKeys.PlanViewersMembersIntro]:
     "What's the difference between viewers and members? Please take a look at",
   [lngKeys.PlanViewersMembersLink]: 'this article',
+  [lngKeys.SeeRoleDetails]: 'See role details',
+  [lngKeys.ViewerDisclaimerIntro]: 'You are a',
+  [lngKeys.ViewerDisclaimerDescription]:
+    'Please ask your admin to give you a member role so that you can participate as well.',
 }
 
 export default {

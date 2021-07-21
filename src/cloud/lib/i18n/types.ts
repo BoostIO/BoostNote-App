@@ -413,6 +413,9 @@ export enum lngKeys {
   PictureChange = 'picture.change.verb',
   PlanViewersMembersIntro = 'plan.viewersmembers.intro',
   PlanViewersMembersLink = 'plan.viewersmembers.link',
+  SeeRoleDetails = 'settings.roles.see.details',
+  ViewerDisclaimerIntro = 'viewer.disclaimer.intro',
+  ViewerDisclaimerDescription = 'viewer.disclaimer.description',
 }
 
 export type TranslationSource = {

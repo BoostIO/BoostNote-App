@@ -25,12 +25,9 @@ import { arraysAreIdentical } from '../../../lib/utils/array'
 import { getUserEmailsFromPermissions } from '../../../api/teams/permissions/emails'
 import { useRouter } from '../../../lib/router'
 import cc from 'classcat'
-import { mdiArrowLeft } from '@mdi/js'
 import { useSet } from 'react-use'
-import SettingsTeamForm from '../../molecules/SettingsTeamForm'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
-import Button from '../../../../shared/components/atoms/Button'
 import Flexbox from '../../../../shared/components/atoms/Flexbox'
 import SettingTabSelector from '../../../../shared/components/organisms/Settings/atoms/SettingTabSelector'
 import FormSelect, {
@@ -61,9 +58,6 @@ const MembersTab = () => {
   )
   const [tab, setTab] = useState<TeamPermissionType>('member')
   const { subscription } = usePage()
-  const [showTeamPersonalForm, setShowTeamPersonalForm] = useState<boolean>(
-    false
-  )
   const mountedRef = useRef(false)
   const { translate, getRoleLabel } = useI18n()
 
@@ -308,22 +302,6 @@ const MembersTab = () => {
 
   const currentUserIsAdmin = currentUserPermissions.role === 'admin'
 
-  if (team.personal && showTeamPersonalForm) {
-    return (
-      <SettingTabContent
-        title={translate(lngKeys.TeamCreate)}
-        description={translate(lngKeys.TeamCreateSubtitle)}
-        backLink={{
-          variant: 'icon',
-          iconPath: mdiArrowLeft,
-          iconSize: 20,
-          onClick: () => setShowTeamPersonalForm(false),
-        }}
-        body={<SettingsTeamForm team={team} teamConversion={true} />}
-      />
-    )
-  }
-
   return (
     <SettingTabContent
       title={
@@ -339,175 +317,122 @@ const MembersTab = () => {
       description={translate(lngKeys.ManageTeamMembers)}
       body={
         <>
-          {team.personal ? (
-            <section>
-              <Flexbox>
-                <h2>{translate(lngKeys.CurrentMembers)}</h2>
-                {fetching.has('userEmails') && (
-                  <Spinner className='relative' style={{ top: 2 }} />
-                )}
-              </Flexbox>
-              <Button
-                variant='primary'
-                onClick={() => setShowTeamPersonalForm(true)}
-              >
-                {translate(lngKeys.AddMembers)}
-              </Button>
-              <TopMargin />
-              <StyledMembersTable>
-                <thead className='table-header'>
-                  <tr>
-                    <th>{translate(lngKeys.GeneralUser)}</th>
-                  </tr>
-                </thead>
-                <tbody className='table-body'>
-                  <tr key={currentUserPermissions.id}>
-                    <td>
-                      <div className='user-info'>
-                        <div className='user-info-icon'>
-                          <UserIcon user={currentUserPermissions.user} />
+          <OpenInvitesSection userPermissions={currentUserPermissions} />
+          <TeamInvitesSection
+            userPermissions={currentUserPermissions}
+            subscription={subscription}
+          />
+          <section>
+            <Flexbox>
+              <h2>{translate(lngKeys.AddMembers)}</h2>
+              {fetching.has('userEmails') && (
+                <Spinner className='relative' style={{ top: 2 }} />
+              )}
+            </Flexbox>
+            <StyledMembersTable>
+              <thead className='table-header'>
+                <tr>
+                  <th>{translate(lngKeys.GeneralUser)}</th>
+                  <th>{translate(lngKeys.MembersAccessLevel)}</th>
+                </tr>
+              </thead>
+              <tbody className='table-body'>
+                {permissions.map((permission) => {
+                  const targetPermissionsAreUsersOwn =
+                    currentUserPermissions.id === permission.id
+                  return (
+                    <tr key={permission.id}>
+                      <td>
+                        <div className='user-info'>
+                          <div className='user-info-icon'>
+                            <UserIcon user={permission.user} />
+                          </div>
+                          <StyledMembername>
+                            {permission.user.displayName}
+                            {currentUserIsAdmin &&
+                              userEmailsMap.has(permission.id) && (
+                                <span>{userEmailsMap.get(permission.id)}</span>
+                              )}
+                          </StyledMembername>
                         </div>
-                        <StyledMembername>
-                          {currentUserPermissions.user.displayName}
-                          {currentUserIsAdmin &&
-                            userEmailsMap.has(currentUserPermissions.id) && (
-                              <span>
-                                {userEmailsMap.get(currentUserPermissions.id)}
-                              </span>
-                            )}
-                        </StyledMembername>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </StyledMembersTable>
-            </section>
-          ) : (
-            <>
-              <OpenInvitesSection userPermissions={currentUserPermissions} />
-              <TeamInvitesSection
-                userPermissions={currentUserPermissions}
-                subscription={subscription}
-              />
-              <section>
-                <Flexbox>
-                  <h2>{translate(lngKeys.AddMembers)}</h2>
-                  {fetching.has('userEmails') && (
-                    <Spinner className='relative' style={{ top: 2 }} />
-                  )}
-                </Flexbox>
-                <StyledMembersTable>
-                  <thead className='table-header'>
-                    <tr>
-                      <th>{translate(lngKeys.GeneralUser)}</th>
-                      <th>{translate(lngKeys.MembersAccessLevel)}</th>
-                    </tr>
-                  </thead>
-                  <tbody className='table-body'>
-                    {permissions.map((permission) => {
-                      const targetPermissionsAreUsersOwn =
-                        currentUserPermissions.id === permission.id
-                      return (
-                        <tr key={permission.id}>
-                          <td>
-                            <div className='user-info'>
-                              <div className='user-info-icon'>
-                                <UserIcon user={permission.user} />
-                              </div>
-                              <StyledMembername>
-                                {permission.user.displayName}
-                                {currentUserIsAdmin &&
-                                  userEmailsMap.has(permission.id) && (
-                                    <span>
-                                      {userEmailsMap.get(permission.id)}
-                                    </span>
-                                  )}
-                              </StyledMembername>
-                            </div>
-                          </td>
-                          <td>
-                            <div className='user-action'>
-                              {sending === `${permission.id}-change` ? (
-                                <Spinner
-                                  style={{
-                                    position: 'relative',
-                                    top: -2,
-                                    bottom: 0,
-                                    verticalAlign: 'middle',
-                                    left: 0,
-                                  }}
-                                />
+                      </td>
+                      <td>
+                        <div className='user-action'>
+                          {sending === `${permission.id}-change` ? (
+                            <Spinner
+                              style={{
+                                position: 'relative',
+                                top: -2,
+                                bottom: 0,
+                                verticalAlign: 'middle',
+                                left: 0,
+                              }}
+                            />
+                          ) : (
+                            <FormSelect
+                              className='user--role--select'
+                              value={{
+                                label: getRoleLabel(permission.role),
+                                value: permission.role,
+                              }}
+                              onChange={(option: FormSelectOption) =>
+                                changePermissionsRole(
+                                  option.value,
+                                  currentUserPermissions,
+                                  permission
+                                )
+                              }
+                              isDisabled={
+                                !currentUserIsAdmin ||
+                                targetPermissionsAreUsersOwn
+                              }
+                              options={[
+                                {
+                                  label: translate(lngKeys.GeneralAdmin),
+                                  value: 'admin',
+                                },
+                                {
+                                  label: translate(lngKeys.GeneralMember),
+                                  value: 'member',
+                                },
+                                {
+                                  label: translate(lngKeys.GeneralViewer),
+                                  value: 'viewer',
+                                },
+                              ]}
+                            />
+                          )}
+                          {(targetPermissionsAreUsersOwn ||
+                            currentUserIsAdmin) && (
+                            <CustomButton
+                              variant='transparent'
+                              onClick={() => removePermissions(permission)}
+                              disabled={sending != null}
+                              style={{ width: 80 }}
+                            >
+                              {sending === `${permission.id}-delete` ? (
+                                <Spinner />
+                              ) : currentUserPermissions.id ===
+                                permission.id ? (
+                                translate(lngKeys.GeneralLeaveVerb)
                               ) : (
-                                <FormSelect
-                                  className='user--role--select'
-                                  value={{
-                                    label: getRoleLabel(permission.role),
-                                    value: permission.role,
-                                  }}
-                                  onChange={(option: FormSelectOption) =>
-                                    changePermissionsRole(
-                                      option.value,
-                                      currentUserPermissions,
-                                      permission
-                                    )
-                                  }
-                                  isDisabled={
-                                    !currentUserIsAdmin ||
-                                    targetPermissionsAreUsersOwn
-                                  }
-                                  options={[
-                                    {
-                                      label: translate(lngKeys.GeneralAdmin),
-                                      value: 'admin',
-                                    },
-                                    {
-                                      label: translate(lngKeys.GeneralMember),
-                                      value: 'member',
-                                    },
-                                    {
-                                      label: translate(lngKeys.GeneralViewer),
-                                      value: 'viewer',
-                                    },
-                                  ]}
-                                />
+                                translate(lngKeys.GeneralRemoveVerb)
                               )}
-                              {(targetPermissionsAreUsersOwn ||
-                                currentUserIsAdmin) && (
-                                <CustomButton
-                                  variant='transparent'
-                                  onClick={() => removePermissions(permission)}
-                                  disabled={sending != null}
-                                  style={{ width: 80 }}
-                                >
-                                  {sending === `${permission.id}-delete` ? (
-                                    <Spinner />
-                                  ) : currentUserPermissions.id ===
-                                    permission.id ? (
-                                    translate(lngKeys.GeneralLeaveVerb)
-                                  ) : (
-                                    translate(lngKeys.GeneralRemoveVerb)
-                                  )}
-                                </CustomButton>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </StyledMembersTable>
-              </section>{' '}
-            </>
-          )}
+                            </CustomButton>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </StyledMembersTable>
+          </section>{' '}
         </>
       }
     />
   )
 }
-
-const TopMargin = styled.div`
-  margin-top: ${({ theme }) => theme.space.medium}px;
-`
 
 const StyledMembersTable = styled.table`
   width: 100%;

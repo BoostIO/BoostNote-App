@@ -90,7 +90,7 @@ const DocContextMenu = ({
           ),
         }}
       />
-      {!team.personal && creator != null && (
+      {creator != null && (
         <MetadataContainerRow
           row={{
             label: translate(lngKeys.CreatedBy),
@@ -123,64 +123,60 @@ const DocContextMenu = ({
                 ),
         }}
       />
-      {!team.personal && (
-        <MetadataContainerRow
-          row={{
-            label: translate(lngKeys.UpdatedBy),
-            type: 'content',
-            icon: mdiAccountCircleOutline,
-            content: (
-              <Flexbox wrap='wrap'>
-                {currentDoc.head != null &&
-                (currentDoc.head.creators || []).length > 0 ? (
-                  <>
-                    {(currentDoc.head.creators || []).map((user) => (
-                      <UserIcon
-                        key={user.id}
-                        user={usersMap.get(user.id) || user}
-                        className='subtle'
-                      />
-                    ))}
-                  </>
-                ) : (
-                  ''
-                )}
-              </Flexbox>
-            ),
-          }}
-        />
-      )}
-      {!team.personal && (
-        <MetadataContainerRow
-          row={{
-            label: translate(lngKeys.Contributors),
-            type: 'content',
-            icon: mdiAccountMultiple,
-            content: (
-              <Flexbox wrap='wrap'>
-                {contributorsState.contributors.map((contributor) => (
-                  <UserIcon
-                    key={contributor.id}
-                    user={usersMap.get(contributor.id) || contributor}
-                    className='subtle'
-                  />
-                ))}
+      <MetadataContainerRow
+        row={{
+          label: translate(lngKeys.UpdatedBy),
+          type: 'content',
+          icon: mdiAccountCircleOutline,
+          content: (
+            <Flexbox wrap='wrap'>
+              {currentDoc.head != null &&
+              (currentDoc.head.creators || []).length > 0 ? (
+                <>
+                  {(currentDoc.head.creators || []).map((user) => (
+                    <UserIcon
+                      key={user.id}
+                      user={usersMap.get(user.id) || user}
+                      className='subtle'
+                    />
+                  ))}
+                </>
+              ) : (
+                ''
+              )}
+            </Flexbox>
+          ),
+        }}
+      />
+      <MetadataContainerRow
+        row={{
+          label: translate(lngKeys.Contributors),
+          type: 'content',
+          icon: mdiAccountMultiple,
+          content: (
+            <Flexbox wrap='wrap'>
+              {contributorsState.contributors.map((contributor) => (
+                <UserIcon
+                  key={contributor.id}
+                  user={usersMap.get(contributor.id) || contributor}
+                  className='subtle'
+                />
+              ))}
 
-                {contributors.length > 5 && (
-                  <SmallButton
-                    variant='transparent'
-                    onClick={() => setSliceContributors((prev) => !prev)}
-                  >
-                    {contributorsState.sliced > 0
-                      ? `+${contributorsState.sliced}`
-                      : '-'}
-                  </SmallButton>
-                )}
-              </Flexbox>
-            ),
-          }}
-        />
-      )}
+              {contributors.length > 5 && (
+                <SmallButton
+                  variant='transparent'
+                  onClick={() => setSliceContributors((prev) => !prev)}
+                >
+                  {contributorsState.sliced > 0
+                    ? `+${contributorsState.sliced}`
+                    : '-'}
+                </SmallButton>
+              )}
+            </Flexbox>
+          ),
+        }}
+      />
       <BackLinksList team={team} docs={backLinks} />
       <MetadataContainerBreak />
       <DocContextMenuActions

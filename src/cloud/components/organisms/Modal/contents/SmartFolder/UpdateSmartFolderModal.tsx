@@ -68,7 +68,6 @@ const UpdateSmartFolderModal = ({
       onCancel={closeModal}
       onSubmit={submit}
       buttonsAreDisabled={sending}
-      isPersonalTeam={team.personal}
       defaultName={smartFolder.name}
       defaultPrivate={smartFolder.private}
       defaultConditionType={smartFolder.condition.type}

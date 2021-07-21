@@ -858,7 +858,7 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
         topbar: {
           breadcrumbs,
           children:
-            !team.personal && currentUserPermissions != null ? (
+            currentUserPermissions != null ? (
               <StyledTopbarChildrenContainer>
                 <LoadingButton
                   variant='icon'
