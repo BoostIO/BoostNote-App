@@ -47,7 +47,6 @@ import {
   mdiEyeOutline,
   mdiViewSplitVertical,
   mdiCommentTextOutline,
-  mdiDotsHorizontal,
   mdiFormatListBulleted,
 } from '@mdi/js'
 import EditorToolButton from './EditorToolButton'
@@ -61,7 +60,7 @@ import EditorSelectionStatus from './EditorSelectionStatus'
 import EditorIndentationStatus from './EditorIndentationStatus'
 import EditorKeyMapSelect from './EditorKeyMapSelect'
 import EditorThemeSelect from './EditorThemeSelect'
-import DocContextMenu from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
+import DocContextMenu from '../../organisms/EditorLayout/NewDocContextMenu'
 import {
   focusTitleEventEmitter,
   focusEditorEventEmitter,
@@ -82,7 +81,6 @@ import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import PresenceIcons from '../../organisms/Topbar/PresenceIcons'
 import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
-import { useDocActionContextMenu } from './useDocActionContextMenu'
 import Icon from '../../atoms/Icon'
 import CommentManager from '../../organisms/CommentManager'
 import useCommentManagerState from '../../../lib/hooks/useCommentManagerState'
@@ -92,6 +90,9 @@ import throttle from 'lodash.throttle'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
 import { parse } from 'querystring'
+import DocShare from '../DocShare'
+import EditorLayout from '../../organisms/EditorLayout'
+import PreferencesContextMenuWrapper from '../../molecules/PreferencesContextMenuWrapper'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -117,16 +118,13 @@ interface SelectionState {
   }[]
 }
 
-const Editor = ({
-  doc,
-  team,
-  user,
-  contributors,
-  backLinks,
-  revisionHistory,
-}: EditorProps) => {
+const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
   const { translate } = useI18n()
-  const { currentUserPermissions, permissions } = usePage()
+  const {
+    currentUserPermissions,
+    permissions,
+    currentUserIsCoreMember,
+  } = usePage()
   const { pushMessage, pushApiErrorMessage } = useToast()
   const [color] = useState(() => getColorFromString(user.id))
   const { preferences, setPreferences } = usePreferences()
@@ -656,7 +654,7 @@ const Editor = ({
     [realtime, setEditorRefContent]
   )
 
-  const { openModal } = useModal()
+  const { openModal, openContextModal } = useModal()
   const onEditorTemplateToolClick = useCallback(() => {
     openModal(<TemplatesModal callback={onTemplatePickCallback} />, {
       width: 'large',
@@ -841,14 +839,6 @@ const Editor = ({
     toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
   }, [toggleDocBookmark, doc.teamId, doc.id, doc.bookmarked])
 
-  const { open: openDocActionContextMenu } = useDocActionContextMenu({
-    doc,
-    team,
-    currentUserIsCoreMember: true,
-    editorRef,
-    toggleBookmarkForDoc,
-  })
-
   if (!initialLoadDone) {
     return (
       <Application content={{}}>
@@ -961,20 +951,14 @@ const Editor = ({
             },
             {
               type: 'button',
-              variant: 'icon',
-              iconPath: mdiDotsHorizontal,
-              onClick: openDocActionContextMenu,
-            },
-            {
-              type: 'button',
-              variant: 'icon',
-              iconPath: mdiCommentTextOutline,
-              active: preferences.docContextMode === 'comment',
-              onClick: () =>
-                setPreferences(({ docContextMode }) => ({
-                  docContextMode:
-                    docContextMode === 'comment' ? 'hidden' : 'comment',
-                })),
+              variant: 'secondary',
+              label: translate(lngKeys.Share),
+              onClick: (event) =>
+                openContextModal(
+                  event,
+                  <DocShare currentDoc={doc} team={team} />,
+                  { width: 440, alignment: 'bottom-right' }
+                ),
             },
             {
               variant: 'icon',
@@ -990,111 +974,124 @@ const Editor = ({
         },
         right:
           preferences.docContextMode === 'context' ? (
-            <DocContextMenu
-              currentDoc={doc}
-              contributors={contributors}
-              backLinks={backLinks}
-              team={team}
-              restoreRevision={onRestoreRevisionCallback}
-              revisionHistory={revisionHistory}
-            />
+            <PreferencesContextMenuWrapper>
+              <DocContextMenu
+                currentDoc={doc}
+                contributors={contributors}
+                backLinks={backLinks}
+                team={team}
+                restoreRevision={onRestoreRevisionCallback}
+                editorRef={editorRef}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+                permissions={permissions || []}
+              />
+            </PreferencesContextMenuWrapper>
           ) : preferences.docContextMode === 'comment' ? (
-            <CommentManager
-              state={normalizedCommentState}
-              user={user}
-              users={users}
-              {...commentActions}
-            />
+            <PreferencesContextMenuWrapper>
+              <CommentManager
+                state={normalizedCommentState}
+                user={user}
+                users={users}
+                {...commentActions}
+              />
+            </PreferencesContextMenuWrapper>
           ) : null,
       }}
     >
-      <Container>
-        {editorLayout !== 'preview' && (
-          <StyledLayoutDimensions className={editorLayout}>
-            <ToolbarRow>
-              <EditorToolButton
-                position={'bottom-right'}
-                tooltip={
-                  scrollSync
-                    ? translate(lngKeys.EditorToolbarTooltipScrollSyncDisable)
-                    : translate(lngKeys.EditorToolbarTooltipScrollSyncEnable)
-                }
-                path={scrollSync ? mdiRepeatOff : mdiRepeat}
-                onClick={toggleScrollSync}
-                className='scroll-sync'
-              />
-              <EditorToolbar editorRef={editorRef} />
-              <EditorToolbarUpload
-                editorRef={editorRef}
-                fileUploadHandlerRef={fileUploadHandlerRef}
-              />
-              <EditorToolButton
-                tooltip={translate(lngKeys.EditorToolbarTooltipTemplate)}
-                path={mdiFileDocumentOutline}
-                onClick={onEditorTemplateToolClick}
-              />
-            </ToolbarRow>
-          </StyledLayoutDimensions>
-        )}
-        <StyledEditor className={editorLayout}>
-          <StyledEditorWrapper className={`layout-${editorLayout}`}>
-            <>
-              <CodeMirrorEditor
-                bind={bindCallback}
-                config={editorConfig}
-                realtime={realtime}
-              />
-              {editorContent === '' && (
-                <EditorTemplateButton
-                  onTemplatePickCallback={onTemplatePickCallback}
+      <EditorLayout
+        doc={doc}
+        docIsEditable={true}
+        fullWidth={editorLayout !== 'preview'}
+        team={team}
+      >
+        <Container>
+          {editorLayout !== 'preview' && (
+            <StyledLayoutDimensions className={editorLayout}>
+              <ToolbarRow>
+                <EditorToolButton
+                  position={'bottom-right'}
+                  tooltip={
+                    scrollSync
+                      ? translate(lngKeys.EditorToolbarTooltipScrollSyncDisable)
+                      : translate(lngKeys.EditorToolbarTooltipScrollSyncEnable)
+                  }
+                  path={scrollSync ? mdiRepeatOff : mdiRepeat}
+                  onClick={toggleScrollSync}
+                  className='scroll-sync'
                 />
-              )}
-              {shortcodeConvertMenu !== null && (
-                <StyledShortcodeConvertMenu style={shortcodeConvertMenuStyle}>
-                  <button onClick={() => shortcodeConvertMenu.cb(false)}>
-                    Dismiss
-                  </button>
-                  <button onClick={() => shortcodeConvertMenu.cb(true)}>
-                    Create embed
-                  </button>
-                </StyledShortcodeConvertMenu>
-              )}
-            </>
-          </StyledEditorWrapper>
-          <StyledPreview className={`layout-${editorLayout}`}>
-            <MarkdownView
-              content={editorContent}
-              updateContent={setEditorRefContent}
-              headerLinks={editorLayout === 'preview'}
-              onRender={onRender.current}
-              className='scroller'
-              getEmbed={getEmbed}
-              scrollerRef={previewRef}
-              comments={viewComments}
-              commentClick={commentClick}
-              SelectionMenu={({ selection }) => (
-                <StyledSelectionMenu>
-                  <div onClick={() => newRangeThread(selection)}>
-                    <Icon size={21} path={mdiCommentTextOutline} />
-                  </div>
-                </StyledSelectionMenu>
-              )}
-            />
-          </StyledPreview>
-        </StyledEditor>
+                <EditorToolbar editorRef={editorRef} />
+                <EditorToolbarUpload
+                  editorRef={editorRef}
+                  fileUploadHandlerRef={fileUploadHandlerRef}
+                />
+                <EditorToolButton
+                  tooltip={translate(lngKeys.EditorToolbarTooltipTemplate)}
+                  path={mdiFileDocumentOutline}
+                  onClick={onEditorTemplateToolClick}
+                />
+              </ToolbarRow>
+            </StyledLayoutDimensions>
+          )}
+          <StyledEditor className={editorLayout}>
+            <StyledEditorWrapper className={`layout-${editorLayout}`}>
+              <>
+                <CodeMirrorEditor
+                  bind={bindCallback}
+                  config={editorConfig}
+                  realtime={realtime}
+                />
+                {editorContent === '' && (
+                  <EditorTemplateButton
+                    onTemplatePickCallback={onTemplatePickCallback}
+                  />
+                )}
+                {shortcodeConvertMenu !== null && (
+                  <StyledShortcodeConvertMenu style={shortcodeConvertMenuStyle}>
+                    <button onClick={() => shortcodeConvertMenu.cb(false)}>
+                      Dismiss
+                    </button>
+                    <button onClick={() => shortcodeConvertMenu.cb(true)}>
+                      Create embed
+                    </button>
+                  </StyledShortcodeConvertMenu>
+                )}
+              </>
+            </StyledEditorWrapper>
+            <StyledPreview className={`layout-${editorLayout}`}>
+              <MarkdownView
+                content={editorContent}
+                updateContent={setEditorRefContent}
+                headerLinks={editorLayout === 'preview'}
+                onRender={onRender.current}
+                className='scroller'
+                getEmbed={getEmbed}
+                scrollerRef={previewRef}
+                comments={viewComments}
+                commentClick={commentClick}
+                SelectionMenu={({ selection }) => (
+                  <StyledSelectionMenu>
+                    <div onClick={() => newRangeThread(selection)}>
+                      <Icon size={21} path={mdiCommentTextOutline} />
+                    </div>
+                  </StyledSelectionMenu>
+                )}
+              />
+            </StyledPreview>
+          </StyledEditor>
 
-        {editorLayout !== 'preview' && (
-          <StyledBottomBar>
-            <EditorSelectionStatus
-              cursor={selection.currentCursor}
-              selections={selection.currentSelections}
-            />
-            <EditorKeyMapSelect />
-            <EditorThemeSelect />
-            <EditorIndentationStatus />
-          </StyledBottomBar>
-        )}
-      </Container>
+          {editorLayout !== 'preview' && (
+            <StyledBottomBar>
+              <EditorSelectionStatus
+                cursor={selection.currentCursor}
+                selections={selection.currentSelections}
+              />
+              <EditorKeyMapSelect />
+              <EditorThemeSelect />
+              <EditorIndentationStatus />
+            </StyledBottomBar>
+          )}
+        </Container>
+      </EditorLayout>
     </Application>
   )
 }
@@ -1164,8 +1161,7 @@ const StyledLayoutDimensions = styled.div`
   width: 100%;
   &.preview,
   .preview {
-    ${rightSidePageLayout}
-    margin: ${({ theme }) => theme.space.default}px auto 0;
+    width: 100%;
     height: auto;
   }
 `
@@ -1257,7 +1253,6 @@ const StyledEditor = styled.div`
   .preview {
     ${rightSidePageLayout}
     margin: auto;
-    padding: 0 ${({ theme }) => theme.space.xlarge}px;
   }
   & .CodeMirrorWrapper {
     height: 100%;
@@ -1341,6 +1336,7 @@ const StyledEditor = styled.div`
   .CodeMirror-scroll {
     position: relative;
     z-index: 0;
+    width: 100%;
   }
   .CodeMirror-code,
   .CodeMirror-gutters {

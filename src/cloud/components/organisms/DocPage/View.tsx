@@ -14,12 +14,10 @@ import { rightSideTopBarHeight } from '../RightSideTopBar/styled'
 import { rightSidePageLayout } from '../../../lib/styled/styleFunctions'
 import { SerializedUser } from '../../../interfaces/db/user'
 import MarkdownView, { SelectionContext } from '../../atoms/MarkdownView'
-import DocContextMenu from '../../organisms/Topbar/Controls/ControlsContextMenu/DocContextMenu'
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import {
   mdiCommentTextOutline,
-  mdiDotsHorizontal,
   mdiFormatListBulleted,
   mdiStar,
   mdiStarOutline,
@@ -39,7 +37,6 @@ import { HighlightRange } from '../../../lib/rehypeHighlight'
 import Spinner from '../../../../shared/components/atoms/Spinner'
 import Icon from '../../atoms/Icon'
 import PresenceIcons from '../Topbar/PresenceIcons'
-import { useDocActionContextMenu } from '../../molecules/Editor/useDocActionContextMenu'
 import CommentManager from '../CommentManager'
 import { SerializedRevision } from '../../../interfaces/db/revision'
 import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
@@ -47,6 +44,10 @@ import { getDocLinkHref } from '../../atoms/Link/DocLink'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
 import { parse } from 'querystring'
+import DocShare from '../../molecules/DocShare'
+import { useModal } from '../../../../shared/lib/stores/modal'
+import NewDocContextMenu from '../EditorLayout/NewDocContextMenu'
+import PreferencesContextMenuWrapper from '../../molecules/PreferencesContextMenuWrapper'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -65,7 +66,6 @@ const ViewPage = ({
   contributors,
   backLinks,
   user,
-  revisionHistory,
 }: ViewPageProps) => {
   const { preferences, setPreferences } = usePreferences()
   const { foldersMap, workspacesMap, loadDoc } = useNav()
@@ -89,6 +89,7 @@ const ViewPage = ({
   const [color] = useState(() => getColorFromString(user.id))
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const { translate } = useI18n()
+  const { openContextModal } = useModal()
 
   const userInfo = useMemo(() => {
     return {
@@ -277,17 +278,6 @@ const ViewPage = ({
     [commentState, commentActions, setPreferences]
   )
 
-  const toggleBookmarkForDoc = useCallback(() => {
-    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
-  }, [toggleDocBookmark, doc.teamId, doc.id, doc.bookmarked])
-
-  const { open: openDocActionContextMenu } = useDocActionContextMenu({
-    doc,
-    team,
-    currentUserIsCoreMember,
-    toggleBookmarkForDoc,
-  })
-
   useEffect(() => {
     if (connState === 'synced' || connState === 'loaded') {
       setInitialLoadDone(true)
@@ -437,20 +427,14 @@ const ViewPage = ({
               : []),
             {
               type: 'button',
-              variant: 'icon',
-              iconPath: mdiDotsHorizontal,
-              onClick: openDocActionContextMenu,
-            },
-            {
-              type: 'button',
-              variant: 'icon',
-              iconPath: mdiCommentTextOutline,
-              active: preferences.docContextMode === 'comment',
-              onClick: () =>
-                setPreferences(({ docContextMode }) => ({
-                  docContextMode:
-                    docContextMode === 'comment' ? 'hidden' : 'comment',
-                })),
+              variant: 'secondary',
+              label: translate(lngKeys.Share),
+              onClick: (event) =>
+                openContextModal(
+                  event,
+                  <DocShare currentDoc={doc} team={team} />,
+                  { width: 440, alignment: 'bottom-right' }
+                ),
             },
             {
               variant: 'icon',
@@ -466,20 +450,25 @@ const ViewPage = ({
         },
         right:
           preferences.docContextMode === 'context' ? (
-            <DocContextMenu
-              currentDoc={doc}
-              contributors={contributors}
-              backLinks={backLinks}
-              team={team}
-              revisionHistory={revisionHistory}
-            />
+            <PreferencesContextMenuWrapper>
+              <NewDocContextMenu
+                currentDoc={doc}
+                contributors={contributors}
+                backLinks={backLinks}
+                team={team}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+                permissions={permissions || []}
+              />
+            </PreferencesContextMenuWrapper>
           ) : preferences.docContextMode === 'comment' ? (
-            <CommentManager
-              state={normalizedCommentState}
-              user={user}
-              users={users}
-              {...commentActions}
-            />
+            <PreferencesContextMenuWrapper>
+              <CommentManager
+                state={normalizedCommentState}
+                user={user}
+                users={users}
+                {...commentActions}
+              />
+            </PreferencesContextMenuWrapper>
           ) : null,
       }}
     >

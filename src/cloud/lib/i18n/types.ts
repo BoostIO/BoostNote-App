@@ -402,6 +402,8 @@ export enum lngKeys {
   GeneralOrdering = 'general.ordering',
   GeneralInbox = 'general.inbox',
   SettingsImportDescription = 'settings.import.description',
+
+  GeneralPassword = 'general.password',
 }
 
 export type TranslationSource = {

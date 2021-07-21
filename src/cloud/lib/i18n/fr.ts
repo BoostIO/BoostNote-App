@@ -358,7 +358,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.Contributors]: 'Contributeurs',
   [lngKeys.History]: 'Historique',
   [lngKeys.Share]: 'Partager',
-  [lngKeys.PublicSharing]: 'Publique',
+  [lngKeys.PublicSharing]: 'Partage publique',
   [lngKeys.PublicSharingDisclaimer]:
     'Toute personne avec accès à ce lien peut lire',
   [lngKeys.SharingSettings]: 'Paramètres de partage',
@@ -448,6 +448,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.SidebarNewUserDiscount]: 'Promotion pour nouvel utilisateur!',
   [lngKeys.SettingsImportDescription]:
     'Plutôt que démarrer à partir de rien, importez vos fichiers directement dans Boost Note en sélectionnant une des options ci-dessous.',
+  [lngKeys.GeneralPassword]: 'Mot de passe',
 }
 
 export default {
