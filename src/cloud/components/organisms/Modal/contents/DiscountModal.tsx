@@ -184,6 +184,7 @@ const Container = styled.div`
       border: 1px solid ${({ theme }) => theme.colors.border.main};
 
       .plan__item__footer {
+        margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
         position: relative;
       }
     }

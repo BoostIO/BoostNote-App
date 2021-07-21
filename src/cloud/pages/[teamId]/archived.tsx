@@ -11,6 +11,7 @@ import { getTeamLinkHref } from '../../components/atoms/Link/TeamLink'
 import ContentManager from '../../components/molecules/ContentManager'
 import { topParentId } from '../../lib/mappers/topbarTree'
 import EmojiIcon from '../../components/atoms/EmojiIcon'
+import InviteCTAButton from '../../components/molecules/InviteCTAButton'
 
 const ArchivedPage = () => {
   const { team, currentUserIsCoreMember } = usePage()
@@ -43,6 +44,12 @@ const ArchivedPage = () => {
                 href,
                 navigateTo: () => push(href),
               },
+            },
+          ],
+          controls: [
+            {
+              type: 'node',
+              element: <InviteCTAButton />,
             },
           ],
         },

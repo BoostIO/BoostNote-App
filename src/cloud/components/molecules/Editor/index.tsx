@@ -93,6 +93,7 @@ import { parse } from 'querystring'
 import DocShare from '../DocShare'
 import EditorLayout from '../../organisms/EditorLayout'
 import PreferencesContextMenuWrapper from '../../molecules/PreferencesContextMenuWrapper'
+import InviteCTAButton from '../InviteCTAButton'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -873,6 +874,10 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
               </StyledTopbarChildrenContainer>
             ) : null,
           controls: [
+            {
+              type: 'node',
+              element: <InviteCTAButton />,
+            },
             {
               type: 'separator',
             },

@@ -48,6 +48,7 @@ import DocShare from '../../molecules/DocShare'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import NewDocContextMenu from '../EditorLayout/NewDocContextMenu'
 import PreferencesContextMenuWrapper from '../../molecules/PreferencesContextMenuWrapper'
+import InviteCTAButton from '../../molecules/InviteCTAButton'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -373,6 +374,10 @@ const ViewPage = ({
             </StyledTopbarChildrenContainer>
           ),
           controls: [
+            {
+              type: 'node',
+              element: <InviteCTAButton />,
+            },
             {
               type: 'separator',
             },
