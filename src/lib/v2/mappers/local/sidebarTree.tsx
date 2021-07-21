@@ -58,6 +58,7 @@ import {
   SidebarNavControls,
   SidebarTreeChildRow,
 } from '../../../../shared/components/organisms/Sidebar/molecules/SidebarTree'
+import { FOLDER_ID_PREFIX } from '../../../db/consts'
 
 type LocalTreeItem = {
   id: string
@@ -82,22 +83,38 @@ type LocalTreeItem = {
   onDrop?: (position?: SidebarDragState) => void
 }
 
+function compareStringStart(a: string, b: string, prefix: string) {
+  return ~~b.startsWith(prefix) - ~~a.startsWith(prefix)
+}
+
+function sortTreeItems<
+  T extends LocalTreeItem | (SidebarTreeChildRow & { lastUpdated?: string })
+>(items: Array<T>, sortingOrder: SidebarTreeSortingOrder) {
+  switch (sortingOrder) {
+    case 'a-z':
+      return sortByAttributeAsc('label', items).sort((a, b) =>
+        compareStringStart(a.id, b.id, FOLDER_ID_PREFIX)
+      )
+    case 'z-a':
+      return sortByAttributeDesc('label', items).sort((a, b) =>
+        compareStringStart(a.id, b.id, FOLDER_ID_PREFIX)
+      )
+    case 'last-updated':
+      return sortByAttributeDesc('lastUpdated', items).sort((a, b) =>
+        compareStringStart(a.id, b.id, FOLDER_ID_PREFIX)
+      )
+    case 'drag':
+    default:
+      return items
+    // todo: [komediruzecki-09/06/2021] Implement drag and drop (ordered Ids)
+  }
+}
+
 function getWorkspaceChildrenOrdered(
   sortingOrder: SidebarTreeSortingOrder,
   workspaceRows: LocalTreeItem[]
 ): LocalTreeItem[] {
-  switch (sortingOrder) {
-    case 'a-z':
-      return sortByAttributeAsc('label', workspaceRows)
-    case 'z-a':
-      return sortByAttributeDesc('label', workspaceRows)
-    case 'last-updated':
-      return sortByAttributeDesc('lastUpdated', workspaceRows)
-    case 'drag':
-    default:
-      return workspaceRows
-    // todo: [komediruzecki-09/06/2021] Implement drag and drop (ordered Ids)
-  }
+  return sortTreeItems(workspaceRows, sortingOrder)
 }
 
 function getFolderChildrenOrderedIds(
@@ -549,18 +566,7 @@ function buildChildrenNavRows(
     return acc
   }, [] as (SidebarTreeChildRow & { lastUpdated?: string })[])
 
-  switch (sortingOrder) {
-    case 'a-z':
-      return sortByAttributeAsc('label', rows)
-    case 'z-a':
-      return sortByAttributeDesc('label', rows)
-    case 'last-updated':
-      return sortByAttributeDesc('lastUpdated', rows)
-    case 'drag':
-    // todo: [komediruzecki-05/06/2021] Implement dragged based order (orderedIds)
-    default:
-      return rows
-  }
+  return sortTreeItems(rows, sortingOrder)
 }
 
 export const SidebarTreeSortingOrders = {
