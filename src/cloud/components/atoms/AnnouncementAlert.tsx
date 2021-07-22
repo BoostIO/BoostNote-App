@@ -3,7 +3,12 @@ import { usePage } from '../../lib/stores/pageStore'
 import styled from '../../../shared/lib/styled'
 import { useOnboarding } from '../../lib/stores/onboarding'
 import IconMdi from './IconMdi'
-import { mdiAlertOutline, mdiClose, mdiOpenInNew } from '@mdi/js'
+import {
+  mdiAlertOutline,
+  mdiClose,
+  mdiInformationOutline,
+  mdiOpenInNew,
+} from '@mdi/js'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { PageStoreWithTeam } from '../../interfaces/pageStore'
 import {
@@ -175,6 +180,62 @@ const AnnouncementAlert = () => {
     )
   }
 
+  if (
+    currentUserPermissions.role === 'admin' &&
+    permissions.filter((p) => p.role === 'viewer').length > 0 &&
+    teamPreferences.showRoleUpgradeAlert
+  ) {
+    return (
+      <Container>
+        <div className='alert alert--info'>
+          <span className='alert__icon'>
+            <IconMdi path={mdiInformationOutline} size={21} />
+          </span>
+          <div className='alert__text'>
+            <p>
+              Some of your members have joined as
+              <ExternalLink
+                href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
+                className='alert__link'
+              >
+                <span>Viewers</span> <IconMdi path={mdiOpenInNew} />
+              </ExternalLink>{' '}
+            </p>
+
+            <p>
+              You will have to upgrade your plan if you wish to let them
+              participate actively.
+            </p>
+            <ButtonGroup className='alert__footer' layout='spread'>
+              <Button
+                variant='bordered'
+                onClick={() => {
+                  closeAllModals()
+                  openSettingsTab('teamUpgrade')
+                }}
+              >
+                Upgrade now
+              </Button>
+              <Button
+                variant='secondary'
+                onClick={() => {
+                  const newPreferences = Object.assign({}, teamPreferences)
+                  delete newPreferences.showRoleUpgradeAlert
+                  setToLocalStorage(
+                    currentUserPermissions.teamId,
+                    newPreferences
+                  )
+                }}
+              >
+                Continue with the free plan
+              </Button>
+            </ButtonGroup>
+          </div>
+        </div>
+      </Container>
+    )
+  }
+
   return null
 }
 
@@ -190,6 +251,7 @@ const Container = styled.div`
   .alert.alert--danger {
     background-color: ${({ theme }) => theme.colors.variants.danger.base};
     color: ${({ theme }) => theme.colors.variants.danger.text};
+    border-left: 3px solid #ff425e;
 
     .alert__icon {
       color: #ff425e;
@@ -222,6 +284,42 @@ const Container = styled.div`
     }
   }
 
+  .alert.alert--info {
+    background-color: ${({ theme }) => theme.colors.variants.primary.base};
+    color: ${({ theme }) => theme.colors.variants.primary.text};
+    border-left: 3px solid #0089df;
+
+    .alert__icon {
+      color: #0089df;
+    }
+
+    .alert__text__link a,
+    .alert__btn--close,
+    .button__label {
+      color: ${({ theme }) => theme.colors.variants.primary.text};
+    }
+
+    .button__variant--bordered {
+      border-color: ${({ theme }) => theme.colors.variants.primary.text};
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.variants.primary.text};
+        .button__label {
+          color: #333;
+        }
+      }
+    }
+
+    .button__variant--secondary {
+      background-color: rgba(255, 255, 255, 0.2);
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.variants.primary.text};
+        .button__label {
+          color: #333;
+        }
+      }
+    }
+  }
+
   .alert {
     display: flex;
     justify-content: space-between;
@@ -229,7 +327,6 @@ const Container = styled.div`
     width: 400px;
     max-width: 90vw;
     padding: ${({ theme }) => theme.sizes.spaces.df}px;
-    border-left: 3px solid #ff425e;
     border-radius: 3px;
   }
 
