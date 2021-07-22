@@ -61,8 +61,10 @@ import DocStatusShowPage from '../pages/[teamId]/status/[docStatus]'
 import EmojiPicker from '../../shared/components/molecules/EmojiPicker'
 import { NotificationsProvider } from '../../shared/lib/stores/notifications'
 import { TeamIntegrationsProvider } from '../../shared/lib/stores/integrations'
+import { TeamStorageProvider } from '../lib/stores/teamStorage'
 
 const CombinedProvider = combineProviders(
+  TeamStorageProvider,
   SidebarCollapseProvider,
   OnboardingProvider,
   PreferencesProvider,

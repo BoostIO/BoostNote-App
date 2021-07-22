@@ -3,23 +3,31 @@ import { usePage } from '../../lib/stores/pageStore'
 import styled from '../../../shared/lib/styled'
 import { useOnboarding } from '../../lib/stores/onboarding'
 import IconMdi from './IconMdi'
-import { mdiAlertOutline, mdiClose } from '@mdi/js'
+import { mdiAlertOutline, mdiClose, mdiOpenInNew } from '@mdi/js'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { PageStoreWithTeam } from '../../interfaces/pageStore'
-import UpgradeButton from '../UpgradeButton'
 import {
   getCurrentDesktopAppVersion,
   useElectron,
   usingLegacyElectron,
 } from '../../lib/stores/electron'
+import { ExternalLink } from '../../../shared/components/atoms/Link'
+import Button from '../../../shared/components/atoms/Button'
+import { useSettings } from '../../lib/stores/settings'
+import { useModal } from '../../../shared/lib/stores/modal'
+import ButtonGroup from '../../../shared/components/atoms/ButtonGroup'
+import { useTeamStorage } from '../../lib/stores/teamStorage'
 
 const AnnouncementAlert = () => {
   const { currentSubInfo } = usePage()
   const { currentOnboardingState, setOnboarding } = useOnboarding()
+  const { closeAllModals } = useModal()
+  const { openSettingsTab } = useSettings()
   const {
     globalData: { currentUser },
   } = useGlobalData()
   const { permissions = [] } = usePage<PageStoreWithTeam>()
+  const { teamPreferences, setToLocalStorage } = useTeamStorage()
   const [
     hidingOutdatedDesktopClientAlert,
     setHidingOutdatedDesktopClientAlert,
@@ -110,19 +118,58 @@ const AnnouncementAlert = () => {
 
   if (
     currentSubInfo.info.trialIsOver &&
-    currentUserPermissions.role === 'admin'
+    currentUserPermissions.role === 'admin' &&
+    teamPreferences.showTrialAlert
   ) {
     return (
       <Container>
-        <div className='alert'>
+        <div className='alert alert--danger'>
           <span className='alert__icon'>
             <IconMdi path={mdiAlertOutline} size={21} />
           </span>
-          <p className='alert__text'>
-            You are not eligible for a free trial anymore. Please
-            <UpgradeButton origin='limit' variant='link' label='Upgrade' />
-            now.
-          </p>
+          <div className='alert__text'>
+            <p>
+              You are not eligible for a free trial anymore. Please upgrade your
+              plan.
+            </p>
+
+            {permissions.filter((p) => p.role !== 'viewer').length >= 1 && (
+              <p>
+                You can continue for free if you demote your other members to a{' '}
+                <ExternalLink
+                  href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
+                  className='alert__link'
+                >
+                  <span>Viewer</span> <IconMdi path={mdiOpenInNew} />
+                </ExternalLink>{' '}
+                role.
+              </p>
+            )}
+            <ButtonGroup className='alert__footer' layout='spread'>
+              <Button
+                variant='bordered'
+                onClick={() => {
+                  closeAllModals()
+                  openSettingsTab('teamUpgrade')
+                }}
+              >
+                Upgrade now
+              </Button>
+              <Button
+                variant='secondary'
+                onClick={() => {
+                  const newPreferences = Object.assign({}, teamPreferences)
+                  delete newPreferences.showTrialAlert
+                  setToLocalStorage(
+                    currentUserPermissions.teamId,
+                    newPreferences
+                  )
+                }}
+              >
+                Continue with the free plan
+              </Button>
+            </ButtonGroup>
+          </div>
         </div>
       </Container>
     )
@@ -140,26 +187,82 @@ const Container = styled.div`
   width: fit-content;
   z-index: 100;
 
+  .alert.alert--danger {
+    background-color: ${({ theme }) => theme.colors.variants.danger.base};
+    color: ${({ theme }) => theme.colors.variants.danger.text};
+
+    .alert__icon {
+      color: #ff425e;
+    }
+
+    .alert__text__link a,
+    .alert__btn--close,
+    .button__label {
+      color: ${({ theme }) => theme.colors.variants.danger.text};
+    }
+
+    .button__variant--bordered {
+      border-color: ${({ theme }) => theme.colors.variants.danger.text};
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.variants.danger.text};
+        .button__label {
+          color: #333;
+        }
+      }
+    }
+
+    .button__variant--secondary {
+      background-color: rgba(255, 255, 255, 0.2);
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.variants.danger.text};
+        .button__label {
+          color: #333;
+        }
+      }
+    }
+  }
+
   .alert {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 330px;
+    width: 400px;
+    max-width: 90vw;
     padding: ${({ theme }) => theme.sizes.spaces.df}px;
-    background-color: ${({ theme }) => theme.colors.variants.danger.base};
     border-left: 3px solid #ff425e;
     border-radius: 3px;
-    color: ${({ theme }) => theme.colors.variants.danger.text};
+  }
+
+  .alert__footer {
+    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
+    button .button__label {
+      text-decoration: none;
+    }
   }
 
   .alert__icon {
     margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
-    color: #ff425e;
   }
 
   .alert__text {
     margin: 0;
     line-height: 1.6;
+
+    .alert__link {
+      display: inline-flex;
+      align-items: center;
+    }
+    p {
+      margin: 0;
+    }
+
+    p + p {
+      margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
+
+    a {
+      color: inherit;
+    }
   }
 
   .alert__text__link {
@@ -168,7 +271,6 @@ const Container = styled.div`
     a {
       margin-left: 3px;
       margin-right: 3px;
-      color: ${({ theme }) => theme.colors.variants.danger.text};
       text-decoration: underline;
     }
   }
@@ -178,7 +280,6 @@ const Container = styled.div`
     align-items: center;
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px;
     background: 0;
-    color: ${({ theme }) => theme.colors.variants.danger.text};
     opacity: 0.7;
     outline: 0;
     transition: opacity 0.3s ease-in-out;
@@ -189,11 +290,6 @@ const Container = styled.div`
   }
 
   .button__label {
-    color: ${({ theme }) => theme.colors.variants.danger.text};
     text-decoration: underline;
-
-    &:hover {
-      cursor: pointer;
-    }
   }
 `

@@ -7,6 +7,7 @@ export interface SerializableUserTeamPermissionsProps {
   id: string
   role: TeamPermissionType
   userId: string
+  teamId: string
 }
 
 export interface SerializedUnserializableUserTeamPermissionsProps {
