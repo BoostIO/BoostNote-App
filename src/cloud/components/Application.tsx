@@ -25,8 +25,6 @@ import EventSource from './organisms/EventSource'
 import ApplicationLayout from '../../shared/components/molecules/ApplicationLayout'
 import { useGlobalData } from '../lib/stores/globalData'
 import { mapUsers } from '../../shared/lib/mappers/users'
-import { SerializedTeam } from '../interfaces/db/team'
-import { getTeamURL } from '../lib/utils/patterns'
 import {
   mdiCog,
   mdiDownload,
@@ -40,11 +38,7 @@ import {
   mdiWeb,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
-import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
-import { getHexFromUUID } from '../lib/utils/string'
-import { stringify } from 'querystring'
 import { sendToHost, useElectron, usingElectron } from '../lib/stores/electron'
-import { SidebarSpace } from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
 import ContentLayout, {
   ContentLayoutProps,
 } from '../../shared/components/templates/ContentLayout'
@@ -78,6 +72,7 @@ import { getTeamLinkHref } from './atoms/Link/TeamLink'
 import SidebarButton from '../../shared/components/organisms/Sidebar/atoms/SidebarButton'
 import CloudGlobalSearch from './organisms/CloudGlobalSearch'
 import ViewerDisclaimer from './molecules/ViewerDisclaimer'
+import { useCloudSidebarSpaces } from '../lib/hooks/sidebar/useCloudSidebarSpaces'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -106,7 +101,7 @@ const Application = ({
   } = usePage()
   const { openModal } = useModal()
   const {
-    globalData: { teams, invites, currentUser },
+    globalData: { currentUser },
   } = useGlobalData()
   const { push, query, goBack, goForward, pathname } = useRouter()
   const [popOverState, setPopOverState] = useState<PopOverState>(null)
@@ -169,9 +164,7 @@ const Application = ({
     )
   }, [team, initialLoadDone, docsMap, foldersMap, workspacesMap, push])
 
-  const spaces = useMemo(() => {
-    return mapSpaces(push, teams, invites, counts, team)
-  }, [teams, team, invites, push, counts])
+  const { spaces } = useCloudSidebarSpaces()
 
   const openCreateFolderModal = useCallback(() => {
     openNewFolderForm({
@@ -457,56 +450,6 @@ const Application = ({
 }
 
 export default Application
-
-function mapSpaces(
-  push: (url: string) => void,
-  teams: SerializedTeam[],
-  invites: SerializedTeamInvite[],
-  counts: Record<string, number>,
-  team?: SerializedTeam
-) {
-  const rows: SidebarSpace[] = []
-  teams.forEach((globalTeam) => {
-    const href = `${process.env.BOOST_HUB_BASE_URL}${getTeamURL(globalTeam)}`
-    rows.push({
-      label: globalTeam.name,
-      active: team?.id === globalTeam.id,
-      notificationCount: counts[globalTeam.id],
-      icon:
-        globalTeam.icon != null
-          ? buildIconUrl(globalTeam.icon.location)
-          : undefined,
-      linkProps: {
-        href,
-        onClick: (event: React.MouseEvent) => {
-          event.preventDefault()
-          push(href)
-        },
-      },
-    })
-  })
-
-  invites.forEach((invite) => {
-    const query = { t: invite.team.id, i: getHexFromUUID(invite.id) }
-    const href = `${process.env.BOOST_HUB_BASE_URL}/invite?${stringify(query)}`
-    rows.push({
-      label: `${invite.team.name} (invited)`,
-      icon:
-        invite.team.icon != null
-          ? buildIconUrl(invite.team.icon.location)
-          : undefined,
-      linkProps: {
-        href,
-        onClick: (event: React.MouseEvent) => {
-          event.preventDefault()
-          push(`/invite?${stringify(query)}`)
-        },
-      },
-    })
-  })
-
-  return rows
-}
 
 function buildSpacesBottomRows(push: (url: string) => void, t: TFunction) {
   return [

@@ -3,12 +3,13 @@ import { SerializedUser, UserOnboardingState } from '../interfaces/db/user'
 import { SerializedTeam } from '../interfaces/db/team'
 import { SerializedUserSettings } from '../interfaces/db/userSettings'
 import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
+import { SerializedSubscription } from '../interfaces/db/subscription'
 
 export interface GlobalDataResponseBody {
   currentUser?: SerializedUser
   currentUserSettings?: SerializedUserSettings
   currentUserOnboarding?: UserOnboardingState
-  teams: SerializedTeam[]
+  teams: (SerializedTeam & { subscription?: SerializedSubscription })[]
   invites: SerializedTeamInvite[]
   realtimeAuth?: string
 }

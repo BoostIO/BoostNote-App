@@ -7,6 +7,7 @@ import RoundedImage from '../../../atoms/RoundedImage'
 import SidebarContextList from '../atoms/SidebarContextList'
 import cc from 'classcat'
 import { mdiCheck } from '@mdi/js'
+import { capitalize } from 'lodash'
 
 export interface SidebarSpaceProps {
   spaces: SidebarSpace[]
@@ -26,6 +27,8 @@ export type SidebarSpace = {
   notificationCount?: number
   icon?: string
   tooltip?: string
+  subscriptionPlan?: string
+  description?: string
   linkProps: React.AnchorHTMLAttributes<{}>
 }
 
@@ -84,9 +87,28 @@ const SidebarSpace = ({
     ])}
   >
     <div className='sidebar__spaces__icon'>
-      <RoundedImage url={row.icon} alt={row.label} size={30} />
+      <RoundedImage url={row.icon} alt={row.label} size={40} />
     </div>
-    <span className='sidebar__spaces__label'>{row.label}</span>
+    <div className='sidebar__spaces__label__container'>
+      <span className='sidebar__spaces__label'>
+        {row.label}
+        {row.label}
+        {row.label}
+        {row.label}
+      </span>
+      {(row.subscriptionPlan != null || row.description != null) && (
+        <div className='sidebar__spaces__description'>
+          {row.subscriptionPlan != null && (
+            <div className='sidebar__spaces__description__plan'>
+              {capitalize(row.subscriptionPlan)}
+            </div>
+          )}
+          <span className='sidebar__spaces__description__label'>
+            {row.description}
+          </span>
+        </div>
+      )}
+    </div>
     {row.notificationCount != null && row.notificationCount > 0 && (
       <div className='sidebar__spaces__notifications'>
         {row.notificationCount}
@@ -144,6 +166,13 @@ const Container = styled.div`
   max-width: 350px;
   max-height: 400px;
 
+  .sidebar__spaces__label__container {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    height: auto;
+  }
+
   .sidebar__spaces {
     display: flex;
     flex-direction: column;
@@ -166,6 +195,28 @@ const Container = styled.div`
       text-decoration: none;
       position: relative;
 
+      .sidebar__spaces__description {
+        display: flex;
+        flex: 1 1 auto;
+        font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+        color: ${({ theme }) => theme.colors.text.subtle} !important;
+        margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+        align-items: center;
+
+        .sidebar__spaces__description__plan {
+          flex: 0 0 auto;
+          margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+          border: 1px solid ${({ theme }) => theme.colors.border.second};
+          border-radius: ${({ theme }) => theme.borders.radius}px;
+          padding: ${({ theme }) => theme.sizes.spaces.xsm}px
+            ${({ theme }) => theme.sizes.spaces.sm}px;
+        }
+
+        .sidebar__spaces__description__label {
+          ${overflowEllipsis}
+        }
+      }
+
       &:focus .sidebar__spaces__label {
         text-decoration: underline;
       }
@@ -175,6 +226,7 @@ const Container = styled.div`
       }
 
       .sidebar__spaces__label {
+        display: block;
         ${overflowEllipsis}
       }
 
@@ -194,7 +246,7 @@ const Container = styled.div`
     }
 
     .sidebar__spaces__icon {
-      width: 40px;
+      width: 50px;
       text-align: center;
       flex: 0 0 auto;
       display: flex;
