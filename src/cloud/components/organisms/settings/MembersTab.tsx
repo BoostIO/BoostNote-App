@@ -35,6 +35,8 @@ import FormSelect, {
 } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
 import { lngKeys } from '../../../lib/i18n/types'
 import { useI18n } from '../../../lib/hooks/useI18n'
+import { freePlanMembersLimit } from '../../../lib/subscription'
+import Alert from '../../../../components/atoms/Alert'
 
 const MembersTab = () => {
   const {
@@ -324,11 +326,19 @@ const MembersTab = () => {
           />
           <section>
             <Flexbox>
-              <h2>{translate(lngKeys.AddMembers)}</h2>
+              <h2>{translate(lngKeys.GeneralMembers)}</h2>
               {fetching.has('userEmails') && (
                 <Spinner className='relative' style={{ top: 2 }} />
               )}
             </Flexbox>
+            {permissions.filter((p) => p.role !== 'viewer').length >
+              freePlanMembersLimit && (
+              <Alert variant='danger'>
+                Your current team exceeds the limits of the free plan. Please
+                demote your other members to the viewer role or consider
+                updgrading.
+              </Alert>
+            )}
             <StyledMembersTable>
               <thead className='table-header'>
                 <tr>
@@ -386,20 +396,29 @@ const MembersTab = () => {
                                 !currentUserIsAdmin ||
                                 targetPermissionsAreUsersOwn
                               }
-                              options={[
-                                {
-                                  label: translate(lngKeys.GeneralAdmin),
-                                  value: 'admin',
-                                },
-                                {
-                                  label: translate(lngKeys.GeneralMember),
-                                  value: 'member',
-                                },
-                                {
-                                  label: translate(lngKeys.GeneralViewer),
-                                  value: 'viewer',
-                                },
-                              ]}
+                              options={
+                                subscription == null
+                                  ? [
+                                      {
+                                        label: translate(lngKeys.GeneralViewer),
+                                        value: 'viewer',
+                                      },
+                                    ]
+                                  : [
+                                      {
+                                        label: translate(lngKeys.GeneralAdmin),
+                                        value: 'admin',
+                                      },
+                                      {
+                                        label: translate(lngKeys.GeneralMember),
+                                        value: 'member',
+                                      },
+                                      {
+                                        label: translate(lngKeys.GeneralViewer),
+                                        value: 'viewer',
+                                      },
+                                    ]
+                              }
                             />
                           )}
                           {(targetPermissionsAreUsersOwn ||

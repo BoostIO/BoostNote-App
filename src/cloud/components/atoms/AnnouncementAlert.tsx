@@ -22,6 +22,7 @@ import { useSettings } from '../../lib/stores/settings'
 import { useModal } from '../../../shared/lib/stores/modal'
 import ButtonGroup from '../../../shared/components/atoms/ButtonGroup'
 import { useTeamStorage } from '../../lib/stores/teamStorage'
+import { freePlanMembersLimit } from '../../lib/subscription'
 
 const AnnouncementAlert = () => {
   const { currentSubInfo } = usePage()
@@ -121,26 +122,27 @@ const AnnouncementAlert = () => {
     return null
   }
 
-  if (
-    currentSubInfo.info.trialIsOver &&
-    currentUserPermissions.role === 'admin' &&
-    teamPreferences.showTrialAlert
-  ) {
-    return (
-      <Container>
-        <div className='alert alert--danger'>
-          <span className='alert__icon'>
-            <IconMdi path={mdiAlertOutline} size={21} />
-          </span>
-          <div className='alert__text'>
-            <p>
-              You are not eligible for a free trial anymore. Please upgrade your
-              plan.
-            </p>
-
-            {permissions.filter((p) => p.role !== 'viewer').length >= 1 && (
+  if (currentUserPermissions.role === 'admin') {
+    if (
+      permissions.filter((p) => p.role !== 'viewer').length >
+      freePlanMembersLimit
+    ) {
+      return (
+        <Container>
+          <div className='alert alert--danger'>
+            <span className='alert__icon'>
+              <IconMdi path={mdiAlertOutline} size={21} />
+            </span>
+            <div className='alert__text'>
               <p>
-                You can continue for free if you demote your other members to a{' '}
+                {currentSubInfo.info.trialIsOver
+                  ? `Your subscription has expired and your current team exceeds the
+                free plan's capacity. Please upgrade your plan.`
+                  : `Your current team permissions exceed the free plan's capacity. Please consider upgrading your plan.`}
+              </p>
+              <p>
+                If you wish to continue for free, you can also demote your other
+                members to a{' '}
                 <ExternalLink
                   href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
                   className='alert__link'
@@ -149,35 +151,88 @@ const AnnouncementAlert = () => {
                 </ExternalLink>{' '}
                 role.
               </p>
-            )}
-            <ButtonGroup className='alert__footer' layout='spread'>
-              <Button
-                variant='bordered'
-                onClick={() => {
-                  closeAllModals()
-                  openSettingsTab('teamUpgrade')
-                }}
-              >
-                Upgrade now
-              </Button>
-              <Button
-                variant='secondary'
-                onClick={() => {
-                  const newPreferences = Object.assign({}, teamPreferences)
-                  delete newPreferences.showTrialAlert
-                  setToLocalStorage(
-                    currentUserPermissions.teamId,
-                    newPreferences
-                  )
-                }}
-              >
-                Continue with the free plan
-              </Button>
-            </ButtonGroup>
+              <ButtonGroup className='alert__footer' layout='spread'>
+                <Button
+                  variant='bordered'
+                  onClick={() => {
+                    closeAllModals()
+                    openSettingsTab('teamUpgrade')
+                  }}
+                >
+                  Upgrade now
+                </Button>
+                <Button
+                  variant='secondary'
+                  onClick={() => {
+                    closeAllModals()
+                    openSettingsTab('teamMembers')
+                  }}
+                >
+                  Demote to Viewer
+                </Button>
+              </ButtonGroup>
+            </div>
           </div>
-        </div>
-      </Container>
-    )
+        </Container>
+      )
+    } else if (
+      currentSubInfo.info.trialIsOver &&
+      teamPreferences.showTrialAlert
+    ) {
+      return (
+        <Container>
+          <div className='alert alert--danger'>
+            <span className='alert__icon'>
+              <IconMdi path={mdiAlertOutline} size={21} />
+            </span>
+            <div className='alert__text'>
+              <p>
+                You are not eligible for a free trial anymore. Please upgrade
+                your plan.
+              </p>
+
+              {permissions.filter((p) => p.role !== 'viewer').length >= 1 && (
+                <p>
+                  You can continue for free if you demote your other members to
+                  a{' '}
+                  <ExternalLink
+                    href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
+                    className='alert__link'
+                  >
+                    <span>Viewer</span> <IconMdi path={mdiOpenInNew} />
+                  </ExternalLink>{' '}
+                  role.
+                </p>
+              )}
+              <ButtonGroup className='alert__footer' layout='spread'>
+                <Button
+                  variant='bordered'
+                  onClick={() => {
+                    closeAllModals()
+                    openSettingsTab('teamUpgrade')
+                  }}
+                >
+                  Upgrade now
+                </Button>
+                <Button
+                  variant='secondary'
+                  onClick={() => {
+                    const newPreferences = Object.assign({}, teamPreferences)
+                    delete newPreferences.showTrialAlert
+                    setToLocalStorage(
+                      currentUserPermissions.teamId,
+                      newPreferences
+                    )
+                  }}
+                >
+                  Continue with the free plan
+                </Button>
+              </ButtonGroup>
+            </div>
+          </div>
+        </Container>
+      )
+    }
   }
 
   if (
@@ -193,13 +248,14 @@ const AnnouncementAlert = () => {
           </span>
           <div className='alert__text'>
             <p>
-              Some of your members have joined as
+              Some
               <ExternalLink
                 href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
                 className='alert__link'
               >
                 <span>Viewers</span> <IconMdi path={mdiOpenInNew} />
               </ExternalLink>{' '}
+              have joined your space.
             </p>
 
             <p>
@@ -247,6 +303,10 @@ const Container = styled.div`
   bottom: ${({ theme }) => theme.sizes.spaces.xl}px;
   width: fit-content;
   z-index: 100;
+
+  .alert__link {
+    font-weight: bold;
+  }
 
   .alert.alert--danger {
     background-color: ${({ theme }) => theme.colors.variants.danger.base};

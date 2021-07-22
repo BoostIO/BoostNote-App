@@ -36,7 +36,10 @@ interface TeamInvitesSectionProps {
   subscription?: SerializedSubscription
 }
 
-const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
+const TeamInvitesSection = ({
+  userPermissions,
+  subscription,
+}: TeamInvitesSectionProps) => {
   const { team } = usePage()
   const [sending, setSending] = useState<boolean>(true)
   const [pendingInvites, setPendingInvites] = useState<SerializedTeamInvite[]>(
@@ -46,7 +49,11 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
   const [error, setError] = useState<unknown>()
   const { messageBox } = useDialog()
   const [role, setRole] = useState<TeamPermissionType>(
-    userPermissions.role === 'viewer' ? 'viewer' : 'member'
+    userPermissions.role === 'viewer'
+      ? 'viewer'
+      : subscription != null
+      ? 'member'
+      : 'viewer'
   )
   const mountedRef = useRef(false)
   const { translate, getRoleLabel } = useI18n()
@@ -172,6 +179,11 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
 
   const selectRoleOptions = useMemo(() => {
     let roles: FormSelectOption[] = []
+
+    if (subscription == null) {
+      return [{ label: translate(lngKeys.GeneralViewer), value: 'viewer' }]
+    }
+
     switch (userPermissions.role) {
       case 'admin':
         roles = [
@@ -189,7 +201,7 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
 
     roles.push({ label: translate(lngKeys.GeneralViewer), value: 'viewer' })
     return roles
-  }, [userPermissions.role, translate])
+  }, [userPermissions.role, subscription, translate])
 
   return (
     <Container>

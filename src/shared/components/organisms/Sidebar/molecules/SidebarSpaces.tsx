@@ -90,12 +90,7 @@ const SidebarSpace = ({
       <RoundedImage url={row.icon} alt={row.label} size={40} />
     </div>
     <div className='sidebar__spaces__label__container'>
-      <span className='sidebar__spaces__label'>
-        {row.label}
-        {row.label}
-        {row.label}
-        {row.label}
-      </span>
+      <span className='sidebar__spaces__label'>{row.label}</span>
       {(row.subscriptionPlan != null || row.description != null) && (
         <div className='sidebar__spaces__description'>
           {row.subscriptionPlan != null && (

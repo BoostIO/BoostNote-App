@@ -16,9 +16,7 @@ const initialContent: TeamStorage = {
 
 function useTeamStorageStore(): TeamStorageContext {
   const { team } = usePage()
-  const [teamPreferences, setTeamPreferences] = useState<TeamStorage>(
-    initialContent
-  )
+  const [teamPreferences, setTeamPreferences] = useState<TeamStorage>({})
 
   const setToLocalStorage = useCallback(
     (teamId: string, content: TeamStorage) => {
@@ -42,6 +40,7 @@ function useTeamStorageStore(): TeamStorageContext {
     try {
       const stringifiedData = localLiteStorage.getItem(teamStorageKey)
       if (stringifiedData == null) {
+        setTeamPreferences(initialContent)
         return
       }
       const locallyStoredDatas = JSON.parse(

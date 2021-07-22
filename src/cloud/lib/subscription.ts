@@ -10,6 +10,7 @@ export const revisionHistoryStandardDays = 7
 export const newTeamDiscountDays = 7
 
 export const membersForDiscount = 4
+export const freePlanMembersLimit = 1
 export function isEligibleForDiscount(
   team: {
     createdAt: string

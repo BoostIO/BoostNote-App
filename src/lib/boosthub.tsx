@@ -75,7 +75,6 @@ export type DesktopGlobalDataResponseBody = {
     icon?: { location: string }
     createdAt: string
     subscription?: SerializedSubscription
-    personal: boolean
     permissions: SerializedUserTeamPermissions[]
     trial?: boolean
   }[]
