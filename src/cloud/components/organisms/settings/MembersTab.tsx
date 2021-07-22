@@ -331,14 +331,15 @@ const MembersTab = () => {
                 <Spinner className='relative' style={{ top: 2 }} />
               )}
             </Flexbox>
-            {permissions.filter((p) => p.role !== 'viewer').length >
-              freePlanMembersLimit && (
-              <Alert variant='danger'>
-                Your current team exceeds the limits of the free plan. Please
-                demote your other members to the viewer role or consider
-                updgrading.
-              </Alert>
-            )}
+            {subscription == null &&
+              permissions.filter((p) => p.role !== 'viewer').length >
+                freePlanMembersLimit && (
+                <Alert variant='danger'>
+                  Your current team exceeds the limits of the free plan. Please
+                  demote your other members to the viewer role or consider
+                  updgrading.
+                </Alert>
+              )}
             <StyledMembersTable>
               <thead className='table-header'>
                 <tr>

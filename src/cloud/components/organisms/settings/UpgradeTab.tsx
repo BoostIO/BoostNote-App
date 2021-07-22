@@ -128,7 +128,7 @@ const UpgradeTab = ({
                 discounted={teamIsEligibleForDiscount}
               />
 
-              <Flexbox justifyContent='center'>
+              <Flexbox justifyContent='flex-start'>
                 <Icon className='icon' size={20} path={mdiStar} />
                 {translate(lngKeys.PlanViewersMembersIntro)}
                 <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'>

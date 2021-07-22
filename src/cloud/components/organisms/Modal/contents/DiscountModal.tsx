@@ -95,10 +95,6 @@ const DiscountModal = () => {
                 }
               : undefined
           }
-          onTrialCallback={() => {
-            openSettingsTab('teamUpgrade', { showTrialPopup: true })
-            closeAllModals()
-          }}
         />
       </header>
     </Container>
@@ -195,6 +191,10 @@ const Container = styled.div`
     .plan__item--pro {
       margin-left: ${({ theme }) => theme.sizes.spaces.md}px;
     }
+
+    .plan__item__footer {
+      height: auto;
+    }
   }
 
   .discount__modal__header {
@@ -203,6 +203,7 @@ const Container = styled.div`
 
   .discount__modal__title {
     margin: 0;
+    margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
     font-size: ${({ theme }) => theme.sizes.fonts.l}px;
   }
 

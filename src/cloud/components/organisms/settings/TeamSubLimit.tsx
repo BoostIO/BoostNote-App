@@ -13,7 +13,7 @@ const TeamSubLimit = ({
   padded?: boolean
   onLimitClick?: () => void
 }) => {
-  const { subscription, team, currentSubInfo, permissions = [] } = usePage()
+  const { subscription, team, currentSubInfo } = usePage()
   const { openSettingsTab } = useSettings()
   const { translate } = useI18n()
 
@@ -25,38 +25,7 @@ const TeamSubLimit = ({
     return null
   }
 
-  if (currentSubInfo.trialing) {
-    return (
-      <Container
-        className={cc(['sub__limit', !padded && 'sub__limit--stripped'])}
-      >
-        <a
-          className='upgrade-link'
-          href='#'
-          onClick={(e: any) => {
-            e.preventDefault()
-            if (onLimitClick != null) {
-              onLimitClick()
-              return
-            }
-            openSettingsTab('teamUpgrade')
-          }}
-        >
-          <h6>{translate(lngKeys.SettingsSubLimitTrialTitle)}</h6>
-          <p className='note-limit'>
-            {translate(lngKeys.SettingsSubLimitTrialDate, {
-              date: currentSubInfo.info.formattedEndDate,
-            })}
-          </p>
-          <p className='note-limit'>
-            {translate(lngKeys.SettingsSubLimitTrialUpgrade)}
-          </p>
-        </a>
-      </Container>
-    )
-  }
-
-  if (permissions.filter((p) => p.role !== 'viewer').length === 1) {
+  if (!currentSubInfo.trialing) {
     return null
   }
 
@@ -76,23 +45,15 @@ const TeamSubLimit = ({
           openSettingsTab('teamUpgrade')
         }}
       >
+        <h6>{translate(lngKeys.SettingsSubLimitTrialTitle)}</h6>
         <p className='note-limit'>
-          {team.permissions.length}/1 {translate(lngKeys.GeneralMembers)}
+          {translate(lngKeys.SettingsSubLimitTrialDate, {
+            date: currentSubInfo.info.formattedEndDate,
+          })}
         </p>
-        <div className='progress-sm'>
-          <div
-            className={cc([
-              'progress-bar',
-              team.permissions.length > 1 && 'over-limit',
-            ])}
-            style={{ width: `${team.permissions.length - 1}%` }}
-          />
-        </div>
-        {currentSubInfo.info.trialIsOver && (
-          <p className='text-danger'>
-            {translate(lngKeys.SettingsSubLimitTrialEnd)}
-          </p>
-        )}
+        <p className='note-limit'>
+          {translate(lngKeys.SettingsSubLimitTrialUpgrade)}
+        </p>
       </a>
     </Container>
   )
