@@ -19,7 +19,7 @@ export function isEligibleForDiscount(
 ) {
   if (
     isTimeEligibleForDiscount(team) &&
-    permissions.length > membersForDiscount
+    permissions.length >= membersForDiscount
   ) {
     return true
   }
