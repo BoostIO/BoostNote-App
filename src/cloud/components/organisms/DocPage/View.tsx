@@ -3,7 +3,6 @@ import {
   SerializedDocWithBookmark,
   SerializedDoc,
 } from '../../../interfaces/db/doc'
-import DocLimitReachedBanner from '../../molecules/Banner/SubLimitReachedBanner'
 import styled from '../../../lib/styled'
 import { useNav } from '../../../lib/stores/nav'
 import { SerializedTeam } from '../../../interfaces/db/team'
@@ -62,7 +61,6 @@ interface ViewPageProps {
 
 const ViewPage = ({
   doc,
-  editable,
   team,
   contributors,
   backLinks,
@@ -480,7 +478,6 @@ const ViewPage = ({
       <Container>
         <div className='view__wrapper'>
           <div className='view__content'>
-            {!editable && <DocLimitReachedBanner />}
             {realtimeContent !== '' ? (
               <MarkdownView
                 content={realtimeContent}
