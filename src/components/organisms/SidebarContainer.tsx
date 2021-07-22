@@ -55,6 +55,7 @@ import SidebarHeader, {
   SidebarControls,
 } from '../../shared/components/organisms/Sidebar/atoms/SidebarHeader'
 import SidebarButtonList from '../../shared/components/organisms/Sidebar/molecules/SidebarButtonList'
+import plur from 'plur'
 
 interface SidebarContainerProps {
   workspace?: NoteStorage
@@ -436,9 +437,32 @@ const SidebarContainer = ({
       )
     })
     generalStatus.boostHubTeams.forEach((boostHubTeam, index) => {
+      const roles = boostHubTeam.permissions.reduce(
+        (acc, val) => {
+          if (val.role === 'viewer') {
+            acc.viewers = acc.viewers + 1
+          } else {
+            acc.members = acc.members + 1
+          }
+          return acc
+        },
+        { viewers: 0, members: 0 }
+      )
+
       allSpaces.push({
         label: boostHubTeam.name,
         icon: boostHubTeam.iconUrl,
+        description: `${roles.members} ${plur('Member', roles.members)} ${
+          roles.viewers > 0
+            ? `- ${roles.viewers} ${plur('Viewer', roles.viewers)}`
+            : ''
+        }`,
+        subscriptionPlan:
+          boostHubTeam.subscription == null
+            ? 'Free'
+            : boostHubTeam.trial
+            ? 'Trial'
+            : boostHubTeam.subscription.plan,
         active: activeBoostHubTeamDomain === boostHubTeam.domain,
         tooltip: `${osName === 'macos' ? '⌘' : 'Ctrl'} ${
           localSpaces.length + index + 1
