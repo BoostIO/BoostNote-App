@@ -50,7 +50,7 @@ const MembersTab = () => {
   } = useGlobalData()
   const { messageBox } = useDialog()
   const { pushApiErrorMessage } = useToast()
-  const { setClosed } = useSettings()
+  const { setClosed, openSettingsTab } = useSettings()
   const [sending, setSending] = useState<string>()
   const router = useRouter()
   const currentUserEmailIds = useRef<string[]>([])
@@ -151,7 +151,6 @@ const MembersTab = () => {
             variant: 'danger',
             label: translate(lngKeys.GeneralDelete),
             onClick: async () => {
-              //remove
               setSending(`${permission.id}-delete`)
               try {
                 await destroyPermission(team, permission)
@@ -200,6 +199,30 @@ const MembersTab = () => {
         userPermissions.id === targetedPermissions.id ||
         targetedRole === targetedPermissions.role
       ) {
+        return
+      }
+
+      if (subscription == null && targetedRole !== 'viewer') {
+        messageBox({
+          title: translate(lngKeys.SettingsRolesRestrictedTitle),
+          message: translate(lngKeys.SettingsRolesRestrictedDescription),
+          iconType: DialogIconTypes.Warning,
+          buttons: [
+            {
+              variant: 'secondary',
+              label: translate(lngKeys.GeneralCancel),
+              cancelButton: true,
+              defaultButton: true,
+            },
+            {
+              variant: 'primary',
+              label: 'Upgrade',
+              onClick: () => {
+                openSettingsTab('teamUpgrade')
+              },
+            },
+          ],
+        })
         return
       }
 
@@ -286,6 +309,8 @@ const MembersTab = () => {
       setPartialPageData,
       team,
       translate,
+      subscription,
+      openSettingsTab,
     ]
   )
 
@@ -397,29 +422,20 @@ const MembersTab = () => {
                                 !currentUserIsAdmin ||
                                 targetPermissionsAreUsersOwn
                               }
-                              options={
-                                subscription == null
-                                  ? [
-                                      {
-                                        label: translate(lngKeys.GeneralViewer),
-                                        value: 'viewer',
-                                      },
-                                    ]
-                                  : [
-                                      {
-                                        label: translate(lngKeys.GeneralAdmin),
-                                        value: 'admin',
-                                      },
-                                      {
-                                        label: translate(lngKeys.GeneralMember),
-                                        value: 'member',
-                                      },
-                                      {
-                                        label: translate(lngKeys.GeneralViewer),
-                                        value: 'viewer',
-                                      },
-                                    ]
-                              }
+                              options={[
+                                {
+                                  label: translate(lngKeys.GeneralAdmin),
+                                  value: 'admin',
+                                },
+                                {
+                                  label: translate(lngKeys.GeneralMember),
+                                  value: 'member',
+                                },
+                                {
+                                  label: translate(lngKeys.GeneralViewer),
+                                  value: 'viewer',
+                                },
+                              ]}
                             />
                           )}
                           {(targetPermissionsAreUsersOwn ||

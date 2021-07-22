@@ -440,6 +440,9 @@ const zhTranslation: TranslationSource = {
   [lngKeys.DiscountModalTimeRemaining]: '剩余时间',
   [lngKeys.DiscountModalExpired]: '您享受折扣的资格已过期',
   [lngKeys.GeneralInvite]: 'Invite',
+  [lngKeys.SettingsRolesRestrictedTitle]: 'This role is restricted',
+  [lngKeys.SettingsRolesRestrictedDescription]:
+    'In order to promote the user to this specific role, your space needs to have an active subscription. Please consider upgrading your plan.',
 }
 
 export default {

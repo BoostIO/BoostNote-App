@@ -465,6 +465,9 @@ const jpTranslation: TranslationSource = {
   [lngKeys.DiscountModalTimeRemaining]: 'タイムリミット',
   [lngKeys.DiscountModalExpired]: '割引への有効期限の期限が切れました。',
   [lngKeys.GeneralInvite]: 'Invite',
+  [lngKeys.SettingsRolesRestrictedTitle]: 'This role is restricted',
+  [lngKeys.SettingsRolesRestrictedDescription]:
+    'In order to promote the user to this specific role, your space needs to have an active subscription. Please consider upgrading your plan.',
 }
 
 export default {

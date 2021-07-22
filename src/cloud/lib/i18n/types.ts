@@ -419,6 +419,8 @@ export enum lngKeys {
   ViewerDisclaimerDescription = 'viewer.disclaimer.description',
 
   GeneralInvite = 'general.invite',
+  SettingsRolesRestrictedTitle = 'settings.roles.restricted.title',
+  SettingsRolesRestrictedDescription = 'settings.roles.restricted.description',
 }
 
 export type TranslationSource = {

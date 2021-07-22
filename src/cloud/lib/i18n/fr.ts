@@ -469,6 +469,9 @@ const frTranslation: TranslationSource = {
   [lngKeys.DiscountModalExpired]:
     "Vous n'êtes plus apte à recevoir cette promotion",
   [lngKeys.GeneralInvite]: 'Inviter',
+  [lngKeys.SettingsRolesRestrictedTitle]: 'Ce rôle est restraint',
+  [lngKeys.SettingsRolesRestrictedDescription]:
+    "Afin de promouvoir l'utilisateur à ce rôle, votre espace doit posséder un abonnement actif. Veuillez considérer upgrader votre plan.",
 }
 
 export default {

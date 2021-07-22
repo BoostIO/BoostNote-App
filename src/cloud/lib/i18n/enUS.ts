@@ -462,6 +462,9 @@ const enTranslation: TranslationSource = {
   [lngKeys.DiscountModalTimeRemaining]: 'Time remaining',
   [lngKeys.DiscountModalExpired]: 'Your eligibility for a discount has expired',
   [lngKeys.GeneralInvite]: 'Invite',
+  [lngKeys.SettingsRolesRestrictedTitle]: 'This role is restricted',
+  [lngKeys.SettingsRolesRestrictedDescription]:
+    'In order to promote the user to this specific role, your space needs to have an active subscription. Please consider upgrading your plan.',
 }
 
 export default {
