@@ -25,7 +25,6 @@ interface SecondaryConditionItemProps {
   update: (newSecondaryCondition: EditibleSecondaryCondition) => void
   addNext: () => void
   remove: () => void
-  personalOnly: boolean
 }
 
 const SecondaryConditionItem = ({
@@ -33,19 +32,16 @@ const SecondaryConditionItem = ({
   update,
   addNext,
   remove,
-  personalOnly,
 }: SecondaryConditionItemProps) => {
   const { translate } = useI18n()
-  const validConditions = personalOnly
-    ? ['status', 'labels', 'due_date', 'creation_date', 'update_date']
-    : [
-        'status',
-        'labels',
-        'due_date',
-        'assignees',
-        'creation_date',
-        'update_date',
-      ]
+  const validConditions = [
+    'status',
+    'labels',
+    'due_date',
+    'assignees',
+    'creation_date',
+    'update_date',
+  ]
 
   return (
     <FormRow fullWidth={true}>

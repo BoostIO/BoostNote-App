@@ -1,3 +1,4 @@
+import { membersForDiscount } from '../subscription'
 import { lngKeys, TranslationSource } from './types'
 
 const jpTranslation: TranslationSource = {
@@ -131,8 +132,6 @@ const jpTranslation: TranslationSource = {
     'あなたのスペースのトライアルは{{date}}で終了します。',
   [lngKeys.SettingsSubLimitTrialUpgrade]:
     'トライアル中、いつでもStandardかProプランにアップグレードすることが可能です。',
-  [lngKeys.SettingsSubLimitUsed]:
-    '{{docsNb}}個のドキュメントが利用されています',
   [lngKeys.SettingsSubLimitTrialEnd]:
     '無料のトライアルが終了しました。利用を続ける場合アップグレードをお願いいたします。',
   [lngKeys.SettingsSubLimitUnderFreePlan]:
@@ -149,17 +148,6 @@ const jpTranslation: TranslationSource = {
   [lngKeys.PlanBusinessLink]: 'お気軽にこちらよりお問い合わせください。',
   [lngKeys.PlanPerMember]: 'メンバーごと',
   [lngKeys.PlanPerMonth]: '毎月',
-  [lngKeys.PlanFreePerk1]: 'メンバー数無制限',
-  [lngKeys.PlanFreePerk2]: 'スペースあたり{{docs}}個のドキュメント',
-  [lngKeys.PlanStoragePerk]: 'メンバーあたり{{storageSize}}',
-  [lngKeys.PlanStandardPerk1]: '無料で{{viewersSize}}人までViewer招待',
-  [lngKeys.PlanStandardPerk2]: '開発チーム支援',
-  [lngKeys.PlanStandardPerk3]: 'ドキュメント数無制限',
-  [lngKeys.PlanStandardPerk4]: '最新{{days}}間のドキュメント編集履歴',
-  [lngKeys.PlanProPerk1]: '無料で無制限Viewer招待',
-  [lngKeys.PlanProPerk2]:
-    'パブリック公開したドキュメントへパスワードと有効期限の設定',
-  [lngKeys.PlanProPerk3]: '無制限のドキュメント編集履歴',
   [lngKeys.PlanTrial]: '{{days}}間の無料トライアル',
   [lngKeys.PlanInTrial]: 'トライアルを利用中です（残り{{remaining}}間）',
   [lngKeys.UpgradeSubtitle]: '支払い情報を入力してください。',
@@ -209,12 +197,6 @@ const jpTranslation: TranslationSource = {
     '無制限ドキュメントやドキュメント履歴変更、大きな容量サイズ等、特別な機能を利用することが出来ます。',
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     '無制限ドキュメントやドキュメント履歴変更、大きな容量サイズ等、特別な機能へのアクセスを失います。',
-
-  [lngKeys.DiscountModalTitle]: '有料プランを購読し、割引を受け取りましょう！',
-  [lngKeys.DiscountModalAlreadySubscribed]:
-    'あなたは既に有料プランに加入しています。',
-  [lngKeys.DiscountModalTimeRemaining]: 'タイムリミット',
-  [lngKeys.DiscountModalExpired]: '割引への有効期限の期限が切れました。',
 
   [lngKeys.FreeTrialModalTitle]: 'プロプランを無料で試してみましょう',
   [lngKeys.FreeTrialModalBody]:
@@ -446,6 +428,46 @@ const jpTranslation: TranslationSource = {
     'No need to start from scratch. Import data into Boost Note by selecting one of the options below.',
 
   [lngKeys.GeneralPassword]: 'パスワード',
+
+  [lngKeys.CooperateTitle]: 'Create a new space',
+  [lngKeys.CooperateSubtitle]: 'Please set up your space information',
+  [lngKeys.PictureAdd]: 'Add a picture',
+  [lngKeys.PictureChange]: 'Change your picture',
+  [lngKeys.SpaceIntent]: 'For what purpose are you going to use this space?',
+  [lngKeys.SpaceIntentPersonal]: 'For my personal use',
+  [lngKeys.SpaceIntentTeam]: 'To collaborate with my team',
+  [lngKeys.PlanFreePerk1]: 'Unlimited Viewers',
+  [lngKeys.PlanFreePerk2]: '1 Member',
+  [lngKeys.PlanFreePerk3]: 'Unlimited documents',
+  [lngKeys.PlanStoragePerk]: '{{storageSize}} per member',
+  [lngKeys.PlanStandardPerk1]: 'Unlimited members',
+  [lngKeys.PlanStandardPerk2]: 'Support development',
+  [lngKeys.PlanStandardPerk3]:
+    "Last {{days}} days of your docs's revision history",
+  [lngKeys.PlanProPerk3]: 'Priority Support',
+  [lngKeys.PlanProPerk1]: 'Password and expiration date when sharing',
+  [lngKeys.PlanProPerk2]: "Full access to your docs' revision history",
+  [lngKeys.PlanViewersMembersIntro]:
+    "What's the difference between viewers and members? Please take a look at",
+  [lngKeys.PlanViewersMembersLink]: 'this article',
+  [lngKeys.SeeRoleDetails]: 'See role details',
+  [lngKeys.ViewerDisclaimerIntro]: 'You are a',
+  [lngKeys.ViewerDisclaimerDescription]:
+    'Please ask your admin to give you a member role so that you can participate as well.',
+
+  [lngKeys.DiscountModalTitle]:
+    'Invitez {{membersNb}} personnes pour recevoir une promotion!',
+  [lngKeys.DiscountModalSubtitle]: `You can receive a one-month free reduction if ${
+    membersForDiscount - 1
+  } people join this space before the timer's end.`,
+  [lngKeys.DiscountModalAlreadySubscribed]:
+    'あなたは既に有料プランに加入しています。',
+  [lngKeys.DiscountModalTimeRemaining]: 'タイムリミット',
+  [lngKeys.DiscountModalExpired]: '割引への有効期限の期限が切れました。',
+  [lngKeys.GeneralInvite]: 'Invite',
+  [lngKeys.SettingsRolesRestrictedTitle]: 'This role is restricted',
+  [lngKeys.SettingsRolesRestrictedDescription]:
+    'In order to promote the user to this specific role, your space needs to have an active subscription. Please consider upgrading your plan.',
 }
 
 export default {

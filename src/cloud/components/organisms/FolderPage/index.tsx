@@ -12,31 +12,20 @@ import {
   isFolderEditShortcut,
 } from '../../../lib/shortcuts'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
-import {
-  // mdiFolderOutline,
-  // mdiTextBoxPlus,
-  // mdiFolderMultiplePlusOutline,
-  mdiStarOutline,
-  mdiStar,
-  mdiDotsHorizontal,
-} from '@mdi/js'
+import { mdiStarOutline, mdiStar, mdiDotsHorizontal } from '@mdi/js'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
-// import EmojiIcon from '../../atoms/EmojiIcon'
 import ContentManager from '../../molecules/ContentManager'
-// import { useEmojiPicker } from '../../../lib/stores/emoji'
-// import { EmojiResource } from '../Sidebar/SideNavigator/SideNavIcon'
-// import RightLayoutHeaderButtons from '../../molecules/RightLayoutHeaderButtons'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import Application from '../../Application'
 import ErrorLayout from '../../../../shared/components/templates/ErrorLayout'
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import FolderContextMenu from '../Topbar/Controls/ControlsContextMenu/FolderContextMenu'
-// import FlattenedBreadcrumbs from '../../../../shared/components/molecules/FlattenedBreadcrumbs'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useI18n } from '../../../lib/hooks/useI18n'
+import InviteCTAButton from '../../molecules/InviteCTAButton'
 
 const FolderPage = () => {
   const { pageFolder, team, currentUserIsCoreMember } = usePage()
@@ -263,6 +252,10 @@ const FolderPage = () => {
             />
           ),
           controls: [
+            {
+              type: 'node',
+              element: <InviteCTAButton />,
+            },
             {
               type: 'button',
               variant: 'icon',

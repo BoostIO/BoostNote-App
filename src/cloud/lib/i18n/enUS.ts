@@ -1,3 +1,4 @@
+import { membersForDiscount } from '../subscription'
 import { lngKeys, TranslationSource } from './types'
 
 const enTranslation: TranslationSource = {
@@ -131,7 +132,6 @@ const enTranslation: TranslationSource = {
     "Your workspace's trial of the Pro plan lasts through {{date}}",
   [lngKeys.SettingsSubLimitTrialUpgrade]:
     'You can upgrade at anytime during your trial.',
-  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} docs used',
   [lngKeys.SettingsSubLimitTrialEnd]:
     'Your pro plan trial has ended. Please upgrade now',
   [lngKeys.SettingsSubLimitUnderFreePlan]:
@@ -149,17 +149,18 @@ const enTranslation: TranslationSource = {
   [lngKeys.PlanBusinessLink]: 'contact our sales department',
   [lngKeys.PlanPerMember]: 'per member',
   [lngKeys.PlanPerMonth]: 'per month',
-  [lngKeys.PlanFreePerk1]: 'Unlimited members',
-  [lngKeys.PlanFreePerk2]: '{{docs}} docs per team',
+
+  [lngKeys.PlanFreePerk1]: 'Unlimited Viewers',
+  [lngKeys.PlanFreePerk2]: '1 Member',
+  [lngKeys.PlanFreePerk3]: 'Unlimited documents',
   [lngKeys.PlanStoragePerk]: '{{storageSize}} per member',
-  [lngKeys.PlanStandardPerk1]: '{{viewersSize}} viewers for free',
+  [lngKeys.PlanStandardPerk1]: 'Unlimited members',
   [lngKeys.PlanStandardPerk2]: 'Support development',
-  [lngKeys.PlanStandardPerk3]: 'Unlimited documents',
-  [lngKeys.PlanStandardPerk4]:
+  [lngKeys.PlanStandardPerk3]:
     "Last {{days}} days of your docs's revision history",
-  [lngKeys.PlanProPerk1]: 'Unlimited viewers for free',
-  [lngKeys.PlanProPerk2]: 'Password and expiration date when sharing',
-  [lngKeys.PlanProPerk3]: "Full access to your docs' revision history",
+  [lngKeys.PlanProPerk3]: 'Priority Support',
+  [lngKeys.PlanProPerk1]: 'Password and expiration date when sharing',
+  [lngKeys.PlanProPerk2]: "Full access to your docs' revision history",
   [lngKeys.PlanTrial]: '{{days}} days free trial',
   [lngKeys.PlanInTrial]: 'In free trial ({{remaining}} left)',
   [lngKeys.UpgradeSubtitle]: 'Confirm and enter your payment information',
@@ -208,11 +209,6 @@ const enTranslation: TranslationSource = {
     'You will get access to advanced features such as unlimited document revision history, setting password and expiration date for shared documents, unlimited viewers etc...',
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     'You will lose access to advanced features such as unlimited document revision history, setting password and expiration date for shared document, unlimited viewers, etc...',
-
-  [lngKeys.DiscountModalTitle]: 'Subscribe now to receive a discount!',
-  [lngKeys.DiscountModalAlreadySubscribed]: 'You are already subscribed',
-  [lngKeys.DiscountModalTimeRemaining]: 'Time remaining',
-  [lngKeys.DiscountModalExpired]: 'Your eligibility for a discount has expired',
 
   [lngKeys.FreeTrialModalTitle]: 'Try the Pro Plan for free',
   [lngKeys.FreeTrialModalBody]:
@@ -441,6 +437,34 @@ const enTranslation: TranslationSource = {
     'No need to start from scratch. Import data into Boost Note by selecting one of the options below.',
 
   [lngKeys.GeneralPassword]: 'Password',
+
+  [lngKeys.CooperateTitle]: 'Create a new space',
+  [lngKeys.CooperateSubtitle]: 'Please set up your space information',
+  [lngKeys.PictureAdd]: 'Add a picture',
+  [lngKeys.PictureChange]: 'Change your picture',
+  [lngKeys.SpaceIntent]: 'For what purpose are you going to use this space?',
+  [lngKeys.SpaceIntentPersonal]: 'For my personal use',
+  [lngKeys.SpaceIntentTeam]: 'To collaborate with my team',
+  [lngKeys.PlanViewersMembersIntro]:
+    "What's the difference between viewers and members? Please take a look at",
+  [lngKeys.PlanViewersMembersLink]: 'this article',
+  [lngKeys.SeeRoleDetails]: 'See role details',
+
+  [lngKeys.ViewerDisclaimerIntro]: 'You are a',
+  [lngKeys.ViewerDisclaimerDescription]:
+    'Please ask your admin to give you a member role so that you can participate as well.',
+  [lngKeys.DiscountModalTitle]:
+    'Invite {{membersNb}} people to receive a discount!',
+  [lngKeys.DiscountModalSubtitle]: `You can receive a one-month free reduction if ${
+    membersForDiscount - 1
+  } people join this space before the timer's end.`,
+  [lngKeys.DiscountModalAlreadySubscribed]: 'You are already subscribed',
+  [lngKeys.DiscountModalTimeRemaining]: 'Time remaining',
+  [lngKeys.DiscountModalExpired]: 'Your eligibility for a discount has expired',
+  [lngKeys.GeneralInvite]: 'Invite',
+  [lngKeys.SettingsRolesRestrictedTitle]: 'This role is restricted',
+  [lngKeys.SettingsRolesRestrictedDescription]:
+    'In order to promote the user to this specific role, your space needs to have an active subscription. Please consider upgrading your plan.',
 }
 
 export default {

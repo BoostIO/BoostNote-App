@@ -3,7 +3,7 @@ import { Icon as MdiIcon } from '@mdi/react'
 import cc from 'classcat'
 import styled from '../../lib/styled'
 
-export type IconSize = 16 | 20 | 26 | 34 | 50 | 100
+export type IconSize = 12 | 16 | 20 | 26 | 34 | 50 | 100
 
 export interface IconProps {
   path: string

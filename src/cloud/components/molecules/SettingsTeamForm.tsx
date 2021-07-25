@@ -1,6 +1,5 @@
 import { mdiDomain } from '@mdi/js'
-import React, { useCallback, useMemo, useState } from 'react'
-import slugify from 'slugify'
+import React, { useCallback, useState } from 'react'
 import { buildIconUrl } from '../../api/files'
 import { updateTeam, updateTeamIcon } from '../../api/teams'
 import { SerializedTeam } from '../../interfaces/db/team'
@@ -11,21 +10,15 @@ import { useRouter } from '../../lib/router'
 import { getTeamURL } from '../../lib/utils/patterns'
 import { useToast } from '../../../shared/lib/stores/toast'
 import Form from '../../../shared/components/molecules/Form'
-import FormRow from '../../../shared/components/molecules/Form/templates/FormRow'
-import styled from '../../../shared/lib/styled'
 import { useTranslation } from 'react-i18next'
 import { lngKeys } from '../../lib/i18n/types'
 
 interface SettingsTeamFormProps {
   team: SerializedTeam
-  teamConversion?: boolean
 }
 
-const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
-  const [name, setName] = useState<string>(!teamConversion ? team.name : '')
-  const [domain, setDomain] = useState<string>(
-    !teamConversion ? team.domain : ''
-  )
+const SettingsTeamForm = ({ team }: SettingsTeamFormProps) => {
+  const [name, setName] = useState<string>(team.name)
   const [sending, setSending] = useState(false)
   const [iconFile, setIconFile] = useState<File | null>(null)
   const [fileUrl, setFileUrl] = useState<string | null>(
@@ -37,20 +30,6 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
   const { pushMessage } = useToast()
   const router = useRouter()
   const { t } = useTranslation()
-
-  const slugDomain = useMemo(() => {
-    if (domain == null) {
-      return process.env.BOOST_HUB_BASE_URL + '/'
-    }
-    return (
-      process.env.BOOST_HUB_BASE_URL +
-      '/' +
-      slugify(domain.trim().replace(/[^a-zA-Z0-9\-]/g, ''), {
-        replacement: '-',
-        lower: true,
-      }).toLocaleLowerCase()
-    )
-  }, [domain])
 
   const changeHandler = useCallback((file: File) => {
     setIconFile(file)
@@ -67,10 +46,6 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
       setSending(true)
       try {
         const body: any = { name }
-        if (teamConversion) {
-          body.domain = domain
-          body.personal = false
-        }
         const { team: updatedTeam } = await updateTeam(currentTeam.id, body)
         if (iconFile != null) {
           const { icon } = await updateTeamIcon(team, iconFile)
@@ -106,17 +81,13 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
       setTeamInGlobal,
       router,
       team,
-      domain,
-      teamConversion,
       iconFile,
       usingElectron,
       sendToElectron,
     ]
   )
 
-  const labels = teamConversion
-    ? { name: t(lngKeys.TeamName), domain: t(lngKeys.TeamDomain) }
-    : { name: t(lngKeys.SpaceName), domain: t(lngKeys.SpaceDomain) }
+  const labels = { name: t(lngKeys.SpaceName), domain: t(lngKeys.SpaceDomain) }
 
   return (
     <Form
@@ -147,54 +118,25 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
             },
           ],
         },
+
+        {
+          title: t(lngKeys.SpaceDomain),
+          items: [
+            {
+              type: 'input',
+              props: {
+                value: team.domain,
+                readOnly: true,
+              },
+            },
+          ],
+        },
       ]}
       submitButton={{
-        label: teamConversion
-          ? t(lngKeys.GeneralCreate)
-          : t(lngKeys.GeneralUpdate),
+        label: t(lngKeys.GeneralUpdate),
       }}
-    >
-      {teamConversion && team.personal && (
-        <FormRow
-          row={{
-            title: labels.domain,
-            items: [
-              {
-                type: 'input',
-                props: {
-                  value: domain,
-                  onChange: (ev) => setDomain(ev.target.value),
-                },
-              },
-            ],
-            description: (
-              <Description>
-                <div className='description'>
-                  {t(lngKeys.TeamDomainShow)}
-                  <span className='underlined'>{slugDomain}</span>
-                </div>
-                <div className='description'>
-                  {t(lngKeys.TeamDomainWarning)}
-                </div>
-              </Description>
-            ),
-          }}
-        />
-      )}
-    </Form>
+    />
   )
 }
-
-const Description = styled.div`
-  .description + .description {
-    margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
-  }
-
-  .underlined {
-    font-weight: 500;
-    padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
-    text-decoration: underline;
-  }
-`
 
 export default SettingsTeamForm

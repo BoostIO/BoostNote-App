@@ -12,6 +12,7 @@ interface ButtonGroupProps {
 
 const ButtonGroup: AppComponent<ButtonGroupProps> = ({
   children,
+  className,
   display = 'inline-flex',
   layout = 'collapsed',
   justifyContent = 'flex-start',
@@ -19,7 +20,7 @@ const ButtonGroup: AppComponent<ButtonGroupProps> = ({
 }) => {
   return (
     <StyledButtonGroup
-      className={cc(['button__group', `button__group--${layout}`])}
+      className={cc(['button__group', `button__group--${layout}`, className])}
       display={display}
       justifyContent={justifyContent}
       flex={flex}

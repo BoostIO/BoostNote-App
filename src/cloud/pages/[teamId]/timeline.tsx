@@ -24,6 +24,7 @@ import { topParentId } from '../../lib/mappers/topbarTree'
 import { useNav } from '../../lib/stores/nav'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
+import InviteCTAButton from '../../components/molecules/InviteCTAButton'
 
 export interface TimelineUser {
   user: SerializedUser
@@ -94,6 +95,12 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
                 },
               },
             ],
+            controls: [
+              {
+                type: 'node',
+                element: <InviteCTAButton />,
+              },
+            ],
           },
           header: (
             <>
@@ -135,6 +142,12 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
                     href,
                     navigateTo: () => push(href),
                   },
+                },
+              ],
+              controls: [
+                {
+                  type: 'node',
+                  element: <InviteCTAButton />,
                 },
               ],
             },

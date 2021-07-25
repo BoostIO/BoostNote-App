@@ -14,6 +14,7 @@ import { mdiTag } from '@mdi/js'
 import { getTagHref } from '../../../../components/atoms/Link/TagLink'
 import { useRouter } from '../../../../lib/router'
 import DocOnlyContentManager from '../../../../components/molecules/ContentManager/DocOnlyContentManager'
+import InviteCTAButton from '../../../../components/molecules/InviteCTAButton'
 
 const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
   const { docsMap, tagsMap, workspacesMap } = useNav()
@@ -77,6 +78,12 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
                 href: getTagHref(pageTag, team, 'index'),
                 navigateTo: () => push(getTagHref(pageTag, team, 'index')),
               },
+            },
+          ],
+          controls: [
+            {
+              type: 'node',
+              element: <InviteCTAButton />,
             },
           ],
         },

@@ -13,6 +13,7 @@ import DocOnlyContentManager from '../../components/molecules/ContentManager/Doc
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import { capitalize } from 'lodash'
+import InviteCTAButton from '../../components/molecules/InviteCTAButton'
 
 const SharedDocsListPage = () => {
   const { team, currentUserIsCoreMember } = usePage()
@@ -44,6 +45,12 @@ const SharedDocsListPage = () => {
                 href: getTeamLinkHref(team, 'shared'),
                 navigateTo: () => push(getTeamLinkHref(team, 'shared')),
               },
+            },
+          ],
+          controls: [
+            {
+              type: 'node',
+              element: <InviteCTAButton />,
             },
           ],
         },

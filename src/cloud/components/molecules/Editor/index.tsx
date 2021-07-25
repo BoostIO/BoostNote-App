@@ -94,6 +94,7 @@ import { parse } from 'querystring'
 import DocShare from '../DocShare'
 import EditorLayout from '../../organisms/EditorLayout'
 import PreferencesContextMenuWrapper from '../../molecules/PreferencesContextMenuWrapper'
+import InviteCTAButton from '../InviteCTAButton'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -896,7 +897,7 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
         topbar: {
           breadcrumbs,
           children:
-            !team.personal && currentUserPermissions != null ? (
+            currentUserPermissions != null ? (
               <StyledTopbarChildrenContainer>
                 <LoadingButton
                   variant='icon'
@@ -911,6 +912,10 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
               </StyledTopbarChildrenContainer>
             ) : null,
           controls: [
+            {
+              type: 'node',
+              element: <InviteCTAButton />,
+            },
             {
               type: 'separator',
             },

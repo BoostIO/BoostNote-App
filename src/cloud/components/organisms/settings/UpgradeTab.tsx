@@ -18,11 +18,13 @@ import {
   newTeamDiscountDays,
 } from '../../../lib/subscription'
 import Banner from '../../../../shared/components/atoms/Banner'
-import { mdiGift } from '@mdi/js'
+import { mdiGift, mdiStar } from '@mdi/js'
 import { format } from 'date-fns'
 import { useElectron } from '../../../lib/stores/electron'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
+import Icon from '../../../../shared/components/atoms/Icon'
+import Flexbox from '../../../../shared/components/atoms/Flexbox'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
@@ -45,6 +47,7 @@ const UpgradeTab = ({
     subscription,
     updateTeamSubscription,
     currentUserPermissions,
+    permissions = [],
   } = usePage<PageStoreWithTeam>()
   const { usingElectron, sendToElectron } = useElectron()
   const [tabState, setTabState] = useState<UpgradeTabs>(defaultTabState)
@@ -94,7 +97,7 @@ const UpgradeTab = ({
 
   const eligibilityEnd = new Date(team.createdAt)
   eligibilityEnd.setDate(eligibilityEnd.getDate() + newTeamDiscountDays)
-  const teamIsEligibleForDiscount = isEligibleForDiscount(team)
+  const teamIsEligibleForDiscount = isEligibleForDiscount(team, permissions)
   if (tabState === 'plans') {
     return (
       <SettingTabContent
@@ -124,6 +127,15 @@ const UpgradeTab = ({
                 onTrialCallback={() => setShowTrialPopup(true)}
                 discounted={teamIsEligibleForDiscount}
               />
+
+              <Flexbox justifyContent='flex-start'>
+                <Icon className='icon' size={20} path={mdiStar} />
+                {translate(lngKeys.PlanViewersMembersIntro)}
+                <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'>
+                  {translate(lngKeys.PlanViewersMembersLink)}
+                </ExternalLink>
+                !
+              </Flexbox>
               <StyledFYI>
                 * {translate(lngKeys.PlanBusinessIntro)}{' '}
                 <ExternalLink href='https://forms.gle/LqzQ2Tcfd6noWH6b9'>

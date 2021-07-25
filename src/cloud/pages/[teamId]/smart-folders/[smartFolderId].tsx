@@ -20,6 +20,7 @@ import DocOnlyContentManager from '../../../components/molecules/ContentManager/
 import { getTeamIndexPageData } from '../../../api/pages/teams'
 import styled from '../../../../shared/lib/styled'
 import { localizeDate } from '../../../components/organisms/Modal/contents/SmartFolder/DocDateSelect'
+import InviteCTAButton from '../../../components/molecules/InviteCTAButton'
 
 function validateAssignees(
   doc: SerializedDocWithBookmark,
@@ -276,7 +277,12 @@ const SmartFolderPage = (params: any) => {
     <Application
       content={{
         topbar: {
-          controls: [],
+          controls: [
+            {
+              type: 'node',
+              element: <InviteCTAButton />,
+            },
+          ],
           children: <SmartFolderLabel>{smartFolder.name}</SmartFolderLabel>,
         },
       }}

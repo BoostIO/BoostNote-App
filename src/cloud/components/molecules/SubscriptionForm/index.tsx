@@ -140,7 +140,7 @@ const SubscriptionForm = ({
   }, [permissions])
 
   const eligibleDiscount = useMemo(() => {
-    if (!isEligibleForDiscount(team)) {
+    if (!isEligibleForDiscount(team, permissions)) {
       return
     }
 
@@ -148,7 +148,7 @@ const SubscriptionForm = ({
       default:
         return discountPlans.newSpace
     }
-  }, [currentPlan, team])
+  }, [currentPlan, team, permissions])
 
   return (
     <Container>
@@ -210,7 +210,7 @@ const SubscriptionForm = ({
 
         {showPromoCode && (
           <>
-            {isEligibleForDiscount(team) && (
+            {isEligibleForDiscount(team, permissions) && (
               <Banner variant='warning'>
                 {translate(lngKeys.PlanDiscountCouponWarning)}
               </Banner>

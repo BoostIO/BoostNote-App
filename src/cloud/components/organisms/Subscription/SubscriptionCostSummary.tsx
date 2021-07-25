@@ -13,7 +13,6 @@ import {
 } from '../../../lib/stripe'
 import Icon from '../../../../shared/components/atoms/Icon'
 import { mdiGiftOutline } from '@mdi/js'
-import { viewerStandardPlanLimit } from '../../../lib/subscription'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
 import { lowerCase } from 'lodash'
@@ -82,9 +81,7 @@ const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
 
       <div className='subscription__cost__summary__row'>
         <div className='subscription__cost__summary__row__description'>
-          {plan === 'pro'
-            ? translate(lngKeys.UnlimitedViewers)
-            : `${viewerStandardPlanLimit} ${translate(lngKeys.Viewers)}`}
+          {translate(lngKeys.UnlimitedViewers)}
           <div className='context__tooltip'>
             <div className='context__tooltip__text'>
               {translate(lngKeys.RoleViewerDescription)}

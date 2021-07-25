@@ -10,12 +10,10 @@ import {
   UpgradePlans,
 } from '../../../lib/stripe'
 import {
-  freePlanDocLimit,
   freePlanStorageMb,
   proPlanStorageMb,
   revisionHistoryStandardDays,
   standardPlanStorageMb,
-  viewerStandardPlanLimit,
 } from '../../../lib/subscription'
 import cc from 'classcat'
 import Button from '../../../../shared/components/atoms/Button'
@@ -88,7 +86,7 @@ const PlanTables = ({
 
   return (
     <Container className={cc(['plans', isTabletOrMobile && 'plans--mobile'])}>
-      <div className='plan__item'>
+      <div className='plan__item plan__item--free'>
         <div className='plan__item__header'>
           <label className='plan__item__title'>Free</label>
           <div className='plan__item__price'>
@@ -104,9 +102,11 @@ const PlanTables = ({
             <span>{translate(lngKeys.PlanFreePerk1)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>
-              {translate(lngKeys.PlanFreePerk2, { docs: freePlanDocLimit })}
-            </span>
+            <span>{translate(lngKeys.PlanFreePerk2)}</span>
+          </div>
+
+          <div className='plan__item__perk'>
+            <span>{translate(lngKeys.PlanFreePerk3)}</span>
           </div>
           <div className='plan__item__perk'>
             <span>
@@ -136,7 +136,7 @@ const PlanTables = ({
           )}
         </div>
       </div>
-      <div className='plan__item'>
+      <div className='plan__item plan__item--standard'>
         <div className='plan__item__header'>
           <label className='plan__item__title'>Standard</label>
           <div
@@ -174,21 +174,14 @@ const PlanTables = ({
         )}
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
-            <span>
-              {translate(lngKeys.PlanStandardPerk1, {
-                viewersSize: viewerStandardPlanLimit,
-              })}
-            </span>
+            <span>{translate(lngKeys.PlanStandardPerk1)}</span>
           </div>
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanStandardPerk2)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>{translate(lngKeys.PlanStandardPerk3)}</span>
-          </div>
-          <div className='plan__item__perk'>
             <span>
-              {translate(lngKeys.PlanStandardPerk4, {
+              {translate(lngKeys.PlanStandardPerk3, {
                 days: revisionHistoryStandardDays,
               })}
             </span>
@@ -211,13 +204,17 @@ const PlanTables = ({
               Current Plan
             </Button>
           ) : (
-            <Button onClick={onStandardCallback} className='upgrade__btn'>
+            <Button
+              onClick={onStandardCallback}
+              className='upgrade__btn'
+              disabled={onStandardCallback == null}
+            >
               {selectedPlan === 'free' ? 'Upgrade' : 'Downgrade'}
             </Button>
           )}
         </div>
       </div>
-      <div className='plan__item'>
+      <div className='plan__item plan__item--pro'>
         <div className='plan__item__header'>
           <label className='plan__item__title'>Pro</label>
           <div
@@ -281,7 +278,11 @@ const PlanTables = ({
               Current Plan
             </Button>
           ) : (
-            <Button onClick={onProCallback} className='upgrade__btn'>
+            <Button
+              onClick={onProCallback}
+              className='upgrade__btn'
+              disabled={onProCallback == null}
+            >
               Upgrade
             </Button>
           )}

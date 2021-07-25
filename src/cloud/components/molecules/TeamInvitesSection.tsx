@@ -15,7 +15,7 @@ import {
 } from '../../api/teams/invites'
 import { TeamPermissionType } from '../../interfaces/db/userTeamPermissions'
 import IconMdi from '../atoms/IconMdi'
-import { mdiClose } from '@mdi/js'
+import { mdiClose, mdiOpenInNew } from '@mdi/js'
 import { Spinner } from '../atoms/Spinner'
 import ErrorBlock from '../atoms/ErrorBlock'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
@@ -27,6 +27,9 @@ import FormRowItem from '../../../shared/components/molecules/Form/templates/For
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import { FormSelectOption } from '../../../shared/components/molecules/Form/atoms/FormSelect'
+import { ExternalLink } from '../../../shared/components/atoms/Link'
+import Icon from '../../../shared/components/atoms/Icon'
+import styled from '../../../shared/lib/styled'
 
 interface TeamInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions
@@ -46,7 +49,11 @@ const TeamInvitesSection = ({
   const [error, setError] = useState<unknown>()
   const { messageBox } = useDialog()
   const [role, setRole] = useState<TeamPermissionType>(
-    userPermissions.role === 'viewer' ? 'viewer' : 'member'
+    userPermissions.role === 'viewer'
+      ? 'viewer'
+      : subscription != null
+      ? 'member'
+      : 'viewer'
   )
   const mountedRef = useRef(false)
   const { translate, getRoleLabel } = useI18n()
@@ -172,6 +179,11 @@ const TeamInvitesSection = ({
 
   const selectRoleOptions = useMemo(() => {
     let roles: FormSelectOption[] = []
+
+    if (subscription == null) {
+      return [{ label: translate(lngKeys.GeneralViewer), value: 'viewer' }]
+    }
+
     switch (userPermissions.role) {
       case 'admin':
         roles = [
@@ -187,14 +199,12 @@ const TeamInvitesSection = ({
         break
     }
 
-    if (subscription != null) {
-      roles.push({ label: translate(lngKeys.GeneralViewer), value: 'viewer' })
-    }
+    roles.push({ label: translate(lngKeys.GeneralViewer), value: 'viewer' })
     return roles
   }, [userPermissions.role, subscription, translate])
 
   return (
-    <section>
+    <Container>
       <Flexbox>
         <h2>{translate(lngKeys.InviteEmail)}</h2>
         {sending && <Spinner className='relative' style={{ top: 2 }} />}
@@ -235,13 +245,18 @@ const TeamInvitesSection = ({
           />
         </FormRow>
       </Form>
-      {role === 'admin' ? (
-        <small>{translate(lngKeys.RoleAdminDescription)}</small>
-      ) : role === 'member' ? (
-        <small>{translate(lngKeys.RoleMemberDescription)}</small>
-      ) : (
-        <small>{translate(lngKeys.RoleViewerDescription)}</small>
-      )}
+      <small>
+        {role === 'admin'
+          ? translate(lngKeys.RoleAdminDescription)
+          : role === 'member'
+          ? translate(lngKeys.RoleMemberDescription)
+          : translate(lngKeys.RoleViewerDescription)}
+        .
+        <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'>
+          {translate(lngKeys.SeeRoleDetails)}
+          <Icon path={mdiOpenInNew} size={12} />
+        </ExternalLink>
+      </small>
       <SectionList>
         {pendingInvites.map((invite) => (
           <SectionListItem key={invite.id} className='li'>
@@ -259,8 +274,20 @@ const TeamInvitesSection = ({
         ))}
       </SectionList>
       {error != null && <ErrorBlock error={error} />}
-    </section>
+    </Container>
   )
 }
+
+const Container = styled.section`
+  small a {
+    display: inline-flex;
+    white-space: nowrap;
+    &:hover {
+      svg {
+        text-decoration: underline;
+      }
+    }
+  }
+`
 
 export default TeamInvitesSection

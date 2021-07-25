@@ -27,7 +27,6 @@ interface SmartFolderFormProps {
   defaultPrivate?: boolean
   defaultConditionType: 'and' | 'or'
   defaultSecondaryConditions: EditibleSecondaryCondition[]
-  isPersonalTeam: boolean
   onSubmit: (
     body: CreateSmartFolderRequestBody | UpdateSmartFolderRequestBody
   ) => void
@@ -41,7 +40,6 @@ const SmartFolderForm = ({
   defaultPrivate = true,
   defaultConditionType,
   defaultSecondaryConditions,
-  isPersonalTeam,
   buttonsAreDisabled,
   onCancel,
   onSubmit,
@@ -184,7 +182,6 @@ const SmartFolderForm = ({
               update={updateSecondaryCondition}
               addNext={insertConditionNext}
               remove={removeCondition}
-              personalOnly={isPersonalTeam}
             />
           )
         })}

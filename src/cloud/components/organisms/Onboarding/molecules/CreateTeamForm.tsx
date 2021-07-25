@@ -13,9 +13,14 @@ import Button, {
 import ButtonGroup from '../../../../../shared/components/atoms/ButtonGroup'
 import FormImage from '../../../../../shared/components/molecules/Form/atoms/FormImage'
 import styled from '../../../../../shared/lib/styled'
+import { useI18n } from '../../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../../lib/i18n/types'
+import UsageFormRow, { SpaceUsageIntent } from './UsageFormRow'
 
 interface CreateTeamFormProps {
   name: string
+  intent?: SpaceUsageIntent
+  setIntent: (intent: SpaceUsageIntent) => void
   setName: (val: string) => void
   domain?: string
   setDomain?: (val: string) => void
@@ -31,6 +36,8 @@ interface CreateTeamFormProps {
 
 const CreateTeamForm = ({
   name,
+  intent,
+  setIntent,
   setName,
   domain = '',
   setDomain,
@@ -43,6 +50,7 @@ const CreateTeamForm = ({
   fileUrl,
   onFileChange,
 }: CreateTeamFormProps) => {
+  const { translate } = useI18n()
   const slugDomain = useMemo(() => {
     if (domain == null) {
       return boostHubBaseUrl + '/'
@@ -68,19 +76,23 @@ const CreateTeamForm = ({
             onChange={onFileChange}
             defaultUrl={fileUrl}
             defaultIcon={mdiDomain}
-            label='Add a photo'
+            label={
+              fileUrl != null
+                ? translate(lngKeys.PictureChange)
+                : translate(lngKeys.PictureAdd)
+            }
             iconSize={100}
             className='profile__image'
           />
         </FormRow>
-        <FormRow row={{ title: 'Team Name' }} fullWidth={true}>
+        <FormRow row={{ title: translate(lngKeys.SpaceName) }} fullWidth={true}>
           <FormRowItem
             item={{
               type: 'input',
               props: {
                 value: name,
                 onChange: (e) => setName(e.target.value),
-                placeholder: 'Display Name',
+                placeholder: translate(lngKeys.GeneralName),
               },
             }}
           />
@@ -88,17 +100,15 @@ const CreateTeamForm = ({
         {setDomain != null && (
           <FormRow
             row={{
-              title: 'Choose your team URL',
+              title: translate(lngKeys.SpaceDomain),
               description: (
                 <div className='domain__description'>
                   <small>
-                    Your url will look like this:
+                    {translate(lngKeys.TeamDomainShow)}{' '}
                     <span className='underlined'>{slugDomain}</span>
                   </small>
                   <br />
-                  <small>
-                    Caution: You can&#39;t change it after creating your team.
-                  </small>
+                  <small>{translate(lngKeys.TeamDomainWarning)}</small>
                 </div>
               ),
             }}
@@ -121,6 +131,11 @@ const CreateTeamForm = ({
             />
           </FormRow>
         )}
+        <UsageFormRow
+          intent={intent}
+          inSpaceForm={true}
+          setIntent={setIntent}
+        />
         <FormRow fullWidth={true} className='end__row'>
           <ButtonGroup layout='column' display='flex' flex='1 1 auto'>
             {showSubmitButton && (
@@ -132,7 +147,7 @@ const CreateTeamForm = ({
                 spinning={sending}
                 size='lg'
               >
-                Continue
+                {translate(lngKeys.GeneralContinueVerb)}
               </LoadingButton>
             )}
             {goBack != null && (
@@ -142,7 +157,8 @@ const CreateTeamForm = ({
                 type='button'
                 onClick={goBack}
               >
-                <IconMdi path={mdiChevronRight} /> Go Back
+                <IconMdi path={mdiChevronRight} />{' '}
+                {translate(lngKeys.GeneralBack)}
               </Button>
             )}
           </ButtonGroup>

@@ -1,23 +1,27 @@
 import React from 'react'
 import styled from '../../../../../shared/lib/styled'
 import Countdown from 'react-countdown'
-import { newTeamDiscountDays } from '../../../../lib/subscription'
+import {
+  isEligibleForDiscount,
+  newTeamDiscountDays,
+  membersForDiscount,
+} from '../../../../lib/subscription'
 import PlanTables from '../../Subscription/PlanTables'
 import { useSettings } from '../../../../lib/stores/settings'
 import { useModal } from '../../../../../shared/lib/stores/modal'
 import { usePage } from '../../../../lib/stores/pageStore'
 import Banner from '../../../../../shared/components/atoms/Banner'
 import { mdiExclamation } from '@mdi/js'
-import TeamSubLimit from '../../settings/TeamSubLimit'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
 import { TFunction } from 'i18next'
 import { withTranslation, Translation } from 'react-i18next'
+import Button from '../../../../../shared/components/atoms/Button'
 
 const DiscountModal = () => {
   const { openSettingsTab } = useSettings()
   const { closeAllModals } = useModal()
-  const { team, subscription } = usePage()
+  const { team, subscription, permissions = [] } = usePage()
   const { translate } = useI18n()
 
   if (team == null) {
@@ -37,12 +41,30 @@ const DiscountModal = () => {
   const eligibilityEnd = new Date(team.createdAt)
   eligibilityEnd.setDate(eligibilityEnd.getDate() + newTeamDiscountDays)
 
+  const eligible = isEligibleForDiscount(team, permissions)
   return (
     <Container className='discount__modal'>
       <header className='discount__modal__header'>
-        <h3 className='discount__modal__title'>
-          {translate(lngKeys.DiscountModalTitle)}
-        </h3>
+        <div className='discount__modal__title'>
+          {translate(lngKeys.DiscountModalTitle, {
+            membersNb: membersForDiscount - 1,
+          })}
+        </div>
+        {!eligible && (
+          <h5 className='discount__modal__subtitle'>
+            <span>{translate(lngKeys.DiscountModalSubtitle)}</span>
+            <Button
+              variant='link'
+              type='button'
+              onClick={() => {
+                openSettingsTab('teamMembers')
+                closeAllModals()
+              }}
+            >
+              {translate(lngKeys.GeneralInvite)}
+            </Button>
+          </h5>
+        )}
         <div className='discount__modal__description'>
           {translate(lngKeys.DiscountModalTimeRemaining)}
         </div>
@@ -51,33 +73,28 @@ const DiscountModal = () => {
           team={team}
           selectedPlan={'free'}
           discounted={true}
-          freePlanFooter={
-            <TeamSubLimit
-              padded={false}
-              onLimitClick={() => {
-                openSettingsTab('teamUpgrade')
-                closeAllModals()
-              }}
-            />
+          onStandardCallback={
+            eligible
+              ? () => {
+                  openSettingsTab('teamUpgrade', {
+                    initialPlan: 'standard',
+                    tabState: 'form',
+                  })
+                  closeAllModals()
+                }
+              : undefined
           }
-          onStandardCallback={() => {
-            openSettingsTab('teamUpgrade', {
-              initialPlan: 'standard',
-              tabState: 'form',
-            })
-            closeAllModals()
-          }}
-          onProCallback={() => {
-            openSettingsTab('teamUpgrade', {
-              initialPlan: 'pro',
-              tabState: 'form',
-            })
-            closeAllModals()
-          }}
-          onTrialCallback={() => {
-            openSettingsTab('teamUpgrade', { showTrialPopup: true })
-            closeAllModals()
-          }}
+          onProCallback={
+            eligible
+              ? () => {
+                  openSettingsTab('teamUpgrade', {
+                    initialPlan: 'pro',
+                    tabState: 'form',
+                  })
+                  closeAllModals()
+                }
+              : undefined
+          }
         />
       </header>
     </Container>
@@ -142,12 +159,51 @@ const DiscountExpired = ({ t }: { t: TFunction }) => {
 }
 
 const Container = styled.div`
+  .discount__modal__subtitle {
+    span {
+      font-size: ${({ theme }) => theme.sizes.fonts.md}px;
+      display: inline-block;
+      margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
+
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
+  }
+
+  .plans {
+    justify-content: center;
+
+    .plan__item {
+      padding: ${({ theme }) => theme.sizes.spaces.sm}px
+        ${({ theme }) => theme.sizes.spaces.md}px;
+      width: 50%;
+      max-width: 420px;
+      border: 1px solid ${({ theme }) => theme.colors.border.main};
+
+      .plan__item__footer {
+        margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
+        position: relative;
+      }
+    }
+    .plan__item--free {
+      display: none;
+    }
+
+    .plan__item--pro {
+      margin-left: ${({ theme }) => theme.sizes.spaces.md}px;
+    }
+
+    .plan__item__footer {
+      height: auto;
+    }
+  }
+
   .discount__modal__header {
     text-align: center;
   }
 
   .discount__modal__title {
     margin: 0;
+    margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
     font-size: ${({ theme }) => theme.sizes.fonts.l}px;
   }
 
