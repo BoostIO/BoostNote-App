@@ -71,6 +71,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
 
   const onBlurHandler = (event: any) => {
     if (
+      containerRef.current !== event.relatedTarget &&
       !isChildNode(
         containerRef.current,
         event.relatedTarget as HTMLElement | null

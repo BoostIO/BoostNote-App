@@ -226,12 +226,14 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
                   },
                 }}
               />
+            </FormRow>
+            <FormRow fullWidth={true}>
               <FormRowItem
                 flex='0 0 100px !important'
                 item={{
                   type: 'button',
                   props: {
-                    type: 'submit',
+                    type: 'button',
                     label: copyButtonLabel,
                   },
                 }}

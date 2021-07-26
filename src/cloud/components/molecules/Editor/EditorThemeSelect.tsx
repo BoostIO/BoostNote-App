@@ -49,7 +49,6 @@ const EditorThemeSelect = () => {
         return
       }
       if (isChildNode(menuRef.current, event.relatedTarget as Node)) {
-        menuRef.current.focus()
         return
       }
       setShowingMenu(false)
