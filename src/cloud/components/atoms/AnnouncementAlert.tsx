@@ -122,11 +122,10 @@ const AnnouncementAlert = () => {
     return null
   }
 
-  if (currentUserPermissions.role === 'admin') {
-    if (
-      permissions.filter((p) => p.role !== 'viewer').length >
-      freePlanMembersLimit
-    ) {
+  if (
+    permissions.filter((p) => p.role !== 'viewer').length > freePlanMembersLimit
+  ) {
+    if (currentUserPermissions.role === 'admin') {
       return (
         <Container>
           <div className='alert alert--danger'>
@@ -175,10 +174,41 @@ const AnnouncementAlert = () => {
           </div>
         </Container>
       )
-    } else if (
-      currentSubInfo.info.trialIsOver &&
-      teamPreferences.showTrialAlert
-    ) {
+    } else {
+      return (
+        <Container>
+          <div className='alert alert--danger'>
+            <span className='alert__icon'>
+              <IconMdi path={mdiAlertOutline} size={21} />
+            </span>
+            <div className='alert__text'>
+              <p>
+                {currentSubInfo.info.trialIsOver
+                  ? `Your subscription has expired and your current team exceeds the
+                  free plan's capacity. Please tell your admins to upgrade your plan.`
+                  : `Your current team permissions exceed the free plan's capacity. Please tell your admins to upgrade your plan.`}
+              </p>
+              <p>
+                If you wish to continue for free, they can also demote you or
+                other members to a{' '}
+                <ExternalLink
+                  href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
+                  className='alert__link'
+                >
+                  <span>Viewer</span> <IconMdi path={mdiOpenInNew} />
+                </ExternalLink>{' '}
+                role.
+              </p>
+            </div>
+          </div>
+        </Container>
+      )
+    }
+  } else if (
+    currentSubInfo.info.trialIsOver &&
+    teamPreferences.showTrialAlert
+  ) {
+    if (currentUserPermissions.role === 'admin') {
       return (
         <Container>
           <div className='alert alert--danger'>
@@ -228,6 +258,35 @@ const AnnouncementAlert = () => {
                   Continue with the free plan
                 </Button>
               </ButtonGroup>
+            </div>
+          </div>
+        </Container>
+      )
+    } else {
+      return (
+        <Container>
+          <div className='alert alert--danger'>
+            <span className='alert__icon'>
+              <IconMdi path={mdiAlertOutline} size={21} />
+            </span>
+            <div className='alert__text'>
+              <p>
+                Your space is not eligible for a free trial anymore. Please tell
+                your admins to upgrade your plan.
+              </p>
+              {permissions.filter((p) => p.role !== 'viewer').length >= 1 && (
+                <p>
+                  If you wish to continue for free, they can also demote you or
+                  other members to a{' '}
+                  <ExternalLink
+                    href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
+                    className='alert__link'
+                  >
+                    <span>Viewer</span> <IconMdi path={mdiOpenInNew} />
+                  </ExternalLink>{' '}
+                  role.
+                </p>
+              )}
             </div>
           </div>
         </Container>
