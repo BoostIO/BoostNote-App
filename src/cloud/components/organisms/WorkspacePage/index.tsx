@@ -8,6 +8,7 @@ import { useRouter } from '../../../lib/router'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { mapWorkspaceBreadcrumb } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useI18n } from '../../../lib/hooks/useI18n'
+import InviteCTAButton from '../../molecules/InviteCTAButton'
 
 interface WorkspacePage {
   workspace: SerializedWorkspace
@@ -92,6 +93,12 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
       content={{
         topbar: {
           breadcrumbs: topbarBreadcrumbs,
+          controls: [
+            {
+              type: 'node',
+              element: <InviteCTAButton />,
+            },
+          ],
         },
       }}
     >

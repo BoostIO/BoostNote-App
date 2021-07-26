@@ -6,12 +6,20 @@ export enum MixpanelActionTrackTypes {
   DocBookmarkDelete = 'doc.bookmark.delete',
   DocCreate = 'doc.create',
   DocDelete = 'doc.delete',
+  DocDueDateAdd = 'doc.duedate.add',
   DocEdit = 'doc.edit',
   DocEmoji = 'doc.emoji',
   DocFeatureRevision = 'doc.feature.revision',
   DocFeatureSharePassword = 'doc.feature.share.password',
   DocFeatureShareExpirationDate = 'doc.feature.share.expiration.date',
   DocImport = 'doc.import',
+  DocAssigneesAdd = 'doc.assignees.add',
+  DocAssigneesRemove = 'doc.assignees.remove',
+  DocStatusClear = 'doc.status.clear',
+  DocStatusPaused = 'doc.status.paused',
+  DocStatusInProgress = 'doc.status.inprogress',
+  DocStatusArchived = 'doc.status.archived',
+  DocStatusCompleted = 'doc.status.completed',
   DocLayoutEdit = 'doc.layout.edit',
   DocOpen = 'doc.open',
   DocUnarchive = 'doc.unarchive',
@@ -40,6 +48,9 @@ export enum MixpanelActionTrackTypes {
   PersonalCreate = 'personal.create',
   RevisionHistoryOpen = 'revision.history.open',
   SearchOpen = 'search.open',
+  SmartFolderCreate = 'smartfolder.create',
+  SmartFolderUpdate = 'smartfolder.update',
+  SmartFolderDestroy = 'smartfolder.destroy',
   SubscriptionStart = 'subscription.start',
   SubscriptionCancel = 'subscription.cancel',
   SubscriptionTrialStart = 'subscription.trial.sart',
@@ -78,6 +89,12 @@ export enum MixpanelActionTrackTypes {
   CommentCreate = 'comment.create',
   CommentUpdate = 'comment.update',
   CommentDelete = 'comment.delete',
+  ViewerCreate = 'viewer.create',
+  IntegrationCreateSlack = 'slack.integration',
+  UserIntentPersonal = 'user.intent.personal',
+  UserIntentTeam = 'user.intent.team',
+  SpaceIntentPersonal = 'space.intent.personal',
+  SpaceIntentTeam = 'space.intent.team',
 }
 
 export type MixpanelFrontEvent =
@@ -101,7 +118,10 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.UpgradePassword
   | MixpanelActionTrackTypes.UpgradeRevision
   | MixpanelActionTrackTypes.DocFeatureRevision
-  | MixpanelActionTrackTypes.UpgradeDiscount
+  | MixpanelActionTrackTypes.UserIntentPersonal
+  | MixpanelActionTrackTypes.UserIntentTeam
+  | MixpanelActionTrackTypes.SpaceIntentPersonal
+  | MixpanelActionTrackTypes.SpaceIntentTeam
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 
@@ -124,6 +144,7 @@ export type MixpanelDocEvent =
   | MixpanelActionTrackTypes.DocCreate
   | MixpanelActionTrackTypes.DocEdit
   | MixpanelActionTrackTypes.DocDelete
+  | MixpanelActionTrackTypes.DocDueDateAdd
   | MixpanelActionTrackTypes.DocTagAdd
   | MixpanelActionTrackTypes.DocBookmarkCreate
   | MixpanelActionTrackTypes.DocBookmarkDelete
@@ -131,6 +152,13 @@ export type MixpanelDocEvent =
   | MixpanelActionTrackTypes.DocArchive
   | MixpanelActionTrackTypes.DocUnarchive
   | MixpanelActionTrackTypes.DocEmoji
+  | MixpanelActionTrackTypes.DocStatusClear
+  | MixpanelActionTrackTypes.DocStatusInProgress
+  | MixpanelActionTrackTypes.DocStatusPaused
+  | MixpanelActionTrackTypes.DocStatusCompleted
+  | MixpanelActionTrackTypes.DocStatusArchived
+  | MixpanelActionTrackTypes.DocAssigneesAdd
+  | MixpanelActionTrackTypes.DocAssigneesRemove
 
 export type MixpanelInviteEvent =
   | MixpanelActionTrackTypes.InviteCreate
@@ -167,9 +195,14 @@ export type MixpanelCommentEvent =
   | MixpanelActionTrackTypes.CommentUpdate
   | MixpanelActionTrackTypes.CommentDelete
 
+export type MixpanelIntegrationEvent = MixpanelActionTrackTypes.IntegrationCreateSlack
+
 export type MixpanelUserProfile = {
   $first_name?: string
   $last__name?: string
   $created?: string
   $email?: string
 }
+export type MixpanelSmartFolderEvent =
+  | MixpanelActionTrackTypes.SmartFolderCreate
+  | MixpanelActionTrackTypes.SmartFolderDestroy

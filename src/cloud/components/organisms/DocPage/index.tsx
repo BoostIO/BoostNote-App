@@ -89,13 +89,17 @@ const DocPage = ({
       return false
     }
 
-    if (subscription == null) {
+    if (
+      subscription == null &&
+      permissions.filter((p) => p.role === 'member').length <= 1
+    ) {
       return true
     }
 
     if (
+      subscription != null &&
       subscription.seats >=
-      permissions.filter((p) => p.role !== 'viewer').length
+        permissions.filter((p) => p.role !== 'viewer').length
     ) {
       return true
     }

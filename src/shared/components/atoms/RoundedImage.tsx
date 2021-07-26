@@ -6,7 +6,7 @@ export interface RoundedImageProps {
   url?: string
   alt: string
   rounded?: boolean
-  size?: 22 | 26 | 30
+  size?: 22 | 26 | 30 | 40
   className?: string
   color?: string
 }

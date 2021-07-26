@@ -34,9 +34,15 @@ export type TopbarControlSeparatorProps = {
   type: 'separator'
 }
 
+export type TopbarControlNodeProps = {
+  type: 'node'
+  element: React.ReactNode
+}
+
 export type TopbarControlProps =
   | TopbarControlButtonProps
   | TopbarControlSeparatorProps
+  | TopbarControlNodeProps
 
 export interface TopbarPageProps {
   controls?: TopbarControlProps[]
@@ -193,6 +199,10 @@ const Topbar: AppComponent<TopbarProps> = ({
                   className='topbar__controls__separator'
                 />
               )
+            }
+
+            if (control.type === 'node') {
+              return control.element
             }
 
             return (

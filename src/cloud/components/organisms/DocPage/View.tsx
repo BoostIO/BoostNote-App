@@ -3,7 +3,6 @@ import {
   SerializedDocWithBookmark,
   SerializedDoc,
 } from '../../../interfaces/db/doc'
-import DocLimitReachedBanner from '../../molecules/Banner/SubLimitReachedBanner'
 import styled from '../../../lib/styled'
 import { useNav } from '../../../lib/stores/nav'
 import { SerializedTeam } from '../../../interfaces/db/team'
@@ -48,6 +47,7 @@ import DocShare from '../../molecules/DocShare'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import NewDocContextMenu from '../EditorLayout/NewDocContextMenu'
 import PreferencesContextMenuWrapper from '../../molecules/PreferencesContextMenuWrapper'
+import InviteCTAButton from '../../molecules/InviteCTAButton'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -61,7 +61,6 @@ interface ViewPageProps {
 
 const ViewPage = ({
   doc,
-  editable,
   team,
   contributors,
   backLinks,
@@ -374,6 +373,10 @@ const ViewPage = ({
           ),
           controls: [
             {
+              type: 'node',
+              element: <InviteCTAButton />,
+            },
+            {
               type: 'separator',
             },
             ...(connState === 'reconnecting'
@@ -475,7 +478,6 @@ const ViewPage = ({
       <Container>
         <div className='view__wrapper'>
           <div className='view__content'>
-            {!editable && <DocLimitReachedBanner />}
             {realtimeContent !== '' ? (
               <MarkdownView
                 content={realtimeContent}

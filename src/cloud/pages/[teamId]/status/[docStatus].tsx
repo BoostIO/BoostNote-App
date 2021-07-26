@@ -11,6 +11,7 @@ import { getTeamIndexPageData } from '../../../api/pages/teams'
 import { useRouter } from '../../../lib/router'
 import styled from '../../../../shared/lib/styled'
 import DocStatusIcon from '../../../components/atoms/DocStatusIcon'
+import InviteCTAButton from '../../../components/molecules/InviteCTAButton'
 
 const DocStatusShowPage = () => {
   const { team, currentUserIsCoreMember } = usePage()
@@ -103,6 +104,12 @@ const DocStatusShowPage = () => {
               {docStatusLabel}
             </TopbarLabel>
           ),
+          controls: [
+            {
+              type: 'node',
+              element: <InviteCTAButton />,
+            },
+          ],
         },
       }}
     >

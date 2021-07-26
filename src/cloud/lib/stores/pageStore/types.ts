@@ -51,11 +51,6 @@ type SubscriptionTrialInfo = {
 type SubscriptionInactiveInfo = {
   trialing: false
   info: {
-    docLimit: number
-    progressLabel: string
-    rate: number
-    overLimit: boolean
-    linkLabel: string
     trialIsOver: boolean
   }
 }

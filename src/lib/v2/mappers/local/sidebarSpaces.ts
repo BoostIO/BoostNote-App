@@ -13,6 +13,7 @@ export function mapLocalSpace(
     label: workspace.name,
     active: activeWorkspaceId === workspace.id,
     tooltip: `${osName === 'macos' ? '⌘' : 'Ctrl'} ${workspaceIndex + 1}`,
+    subscriptionPlan: 'local',
     linkProps: {
       onClick: (event: React.MouseEvent) => linkOnClick(event, workspace),
       onContextMenu: (event: React.MouseEvent) =>

@@ -1,3 +1,4 @@
+import { membersForDiscount } from '../subscription'
 import { lngKeys, TranslationSource } from './types'
 
 const zhTranslation: TranslationSource = {
@@ -126,7 +127,6 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SettingsSubLimitTrialDate]:
     '您的工作区对Pro计划的试用持续到{{date}}',
   [lngKeys.SettingsSubLimitTrialUpgrade]: '您可以在试用期间随时升级。',
-  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}}使用的文档',
   [lngKeys.SettingsSubLimitTrialEnd]: '你的pro计划试用已经结束。请立即升级',
   [lngKeys.SettingsSubLimitUnderFreePlan]:
     '在自由计划下，您最多可以创建{{limit}}个文档。',
@@ -140,16 +140,6 @@ const zhTranslation: TranslationSource = {
   [lngKeys.PlanBusinessLink]: '联系我们的销售部',
   [lngKeys.PlanPerMember]: '每个成员',
   [lngKeys.PlanPerMonth]: '每月',
-  [lngKeys.PlanFreePerk1]: '无限成员',
-  [lngKeys.PlanFreePerk2]: '每个团队{{docs}}个文档',
-  [lngKeys.PlanStoragePerk]: ' 每个成员{{storageSize}}',
-  [lngKeys.PlanStandardPerk1]: '{{viewersSize}}免费观看者',
-  [lngKeys.PlanStandardPerk2]: '支持开发',
-  [lngKeys.PlanStandardPerk3]: 'Unlimited documents',
-  [lngKeys.PlanStandardPerk4]: '文档修订历史的最后{{days}}天',
-  [lngKeys.PlanProPerk1]: '免费无限制查看',
-  [lngKeys.PlanProPerk2]: '共享时的密码和过期日期',
-  [lngKeys.PlanProPerk3]: '完全访问文档的修订历史记录',
   [lngKeys.PlanTrial]: '{{days}}天免费试用',
   [lngKeys.PlanInTrial]: '免费试用（剩余{{remaining}}）',
   [lngKeys.UpgradeSubtitle]: '确认并输入您的付款信息',
@@ -194,11 +184,6 @@ const zhTranslation: TranslationSource = {
     '您可以访问高级功能，如无限文档修订历史记录、设置共享文档的密码和过期日期、无限查看器等...',
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     '您将无法访问高级功能，如无限制的文档修订历史记录、为共享文档设置密码和过期日期、无限制的查看器等...',
-
-  [lngKeys.DiscountModalTitle]: '立即订阅即可享受折扣！',
-  [lngKeys.DiscountModalAlreadySubscribed]: '您已订阅',
-  [lngKeys.DiscountModalTimeRemaining]: '剩余时间',
-  [lngKeys.DiscountModalExpired]: '您享受折扣的资格已过期',
 
   [lngKeys.FreeTrialModalTitle]: '免费尝试专业计划',
   [lngKeys.FreeTrialModalBody]:
@@ -420,6 +405,44 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SettingsImportDescription]:
     'No need to start from scratch. Import data into Boost Note by selecting one of the options below.',
   [lngKeys.GeneralPassword]: '密码',
+
+  [lngKeys.CooperateTitle]: 'Create a new space',
+  [lngKeys.CooperateSubtitle]: 'Please set up your space information',
+  [lngKeys.PictureAdd]: 'Add a picture',
+  [lngKeys.PictureChange]: 'Change your picture',
+  [lngKeys.SpaceIntent]: 'For what purpose are you going to use this space?',
+  [lngKeys.SpaceIntentPersonal]: 'For my personal use',
+  [lngKeys.SpaceIntentTeam]: 'To collaborate with my team',
+  [lngKeys.PlanFreePerk1]: 'Unlimited Viewers',
+  [lngKeys.PlanFreePerk2]: '1 Member',
+  [lngKeys.PlanFreePerk3]: 'Unlimited documents',
+  [lngKeys.PlanStoragePerk]: '{{storageSize}} per member',
+  [lngKeys.PlanStandardPerk1]: 'Unlimited members',
+  [lngKeys.PlanStandardPerk2]: 'Support development',
+  [lngKeys.PlanStandardPerk3]:
+    "Last {{days}} days of your docs's revision history",
+  [lngKeys.PlanProPerk3]: 'Priority Support',
+  [lngKeys.PlanProPerk1]: 'Password and expiration date when sharing',
+  [lngKeys.PlanProPerk2]: "Full access to your docs' revision history",
+  [lngKeys.PlanViewersMembersIntro]:
+    "What's the difference between viewers and members? Please take a look at",
+  [lngKeys.PlanViewersMembersLink]: 'this article',
+  [lngKeys.SeeRoleDetails]: 'See role details',
+  [lngKeys.ViewerDisclaimerIntro]: 'You are a',
+  [lngKeys.ViewerDisclaimerDescription]:
+    'Please ask your admin to give you a member role so that you can participate as well.',
+  [lngKeys.DiscountModalTitle]:
+    'Invitez {{membersNb}} personnes pour recevoir une promotion!',
+  [lngKeys.DiscountModalSubtitle]: `You can receive a one-month free reduction if ${
+    membersForDiscount - 1
+  } people join this space before the timer's end.`,
+  [lngKeys.DiscountModalAlreadySubscribed]: '您已订阅',
+  [lngKeys.DiscountModalTimeRemaining]: '剩余时间',
+  [lngKeys.DiscountModalExpired]: '您享受折扣的资格已过期',
+  [lngKeys.GeneralInvite]: 'Invite',
+  [lngKeys.SettingsRolesRestrictedTitle]: 'This role is restricted',
+  [lngKeys.SettingsRolesRestrictedDescription]:
+    'In order to promote the user to this specific role, your space needs to have an active subscription. Please consider upgrading your plan.',
 }
 
 export default {

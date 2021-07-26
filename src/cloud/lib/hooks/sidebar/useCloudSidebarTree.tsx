@@ -676,7 +676,7 @@ export function useCloudSidebarTree() {
         : undefined,
     })
 
-    if (!team.personal && currentUserIsCoreMember) {
+    if (currentUserIsCoreMember) {
       tree.push({
         label: 'Private',
         title: translate(lngKeys.GeneralPrivate),

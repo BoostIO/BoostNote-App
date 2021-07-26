@@ -1,6 +1,4 @@
 import React, { useCallback, useState } from 'react'
-import Page from '../../components/Page'
-import styled from '../../lib/styled'
 import { saveUserInfo, updateUserIcon } from '../../api/users'
 import {
   getSettingsPageData,
@@ -8,18 +6,26 @@ import {
 } from '../../api/pages/settings'
 import ErrorBlock from '../../components/atoms/ErrorBlock'
 import cc from 'classcat'
-import { Spinner } from '../../components/atoms/Spinner'
-import { baseIconStyle, inputStyle } from '../../lib/styled/styleFunctions'
-import Button from '../../components/atoms/Button'
-import Flexbox from '../../components/atoms/Flexbox'
 import { getTeamURL } from '../../lib/utils/patterns'
 import { buildIconUrl } from '../../api/files'
-import Icon from '../../components/atoms/Icon'
 import { mdiAccountCircleOutline } from '@mdi/js'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { useRouter } from '../../lib/router'
 import { parse as parseQuery } from 'querystring'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
+import Form from '../../../shared/components/molecules/Form'
+import FormRow from '../../../shared/components/molecules/Form/templates/FormRow'
+import FormImage from '../../../shared/components/molecules/Form/atoms/FormImage'
+import FormRowItem from '../../../shared/components/molecules/Form/templates/FormRowItem'
+import { LoadingButton } from '../../../shared/components/atoms/Button'
+import ButtonGroup from '../../../shared/components/atoms/ButtonGroup'
+import styled from '../../../shared/lib/styled'
+import OnboardingLayout from '../../components/organisms/Onboarding/layouts/OnboardingLayout'
+import UsageFormRow, {
+  SpaceUsageIntent,
+} from '../../components/organisms/Onboarding/molecules/UsageFormRow'
+import { trackEvent } from '../../api/track'
+import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
   const [displayName, setDisplayName] = useState<string>(
@@ -32,25 +38,16 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
     setPartialGlobalData,
   } = useGlobalData()
   const [iconFile, setIconFile] = useState<File | null>(null)
+  const [intent, setIntent] = useState<SpaceUsageIntent>()
   const [fileUrl, setFileUrl] = useState<string | null>(
     currentUser.icon != null ? buildIconUrl(currentUser.icon.location) : null
   )
   const { push, search } = useRouter()
 
-  const changeHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (event) => {
-      if (
-        event.target != null &&
-        event.target.files != null &&
-        event.target.files.length > 0
-      ) {
-        const file = event.target.files[0]
-        setIconFile(file)
-        setFileUrl(URL.createObjectURL(file))
-      }
-    },
-    []
-  )
+  const changeHandler = useCallback((file: File) => {
+    setIconFile(file)
+    setFileUrl(URL.createObjectURL(file))
+  }, [])
 
   const changeDisplayName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +79,14 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
             ? getTeamURL(teams[0])
             : `/cooperate`
 
+        if (intent != null) {
+          await trackEvent(
+            intent === 'personal'
+              ? MixpanelActionTrackTypes.UserIntentPersonal
+              : MixpanelActionTrackTypes.UserIntentTeam
+          )
+        }
+
         push(finalRedirect)
       } catch (error) {
         setError(error)
@@ -89,6 +94,7 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
       setSending(false)
     },
     [
+      intent,
       currentUser,
       displayName,
       teams,
@@ -100,139 +106,80 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
   )
 
   return (
-    <Page>
+    <OnboardingLayout
+      title={'Welcome to Boost Note'}
+      subtitle='First, tell us a bit about yourself.'
+      contentWidth={600}
+    >
       <Container>
-        <div className='settings__wrap'>
-          <h1>Welcome to Boost Note</h1>
-          <p>First, tell us a bit about yourself.</p>
-
-          <form onSubmit={changeInfo}>
-            <div className={cc(['row'])}>
-              <div className='profile__row'>
-                {fileUrl != null ? (
-                  <img src={fileUrl} className='profile__pic' />
-                ) : (
-                  <Icon
-                    path={mdiAccountCircleOutline}
-                    className='profile__icon'
-                    size={100}
-                  />
-                )}
-              </div>
-              <label htmlFor='profile' className='profile__label'>
-                {fileUrl == null ? 'Add a photo' : 'Change your photo'}
-              </label>
-              <input
-                id='profile'
-                name='profile'
-                accept='image/*'
-                type='file'
-                onChange={changeHandler}
-              />
-            </div>
-            <div className={cc(['row'])}>
-              <label htmlFor='display-name'>Username</label>
-              <input
-                type='text'
-                name='display-name'
-                id='display-name'
-                placeholder='Username...'
-                value={displayName}
-                onChange={changeDisplayName}
-              />
-            </div>
-            {error != null && <ErrorBlock error={error} />}
-            <Flexbox justifyContent='center'>
-              <Button type='submit' disabled={sending} variant='primary'>
-                {sending ? (
-                  <Spinner style={{ position: 'relative', top: 0, left: 0 }} />
-                ) : (
-                  'Continue'
-                )}
-              </Button>
-            </Flexbox>
-          </form>
-        </div>
+        <Form onSubmit={changeInfo} className={cc(['team__edit__form'])}>
+          <FormRow fullWidth={true}>
+            <FormImage
+              onChange={changeHandler}
+              defaultUrl={fileUrl != null ? fileUrl : undefined}
+              defaultIcon={mdiAccountCircleOutline}
+              label={fileUrl == null ? 'Add a photo' : 'Change your photo'}
+              iconSize={100}
+              className='profile__image'
+            />
+          </FormRow>
+          <FormRow row={{ title: 'Username' }} fullWidth={true}>
+            <FormRowItem
+              item={{
+                type: 'input',
+                props: {
+                  id: 'display-name',
+                  placeholder: 'Username...',
+                  value: displayName,
+                  onChange: changeDisplayName,
+                },
+              }}
+            />
+          </FormRow>
+          <UsageFormRow
+            intent={intent}
+            inSpaceForm={false}
+            setIntent={setIntent}
+          />
+          <FormRow>{error != null && <ErrorBlock error={error} />}</FormRow>
+          <FormRow fullWidth={true} className='end__row'>
+            <ButtonGroup layout='column' display='flex' flex='1 1 auto'>
+              <LoadingButton
+                type='submit'
+                variant='bordered'
+                className='submit-team'
+                disabled={sending}
+                spinning={sending}
+                size='lg'
+              >
+                Continue
+              </LoadingButton>
+            </ButtonGroup>
+          </FormRow>
+        </Form>
       </Container>
-    </Page>
+    </OnboardingLayout>
   )
 }
 
 const Container = styled.div`
-  display: flex;
-  height: 100vh;
-  width: 100%;
-  .profile__icon {
-    width: 100px;
-    height: 100px;
-    color: ${({ theme }) => theme.secondaryBorderColor};
+  text-align: left;
+
+  .button__variant--bordered {
+    width: 300px !important;
   }
-  .profile__row {
-    margin: ${({ theme }) => theme.space.small}px 0;
-    text-align: center;
+
+  .end__row {
+    margin-top: ${({ theme }) => theme.sizes.spaces.l}px !important;
   }
-  .profile__label {
-    font-size: ${({ theme }) => theme.fontSizes.large}px;
-    color: ${({ theme }) => theme.subtleTextColor};
-    font-weight: 300;
-    text-align: center;
-    display: block;
-    cursor: pointer;
-    ${baseIconStyle}
-  }
-  #profile {
-    display: none;
-  }
-  .profile__pic {
-    display: block;
-    margin: auto;
-    object-fit: cover;
-    width: 100px;
-    height: 100px;
-    background: ${({ theme }) => theme.secondaryBackgroundColor};
-    border: 1px solid ${({ theme }) => theme.secondaryBorderColor};
-    border-radius: 100%;
-  }
-  .settings__wrap {
-    position: relative;
-    width: 600px;
-    max-width: 96%;
-    margin: 0 auto;
-    text-align: center;
-  }
-  h1 {
-    color: ${({ theme }) => theme.emphasizedTextColor};
-    font-size: ${({ theme }) => theme.fontSizes.xlarge}px;
-    margin-top: ${({ theme }) => theme.space.xxxlarge}px;
-  }
-  form {
-    text-align: left;
-    margin-top: ${({ theme }) => theme.space.xxlarge}px;
-    .row {
-      margin: 20px 0;
-      display: block;
-      position: relative;
-      label {
-        color: ${({ theme }) => theme.subtleTextColor};
-      }
-      input[type='text'] {
-        ${inputStyle}
-        position: relative;
-        width: 100%;
-        height: 50px;
-        padding: ${({ theme }) => theme.space.xsmall}px
-          ${({ theme }) => theme.space.small}px;
-        border: none;
-        border-radius: 2px;
-        padding-left: ${({ theme }) => theme.space.small}px;
-        margin-bottom: 10px;
-        ::placeholder {
-          color: ${({ theme }) => theme.subtleTextColor};
-        }
-        &:focus {
-          background-color: ${({ theme }) => theme.emphasizedBackgroundColor};
-        }
-      }
+  .profile__image {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+
+    .form__image__label {
+      margin-left: 0;
+      margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
     }
   }
 `

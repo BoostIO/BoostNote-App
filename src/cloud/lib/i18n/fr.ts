@@ -1,3 +1,4 @@
+import { membersForDiscount } from '../subscription'
 import { TranslationSource, lngKeys } from './types'
 
 const frTranslation: TranslationSource = {
@@ -126,7 +127,6 @@ const frTranslation: TranslationSource = {
     "Votre essai gratuit du plan pro est actif jusqu'à: {{date}}",
   [lngKeys.SettingsSubLimitTrialUpgrade]:
     "Vous pouvez mettre à niveau à tout moment durant l'essai gratuit.",
-  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} documents utilisés',
   [lngKeys.SettingsSubLimitTrialEnd]:
     'Votre essai gratuit a expiré. Veuillez mettre à niveau votre espace',
   [lngKeys.SettingsSubLimitUnderFreePlan]:
@@ -144,17 +144,17 @@ const frTranslation: TranslationSource = {
   [lngKeys.PlanBusinessLink]: 'contacter notre département de ventes',
   [lngKeys.PlanPerMember]: 'par membre',
   [lngKeys.PlanPerMonth]: 'par mois',
-  [lngKeys.PlanFreePerk1]: 'Membres illimités',
-  [lngKeys.PlanFreePerk2]: '{{docs}} documents par espace',
+  [lngKeys.PlanFreePerk1]: 'Observateurs illimités',
+  [lngKeys.PlanFreePerk2]: '1 Membre',
+  [lngKeys.PlanFreePerk3]: 'Documents illimités',
   [lngKeys.PlanStoragePerk]: '{{storageSize}} par membre',
-  [lngKeys.PlanStandardPerk1]: '{{viewersSize}} observateurs sans frais',
+  [lngKeys.PlanStandardPerk1]: 'Membres illimités',
   [lngKeys.PlanStandardPerk2]: 'Soutenir le dévelopement',
-  [lngKeys.PlanStandardPerk3]: 'Documents illimités',
-  [lngKeys.PlanStandardPerk4]:
+  [lngKeys.PlanStandardPerk3]:
     "Derniers {{days}} jours d'historique des révisions de vos documents",
-  [lngKeys.PlanProPerk1]: 'Observateurs illimités sans frais',
-  [lngKeys.PlanProPerk2]: "Mot de passe et date d'expiration lors de partage",
-  [lngKeys.PlanProPerk3]:
+  [lngKeys.PlanProPerk3]: 'Prioritée lors de demande de support',
+  [lngKeys.PlanProPerk1]: "Mot de passe et date d'expiration lors de partage",
+  [lngKeys.PlanProPerk2]:
     "Accès complet à l'historique des revisions de vos documents",
   [lngKeys.PlanTrial]: 'Essai gratuit de {{days}} jours',
   [lngKeys.PlanInTrial]: 'En essai gratuit ({{remaining}} left)',
@@ -205,12 +205,7 @@ const frTranslation: TranslationSource = {
     "Vous allez immédiatement gagner accès à des fonctionnalités avancées tel que l'accès complet à l'historique de révisions pour vos documents, choisir et installer des mots de passe ou des dates d'expiration pour vos documents partagés, nombre illimité d'observateurs etc...",
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     "Vous allez immédiatement perdre accès à des fonctionnalités avancées tel que l'accès complet à l'historique de révisions pour vos documents, choisir et installer des mots de passe ou des dates d'expiration pour vos documents partagés, nombre illimité d'observateurs etc...",
-  [lngKeys.DiscountModalTitle]:
-    'Abonnez vous dès maintenant pour recevoir une promotion!',
-  [lngKeys.DiscountModalAlreadySubscribed]: 'Vous êtes déjà abonné',
-  [lngKeys.DiscountModalTimeRemaining]: 'Temps restant',
-  [lngKeys.DiscountModalExpired]:
-    "Vous n'êtes plus apte à recevoir cette promotion",
+
   [lngKeys.FreeTrialModalTitle]: 'Pro Plan: Essai gratuit',
   [lngKeys.FreeTrialModalBody]:
     'Vous allez pouvoir accéder à toutes les fonctionnalités du pro plan tel que documents illimités, historique de révisions etc... durant {{days}} jours.',
@@ -449,6 +444,34 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsImportDescription]:
     'Plutôt que démarrer à partir de rien, importez vos fichiers directement dans Boost Note en sélectionnant une des options ci-dessous.',
   [lngKeys.GeneralPassword]: 'Mot de passe',
+
+  [lngKeys.CooperateTitle]: 'Créez un nouvel espace',
+  [lngKeys.CooperateSubtitle]: 'Veuillez configurer votre nouvel espace',
+  [lngKeys.PictureAdd]: 'Ajouter une image',
+  [lngKeys.PictureChange]: "Changer l'image",
+  [lngKeys.SpaceIntent]: 'Dans quel but allez vous utiliser cet espace?',
+  [lngKeys.SpaceIntentPersonal]: 'Pour mon propre usage',
+  [lngKeys.SpaceIntentTeam]: 'Pour collaborer avec mon équipe',
+  [lngKeys.PlanViewersMembersIntro]:
+    'Quelle est la différence entre un membre et un observateur? Veuillez lire',
+  [lngKeys.PlanViewersMembersLink]: 'cet article',
+  [lngKeys.SeeRoleDetails]: 'Voir les détails concernant les rôles',
+  [lngKeys.ViewerDisclaimerIntro]: 'Vous êtes un',
+  [lngKeys.ViewerDisclaimerDescription]:
+    'Veuillez demander à vos admins de vous promouvoir au rôle de membre afin de participer.',
+  [lngKeys.DiscountModalTitle]:
+    'Invitez {{membersNb}} personnes pour recevoir une promotion!',
+  [lngKeys.DiscountModalSubtitle]: `Vous pouvez recevoir un mois d'abonnement gratuit si ${
+    membersForDiscount - 1
+  } personnes vous rejoignent dans cet espace avant la date butôire.`,
+  [lngKeys.DiscountModalAlreadySubscribed]: 'Vous êtes déjà abonné',
+  [lngKeys.DiscountModalTimeRemaining]: 'Temps restant',
+  [lngKeys.DiscountModalExpired]:
+    "Vous n'êtes plus apte à recevoir cette promotion",
+  [lngKeys.GeneralInvite]: 'Inviter',
+  [lngKeys.SettingsRolesRestrictedTitle]: 'Ce rôle est restraint',
+  [lngKeys.SettingsRolesRestrictedDescription]:
+    "Afin de promouvoir l'utilisateur à ce rôle, votre espace doit posséder un abonnement actif. Veuillez considérer upgrader votre plan.",
 }
 
 export default {

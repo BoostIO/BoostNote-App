@@ -11,6 +11,7 @@ import { usePreferences } from './preferences'
 import { useRouter } from './router'
 import { Cookie } from 'electron/main'
 import { SerializedSubscription } from '../cloud/interfaces/db/subscription'
+import { SerializedUserTeamPermissions } from '../cloud/interfaces/db/userTeamPermissions'
 
 export const boostHubBaseUrl = process.env.BOOST_HUB_BASE_URL as string
 
@@ -74,7 +75,8 @@ export type DesktopGlobalDataResponseBody = {
     icon?: { location: string }
     createdAt: string
     subscription?: SerializedSubscription
-    personal: boolean
+    permissions: SerializedUserTeamPermissions[]
+    trial?: boolean
   }[]
 }
 

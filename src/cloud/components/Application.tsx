@@ -25,8 +25,6 @@ import EventSource from './organisms/EventSource'
 import ApplicationLayout from '../../shared/components/molecules/ApplicationLayout'
 import { useGlobalData } from '../lib/stores/globalData'
 import { mapUsers } from '../../shared/lib/mappers/users'
-import { SerializedTeam } from '../interfaces/db/team'
-import { getTeamURL } from '../lib/utils/patterns'
 import {
   mdiCog,
   mdiDownload,
@@ -40,11 +38,7 @@ import {
   mdiWeb,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
-import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
-import { getHexFromUUID } from '../lib/utils/string'
-import { stringify } from 'querystring'
 import { sendToHost, useElectron, usingElectron } from '../lib/stores/electron'
-import { SidebarSpace } from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
 import ContentLayout, {
   ContentLayoutProps,
 } from '../../shared/components/templates/ContentLayout'
@@ -59,7 +53,7 @@ import {
 import { useModal } from '../../shared/lib/stores/modal'
 import NewDocButton from './molecules/NewDocButton'
 import { useCloudSidebarTree } from '../lib/hooks/sidebar/useCloudSidebarTree'
-import { isEligibleForDiscount } from '../lib/subscription'
+import { isTimeEligibleForDiscount } from '../lib/subscription'
 import DiscountModal from './organisms/Modal/contents/DiscountModal'
 import { Notification as UserNotification } from '../interfaces/db/notifications'
 import useNotificationState from '../../shared/lib/hooks/useNotificationState'
@@ -77,6 +71,8 @@ import NotifyIcon from '../../shared/components/atoms/NotifyIcon'
 import { getTeamLinkHref } from './atoms/Link/TeamLink'
 import SidebarButton from '../../shared/components/organisms/Sidebar/atoms/SidebarButton'
 import CloudGlobalSearch from './organisms/CloudGlobalSearch'
+import ViewerDisclaimer from './molecules/ViewerDisclaimer'
+import { useCloudSidebarSpaces } from '../lib/hooks/sidebar/useCloudSidebarSpaces'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -101,10 +97,11 @@ const Application = ({
     permissions = [],
     currentUserPermissions,
     currentUserIsCoreMember,
+    subscription,
   } = usePage()
   const { openModal } = useModal()
   const {
-    globalData: { teams, invites, currentUser },
+    globalData: { currentUser },
   } = useGlobalData()
   const { push, query, goBack, goForward, pathname } = useRouter()
   const [popOverState, setPopOverState] = useState<PopOverState>(null)
@@ -167,9 +164,7 @@ const Application = ({
     )
   }, [team, initialLoadDone, docsMap, foldersMap, workspacesMap, push])
 
-  const spaces = useMemo(() => {
-    return mapSpaces(push, teams, invites, counts, team)
-  }, [teams, team, invites, push, counts])
+  const { spaces } = useCloudSidebarSpaces()
 
   const openCreateFolderModal = useCallback(() => {
     openNewFolderForm({
@@ -327,51 +322,65 @@ const Application = ({
   ])
 
   const sidebarFooter = useMemo(() => {
-    return team != null ? (
-      <SidebarButtonList
-        rows={[
-          {
-            label: translate(lngKeys.GeneralAttachments),
-            icon: mdiPaperclip,
-            variant: 'subtle',
-            labelClick: () => openSettingsTab('attachments'),
-            id: 'sidebar__button__attachments',
-          },
-          {
-            label: translate(lngKeys.GeneralShared),
-            icon: mdiWeb,
-            variant: 'subtle',
-            labelHref: getTeamLinkHref(team, 'shared'),
-            active: getTeamLinkHref(team, 'shared') === pathname,
-            labelClick: () => push(getTeamLinkHref(team, 'shared')),
-            id: 'sidebar__button__shared',
-          },
-          {
-            label: translate(lngKeys.GeneralImport),
-            icon: mdiImport,
-            variant: 'subtle',
-            labelClick: () => openSettingsTab('import'),
-            id: 'sidebar__button__import',
-          },
-        ]}
-      >
-        {isEligibleForDiscount(team) ? (
-          <SidebarButton
-            variant='subtle'
-            icon={<NotifyIcon text='!' size={16} path={mdiGiftOutline} />}
-            id='sidebar__button__promo'
-            label={translate(lngKeys.SidebarNewUserDiscount)}
-            labelClick={() =>
-              openModal(<DiscountModal />, {
-                showCloseIcon: true,
-                width: 'large',
-              })
-            }
-          />
-        ) : null}
-      </SidebarButtonList>
-    ) : null
-  }, [openModal, openSettingsTab, team, pathname, push, translate])
+    if (team == null) {
+      return null
+    }
+    return (
+      <>
+        <SidebarButtonList
+          rows={[
+            {
+              label: translate(lngKeys.GeneralAttachments),
+              icon: mdiPaperclip,
+              variant: 'subtle',
+              labelClick: () => openSettingsTab('attachments'),
+              id: 'sidebar__button__attachments',
+            },
+            {
+              label: translate(lngKeys.GeneralShared),
+              icon: mdiWeb,
+              variant: 'subtle',
+              labelHref: getTeamLinkHref(team, 'shared'),
+              active: getTeamLinkHref(team, 'shared') === pathname,
+              labelClick: () => push(getTeamLinkHref(team, 'shared')),
+              id: 'sidebar__button__shared',
+            },
+            {
+              label: translate(lngKeys.GeneralImport),
+              icon: mdiImport,
+              variant: 'subtle',
+              labelClick: () => openSettingsTab('import'),
+              id: 'sidebar__button__import',
+            },
+          ]}
+        >
+          {isTimeEligibleForDiscount(team) && subscription == null ? (
+            <SidebarButton
+              variant='subtle'
+              icon={<NotifyIcon text='!' size={16} path={mdiGiftOutline} />}
+              id='sidebar__button__promo'
+              label={translate(lngKeys.SidebarNewUserDiscount)}
+              labelClick={() =>
+                openModal(<DiscountModal />, {
+                  showCloseIcon: true,
+                  width: 'large',
+                })
+              }
+            />
+          ) : null}
+        </SidebarButtonList>
+        <ViewerDisclaimer />
+      </>
+    )
+  }, [
+    openModal,
+    openSettingsTab,
+    team,
+    pathname,
+    push,
+    translate,
+    subscription,
+  ])
 
   return (
     <>
@@ -441,56 +450,6 @@ const Application = ({
 }
 
 export default Application
-
-function mapSpaces(
-  push: (url: string) => void,
-  teams: SerializedTeam[],
-  invites: SerializedTeamInvite[],
-  counts: Record<string, number>,
-  team?: SerializedTeam
-) {
-  const rows: SidebarSpace[] = []
-  teams.forEach((globalTeam) => {
-    const href = `${process.env.BOOST_HUB_BASE_URL}${getTeamURL(globalTeam)}`
-    rows.push({
-      label: globalTeam.name,
-      active: team?.id === globalTeam.id,
-      notificationCount: counts[globalTeam.id],
-      icon:
-        globalTeam.icon != null
-          ? buildIconUrl(globalTeam.icon.location)
-          : undefined,
-      linkProps: {
-        href,
-        onClick: (event: React.MouseEvent) => {
-          event.preventDefault()
-          push(href)
-        },
-      },
-    })
-  })
-
-  invites.forEach((invite) => {
-    const query = { t: invite.team.id, i: getHexFromUUID(invite.id) }
-    const href = `${process.env.BOOST_HUB_BASE_URL}/invite?${stringify(query)}`
-    rows.push({
-      label: `${invite.team.name} (invited)`,
-      icon:
-        invite.team.icon != null
-          ? buildIconUrl(invite.team.icon.location)
-          : undefined,
-      linkProps: {
-        href,
-        onClick: (event: React.MouseEvent) => {
-          event.preventDefault()
-          push(`/invite?${stringify(query)}`)
-        },
-      },
-    })
-  })
-
-  return rows
-}
 
 function buildSpacesBottomRows(push: (url: string) => void, t: TFunction) {
   return [

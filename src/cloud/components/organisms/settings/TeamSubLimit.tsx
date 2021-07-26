@@ -25,35 +25,8 @@ const TeamSubLimit = ({
     return null
   }
 
-  if (currentSubInfo.trialing) {
-    return (
-      <Container
-        className={cc(['sub__limit', !padded && 'sub__limit--stripped'])}
-      >
-        <a
-          className='upgrade-link'
-          href='#'
-          onClick={(e: any) => {
-            e.preventDefault()
-            if (onLimitClick != null) {
-              onLimitClick()
-              return
-            }
-            openSettingsTab('teamUpgrade')
-          }}
-        >
-          <h6>{translate(lngKeys.SettingsSubLimitTrialTitle)}</h6>
-          <p className='note-limit'>
-            {translate(lngKeys.SettingsSubLimitTrialDate, {
-              date: currentSubInfo.info.formattedEndDate,
-            })}
-          </p>
-          <p className='note-limit'>
-            {translate(lngKeys.SettingsSubLimitTrialUpgrade)}
-          </p>
-        </a>
-      </Container>
-    )
+  if (!currentSubInfo.trialing) {
+    return null
   }
 
   return (
@@ -72,32 +45,15 @@ const TeamSubLimit = ({
           openSettingsTab('teamUpgrade')
         }}
       >
+        <h6>{translate(lngKeys.SettingsSubLimitTrialTitle)}</h6>
         <p className='note-limit'>
-          {translate(lngKeys.SettingsSubLimitUsed, {
-            docsNb: currentSubInfo.info.progressLabel,
+          {translate(lngKeys.SettingsSubLimitTrialDate, {
+            date: currentSubInfo.info.formattedEndDate,
           })}
         </p>
-        <div className='progress-sm'>
-          <div
-            className={cc([
-              'progress-bar',
-              currentSubInfo.info.overLimit && 'over-limit',
-            ])}
-            style={{ width: `${currentSubInfo.info.rate}%` }}
-          />
-        </div>
-        {currentSubInfo.info.docLimit != null && (
-          <p>
-            {translate(lngKeys.SettingsSubLimitUnderFreePlan, {
-              limit: currentSubInfo.info.docLimit,
-            })}
-          </p>
-        )}
-        {currentSubInfo.info.trialIsOver && (
-          <p className='text-danger'>
-            {translate(lngKeys.SettingsSubLimitTrialEnd)}
-          </p>
-        )}
+        <p className='note-limit'>
+          {translate(lngKeys.SettingsSubLimitTrialUpgrade)}
+        </p>
       </a>
     </Container>
   )

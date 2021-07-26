@@ -6,6 +6,7 @@ import { createStoreContext } from './context'
 import { getFolderItemId, getStorageItemId } from './nav'
 import { SerializedSubscription } from '../cloud/interfaces/db/subscription'
 import { SidebarTreeSortingOrder } from '../shared/lib/sidebar'
+import { SerializedUserTeamPermissions } from '../cloud/interfaces/db/userTeamPermissions'
 
 export type ViewModeType = 'edit' | 'preview' | 'split'
 
@@ -22,7 +23,8 @@ export interface GeneralStatus {
     iconUrl?: string
     createdAt: string
     subscription?: SerializedSubscription
-    personal: boolean
+    permissions: SerializedUserTeamPermissions[]
+    trial?: boolean
   }[]
   showingNoteContextMenu: boolean
   sidebarTreeSortingOrder: SidebarTreeSortingOrder

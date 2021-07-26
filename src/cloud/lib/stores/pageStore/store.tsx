@@ -13,7 +13,6 @@ import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPe
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedUser } from '../../../interfaces/db/user'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
-import { freePlanDocLimit } from '../../subscription'
 import { SubscriptionInfo } from './types'
 import { getFormattedDateFromUnixTimestamp } from '../../date'
 import { useGlobalData } from '../globalData'
@@ -167,11 +166,6 @@ function usePageDataStore(pageProps: any) {
   )
 
   const currentSubInfo: SubscriptionInfo | undefined = useMemo(() => {
-    let progressLabel = ''
-    let rate = 0
-    let overLimit = false
-    const linkLabel = 'Subscribe'
-
     if (team == null) {
       return undefined
     }
@@ -191,21 +185,12 @@ function usePageDataStore(pageProps: any) {
       }
     }
 
-    const docCount = team.creationsCounter
     const trialIsOver = !team.trial
-    overLimit = docCount >= freePlanDocLimit
-    rate = docCount === 0 ? 0 : Math.ceil((docCount / freePlanDocLimit) * 100)
-    progressLabel = `${docCount}/${freePlanDocLimit}`
 
     return {
       trialing: false,
       info: {
-        docLimit: freePlanDocLimit,
         trialIsOver,
-        progressLabel,
-        rate,
-        overLimit,
-        linkLabel,
       },
     }
   }, [subscription, team])
