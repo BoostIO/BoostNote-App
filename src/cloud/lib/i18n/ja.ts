@@ -419,8 +419,8 @@ const jpTranslation: TranslationSource = {
   [lngKeys.GeneralMinutes]: '分',
   [lngKeys.GeneralSeconds]: '秒',
 
-  [lngKeys.GeneralOrdering]: 'Ordering',
-  [lngKeys.SidebarViewOptions]: 'View Options',
+  [lngKeys.GeneralOrdering]: '並び順',
+  [lngKeys.SidebarViewOptions]: '表示',
   [lngKeys.SidebarSettingsAndMembers]: 'Settings & Members',
   [lngKeys.GeneralInbox]: 'Inbox',
   [lngKeys.SidebarNewUserDiscount]: 'Get the new user discount!',
