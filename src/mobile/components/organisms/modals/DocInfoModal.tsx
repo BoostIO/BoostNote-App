@@ -244,37 +244,34 @@ DocInfoModalProps) => {
                     {translate(lngKeys.DocInfo)}
                   </div>
                 </div>
-                {!team.personal && (
-                  <div className='context__row'>
-                    <label className='context__label'>
-                      <Icon
-                        path={mdiAccountCircleOutline}
-                        size={20}
-                        className='context__icon'
-                      />{' '}
-                      {translate(lngKeys.Assignees)}
-                    </label>
-                    <div className='context__content'>
-                      <span>
-                        <DocAssigneeSelect
-                          isLoading={sendingAssignees}
-                          disabled={
-                            sendingAssignees || !currentUserIsCoreMember
-                          }
-                          defaultValue={
-                            currentDoc.assignees != null
-                              ? currentDoc.assignees.map(
-                                  (assignee) => assignee.userId
-                                )
-                              : []
-                          }
-                          readOnly={!currentUserIsCoreMember}
-                          update={sendUpdateDocAssignees}
-                        />
-                      </span>
-                    </div>
+
+                <div className='context__row'>
+                  <label className='context__label'>
+                    <Icon
+                      path={mdiAccountCircleOutline}
+                      size={20}
+                      className='context__icon'
+                    />{' '}
+                    {translate(lngKeys.Assignees)}
+                  </label>
+                  <div className='context__content'>
+                    <span>
+                      <DocAssigneeSelect
+                        isLoading={sendingAssignees}
+                        disabled={sendingAssignees || !currentUserIsCoreMember}
+                        defaultValue={
+                          currentDoc.assignees != null
+                            ? currentDoc.assignees.map(
+                                (assignee) => assignee.userId
+                              )
+                            : []
+                        }
+                        readOnly={!currentUserIsCoreMember}
+                        update={sendUpdateDocAssignees}
+                      />
+                    </span>
                   </div>
-                )}
+                </div>
 
                 <div className='context__row'>
                   <label className='context__label'>
@@ -356,7 +353,7 @@ DocInfoModalProps) => {
                     </span>
                   </div>
                 </div>
-                {!team.personal && creator != null && (
+                {creator != null && (
                   <div className='context__row'>
                     <label className='context__label'>
                       <Icon
@@ -402,75 +399,71 @@ DocInfoModalProps) => {
                     </Flexbox>
                   </div>
                 </div>
-                {!team.personal && (
-                  <div className='context__row'>
-                    <label className='context__label'>
-                      <Icon
-                        path={mdiAccountCircleOutline}
-                        size={20}
-                        className='context__icon'
-                      />{' '}
-                      {translate(lngKeys.UpdatedBy)}
-                    </label>
-                    <div className='context__content'>
-                      <Flexbox wrap='wrap'>
-                        {currentDoc.head != null ? (
-                          (currentDoc.head.creators || []).length > 0 ? (
-                            <>
-                              {(currentDoc.head.creators || []).map((user) => (
-                                <UserIcon
-                                  key={user.id}
-                                  user={usersMap.get(user.id) || user}
-                                  className='subtle'
-                                />
-                              ))}
-                            </>
-                          ) : (
-                            ''
-                          )
+                <div className='context__row'>
+                  <label className='context__label'>
+                    <Icon
+                      path={mdiAccountCircleOutline}
+                      size={20}
+                      className='context__icon'
+                    />{' '}
+                    {translate(lngKeys.UpdatedBy)}
+                  </label>
+                  <div className='context__content'>
+                    <Flexbox wrap='wrap'>
+                      {currentDoc.head != null ? (
+                        (currentDoc.head.creators || []).length > 0 ? (
+                          <>
+                            {(currentDoc.head.creators || []).map((user) => (
+                              <UserIcon
+                                key={user.id}
+                                user={usersMap.get(user.id) || user}
+                                className='subtle'
+                              />
+                            ))}
+                          </>
                         ) : (
                           ''
-                        )}
-                      </Flexbox>
-                    </div>
+                        )
+                      ) : (
+                        ''
+                      )}
+                    </Flexbox>
                   </div>
-                )}
-                {!team.personal && (
-                  <div className='context__row'>
-                    <label className='context__label'>
-                      <Icon
-                        path={mdiAccountMultiple}
-                        size={20}
-                        className='context__icon'
-                      />{' '}
-                      {translate(lngKeys.Contributors)}
-                    </label>
-                    <div className='context__content'>
-                      <Flexbox wrap='wrap'>
-                        {contributorsState.contributors.map((contributor) => (
-                          <UserIcon
-                            key={contributor.id}
-                            user={usersMap.get(contributor.id) || contributor}
-                            className='subtle'
-                          />
-                        ))}
+                </div>
 
-                        {contributors.length > 5 && (
-                          <SmallButton
-                            variant='transparent'
-                            onClick={() =>
-                              setSliceContributors((prev) => !prev)
-                            }
-                          >
-                            {contributorsState.sliced > 0
-                              ? `+${contributorsState.sliced}`
-                              : '-'}
-                          </SmallButton>
-                        )}
-                      </Flexbox>
-                    </div>
+                <div className='context__row'>
+                  <label className='context__label'>
+                    <Icon
+                      path={mdiAccountMultiple}
+                      size={20}
+                      className='context__icon'
+                    />{' '}
+                    {translate(lngKeys.Contributors)}
+                  </label>
+                  <div className='context__content'>
+                    <Flexbox wrap='wrap'>
+                      {contributorsState.contributors.map((contributor) => (
+                        <UserIcon
+                          key={contributor.id}
+                          user={usersMap.get(contributor.id) || contributor}
+                          className='subtle'
+                        />
+                      ))}
+
+                      {contributors.length > 5 && (
+                        <SmallButton
+                          variant='transparent'
+                          onClick={() => setSliceContributors((prev) => !prev)}
+                        >
+                          {contributorsState.sliced > 0
+                            ? `+${contributorsState.sliced}`
+                            : '-'}
+                        </SmallButton>
+                      )}
+                    </Flexbox>
                   </div>
-                )}
+                </div>
+
                 {/* <Flexbox
                   className='context__row'
                   justifyContent='space-between'

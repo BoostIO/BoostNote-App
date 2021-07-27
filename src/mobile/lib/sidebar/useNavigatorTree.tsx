@@ -659,7 +659,7 @@ export function useNavigatorTree() {
         : undefined,
     })
 
-    if (!team.personal && currentUserIsCoreMember) {
+    if (currentUserIsCoreMember) {
       tree.push({
         label: 'Private',
         rows:

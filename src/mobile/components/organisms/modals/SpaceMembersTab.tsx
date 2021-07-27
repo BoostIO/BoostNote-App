@@ -24,7 +24,6 @@ import { mdiArrowLeft } from '@mdi/js'
 import { useSet } from 'react-use'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
-import Button from '../../../../shared/components/atoms/Button'
 import Flexbox from '../../../../shared/components/atoms/Flexbox'
 import { SimpleFormSelect } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
 import ModalFormWrapper from './atoms/ModalFormWrapper'
@@ -32,7 +31,6 @@ import NavigationBarButton from '../../atoms/NavigationBarButton'
 import Icon from '../../../../shared/components/atoms/Icon'
 import ModalContainer from './atoms/ModalContainer'
 import { SettingsTabTypes } from './types'
-import SettingsTeamForm from './organisms/SettingsTeamForm'
 
 interface SpaceMembersTabProps {
   setActiveTab: (tabType: SettingsTabTypes | null) => void
@@ -57,9 +55,6 @@ const SpaceMembersTab = ({ setActiveTab }: SpaceMembersTabProps) => {
   const [fetching, { add, remove }] = useSet<string>(new Set())
   const [userEmailsMap, setUserEmailsMap] = useState<Map<string, string>>(
     new Map()
-  )
-  const [showTeamPersonalForm, setShowTeamPersonalForm] = useState<boolean>(
-    false
   )
   const mountedRef = useRef(false)
 
@@ -287,34 +282,6 @@ const SpaceMembersTab = ({ setActiveTab }: SpaceMembersTabProps) => {
 
   const currentUserIsAdmin = currentUserPermissions.role === 'admin'
 
-  if (team.personal && showTeamPersonalForm) {
-    return (
-      <ModalContainer
-        left={
-          <NavigationBarButton onClick={() => setActiveTab(null)}>
-            <Icon size={20} path={mdiArrowLeft} /> Back
-          </NavigationBarButton>
-        }
-        title='Settings'
-        closeLabel='Done'
-      >
-        <ModalFormWrapper>
-          <SettingTabContent
-            title='Create team space'
-            description='Create a team space in order to invite your teammates'
-            backLink={{
-              variant: 'icon',
-              iconPath: mdiArrowLeft,
-              iconSize: 20,
-              onClick: () => setShowTeamPersonalForm(false),
-            }}
-            body={<SettingsTeamForm team={team} teamConversion={true} />}
-          />
-        </ModalFormWrapper>
-      </ModalContainer>
-    )
-  }
-
   return (
     <ModalContainer
       left={
@@ -326,154 +293,100 @@ const SpaceMembersTab = ({ setActiveTab }: SpaceMembersTabProps) => {
       closeLabel='Done'
     >
       <ModalFormWrapper>
-        {team.personal ? (
-          <section>
-            <Flexbox>
-              <h2>Current Members</h2>
-              {fetching.has('userEmails') && (
-                <Spinner className='relative' style={{ top: 2 }} />
-              )}
-            </Flexbox>
-            <Button
-              variant='primary'
-              onClick={() => setShowTeamPersonalForm(true)}
-            >
-              Add members
-            </Button>
-            <TopMargin />
-            <StyledMembersTable>
-              <thead className='table-header'>
-                <tr>
-                  <th>User</th>
-                </tr>
-              </thead>
-              <tbody className='table-body'>
-                <tr key={currentUserPermissions.id}>
-                  <td>
-                    <div className='user-info'>
-                      <div className='user-info-icon'>
-                        <UserIcon user={currentUserPermissions.user} />
+        <OpenInvitesSection userPermissions={currentUserPermissions} />
+        <section>
+          <Flexbox>
+            <h2>Current Members</h2>
+            {fetching.has('userEmails') && (
+              <Spinner className='relative' style={{ top: 2 }} />
+            )}
+          </Flexbox>
+          <StyledMembersTable>
+            <thead className='table-header'>
+              <tr>
+                <th>User</th>
+                <th>Access Level</th>
+              </tr>
+            </thead>
+            <tbody className='table-body'>
+              {permissions.map((permission) => {
+                const targetPermissionsAreUsersOwn =
+                  currentUserPermissions.id === permission.id
+                return (
+                  <tr key={permission.id}>
+                    <td>
+                      <div className='user-info'>
+                        <div className='user-info-icon'>
+                          <UserIcon user={permission.user} />
+                        </div>
+                        <StyledMembername>
+                          {permission.user.displayName}
+                          {currentUserIsAdmin &&
+                            userEmailsMap.has(permission.id) && (
+                              <span>{userEmailsMap.get(permission.id)}</span>
+                            )}
+                        </StyledMembername>
                       </div>
-                      <StyledMembername>
-                        {currentUserPermissions.user.displayName}
-                        {currentUserIsAdmin &&
-                          userEmailsMap.has(currentUserPermissions.id) && (
-                            <span>
-                              {userEmailsMap.get(currentUserPermissions.id)}
-                            </span>
-                          )}
-                      </StyledMembername>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </StyledMembersTable>
-          </section>
-        ) : (
-          <>
-            <OpenInvitesSection userPermissions={currentUserPermissions} />
-            <section>
-              <Flexbox>
-                <h2>Current Members</h2>
-                {fetching.has('userEmails') && (
-                  <Spinner className='relative' style={{ top: 2 }} />
-                )}
-              </Flexbox>
-              <StyledMembersTable>
-                <thead className='table-header'>
-                  <tr>
-                    <th>User</th>
-                    <th>Access Level</th>
-                  </tr>
-                </thead>
-                <tbody className='table-body'>
-                  {permissions.map((permission) => {
-                    const targetPermissionsAreUsersOwn =
-                      currentUserPermissions.id === permission.id
-                    return (
-                      <tr key={permission.id}>
-                        <td>
-                          <div className='user-info'>
-                            <div className='user-info-icon'>
-                              <UserIcon user={permission.user} />
-                            </div>
-                            <StyledMembername>
-                              {permission.user.displayName}
-                              {currentUserIsAdmin &&
-                                userEmailsMap.has(permission.id) && (
-                                  <span>
-                                    {userEmailsMap.get(permission.id)}
-                                  </span>
-                                )}
-                            </StyledMembername>
-                          </div>
-                        </td>
-                        <td>
-                          <div className='user-action'>
-                            {sending === `${permission.id}-change` ? (
-                              <Spinner
-                                style={{
-                                  position: 'relative',
-                                  top: -2,
-                                  bottom: 0,
-                                  verticalAlign: 'middle',
-                                  left: 0,
-                                }}
-                              />
+                    </td>
+                    <td>
+                      <div className='user-action'>
+                        {sending === `${permission.id}-change` ? (
+                          <Spinner
+                            style={{
+                              position: 'relative',
+                              top: -2,
+                              bottom: 0,
+                              verticalAlign: 'middle',
+                              left: 0,
+                            }}
+                          />
+                        ) : (
+                          <SimpleFormSelect
+                            className='user--role--select'
+                            value={permission.role}
+                            onChange={(value: string) =>
+                              changePermissionsRole(
+                                value,
+                                currentUserPermissions,
+                                permission
+                              )
+                            }
+                            isDisabled={
+                              !currentUserIsAdmin ||
+                              targetPermissionsAreUsersOwn
+                            }
+                            options={['admin', 'member', 'viewer']}
+                          />
+                        )}
+                        {(targetPermissionsAreUsersOwn ||
+                          currentUserIsAdmin) && (
+                          <CustomButton
+                            variant='transparent'
+                            onClick={() => removePermissions(permission)}
+                            disabled={sending != null}
+                            style={{ width: 80 }}
+                          >
+                            {sending === `${permission.id}-delete` ? (
+                              <Spinner />
+                            ) : currentUserPermissions.id === permission.id ? (
+                              'Leave'
                             ) : (
-                              <SimpleFormSelect
-                                className='user--role--select'
-                                value={permission.role}
-                                onChange={(value: string) =>
-                                  changePermissionsRole(
-                                    value,
-                                    currentUserPermissions,
-                                    permission
-                                  )
-                                }
-                                isDisabled={
-                                  !currentUserIsAdmin ||
-                                  targetPermissionsAreUsersOwn
-                                }
-                                options={['admin', 'member', 'viewer']}
-                              />
+                              'Remove'
                             )}
-                            {(targetPermissionsAreUsersOwn ||
-                              currentUserIsAdmin) && (
-                              <CustomButton
-                                variant='transparent'
-                                onClick={() => removePermissions(permission)}
-                                disabled={sending != null}
-                                style={{ width: 80 }}
-                              >
-                                {sending === `${permission.id}-delete` ? (
-                                  <Spinner />
-                                ) : currentUserPermissions.id ===
-                                  permission.id ? (
-                                  'Leave'
-                                ) : (
-                                  'Remove'
-                                )}
-                              </CustomButton>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </StyledMembersTable>
-            </section>{' '}
-          </>
-        )}
+                          </CustomButton>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </StyledMembersTable>
+        </section>
       </ModalFormWrapper>
     </ModalContainer>
   )
 }
-
-const TopMargin = styled.div`
-  margin-top: ${({ theme }) => theme.space.medium}px;
-`
 
 const StyledMembersTable = styled.table`
   width: 100%;

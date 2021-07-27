@@ -121,7 +121,6 @@ const DocPage = ({ doc, contributors, backLinks }: DocPageProps) => {
     <DocViewPage
       team={team}
       doc={currentDoc}
-      editable={docIsEditable}
       contributors={contributors}
       backLinks={currentBacklinks}
       user={currentUser}

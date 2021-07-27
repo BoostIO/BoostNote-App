@@ -61,7 +61,6 @@ const SmartFolderCreateModal = () => {
         onSubmit={submit}
         defaultConditionType='and'
         buttonsAreDisabled={sending}
-        isPersonalTeam={team.personal}
         defaultSecondaryConditions={[
           {
             type: 'status',

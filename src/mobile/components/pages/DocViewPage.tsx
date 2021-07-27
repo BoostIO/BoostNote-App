@@ -3,7 +3,6 @@ import {
   SerializedDocWithBookmark,
   SerializedDoc,
 } from '../../../cloud/interfaces/db/doc'
-import DocLimitReachedBanner from '../../../cloud/components/molecules/Banner/SubLimitReachedBanner'
 import styled from '../../../cloud/lib/styled'
 import { usePreferences } from '../../lib/preferences'
 import { rightSideTopBarHeight } from '../../../cloud/components/organisms/RightSideTopBar/styled'
@@ -30,13 +29,11 @@ interface ViewPageProps {
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
   doc: SerializedDocWithBookmark
-  editable: boolean
   user: SerializedUser
 }
 
 const ViewPage = ({
   doc,
-  editable,
   user,
   team,
   contributors,
@@ -206,7 +203,6 @@ const ViewPage = ({
       <Container>
         <div className='view__wrapper'>
           <div className='view__content'>
-            {!editable && <DocLimitReachedBanner />}
             {realtimeContent !== '' ? (
               <MarkdownView
                 content={realtimeContent}

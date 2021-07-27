@@ -138,7 +138,7 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
       ]}
       submitButton={{ label: teamConversion ? 'Create' : 'Update' }}
     >
-      {teamConversion && team.personal && (
+      {teamConversion && (
         <FormRow
           row={{
             title: `${label} domain`,
