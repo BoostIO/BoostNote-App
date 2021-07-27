@@ -442,13 +442,12 @@ const jpTranslation: TranslationSource = {
   [lngKeys.PlanStoragePerk]: 'ひとりあたり{{storageSize}}の容量',
   [lngKeys.PlanStandardPerk1]: '無制限Member権限',
   [lngKeys.PlanStandardPerk2]: '開発支援',
-  [lngKeys.PlanStandardPerk3]:
-    "直近{{days}}日間のドキュメント変更履歴",
+  [lngKeys.PlanStandardPerk3]: '直近{{days}}日間のドキュメント変更履歴',
   [lngKeys.PlanProPerk3]: '優先サポート',
   [lngKeys.PlanProPerk1]: 'シェアドキュメントへ、パスワードと有効期限設定',
-  [lngKeys.PlanProPerk2]: "全てのドキュメント変更履歴",
+  [lngKeys.PlanProPerk2]: '全てのドキュメント変更履歴',
   [lngKeys.PlanViewersMembersIntro]:
-    "Viewer権限とMember権限の違いにつきましては、",
+    'Viewer権限とMember権限の違いにつきましては、',
   [lngKeys.PlanViewersMembersLink]: 'こちらの記事をご覧ください。',
   [lngKeys.SeeRoleDetails]: '各権限を確認する。',
   [lngKeys.ViewerDisclaimerIntro]: 'あなたは',
