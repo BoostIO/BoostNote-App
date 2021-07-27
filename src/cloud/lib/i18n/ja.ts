@@ -456,18 +456,18 @@ const jpTranslation: TranslationSource = {
     'Please ask your admin to give you a member role so that you can participate as well.',
 
   [lngKeys.DiscountModalTitle]:
-    'Invitez {{membersNb}} personnes pour recevoir une promotion!',
-  [lngKeys.DiscountModalSubtitle]: `You can receive a one-month free reduction if ${
+    '残り{{membersNb}}人を招待して、割引を受け取りましょう！',
+  [lngKeys.DiscountModalSubtitle]: `タイマーが切れるまでに${
     membersForDiscount - 1
-  } people join this space before the timer's end.`,
+  }人がこのSpaceに登録すると、割引を受け取ることができます。`,
   [lngKeys.DiscountModalAlreadySubscribed]:
     'あなたは既に有料プランに加入しています。',
   [lngKeys.DiscountModalTimeRemaining]: 'タイムリミット',
   [lngKeys.DiscountModalExpired]: '割引への有効期限の期限が切れました。',
-  [lngKeys.GeneralInvite]: 'Invite',
-  [lngKeys.SettingsRolesRestrictedTitle]: 'This role is restricted',
+  [lngKeys.GeneralInvite]: '招待する',
+  [lngKeys.SettingsRolesRestrictedTitle]: 'この権限は制限されています。',
   [lngKeys.SettingsRolesRestrictedDescription]:
-    'In order to promote the user to this specific role, your space needs to have an active subscription. Please consider upgrading your plan.',
+    'メンバー権限を変更するためには、有料プランを購入する必要があります。アップグレードをご検討いただけますと幸いです。',
 }
 
 export default {
