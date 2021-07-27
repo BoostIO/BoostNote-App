@@ -421,11 +421,11 @@ const jpTranslation: TranslationSource = {
 
   [lngKeys.GeneralOrdering]: '並び順',
   [lngKeys.SidebarViewOptions]: '表示',
-  [lngKeys.SidebarSettingsAndMembers]: 'Settings & Members',
-  [lngKeys.GeneralInbox]: 'Inbox',
-  [lngKeys.SidebarNewUserDiscount]: 'Get the new user discount!',
+  [lngKeys.SidebarSettingsAndMembers]: '設定とメンバー',
+  [lngKeys.GeneralInbox]: '通知',
+  [lngKeys.SidebarNewUserDiscount]: '期間限定クーポン',
   [lngKeys.SettingsImportDescription]:
-    'No need to start from scratch. Import data into Boost Note by selecting one of the options below.',
+    '既存のツールから、ドキュメントを移行しましょう。',
 
   [lngKeys.GeneralPassword]: 'パスワード',
 
