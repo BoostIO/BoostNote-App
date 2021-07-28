@@ -287,6 +287,21 @@ const AnnouncementAlert = () => {
                   role.
                 </p>
               )}
+              <ButtonGroup className='alert__footer' layout='spread'>
+                <Button
+                  variant='secondary'
+                  onClick={() => {
+                    const newPreferences = Object.assign({}, teamPreferences)
+                    delete newPreferences.showTrialAlert
+                    setToLocalStorage(
+                      currentUserPermissions.teamId,
+                      newPreferences
+                    )
+                  }}
+                >
+                  Dismiss
+                </Button>
+              </ButtonGroup>
             </div>
           </div>
         </Container>
