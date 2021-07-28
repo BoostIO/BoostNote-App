@@ -419,55 +419,54 @@ const jpTranslation: TranslationSource = {
   [lngKeys.GeneralMinutes]: '分',
   [lngKeys.GeneralSeconds]: '秒',
 
-  [lngKeys.GeneralOrdering]: 'Ordering',
-  [lngKeys.SidebarViewOptions]: 'View Options',
-  [lngKeys.SidebarSettingsAndMembers]: 'Settings & Members',
-  [lngKeys.GeneralInbox]: 'Inbox',
-  [lngKeys.SidebarNewUserDiscount]: 'Get the new user discount!',
+  [lngKeys.GeneralOrdering]: '並び順',
+  [lngKeys.SidebarViewOptions]: '表示',
+  [lngKeys.SidebarSettingsAndMembers]: '設定とメンバー',
+  [lngKeys.GeneralInbox]: '通知',
+  [lngKeys.SidebarNewUserDiscount]: '期間限定クーポン',
   [lngKeys.SettingsImportDescription]:
-    'No need to start from scratch. Import data into Boost Note by selecting one of the options below.',
+    '既存のツールから、ドキュメントを移行しましょう。',
 
   [lngKeys.GeneralPassword]: 'パスワード',
 
-  [lngKeys.CooperateTitle]: 'Create a new space',
-  [lngKeys.CooperateSubtitle]: 'Please set up your space information',
-  [lngKeys.PictureAdd]: 'Add a picture',
-  [lngKeys.PictureChange]: 'Change your picture',
-  [lngKeys.SpaceIntent]: 'For what purpose are you going to use this space?',
-  [lngKeys.SpaceIntentPersonal]: 'For my personal use',
-  [lngKeys.SpaceIntentTeam]: 'To collaborate with my team',
-  [lngKeys.PlanFreePerk1]: 'Unlimited Viewers',
-  [lngKeys.PlanFreePerk2]: '1 Member',
-  [lngKeys.PlanFreePerk3]: 'Unlimited documents',
-  [lngKeys.PlanStoragePerk]: '{{storageSize}} per member',
-  [lngKeys.PlanStandardPerk1]: 'Unlimited members',
-  [lngKeys.PlanStandardPerk2]: 'Support development',
-  [lngKeys.PlanStandardPerk3]:
-    "Last {{days}} days of your docs's revision history",
-  [lngKeys.PlanProPerk3]: 'Priority Support',
-  [lngKeys.PlanProPerk1]: 'Password and expiration date when sharing',
-  [lngKeys.PlanProPerk2]: "Full access to your docs' revision history",
+  [lngKeys.CooperateTitle]: 'Spaceを作成する',
+  [lngKeys.CooperateSubtitle]: 'Space情報を設定しましょう',
+  [lngKeys.PictureAdd]: '写真追加',
+  [lngKeys.PictureChange]: '写真を変更する',
+  [lngKeys.SpaceIntent]: 'どのような目的でこのSpaceを作成しますか？',
+  [lngKeys.SpaceIntentPersonal]: '個人利用',
+  [lngKeys.SpaceIntentTeam]: 'チームとのコラボレーション',
+  [lngKeys.PlanFreePerk1]: '無制限のViewers権限',
+  [lngKeys.PlanFreePerk2]: '1 Member権限',
+  [lngKeys.PlanFreePerk3]: '無制限ドキュメント',
+  [lngKeys.PlanStoragePerk]: 'ひとりあたり{{storageSize}}の容量',
+  [lngKeys.PlanStandardPerk1]: '無制限Member権限',
+  [lngKeys.PlanStandardPerk2]: '開発支援',
+  [lngKeys.PlanStandardPerk3]: '直近{{days}}日間のドキュメント変更履歴',
+  [lngKeys.PlanProPerk3]: '優先サポート',
+  [lngKeys.PlanProPerk1]: 'シェアドキュメントへ、パスワードと有効期限設定',
+  [lngKeys.PlanProPerk2]: '全てのドキュメント変更履歴',
   [lngKeys.PlanViewersMembersIntro]:
-    "What's the difference between viewers and members? Please take a look at",
-  [lngKeys.PlanViewersMembersLink]: 'this article',
-  [lngKeys.SeeRoleDetails]: 'See role details',
-  [lngKeys.ViewerDisclaimerIntro]: 'You are a',
+    'Viewer権限とMember権限の違いにつきましては、',
+  [lngKeys.PlanViewersMembersLink]: 'こちらの記事をご覧ください。',
+  [lngKeys.SeeRoleDetails]: '各権限を確認する。',
+  [lngKeys.ViewerDisclaimerIntro]: 'あなたは',
   [lngKeys.ViewerDisclaimerDescription]:
-    'Please ask your admin to give you a member role so that you can participate as well.',
+    'Admin権限の方があなたの権限をMemberに変更すると、ドキュメント編集等を行うことができるようになります。',
 
   [lngKeys.DiscountModalTitle]:
-    'Invitez {{membersNb}} personnes pour recevoir une promotion!',
-  [lngKeys.DiscountModalSubtitle]: `You can receive a one-month free reduction if ${
+    '残り{{membersNb}}人を招待して、割引を受け取りましょう！',
+  [lngKeys.DiscountModalSubtitle]: `タイマーが切れるまでに${
     membersForDiscount - 1
-  } people join this space before the timer's end.`,
+  }人がこのSpaceに登録すると、割引を受け取ることができます。`,
   [lngKeys.DiscountModalAlreadySubscribed]:
     'あなたは既に有料プランに加入しています。',
   [lngKeys.DiscountModalTimeRemaining]: 'タイムリミット',
   [lngKeys.DiscountModalExpired]: '割引への有効期限の期限が切れました。',
-  [lngKeys.GeneralInvite]: 'Invite',
-  [lngKeys.SettingsRolesRestrictedTitle]: 'This role is restricted',
+  [lngKeys.GeneralInvite]: '招待する',
+  [lngKeys.SettingsRolesRestrictedTitle]: 'この権限は制限されています。',
   [lngKeys.SettingsRolesRestrictedDescription]:
-    'In order to promote the user to this specific role, your space needs to have an active subscription. Please consider upgrading your plan.',
+    'メンバー権限を変更するためには、有料プランを購入する必要があります。アップグレードをご検討いただけますと幸いです。',
 }
 
 export default {
