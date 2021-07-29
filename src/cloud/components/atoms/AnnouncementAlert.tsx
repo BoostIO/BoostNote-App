@@ -221,7 +221,8 @@ const AnnouncementAlert = () => {
                 your plan.
               </p>
 
-              {permissions.filter((p) => p.role !== 'viewer').length >= 1 && (
+              {permissions.filter((p) => p.role !== 'viewer').length >
+                freePlanMembersLimit && (
                 <p>
                   You can continue for free if you demote your other members to
                   a{' '}
@@ -274,7 +275,8 @@ const AnnouncementAlert = () => {
                 Your space is not eligible for a free trial anymore. Please tell
                 your admins to upgrade your plan.
               </p>
-              {permissions.filter((p) => p.role !== 'viewer').length >= 1 && (
+              {permissions.filter((p) => p.role !== 'viewer').length >
+                freePlanMembersLimit && (
                 <p>
                   If you wish to continue for free, they can also demote you or
                   other members to a{' '}
@@ -287,6 +289,21 @@ const AnnouncementAlert = () => {
                   role.
                 </p>
               )}
+              <ButtonGroup className='alert__footer' layout='spread'>
+                <Button
+                  variant='secondary'
+                  onClick={() => {
+                    const newPreferences = Object.assign({}, teamPreferences)
+                    delete newPreferences.showTrialAlert
+                    setToLocalStorage(
+                      currentUserPermissions.teamId,
+                      newPreferences
+                    )
+                  }}
+                >
+                  Dismiss
+                </Button>
+              </ButtonGroup>
             </div>
           </div>
         </Container>
