@@ -45,6 +45,7 @@ import NavigationBarButton from '../atoms/NavigationBarButton'
 import { useModal } from '../../../shared/lib/stores/modal'
 import DocInfoModal from '../organisms/modals/DocInfoModal'
 import { SerializedRevision } from '../../../cloud/interfaces/db/revision'
+import { osName } from '../../../lib/platform'
 
 interface EditorProps {
   doc: SerializedDocWithBookmark
@@ -339,6 +340,7 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
       indentWithTabs: editorIndentType === 'tab',
       indentUnit: editorIndentSize,
       tabSize: editorIndentSize,
+      inputStyle: osName === 'android' ? 'textarea' : 'contenteditable',
       extraKeys: {
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
