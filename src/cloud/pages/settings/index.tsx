@@ -21,11 +21,6 @@ import { LoadingButton } from '../../../shared/components/atoms/Button'
 import ButtonGroup from '../../../shared/components/atoms/ButtonGroup'
 import styled from '../../../shared/lib/styled'
 import OnboardingLayout from '../../components/organisms/Onboarding/layouts/OnboardingLayout'
-import UsageFormRow, {
-  SpaceUsageIntent,
-} from '../../components/organisms/Onboarding/molecules/UsageFormRow'
-import { trackEvent } from '../../api/track'
-import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
   const [displayName, setDisplayName] = useState<string>(
@@ -38,7 +33,6 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
     setPartialGlobalData,
   } = useGlobalData()
   const [iconFile, setIconFile] = useState<File | null>(null)
-  const [intent, setIntent] = useState<SpaceUsageIntent>()
   const [fileUrl, setFileUrl] = useState<string | null>(
     currentUser.icon != null ? buildIconUrl(currentUser.icon.location) : null
   )
@@ -79,14 +73,6 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
             ? getTeamURL(teams[0])
             : `/cooperate`
 
-        if (intent != null) {
-          await trackEvent(
-            intent === 'personal'
-              ? MixpanelActionTrackTypes.UserIntentPersonal
-              : MixpanelActionTrackTypes.UserIntentTeam
-          )
-        }
-
         push(finalRedirect)
       } catch (error) {
         setError(error)
@@ -94,7 +80,6 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
       setSending(false)
     },
     [
-      intent,
       currentUser,
       displayName,
       teams,
@@ -136,11 +121,6 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
               }}
             />
           </FormRow>
-          <UsageFormRow
-            intent={intent}
-            inSpaceForm={false}
-            setIntent={setIntent}
-          />
           <FormRow>{error != null && <ErrorBlock error={error} />}</FormRow>
           <FormRow fullWidth={true} className='end__row'>
             <ButtonGroup layout='column' display='flex' flex='1 1 auto'>
