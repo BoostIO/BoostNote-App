@@ -109,6 +109,8 @@ const ContextModalItem = ({
             'modal__window',
             `modal__window__width--${modal.width}`,
             modal.position != null && `modal__window--context`,
+            modal.hideBackground && 'modal__window--no-bg',
+            modal.removePadding && 'modal__window--no-padding',
           ])}
           style={style}
         >
@@ -194,6 +196,15 @@ const Container = styled.div`
     left: 0;
     background-color: #000;
     opacity: 0.7;
+  }
+
+  .modal__window--context.modal__window--no-bg {
+    background: none !important;
+  }
+
+  .modal__window--context.modal__window--no-padding,
+  .modal__window--context.modal__window--no-padding .modal__wrapper {
+    padding: 0 !important;
   }
 
   .modal__bg__hidden {

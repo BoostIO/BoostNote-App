@@ -30,6 +30,8 @@ function useModalStore(): ModalsContext {
           alignment: options.alignment || 'bottom-left',
         },
       }
+
+      console.log(modal)
       setModals([modal])
     },
     []

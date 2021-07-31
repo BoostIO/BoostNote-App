@@ -3,7 +3,6 @@ import styled from '../../../lib/styled'
 import { AppComponent } from '../../../lib/types'
 import cc from 'classcat'
 import UpDownList from '../../atoms/UpDownList'
-import VerticalScroller from '../../atoms/VerticalScroller'
 import MetadataContainerRow, {
   MetadataContainerRowProps,
 } from './molecules/MetadataContainerRow'
@@ -20,25 +19,24 @@ const MetadataContainer: AppComponent<MetadataContainerProps> = ({
   <UpDownList ignoreFocus={true}>
     <Container className={cc(['metadata', className])}>
       <div className='metadata__container'>
-        <VerticalScroller className='metadata__scroll'>
+        <div className='metadata__scroll'>
           {rows.map((row, i) => (
             <MetadataContainerRow row={row} key={`row-${i}`} />
           ))}
           {children}
-        </VerticalScroller>
+        </div>
       </div>
     </Container>
   </UpDownList>
 )
 
-const containerWidth = 350
 const Container = styled.div`
-  width: ${containerWidth}px;
-  height: 100vh;
+  width: 100%;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   border-left: 1px solid transparent;
-  background-color: ${({ theme }) => theme.colors.background.secondary};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   color: ${({ theme }) => theme.colors.text.primary};
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
 

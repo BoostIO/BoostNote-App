@@ -3,7 +3,7 @@ import { LayoutMode } from '../../../components/layouts/DocEditLayout'
 import { SidebarTreeSortingOrder } from '../../../../shared/lib/sidebar'
 
 export interface Preferences {
-  docContextMode: 'hidden' | 'context' | 'comment'
+  docContextMode: 'hidden' | 'comment'
   sidebarIsHidden: boolean
   sidebarIsHovered: boolean
   sideBarWidth: number

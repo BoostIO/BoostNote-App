@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useNav } from '../../../lib/stores/nav'
 import { useTitle } from 'react-use'
@@ -12,7 +12,14 @@ import {
   isFolderEditShortcut,
 } from '../../../lib/shortcuts'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
-import { mdiStarOutline, mdiStar, mdiDotsHorizontal } from '@mdi/js'
+import {
+  mdiStarOutline,
+  mdiStar,
+  mdiDotsHorizontal,
+  mdiPlus,
+  mdiTextBoxPlus,
+  mdiFolderPlusOutline,
+} from '@mdi/js'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import ContentManager from '../../molecules/ContentManager'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
@@ -20,12 +27,17 @@ import Application from '../../Application'
 import ErrorLayout from '../../../../shared/components/templates/ErrorLayout'
 import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
-import FolderContextMenu from '../Topbar/Controls/ControlsContextMenu/FolderContextMenu'
+import FolderContextMenu from './NewFolderContextMenu'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { mapTopbarBreadcrumbs } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import InviteCTAButton from '../../molecules/InviteCTAButton'
+import { useModal } from '../../../../shared/lib/stores/modal'
+import MetadataContainer from '../../../../shared/components/organisms/MetadataContainer'
+import MetadataContainerRow from '../../../../shared/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import { lngKeys } from '../../../lib/i18n/types'
+import { TopbarControlProps } from '../../../../shared/components/organisms/Topbar'
 
 const FolderPage = () => {
   const { pageFolder, team, currentUserIsCoreMember } = usePage()
@@ -36,11 +48,8 @@ const FolderPage = () => {
     workspacesMap,
     currentWorkspaceId,
   } = useNav()
-  // const { openEmojiPicker } = useEmojiPicker()
-  // const [sending, setSending] = useState<number>()
   const { toggleFolderBookmark, sendingMap } = useCloudApi()
   const { push } = useRouter()
-  const [showContextMenu, setShowContextMenu] = useState<boolean>(false)
   const {
     openRenameDocForm,
     openRenameFolderForm,
@@ -52,6 +61,7 @@ const FolderPage = () => {
     deleteWorkspace,
   } = useCloudResourceModals()
   const { translate } = useI18n()
+  const { openContextModal } = useModal()
 
   const currentFolder = useMemo(() => {
     if (pageFolder == null) {
@@ -206,6 +216,103 @@ const FolderPage = () => {
     return map
   }, [currentWorkspace])
 
+  const topbarControls = useMemo(() => {
+    if (team == null || currentFolder == null) {
+      return undefined
+    }
+
+    const controls: TopbarControlProps[] = [
+      {
+        type: 'node',
+        element: <InviteCTAButton origin='folder-page' />,
+      },
+    ]
+
+    if (currentUserIsCoreMember) {
+      controls.push({
+        type: 'button',
+        variant: 'icon',
+        iconPath: mdiPlus,
+        onClick: (event) =>
+          openContextModal(
+            event,
+            <MetadataContainer>
+              <MetadataContainerRow
+                row={{
+                  type: 'button',
+                  props: {
+                    disabled: sendingMap.has(currentFolder.id),
+                    id: 'folder-add-doc',
+                    label: translate(lngKeys.CreateNewDoc),
+                    iconPath: mdiTextBoxPlus,
+                    onClick: () =>
+                      openNewDocForm({
+                        team,
+                        parentFolderId: currentFolder.id,
+                        workspaceId: currentFolder.workspaceId,
+                      }),
+                  },
+                }}
+              />
+              <MetadataContainerRow
+                row={{
+                  type: 'button',
+                  props: {
+                    disabled: sendingMap.has(currentFolder.id),
+                    id: 'folder-add-folder',
+                    label: translate(lngKeys.ModalsCreateNewFolder),
+                    iconPath: mdiFolderPlusOutline,
+                    onClick: () =>
+                      openNewFolderForm({
+                        team,
+                        parentFolderId: currentFolder.id,
+                        workspaceId: currentFolder.workspaceId,
+                      }),
+                  },
+                }}
+              />
+            </MetadataContainer>,
+            {
+              hideBackground: true,
+              removePadding: true,
+              width: 200,
+              alignment: 'bottom-right',
+            }
+          ),
+      })
+    }
+
+    controls.push({
+      type: 'button',
+      variant: 'icon',
+      iconPath: mdiDotsHorizontal,
+      onClick: (event) =>
+        openContextModal(
+          event,
+          <FolderContextMenu
+            currentFolder={currentFolder}
+            currentUserIsCoreMember={currentUserIsCoreMember}
+          />,
+          {
+            width: 200,
+            hideBackground: true,
+            removePadding: true,
+          }
+        ),
+    })
+
+    return controls
+  }, [
+    currentFolder,
+    currentUserIsCoreMember,
+    openContextModal,
+    openNewDocForm,
+    openNewFolderForm,
+    sendingMap,
+    translate,
+    team,
+  ])
+
   if (team == null) {
     return (
       <Application
@@ -251,28 +358,10 @@ const FolderPage = () => {
               }
             />
           ),
-          controls: [
-            {
-              type: 'node',
-              element: <InviteCTAButton origin='folder-page' />,
-            },
-            {
-              type: 'button',
-              variant: 'icon',
-              iconPath: mdiDotsHorizontal,
-              onClick: () => setShowContextMenu(true),
-            },
-          ],
+          controls: topbarControls,
         },
       }}
     >
-      {showContextMenu && (
-        <FolderContextMenu
-          currentFolder={currentFolder}
-          closeContextMenu={() => setShowContextMenu(false)}
-          currentUserIsCoreMember={currentUserIsCoreMember}
-        />
-      )}
       <ContentManager
         team={team}
         documents={childDocs}

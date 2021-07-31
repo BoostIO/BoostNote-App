@@ -47,7 +47,7 @@ import {
   mdiEyeOutline,
   mdiViewSplitVertical,
   mdiCommentTextOutline,
-  mdiFormatListBulleted,
+  mdiDotsHorizontal,
 } from '@mdi/js'
 import EditorToolButton from './EditorToolButton'
 import { not } from 'ramda'
@@ -1005,31 +1005,32 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
             },
             {
               variant: 'icon',
-              iconPath: mdiFormatListBulleted,
-              active: preferences.docContextMode === 'context',
-              onClick: () =>
-                setPreferences(({ docContextMode }) => ({
-                  docContextMode:
-                    docContextMode === 'context' ? 'hidden' : 'context',
-                })),
+              iconPath: mdiDotsHorizontal,
+              onClick: (event) => {
+                openContextModal(
+                  event,
+                  <DocContextMenu
+                    currentDoc={doc}
+                    contributors={contributors}
+                    backLinks={backLinks}
+                    team={team}
+                    restoreRevision={onRestoreRevisionCallback}
+                    editorRef={editorRef}
+                    currentUserIsCoreMember={currentUserIsCoreMember}
+                    permissions={permissions || []}
+                  />,
+                  {
+                    alignment: 'bottom-right',
+                    removePadding: true,
+                    hideBackground: true,
+                  }
+                )
+              },
             },
           ] as TopbarControlProps[],
         },
         right:
-          preferences.docContextMode === 'context' ? (
-            <PreferencesContextMenuWrapper>
-              <DocContextMenu
-                currentDoc={doc}
-                contributors={contributors}
-                backLinks={backLinks}
-                team={team}
-                restoreRevision={onRestoreRevisionCallback}
-                editorRef={editorRef}
-                currentUserIsCoreMember={currentUserIsCoreMember}
-                permissions={permissions || []}
-              />
-            </PreferencesContextMenuWrapper>
-          ) : preferences.docContextMode === 'comment' ? (
+          preferences.docContextMode === 'comment' ? (
             <PreferencesContextMenuWrapper>
               <CommentManager
                 state={normalizedCommentState}

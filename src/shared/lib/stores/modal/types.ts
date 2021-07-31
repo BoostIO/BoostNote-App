@@ -10,6 +10,8 @@ export interface ModalElement {
     bottom: number
     alignment: ContextModalAlignment
   }
+  hideBackground?: boolean
+  removePadding?: boolean
   onClose?: () => void
 }
 
@@ -24,6 +26,8 @@ export type ModalOpeningOptions = {
 
 export type ContextModalOpeningOptions = ModalOpeningOptions & {
   alignment?: ContextModalAlignment
+  hideBackground?: boolean
+  removePadding?: boolean
 }
 
 export interface ModalsContext {

@@ -17,7 +17,7 @@ import { useRouter } from '../../../lib/router'
 import { LoadingButton } from '../../../../shared/components/atoms/Button'
 import {
   mdiCommentTextOutline,
-  mdiFormatListBulleted,
+  mdiDotsHorizontal,
   mdiStar,
   mdiStarOutline,
 } from '@mdi/js'
@@ -441,29 +441,30 @@ const ViewPage = ({
             },
             {
               variant: 'icon',
-              iconPath: mdiFormatListBulleted,
-              active: preferences.docContextMode === 'context',
-              onClick: () =>
-                setPreferences(({ docContextMode }) => ({
-                  docContextMode:
-                    docContextMode === 'context' ? 'hidden' : 'context',
-                })),
+              iconPath: mdiDotsHorizontal,
+              onClick: (event) => {
+                openContextModal(
+                  event,
+                  <NewDocContextMenu
+                    currentDoc={doc}
+                    contributors={contributors}
+                    backLinks={backLinks}
+                    team={team}
+                    currentUserIsCoreMember={currentUserIsCoreMember}
+                    permissions={permissions || []}
+                  />,
+                  {
+                    alignment: 'bottom-right',
+                    removePadding: true,
+                    hideBackground: true,
+                  }
+                )
+              },
             },
           ] as TopbarControlProps[],
         },
         right:
-          preferences.docContextMode === 'context' ? (
-            <PreferencesContextMenuWrapper>
-              <NewDocContextMenu
-                currentDoc={doc}
-                contributors={contributors}
-                backLinks={backLinks}
-                team={team}
-                currentUserIsCoreMember={currentUserIsCoreMember}
-                permissions={permissions || []}
-              />
-            </PreferencesContextMenuWrapper>
-          ) : preferences.docContextMode === 'comment' ? (
+          preferences.docContextMode === 'comment' ? (
             <PreferencesContextMenuWrapper>
               <CommentManager
                 state={normalizedCommentState}
