@@ -96,7 +96,7 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
           controls: [
             {
               type: 'node',
-              element: <InviteCTAButton />,
+              element: <InviteCTAButton origin='folder-page' />,
             },
           ],
         },

@@ -73,6 +73,8 @@ import SidebarButton from '../../shared/components/organisms/Sidebar/atoms/Sideb
 import CloudGlobalSearch from './organisms/CloudGlobalSearch'
 import ViewerDisclaimer from './molecules/ViewerDisclaimer'
 import { useCloudSidebarSpaces } from '../lib/hooks/sidebar/useCloudSidebarSpaces'
+import { trackEvent } from '../api/track'
+import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -299,7 +301,10 @@ const Application = ({
                 label: translate(lngKeys.SidebarSettingsAndMembers),
                 icon: mdiCog,
                 variant: 'transparent',
-                labelClick: () => openSettingsTab('teamMembers'),
+                labelClick: () => {
+                  openSettingsTab('teamMembers')
+                  trackEvent(MixpanelActionTrackTypes.InviteFromSidenav)
+                },
                 id: 'sidebar__button__members',
               },
             ]}

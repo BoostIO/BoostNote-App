@@ -95,6 +95,9 @@ export enum MixpanelActionTrackTypes {
   UserIntentTeam = 'user.intent.team',
   SpaceIntentPersonal = 'space.intent.personal',
   SpaceIntentTeam = 'space.intent.team',
+  InviteFromDocPage = 'invite.doc',
+  InviteFromFolderPage = 'invite.folder',
+  InviteFromSidenav = 'invite.sidenav',
 }
 
 export type MixpanelFrontEvent =
@@ -122,6 +125,9 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.UserIntentTeam
   | MixpanelActionTrackTypes.SpaceIntentPersonal
   | MixpanelActionTrackTypes.SpaceIntentTeam
+  | MixpanelActionTrackTypes.InviteFromDocPage
+  | MixpanelActionTrackTypes.InviteFromFolderPage
+  | MixpanelActionTrackTypes.InviteFromSidenav
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 

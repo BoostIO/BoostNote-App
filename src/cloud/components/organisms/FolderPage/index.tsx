@@ -254,7 +254,7 @@ const FolderPage = () => {
           controls: [
             {
               type: 'node',
-              element: <InviteCTAButton />,
+              element: <InviteCTAButton origin='folder-page' />,
             },
             {
               type: 'button',
