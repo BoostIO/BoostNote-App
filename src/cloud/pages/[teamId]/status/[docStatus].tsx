@@ -6,7 +6,7 @@ import { DocStatus } from '../../../interfaces/db/doc'
 import Application from '../../../components/Application'
 import ErrorLayout from '../../../../shared/components/templates/ErrorLayout'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
-import DocOnlyContentManager from '../../../components/molecules/ContentManager/DocOnlyContentManager'
+import ContentManager from '../../../components/molecules/ContentManager'
 import { getTeamIndexPageData } from '../../../api/pages/teams'
 import { useRouter } from '../../../lib/router'
 import styled from '../../../../shared/lib/styled'
@@ -113,7 +113,7 @@ const DocStatusShowPage = () => {
         },
       }}
     >
-      <DocOnlyContentManager
+      <ContentManager
         team={team}
         documents={documents}
         workspacesMap={workspacesMap}

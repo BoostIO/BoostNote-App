@@ -47,7 +47,7 @@ interface ContentManagerProps {
   currentUserIsCoreMember: boolean
   currentWorkspaceId?: string
   currentFolderId?: string
-  page?: 'archive' | 'tag' | 'shared'
+  page?: string
 }
 
 const ContentManager = ({
@@ -213,73 +213,82 @@ const ContentManager = ({
     <Container>
       <VerticalScroller className='cm__scroller'>
         <StyledContentManagerHeader>
-          <div className='header__left'>
-            {currentUserIsCoreMember && (
-              <Checkbox
-                checked={selectingAllItems}
-                disabled={orderedDocs.length + orderedFolders.length === 0}
-                className={cc([
-                  'header__left__checkbox',
-                  selectingAllItems && 'header__left__checkbox--checked',
-                ])}
-                onChange={selectingAllItems ? unselectAllItems : selectAllItems}
-              />
-            )}
+          {folders != null ? (
+            <div className='header__left'>
+              {currentUserIsCoreMember && (
+                <Checkbox
+                  checked={selectingAllItems}
+                  disabled={orderedDocs.length + orderedFolders.length === 0}
+                  className={cc([
+                    'header__left__checkbox',
+                    selectingAllItems && 'header__left__checkbox--checked',
+                  ])}
+                  onChange={
+                    selectingAllItems ? unselectAllItems : selectAllItems
+                  }
+                />
+              )}
 
-            <Button
-              variant='transparent'
-              active={contentTab === 'all'}
-              onClick={() => setContentTab('all')}
-            >
-              {translate(lngKeys.GeneralAll)}
-            </Button>
-            <Button
-              variant='transparent'
-              active={contentTab === 'folders'}
-              onClick={() => setContentTab('folders')}
-            >
-              {translate(lngKeys.GeneralFolders)}
-            </Button>
-            <Button
-              variant='transparent'
-              active={contentTab === 'docs'}
-              onClick={() => setContentTab('docs')}
-            >
-              {translate(lngKeys.GeneralDocuments)}
-            </Button>
-          </div>
+              <Button
+                variant='transparent'
+                active={contentTab === 'all'}
+                onClick={() => setContentTab('all')}
+              >
+                {translate(lngKeys.GeneralAll)}
+              </Button>
+              <Button
+                variant='transparent'
+                active={contentTab === 'folders'}
+                onClick={() => setContentTab('folders')}
+              >
+                {translate(lngKeys.GeneralFolders)}
+              </Button>
+              <Button
+                variant='transparent'
+                active={contentTab === 'docs'}
+                onClick={() => setContentTab('docs')}
+              >
+                {translate(lngKeys.GeneralDocuments)}
+              </Button>
+            </div>
+          ) : (
+            <div className='header__left' />
+          )}
 
           <div className='header__right'>
             <SortingOption value={order} onChange={onChangeOrder} />
           </div>
         </StyledContentManagerHeader>
         <StyledContentManagerList>
-          {(contentTab === 'all' || contentTab === 'folders') && (
-            <>
-              <ContentManagerRow
-                label={translate(lngKeys.GeneralFolders)}
-                checked={selectingAllFolders}
-                onSelect={selectingAllFolders ? resetFolders : selectAllFolders}
-                showCheckbox={currentUserIsCoreMember}
-                type='header'
-              />
-
-              {orderedFolders.map((folder) => (
-                <ContentmanagerFolderRow
-                  folder={folder}
-                  key={folder.id}
-                  team={team}
-                  updating={updating.includes(getFolderId(folder))}
-                  setUpdating={setUpdating}
-                  checked={hasFolder(folder.id)}
-                  onSelect={() => toggleFolder(folder.id)}
-                  currentUserIsCoreMember={currentUserIsCoreMember}
+          {(contentTab === 'all' || contentTab === 'folders') &&
+            folders != null && (
+              <>
+                <ContentManagerRow
+                  label={translate(lngKeys.GeneralFolders)}
+                  checked={selectingAllFolders}
+                  onSelect={
+                    selectingAllFolders ? resetFolders : selectAllFolders
+                  }
+                  showCheckbox={currentUserIsCoreMember}
+                  type='header'
                 />
-              ))}
 
-              {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
-            </>
-          )}
+                {orderedFolders.map((folder) => (
+                  <ContentmanagerFolderRow
+                    folder={folder}
+                    key={folder.id}
+                    team={team}
+                    updating={updating.includes(getFolderId(folder))}
+                    setUpdating={setUpdating}
+                    checked={hasFolder(folder.id)}
+                    onSelect={() => toggleFolder(folder.id)}
+                    currentUserIsCoreMember={currentUserIsCoreMember}
+                  />
+                ))}
+
+                {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
+              </>
+            )}
           {(contentTab === 'all' || contentTab === 'docs') && (
             <>
               <ContentManagerRow

@@ -9,7 +9,7 @@ import { GetInitialPropsParameters } from '../../interfaces/pages'
 import { getTeamLinkHref } from '../../components/atoms/Link/TeamLink'
 import { useRouter } from '../../lib/router'
 import { topParentId } from '../../lib/mappers/topbarTree'
-import DocOnlyContentManager from '../../components/molecules/ContentManager/DocOnlyContentManager'
+import ContentManager from '../../components/molecules/ContentManager'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import { capitalize } from 'lodash'
@@ -56,7 +56,7 @@ const SharedDocsListPage = () => {
         },
       }}
     >
-      <DocOnlyContentManager
+      <ContentManager
         team={team}
         documents={sharedDocs}
         page='shared'

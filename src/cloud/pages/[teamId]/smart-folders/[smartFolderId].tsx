@@ -16,7 +16,7 @@ import {
   UpdateDateCondition,
 } from '../../../interfaces/db/smartFolder'
 import { addDays, subDays } from 'date-fns'
-import DocOnlyContentManager from '../../../components/molecules/ContentManager/DocOnlyContentManager'
+import ContentManager from '../../../components/molecules/ContentManager'
 import { getTeamIndexPageData } from '../../../api/pages/teams'
 import styled from '../../../../shared/lib/styled'
 import { localizeDate } from '../../../components/organisms/Modal/contents/SmartFolder/DocDateSelect'
@@ -287,11 +287,11 @@ const SmartFolderPage = (params: any) => {
         },
       }}
     >
-      <DocOnlyContentManager
+      <ContentManager
         team={team}
         documents={documents}
-        page='smart-folder'
         workspacesMap={workspacesMap}
+        page={'smart-folder'}
         currentUserIsCoreMember={currentUserIsCoreMember}
       />
     </Application>
