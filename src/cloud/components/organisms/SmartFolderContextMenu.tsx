@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import {
   mdiAccountCircleOutline,
   mdiAccountMultiple,
@@ -186,7 +187,6 @@ const SmartFolderContextMenu = ({
                       readOnly={true}
                       disabled={true}
                       defaultValue={condition.value}
-                      update={() => {}}
                     />
                   ),
                 }}
