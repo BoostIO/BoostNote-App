@@ -437,7 +437,10 @@ const SidebarContainer = ({
       )
     })
     generalStatus.boostHubTeams.forEach((boostHubTeam, index) => {
-      const roles = boostHubTeam.permissions.reduce(
+      const roles = (boostHubTeam.permissions != null
+        ? boostHubTeam.permissions
+        : []
+      ).reduce(
         (acc, val) => {
           if (val.role === 'viewer') {
             acc.viewers = acc.viewers + 1
