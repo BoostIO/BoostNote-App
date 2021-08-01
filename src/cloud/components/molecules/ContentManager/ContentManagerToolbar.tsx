@@ -506,22 +506,30 @@ const ContentManagerToolbar = ({
 
 const Container = styled.div`
   width: fit-content;
-  height: 40px;
+  min-height: 40px;
   background: ${({ theme }) => theme.colors.background.secondary};
-
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
-  bottom: 10px;
+  bottom: 6px;
   border-radius: ${({ theme }) => theme.borders.radius}px;
+  max-width: 96%;
 
   .cm__toolbar__wrapper {
-    padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
+    padding: ${({ theme }) => theme.sizes.spaces.sm}px
+      ${({ theme }) => theme.sizes.spaces.df}px 0
+      ${({ theme }) => theme.sizes.spaces.df}px;
     display: flex;
     align-items: center;
     height: 100%;
     flex: 0 1 auto;
+    flex-wrap: wrap;
+    justify-content: center !important;
+  }
+
+  .cm__toolbar__wrapper > * {
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 
   .cm__selection {
@@ -544,6 +552,8 @@ const Container = styled.div`
   .doc__status__select,
   .doc__assignee__select {
     margin-left: ${({ theme }) => theme.sizes.spaces.sm}px !important;
+    width: fit-content !important;
+    display: inline-flex;
   }
 
   .cm__tool,
