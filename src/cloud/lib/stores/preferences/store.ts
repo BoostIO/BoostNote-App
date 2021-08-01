@@ -24,6 +24,7 @@ const basePreferences: Preferences = {
   lastEditorEditLayout: 'split',
   workspaceManagerIsOpen: true,
   lastSidebarState: 'tree',
+  docStatusDisplayed: ['in_progress', 'paused'],
   sidebarOrderedCategories: cloudSidebaCategoryLabels.join(
     cloudSidebarOrderedCategoriesDelimiter
   ),

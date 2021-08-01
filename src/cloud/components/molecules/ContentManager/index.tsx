@@ -119,7 +119,7 @@ const ContentManager = ({
   }, [folders, removeFolder])
 
   const [statusFilterSet, setStatusFilterSet] = useState(
-    new Set<DocStatus>(['in_progress', 'paused'])
+    new Set<DocStatus>(preferences.docStatusDisplayed)
   )
 
   const orderedDocs = useMemo(() => {

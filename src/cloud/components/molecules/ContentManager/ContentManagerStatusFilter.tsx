@@ -4,6 +4,7 @@ import Button from '../../../../shared/components/atoms/Button'
 import { isChildNode } from '../../../../shared/lib/dom'
 import styled from '../../../../shared/lib/styled'
 import { DocStatus } from '../../../interfaces/db/doc'
+import { usePreferences } from '../../../lib/stores/preferences'
 import Checkbox from '../../atoms/Checkbox'
 import DocStatusIcon from '../../atoms/DocStatusIcon'
 
@@ -16,6 +17,7 @@ const ContentManagerStatusFilter = ({
   statusFilterSet,
   setStatusFilterSet,
 }: ContentManagerStatusFilterProps) => {
+  const { setPreferences } = usePreferences()
   const [
     showingStatusFilterContextMenu,
     setShowingStatusFilterContextMenu,
@@ -41,10 +43,11 @@ const ContentManagerStatusFilter = ({
         } else {
           newSet.add(status)
         }
+        setPreferences({ docStatusDisplayed: [...newSet.values()] })
         return newSet
       })
     },
-    [setStatusFilterSet]
+    [setStatusFilterSet, setPreferences]
   )
 
   useEffect(() => {
