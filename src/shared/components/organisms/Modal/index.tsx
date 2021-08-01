@@ -96,6 +96,13 @@ const ContextModalItem = ({
       }
     }
 
+    if (properties.maxHeight! < 80) {
+      properties.minHeight = 100
+      properties.maxHeight = 200
+      properties.top = undefined
+      properties.bottom = 6
+    }
+
     return properties
   }, [modal.position, windowWidth, modalWidth, windowHeight])
 
@@ -235,8 +242,8 @@ const Container = styled.div`
 
   .modal__window--context {
     border: 1px solid ${({ theme }) => theme.colors.border.main};
+    position: fixed !important;
     margin: 0 !important;
-    bottom: 0;
     right: 0;
     left: 0;
     background-color: ${({ theme }) =>
