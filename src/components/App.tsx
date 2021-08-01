@@ -194,11 +194,6 @@ const App = () => {
     }
     addIpcListener('preferences', preferencesIpcEventHandler)
 
-    const createLocalSpaceHandler = () => {
-      push('/app/storages')
-    }
-    addIpcListener('create-local-space', createLocalSpaceHandler)
-
     const createCloudSpaceHandler = () => {
       push('/app/boosthub/teams')
     }
@@ -206,7 +201,6 @@ const App = () => {
 
     return () => {
       removeIpcListener('preferences', preferencesIpcEventHandler)
-      removeIpcListener('create-local-space', createLocalSpaceHandler)
       removeIpcListener('create-cloud-space', createCloudSpaceHandler)
     }
   }, [togglePreferencesModal, push, boostHubTeamsShowPageIsActive])
