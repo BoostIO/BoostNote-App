@@ -416,7 +416,7 @@ const ContentManagerToolbar = ({
         <span className='cm__selection'>
           {selectedDocs.size + selectedFolders.size} selected
         </span>
-        {selectedDocs.size > 0 && (
+        {selectedDocs.size > 0 && selectedFolders.size === 0 && (
           <>
             <LoadingButton
               className='cm__tool'
