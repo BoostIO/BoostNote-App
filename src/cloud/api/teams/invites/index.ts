@@ -1,7 +1,6 @@
 import { callApi } from '../../../lib/client'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedTeamInvite } from '../../../interfaces/db/teamInvite'
-import report from '../../../lib/analytics'
 
 export interface GetInvitesResponseBody {
   invites: SerializedTeamInvite[]
@@ -34,7 +33,6 @@ export async function createTeamInvite(
       method: 'post',
     }
   )
-  report('create_invite', { team, invite: data.invite })
   return data
 }
 
@@ -57,9 +55,6 @@ export async function createTeamInvitesInBulk(
       method: 'post',
     }
   )
-  data.invites.forEach((invite) =>
-    report('create_invite', { team, invite: invite })
-  )
   return data
 }
 
@@ -70,6 +65,5 @@ export async function cancelTeamInvite(
   const data = await callApi(`api/teams/${team.id}/invites/${invite.id}`, {
     method: 'delete',
   })
-  report('delete_invite', { team, invite: invite })
   return data
 }

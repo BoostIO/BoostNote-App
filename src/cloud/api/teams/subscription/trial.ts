@@ -1,6 +1,5 @@
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { callApi } from '../../../lib/client'
-import report from '../../../lib/analytics'
 import { CreateSubscriptionResponseBody } from '.'
 
 export async function startTeamFreeTrial(team: SerializedTeam) {
@@ -10,6 +9,5 @@ export async function startTeamFreeTrial(team: SerializedTeam) {
       method: 'post',
     }
   )
-  report('create_free_trial')
   return data
 }

@@ -6,7 +6,6 @@ import {
 } from '../../../interfaces/db/folder'
 import { stringify } from 'querystring'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
-import report from '../../../lib/analytics'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 
 export interface CreateFolderRequestBody {
@@ -33,7 +32,6 @@ export async function createFolder(
     }
   )
 
-  report('create_folder', { team, folder: data.folder })
   return data
 }
 
@@ -67,7 +65,6 @@ export async function updateFolder(
       method: 'put',
     }
   )
-  report('update_folder')
   return data
 }
 
@@ -90,7 +87,6 @@ export async function destroyFolder(
     }
   )
 
-  report('delete_folder', { team, folder })
   return data
 }
 
@@ -105,7 +101,6 @@ export async function updateFolderEmoji(
       method: 'put',
     }
   )
-  report('update_folder')
   return data
 }
 

@@ -2,7 +2,6 @@
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { callApi } from '../../../lib/client'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
-import report from '../../../lib/analytics'
 import { UpgradePlans } from '../../../lib/stripe'
 
 export interface WithPromoCode {
@@ -52,7 +51,6 @@ export async function createSubscription(
       method: 'post',
     }
   )
-  report('create_sub')
   return data
 }
 
@@ -70,7 +68,6 @@ export async function cancelSubscription(teamId: string) {
       method: 'delete',
     }
   )
-  report('cancel_sub')
   return data
 }
 

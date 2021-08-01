@@ -1,7 +1,6 @@
 import { callApi } from '../../../lib/client'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
-import report from '../../../lib/analytics'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface DestroyPermissionResponseBody {}
@@ -14,7 +13,6 @@ export async function destroyPermission(
     `api/teams/${team.id}/permissions/${userPermissions.id}`,
     { method: 'delete' }
   )
-  report('delete_member')
   return data
 }
 
@@ -49,7 +47,6 @@ export async function createPermissions(
       method: 'post',
     }
   )
-  report('create_member')
   return data
 }
 

@@ -1,5 +1,4 @@
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
-import report from '../../../lib/analytics'
 import { callApi } from '../../../lib/client'
 
 export interface CreateFolderBookmarkResponseBody {
@@ -11,7 +10,7 @@ export async function createFolderBookmark(teamId: string, folderId: string) {
     `api/teams/${teamId}/folders/${folderId}/bookmarks`,
     { method: 'post' }
   )
-  report('create_bookmark_folder')
+
   return data
 }
 
@@ -24,6 +23,6 @@ export async function destroyFolderBookmark(teamId: string, folderId: string) {
     `api/teams/${teamId}/folders/${folderId}/bookmarks`,
     { method: 'delete' }
   )
-  report('delete_bookmark_folder')
+
   return data
 }

@@ -1,6 +1,5 @@
 import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedIcon } from '../../interfaces/db/icon'
-import report from '../../lib/analytics'
 import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
 import { callApi } from '../../lib/client'
 import { SerializedOpenInvite } from '../../interfaces/db/openInvite'
@@ -33,7 +32,6 @@ export async function createTeam(body: CreateTeamRequestBody) {
     json: body,
     method: 'post',
   })
-  report('create_team', { team: data.team })
   return data
 }
 
@@ -59,7 +57,6 @@ export async function updateTeam(id: string, body: UpdateTeamRequestBody) {
     json: body,
     method: 'put',
   })
-  report('update_team_profile')
   return data
 }
 
@@ -67,7 +64,6 @@ export async function destroyTeam(id: string) {
   const data = await callApi<DestroyTeamResponseBody>(`api/teams/${id}`, {
     method: 'delete',
   })
-  report('delete_team', { team: { id } })
   return data
 }
 
