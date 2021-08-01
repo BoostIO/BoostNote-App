@@ -179,12 +179,7 @@ const Application = ({
     <>
       {storage != null && showSearchModal && <SearchModal storage={storage} />}
       <ApplicationLayout
-        sidebar={
-          <SidebarContainer
-            workspace={storage}
-            toggleSearchScreen={() => setShowSearchScreen((prev) => !prev)}
-          />
-        }
+        sidebar={<SidebarContainer workspace={storage} />}
         pageBody={
           showSearchScreen ? (
             <LocalGlobalSearch

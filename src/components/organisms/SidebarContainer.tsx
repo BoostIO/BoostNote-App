@@ -17,14 +17,7 @@ import {
   StorageTagsRouteParams,
   useRouteParams,
 } from '../../lib/routeParams'
-import {
-  mdiCloudOffOutline,
-  mdiCog,
-  mdiLogin,
-  mdiLogout,
-  mdiMagnify,
-  mdiPlus,
-} from '@mdi/js'
+import { mdiLogin, mdiLogout, mdiPlus } from '@mdi/js'
 import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { useTranslation } from 'react-i18next'
 import { useSearchModal } from '../../lib/searchModal'
@@ -41,7 +34,6 @@ import { useLocalDB } from '../../lib/v2/hooks/local/useLocalDB'
 import { useLocalDnd } from '../../lib/v2/hooks/local/useLocalDnd'
 import { CollapsableType } from '../../lib/v2/stores/sidebarCollapse'
 import { useSidebarCollapse } from '../../lib/v2/stores/sidebarCollapse'
-import { useCloudIntroModal } from '../../lib/cloudIntroModal'
 import { mapLocalSpace } from '../../lib/v2/mappers/local/sidebarSpaces'
 import { osName } from '../../shared/lib/platform'
 import {
@@ -49,27 +41,21 @@ import {
   SidebarSpaceContentRow,
 } from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
 import { useBoostHub } from '../../lib/boosthub'
-import NewDocButton from '../molecules/NewDocButton'
 import Sidebar from '../../shared/components/organisms/Sidebar'
 import SidebarHeader, {
   SidebarControls,
 } from '../../shared/components/organisms/Sidebar/atoms/SidebarHeader'
-import SidebarButtonList from '../../shared/components/organisms/Sidebar/molecules/SidebarButtonList'
 import plur from 'plur'
 
 interface SidebarContainerProps {
   workspace?: NoteStorage
-  toggleSearchScreen: () => void
 }
 
-const SidebarContainer = ({
-  workspace,
-  toggleSearchScreen,
-}: SidebarContainerProps) => {
+const SidebarContainer = ({ workspace }: SidebarContainerProps) => {
   const { createNote, storageMap } = useDb()
   const { push, hash, pathname } = useRouter()
   const { navigate } = useStorageRouter()
-  const { preferences, openTab, togglePreferencesModal } = usePreferences()
+  const { preferences, togglePreferencesModal } = usePreferences()
   const routeParams = useRouteParams() as
     | StorageTagsRouteParams
     | StorageNotesRouteParams
@@ -95,10 +81,6 @@ const SidebarContainer = ({
   const { draggedResource, dropInDocOrFolder } = useLocalDnd()
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const [showSpaces, setShowSpaces] = useState(false)
-  const {
-    toggleShowingCloudIntroModal,
-    showingCloudIntroModal,
-  } = useCloudIntroModal()
   const usersMap = new Map<string, AppUser>()
   const [initialLoadDone] = useState(true)
   const {
@@ -540,66 +522,18 @@ const SidebarContainer = ({
   const activeSpace = spaces.find((space) => space.active)
   const sidebarHeader = useMemo(() => {
     return (
-      <>
-        <SidebarHeader
-          onSpaceClick={() => setShowSpaces(true)}
-          spaceName={activeSpace != null ? activeSpace.label : '...'}
-          spaceImage={
-            activeSpace != null && activeSpace.icon != null
-              ? activeSpace.icon
-              : undefined
-          }
-          controls={sidebarHeaderControls}
-        />
-        {workspace == null ? null : (
-          <SidebarButtonList
-            rows={[
-              {
-                label: 'Search',
-                icon: mdiMagnify,
-                variant: 'transparent',
-                labelClick: toggleSearchScreen,
-                id: 'sidebar__button__search',
-                active: false,
-              },
-              {
-                label: 'Settings',
-                icon: mdiCog,
-                variant: 'transparent',
-                labelClick: () => openTab('about'),
-                id: 'sidebar__button__members',
-              },
-            ]}
-          >
-            <NewDocButton workspace={workspace} />
-          </SidebarButtonList>
-        )}
-      </>
-    )
-  }, [
-    activeSpace,
-    openTab,
-    sidebarHeaderControls,
-    toggleSearchScreen,
-    workspace,
-  ])
-
-  const sidebarFooter = useMemo(() => {
-    return (
-      <SidebarButtonList
-        rows={[
-          {
-            label: 'Cloud Intro',
-            active: showingCloudIntroModal,
-            icon: mdiCloudOffOutline,
-            variant: 'subtle',
-            labelClick: () => toggleShowingCloudIntroModal(),
-            id: 'sidebar__button__cloud',
-          },
-        ]}
+      <SidebarHeader
+        onSpaceClick={() => setShowSpaces(true)}
+        spaceName={activeSpace != null ? activeSpace.label : '...'}
+        spaceImage={
+          activeSpace != null && activeSpace.icon != null
+            ? activeSpace.icon
+            : undefined
+        }
+        controls={sidebarHeaderControls}
       />
     )
-  }, [showingCloudIntroModal, toggleShowingCloudIntroModal])
+  }, [activeSpace, sidebarHeaderControls])
 
   return (
     <NavigatorContainer onContextMenu={openStorageContextMenu}>
@@ -610,10 +544,9 @@ const SidebarContainer = ({
         spaces={spaces}
         spaceBottomRows={spaceBottomRows}
         sidebarExpandedWidth={generalStatus.sideBarWidth}
-        tree={tree}
+        tree={[]}
         sidebarResize={sidebarResize}
         header={sidebarHeader}
-        treeBottomRows={sidebarFooter}
         users={usersMap}
       />
     </NavigatorContainer>
