@@ -1,7 +1,7 @@
 import { openNew } from './platform'
 import { format as formatUrl } from 'url'
 import { join } from 'path'
-import { getPathByName, getCookie, removeCookie, got } from './electronOnly'
+import { getPathByName, removeCookie } from './electronOnly'
 import { useCallback } from 'react'
 import { createStoreContext } from './context'
 import ky from 'ky'
@@ -9,7 +9,6 @@ import { useRouteParams } from './routeParams'
 import { useGeneralStatus } from './generalStatus'
 import { usePreferences } from './preferences'
 import { useRouter } from './router'
-import { Cookie } from 'electron/main'
 import { SerializedSubscription } from '../cloud/interfaces/db/subscription'
 import { SerializedUserTeamPermissions } from '../cloud/interfaces/db/userTeamPermissions'
 
@@ -141,28 +140,3 @@ export const {
   StoreProvider: BoostHubStoreProvider,
   useStore: useBoostHub,
 } = createStoreContext(useBoostHubStore)
-
-export async function getLegacySessionCookie(): Promise<Cookie | null> {
-  const cookies = await getCookie({
-    domain: '.boostnote.io',
-    name: 'boostnote.session',
-  })
-  return cookies[0] || null
-}
-
-export async function getDesktopAccessTokenFromSessionKey(sessionKey: string) {
-  return got
-    .post(`${boostHubBaseUrl}/api/desktop/access-tokens`, {
-      headers: {
-        cookie: `boostnote.session=${sessionKey}`,
-      },
-      json: {
-        deviceName: navigator.userAgent,
-      },
-    })
-    .json<{ token: string }>()
-}
-
-export async function flushLegacySessionCookie(): Promise<void> {
-  await removeCookie(`${boostHubBaseUrl}`, 'boostnote.session')
-}

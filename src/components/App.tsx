@@ -10,21 +10,10 @@ import CodeMirrorStyle from './CodeMirrorStyle'
 import { useEffectOnce } from 'react-use'
 import { useRouter } from '../lib/router'
 import { values, keys } from '../lib/db/utils'
-import {
-  addIpcListener,
-  removeIpcListener,
-  setCookie,
-} from '../lib/electronOnly'
+import { addIpcListener, removeIpcListener } from '../lib/electronOnly'
 import { useGeneralStatus } from '../lib/generalStatus'
 import { useBoostNoteProtocol } from '../lib/protocol'
-import {
-  useBoostHub,
-  getBoostHubTeamIconUrl,
-  getLegacySessionCookie,
-  getDesktopAccessTokenFromSessionKey,
-  flushLegacySessionCookie,
-  boostHubBaseUrl,
-} from '../lib/boosthub'
+import { useBoostHub, getBoostHubTeamIconUrl } from '../lib/boosthub'
 import {
   boostHubTeamCreateEventEmitter,
   BoostHubTeamCreateEvent,
@@ -86,34 +75,11 @@ const App = () => {
   useEffectOnce(() => {
     const fetchDesktopGlobalDataOfCloud = async () => {
       const cloudUserInfo = preferences['cloud.user']
-      let accessToken: string
       if (cloudUserInfo == null) {
-        const legacyCookie = await getLegacySessionCookie()
-        if (legacyCookie == null) {
-          return
-        }
-
-        console.info('Get a new access token from legacy session...')
-        const { token } = await getDesktopAccessTokenFromSessionKey(
-          legacyCookie.value
-        )
-        accessToken = token
-
-        await flushLegacySessionCookie()
-
-        await setCookie({
-          url: boostHubBaseUrl,
-          name: 'desktop_access_token',
-          value: token,
-          expirationDate: 4766076898395,
-        })
-
-        setGeneralStatus({
-          boostHubTeams: [],
-        })
-      } else {
-        accessToken = cloudUserInfo.accessToken
+        return
       }
+
+      const accessToken = cloudUserInfo.accessToken
 
       const desktopGlobalData = await fetchDesktopGlobalData(accessToken)
       if (desktopGlobalData.user == null) {
