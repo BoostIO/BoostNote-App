@@ -914,7 +914,7 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
           controls: [
             {
               type: 'node',
-              element: <InviteCTAButton origin='doc-page' />,
+              element: <InviteCTAButton origin='doc-page' key='invite-cta' />,
             },
             {
               type: 'separator',

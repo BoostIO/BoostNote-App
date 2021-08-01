@@ -50,7 +50,7 @@ const SharedDocsListPage = () => {
           controls: [
             {
               type: 'node',
-              element: <InviteCTAButton />,
+              element: <InviteCTAButton key='invite-cta' />,
             },
           ],
         },

@@ -83,7 +83,7 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
           controls: [
             {
               type: 'node',
-              element: <InviteCTAButton />,
+              element: <InviteCTAButton key='invite-cta' />,
             },
           ],
         },

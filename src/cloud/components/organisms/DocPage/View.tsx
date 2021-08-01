@@ -374,7 +374,7 @@ const ViewPage = ({
           controls: [
             {
               type: 'node',
-              element: <InviteCTAButton origin='doc-page' />,
+              element: <InviteCTAButton origin='doc-page' key='invite-cta' />,
             },
             {
               type: 'separator',

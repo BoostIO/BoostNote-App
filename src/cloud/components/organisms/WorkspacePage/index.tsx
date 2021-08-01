@@ -105,7 +105,9 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
             ? [
                 {
                   type: 'node',
-                  element: <InviteCTAButton origin='folder-page' />,
+                  element: (
+                    <InviteCTAButton origin='folder-page' key='invite-cta' />
+                  ),
                 },
                 {
                   type: 'button',
@@ -160,7 +162,9 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
             : [
                 {
                   type: 'node',
-                  element: <InviteCTAButton origin='folder-page' />,
+                  element: (
+                    <InviteCTAButton origin='folder-page' key='invite-cta' />
+                  ),
                 },
               ],
         },

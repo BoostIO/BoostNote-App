@@ -9,7 +9,10 @@ import FormInput from '../../../../shared/components/molecules/Form/atoms/FormIn
 import FormRowItem from '../../../../shared/components/molecules/Form/templates/FormRowItem'
 import styled from '../../../../shared/lib/styled'
 import { overflowEllipsis } from '../../../../shared/lib/styled/styleFunctions'
-import { getMapValues } from '../../../../shared/lib/utils/array'
+import {
+  getMapValues,
+  sortByAttributeAsc,
+} from '../../../../shared/lib/utils/array'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
 import { useNav } from '../../../lib/stores/nav'
@@ -53,9 +56,12 @@ const DocLabelSelectionModal = ({
 
   const matchedTags = useMemo(() => {
     const trimmed = query.trim().toLocaleLowerCase()
-    if (trimmed === '') return availableTags
-    return availableTags.filter((tag) =>
-      tag.text.toLocaleLowerCase().startsWith(trimmed)
+    if (trimmed === '') return sortByAttributeAsc('text', availableTags)
+    return sortByAttributeAsc(
+      'text',
+      availableTags.filter((tag) =>
+        tag.text.toLocaleLowerCase().startsWith(trimmed)
+      )
     )
   }, [availableTags, query])
 

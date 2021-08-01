@@ -98,7 +98,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
             controls: [
               {
                 type: 'node',
-                element: <InviteCTAButton />,
+                element: <InviteCTAButton key='invite-cta' />,
               },
             ],
           },
@@ -147,7 +147,7 @@ const TimelinePage = ({ team, events }: TimelinePageData) => {
               controls: [
                 {
                   type: 'node',
-                  element: <InviteCTAButton />,
+                  element: <InviteCTAButton key='invite-cta' />,
                 },
               ],
             },
