@@ -1146,6 +1146,11 @@ const Container = styled.div`
   flex-grow: 1;
   width: 100%;
   height: 100%;
+
+  .layout-split .scroller {
+    padding-left: 48px !important;
+    padding-right: 48px !important;
+  }
 `
 
 const StyledTopbarChildrenContainer = styled.div`

@@ -63,7 +63,7 @@ const Container = styled.div`
 
   .editor__layout__content {
     flex: 1 1 auto;
-    overflow-y: auto;
+    overflow: visible;
     height: 0px;
   }
 
