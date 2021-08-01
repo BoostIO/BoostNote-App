@@ -7,11 +7,15 @@ import {
   destroyDoc,
   DestroyDocResponseBody,
   updateDoc,
+  updateDocAssignees,
+  UpdateDocAssigneesResponseBody,
   updateDocEmoji,
   UpdateDocRequestBody,
   UpdateDocResponseBody,
   updateDocStatus,
   UpdateDocStatusResponseBody,
+  updateDocDueDate,
+  UpdateDocDueDateResponseBody,
 } from '../../api/teams/docs'
 import {
   createDocBookmark,
@@ -44,7 +48,7 @@ import {
   destroyWorkspace,
   DestroyWorkspaceResponseBody,
 } from '../../api/teams/workspaces'
-import { SerializedDoc } from '../../interfaces/db/doc'
+import { DocStatus, SerializedDoc } from '../../interfaces/db/doc'
 import { SerializedFolder } from '../../interfaces/db/folder'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { useRouter } from '../router'
@@ -60,6 +64,8 @@ import useBulkApi from '../../../shared/lib/hooks/useBulkApi'
 import { getMapFromEntityArray } from '../../../shared/lib/utils/array'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { deleteSmartFolder } from '../../api/teams/smart-folder'
+
+import { format as formatDate } from 'date-fns'
 
 export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
@@ -333,6 +339,61 @@ export function useCloudApi() {
     ]
   )
 
+  const updateDocAssigneeApi = useCallback(
+    async (target: SerializedDoc, newAssignees: string[]) => {
+      await send(target.id, 'assignees', {
+        api: () => updateDocAssignees(target.teamId, target.id, newAssignees),
+        cb: ({ doc }: UpdateDocAssigneesResponseBody) => {
+          updateDocsMap([doc.id, doc])
+
+          if (pageDoc != null && doc.id === pageDoc.id) {
+            setPartialPageData({ pageDoc: doc })
+          }
+        },
+      })
+    },
+    [pageDoc, updateDocsMap, setPartialPageData, send]
+  )
+
+  const updateDocStatusApi = useCallback(
+    async (target: SerializedDoc, newStatus: DocStatus | null) => {
+      await send(target.id, 'assignees', {
+        api: () => updateDocStatus(target.teamId, target.id, newStatus),
+        cb: ({ doc }: UpdateDocAssigneesResponseBody) => {
+          updateDocsMap([doc.id, doc])
+
+          if (pageDoc != null && doc.id === pageDoc.id) {
+            setPartialPageData({ pageDoc: doc })
+          }
+        },
+      })
+    },
+    [pageDoc, updateDocsMap, setPartialPageData, send]
+  )
+
+  const updateDocDueDateApi = useCallback(
+    async (target: SerializedDoc, newDate: Date | null) => {
+      await send(target.id, 'duedate', {
+        api: () =>
+          updateDocDueDate(
+            target.teamId,
+            target.id,
+            newDate != null
+              ? new Date(formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z')
+              : null
+          ),
+        cb: ({ doc }: UpdateDocDueDateResponseBody) => {
+          updateDocsMap([doc.id, doc])
+
+          if (pageDoc != null && doc.id === pageDoc.id) {
+            setPartialPageData({ pageDoc: doc })
+          }
+        },
+      })
+    },
+    [pageDoc, updateDocsMap, setPartialPageData, send]
+  )
+
   const updateDocEmojiApi = useCallback(
     async (target: SerializedDoc, emoji?: string) => {
       await send(target.id, 'emoji', {
@@ -518,5 +579,8 @@ export function useCloudApi() {
     deleteFolderApi,
     deleteDocApi,
     deleteSmartFolder: deleteSmartFolderApi,
+    updateDocAssigneeApi,
+    updateDocStatusApi,
+    updateDocDueDateApi,
   }
 }

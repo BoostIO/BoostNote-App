@@ -36,7 +36,7 @@ const DocStatusSelect = ({
 }: DocStatusSelectProps) => {
   const { popup } = useContextMenu()
   return (
-    <Container className='prop__margin'>
+    <Container className='doc__status__select prop__margin'>
       <DocPropertyValueButton
         sending={sending}
         isReadOnly={isReadOnly}

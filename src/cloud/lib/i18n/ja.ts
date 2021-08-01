@@ -467,6 +467,8 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SettingsRolesRestrictedTitle]: 'この権限は制限されています。',
   [lngKeys.SettingsRolesRestrictedDescription]:
     'メンバー権限を変更するためには、有料プランを購入する必要があります。アップグレードをご検討いただけますと幸いです。',
+
+  [lngKeys.GeneralDocuments]: 'Documents',
 }
 
 export default {

@@ -56,7 +56,7 @@ const DocAssigneeSelect = ({
   }, [defaultValue, permissions])
 
   return (
-    <Container className='prop__margin'>
+    <Container className='doc__assignee__select prop__margin'>
       <DocPropertyValueButton
         disabled={disabled}
         sending={isLoading}

@@ -4,7 +4,7 @@ import { SerializedTeam } from '../../../../../interfaces/db/team'
 import TagsAutoCompleteInput from './TagsAutoCompleteInput'
 import { deleteTagFromDoc } from '../../../../../api/teams/docs/tags'
 import { useNav } from '../../../../../lib/stores/nav'
-import DocTagsListItem from './DocTagsListItem'
+import DocTagsListItem from '../../../../atoms/DocTagsListItem'
 import { SerializedTag } from '../../../../../interfaces/db/tag'
 import { mdiChevronRight, mdiChevronDown, mdiLabelOutline } from '@mdi/js'
 import { useToast } from '../../../../../../shared/lib/stores/toast'
@@ -64,11 +64,10 @@ const DocTagsList = ({ doc, team, readOnly }: DocTagsListProps) => {
           <DocTagsListItem
             tag={tag}
             team={team}
-            onDeleteHandler={onDeleteHandler}
+            onDeleteHandler={!readOnly ? onDeleteHandler : undefined}
             removing={removing}
             sending={sending}
             key={tag.id}
-            removable={!readOnly}
           />
         ))}
       </>

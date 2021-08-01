@@ -257,6 +257,10 @@ const Container = styled.div`
     min-width: 0;
   }
 
+  .topbar__controls > * {
+    margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px !important;
+  }
+
   .topbar__controls,
   .topbar__navigation,
   .topbar__separator {

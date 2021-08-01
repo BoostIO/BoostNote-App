@@ -7,6 +7,7 @@ import { lngKeys } from '../../../lib/i18n/types'
 import MetadataContainer from '../../../../shared/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../shared/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
+import { useModal } from '../../../../shared/lib/stores/modal'
 
 interface FolderContextMenuProps {
   currentFolder: SerializedFolderWithBookmark
@@ -18,8 +19,8 @@ const FolderContextMenu = ({
   currentUserIsCoreMember,
 }: FolderContextMenuProps) => {
   const { toggleFolderBookmark, sendingMap } = useCloudApi()
-  const { deleteFolder } = useCloudResourceModals()
-  const { openRenameFolderForm } = useCloudResourceModals()
+  const { deleteFolder, openRenameFolderForm } = useCloudResourceModals()
+  const { closeAllModals } = useModal()
   const { translate } = useI18n()
 
   return (
@@ -67,7 +68,10 @@ const FolderContextMenu = ({
               id: 'metadata-delete',
               label: translate(lngKeys.GeneralDelete),
               iconPath: mdiTrashCan,
-              onClick: () => deleteFolder(currentFolder),
+              onClick: () => {
+                closeAllModals()
+                deleteFolder(currentFolder)
+              },
             },
           }}
         />

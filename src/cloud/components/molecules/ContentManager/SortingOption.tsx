@@ -83,7 +83,7 @@ const StyledSortingOption = styled.div`
 
   .select__control {
     flex-wrap: inherit;
-    width: 52px;
+    width: 32px;
     min-height: 32px;
     height: 34px;
     border: 0 !important;
@@ -93,7 +93,7 @@ const StyledSortingOption = styled.div`
 
     .select__single-value,
     .select__dropdown-indicator {
-      color: ${({ theme }) => theme.colors.text.primary} !important;
+      color: ${({ theme }) => theme.colors.text.subtle} !important;
       transition: color 150ms;
 
       .select__option__icon {
@@ -128,6 +128,10 @@ const StyledSortingOption = styled.div`
     width: 180px;
     background-color: ${({ theme }) => theme.colors.background.primary};
     box-shadow: ${({ theme }) => theme.colors.shadow};
+  }
+
+  .select__indicators {
+    display: none;
   }
 
   .select__option {

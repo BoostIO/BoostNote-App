@@ -15,6 +15,7 @@ interface DocDueDateSelectProps {
   dueDate?: string | null
   onDueDateChange: (newDueDate: Date | null) => void
   disabled?: boolean
+  shortenedLabel?: boolean
 }
 
 const DocDueDateSelect = ({
@@ -22,6 +23,7 @@ const DocDueDateSelect = ({
   sending,
   disabled,
   isReadOnly,
+  shortenedLabel,
   dueDate: dueDateString,
   onDueDateChange,
 }: DocDueDateSelectProps) => {
@@ -35,7 +37,7 @@ const DocDueDateSelect = ({
   }, [dueDateString])
 
   return (
-    <Container className='prop__margin'>
+    <Container className='doc__due-date__select prop__margin'>
       <DatePicker
         wrapperClassName={className}
         disabled={sending || disabled}
@@ -51,6 +53,8 @@ const DocDueDateSelect = ({
           >
             {dueDate != null
               ? formatDate(dueDate, 'MMM dd, yyyy')
+              : shortenedLabel
+              ? translate(lngKeys.DueDate)
               : translate(lngKeys.AddDueDate)}
           </DocPropertyValueButton>
         }

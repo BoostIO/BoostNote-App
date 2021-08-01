@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useEffect,
-  useRef,
-  FocusEvent,
-} from 'react'
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import {
   SerializedDocWithBookmark,
   DocStatus,
@@ -18,7 +11,7 @@ import {
 } from '../../../lib/utils/array'
 import { getDocTitle, getDocId, getFolderId } from '../../../lib/utils/patterns'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
-import { StyledContentManager, StyledContentManagerList } from './styled'
+import { StyledContentManagerList } from './styled'
 import Checkbox from '../../atoms/Checkbox'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { CustomSelectOption } from '../../atoms/Select/CustomSelect'
@@ -27,21 +20,17 @@ import ContentManagerDocRow from './Rows/ContentManagerDocRow'
 import ContentmanagerFolderRow from './Rows/ContentManagerFolderRow'
 import { difference } from 'ramda'
 import ContentManagerBulkActions from './Actions/ContentManagerBulkActions'
-import {
-  mdiTextBoxPlus,
-  mdiFolderPlusOutline,
-  mdiFormatListChecks,
-} from '@mdi/js'
-import Button, {
-  LoadingButton,
-} from '../../../../shared/components/atoms/Button'
+import Button from '../../../../shared/components/atoms/Button'
 import styled from '../../../../shared/lib/styled'
-import DocStatusIcon from '../../atoms/DocStatusIcon'
-import { isChildNode } from '../../../../shared/lib/dom'
 import { usePreferences } from '../../../lib/stores/preferences'
 import EmptyRow from './Rows/EmptyRow'
 import cc from 'classcat'
-import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
+import ContentManagerRow from './Rows/ContentManagerRow'
+import { lngKeys } from '../../../lib/i18n/types'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import ContentManagerCell from './ContentManagerCell'
+import Flexbox from '../../../../shared/components/atoms/Flexbox'
+import ContentManagerStatusFilter from './ContentManagerStatusFilter'
 
 export type ContentManagerParent =
   | { type: 'folder'; item: SerializedFolderWithBookmark }
@@ -52,12 +41,11 @@ type ContentTab = 'all' | 'folders' | 'docs'
 interface ContentManagerProps {
   team: SerializedTeam
   documents: SerializedDocWithBookmark[]
-  folders: SerializedFolderWithBookmark[]
+  folders?: SerializedFolderWithBookmark[]
   workspacesMap: Map<string, SerializedWorkspace>
   currentUserIsCoreMember: boolean
   currentWorkspaceId?: string
   currentFolderId?: string
-  showCreateButtons?: boolean
   page?: 'archive' | 'tag' | 'shared'
 }
 
@@ -67,20 +55,14 @@ const ContentManager = ({
   folders,
   page,
   workspacesMap,
-  currentFolderId,
-  currentWorkspaceId,
   currentUserIsCoreMember,
-  showCreateButtons = currentUserIsCoreMember ? true : false,
 }: ContentManagerProps) => {
   const { preferences, setPreferences } = usePreferences()
-  const [sendingAction, setSendingAction] = useState<
-    'new-doc' | 'new-folder' | undefined
-  >()
   const [contentTab, setContentTab] = useState<ContentTab>('all')
-  const { openNewDocForm, openNewFolderForm } = useCloudResourceModals()
   const [order, setOrder] = useState<typeof sortingOrders[number]['data']>(
     preferences.folderSortingOrder
   )
+  const { translate } = useI18n()
 
   const [
     selectedFolderSet,
@@ -110,7 +92,7 @@ const ContentManager = ({
   )
   const currentFoldersRef = useRef(
     new Map<string, SerializedFolderWithBookmark>(
-      folders.map((folder) => [folder.id, folder])
+      (folders || []).map((folder) => [folder.id, folder])
     )
   )
   const [updating, setUpdating] = useState<string[]>([])
@@ -126,7 +108,7 @@ const ContentManager = ({
   }, [documents, removeDoc])
 
   useEffect(() => {
-    const newMap = new Map(folders.map((folder) => [folder.id, folder]))
+    const newMap = new Map((folders || []).map((folder) => [folder.id, folder]))
     const idsToClean: string[] = difference(
       [...currentFoldersRef.current.keys()],
       [...newMap.keys()]
@@ -169,6 +151,10 @@ const ContentManager = ({
   }, [order, documents, statusFilterSet])
 
   const orderedFolders = useMemo(() => {
+    if (folders == null) {
+      return []
+    }
+
     switch (order) {
       case 'Title A-Z':
         return sortByAttributeAsc('name', folders)
@@ -179,18 +165,6 @@ const ContentManager = ({
         return sortByAttributeDesc('updatedAt', folders)
     }
   }, [order, folders])
-
-  const toggleStatusFilter = useCallback((status: DocStatus) => {
-    setStatusFilterSet((previousSet) => {
-      const newSet = new Set(previousSet)
-      if (newSet.has(status)) {
-        newSet.delete(status)
-      } else {
-        newSet.add(status)
-      }
-      return newSet
-    })
-  }, [])
 
   const selectingAllDocs = useMemo(() => {
     return orderedDocs.length > 0 && orderedDocs.every((doc) => hasDoc(doc.id))
@@ -234,64 +208,8 @@ const ContentManager = ({
     [setPreferences]
   )
 
-  const [
-    showingStatusFilterContextMenu,
-    setShowingStatusFilterContextMenu,
-  ] = useState(false)
-
-  const filterMenuRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (filterMenuRef.current == null) {
-      return
-    }
-    if (!showingStatusFilterContextMenu) {
-      return
-    }
-    filterMenuRef.current.focus()
-  }, [showingStatusFilterContextMenu])
-
-  const handleStatusFilterContextMenuBlur = useCallback(
-    (event: FocusEvent<HTMLDivElement>) => {
-      if (!isChildNode(event.target, event.relatedTarget as Node)) {
-        setShowingStatusFilterContextMenu(false)
-      }
-    },
-    []
-  )
-
-  const openCreateDocForm = useCallback(() => {
-    openNewDocForm(
-      {
-        team,
-        workspaceId: currentWorkspaceId,
-        parentFolderId: currentFolderId,
-      },
-      {
-        precedingRows: [],
-        beforeSubmitting: () => setSendingAction('new-doc'),
-        afterSubmitting: () => setSendingAction(undefined),
-      }
-    )
-  }, [openNewDocForm, currentWorkspaceId, currentFolderId, team])
-
-  const openCreateFolderForm = useCallback(() => {
-    openNewFolderForm(
-      {
-        team,
-        workspaceId: currentWorkspaceId,
-        parentFolderId: currentFolderId,
-      },
-      {
-        precedingRows: [],
-        beforeSubmitting: () => setSendingAction('new-folder'),
-        afterSubmitting: () => setSendingAction(undefined),
-      }
-    )
-  }, [openNewFolderForm, currentWorkspaceId, currentFolderId, team])
-
   return (
-    <StyledContentManager>
+    <Container>
       <StyledContentManagerHeader>
         <div className='header__left'>
           {currentUserIsCoreMember && (
@@ -311,21 +229,21 @@ const ContentManager = ({
             active={contentTab === 'all'}
             onClick={() => setContentTab('all')}
           >
-            ALL
+            {translate(lngKeys.GeneralAll)}
           </Button>
           <Button
             variant='transparent'
             active={contentTab === 'folders'}
             onClick={() => setContentTab('folders')}
           >
-            FOLDERS
+            {translate(lngKeys.GeneralFolders)}
           </Button>
           <Button
             variant='transparent'
             active={contentTab === 'docs'}
             onClick={() => setContentTab('docs')}
           >
-            DOCUMENTS
+            {translate(lngKeys.GeneralDocuments)}
           </Button>
 
           {currentUserIsCoreMember && (
@@ -349,34 +267,14 @@ const ContentManager = ({
       <StyledContentManagerList>
         {(contentTab === 'all' || contentTab === 'folders') && (
           <>
-            <StyledContentManagerListHeader>
-              {currentUserIsCoreMember && (
-                <Checkbox
-                  className={cc([
-                    'header__checkbox',
-                    selectingAllFolders && 'header__checkbox--checked',
-                  ])}
-                  checked={selectingAllFolders}
-                  onChange={
-                    selectingAllFolders ? resetFolders : selectAllFolders
-                  }
-                />
-              )}
-              <div className='header__label'>FOLDERS</div>
-              {showCreateButtons && (
-                <div className='header__control'>
-                  <LoadingButton
-                    variant='transparent'
-                    className='header__control__button'
-                    iconPath={mdiFolderPlusOutline}
-                    iconSize={16}
-                    spinning={sendingAction === 'new-folder'}
-                    disabled={sendingAction != null}
-                    onClick={openCreateFolderForm}
-                  />
-                </div>
-              )}
-            </StyledContentManagerListHeader>
+            <ContentManagerRow
+              label={translate(lngKeys.GeneralFolders)}
+              checked={selectingAllFolders}
+              onSelect={selectingAllFolders ? resetFolders : selectAllFolders}
+              showCheckbox={currentUserIsCoreMember}
+              type='header'
+            />
+
             {orderedFolders.map((folder) => (
               <ContentmanagerFolderRow
                 folder={folder}
@@ -395,124 +293,34 @@ const ContentManager = ({
         )}
         {(contentTab === 'all' || contentTab === 'docs') && (
           <>
-            <StyledContentManagerListHeader>
-              {currentUserIsCoreMember && (
-                <Checkbox
-                  className={cc([
-                    'header__checkbox',
-                    selectingAllDocs && 'header__checkbox--checked',
-                  ])}
-                  checked={selectingAllDocs}
-                  onChange={selectingAllDocs ? resetDocs : selectAllDocs}
-                />
-              )}
-              <div className='header__label'>DOCUMENTS</div>
-              <div className='header__control'>
-                <Button
-                  variant='transparent'
-                  className='header__control__button'
-                  iconPath={mdiFormatListChecks}
-                  iconSize={16}
-                  onClick={() => setShowingStatusFilterContextMenu(true)}
-                />
-                {showCreateButtons && (
-                  <LoadingButton
-                    variant='transparent'
-                    className='header__control__button'
-                    iconPath={mdiTextBoxPlus}
-                    iconSize={16}
-                    spinning={sendingAction === 'new-doc'}
-                    disabled={sendingAction != null}
-                    onClick={openCreateDocForm}
+            <ContentManagerRow
+              label={translate(lngKeys.GeneralDocuments)}
+              checked={selectingAllDocs}
+              onSelect={selectingAllDocs ? resetDocs : selectAllDocs}
+              showCheckbox={currentUserIsCoreMember}
+              type='header'
+              className={cc([
+                folders != null &&
+                  contentTab === 'all' &&
+                  'content__manager__list__header--margin',
+              ])}
+            >
+              <ContentManagerCell>
+                {translate(lngKeys.Assignees)}
+              </ContentManagerCell>
+              <ContentManagerCell>
+                <Flexbox justifyContent='space-between' flex='1 1 auto'>
+                  <span>{translate(lngKeys.GeneralStatus)}</span>
+                  <ContentManagerStatusFilter
+                    statusFilterSet={statusFilterSet}
+                    setStatusFilterSet={setStatusFilterSet}
                   />
-                )}
-              </div>
-              {showingStatusFilterContextMenu && (
-                <div
-                  className='header__filter-menu'
-                  ref={filterMenuRef}
-                  onBlur={handleStatusFilterContextMenuBlur}
-                  tabIndex={-1}
-                >
-                  <div className='header__filter-menu__menu-item'>
-                    <Checkbox
-                      className='header__filter-menu__menu-item__checkbox'
-                      checked={statusFilterSet.has('in_progress')}
-                      onChange={() => toggleStatusFilter('in_progress')}
-                      label={
-                        <div className='header__filter-menu__menu-item__checkbox__label'>
-                          <DocStatusIcon
-                            className='header__filter-menu__menu-item__checkbox__label__icon'
-                            size={16}
-                            status='in_progress'
-                          />
-                          <div className='header__filter-menu__menu-item__checkbox__label__text'>
-                            In Progress
-                          </div>
-                        </div>
-                      }
-                    />
-                  </div>
-                  <div className='header__filter-menu__menu-item'>
-                    <Checkbox
-                      className='header__filter-menu__menu-item__checkbox'
-                      checked={statusFilterSet.has('paused')}
-                      onChange={() => toggleStatusFilter('paused')}
-                      label={
-                        <div className='header__filter-menu__menu-item__checkbox__label'>
-                          <DocStatusIcon
-                            className='header__filter-menu__menu-item__checkbox__label__icon'
-                            size={16}
-                            status='paused'
-                          />
-                          <div className='header__filter-menu__menu-item__checkbox__label__text'>
-                            Paused
-                          </div>
-                        </div>
-                      }
-                    />
-                  </div>
-                  <div className='header__filter-menu__menu-item'>
-                    <Checkbox
-                      className='header__filter-menu__menu-item__checkbox'
-                      checked={statusFilterSet.has('completed')}
-                      onChange={() => toggleStatusFilter('completed')}
-                      label={
-                        <div className='header__filter-menu__menu-item__checkbox__label'>
-                          <DocStatusIcon
-                            className='header__filter-menu__menu-item__checkbox__label__icon'
-                            size={16}
-                            status='completed'
-                          />
-                          <div className='header__filter-menu__menu-item__checkbox__label__text'>
-                            Completed
-                          </div>
-                        </div>
-                      }
-                    />
-                  </div>
-                  <div className='header__filter-menu__menu-item'>
-                    <Checkbox
-                      className='header__filter-menu__menu-item__checkbox'
-                      checked={statusFilterSet.has('archived')}
-                      onChange={() => toggleStatusFilter('archived')}
-                      label={
-                        <div className='header__filter-menu__menu-item__checkbox__label'>
-                          <DocStatusIcon
-                            className='header__filter-menu__menu-item__checkbox__label__icon'
-                            size={16}
-                            status='archived'
-                          />
-                          <div className='header__filter-menu__menu-item__checkbox__label__text'>
-                            Archived
-                          </div>
-                        </div>
-                      }
-                    />
-                  </div>
-                </div>
-              )}
-            </StyledContentManagerListHeader>
+                </Flexbox>
+              </ContentManagerCell>
+              <ContentManagerCell>
+                {translate(lngKeys.DueDate)}
+              </ContentManagerCell>
+            </ContentManagerRow>
             {orderedDocs.map((doc) => (
               <ContentManagerDocRow
                 doc={doc}
@@ -531,17 +339,33 @@ const ContentManager = ({
           </>
         )}
       </StyledContentManagerList>
-    </StyledContentManager>
+    </Container>
   )
 }
 
-export default ContentManager
+export default React.memo(ContentManager)
+
+const Container = styled.div`
+  display: block;
+  width: 100%;
+
+  .content__manager__list__header--margin {
+    margin-top: ${({ theme }) => theme.sizes.spaces.l}px !important;
+  }
+`
 
 export const StyledContentManagerHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 ${({ theme }) => theme.sizes.spaces.l}px;
+  padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
+  padding-right: 0;
+  height: 40px;
+
+  button {
+    font-size: ${({ theme }) => theme.sizes.fonts.md}px !important;
+    text-transform: uppercase !important;
+  }
 
   .header__left {
     display: flex;
@@ -552,7 +376,7 @@ export const StyledContentManagerHeader = styled.div`
     align-items: center;
   }
   .header__left__checkbox {
-    margin-right: 8px;
+    margin-right: 5px;
     opacity: 0;
     &.header__left__checkbox--checked {
       opacity: 1;
@@ -563,70 +387,5 @@ export const StyledContentManagerHeader = styled.div`
     .header__left__checkbox {
       opacity: 1;
     }
-  }
-`
-
-export const StyledContentManagerListHeader = styled.div`
-  width: 100%;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  background-color: ${({ theme }) => theme.colors.background.secondary};
-  position: relative;
-  padding: 0 ${({ theme }) => theme.sizes.spaces.l}px;
-
-  .header__label {
-    flex: 1;
-    line-height: 24px;
-  }
-
-  .header__checkbox {
-    opacity: 0;
-    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
-
-    &.header__checkbox--checked {
-      opacity: 1;
-    }
-  }
-
-  &:hover {
-    .header__checkbox {
-      opacity: 1;
-    }
-  }
-  .header__control {
-  }
-
-  .header__control__button {
-    background-color: transparent;
-    height: 24px;
-  }
-
-  .header__filter-menu {
-    top: 28px;
-    right: 4px;
-    width: 140px;
-    z-index: 1;
-    position: absolute;
-    background-color: ${({ theme }) => theme.colors.background.primary};
-    border: solid 1px ${({ theme }) => theme.colors.border.main};
-  }
-
-  .header__filter-menu__menu-item {
-    display: flex;
-    align-items: center;
-    height: 32px;
-    padding: 0 4px;
-  }
-  .header__filter-menu__menu-item__checkbox {
-    height: 100%;
-    width: 100%;
-  }
-  .header__filter-menu__menu-item__checkbox__label {
-    display: flex;
-    align-items: center;
-  }
-  .header__filter-menu__menu-item__checkbox__label__icon {
-    margin-right: 4px;
   }
 `

@@ -1,40 +1,54 @@
 import React from 'react'
-import { SerializedTeam } from '../../../../../interfaces/db/team'
+import { SerializedTeam } from '../../interfaces/db/team'
 import { mdiClose } from '@mdi/js'
 import cc from 'classcat'
-import TagLink from '../../../../atoms/Link/TagLink'
-import { SerializedTag } from '../../../../../interfaces/db/tag'
-import styled from '../../../../../../shared/lib/styled'
-import { LoadingButton } from '../../../../../../shared/components/atoms/Button'
+import TagLink from './Link/TagLink'
+import { SerializedTag } from '../../interfaces/db/tag'
+import styled from '../../../shared/lib/styled'
+import { LoadingButton } from '../../../shared/components/atoms/Button'
 
 interface DocTagsListItemProps {
   tag: SerializedTag
+  showLink?: boolean
   team: SerializedTeam
-  sending: boolean
-  removing: string | undefined
-  onDeleteHandler: (tagId: string) => void
-  removable?: boolean
+  sending?: boolean
+  removing?: string
+  className?: string
+  onDeleteHandler?: (tagId: string) => void
 }
 
 const DocTagsListItem = ({
   team,
   tag,
+  className,
+  showLink = true,
   sending,
   onDeleteHandler,
   removing,
-  removable = true,
 }: DocTagsListItemProps) => {
   return (
-    <Container key={tag.id} className='doc__tags__list__item'>
-      <TagLink
-        tag={tag}
-        team={team}
-        className='doc__tags__list__item__link'
-        tabIndex={-1}
-      >
-        {tag.text}
-      </TagLink>
-      {removable && (
+    <Container
+      key={tag.id}
+      className={cc(['doc__tags__list__item', className])}
+    >
+      {showLink ? (
+        <TagLink
+          tag={tag}
+          team={team}
+          className='doc__tags__list__item__link'
+          tabIndex={-1}
+        >
+          {tag.text}
+        </TagLink>
+      ) : (
+        <span
+          className='doc__tags__list__item__link doc__tags__list__item__link--text'
+          tabIndex={-1}
+        >
+          {tag.text}
+        </span>
+      )}
+      {onDeleteHandler != null && (
         <LoadingButton
           variant='icon'
           spinning={removing === tag.id}
@@ -53,7 +67,7 @@ const DocTagsListItem = ({
 }
 
 const Container = styled.div`
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   padding: 2px 5px;
   position: relative;
@@ -65,6 +79,8 @@ const Container = styled.div`
   vertical-align: middle;
   height: 32px;
   align-items: center;
+  flex: 0 1 auto;
+  width: fit-content;
 
   .doc__tags__list__item__remove {
     display: inline-block;
@@ -76,7 +92,7 @@ const Container = styled.div`
       color: ${({ theme }) => theme.colors.text.primary};
     }
 
-    &disabled {
+    &:disabled {
       pointer-events: none;
     }
 
@@ -95,8 +111,8 @@ const Container = styled.div`
     cursor: pointer;
     color: ${({ theme }) => theme.colors.text.primary};
     text-decoration: none;
-    &:hover,
-    &:focus {
+    &:not(.doc__tags__list__item__link--text):hover,
+    &:not(.doc__tags__list__item__link--text):focus {
       opacity: 0.8;
     }
   }

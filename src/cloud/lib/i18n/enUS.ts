@@ -465,6 +465,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsRolesRestrictedTitle]: 'This role is restricted',
   [lngKeys.SettingsRolesRestrictedDescription]:
     'In order to promote the user to this specific role, your space needs to have an active subscription. Please consider upgrading your plan.',
+
+  [lngKeys.GeneralDocuments]: 'Documents',
 }
 
 export default {

@@ -71,7 +71,6 @@ const ArchivedPage = () => {
         folders={[]}
         page='archive'
         workspacesMap={workspacesMap}
-        showCreateButtons={false}
         currentUserIsCoreMember={currentUserIsCoreMember}
       />
     </Application>

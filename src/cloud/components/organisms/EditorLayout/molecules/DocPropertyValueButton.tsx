@@ -42,6 +42,7 @@ const DocPropertyValueButton = forwardRef<
         onClick={onClick}
         id={id}
         className={cc([
+          'doc__property__button',
           empty && 'doc__property__button--empty',
           isReadOnly && 'doc__property__button--readOnly',
           className,
