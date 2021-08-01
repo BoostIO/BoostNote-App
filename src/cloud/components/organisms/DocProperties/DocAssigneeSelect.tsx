@@ -1,8 +1,8 @@
-import React, { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useState, useMemo, useRef } from 'react'
 import { usePage } from '../../../lib/stores/pageStore'
 import styled from '../../../../shared/lib/styled'
 import UserIcon from '../../atoms/UserIcon'
-import { textOverflow } from '../../../../shared/lib/styled/styleFunctions'
+import { overflowEllipsis } from '../../../../shared/lib/styled/styleFunctions'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
 import DocPropertyValueButton from './DocPropertyValueButton'
@@ -10,7 +10,12 @@ import { mdiAccountCircleOutline } from '@mdi/js'
 import { useModal } from '../../../../shared/lib/stores/modal'
 import Checkbox from '../../../../shared/components/molecules/Form/atoms/FormCheckbox'
 import Form from '../../../../shared/components/molecules/Form'
-import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
+import UpDownList from '../../../../shared/components/atoms/UpDownList'
+import FormInput from '../../../../shared/components/molecules/Form/atoms/FormInput'
+import { useEffectOnce } from 'react-use'
+import VerticalScroller from '../../../../shared/components/atoms/VerticalScroller'
+import Button from '../../../../shared/components/atoms/Button'
+import FormRowItem from '../../../../shared/components/molecules/Form/templates/FormRowItem'
 
 interface DocAssigneeSelectProps {
   disabled?: boolean
@@ -78,7 +83,6 @@ const DocAssigneeSelect = ({
             {
               alignment: popupAlignment,
               width: 300,
-              maxHeight: popupAlignment === 'top-left' ? 330 : undefined,
             }
           )
         }
@@ -119,6 +123,7 @@ const DocAssigneeModal = ({
   const { permissions = [] } = usePage()
   const [value, setValue] = useState<string[]>(selectedUsers)
   const { translate } = useI18n()
+  const [query, setQuery] = useState<string>('')
 
   const toggleUser = useCallback((userId: string) => {
     setValue((prev) => {
@@ -132,76 +137,125 @@ const DocAssigneeModal = ({
     })
   }, [])
 
+  const matchedUsers = useMemo(() => {
+    const trimmed = query.trim().toLocaleLowerCase()
+    if (trimmed === '') {
+      return permissions.map((p) => p.user)
+    }
+
+    return permissions
+      .filter((p) => p.user.displayName.toLocaleLowerCase().includes(trimmed))
+      .map((p) => p.user)
+  }, [permissions, query])
+
+  const inputRef = useRef<HTMLInputElement>(null)
+  useEffectOnce(() => {
+    inputRef.current!.focus()
+  })
+
   return (
     <ModalContainer>
       <Form
         onSubmit={() => submitUpdate(value)}
         onCancel={closeModal}
         className='assignee__form'
-        submitButton={{
-          label: translate(lngKeys.GeneralSaveVerb),
-          variant: 'secondary',
-          id: 'assignee-submit-button',
-          tabIndex: 0,
-        }}
       >
-        {permissions.map((p) => {
-          return (
-            <FormRow row={{}} className='assignee__item' key={p.userId}>
-              <button
-                className='assignee__item__wrapper'
-                onClick={() => toggleUser(p.userId)}
-                id={`assignee__item__${p.userId}`}
-                tabIndex={0}
-                type='button'
-              >
-                <UserIcon user={p.user} className='assignee__item__icon' />
-                <span className='assignee__item__label'>
-                  {p.user.displayName}
-                </span>
-                <Checkbox
-                  checked={value.includes(p.userId)}
-                  className='assignee__checkbox'
-                />
-              </button>
-            </FormRow>
-          )
-        })}
+        <UpDownList ignoreFocus={true}>
+          <FormRowItem>
+            <FormInput
+              ref={inputRef}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={translate(lngKeys.GeneralSearchVerb)}
+              id='selection__input'
+            />
+          </FormRowItem>
+          <VerticalScroller className='selection__wrapper'>
+            {matchedUsers.map((user) => {
+              return (
+                <div className='selection__item' key={user.id}>
+                  <button
+                    className='selection__item__wrapper'
+                    onClick={() => toggleUser(user.id)}
+                    id={`selection__item__${user.id}`}
+                    tabIndex={0}
+                    type='button'
+                  >
+                    <UserIcon user={user} className='assignee__item__icon' />
+                    <span className='selection__label'>{user.displayName}</span>
+                    <Checkbox
+                      checked={value.includes(user.id)}
+                      className='selection__checkbox'
+                    />
+                  </button>
+                </div>
+              )
+            })}
+          </VerticalScroller>
+          <div className='selection__break' />
+          <Button
+            type='submit'
+            variant='transparent'
+            className='selection__submit'
+            id='selection__submit'
+            size='sm'
+          >
+            {translate(lngKeys.GeneralSaveVerb)}
+          </Button>
+        </UpDownList>
       </Form>
     </ModalContainer>
   )
 }
 
 const ModalContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  .assignee__form,
-  .assignee__item,
-  .assignee__item__wrapper {
-    width: 100%;
-    flex: 1 1 auto;
+  .assignee__item__icon {
+    width: 24px;
+    height: 24px;
+    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 
-  #assignee-submit-button {
+  .selection__item {
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  #selection__input {
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  .selection__break {
+    display: block;
+    height: 1px;
     width: 100%;
+    background: ${({ theme }) => theme.colors.border.second};
+    flex: 0 0 auto;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+  .selection__submit {
+    display: flex;
+    width: 100%;
+  }
+
+  .selection__wrapper {
+    min-height: 30px;
+    max-height: 250px;
+  }
+
+  .selection__checkbox {
     flex: 0 0 auto;
   }
 
-  .assignee__checkbox {
-    flex: 0 0 auto;
-  }
-
-  .assignee__item__wrapper {
+  .selection__item__wrapper {
     display: flex;
     flex: 1 1 auto;
     align-items: center;
+    width: 100%;
     height: 30px;
     cursor: pointer;
     background: none;
     transition: background 200ms;
     color: ${({ theme }) => theme.colors.text.primary};
-    justify-content: flex-start;
+    justify-content: space-between;
     text-align: left;
     border-radius: ${({ theme }) => theme.borders.radius}px;
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px
@@ -215,25 +269,25 @@ const ModalContainer = styled.div`
       background: ${({ theme }) => theme.colors.background.secondary};
     }
 
-    .assignee__item__label {
+    .selection__label {
       flex: 1 1 auto;
-      ${textOverflow}
+      ${overflowEllipsis}
     }
 
-    .assignee__item__icon {
+    .selection__item__icon {
       margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
       width: 22px;
       height: 22px;
       line-height: 19px;
     }
 
-    .assignee__checkbox {
+    .selection__checkbox {
       margin-left: ${({ theme }) => theme.sizes.spaces.df}px;
       pointer-events: none;
     }
 
-    .assignee__item__icon,
-    .assignee__checkbox {
+    .selection__item__icon,
+    .selection__checkbox {
       flex: 0 0 auto;
       flex-shrink: 0;
     }
