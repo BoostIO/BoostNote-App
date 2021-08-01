@@ -18,10 +18,10 @@ import DocTagsListItem from '../../../atoms/DocTagsListItem'
 import ContentManagerCell from '../ContentManagerCell'
 import { getFormattedBoosthubDateTime } from '../../../../lib/date'
 import EditorsIcons from '../../../atoms/EditorsIcons'
-import DocAssigneeSelect from '../../../organisms/EditorLayout/molecules/DocAssigneeSelect'
+import DocAssigneeSelect from '../../../organisms/DocProperties/DocAssigneeSelect'
 import { useCloudApi } from '../../../../lib/hooks/useCloudApi'
-import DocStatusSelect from '../../../organisms/EditorLayout/molecules/DocStatusSelect'
-import DocDueDateSelect from '../../../organisms/EditorLayout/molecules/DocDueDateSelect'
+import DocStatusSelect from '../../../organisms/DocProperties/DocStatusSelect'
+import DocDueDateSelect from '../../../organisms/DocProperties/DocDueDateSelect'
 
 interface ContentManagerDocRowProps {
   team: SerializedTeam

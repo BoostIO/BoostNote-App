@@ -7,6 +7,7 @@ import {
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import report from '../../../lib/analytics'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
+import { SerializedTag } from '../../../interfaces/db/tag'
 
 interface GetDocResponseBody {
   doc: SerializedDocWithBookmark
@@ -160,6 +161,28 @@ export async function updateDocAssignees(
       method: 'put',
       json: {
         assignees,
+      },
+    }
+  )
+
+  return data
+}
+
+export interface UpdateDocTagsResponseBody {
+  doc: SerializedDocWithBookmark
+  tags: SerializedTag[]
+}
+export async function updateDocTagsInBulk(
+  teamId: string,
+  docId: string,
+  tags: string[]
+) {
+  const data = await callApi<UpdateDocTagsResponseBody>(
+    `api/teams/${teamId}/docs/${docId}/tags/bulk`,
+    {
+      method: 'put',
+      json: {
+        tags,
       },
     }
   )

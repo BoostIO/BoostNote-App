@@ -16,6 +16,8 @@ import {
   UpdateDocStatusResponseBody,
   updateDocDueDate,
   UpdateDocDueDateResponseBody,
+  updateDocTagsInBulk,
+  UpdateDocTagsResponseBody,
 } from '../../api/teams/docs'
 import {
   createDocBookmark,
@@ -77,6 +79,7 @@ export function useCloudApi() {
     removeFromWorkspacesMap,
     foldersMap,
     docsMap,
+    updateTagsMap,
     removeFromDocsMap,
     removeFromFoldersMap,
     setCurrentPath,
@@ -355,11 +358,27 @@ export function useCloudApi() {
     [pageDoc, updateDocsMap, setPartialPageData, send]
   )
 
+  const updateDocTagsBulkApi = useCallback(
+    async (target: SerializedDoc, newTags: string[]) => {
+      await send(target.id, 'tags', {
+        api: () => updateDocTagsInBulk(target.teamId, target.id, newTags),
+        cb: ({ doc, tags }: UpdateDocTagsResponseBody) => {
+          updateDocsMap([doc.id, doc])
+          updateTagsMap(...getMapFromEntityArray(tags))
+          if (pageDoc != null && doc.id === pageDoc.id) {
+            setPartialPageData({ pageDoc: doc })
+          }
+        },
+      })
+    },
+    [pageDoc, updateDocsMap, setPartialPageData, send, updateTagsMap]
+  )
+
   const updateDocStatusApi = useCallback(
     async (target: SerializedDoc, newStatus: DocStatus | null) => {
       await send(target.id, 'assignees', {
         api: () => updateDocStatus(target.teamId, target.id, newStatus),
-        cb: ({ doc }: UpdateDocAssigneesResponseBody) => {
+        cb: ({ doc }: UpdateDocStatusResponseBody) => {
           updateDocsMap([doc.id, doc])
 
           if (pageDoc != null && doc.id === pageDoc.id) {
@@ -582,5 +601,6 @@ export function useCloudApi() {
     updateDocAssigneeApi,
     updateDocStatusApi,
     updateDocDueDateApi,
+    updateDocTagsBulkApi,
   }
 }

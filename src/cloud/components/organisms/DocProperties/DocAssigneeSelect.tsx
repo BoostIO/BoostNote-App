@@ -1,16 +1,16 @@
 import React, { useCallback, useState, useMemo } from 'react'
-import { usePage } from '../../../../lib/stores/pageStore'
-import styled from '../../../../../shared/lib/styled'
-import UserIcon from '../../../atoms/UserIcon'
-import { textOverflow } from '../../../../../shared/lib/styled/styleFunctions'
-import { useI18n } from '../../../../lib/hooks/useI18n'
-import { lngKeys } from '../../../../lib/i18n/types'
+import { usePage } from '../../../lib/stores/pageStore'
+import styled from '../../../../shared/lib/styled'
+import UserIcon from '../../atoms/UserIcon'
+import { textOverflow } from '../../../../shared/lib/styled/styleFunctions'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 import DocPropertyValueButton from './DocPropertyValueButton'
 import { mdiAccountCircleOutline } from '@mdi/js'
-import { useModal } from '../../../../../shared/lib/stores/modal'
-import Checkbox from '../../../../../shared/components/molecules/Form/atoms/FormCheckbox'
-import Form from '../../../../../shared/components/molecules/Form'
-import FormRow from '../../../../../shared/components/molecules/Form/templates/FormRow'
+import { useModal } from '../../../../shared/lib/stores/modal'
+import Checkbox from '../../../../shared/components/molecules/Form/atoms/FormCheckbox'
+import Form from '../../../../shared/components/molecules/Form'
+import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
 
 interface DocAssigneeSelectProps {
   disabled?: boolean
@@ -18,6 +18,7 @@ interface DocAssigneeSelectProps {
   update: (value: string[]) => void
   isLoading: boolean
   readOnly: boolean
+  popupAlignment?: 'bottom-left' | 'top-left'
 }
 
 const DocAssigneeSelect = ({
@@ -26,6 +27,7 @@ const DocAssigneeSelect = ({
   isLoading,
   readOnly,
   update,
+  popupAlignment = 'bottom-left',
 }: DocAssigneeSelectProps) => {
   const { translate } = useI18n()
   const { openContextModal, closeAllModals } = useModal()
@@ -74,8 +76,9 @@ const DocAssigneeSelect = ({
               closeModal={closeAllModals}
             />,
             {
-              alignment: 'bottom-left',
+              alignment: popupAlignment,
               width: 300,
+              maxHeight: popupAlignment === 'top-left' ? 330 : undefined,
             }
           )
         }
@@ -137,7 +140,7 @@ const DocAssigneeModal = ({
         className='assignee__form'
         submitButton={{
           label: translate(lngKeys.GeneralSaveVerb),
-          variant: 'primary',
+          variant: 'secondary',
           id: 'assignee-submit-button',
           tabIndex: 0,
         }}
@@ -178,6 +181,11 @@ const ModalContainer = styled.div`
   .assignee__item__wrapper {
     width: 100%;
     flex: 1 1 auto;
+  }
+
+  #assignee-submit-button {
+    width: 100%;
+    flex: 0 0 auto;
   }
 
   .assignee__checkbox {

@@ -1,9 +1,9 @@
 import React, { forwardRef } from 'react'
-import styled from '../../../../../shared/lib/styled'
-import Spinner from '../../../../../shared/components/atoms/Spinner'
-import { contextMenuFormItem } from '../../../../../shared/lib/styled/styleFunctions'
+import styled from '../../../../shared/lib/styled'
+import Spinner from '../../../../shared/components/atoms/Spinner'
+import { contextMenuFormItem } from '../../../../shared/lib/styled/styleFunctions'
 import cc from 'classcat'
-import Icon from '../../../../../shared/components/atoms/Icon'
+import Icon from '../../../../shared/components/atoms/Icon'
 
 interface DocPropertyValueButtonProps {
   children: React.ReactNode

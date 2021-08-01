@@ -224,7 +224,7 @@ const FolderPage = () => {
     const controls: TopbarControlProps[] = [
       {
         type: 'node',
-        element: <InviteCTAButton origin='folder-page' />,
+        element: <InviteCTAButton origin='folder-page' key='invite-cta' />,
       },
     ]
 

@@ -19,7 +19,7 @@ import SortingOption, { sortingOrders } from './SortingOption'
 import ContentManagerDocRow from './Rows/ContentManagerDocRow'
 import ContentmanagerFolderRow from './Rows/ContentManagerFolderRow'
 import { difference } from 'ramda'
-import ContentManagerBulkActions from './Actions/ContentManagerBulkActions'
+import ContentManagerToolbar from './ContentManagerToolbar'
 import Button from '../../../../shared/components/atoms/Button'
 import styled from '../../../../shared/lib/styled'
 import { usePreferences } from '../../../lib/stores/preferences'
@@ -31,6 +31,7 @@ import { useI18n } from '../../../lib/hooks/useI18n'
 import ContentManagerCell from './ContentManagerCell'
 import Flexbox from '../../../../shared/components/atoms/Flexbox'
 import ContentManagerStatusFilter from './ContentManagerStatusFilter'
+import VerticalScroller from '../../../../shared/components/atoms/VerticalScroller'
 
 export type ContentManagerParent =
   | { type: 'folder'; item: SerializedFolderWithBookmark }
@@ -210,135 +211,137 @@ const ContentManager = ({
 
   return (
     <Container>
-      <StyledContentManagerHeader>
-        <div className='header__left'>
-          {currentUserIsCoreMember && (
-            <Checkbox
-              checked={selectingAllItems}
-              disabled={orderedDocs.length + orderedFolders.length === 0}
-              className={cc([
-                'header__left__checkbox',
-                selectingAllItems && 'header__left__checkbox--checked',
-              ])}
-              onChange={selectingAllItems ? unselectAllItems : selectAllItems}
-            />
-          )}
-
-          <Button
-            variant='transparent'
-            active={contentTab === 'all'}
-            onClick={() => setContentTab('all')}
-          >
-            {translate(lngKeys.GeneralAll)}
-          </Button>
-          <Button
-            variant='transparent'
-            active={contentTab === 'folders'}
-            onClick={() => setContentTab('folders')}
-          >
-            {translate(lngKeys.GeneralFolders)}
-          </Button>
-          <Button
-            variant='transparent'
-            active={contentTab === 'docs'}
-            onClick={() => setContentTab('docs')}
-          >
-            {translate(lngKeys.GeneralDocuments)}
-          </Button>
-
-          {currentUserIsCoreMember && (
-            <ContentManagerBulkActions
-              selectedDocs={selectedDocSet}
-              selectedFolders={selectedFolderSet}
-              documentsMap={currentDocumentsRef.current}
-              foldersMap={currentFoldersRef.current}
-              workspacesMap={workspacesMap}
-              team={team}
-              updating={updating}
-              setUpdating={setUpdating}
-            />
-          )}
-        </div>
-
-        <div className='header__right'>
-          <SortingOption value={order} onChange={onChangeOrder} />
-        </div>
-      </StyledContentManagerHeader>
-      <StyledContentManagerList>
-        {(contentTab === 'all' || contentTab === 'folders') && (
-          <>
-            <ContentManagerRow
-              label={translate(lngKeys.GeneralFolders)}
-              checked={selectingAllFolders}
-              onSelect={selectingAllFolders ? resetFolders : selectAllFolders}
-              showCheckbox={currentUserIsCoreMember}
-              type='header'
-            />
-
-            {orderedFolders.map((folder) => (
-              <ContentmanagerFolderRow
-                folder={folder}
-                key={folder.id}
-                team={team}
-                updating={updating.includes(getFolderId(folder))}
-                setUpdating={setUpdating}
-                checked={hasFolder(folder.id)}
-                onSelect={() => toggleFolder(folder.id)}
-                currentUserIsCoreMember={currentUserIsCoreMember}
+      <VerticalScroller className='cm__scroller'>
+        <StyledContentManagerHeader>
+          <div className='header__left'>
+            {currentUserIsCoreMember && (
+              <Checkbox
+                checked={selectingAllItems}
+                disabled={orderedDocs.length + orderedFolders.length === 0}
+                className={cc([
+                  'header__left__checkbox',
+                  selectingAllItems && 'header__left__checkbox--checked',
+                ])}
+                onChange={selectingAllItems ? unselectAllItems : selectAllItems}
               />
-            ))}
+            )}
 
-            {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
-          </>
-        )}
-        {(contentTab === 'all' || contentTab === 'docs') && (
-          <>
-            <ContentManagerRow
-              label={translate(lngKeys.GeneralDocuments)}
-              checked={selectingAllDocs}
-              onSelect={selectingAllDocs ? resetDocs : selectAllDocs}
-              showCheckbox={currentUserIsCoreMember}
-              type='header'
-              className={cc([
-                folders != null &&
-                  contentTab === 'all' &&
-                  'content__manager__list__header--margin',
-              ])}
+            <Button
+              variant='transparent'
+              active={contentTab === 'all'}
+              onClick={() => setContentTab('all')}
             >
-              <ContentManagerCell>
-                {translate(lngKeys.Assignees)}
-              </ContentManagerCell>
-              <ContentManagerCell>
-                <Flexbox justifyContent='space-between' flex='1 1 auto'>
-                  <span>{translate(lngKeys.GeneralStatus)}</span>
-                  <ContentManagerStatusFilter
-                    statusFilterSet={statusFilterSet}
-                    setStatusFilterSet={setStatusFilterSet}
-                  />
-                </Flexbox>
-              </ContentManagerCell>
-              <ContentManagerCell>
-                {translate(lngKeys.DueDate)}
-              </ContentManagerCell>
-            </ContentManagerRow>
-            {orderedDocs.map((doc) => (
-              <ContentManagerDocRow
-                doc={doc}
-                key={doc.id}
-                workspace={workspacesMap.get(doc.workspaceId)}
-                team={team}
-                updating={updating.includes(getDocId(doc))}
-                setUpdating={setUpdating}
-                checked={hasDoc(doc.id)}
-                onSelect={() => toggleDoc(doc.id)}
-                showPath={page != null}
-                currentUserIsCoreMember={currentUserIsCoreMember}
+              {translate(lngKeys.GeneralAll)}
+            </Button>
+            <Button
+              variant='transparent'
+              active={contentTab === 'folders'}
+              onClick={() => setContentTab('folders')}
+            >
+              {translate(lngKeys.GeneralFolders)}
+            </Button>
+            <Button
+              variant='transparent'
+              active={contentTab === 'docs'}
+              onClick={() => setContentTab('docs')}
+            >
+              {translate(lngKeys.GeneralDocuments)}
+            </Button>
+          </div>
+
+          <div className='header__right'>
+            <SortingOption value={order} onChange={onChangeOrder} />
+          </div>
+        </StyledContentManagerHeader>
+        <StyledContentManagerList>
+          {(contentTab === 'all' || contentTab === 'folders') && (
+            <>
+              <ContentManagerRow
+                label={translate(lngKeys.GeneralFolders)}
+                checked={selectingAllFolders}
+                onSelect={selectingAllFolders ? resetFolders : selectAllFolders}
+                showCheckbox={currentUserIsCoreMember}
+                type='header'
               />
-            ))}
-            {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
-          </>
-        )}
-      </StyledContentManagerList>
+
+              {orderedFolders.map((folder) => (
+                <ContentmanagerFolderRow
+                  folder={folder}
+                  key={folder.id}
+                  team={team}
+                  updating={updating.includes(getFolderId(folder))}
+                  setUpdating={setUpdating}
+                  checked={hasFolder(folder.id)}
+                  onSelect={() => toggleFolder(folder.id)}
+                  currentUserIsCoreMember={currentUserIsCoreMember}
+                />
+              ))}
+
+              {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
+            </>
+          )}
+          {(contentTab === 'all' || contentTab === 'docs') && (
+            <>
+              <ContentManagerRow
+                label={translate(lngKeys.GeneralDocuments)}
+                checked={selectingAllDocs}
+                onSelect={selectingAllDocs ? resetDocs : selectAllDocs}
+                showCheckbox={currentUserIsCoreMember}
+                type='header'
+                className={cc([
+                  folders != null &&
+                    contentTab === 'all' &&
+                    'content__manager__list__header--margin',
+                ])}
+              >
+                <ContentManagerCell>
+                  {translate(lngKeys.Assignees)}
+                </ContentManagerCell>
+                <ContentManagerCell>
+                  <Flexbox justifyContent='space-between' flex='1 1 auto'>
+                    <span>{translate(lngKeys.GeneralStatus)}</span>
+                    <ContentManagerStatusFilter
+                      statusFilterSet={statusFilterSet}
+                      setStatusFilterSet={setStatusFilterSet}
+                    />
+                  </Flexbox>
+                </ContentManagerCell>
+                <ContentManagerCell>
+                  {translate(lngKeys.DueDate)}
+                </ContentManagerCell>
+              </ContentManagerRow>
+              {orderedDocs.map((doc) => (
+                <ContentManagerDocRow
+                  doc={doc}
+                  key={doc.id}
+                  workspace={workspacesMap.get(doc.workspaceId)}
+                  team={team}
+                  updating={updating.includes(getDocId(doc))}
+                  setUpdating={setUpdating}
+                  checked={hasDoc(doc.id)}
+                  onSelect={() => toggleDoc(doc.id)}
+                  showPath={page != null}
+                  currentUserIsCoreMember={currentUserIsCoreMember}
+                />
+              ))}
+              {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
+            </>
+          )}
+        </StyledContentManagerList>
+      </VerticalScroller>
+
+      {currentUserIsCoreMember && (
+        <ContentManagerToolbar
+          selectedDocs={selectedDocSet}
+          selectedFolders={selectedFolderSet}
+          documentsMap={currentDocumentsRef.current}
+          foldersMap={currentFoldersRef.current}
+          workspacesMap={workspacesMap}
+          team={team}
+          updating={updating}
+          setUpdating={setUpdating}
+        />
+      )}
     </Container>
   )
 }
@@ -348,9 +351,15 @@ export default React.memo(ContentManager)
 const Container = styled.div`
   display: block;
   width: 100%;
+  position: relative;
+  height: 100%;
 
   .content__manager__list__header--margin {
     margin-top: ${({ theme }) => theme.sizes.spaces.l}px !important;
+  }
+
+  .cm__scroller {
+    height: 100%;
   }
 `
 

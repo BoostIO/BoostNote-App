@@ -8,7 +8,6 @@ import styled from '../../../lib/styled'
 import Button from '../../atoms/Button'
 import VerticalScroller from '../../atoms/VerticalScroller'
 import { useWindow } from '../../../lib/stores/window'
-import { useEffectOnce } from 'react-use'
 
 const Modal = () => {
   const { modals, closeLastModal } = useModal()
@@ -61,18 +60,24 @@ const ContextModalItem = ({
   closeModal: () => void
   modal: ModalElement
 }) => {
-  const contentRef = useRef<HTMLDivElement>(null)
   const {
     windowSize: { width: windowWidth, height: windowHeight },
   } = useWindow()
   const modalWidth = typeof modal.width === 'string' ? 400 : modal.width
 
-  useEffectOnce(() => contentRef.current?.focus())
-
   const style: CSSProperties | undefined = useMemo(() => {
     const properties: CSSProperties = {
       width: modalWidth,
-      maxHeight: windowHeight - (modal.position?.bottom || 0) - 10,
+      height: modal.height,
+      maxHeight:
+        modal.position?.alignment === 'bottom-left' ||
+        modal.position?.alignment === 'bottom-right'
+          ? windowHeight - (modal.position?.bottom || 0) - 10
+          : modal.maxHeight != null
+          ? modal.maxHeight
+          : (modal.position?.top || 0) -
+            ((modal.position?.bottom || 0) - (modal.position?.top || 0)) -
+            10,
     }
 
     if (modal.position != null) {
@@ -91,6 +96,12 @@ const ContextModalItem = ({
               : windowWidth - modalWidth - 10
           properties.top = modal.position.bottom + 6
           break
+        case 'top-left':
+          properties.left =
+            modal.position.left + modalWidth < windowWidth - 10
+              ? modal.position.left
+              : windowWidth - modalWidth - 10
+          properties.bottom = windowHeight - modal.position.top + 10
         default:
           break
       }
@@ -104,7 +115,14 @@ const ContextModalItem = ({
     }
 
     return properties
-  }, [modal.position, windowWidth, modalWidth, windowHeight])
+  }, [
+    modal.position,
+    windowWidth,
+    modalWidth,
+    windowHeight,
+    modal.height,
+    modal.maxHeight,
+  ])
 
   return (
     <>
@@ -121,7 +139,7 @@ const ContextModalItem = ({
           ])}
           style={style}
         >
-          <div className='modal__wrapper' ref={contentRef} tabIndex={0}>
+          <div className='modal__wrapper'>
             {modal.title != null && (
               <h3 className='modal__title'>{modal.title}</h3>
             )}
