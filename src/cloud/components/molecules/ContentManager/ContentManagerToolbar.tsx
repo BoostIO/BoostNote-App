@@ -326,6 +326,7 @@ const ContentManagerToolbar = ({
 
   const sendUpdateStatus = useCallback(
     async (status: DocStatus | null) => {
+      closeAllModals()
       if (selectedDocsAreUpdating || selectedDocs.size === 0) {
         return
       }
@@ -347,6 +348,7 @@ const ContentManagerToolbar = ({
       team.id,
       updateDocStatusApi,
       setUpdating,
+      closeAllModals,
     ]
   )
 

@@ -376,7 +376,7 @@ export function useCloudApi() {
 
   const updateDocStatusApi = useCallback(
     async (target: SerializedDoc, newStatus: DocStatus | null) => {
-      await send(target.id, 'assignees', {
+      await send(target.id, 'status', {
         api: () => updateDocStatus(target.teamId, target.id, newStatus),
         cb: ({ doc }: UpdateDocStatusResponseBody) => {
           updateDocsMap([doc.id, doc])
