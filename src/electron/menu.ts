@@ -43,10 +43,6 @@ export function getTemplateFromKeymap(
                 label: 'Add Cloud Space',
                 click: createEmitIpcMenuItemHandler('create-cloud-space'),
               },
-              {
-                label: 'Add Local Space',
-                click: createEmitIpcMenuItemHandler('create-local-space'),
-              },
               { type: 'separator' },
               {
                 label: 'Check For Updates',
