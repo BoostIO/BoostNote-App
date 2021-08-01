@@ -555,8 +555,12 @@ const Container = styled.div`
     white-space: nowrap;
   }
 
+  .doc__status__select {
+    height: 32px !important;
+  }
+
   .doc__property__button {
-    height: 30px;
+    height: 32px;
     border: 1px solid ${({ theme }) => theme.colors.border.second};
     width: fit-content;
     white-space: nowrap;
