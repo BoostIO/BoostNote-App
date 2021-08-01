@@ -1,5 +1,4 @@
 import { SerializedTemplate } from '../../../interfaces/db/template'
-import report from '../../../lib/analytics'
 import { callApi } from '../../../lib/client'
 
 export interface GetTemplatesResponseBody {
@@ -41,7 +40,6 @@ export async function getTemplate(templateId: string) {
     `api/templates/${templateId}`
   )
 
-  report('create_template_doc')
   return data
 }
 
@@ -50,7 +48,6 @@ export async function saveDocAsTemplate(teamId: string, docId: string) {
     json: { teamId, docId },
     method: 'post',
   })
-  report('create_template_doc')
   return data
 }
 
@@ -58,7 +55,6 @@ export async function destroyDocTemplate(templateId: string) {
   const data = await callApi(`api/templates/${templateId}`, {
     method: 'delete',
   })
-  report('delete_template_doc')
   return data
 }
 

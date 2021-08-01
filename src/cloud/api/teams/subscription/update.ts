@@ -1,6 +1,5 @@
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { callApi } from '../../../lib/client'
-import report from '../../../lib/analytics'
 import { UpgradePlans } from '../../../lib/stripe'
 
 export interface UpdatePaymentInfoResponseBody {
@@ -21,7 +20,7 @@ export async function updateSubEmail(teamId: string, email: string) {
       method: 'put',
     }
   )
-  report('update_sub_email')
+
   return data
 }
 
@@ -40,7 +39,7 @@ export async function updateSubMethod(
       method: 'put',
     }
   )
-  report('update_sub_card')
+
   return data
 }
 

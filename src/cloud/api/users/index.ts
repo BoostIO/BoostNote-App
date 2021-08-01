@@ -1,6 +1,5 @@
 import { SerializedIcon } from '../../interfaces/db/icon'
 import { UserFeedbackFormData } from '../../components/organisms/FeedbackForm/types'
-import report from '../../lib/analytics'
 import { callApi } from '../../lib/client'
 
 export interface SaveUserRequestBody {
@@ -48,6 +47,5 @@ export async function deleteUser(id: string, body: UserFeedbackFormData) {
     json: body,
     method: 'delete',
   })
-  report('delete_user')
   return data
 }

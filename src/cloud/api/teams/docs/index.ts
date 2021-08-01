@@ -5,7 +5,6 @@ import {
   DocStatus,
 } from '../../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
-import report from '../../../lib/analytics'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedTag } from '../../../interfaces/db/tag'
 
@@ -40,7 +39,6 @@ export async function createDoc(
       method: 'post',
     }
   )
-  report('create_doc', { team, doc: data.doc })
   return data
 }
 
@@ -69,7 +67,6 @@ export async function updateDoc(
       method: 'put',
     }
   )
-  report('update_doc')
   return data
 }
 
@@ -86,7 +83,6 @@ export async function destroyDoc(team: { id: string }, doc: { id: string }) {
       method: 'delete',
     }
   )
-  report('delete_doc', { team, doc })
 
   return data
 }
@@ -99,7 +95,6 @@ export async function updateDocEmoji(doc: SerializedDoc, emoji?: string) {
       method: 'put',
     }
   )
-  report('update_doc')
   return data
 }
 export interface UpdateDocStatusResponseBody {

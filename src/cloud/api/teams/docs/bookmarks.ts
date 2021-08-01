@@ -1,5 +1,4 @@
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
-import report from '../../../lib/analytics'
 import { callApi } from '../../../lib/client'
 
 export interface CreateDocBookmarkResponseBody {
@@ -11,7 +10,7 @@ export async function createDocBookmark(teamId: string, docId: string) {
     `api/teams/${teamId}/docs/${docId}/bookmarks`,
     { method: 'post' }
   )
-  report('create_bookmark_doc')
+
   return data
 }
 
@@ -26,6 +25,6 @@ export async function destroyDocBookmark(teamId: string, docId: string) {
       method: 'delete',
     }
   )
-  report('delete_bookmark_doc')
+
   return data
 }
