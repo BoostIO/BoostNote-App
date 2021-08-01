@@ -187,6 +187,7 @@ const SmartFolderContextMenu = ({
                       readOnly={true}
                       disabled={true}
                       defaultValue={condition.value}
+                      update={() => {}}
                     />
                   ),
                 }}
