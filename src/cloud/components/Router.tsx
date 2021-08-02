@@ -31,7 +31,6 @@ import ResourceIndex from '../pages/[teamId]/[resourceId]'
 import TeamIndex from '../pages/[teamId]'
 import ErrorPage from './organisms/error/ErrorPage'
 import { NavProvider } from '../lib/stores/nav'
-import ArchivedPage from '../pages/[teamId]/archived'
 import SharedDocsListPage from '../pages/[teamId]/shared'
 import DeleteTeamPage from '../pages/[teamId]/delete'
 import TimelinePage from '../pages/[teamId]/timeline'
@@ -388,11 +387,6 @@ function getPageComponent(pathname: string): PageSpec | null {
 
   if (splittedPathnames.length >= 2) {
     switch (splittedPathnames[1]) {
-      case 'archived':
-        return {
-          Component: ArchivedPage,
-          getInitialProps: ArchivedPage.getInitialProps,
-        }
       case 'shared':
         return {
           Component: SharedDocsListPage,

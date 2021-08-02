@@ -15,7 +15,7 @@ function savePreferencesToLocalStorage(preferences: Partial<Preferences>) {
 
 const basePreferences: Preferences = {
   folderSortingOrder: 'Latest Updated',
-  docContextMode: 'context',
+  docContextMode: 'comment',
   sidebarIsHidden: false,
   sidebarIsHovered: false,
   sidebarTreeSortingOrder: 'drag',
@@ -24,6 +24,7 @@ const basePreferences: Preferences = {
   lastEditorEditLayout: 'split',
   workspaceManagerIsOpen: true,
   lastSidebarState: 'tree',
+  docStatusDisplayed: ['in_progress', 'paused'],
   sidebarOrderedCategories: cloudSidebaCategoryLabels.join(
     cloudSidebarOrderedCategoriesDelimiter
   ),

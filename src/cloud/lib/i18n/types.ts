@@ -421,6 +421,8 @@ export enum lngKeys {
   GeneralInvite = 'general.invite',
   SettingsRolesRestrictedTitle = 'settings.roles.restricted.title',
   SettingsRolesRestrictedDescription = 'settings.roles.restricted.description',
+
+  GeneralDocuments = 'general.documents',
 }
 
 export type TranslationSource = {

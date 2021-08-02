@@ -15,7 +15,7 @@ import { lngKeys } from '../../../../../lib/i18n/types'
 import { useI18n } from '../../../../../lib/hooks/useI18n'
 import Spinner from '../../../../../../shared/components/atoms/Spinner'
 import Flexbox from '../../../../../../shared/components/atoms/Flexbox'
-import DocPropertyValueButton from '../DocPropertyValueButton'
+import DocPropertyValueButton from '../../../DocProperties/DocPropertyValueButton'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface TagsAutoCompleteInputProps {

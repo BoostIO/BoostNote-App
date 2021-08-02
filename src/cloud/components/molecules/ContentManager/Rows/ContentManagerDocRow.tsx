@@ -1,33 +1,27 @@
-import React, { useState, useMemo, useCallback } from 'react'
-import { SerializedDocWithBookmark } from '../../../../interfaces/db/doc'
+import React, { useMemo, useCallback } from 'react'
+import {
+  DocStatus,
+  SerializedDocWithBookmark,
+} from '../../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../../interfaces/db/team'
 import ContentManagerRow from './ContentManagerRow'
-import { getDocTitle, getDocId } from '../../../../lib/utils/patterns'
-import {
-  mdiStarOutline,
-  mdiStar,
-  mdiTrashCanOutline,
-  mdiFolderMoveOutline,
-  mdiFileDocumentOutline,
-} from '@mdi/js'
-import DocLink from '../../../atoms/Link/DocLink'
-import cc from 'classcat'
-import ContentManagerRowLinkContent from './ContentManagerRowLinkContent'
-import RowAction, { ContentManagerRowAction } from '../Actions/RowAction'
-import {
-  destroyDocBookmark,
-  createDocBookmark,
-  CreateDocBookmarkResponseBody,
-  DestroyDocBookmarkResponseBody,
-} from '../../../../api/teams/docs/bookmarks'
-import { useNav } from '../../../../lib/stores/nav'
-import Flexbox from '../../../atoms/Flexbox'
-import MoveItemModal from '../../../organisms/Modal/contents/Forms/MoveItemModal'
+import { getDocTitle } from '../../../../lib/utils/patterns'
+import { mdiFileDocumentOutline } from '@mdi/js'
+import { getDocLinkHref } from '../../../atoms/Link/DocLink'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import { usePage } from '../../../../lib/stores/pageStore'
 import { SerializedUser } from '../../../../interfaces/db/user'
-import { useToast } from '../../../../../shared/lib/stores/toast'
-import { useModal } from '../../../../../shared/lib/stores/modal'
+import { useRouter } from '../../../../lib/router'
+import styled from '../../../../../shared/lib/styled'
+import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
+import DocTagsListItem from '../../../atoms/DocTagsListItem'
+import ContentManagerCell from '../ContentManagerCell'
+import { getFormattedBoosthubDateTime } from '../../../../lib/date'
+import EditorsIcons from '../../../atoms/EditorsIcons'
+import DocAssigneeSelect from '../../../organisms/DocProperties/DocAssigneeSelect'
+import { useCloudApi } from '../../../../lib/hooks/useCloudApi'
+import DocStatusSelect from '../../../organisms/DocProperties/DocStatusSelect'
+import DocDueDateSelect from '../../../organisms/DocProperties/DocDueDateSelect'
 
 interface ContentManagerDocRowProps {
   team: SerializedTeam
@@ -41,29 +35,23 @@ interface ContentManagerDocRowProps {
   setUpdating: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-enum ActionsIds {
-  Bookmark = 0,
-  Move = 1,
-  Archive = 2,
-  Delete = 3,
-}
-
 const ContentManagerDocRow = ({
   team,
   doc,
   checked,
   workspace,
-  updating,
   showPath,
   currentUserIsCoreMember,
-  setUpdating,
   onSelect,
 }: ContentManagerDocRowProps) => {
-  const [sending, setSending] = useState<ActionsIds>()
-  const { updateDocsMap, deleteDocHandler, updateDocHandler } = useNav()
-  const { pushMessage, pushApiErrorMessage } = useToast()
-  const { openModal } = useModal()
   const { permissions = [] } = usePage()
+  const { push } = useRouter()
+  const {
+    updateDocAssigneeApi,
+    updateDocDueDateApi,
+    updateDocStatusApi,
+    sendingMap,
+  } = useCloudApi()
 
   const fullPath = useMemo(() => {
     if (!showPath) {
@@ -76,127 +64,6 @@ const ContentManagerDocRow = ({
 
     return `/${workspace.name}${doc.folderPathname}`
   }, [showPath, doc, workspace])
-
-  const toggleDocBookmark = useCallback(
-    async (doc: SerializedDocWithBookmark) => {
-      if (updating) {
-        return
-      }
-      const patternedId = getDocId(doc)
-      setUpdating((prev) => [...prev, patternedId])
-      setSending(ActionsIds.Bookmark)
-      try {
-        let data: CreateDocBookmarkResponseBody | DestroyDocBookmarkResponseBody
-        if (doc.bookmarked) {
-          data = await destroyDocBookmark(team.id, doc.id)
-        } else {
-          data = await createDocBookmark(team.id, doc.id)
-        }
-        updateDocsMap([data.doc.id, data.doc])
-      } catch (error) {
-        pushMessage({
-          title: 'Error',
-          description: 'Could not alter bookmark for this doc',
-        })
-      }
-      setSending(undefined)
-      setUpdating((prev) => prev.filter((id) => id !== patternedId))
-    },
-    [team, pushMessage, updateDocsMap, updating, setUpdating]
-  )
-
-  const deleteDoc = useCallback(
-    async (doc: SerializedDocWithBookmark) => {
-      if (updating) {
-        return
-      }
-      const patternedId = getDocId(doc)
-      setUpdating((prev) => [...prev, patternedId])
-      setSending(ActionsIds.Delete)
-      await deleteDocHandler(doc)
-      setSending(undefined)
-      setUpdating((prev) => prev.filter((id) => id !== patternedId))
-    },
-    [deleteDocHandler, updating, setUpdating]
-  )
-
-  const moveDoc = useCallback(
-    async (
-      doc: SerializedDocWithBookmark,
-      workspaceId: string,
-      parentFolderId?: string
-    ) => {
-      if (updating) {
-        return
-      }
-      const patternedId = getDocId(doc)
-      setUpdating((prev) => [...prev, patternedId])
-      setSending(ActionsIds.Move)
-      try {
-        await updateDocHandler(doc, { workspaceId, parentFolderId })
-      } catch (error) {
-        pushApiErrorMessage(error)
-      }
-      setSending(undefined)
-      setUpdating((prev) => prev.filter((id) => id !== patternedId))
-    },
-    [updateDocHandler, updating, setUpdating, pushApiErrorMessage]
-  )
-
-  const openMoveForm = useCallback(
-    (doc: SerializedDocWithBookmark) => {
-      openModal(
-        <MoveItemModal
-          onSubmit={(workspaceId, parentFolderId) =>
-            moveDoc(doc, workspaceId, parentFolderId)
-          }
-        />
-      )
-    },
-    [openModal, moveDoc]
-  )
-
-  const actions = useMemo(() => {
-    const actions: ContentManagerRowAction<SerializedDocWithBookmark>[] = []
-
-    actions.push(
-      doc.bookmarked
-        ? {
-            iconPath: mdiStar,
-            id: ActionsIds.Bookmark,
-            tooltip: 'Unbookmark',
-            onClick: () => toggleDocBookmark(doc),
-          }
-        : {
-            iconPath: mdiStarOutline,
-            id: ActionsIds.Bookmark,
-            tooltip: 'Bookmark',
-            onClick: () => toggleDocBookmark(doc),
-          }
-    )
-
-    if (!currentUserIsCoreMember) {
-      return actions
-    }
-
-    if (doc.archivedAt == null) {
-      actions.push({
-        iconPath: mdiFolderMoveOutline,
-        id: ActionsIds.Move,
-        tooltip: 'Move',
-        onClick: () => openMoveForm(doc),
-      })
-    }
-
-    actions.push({
-      iconPath: mdiTrashCanOutline,
-      id: ActionsIds.Delete,
-      tooltip: 'Delete',
-      onClick: () => deleteDoc(doc),
-    })
-
-    return actions
-  }, [doc, toggleDocBookmark, deleteDoc, openMoveForm, currentUserIsCoreMember])
 
   const editors = useMemo(() => {
     if (
@@ -228,40 +95,155 @@ const ContentManagerDocRow = ({
       return acc
     }, [] as SerializedUser[])
   }, [permissions, doc])
+
+  const sendUpdateDocAssignees = useCallback(
+    async (newAssignees: string[]) => {
+      if (sendingMap.has(doc.id)) {
+        return
+      }
+
+      await updateDocAssigneeApi(doc, newAssignees)
+    },
+    [doc, updateDocAssigneeApi, sendingMap]
+  )
+
+  const sendUpdateStatus = useCallback(
+    async (newStatus: DocStatus | null) => {
+      if (doc.status === newStatus || sendingMap.has(doc.id)) {
+        return
+      }
+
+      await updateDocStatusApi(doc, newStatus)
+    },
+    [doc, sendingMap, updateDocStatusApi]
+  )
+
+  const sendUpdateDocDueDate = useCallback(
+    async (newDate: Date | null) => {
+      if (sendingMap.has(doc.id)) {
+        return
+      }
+      await updateDocDueDateApi(doc, newDate)
+    },
+    [doc, sendingMap, updateDocDueDateApi]
+  )
+
+  const href = getDocLinkHref(doc, team, 'index')
   return (
     <ContentManagerRow
       checked={checked}
       onSelect={onSelect}
       showCheckbox={currentUserIsCoreMember}
-      itemLink={
-        <DocLink doc={doc} team={team} id={`cm-doc-${doc.id}`}>
-          <ContentManagerRowLinkContent
-            status={doc.status}
-            label={getDocTitle(doc, 'Untitled')}
-            defaultIcon={mdiFileDocumentOutline}
-            emoji={doc.emoji}
-            date={doc.updatedAt}
-            path={fullPath}
-            editors={editors}
-          />
-        </DocLink>
+      label={
+        <DocLabel>
+          {fullPath != null && (
+            <div className='doc__path'>
+              <span className='doc__path__label'>{fullPath}</span>
+            </div>
+          )}
+          <div className='doc__header'>
+            <span className='doc__title'>{getDocTitle(doc, 'Untitled')}</span>
+            {(doc.tags || []).map((tag) => (
+              <DocTagsListItem
+                tag={tag}
+                team={team}
+                key={tag.id}
+                showLink={false}
+                className='doc__tag'
+              />
+            ))}
+          </div>
+          <div className='doc__updated'>
+            {getFormattedBoosthubDateTime(doc.updatedAt)}
+            {editors != null && editors.length > 0 && (
+              <EditorsIcons editors={editors} />
+            )}
+          </div>
+        </DocLabel>
       }
-      className={cc([showPath && 'expanded'])}
-      rowActions={
-        <Flexbox flex='0 0 auto' className='actions'>
-          {actions.map((action) => (
-            <RowAction
-              action={action}
-              item={doc}
-              key={`${action.id}`}
-              sending={action.id === sending}
-              disabled={updating}
-            />
-          ))}
-        </Flexbox>
-      }
-    />
+      labelHref={href}
+      labelOnclick={() => push(href)}
+      defaultIcon={mdiFileDocumentOutline}
+      emoji={doc.emoji}
+    >
+      <ContentManagerCell fullWidth={true}>
+        <DocAssigneeSelect
+          isLoading={sendingMap.get(doc.id) === 'assignees'}
+          disabled={sendingMap.has(doc.id) || !currentUserIsCoreMember}
+          defaultValue={
+            doc.assignees != null
+              ? doc.assignees.map((assignee) => assignee.userId)
+              : []
+          }
+          readOnly={!currentUserIsCoreMember}
+          update={sendUpdateDocAssignees}
+        />
+      </ContentManagerCell>
+      <ContentManagerCell fullWidth={true}>
+        <DocStatusSelect
+          status={doc.status}
+          sending={sendingMap.get(doc.id) === 'status'}
+          onStatusChange={sendUpdateStatus}
+          disabled={!currentUserIsCoreMember}
+          isReadOnly={!currentUserIsCoreMember}
+        />
+      </ContentManagerCell>
+      <ContentManagerCell fullWidth={true}>
+        <DocDueDateSelect
+          className='context__content__date_select'
+          sending={sendingMap.get(doc.id) === 'duedate'}
+          dueDate={doc.dueDate}
+          onDueDateChange={sendUpdateDocDueDate}
+          disabled={!currentUserIsCoreMember}
+          isReadOnly={!currentUserIsCoreMember}
+          shortenedLabel={true}
+        />
+      </ContentManagerCell>
+    </ContentManagerRow>
   )
 }
 
-export default ContentManagerDocRow
+const DocLabel = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: ${({ theme }) => theme.sizes.spaces.df}px 0;
+
+  .doc__path,
+  .doc__title,
+  .doc__tag {
+    margin-bottom: 2px !important;
+  }
+
+  .doc__path {
+    width: 100%;
+    color: ${({ theme }) => theme.colors.text.subtle};
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+
+    .doc__path__label {
+      ${overflowEllipsis()}
+    }
+  }
+
+  .doc__title {
+    display: inline-block;
+    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    min-height: 20px;
+  }
+
+  .doc__updated,
+  .doc__updated .editors__icons li {
+    color: ${({ theme }) => theme.colors.text.subtle} !important;
+  }
+
+  .doc__updated {
+    margin-top: 2px;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+`
+
+export default React.memo(ContentManagerDocRow)

@@ -9,6 +9,12 @@ import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModal
 import { mapWorkspaceBreadcrumb } from '../../../lib/mappers/topbarBreadcrumbs'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import InviteCTAButton from '../../molecules/InviteCTAButton'
+import MetadataContainerRow from '../../../../shared/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import { useCloudApi } from '../../../lib/hooks/useCloudApi'
+import { mdiFolderPlusOutline, mdiPlus, mdiTextBoxPlus } from '@mdi/js'
+import MetadataContainer from '../../../../shared/components/organisms/MetadataContainer'
+import { lngKeys } from '../../../lib/i18n/types'
+import { useModal } from '../../../../shared/lib/stores/modal'
 
 interface WorkspacePage {
   workspace: SerializedWorkspace
@@ -24,7 +30,9 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
     openWorkspaceEditForm,
     deleteWorkspace,
   } = useCloudResourceModals()
+  const { sendingMap } = useCloudApi()
   const { translate } = useI18n()
+  const { openContextModal } = useModal()
 
   const topbarBreadcrumbs = useMemo(() => {
     if (team == null) {
@@ -93,12 +101,72 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
       content={{
         topbar: {
           breadcrumbs: topbarBreadcrumbs,
-          controls: [
-            {
-              type: 'node',
-              element: <InviteCTAButton />,
-            },
-          ],
+          controls: currentUserIsCoreMember
+            ? [
+                {
+                  type: 'node',
+                  element: (
+                    <InviteCTAButton origin='folder-page' key='invite-cta' />
+                  ),
+                },
+                {
+                  type: 'button',
+                  variant: 'icon',
+                  iconPath: mdiPlus,
+                  onClick: (event) =>
+                    openContextModal(
+                      event,
+                      <MetadataContainer>
+                        <MetadataContainerRow
+                          row={{
+                            type: 'button',
+                            props: {
+                              disabled: sendingMap.has(workspace.id),
+                              id: 'folder-add-doc',
+                              label: translate(lngKeys.CreateNewDoc),
+                              iconPath: mdiTextBoxPlus,
+                              onClick: () =>
+                                openNewDocForm({
+                                  team,
+                                  workspaceId: workspace.id,
+                                }),
+                            },
+                          }}
+                        />
+                        <MetadataContainerRow
+                          row={{
+                            type: 'button',
+                            props: {
+                              disabled: sendingMap.has(workspace.id),
+                              id: 'folder-add-folder',
+                              label: translate(lngKeys.ModalsCreateNewFolder),
+                              iconPath: mdiFolderPlusOutline,
+                              onClick: () =>
+                                openNewFolderForm({
+                                  team,
+                                  workspaceId: workspace.id,
+                                }),
+                            },
+                          }}
+                        />
+                      </MetadataContainer>,
+                      {
+                        hideBackground: true,
+                        removePadding: true,
+                        width: 200,
+                        alignment: 'bottom-right',
+                      }
+                    ),
+                },
+              ]
+            : [
+                {
+                  type: 'node',
+                  element: (
+                    <InviteCTAButton origin='folder-page' key='invite-cta' />
+                  ),
+                },
+              ],
         },
       }}
     >

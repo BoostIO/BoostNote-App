@@ -74,7 +74,7 @@ export function DocContextMenuActions({
   const { translate } = useI18n()
   const { sendingMap, toggleDocBookmark, send, updateDoc } = useCloudApi()
   const { deleteDoc } = useCloudResourceModals()
-  const { openModal } = useModal()
+  const { openModal, closeAllModals } = useModal()
   const { settings } = useSettings()
   const { pushMessage } = useToast()
   const { convertHtmlStringToPdfBlob } = useElectron()
@@ -350,7 +350,10 @@ export function DocContextMenuActions({
                 id: 'metadata-delete',
                 label: translate(lngKeys.GeneralDelete),
                 iconPath: mdiTrashCanOutline,
-                onClick: () => deleteDoc(doc),
+                onClick: () => {
+                  closeAllModals()
+                  return deleteDoc(doc)
+                },
               },
             }}
           />

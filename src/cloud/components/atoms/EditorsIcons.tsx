@@ -15,7 +15,7 @@ const displayLimit = 5
 
 const EditorsIcons = ({ editors, prefix = true }: EditorsIconsProps) => {
   return (
-    <Flexbox flex='0 0 auto'>
+    <Flexbox flex='0 0 auto' className='editors__icons'>
       <StyledUsersList>
         {prefix && <li style={{ marginRight: 4 }}>by</li>}
         {editors.slice(0, displayLimit).map((user) => {

@@ -472,6 +472,8 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsRolesRestrictedTitle]: 'Ce rôle est restraint',
   [lngKeys.SettingsRolesRestrictedDescription]:
     "Afin de promouvoir l'utilisateur à ce rôle, votre espace doit posséder un abonnement actif. Veuillez considérer upgrader votre plan.",
+
+  [lngKeys.GeneralDocuments]: 'Documents',
 }
 
 export default {

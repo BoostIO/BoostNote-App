@@ -13,7 +13,7 @@ import { topParentId } from '../../../../lib/mappers/topbarTree'
 import { mdiTag } from '@mdi/js'
 import { getTagHref } from '../../../../components/atoms/Link/TagLink'
 import { useRouter } from '../../../../lib/router'
-import DocOnlyContentManager from '../../../../components/molecules/ContentManager/DocOnlyContentManager'
+import ContentManager from '../../../../components/molecules/ContentManager'
 import InviteCTAButton from '../../../../components/molecules/InviteCTAButton'
 
 const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
@@ -83,13 +83,13 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
           controls: [
             {
               type: 'node',
-              element: <InviteCTAButton />,
+              element: <InviteCTAButton key='invite-cta' />,
             },
           ],
         },
       }}
     >
-      <DocOnlyContentManager
+      <ContentManager
         team={team}
         documents={docs}
         page='tag'

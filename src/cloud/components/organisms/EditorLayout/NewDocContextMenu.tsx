@@ -20,6 +20,7 @@ import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPe
 import { getFormattedDateTime } from '../../../lib/date'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
+import { useNav } from '../../../lib/stores/nav'
 import SmallButton from '../../atoms/SmallButton'
 import UserIcon from '../../atoms/UserIcon'
 import BackLinksList from './molecules/BackLinksList'
@@ -38,7 +39,7 @@ interface DocContextMenuProps {
 
 const DocContextMenu = ({
   team,
-  currentDoc,
+  currentDoc: doc,
   contributors,
   backLinks,
   permissions,
@@ -46,7 +47,12 @@ const DocContextMenu = ({
   editorRef,
 }: DocContextMenuProps) => {
   const [sliceContributors, setSliceContributors] = useState(true)
+  const { docsMap } = useNav()
   const { translate } = useI18n()
+
+  const currentDoc = useMemo(() => {
+    return docsMap.get(doc.id)!
+  }, [docsMap, doc.id])
 
   const usersMap = useMemo(() => {
     const users = permissions.reduce((acc, val) => {

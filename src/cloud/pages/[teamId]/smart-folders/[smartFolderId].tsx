@@ -16,11 +16,14 @@ import {
   UpdateDateCondition,
 } from '../../../interfaces/db/smartFolder'
 import { addDays, subDays } from 'date-fns'
-import DocOnlyContentManager from '../../../components/molecules/ContentManager/DocOnlyContentManager'
+import ContentManager from '../../../components/molecules/ContentManager'
 import { getTeamIndexPageData } from '../../../api/pages/teams'
 import styled from '../../../../shared/lib/styled'
 import { localizeDate } from '../../../components/organisms/Modal/contents/SmartFolder/DocDateSelect'
 import InviteCTAButton from '../../../components/molecules/InviteCTAButton'
+import { mdiDotsHorizontal } from '@mdi/js'
+import { useModal } from '../../../../shared/lib/stores/modal'
+import SmartFolderContextMenu from '../../../components/organisms/SmartFolderContextMenu'
 
 function validateAssignees(
   doc: SerializedDocWithBookmark,
@@ -123,6 +126,7 @@ function validateDateValue(
 const SmartFolderPage = (params: any) => {
   const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, initialLoadDone, workspacesMap, smartFoldersMap } = useNav()
+  const { openContextModal } = useModal()
 
   const { smartFolderId } = params
 
@@ -280,18 +284,37 @@ const SmartFolderPage = (params: any) => {
           controls: [
             {
               type: 'node',
-              element: <InviteCTAButton />,
+              element: <InviteCTAButton key='invite-cta' />,
+            },
+            {
+              type: 'button',
+              variant: 'icon',
+              iconPath: mdiDotsHorizontal,
+              onClick: (event) => {
+                openContextModal(
+                  event,
+                  <SmartFolderContextMenu
+                    smartFolder={smartFolder}
+                    team={team}
+                  />,
+                  {
+                    alignment: 'bottom-right',
+                    removePadding: true,
+                    hideBackground: true,
+                  }
+                )
+              },
             },
           ],
           children: <SmartFolderLabel>{smartFolder.name}</SmartFolderLabel>,
         },
       }}
     >
-      <DocOnlyContentManager
+      <ContentManager
         team={team}
         documents={documents}
-        page='smart-folder'
         workspacesMap={workspacesMap}
+        page={'smart-folder'}
         currentUserIsCoreMember={currentUserIsCoreMember}
       />
     </Application>

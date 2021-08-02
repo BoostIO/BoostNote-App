@@ -59,7 +59,7 @@ const Form: AppComponent<FormProps> = ({
           <LoadingButton
             {...submitButton}
             spinning={submitState || submitButton.spinning}
-            variant='primary'
+            variant={submitButton.variant || 'primary'}
             type='submit'
           >
             {submitButton.label}
