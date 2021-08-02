@@ -7,6 +7,7 @@ import {
   MenuItemConstructorOptions,
   protocol,
   session,
+  autoUpdater,
 } from 'electron'
 import path from 'path'
 import url from 'url'
@@ -75,6 +76,10 @@ function createMainWindow() {
     })
 
     app.on('before-quit', () => {
+      window.removeAllListeners()
+    })
+
+    autoUpdater.on('before-quit-for-update', () => {
       window.removeAllListeners()
     })
   }
