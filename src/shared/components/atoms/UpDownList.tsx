@@ -51,7 +51,6 @@ const UpDownList: React.FC<UpDownListProps> = ({
         if (event.target === listRef.current) {
           event.preventDefault()
           focusFirstChildFromElement(event.target)
-          console.log('focus list')
         }
       }}
       onBlur={onBlurHandler}
