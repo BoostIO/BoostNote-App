@@ -7,9 +7,7 @@ import { LocalSpaceRouteParams, useRouteParams } from '../lib/routeParams'
 import { mapTopBarTree } from '../lib/v2/mappers/local/topbarTree'
 import { useDb } from '../lib/db'
 import { useGeneralStatus } from '../lib/generalStatus'
-import { useSearchModal } from '../lib/searchModal'
 import { addIpcListener, removeIpcListener } from '../lib/electronOnly'
-import SearchModal from './organisms/SearchModal'
 import SidebarContainer from './organisms/SidebarContainer'
 import ApplicationLayout from '../shared/components/molecules/ApplicationLayout'
 import LocalGlobalSearch from './organisms/LocalGlobalSearch'
@@ -34,7 +32,6 @@ const Application = ({
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const { noteViewMode, preferredEditingViewMode } = generalStatus
   const { bookmarkNote, unbookmarkNote } = useDb()
-  const { showSearchModal } = useSearchModal()
   const [showSearchScreen, setShowSearchScreen] = useState<boolean>()
 
   const previousPathnameRef = useRef(pathname)
@@ -154,34 +151,31 @@ const Application = ({
   })
 
   return (
-    <>
-      {storage != null && showSearchModal && <SearchModal storage={storage} />}
-      <ApplicationLayout
-        sidebar={<SidebarContainer workspace={storage} />}
-        pageBody={
-          showSearchScreen ? (
-            <LocalGlobalSearch
-              workspace={storage}
-              closeSearch={() => setShowSearchScreen(false)}
-            />
-          ) : (
-            <ContentLayout
-              {...content}
-              topbar={{
-                ...topbar,
-                tree: topbarTree,
-                navigation: {
-                  goBack,
-                  goForward,
-                },
-              }}
-            >
-              {children}
-            </ContentLayout>
-          )
-        }
-      />
-    </>
+    <ApplicationLayout
+      sidebar={<SidebarContainer workspace={storage} />}
+      pageBody={
+        showSearchScreen ? (
+          <LocalGlobalSearch
+            workspace={storage}
+            closeSearch={() => setShowSearchScreen(false)}
+          />
+        ) : (
+          <ContentLayout
+            {...content}
+            topbar={{
+              ...topbar,
+              tree: topbarTree,
+              navigation: {
+                goBack,
+                goForward,
+              },
+            }}
+          >
+            {children}
+          </ContentLayout>
+        )
+      }
+    />
   )
 }
 
