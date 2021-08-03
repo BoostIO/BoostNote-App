@@ -48,7 +48,7 @@ type MigrationState =
     }
   | { step: 'error'; err: Error }
 
-const MigrationPage = ({ storage }: MigrationPageProps) => {
+const MigrationTab = ({ storage }: MigrationPageProps) => {
   const { push } = useRouter()
   const {
     generalStatus: { boostHubTeams },
@@ -488,4 +488,4 @@ function getProgressPercentage(progress: MigrationProgress) {
   )
 }
 
-export default MigrationPage
+export default MigrationTab
