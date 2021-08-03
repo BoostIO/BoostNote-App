@@ -12,6 +12,7 @@ import {
   mdiAccountCircleOutline,
   mdiClose,
   mdiHelpCircleOutline,
+  mdiTimelineAlert,
 } from '@mdi/js'
 import PersonalInfoTab from './PersonalInfoTab'
 import { usePage } from '../../../lib/stores/pageStore'
@@ -45,6 +46,7 @@ import GithubIntegration from './GithubIntegration'
 import SlackIntegration from './SlackIntegration'
 import AttachmentsTab from './AttachmentsTab'
 import ImportTab from './ImportTab'
+import BlockEditorTab from './BlockEditorTab'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -123,6 +125,8 @@ const SettingsComponent = () => {
         return <SlackIntegration />
       case 'api':
         return <ApiTab />
+      case 'blockeditor':
+        return <BlockEditorTab />
       case 'feedback':
         return (
           <SettingTabContent
@@ -297,6 +301,17 @@ const SettingsComponent = () => {
             label={t(lngKeys.KeyboardShortcuts)}
             href='https://intercom.help/boostnote-for-teams/en/articles/4347206-keyboard-shortcuts'
             id='setting-keyboard-shortcuts'
+          />
+          <SettingSidenavHeader
+            path={mdiTimelineAlert}
+            text={'The road ahead'}
+            size={16}
+          />
+          <SettingNavButtonItem
+            label={'Block Editor'}
+            active={settingsTab === 'blockeditor'}
+            id='settings-blockeditor-btn'
+            onClick={() => openSettingsTab('blockeditor')}
           />
         </SettingSidenav>
       }
