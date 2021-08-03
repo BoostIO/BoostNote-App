@@ -3,8 +3,6 @@ import { lightTheme } from './light'
 import { sepiaTheme } from './sepia'
 import { solarizedDarkTheme } from './solarizedDark'
 import { BaseTheme, ThemeTypes } from './types'
-import { isColorBright } from '../../../lib/colors'
-import { TagStyleProps } from '../../../components/atoms/TagNavigatorListItem'
 
 export interface StyledProps {
   theme: BaseTheme
@@ -101,20 +99,6 @@ export const scrollbarOverlay = (
   }
 `
 
-export const tagBackgroundColor = ({
-  theme,
-  color,
-}: StyledProps & TagStyleProps) => `
-background-color: ${color || theme.colors.background.secondary};
-  &:hover {
-    filter: brightness(${
-      isColorBright(color || theme.colors.background.secondary) ? 85 : 115
-    }%
-    );
-    background-color: ${color || theme.colors.background.secondary};
-  }
-}`
-
 /* ———————————–———————————–———————————–——–——
     Border
 ———————————–———————————–———————————–——–—— */
@@ -147,7 +131,7 @@ export const hideScroll = () => `
 
   /* Internet Explorer 10+ */
   -ms-overflow-style: none;
-  
+
   /* WebKit */
   &::-webkit-scrollbar {
     width: 0;
