@@ -6,7 +6,6 @@ import PreferencesModal from './PreferencesModal/PreferencesModal'
 import { usePreferences } from '../lib/preferences'
 import '../lib/i18n'
 import '../lib/analytics'
-import CodeMirrorStyle from './CodeMirrorStyle'
 import { useEffectOnce } from 'react-use'
 import { useRouter } from '../lib/router'
 import { values, keys } from '../lib/db/utils'
@@ -22,7 +21,6 @@ import {
   BoostHubTeamDeleteEvent,
   boostHubTeamDeleteEventEmitter,
   boostHubAccountDeleteEventEmitter,
-  boostHubToggleSettingsEventEmitter,
   boostHubLoginRequestEventEmitter,
   boostHubCreateLocalSpaceEventEmitter,
   BoostHubSubscriptionDeleteEvent,
@@ -31,7 +29,6 @@ import {
 } from '../lib/events'
 import { useRouteParams } from '../lib/routeParams'
 import { useStorageRouter } from '../lib/storageRouter'
-import ExternalStyle from './ExternalStyle'
 import { selectV2Theme } from '../shared/lib/styled/styleFunctions'
 import Modal from '../shared/components/organisms/Modal'
 import GlobalStyle from '../shared/components/atoms/GlobalStyle'
@@ -62,11 +59,7 @@ const App = () => {
   const { push, pathname } = useRouter()
   const [initialized, setInitialized] = useState(false)
   const { setGeneralStatus, generalStatus } = useGeneralStatus()
-  const {
-    togglePreferencesModal,
-    preferences,
-    setPreferences,
-  } = usePreferences()
+  const { preferences, setPreferences } = usePreferences()
   const { fetchDesktopGlobalData } = useBoostHub()
   const routeParams = useRouteParams()
   const { navigate: navigateToStorage } = useStorageRouter()
@@ -181,29 +174,16 @@ const App = () => {
       })
   })
 
-  const boostHubTeamsShowPageIsActive =
-    routeParams.name === 'boosthub.teams.show'
-
   useEffect(() => {
-    const preferencesIpcEventHandler = () => {
-      if (boostHubTeamsShowPageIsActive) {
-        boostHubToggleSettingsEventEmitter.dispatch()
-      } else {
-        togglePreferencesModal()
-      }
-    }
-    addIpcListener('preferences', preferencesIpcEventHandler)
-
     const createCloudSpaceHandler = () => {
       push('/app/boosthub/teams')
     }
     addIpcListener('create-cloud-space', createCloudSpaceHandler)
 
     return () => {
-      removeIpcListener('preferences', preferencesIpcEventHandler)
       removeIpcListener('create-cloud-space', createCloudSpaceHandler)
     }
-  }, [togglePreferencesModal, push, boostHubTeamsShowPageIsActive])
+  }, [push])
 
   useEffect(() => {
     const boostHubTeamCreateEventHandler = (event: BoostHubTeamCreateEvent) => {
@@ -419,8 +399,6 @@ const App = () => {
           <LoadingText>Loading Data...</LoadingText>
         )}
         <GlobalStyle />
-        <CodeMirrorStyle />
-        <ExternalStyle />
 
         <Toast />
         <PreferencesModal />
