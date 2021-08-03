@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDb } from '../../lib/db'
 import { entries } from '../../lib/db/utils'
-import { mdiLogin, mdiLogout, mdiPlus, mdiMessageQuestion } from '@mdi/js'
+import { mdiLogin, mdiLogout, mdiPlus } from '@mdi/js'
 import { useRouter } from '../../lib/router'
 import { useActiveStorageId, useRouteParams } from '../../lib/routeParams'
 import { usePreferences } from '../../lib/preferences'
@@ -23,14 +23,11 @@ import {
 import CloudIntroModal from './CloudIntroModal'
 import { useCloudIntroModal } from '../../lib/cloudIntroModal'
 import { DialogIconTypes, useDialog } from '../../shared/lib/stores/dialog'
-import BasicInputFormLocal from '../v2/organisms/BasicInputFormLocal'
-import { useModal } from '../../shared/lib/stores/modal'
-import { useToast } from '../../shared/lib/stores/toast'
 import styled from '../../shared/lib/styled'
 import SidebarPopOver from '../../shared/components/organisms/Sidebar/atoms/SidebarPopOver'
 
 const TopLevelNavigator = () => {
-  const { storageMap, renameStorage, removeStorage } = useDb()
+  const { storageMap, removeStorage } = useDb()
   const { push } = useRouter()
   const { preferences } = usePreferences()
   const { generalStatus } = useGeneralStatus()
@@ -38,8 +35,6 @@ const TopLevelNavigator = () => {
   const { signOut } = useBoostHub()
   const { navigate } = useStorageRouter()
   const { messageBox } = useDialog()
-  const { openModal, closeLastModal } = useModal()
-  const { pushMessage } = useToast()
   const { t } = useTranslation()
   const [showSpaces, setShowSpaces] = useState(false)
   const boostHubUserInfo = preferences['cloud.user']
@@ -101,7 +96,7 @@ const TopLevelNavigator = () => {
       })
     } else {
       rows.push({
-        label: 'Sign Out Team Account',
+        label: 'Sign Out',
         icon: mdiLogout,
         linkProps: {
           onClick: (event) => {
@@ -128,7 +123,6 @@ const TopLevelNavigator = () => {
     }
   }, [])
 
-  const inputRef = useRef<HTMLInputElement>(null)
   const spaces = useMemo(() => {
     const spaces: SidebarSpace[] = []
 
@@ -146,39 +140,6 @@ const TopLevelNavigator = () => {
             event.preventDefault()
             event.stopPropagation()
             const menuItems: MenuItemConstructorOptions[] = [
-              {
-                type: 'normal',
-                label: t('storage.rename'),
-                click: async () => {
-                  openModal(
-                    <BasicInputFormLocal
-                      inputRef={inputRef}
-                      defaultIcon={mdiMessageQuestion}
-                      defaultInputValue={workspace.name}
-                      placeholder='Folder name'
-                      submitButtonProps={{
-                        label: t('storage.rename'),
-                      }}
-                      onSubmit={async (workspaceName: string | null) => {
-                        if (workspaceName == '' || workspaceName == null) {
-                          pushMessage({
-                            title: 'Cannot rename folder',
-                            description: 'Folder name should not be empty.',
-                          })
-                          return
-                        }
-                        await renameStorage(workspace.id, workspaceName)
-                        closeLastModal()
-                      }}
-                    />,
-                    {
-                      showCloseIcon: true,
-                      title: `Rename "${workspace.name}" storage`,
-                    }
-                  )
-                },
-              },
-              { type: 'separator' },
               {
                 type: 'normal',
                 label: t('storage.remove'),
@@ -235,10 +196,6 @@ const TopLevelNavigator = () => {
     activeStorageId,
     navigate,
     t,
-    openModal,
-    renameStorage,
-    closeLastModal,
-    pushMessage,
     messageBox,
     removeStorage,
     activeBoostHubTeamDomain,
