@@ -3,8 +3,7 @@ import { useRouter } from '../lib/router'
 import { useRouteParams, AllRouteParams } from '../lib/routeParams'
 import StorageCreatePage from './pages/StorageCreatePage'
 import { useDb } from '../lib/db'
-import AttachmentsPage from './pages/AttachmentsPage'
-import WikiNotePage from './pages/WikiNotePage'
+import FSDbDeprecationPage from './pages/FsDbDeprecationPage'
 import { values } from '../lib/db/utils'
 import BoostHubTeamsShowPage from './pages/BoostHubTeamsShowPage'
 import BoostHubTeamsCreatePage from './pages/BoostHubTeamsCreatePage'
@@ -18,11 +17,8 @@ import {
 import { parse as parseUrl } from 'url'
 import { openNew } from '../lib/platform'
 import BoostHubLoginPage from './pages/BoostHubLoginPage'
-import { ObjectMap, NoteStorage } from '../lib/db/types'
+import { ObjectMap, NoteStorage, FSNoteStorage } from '../lib/db/types'
 import { useGeneralStatus } from '../lib/generalStatus'
-import ArchivePage from './pages/ArchivePage'
-import LabelsPage from './pages/LabelsPage'
-import TimelinePage from './pages/TimelinePage'
 import PouchDbDeprecationPage from './pages/PouchDbDeprecationPage'
 import NotFoundErrorPage from './pages/NotFoundErrorPage'
 
@@ -140,7 +136,8 @@ function useContent(
       return <BoostHubAccountDeletePage />
     case 'boosthub.teams.show':
       return null
-    case 'workspaces.notes': {
+
+    case 'local': {
       const { workspaceId } = routeParams
       const storage = storageMap[workspaceId]
       if (storage == null) {
@@ -150,61 +147,7 @@ function useContent(
       return storage.type == 'pouch' ? (
         <PouchDbDeprecationPage />
       ) : (
-        <WikiNotePage storage={storage} />
-      )
-    }
-
-    case 'workspaces.labels.show': {
-      const { workspaceId, tagName } = routeParams
-      const storage = storageMap[workspaceId]
-      if (storage == null) {
-        break
-      }
-
-      return storage.type == 'pouch' ? (
-        <PouchDbDeprecationPage />
-      ) : (
-        <LabelsPage storage={storage} tagName={tagName} />
-      )
-    }
-
-    case 'workspaces.archive': {
-      const { workspaceId } = routeParams
-      const storage = storageMap[workspaceId]
-      if (storage == null) {
-        break
-      }
-
-      return storage.type == 'pouch' ? (
-        <PouchDbDeprecationPage />
-      ) : (
-        <ArchivePage storage={storage} />
-      )
-    }
-    case 'workspaces.attachments': {
-      const { workspaceId } = routeParams
-      const storage = storageMap[workspaceId]
-      if (storage == null) {
-        break
-      }
-
-      return storage.type == 'pouch' ? (
-        <PouchDbDeprecationPage />
-      ) : (
-        <AttachmentsPage storage={storage} />
-      )
-    }
-    case 'workspaces.timeline': {
-      const { workspaceId } = routeParams
-      const storage = storageMap[workspaceId]
-      if (storage == null) {
-        break
-      }
-
-      return storage.type == 'pouch' ? (
-        <PouchDbDeprecationPage />
-      ) : (
-        <TimelinePage storage={storage} />
+        <FSDbDeprecationPage storage={storage as FSNoteStorage} />
       )
     }
     case 'workspaces.create':

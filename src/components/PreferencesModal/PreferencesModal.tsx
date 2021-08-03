@@ -114,10 +114,7 @@ const PreferencesModal = () => {
   const currentStorage = useMemo(() => {
     let storageId: string
     switch (routeParams.name) {
-      case 'workspaces.notes':
-      case 'workspaces.labels.show':
-      case 'workspaces.attachments':
-      case 'workspaces.archive':
+      case 'local':
         storageId = routeParams.workspaceId
         break
       default:

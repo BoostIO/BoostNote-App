@@ -3,7 +3,7 @@ import ContentLayout, {
   ContentLayoutProps,
 } from '../shared/components/templates/ContentLayout'
 import { useRouter } from '../lib/router'
-import { StorageNotesRouteParams, useRouteParams } from '../lib/routeParams'
+import { LocalSpaceRouteParams, useRouteParams } from '../lib/routeParams'
 import { mapTopBarTree } from '../lib/v2/mappers/local/topbarTree'
 import { useDb } from '../lib/db'
 import { useGeneralStatus } from '../lib/generalStatus'
@@ -13,6 +13,7 @@ import SearchModal from './organisms/SearchModal'
 import SidebarContainer from './organisms/SidebarContainer'
 import ApplicationLayout from '../shared/components/molecules/ApplicationLayout'
 import LocalGlobalSearch from './organisms/LocalGlobalSearch'
+import { NoteDoc } from '../lib/db/types'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -25,7 +26,7 @@ const Application = ({
   children,
 }: React.PropsWithChildren<ApplicationProps>) => {
   const { storageMap } = useDb()
-  const routeParams = useRouteParams() as StorageNotesRouteParams
+  const routeParams = useRouteParams() as LocalSpaceRouteParams
   const { workspaceId } = routeParams
   const storage = storageMap[workspaceId]
 
@@ -47,32 +48,9 @@ const Application = ({
     }
   }, [pathname])
 
-  const note = useMemo(() => {
-    if (storage == null) {
-      return undefined
-    }
-    switch (routeParams.name) {
-      case 'workspaces.notes': {
-        if (routeParams.noteId == null) {
-          return undefined
-        }
-        const note = storage.noteMap[routeParams.noteId]
-        if (note == null) {
-          return undefined
-        }
-        if (!note.folderPathname.includes(routeParams.folderPathname)) {
-          return undefined
-        }
-        return note
-      }
-    }
+  const note = useMemo<NoteDoc | undefined>(() => {
     return undefined
-  }, [
-    routeParams.folderPathname,
-    routeParams.name,
-    routeParams.noteId,
-    storage,
-  ])
+  }, [])
 
   const noteId = note?._id
 
