@@ -5,6 +5,7 @@ import type { SerializedTag } from './tag'
 import { SerializedWorkspace } from './workspace'
 import { SerializedShareLink } from './shareLink'
 import { SerializedUser } from './user'
+import { ContainerBlock } from '../../api/blocks'
 
 export type DocStatus = 'in_progress' | 'completed' | 'archived' | 'paused'
 
@@ -30,6 +31,7 @@ export interface SerializableDocProps {
   dueDate: string
   assignees?: SerializedDocAssignee[]
   userId?: string
+  rootBlock?: ContainerBlock
 }
 
 export interface SerializedUnserializableDocProps {
