@@ -30,6 +30,7 @@ import { FormSelectOption } from '../../../shared/components/molecules/Form/atom
 import { ExternalLink } from '../../../shared/components/atoms/Link'
 import Icon from '../../../shared/components/atoms/Icon'
 import styled from '../../../shared/lib/styled'
+import { useMediaQuery } from 'react-responsive'
 
 interface TeamInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions
@@ -57,6 +58,7 @@ const TeamInvitesSection = ({
   )
   const mountedRef = useRef(false)
   const { translate, getRoleLabel } = useI18n()
+  const isMobile = useMediaQuery({ maxWidth: 700 })
 
   useEffect(() => {
     mountedRef.current = true
@@ -210,40 +212,81 @@ const TeamInvitesSection = ({
         {sending && <Spinner className='relative' style={{ top: 2 }} />}
       </Flexbox>
       <Form onSubmit={submitInvite}>
-        <FormRow fullWidth={true}>
-          <FormRowItem
-            item={{
-              type: 'input',
-              props: {
-                value: email,
-                onChange: onChangeHandler,
-                placeholder: 'Email...',
-              },
-            }}
-          />
-          <FormRowItem
-            flex='0 0 150px'
-            item={{
-              type: 'select',
-              props: {
-                value: { label: getRoleLabel(role), value: role },
-                onChange: selectRole,
-                options: selectRoleOptions,
-              },
-            }}
-          />
-          <FormRowItem
-            flex='0 0 100px !important'
-            item={{
-              type: 'button',
-              props: {
-                type: 'submit',
-                label: translate(lngKeys.GeneralSendVerb),
-                disabled: sending,
-              },
-            }}
-          />
-        </FormRow>
+        {!isMobile ? (
+          <FormRow fullWidth={true}>
+            <FormRowItem
+              item={{
+                type: 'input',
+                props: {
+                  value: email,
+                  onChange: onChangeHandler,
+                  placeholder: 'Email...',
+                },
+              }}
+            />
+            <FormRowItem
+              flex='0 0 150px'
+              item={{
+                type: 'select',
+                props: {
+                  value: { label: getRoleLabel(role), value: role },
+                  onChange: selectRole,
+                  options: selectRoleOptions,
+                },
+              }}
+            />
+            <FormRowItem
+              flex='0 0 100px !important'
+              item={{
+                type: 'button',
+                props: {
+                  type: 'submit',
+                  label: translate(lngKeys.GeneralSendVerb),
+                  disabled: sending,
+                },
+              }}
+            />
+          </FormRow>
+        ) : (
+          <>
+            <FormRow fullWidth={true}>
+              <FormRowItem
+                item={{
+                  type: 'input',
+                  props: {
+                    value: email,
+                    onChange: onChangeHandler,
+                    placeholder: 'Email...',
+                  },
+                }}
+              />
+              <FormRowItem
+                flex='0 0 150px'
+                item={{
+                  type: 'select',
+                  props: {
+                    value: { label: getRoleLabel(role), value: role },
+                    onChange: selectRole,
+                    options: selectRoleOptions,
+                  },
+                }}
+              />
+            </FormRow>
+            <FormRow fullWidth={true}>
+              <FormRowItem
+                flex='0 0 100px !important'
+                item={{
+                  type: 'button',
+                  props: {
+                    type: 'submit',
+                    label: translate(lngKeys.GeneralSendVerb),
+                    disabled: sending,
+                  },
+                }}
+              />
+            </FormRow>
+          </>
+        )}
       </Form>
       <small>
         {role === 'admin'
