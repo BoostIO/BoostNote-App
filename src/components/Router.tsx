@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { useRouter } from '../lib/router'
 import { useRouteParams, AllRouteParams } from '../lib/routeParams'
-import StorageCreatePage from './pages/StorageCreatePage'
 import { useDb } from '../lib/db'
 import FSDbDeprecationPage from './pages/FsDbDeprecationPage'
 import { values } from '../lib/db/utils'
@@ -19,7 +18,6 @@ import { openNew } from '../lib/platform'
 import BoostHubLoginPage from './pages/BoostHubLoginPage'
 import { ObjectMap, NoteStorage, FSNoteStorage } from '../lib/db/types'
 import { useGeneralStatus } from '../lib/generalStatus'
-import PouchDbDeprecationPage from './pages/PouchDbDeprecationPage'
 import NotFoundErrorPage from './pages/NotFoundErrorPage'
 
 const Router = () => {
@@ -136,31 +134,16 @@ function useContent(
       return <BoostHubAccountDeletePage />
     case 'boosthub.teams.show':
       return null
-
     case 'local': {
       const { workspaceId } = routeParams
       const storage = storageMap[workspaceId]
-      if (storage == null) {
+      if (storage == null || storage.type === 'pouch') {
         break
       }
-
-      return storage.type == 'pouch' ? (
-        <PouchDbDeprecationPage />
-      ) : (
-        <FSDbDeprecationPage storage={storage as FSNoteStorage} />
-      )
+      return <FSDbDeprecationPage storage={storage as FSNoteStorage} />
     }
-    case 'workspaces.create':
-      return <StorageCreatePage />
   }
-  return (
-    <NotFoundErrorPage
-      title={'Page not found'}
-      description={
-        'Check the URL or click other link in the left side navigation.'
-      }
-    />
-  )
+  return <NotFoundErrorPage />
 }
 
 function useRedirect() {
