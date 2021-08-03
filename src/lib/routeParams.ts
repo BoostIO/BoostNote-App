@@ -5,10 +5,6 @@ export interface BaseRouteParams {
   name: string
 }
 
-export interface StorageCreate extends BaseRouteParams {
-  name: 'workspaces.create'
-}
-
 export interface LocalSpaceRouteParams extends BaseRouteParams {
   name: 'local'
   workspaceId: string
@@ -36,7 +32,6 @@ export interface UnknownRouteParams extends BaseRouteParams {
 }
 
 export type AllRouteParams =
-  | StorageCreate
   | LocalSpaceRouteParams
   | UnknownRouteParams
   | BoostHubTeamsShowRouteParams
@@ -78,12 +73,6 @@ export const useRouteParams = () => {
       }
     }
 
-    if (names[0] === 'storages' && names[1] == null) {
-      return {
-        name: 'workspaces.create',
-      }
-    }
-
     if (names[0] !== 'storages' || names[1] == null) {
       return {
         name: 'unknown',
@@ -107,7 +96,6 @@ export const useActiveStorageId = () => {
       case 'boosthub.teams.create':
       case 'boosthub.teams.show':
       case 'boosthub.login':
-      case 'workspaces.create':
       case 'unknown':
         return null
     }

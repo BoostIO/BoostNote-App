@@ -2,14 +2,12 @@ import React, { useRef, useState, useCallback } from 'react'
 import { boostHubTeamsCreatePageUrl } from '../../lib/boosthub'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
 import { DidFailLoadEvent } from 'electron/main'
-import { useRouter } from '../../lib/router'
 import styled from '../../shared/lib/styled'
 import Button from '../../shared/components/atoms/Button'
 
 const BoostHubTeamsCreatePage = () => {
   const controlRef = useRef<WebviewControl>()
   const [refusedConnection, setRefusedConnection] = useState(false)
-  const { push } = useRouter()
 
   const handleWebviewDidFailLoadEventHandler = useCallback(
     (event: DidFailLoadEvent) => {
@@ -30,10 +28,6 @@ const BoostHubTeamsCreatePage = () => {
     setRefusedConnection(false)
   }, [])
 
-  const navigateToCreateLocalSpacePage = useCallback(() => {
-    push('/app/storages')
-  }, [push])
-
   return (
     <PageContainer>
       <WebViewContainer>
@@ -52,13 +46,6 @@ const BoostHubTeamsCreatePage = () => {
               </p>
               <Button variant={'secondary'} onClick={reloadWebview}>
                 Reload Page
-              </Button>
-
-              <Button
-                variant={'secondary'}
-                onClick={navigateToCreateLocalSpacePage}
-              >
-                Create Local Space
               </Button>
             </div>
           </ReloadView>
