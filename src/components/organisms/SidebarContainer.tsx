@@ -1,13 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useRouter } from '../../lib/router'
 import { useDb } from '../../lib/db'
 import { usePreferences } from '../../lib/preferences'
 import { NoteStorage } from '../../lib/db/types'
-import {
-  openContextMenu,
-  addIpcListener,
-  removeIpcListener,
-} from '../../lib/electronOnly'
+import { openContextMenu } from '../../lib/electronOnly'
 import { values } from '../../lib/db/utils'
 import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
@@ -18,20 +14,11 @@ import {
 } from '../../lib/routeParams'
 import { mdiLogin, mdiLogout, mdiPlus } from '@mdi/js'
 import { useTranslation } from 'react-i18next'
-import { useSearchModal } from '../../lib/searchModal'
 import styled from '../../shared/lib/styled'
 import cc from 'classcat'
 import { useGeneralStatus } from '../../lib/generalStatus'
 import { AppUser } from '../../shared/lib/mappers/users'
 import { useLocalUI } from '../../lib/v2/hooks/local/useLocalUI'
-import {
-  mapTree,
-  SidebarTreeSortingOrders,
-} from '../../lib/v2/mappers/local/sidebarTree'
-import { useLocalDB } from '../../lib/v2/hooks/local/useLocalDB'
-import { useLocalDnd } from '../../lib/v2/hooks/local/useLocalDnd'
-import { CollapsableType } from '../../lib/v2/stores/sidebarCollapse'
-import { useSidebarCollapse } from '../../lib/v2/stores/sidebarCollapse'
 import { mapLocalSpace } from '../../lib/v2/mappers/local/sidebarSpaces'
 import { osName } from '../../shared/lib/platform'
 import {
@@ -40,9 +27,7 @@ import {
 } from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
 import { useBoostHub } from '../../lib/boosthub'
 import Sidebar from '../../shared/components/organisms/Sidebar'
-import SidebarHeader, {
-  SidebarControls,
-} from '../../shared/components/organisms/Sidebar/atoms/SidebarHeader'
+import SidebarHeader from '../../shared/components/organisms/Sidebar/atoms/SidebarHeader'
 import plur from 'plur'
 
 interface SidebarContainerProps {
@@ -51,41 +36,19 @@ interface SidebarContainerProps {
 
 const SidebarContainer = ({ workspace }: SidebarContainerProps) => {
   const { storageMap } = useDb()
-  const { push, pathname } = useRouter()
+  const { push } = useRouter()
   const { navigate } = useStorageRouter()
-  const { preferences, togglePreferencesModal } = usePreferences()
+  const { preferences } = usePreferences()
   const routeParams = useRouteParams() as
     | LocalSpaceRouteParams
     | BoostHubTeamsShowRouteParams
   const { t } = useTranslation()
   const boostHubUserInfo = preferences['cloud.user']
   const { signOut } = useBoostHub()
-  const {
-    createFolderApi,
-    createDocApi,
-    deleteFolderApi,
-    toggleDocArchived,
-    toggleDocBookmark,
-  } = useLocalDB()
-  const {
-    openWorkspaceEditForm,
-    openRenameFolderForm,
-    openRenameDocForm,
-    removeWorkspace,
-    exportDocuments,
-  } = useLocalUI()
-  const { draggedResource, dropInDocOrFolder } = useLocalDnd()
+  const { removeWorkspace } = useLocalUI()
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const [showSpaces, setShowSpaces] = useState(false)
   const usersMap = new Map<string, AppUser>()
-  const [initialLoadDone] = useState(true)
-  const {
-    sideBarOpenedLinksIdsSet,
-    sideBarOpenedFolderIdsSet,
-    toggleItem,
-    unfoldItem,
-    foldItem,
-  } = useSidebarCollapse()
 
   const localSpaces = useMemo(() => values(storageMap), [storageMap])
 
@@ -97,60 +60,8 @@ const SidebarContainer = ({ workspace }: SidebarContainerProps) => {
         return
       }
 
-      const workspaceId = workspace.id
       openContextMenu({
         menuItems: [
-          {
-            type: 'normal',
-            label: t('storage.rename'),
-            click: () => openWorkspaceEditForm(workspace),
-          },
-          {
-            type: 'normal',
-            label: 'New Space',
-            click: () => {
-              push('/app/storages')
-            },
-          },
-          {
-            type: 'separator',
-          },
-          {
-            type: 'normal',
-            label: 'Export Folder',
-            click: () =>
-              exportDocuments(workspace, {
-                folderName: workspace.name,
-                folderPathname: '/',
-                exportingStorage: true,
-              }),
-          },
-          {
-            type: 'normal',
-            label: 'Preferences',
-            click: () => {
-              togglePreferencesModal()
-            },
-          },
-          {
-            type: 'separator',
-          },
-          ...localSpaces
-            .filter((storage) => {
-              return storage.id !== workspaceId
-            })
-            .map<MenuItemConstructorOptions>((storage) => {
-              return {
-                type: 'normal',
-                label: `Switch to ${storage.name} storage`,
-                click: () => {
-                  navigate(storage.id)
-                },
-              }
-            }),
-          {
-            type: 'separator',
-          },
           {
             type: 'normal',
             label: t('storage.remove'),
@@ -159,127 +70,13 @@ const SidebarContainer = ({ workspace }: SidebarContainerProps) => {
         ],
       })
     },
-    [
-      workspace,
-      t,
-      localSpaces,
-      openWorkspaceEditForm,
-      push,
-      exportDocuments,
-      togglePreferencesModal,
-      navigate,
-      removeWorkspace,
-    ]
+    [workspace, t, removeWorkspace]
   )
-
-  const { toggleShowSearchModal } = useSearchModal()
-
-  useEffect(() => {
-    const handler = () => {
-      toggleShowSearchModal()
-    }
-    addIpcListener('search', handler)
-    return () => {
-      removeIpcListener('search', handler)
-    }
-  }, [toggleShowSearchModal])
 
   const sidebarResize = useCallback(
     (width: number) => setGeneralStatus({ sideBarWidth: width }),
     [setGeneralStatus]
   )
-
-  const getFoldEvents = useCallback(
-    (type: CollapsableType, key: string) => {
-      return {
-        fold: () => foldItem(type, key),
-        unfold: () => unfoldItem(type, key),
-        toggle: () => toggleItem(type, key),
-      }
-    },
-    [foldItem, unfoldItem, toggleItem]
-  )
-
-  const tree = useMemo(() => {
-    if (workspace == null) {
-      return undefined
-    }
-    return mapTree(
-      initialLoadDone,
-      generalStatus.sidebarTreeSortingOrder,
-      workspace,
-      workspace.noteMap,
-      workspace.folderMap,
-      workspace.tagMap,
-      pathname,
-      sideBarOpenedLinksIdsSet,
-      sideBarOpenedFolderIdsSet,
-      toggleItem,
-      getFoldEvents,
-      push,
-      toggleDocBookmark,
-      toggleDocArchived,
-      deleteFolderApi,
-      createFolderApi,
-      createDocApi,
-      draggedResource,
-      dropInDocOrFolder,
-      openRenameFolderForm,
-      openRenameDocForm,
-      exportDocuments
-    )
-  }, [
-    workspace,
-    initialLoadDone,
-    generalStatus.sidebarTreeSortingOrder,
-    pathname,
-    sideBarOpenedLinksIdsSet,
-    sideBarOpenedFolderIdsSet,
-    toggleItem,
-    getFoldEvents,
-    push,
-    toggleDocBookmark,
-    toggleDocArchived,
-    deleteFolderApi,
-    createFolderApi,
-    createDocApi,
-    draggedResource,
-    dropInDocOrFolder,
-    openRenameFolderForm,
-    openRenameDocForm,
-    exportDocuments,
-  ])
-
-  const sidebarHeaderControls: SidebarControls = useMemo(() => {
-    return {
-      'View Options': (tree || []).map((category) => {
-        return {
-          type: 'check',
-          label: category.label,
-          checked: !sideBarOpenedLinksIdsSet.has(`hide-${category.label}`),
-          onClick: () => toggleItem('links', `hide-${category.label}`),
-        }
-      }),
-      Sorting: Object.values(SidebarTreeSortingOrders).map((sort) => {
-        return {
-          type: 'radio',
-          label: sort.label,
-          icon: sort.icon,
-          checked: sort.value === generalStatus.sidebarTreeSortingOrder,
-          onClick: () =>
-            setGeneralStatus({
-              sidebarTreeSortingOrder: sort.value,
-            }),
-        }
-      }),
-    }
-  }, [
-    tree,
-    generalStatus.sidebarTreeSortingOrder,
-    setGeneralStatus,
-    sideBarOpenedLinksIdsSet,
-    toggleItem,
-  ])
 
   const activeBoostHubTeamDomain = useMemo<string | null>(() => {
     if (routeParams.name !== 'boosthub.teams.show') {
@@ -306,12 +103,6 @@ const SidebarContainer = ({ workspace }: SidebarContainerProps) => {
       event.preventDefault()
       event.stopPropagation()
       const menuItems: MenuItemConstructorOptions[] = [
-        {
-          type: 'normal',
-          label: t('storage.rename'),
-          click: () => openWorkspaceEditForm(space),
-        },
-        { type: 'separator' },
         {
           type: 'normal',
           label: t('storage.remove'),
@@ -382,7 +173,6 @@ const SidebarContainer = ({ workspace }: SidebarContainerProps) => {
     generalStatus.boostHubTeams,
     navigate,
     t,
-    openWorkspaceEditForm,
     removeWorkspace,
     activeBoostHubTeamDomain,
     push,
@@ -444,10 +234,10 @@ const SidebarContainer = ({ workspace }: SidebarContainerProps) => {
             ? activeSpace.icon
             : undefined
         }
-        controls={sidebarHeaderControls}
+        controls={{}}
       />
     )
-  }, [activeSpace, sidebarHeaderControls])
+  }, [activeSpace])
 
   return (
     <NavigatorContainer onContextMenu={openStorageContextMenu}>

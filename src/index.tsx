@@ -6,7 +6,6 @@ import { V2WindowProvider } from './shared/lib/stores/window'
 import { V2DialogProvider } from './shared/lib/stores/dialog'
 import { V2ModalProvider } from './shared/lib/stores/modal'
 import { V2ContextMenuProvider } from './shared/lib/stores/contextMenu'
-import { V2SidebarCollapseProvider } from './lib/v2/stores/sidebarCollapse'
 import { DbProvider } from './lib/db'
 import { RouterProvider } from './lib/router'
 import { combineProviders } from './lib/context'
@@ -24,7 +23,6 @@ import { DialogProvider } from './lib/dialog'
 
 const V2CombinedProvider = combineProviders(
   V2ToastProvider,
-  V2SidebarCollapseProvider,
   V2WindowProvider,
   V2ContextMenuProvider,
   V2ModalProvider,
