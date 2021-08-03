@@ -22,6 +22,7 @@ export interface CreateDocRequestBody {
   template?: string
   title?: string
   emoji?: string
+  blocks?: boolean
 }
 
 export interface CreateDocResponseBody {
