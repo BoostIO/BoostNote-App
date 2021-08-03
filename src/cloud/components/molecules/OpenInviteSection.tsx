@@ -26,6 +26,8 @@ import FormRowItem from '../../../shared/components/molecules/Form/templates/For
 import { lngKeys } from '../../lib/i18n/types'
 import { FormSelectOption } from '../../../shared/components/molecules/Form/atoms/FormSelect'
 import { useI18n } from '../../lib/hooks/useI18n'
+import { useMediaQuery } from 'react-responsive'
+import commonTheme from '../../../shared/lib/styled/common'
 
 interface OpenInvitesSectionProps {
   userPermissions: SerializedUserTeamPermissions
@@ -46,6 +48,10 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
   const [selectedInviteRole, setSelectedInviteRole] = useState<
     TeamPermissionType
   >('member')
+
+  const isSmallScreen = useMediaQuery({
+    maxWidth: commonTheme.breakpoints.mobile,
+  })
 
   useEffect(() => {
     mountedRef.current = true
@@ -196,49 +202,97 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
       {selectedInvite != null && (
         <StyledOpenLinkSection>
           <Form onSubmit={onFormSubmit}>
-            <FormRow fullWidth={true}>
-              <FormRowItem
-                item={{
-                  type: 'input',
-                  props: {
-                    value: selectedInvite.link,
-                    readOnly: true,
-                  },
-                }}
-              />
-              <FormRowItem
-                flex='0 0 150px'
-                item={{
-                  type: 'select',
-                  props: {
-                    value: {
-                      label: getRoleLabel(selectedInvite.role),
-                      value: selectedInvite.role,
+            {isSmallScreen ? (
+              <>
+                <FormRow fullWidth={true}>
+                  <FormRowItem
+                    item={{
+                      type: 'input',
+                      props: {
+                        value: selectedInvite.link,
+                        readOnly: true,
+                      },
+                    }}
+                  />
+                  <FormRowItem
+                    flex='0 0 150px'
+                    item={{
+                      type: 'select',
+                      props: {
+                        value: {
+                          label: getRoleLabel(selectedInvite.role),
+                          value: selectedInvite.role,
+                        },
+                        onChange: (val: FormSelectOption) =>
+                          setSelectedInviteRole(
+                            val.value as TeamPermissionType
+                          ),
+                        options: openInvites.map((invite) => {
+                          return {
+                            label: getRoleLabel(invite.role),
+                            value: invite.role,
+                          }
+                        }),
+                      },
+                    }}
+                  />
+                </FormRow>
+                <FormRow fullWidth={true}>
+                  <FormRowItem
+                    flex='0 0 100px !important'
+                    item={{
+                      type: 'button',
+                      props: {
+                        type: 'button',
+                        label: copyButtonLabel,
+                      },
+                    }}
+                  />
+                </FormRow>
+              </>
+            ) : (
+              <FormRow fullWidth={true}>
+                <FormRowItem
+                  item={{
+                    type: 'input',
+                    props: {
+                      value: selectedInvite.link,
+                      readOnly: true,
                     },
-                    onChange: (val: FormSelectOption) =>
-                      setSelectedInviteRole(val.value as TeamPermissionType),
-                    options: openInvites.map((invite) => {
-                      return {
-                        label: getRoleLabel(invite.role),
-                        value: invite.role,
-                      }
-                    }),
-                  },
-                }}
-              />
-            </FormRow>
-            <FormRow fullWidth={true}>
-              <FormRowItem
-                flex='0 0 100px !important'
-                item={{
-                  type: 'button',
-                  props: {
+                  }}
+                />
+                <FormRowItem
+                  flex='0 0 150px'
+                  item={{
+                    type: 'select',
+                    props: {
+                      value: {
+                        label: getRoleLabel(selectedInvite.role),
+                        value: selectedInvite.role,
+                      },
+                      onChange: (val: FormSelectOption) =>
+                        setSelectedInviteRole(val.value as TeamPermissionType),
+                      options: openInvites.map((invite) => {
+                        return {
+                          label: getRoleLabel(invite.role),
+                          value: invite.role,
+                        }
+                      }),
+                    },
+                  }}
+                />
+                <FormRowItem
+                  flex='0 0 100px !important'
+                  item={{
                     type: 'button',
-                    label: copyButtonLabel,
-                  },
-                }}
-              />
-            </FormRow>
+                    props: {
+                      type: 'button',
+                      label: copyButtonLabel,
+                    },
+                  }}
+                />
+              </FormRow>
+            )}
           </Form>
         </StyledOpenLinkSection>
       )}
