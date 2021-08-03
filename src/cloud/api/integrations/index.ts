@@ -16,3 +16,29 @@ export async function deleteTeamIntegration(
 ) {
   return callApi(`api/integrations/${integration.id}`, { method: 'delete' })
 }
+
+export interface IntegrationActionTypes {
+  ['orgs:list']: {
+    id: string
+    login: string
+  }[]
+  ['org:repos']: {
+    id: string
+    name: string
+    owner: {
+      login: string
+    }
+  }[]
+  ['repo:issues']: any[]
+}
+
+export async function getAction<A extends keyof IntegrationActionTypes>(
+  integration: SerializedTeamIntegration,
+  action: A,
+  args?: Record<string, any>
+): Promise<IntegrationActionTypes[A]> {
+  const { data } = await callApi(`/api/integrations/${integration.id}/action`, {
+    search: { action, ...args },
+  })
+  return data
+}
