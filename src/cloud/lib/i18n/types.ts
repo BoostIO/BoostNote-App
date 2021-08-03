@@ -285,6 +285,7 @@ export enum lngKeys {
   SortTitleZA = 'sort.z-a',
   SortDragAndDrop = 'sort.drag',
   CreateNewDoc = 'create.new.doc',
+  CreateNewCanvas = 'create.new.canvas',
   UseATemplate = 'use.a.template',
   RenameFolder = 'Rename.folder',
   RenameDoc = 'Rename.doc',

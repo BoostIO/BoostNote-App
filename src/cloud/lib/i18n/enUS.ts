@@ -240,6 +240,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.SortTitleZA]: 'Title Z-A',
   [lngKeys.SortDragAndDrop]: 'Drag and Drop',
   [lngKeys.CreateNewDoc]: 'Create new doc',
+  [lngKeys.CreateNewCanvas]: 'Create new canvas (beta)',
   [lngKeys.UseATemplate]: 'Use a template',
   [lngKeys.RenameFolder]: 'Rename folder',
   [lngKeys.RenameDoc]: 'Rename doc',
