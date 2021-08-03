@@ -70,27 +70,8 @@ module.exports = (env, argv) => {
       new CopyPlugin({
         patterns: [
           {
-            from: path.join(__dirname, 'node_modules/codemirror/theme'),
-            to: 'app/codemirror/theme',
-          },
-          {
             from: path.join(__dirname, 'static'),
             to: 'app/static',
-          },
-          {
-            from: path.join(__dirname, 'node_modules/katex/dist/katex.min.css'),
-            to: 'app/katex/katex.min.css',
-          },
-          {
-            from: path.join(__dirname, 'node_modules/katex/dist/fonts/'),
-            to: 'app/katex/fonts/',
-          },
-          {
-            from: path.join(
-              __dirname,
-              'node_modules/remark-admonitions/styles/classic.css'
-            ),
-            to: 'app/remark-admonitions/classic.css',
           },
         ],
       }),
@@ -109,33 +90,6 @@ module.exports = (env, argv) => {
       // enable HMR on the server
 
       before: function (app, server) {
-        app.use(
-          '/app/codemirror/mode',
-          express.static(path.join(__dirname, 'node_modules/codemirror/mode'))
-        )
-        app.use(
-          '/app/codemirror/addon',
-          express.static(path.join(__dirname, 'node_modules/codemirror/addon'))
-        )
-        app.use(
-          '/app/codemirror/theme',
-          express.static(path.join(__dirname, 'node_modules/codemirror/theme'))
-        )
-        app.use(
-          '/app/katex/katex.min.css',
-          express.static(
-            path.join(__dirname, 'node_modules/katex/dist/katex.min.css')
-          )
-        )
-        app.use(
-          '/app/remark-admonitions/classic.css',
-          express.static(
-            path.join(
-              __dirname,
-              'node_modules/remark-admonitions/styles/classic.css'
-            )
-          )
-        )
         app.use('/app/static', express.static(path.join(__dirname, 'static')))
       },
     },
