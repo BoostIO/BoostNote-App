@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react'
-import { useRouteParams } from '../../lib/routeParams'
 import TagNavigatorListItem from '../atoms/TagNavigatorListItem'
 import TagNavigatorNewTagPopup from '../atoms/TagNavigatorNewTagPopup'
 import { PopulatedTagDoc, NoteStorage } from '../../lib/db/types'
@@ -87,14 +86,7 @@ const NoteDetailTagNavigator = ({
     return new Map(entries(storage.tagMap))
   }, [storage.tagMap])
 
-  const routeParams = useRouteParams()
-
-  const currentTagName = useMemo(() => {
-    if (routeParams.name !== 'workspaces.labels.show') {
-      return null
-    }
-    return routeParams.tagName
-  }, [routeParams])
+  const currentTagName = null
 
   const [showingNewTagPopup, setShowingNewTagPopup] = useState<boolean>(false)
   const buttonRef = useRef<HTMLButtonElement>(null)

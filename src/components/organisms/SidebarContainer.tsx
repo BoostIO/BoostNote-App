@@ -13,12 +13,10 @@ import { MenuItemConstructorOptions } from 'electron'
 import { useStorageRouter } from '../../lib/storageRouter'
 import {
   BoostHubTeamsShowRouteParams,
-  StorageNotesRouteParams,
-  StorageTagsRouteParams,
+  LocalSpaceRouteParams,
   useRouteParams,
 } from '../../lib/routeParams'
 import { mdiLogin, mdiLogout, mdiPlus } from '@mdi/js'
-import { noteDetailFocusTitleInputEventEmitter } from '../../lib/events'
 import { useTranslation } from 'react-i18next'
 import { useSearchModal } from '../../lib/searchModal'
 import styled from '../../shared/lib/styled'
@@ -52,13 +50,12 @@ interface SidebarContainerProps {
 }
 
 const SidebarContainer = ({ workspace }: SidebarContainerProps) => {
-  const { createNote, storageMap } = useDb()
-  const { push, hash, pathname } = useRouter()
+  const { storageMap } = useDb()
+  const { push, pathname } = useRouter()
   const { navigate } = useStorageRouter()
   const { preferences, togglePreferencesModal } = usePreferences()
   const routeParams = useRouteParams() as
-    | StorageTagsRouteParams
-    | StorageNotesRouteParams
+    | LocalSpaceRouteParams
     | BoostHubTeamsShowRouteParams
   const { t } = useTranslation()
   const boostHubUserInfo = preferences['cloud.user']
@@ -72,7 +69,6 @@ const SidebarContainer = ({ workspace }: SidebarContainerProps) => {
   } = useLocalDB()
   const {
     openWorkspaceEditForm,
-    openNewFolderForm,
     openRenameFolderForm,
     openRenameDocForm,
     removeWorkspace,
@@ -175,88 +171,6 @@ const SidebarContainer = ({ workspace }: SidebarContainerProps) => {
       removeWorkspace,
     ]
   )
-
-  const createFolderByRoute = useCallback(async () => {
-    if (workspace == null) {
-      return
-    }
-    const workspaceId = workspace.id
-    let folderPathname = '/'
-    switch (routeParams.name) {
-      case 'workspaces.notes':
-        if (routeParams.folderPathname !== '/') {
-          folderPathname = routeParams.folderPathname
-        }
-        break
-    }
-
-    await openNewFolderForm({
-      workspaceId: workspaceId,
-      parentFolderPathname: folderPathname,
-      navigateToFolder: true,
-    })
-  }, [workspace, routeParams, openNewFolderForm])
-
-  const createNoteByRoute = useCallback(async () => {
-    if (workspace == null) {
-      return
-    }
-    const workspaceId = workspace.id
-    let folderPathname = '/'
-    let tags: string[] = []
-    let baseHrefAfterCreate = `/app/storages/${workspaceId}/notes`
-    switch (routeParams.name) {
-      case 'workspaces.labels.show':
-        tags = [routeParams.tagName]
-        baseHrefAfterCreate = `/app/storages/${workspaceId}/tags/${routeParams.tagName}`
-        break
-      case 'workspaces.notes':
-        if (routeParams.folderPathname !== '/') {
-          folderPathname = routeParams.folderPathname
-          baseHrefAfterCreate = `/app/storages/${workspaceId}/notes${folderPathname}`
-        }
-        break
-    }
-
-    const note = await createNote(workspaceId, {
-      folderPathname,
-      tags,
-    })
-    if (note == null) {
-      return
-    }
-
-    push(`${baseHrefAfterCreate}/${note._id}#new`)
-  }, [workspace, routeParams, push, createNote])
-
-  useEffect(() => {
-    if (hash === '#new') {
-      push({ hash: '' })
-      setImmediate(() => {
-        noteDetailFocusTitleInputEventEmitter.dispatch()
-      })
-    }
-  }, [push, hash])
-
-  useEffect(() => {
-    const handler = async () => {
-      await createNoteByRoute()
-    }
-    addIpcListener('new-note', handler)
-    return () => {
-      removeIpcListener('new-note', handler)
-    }
-  }, [createNoteByRoute])
-
-  useEffect(() => {
-    const handler = async () => {
-      await createFolderByRoute()
-    }
-    addIpcListener('new-folder', handler)
-    return () => {
-      removeIpcListener('new-folder', handler)
-    }
-  }, [createFolderByRoute, createNoteByRoute])
 
   const { toggleShowSearchModal } = useSearchModal()
 

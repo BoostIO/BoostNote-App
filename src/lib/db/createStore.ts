@@ -19,7 +19,6 @@ import { schema, isValid } from '../predicates'
 import PouchNoteDb from './PouchNoteDb'
 import {
   getFolderPathname,
-  getParentFolderPathname,
   getAllParentFolderPathnames,
   entries,
 } from './utils'
@@ -97,12 +96,10 @@ export interface DbStore {
 
 export function createDbStoreCreator(
   liteStorage: LiteStorage,
-  routerHook: () => RouterStore,
-  pathnameWithoutNoteIdGetter: () => string
+  routerHook: () => RouterStore
 ) {
   return (): DbStore => {
     const router = routerHook()
-    const currentPathnameWithoutNoteId = pathnameWithoutNoteIdGetter()
     const [initialized, setInitialized] = useState(false)
     const [storageMap, storageMapRef, setStorageMap] = useRefState<
       ObjectMap<NoteStorage>
@@ -351,17 +348,6 @@ export function createDbStoreCreator(
           return
         }
         await storage.db.removeFolder(pathname)
-        if (
-          `${currentPathnameWithoutNoteId}/`.startsWith(
-            `/app/storages/${storageId}/notes${pathname}/`
-          )
-        ) {
-          router.replace(
-            `/app/storages/${storageId}/notes${getParentFolderPathname(
-              pathname
-            )}`
-          )
-        }
 
         const deletedFolderPathnames = [
           pathname,
@@ -424,7 +410,7 @@ export function createDbStoreCreator(
           })
         )
       },
-      [storageMap, currentPathnameWithoutNoteId, setStorageMap, router]
+      [storageMap, setStorageMap]
     )
 
     const updateNote = useCallback(
@@ -921,13 +907,6 @@ export function createDbStoreCreator(
 
         await storage.db.removeTag(tag)
 
-        if (
-          currentPathnameWithoutNoteId ===
-          `/app/storages/${storageId}/tags/${tag}`
-        ) {
-          router.replace(`/app/storages/${storageId}/notes`)
-        }
-
         const modifiedNotes: ObjectMap<NoteDoc> = Object.keys(
           storageMap[storageId]!.noteMap
         ).reduce((acc, noteId) => {
@@ -957,7 +936,7 @@ export function createDbStoreCreator(
 
         return
       },
-      [storageMap, currentPathnameWithoutNoteId, setStorageMap, router]
+      [storageMap, setStorageMap]
     )
 
     const renameTag = useCallback(
