@@ -15,7 +15,7 @@ export interface SidebarButtonProps {
   id: string
   label: string | React.ReactNode
   labelHref?: string
-  labelClick?: () => void
+  labelClick?: React.MouseEventHandler
   pastille?: string | number
   contextControls?: MenuItem[]
   active?: boolean
@@ -51,7 +51,7 @@ const SidebarButton: AppComponent<SidebarButtonProps> = ({
         return
       }
       event.preventDefault()
-      labelClick()
+      labelClick(event)
     },
     [labelClick]
   )

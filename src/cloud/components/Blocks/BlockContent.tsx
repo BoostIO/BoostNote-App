@@ -1,20 +1,23 @@
 import React, { useCallback } from 'react'
-import { SerializedDoc } from '../../../interfaces/db/doc'
-import { useDocBlocks } from '../../../lib/hooks/useDocBlocks'
-import { Block } from '../../../api/blocks'
-import { capitalize } from '../../../../lib/string'
+import { Block } from '../../api/blocks'
+import { SerializedDoc } from '../../interfaces/db/doc'
+import { useDocBlocks } from '../../lib/hooks/useDocBlocks'
 
 const BlockContent = (doc: SerializedDoc) => {
   const { state, actions } = useDocBlocks(doc.id)
 
-  const createContainer = useCallback(() => {
-    return actions.create({
-      name: 'container',
-      type: 'container',
-      doc: doc.id,
-      children: [],
-      data: null,
-    })
+  const createContainer = useCallback(async () => {
+    if (doc.rootBlock != null) {
+      await actions.create(
+        {
+          name: 'container',
+          type: 'container',
+          children: [],
+          data: null,
+        },
+        doc.rootBlock
+      )
+    }
   }, [doc, actions])
 
   if (state.type === 'loading') {
