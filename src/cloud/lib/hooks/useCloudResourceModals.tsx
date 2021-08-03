@@ -182,6 +182,7 @@ export function useCloudResourceModals() {
                 parentFolderId: body.parentFolderId,
                 title: inputValue,
                 emoji,
+                blocks: body.blocks,
               },
               {
                 skipRedirect: options?.skipRedirect,
@@ -302,6 +303,7 @@ export interface CloudNewResourceRequestBody {
   team?: SerializedTeam
   workspaceId?: string
   parentFolderId?: string
+  blocks?: boolean
 }
 
 export type UIFormOptions = SubmissionWrappers & {

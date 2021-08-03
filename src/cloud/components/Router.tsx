@@ -62,6 +62,7 @@ import Spinner from '../../design/components/atoms/Spinner'
 import { TeamPreferencesProvider } from '../lib/stores/teamPreferences'
 import Application from './Application'
 import { BaseTheme } from '../../design/lib/styled/types'
+import { BlocksProvider } from '../lib/stores/blocks'
 
 const CombinedProvider = combineProviders(
   TeamStorageProvider,
@@ -84,7 +85,8 @@ const V2CombinedProvider = combineProviders(
   V2DialogProvider,
   CommentsProvider,
   NotificationsProvider,
-  TeamIntegrationsProvider
+  TeamIntegrationsProvider,
+  BlocksProvider
 )
 
 interface PageInfo {

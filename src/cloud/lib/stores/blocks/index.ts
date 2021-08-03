@@ -3,25 +3,25 @@ import { useToast } from '../../../../shared/lib/stores/toast'
 import { useRef, useCallback } from 'react'
 import {
   Block,
-  getDocBlocks,
+  getBlockTree,
   deleteBlock,
   updateBlock,
   createBlock,
 } from '../../../api/blocks'
 
-type BlocksObserver = (blocks: Block<any, any>[]) => void
+type BlocksObserver = (blocks: Block) => void
 
 function useBlocksStore() {
   const { pushApiErrorMessage } = useToast()
-  const blocksCache = useRef<Map<string, Block<any, any>[]>>(new Map())
-  const docBlockObservers = useRef<Map<string, Set<BlocksObserver>>>(new Map())
+  const treeCache = useRef<Map<string, Block>>(new Map())
+  const treeObservers = useRef<Map<string, Set<BlocksObserver>>>(new Map())
 
   const getBlocks = useCallback(
-    async (doc: string) => {
+    async (rootBlock: string) => {
       try {
-        const blocks = await getDocBlocks(doc)
-        blocksCache.current.set(doc, blocks)
-        const observers = docBlockObservers.current.get(doc) || new Set()
+        const blocks = await getBlockTree(rootBlock)
+        treeCache.current.set(rootBlock, blocks)
+        const observers = treeObservers.current.get(rootBlock) || new Set()
         for (const observer of observers) {
           observer(blocks)
         }
@@ -35,16 +35,16 @@ function useBlocksStore() {
   )
 
   const observeDocBlocks = useCallback(
-    (doc: string, observer: BlocksObserver) => {
-      const observers = docBlockObservers.current.get(doc) || new Set()
+    (rootBlock: string, observer: BlocksObserver) => {
+      const observers = treeObservers.current.get(rootBlock) || new Set()
       observers.add(observer)
-      docBlockObservers.current.set(doc, observers)
+      treeObservers.current.set(rootBlock, observers)
       Promise.resolve(() => {
-        if (blocksCache.current.has(doc)) {
-          observer(blocksCache.current.get(doc)!)
+        if (treeCache.current.has(rootBlock)) {
+          observer(treeCache.current.get(rootBlock)!)
         }
       })
-      getBlocks(doc)
+      getBlocks(rootBlock)
       return () => {
         observers.delete(observer)
       }
@@ -52,27 +52,27 @@ function useBlocksStore() {
     [getBlocks]
   )
 
-  const create: typeof createBlock = useCallback(
-    async (body, parent) => {
-      const block = await createBlock(body, parent)
-      await getBlocks(block.doc)
+  const create = useCallback(
+    async (body: Omit<Block, 'id'>, parent: Block, root: string) => {
+      const block = await createBlock(body, parent.id)
+      await getBlocks(root)
       return block
     },
     [getBlocks]
   )
 
   const remove = useCallback(
-    async (block: Block<any, any>) => {
+    async (block: Block, root: string) => {
       await deleteBlock(block.id)
-      await getBlocks(block.doc)
+      await getBlocks(root)
     },
     [getBlocks]
   )
 
-  const update: typeof updateBlock = useCallback(
-    async (block) => {
+  const update = useCallback(
+    async (block: Block, root: string) => {
       const updated = await updateBlock(block)
-      await getBlocks(updated.doc)
+      await getBlocks(root)
       return updated
     },
     [getBlocks]
@@ -89,4 +89,4 @@ function useBlocksStore() {
 export const {
   StoreProvider: BlocksProvider,
   useStore: useBlocks,
-} = createStoreContext(useBlocksStore, 'comments')
+} = createStoreContext(useBlocksStore, 'blocks')
