@@ -27,9 +27,14 @@ import BlockTree from './BlockTree'
 import Icon from '../../../design/components/atoms/Icon'
 import styled from '../../../design/lib/styled'
 
+interface Canvas extends SerializedDocWithBookmark {
+  rootBlock: ContainerBlock
+}
+
 export interface ViewProps<T extends Block> {
   block: T
   actions: BlockActions
+  canvas: Canvas
 }
 
 export interface FormProps<T extends Block> {
@@ -37,7 +42,7 @@ export interface FormProps<T extends Block> {
 }
 
 interface BlockContentProps {
-  doc: SerializedDocWithBookmark & { rootBlock: ContainerBlock }
+  doc: Canvas 
 }
 
 const BlockContent = ({ doc }: BlockContentProps) => {
@@ -85,19 +90,19 @@ const BlockContent = ({ doc }: BlockContentProps) => {
     const active = currentBlock || state.block
     switch (active.type) {
       case 'container':
-        return <ContainerView block={active} actions={actions} />
+        return <ContainerView block={active} actions={actions} canvas={doc} />
       case 'embed':
-        return <EmbedView block={active} actions={actions} />
+        return <EmbedView block={active} actions={actions} canvas={doc} />
       case 'markdown':
-        return <MarkdownView block={active} actions={actions} />
+        return <MarkdownView block={active} actions={actions} canvas={doc} />
       case 'table':
-        return <TableView block={active} actions={actions} />
+        return <TableView block={active} actions={actions} canvas={doc} />
       case 'github.issue':
-        return <GithubIssueView block={active} actions={actions} />
+        return <GithubIssueView block={active} actions={actions} canvas={doc} />
       default:
         return <div>Block of type ${(active as any).type} is unsupported</div>
     }
-  }, [currentBlock, state, actions])
+  }, [currentBlock, state, actions, doc])
 
   if (state.type === 'loading') {
     return <div>loading</div>
@@ -151,10 +156,7 @@ const BlockContent = ({ doc }: BlockContentProps) => {
           )}
         </div>
       </div>
-      <div className='block__editor__view'>
-        <h3>{doc.title}</h3>
-        {content}
-      </div>
+      <div className='block__editor__view'>{content}</div>
     </StyledBlockContent>
   )
 }
@@ -225,8 +227,6 @@ const StyledBlockContent = styled.div`
     flex: 1 1 auto;
     height: 100%;
     overflow: auto;
-    padding: ${({ theme }) => theme.sizes.spaces.df}px
-      ${({ theme }) => theme.sizes.spaces.xl}px;
   }
 `
 
