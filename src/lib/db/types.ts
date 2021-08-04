@@ -1,4 +1,3 @@
-import PouchNoteDb from './PouchNoteDb'
 import { JsonObject, Except } from 'type-fest'
 import FSNoteDb from './FSNoteDb'
 
@@ -6,25 +5,7 @@ export type ObjectMap<T> = {
   [key: string]: T | undefined
 }
 
-/**
- * DB Types
- */
-
 export type ExceptRev<D extends PouchDB.Core.RevisionIdMeta> = Except<D, '_rev'>
-
-export interface CloudNoteStorageData {
-  id: number
-  name?: string
-  size: number
-  syncedAt?: number
-}
-
-export interface PouchNoteStorageData {
-  type?: 'pouch'
-  id: string
-  name: string
-  cloudStorage?: CloudNoteStorageData
-}
 
 export interface FSNoteStorageData {
   type: 'fs'
@@ -33,7 +14,7 @@ export interface FSNoteStorageData {
   location: string
 }
 
-export type NoteStorageData = PouchNoteStorageData | FSNoteStorageData
+export type NoteStorageData = FSNoteStorageData
 
 export type NoteDocEditibleProps = {
   title: string
@@ -97,23 +78,13 @@ export interface AllDocsMap {
   tagMap: ObjectMap<TagDoc>
 }
 
-/**
- * React state types
- */
-
 export type NoteIdSet = Set<string>
 
-export type PouchNoteStorage = PouchNoteStorageData &
-  AllPopulatedDocsMap & {
-    db: PouchNoteDb
-    sync?: PouchDB.Replication.Sync<any>
-    syncTimer?: any
-  }
 export type FSNoteStorage = FSNoteStorageData &
   AllPopulatedDocsMap & {
     db: FSNoteDb
   }
-export type NoteStorage = PouchNoteStorage | FSNoteStorage
+export type NoteStorage = FSNoteStorage
 export type PopulatedFolderDoc = FolderDoc & {
   pathname: string
   noteIdSet: NoteIdSet

@@ -137,7 +137,7 @@ function useContent(
     case 'local': {
       const { workspaceId } = routeParams
       const storage = storageMap[workspaceId]
-      if (storage == null || storage.type === 'pouch') {
+      if (storage == null) {
         break
       }
       return <FSDbDeprecationPage storage={storage as FSNoteStorage} />
