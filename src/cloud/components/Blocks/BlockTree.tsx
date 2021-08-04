@@ -16,12 +16,23 @@ interface BlockTreeProps {
   root: Block
   onSelect: (block: Block) => void
   onDelete: (block: Block) => void
+  active?: Block
   depth?: number
 }
 
-const BlockTree = ({ root, onSelect, onDelete, depth }: BlockTreeProps) => {
+const BlockTree = ({
+  root,
+  onSelect,
+  onDelete,
+  depth,
+  active,
+}: BlockTreeProps) => {
   return (
-    <StyledBlockTree key={root.id} depth={depth || 0}>
+    <StyledBlockTree
+      className={active && active.id === root.id && 'block__tree--active'}
+      key={root.id}
+      depth={depth || 0}
+    >
       <div className='block__tree__label'>
         <BlockIcon block={root} size={16} />
         <span onClick={() => onSelect(root)}>{capitalize(root.type)}</span>
@@ -41,6 +52,7 @@ const BlockTree = ({ root, onSelect, onDelete, depth }: BlockTreeProps) => {
               root={child}
               onSelect={onSelect}
               onDelete={onDelete}
+              active={active}
               depth={(depth || 0) + 1}
             />
           ))}
@@ -51,6 +63,10 @@ const BlockTree = ({ root, onSelect, onDelete, depth }: BlockTreeProps) => {
 
 const StyledBlockTree = styled.div<{ depth: number }>`
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+
+  &.block__tree--active > .block__tree__label {
+    background-color: ${({ theme }) => theme.colors.background.secondary};
+  }
 
   & > .block__tree__label {
     padding-left: ${({ depth }) => 18 + (depth as number) * 15}px;
