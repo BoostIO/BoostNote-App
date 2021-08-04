@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import {
   mdiPlus,
   mdiChevronDown,
@@ -26,6 +26,7 @@ import ContainerForm from './forms/ContainerForm'
 import BlockTree from './BlockTree'
 import Icon from '../../../design/components/atoms/Icon'
 import styled from '../../../design/lib/styled'
+import { find } from '../../../design/lib/utils/tree'
 
 interface Canvas extends SerializedDocWithBookmark {
   rootBlock: ContainerBlock
@@ -59,6 +60,16 @@ const BlockContent = ({ doc }: BlockContentProps) => {
     },
     [doc, actions, closeAllModals]
   )
+
+  useEffect(() => {
+    if (state.type === 'loaded') {
+      setCurrentBlock((prev) => {
+        return prev != null
+          ? find(state.block, (block) => block.id === prev.id)
+          : null
+      })
+    }
+  }, [state])
 
   const modalOptions = useMemo(() => {
     return {
@@ -113,6 +124,7 @@ const BlockContent = ({ doc }: BlockContentProps) => {
       <div className='block__editor__nav'>
         <BlockTree
           root={state.block}
+          active={currentBlock || doc.rootBlock}
           onSelect={setCurrentBlock}
           onDelete={actions.remove}
         />
