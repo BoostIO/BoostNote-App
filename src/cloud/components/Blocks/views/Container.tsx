@@ -16,6 +16,7 @@ import { Block, ContainerBlock } from '../../../api/blocks'
 import { useModal } from '../../../../design/lib/stores/modal'
 import Icon from '../../../../design/components/atoms/Icon'
 import styled from '../../../../design/lib/styled'
+import AspectRatio from '../../../../design/components/atoms/AspectRation'
 
 interface ContainerViewProps extends ViewProps<ContainerBlock> {
   nested?: boolean
@@ -76,7 +77,9 @@ const ContainerView = ({
               )
             case 'embed':
               return (
-                <EmbedView block={child} actions={actions} canvas={canvas} />
+                <AspectRatio width={16} height={9}>
+                  <EmbedView block={child} actions={actions} canvas={canvas} />
+                </AspectRatio>
               )
             case 'markdown':
               return (
