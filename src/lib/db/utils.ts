@@ -5,7 +5,6 @@ import {
   NoteDoc,
   FolderDoc,
   TagDoc,
-  PouchNoteStorageData,
   NoteStorage,
   PopulatedTagDoc,
 } from './types'
@@ -231,12 +230,6 @@ export function getAllParentFolderPathnames(pathname: string) {
     }
   } while (currentPathname !== '/')
   return pathnames
-}
-
-export function isCloudStorageData(
-  data: PouchNoteStorageData
-): data is Required<PouchNoteStorageData> {
-  return data.cloudStorage != null
 }
 
 export function normalizeTagColor(tag: PopulatedTagDoc): string {

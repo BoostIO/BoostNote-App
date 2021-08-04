@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import ContentLayout, {
   ContentLayoutProps,
 } from '../shared/components/templates/ContentLayout'
@@ -9,7 +9,6 @@ import { useGeneralStatus } from '../lib/generalStatus'
 import { addIpcListener, removeIpcListener } from '../lib/electronOnly'
 import SidebarContainer from './organisms/SidebarContainer'
 import ApplicationLayout from '../shared/components/molecules/ApplicationLayout'
-import { NoteDoc } from '../lib/db/types'
 
 interface ApplicationProps {
   content: ContentLayoutProps
@@ -29,27 +28,6 @@ const Application = ({
   const { goBack, goForward } = useRouter()
   const { generalStatus, setGeneralStatus } = useGeneralStatus()
   const { noteViewMode, preferredEditingViewMode } = generalStatus
-  const { bookmarkNote, unbookmarkNote } = useDb()
-
-  const note = useMemo<NoteDoc | undefined>(() => {
-    return undefined
-  }, [])
-
-  const noteId = note?._id
-
-  const bookmark = useCallback(async () => {
-    if (noteId == null || storage == null) {
-      return
-    }
-    await bookmarkNote(storage.id, noteId)
-  }, [noteId, storage, bookmarkNote])
-
-  const unbookmark = useCallback(async () => {
-    if (noteId == null || storage == null) {
-      return
-    }
-    await unbookmarkNote(storage.id, noteId)
-  }, [storage, noteId, unbookmarkNote])
 
   const selectEditMode = useCallback(() => {
     setGeneralStatus({
@@ -95,39 +73,6 @@ const Application = ({
       removeIpcListener('toggle-preview-mode', togglePreviewMode)
     }
   }, [togglePreviewMode])
-
-  const toggleSplitEditMode = useCallback(() => {
-    if (noteViewMode === 'edit') {
-      selectSplitMode()
-    } else {
-      selectEditMode()
-    }
-  }, [noteViewMode, selectSplitMode, selectEditMode])
-
-  useEffect(() => {
-    addIpcListener('toggle-split-edit-mode', toggleSplitEditMode)
-    return () => {
-      removeIpcListener('toggle-split-edit-mode', toggleSplitEditMode)
-    }
-  }, [toggleSplitEditMode])
-
-  const toggleBookmark = useCallback(() => {
-    if (note == null) {
-      return
-    }
-    if (note.data.bookmarked) {
-      unbookmark()
-    } else {
-      bookmark()
-    }
-  }, [note, unbookmark, bookmark])
-
-  useEffect(() => {
-    addIpcListener('toggle-bookmark', toggleBookmark)
-    return () => {
-      removeIpcListener('toggle-bookmark', toggleBookmark)
-    }
-  })
 
   return (
     <ApplicationLayout
