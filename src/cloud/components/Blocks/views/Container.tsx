@@ -18,10 +18,15 @@ import Icon from '../../../../design/components/atoms/Icon'
 import styled from '../../../../design/lib/styled'
 
 interface ContainerViewProps extends ViewProps<ContainerBlock> {
-  hideAdd?: boolean
+  nested?: boolean
 }
 
-const ContainerView = ({ block, actions, hideAdd }: ContainerViewProps) => {
+const ContainerView = ({
+  block,
+  actions,
+  canvas,
+  nested,
+}: ContainerViewProps) => {
   const { openModal, closeAllModals } = useModal()
   const [addSelectOpen, setAddSelectOpen] = useState(false)
 
@@ -55,20 +60,32 @@ const ContainerView = ({ block, actions, hideAdd }: ContainerViewProps) => {
   }, [createBlock, openModal, modalOptions])
 
   return (
-    <StyledContainerView>
+    <StyledContainerView className={nested && 'block__view--nested'}>
+      <h1>{canvas.rootBlock.id === block.id ? canvas.title : block.name}</h1>
       <div className='block__view__container__content'>
         {block.children.map((child) => {
           switch (child.type) {
             case 'container':
               return (
-                <ContainerView block={child} actions={actions} hideAdd={true} />
+                <ContainerView
+                  block={child}
+                  actions={actions}
+                  nested={true}
+                  canvas={canvas}
+                />
               )
             case 'embed':
-              return <EmbedView block={child} actions={actions} />
+              return (
+                <EmbedView block={child} actions={actions} canvas={canvas} />
+              )
             case 'markdown':
-              return <MarkdownView block={child} actions={actions} />
+              return (
+                <MarkdownView block={child} actions={actions} canvas={canvas} />
+              )
             case 'table':
-              return <TableView block={child} actions={actions} />
+              return (
+                <TableView block={child} actions={actions} canvas={canvas} />
+              )
             default:
               return (
                 <div>Block of type ${(child as any).type} is unsupported</div>
@@ -76,7 +93,7 @@ const ContainerView = ({ block, actions, hideAdd }: ContainerViewProps) => {
           }
         })}
       </div>
-      {!hideAdd && (
+      {!nested && (
         <div
           onClick={() => setAddSelectOpen((open) => !open)}
           className='block__view__container__add'
@@ -113,9 +130,23 @@ const ContainerView = ({ block, actions, hideAdd }: ContainerViewProps) => {
 
 const StyledContainerView = styled.div`
   width: 100%;
+  padding: ${({ theme }) => theme.sizes.spaces.df}px
+    ${({ theme }) => theme.sizes.spaces.xl}px;
+
+  & > & h1 {
+    font-size: 5px;
+  }
+
+  &.block__view--nested {
+    padding: 0;
+    & h1 {
+      font-size: ${({ theme }) => theme.sizes.fonts.md}px;
+      color: ${({ theme }) => theme.colors.text.subtle};
+    }
+  }
 
   & .block__view__container__content > * {
-    margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
   }
 
   & .block__view__container__add {
