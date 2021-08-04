@@ -304,7 +304,7 @@ const SettingsComponent = () => {
           />
           <SettingSidenavHeader
             path={mdiTimelineAlert}
-            text={'The road ahead'}
+            text={'Beta Program'}
             size={16}
           />
           <SettingNavButtonItem

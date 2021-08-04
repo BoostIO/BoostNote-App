@@ -26,3 +26,22 @@ export async function registerToBeta(teamId?: string) {
 
   return result
 }
+
+interface UpdateBetaRegistrationResponseBody {
+  betaRegistration: SerializedBetaRegistration
+}
+
+export async function updateBetaRegistration(
+  betaRegistrationId: string,
+  integrations: string[]
+) {
+  const result = await callApi<UpdateBetaRegistrationResponseBody>(
+    `api/beta/${betaRegistrationId}`,
+    {
+      method: 'put',
+      json: { integrations },
+    }
+  )
+
+  return result
+}

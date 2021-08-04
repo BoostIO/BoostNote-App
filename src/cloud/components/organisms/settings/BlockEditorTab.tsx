@@ -12,11 +12,52 @@ import {
 } from '../../../lib/stores/betaRegistration'
 import Form from '../../../../shared/components/molecules/Form'
 import styled from '../../../../shared/lib/styled'
+import { useMediaQuery } from 'react-responsive'
+import commonTheme from '../../../../shared/lib/styled/common'
+import { useSet } from 'react-use'
+import Checkbox from '../../../../shared/components/molecules/Form/atoms/FormCheckbox'
+import cc from 'classcat'
+import { lngKeys } from '../../../lib/i18n/types'
+import { useI18n } from '../../../lib/hooks/useI18n'
+
+const integrations = [
+  'Trello',
+  'Jira',
+  'Asana',
+  'Clubhouse',
+  'Github Issue',
+  'GitLab',
+  'Azure DevOps',
+  'Miro',
+  'Figma',
+  'Invision',
+  'Intercom',
+  'Zendesk',
+  'Spreadsheet',
+  'Air Table',
+  'Zoom',
+  'Meet',
+  'Mixpanel',
+  'Kissmetrics',
+  'Google Analytics',
+  'Slack',
+  'Discord',
+  'CircleCI',
+  'Jenkins',
+  'Github Actions',
+  'Datadog',
+]
 
 const BlockEditorTab = () => {
   const { team } = usePage()
   const { openSettingsTab } = useSettings()
   const betaRegistration = useBetaRegistration()
+  const [integrationsSet, { has, toggle }] = useSet<string>(new Set())
+  const { translate } = useI18n()
+
+  const isTabletScreenOrSmaller = useMediaQuery({
+    maxWidth: commonTheme.breakpoints.tablet,
+  })
 
   return (
     <SettingTabContent
@@ -120,6 +161,64 @@ const BlockEditorTab = () => {
               )}
             </Flexbox>
           </Form>
+          {betaRegistration.state === 'loaded' &&
+            betaRegistration.betaRegistration != null &&
+            !('integrations' in betaRegistration.betaRegistration.state) && (
+              <div
+                className={cc([
+                  'beta__integrations',
+                  isTabletScreenOrSmaller && 'beta__integrations--minimized',
+                ])}
+              >
+                <p>
+                  If you want to already help us decide of this beta direction,
+                  please let us know what integrations you would like us to
+                  prioritize over the rest!
+                </p>
+                <Form
+                  onSubmit={() => {
+                    if (
+                      integrationsSet.size === 0 ||
+                      betaRegistration.betaRegistration == null
+                    ) {
+                      return
+                    }
+
+                    return betaRegistration.registration.update({
+                      betaRegistrationId: betaRegistration.betaRegistration.id,
+                      integrations: Array.from(integrationsSet),
+                    })
+                  }}
+                >
+                  {integrations.map((integration, i) => (
+                    <Button
+                      variant='transparent'
+                      id={`integration-${integration}`}
+                      key={i}
+                      className='beta__integration'
+                      onClick={() => toggle(integration)}
+                    >
+                      <Checkbox
+                        className='beta__integration__check'
+                        checked={has(integration)}
+                      />{' '}
+                      {integration}
+                    </Button>
+                  ))}
+
+                  <Flexbox justifyContent='center'>
+                    <LoadingButton
+                      type='submit'
+                      variant='primary'
+                      disabled={integrationsSet.size === 0}
+                      spinning={betaRegistration.registration.updating}
+                    >
+                      {translate(lngKeys.GeneralSave)}
+                    </LoadingButton>
+                  </Flexbox>
+                </Form>
+              </div>
+            )}
           <p>Thank you,</p>
           <p>The BoostIO team.</p>
         </Container>
@@ -131,6 +230,38 @@ const BlockEditorTab = () => {
 const Container = styled.div`
   .registration__form {
     margin: ${({ theme }) => theme.sizes.spaces.l}px 0 !important;
+  }
+
+  .beta__integrations {
+    background: ${({ theme }) => theme.colors.background.secondary};
+    padding: ${({ theme }) => theme.sizes.spaces.df}px
+      ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  .beta__integration {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 30%;
+    .beta__integration__check {
+      pointer-events: none;
+      margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
+  }
+
+  .beta__integrations:not(.beta__integrations--minimized)
+    .beta__integration:nth-child(3n + 1) {
+    margin-left: 0;
+  }
+
+  .beta__integrations.beta__integrations--minimized {
+    .beta__integration {
+      width: 49% !important;
+    }
+
+    .beta__integration:nth-child(2n + 1) {
+      margin-left: 0;
+    }
   }
 `
 
