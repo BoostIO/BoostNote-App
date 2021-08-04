@@ -13,13 +13,10 @@ const EmbedView = ({ block }: ViewProps<EmbedBlock>) => {
 
 const StyledEmbedView = styled.div`
   width: 100%;
-  position: relative;
-  padding-top: 56.25%;
+  height: 100%;
+  overflow: hidden;
 
   & iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
     height: 100%;
     width: 100%;
   }

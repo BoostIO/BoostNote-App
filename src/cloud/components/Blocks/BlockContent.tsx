@@ -42,7 +42,7 @@ export interface FormProps<T extends Block> {
 }
 
 interface BlockContentProps {
-  doc: Canvas 
+  doc: Canvas
 }
 
 const BlockContent = ({ doc }: BlockContentProps) => {
