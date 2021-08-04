@@ -11,14 +11,11 @@ import {
   useCapturingGlobalKeyDownHandler,
 } from '../../../../../../lib/keyboard'
 import { focusFirstChildFromElement } from '../../../../../../lib/dom'
-import Spinner from '../../../../../atoms/CustomSpinner'
 import { SerializedRevision } from '../../../../../../interfaces/db/revision'
 import { getAllRevisionsFromDoc } from '../../../../../../api/teams/docs/revisions'
 import { usePage } from '../../../../../../lib/stores/pageStore'
-import ErrorBlock from '../../../../../atoms/ErrorBlock'
 import IconMdi from '../../../../../atoms/IconMdi'
 import { mdiBackupRestore } from '@mdi/js'
-import CustomButton from '../../../../../atoms/buttons/CustomButton'
 import { useSettings } from '../../../../../../lib/stores/settings'
 import {
   useDialog,
@@ -35,6 +32,8 @@ import { compareDateString } from '../../../../../../lib/date'
 import { trackEvent } from '../../../../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../../../../interfaces/analytics/mixpanel'
 import { useModal } from '../../../../../../../shared/lib/stores/modal'
+import Button from '../../../../../../../shared/components/atoms/Button'
+import useApi from '../../../../../../../shared/lib/hooks/useApi'
 
 interface RevisionsModalProps {
   currentDoc: SerializedDocWithBookmark
@@ -45,13 +44,11 @@ const RevisionsModal = ({
   currentDoc,
   restoreRevision,
 }: RevisionsModalProps) => {
-  const [fetching, setFetching] = useState<boolean>(false)
   const contentSideRef = useRef<HTMLDivElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const [revisionsMap, setRevisionsMap] = useState<
     Map<number, SerializedRevision>
   >(new Map())
-  const [error, setError] = useState<unknown>()
   const { subscription, currentUserPermissions } = usePage()
   const { closeLastModal: closeModal } = useModal()
   const { openSettingsTab } = useSettings()
@@ -121,44 +118,33 @@ const RevisionsModal = ({
     []
   )
 
-  const fetchRevisions = useCallback(
-    async (nextPage: number) => {
-      if (fetching) {
-        return
+  const { submit: fetchRevisions, sending: fetching } = useApi({
+    api: ({
+      nextPage,
+      currentDoc,
+    }: {
+      nextPage: number
+      currentDoc: SerializedDocWithBookmark
+    }) => getAllRevisionsFromDoc(currentDoc.teamId, currentDoc.id, nextPage),
+    cb: ({ revisions, page, totalPages }) => {
+      const mappedRevisions = revisions.reduce((acc, val) => {
+        acc.set(val.id, val)
+        return acc
+      }, new Map<number, SerializedRevision>())
+
+      setCurrentPage(page)
+      setTotalPages(totalPages)
+      updateRevisionsMap(...mappedRevisions)
+      if (page === 1 && revisions.length > 0) {
+        focusFirstChildFromElement(menuRef.current)
+        setRevisionIndex(revisions[0].id)
       }
-
-      setFetching(true)
-      try {
-        const { revisions, page, totalPages } = await getAllRevisionsFromDoc(
-          currentDoc.teamId,
-          currentDoc.id,
-          nextPage
-        )
-
-        const mappedRevisions = revisions.reduce((acc, val) => {
-          acc.set(val.id, val)
-          return acc
-        }, new Map<number, SerializedRevision>())
-
-        setCurrentPage(page)
-        setTotalPages(totalPages)
-        updateRevisionsMap(...mappedRevisions)
-        if (page === 1 && revisions.length > 0) {
-          focusFirstChildFromElement(menuRef.current)
-          setRevisionIndex(revisions[0].id)
-        }
-      } catch (error) {
-        setError(error)
-      }
-
-      setFetching(false)
     },
-    [fetching, currentDoc.teamId, currentDoc.id, updateRevisionsMap]
-  )
+  })
 
   useEffectOnce(() => {
     trackEvent(MixpanelActionTrackTypes.DocFeatureRevision)
-    fetchRevisions(currentPage)
+    fetchRevisions({ nextPage: currentPage, currentDoc })
   })
 
   const preview = useMemo(() => {
@@ -180,21 +166,6 @@ const RevisionsModal = ({
   }, [revisionsMap, revisionIndex, onRestoreClick, restoreRevision])
 
   const rightSideContent = useMemo(() => {
-    if (error != null) {
-      return (
-        <StyledNoSubContent>
-          <ErrorBlock error={error} style={{ marginBottom: 20 }} />
-          <CustomButton
-            variant='secondary'
-            disabled={fetching}
-            onClick={() => fetchRevisions(currentPage)}
-          >
-            {fetching ? <Spinner /> : 'Try again'}
-          </CustomButton>
-        </StyledNoSubContent>
-      )
-    }
-
     if (subscription == null && currentUserPermissions != null) {
       return (
         <StyledNoSubContent>
@@ -208,7 +179,7 @@ const RevisionsModal = ({
             documents with a password.
             <br /> You can try a two-week trial for free!
           </p>
-          <CustomButton
+          <Button
             variant='primary'
             onClick={() => {
               openSettingsTab('teamUpgrade')
@@ -216,7 +187,7 @@ const RevisionsModal = ({
             }}
           >
             Start Free Trial
-          </CustomButton>
+          </Button>
         </StyledNoSubContent>
       )
     }
@@ -224,14 +195,10 @@ const RevisionsModal = ({
     return <StyledContent>{preview}</StyledContent>
   }, [
     currentUserPermissions,
-    error,
     subscription,
     closeModal,
     openSettingsTab,
     preview,
-    fetching,
-    fetchRevisions,
-    currentPage,
   ])
 
   const orderedRevisions = useMemo(() => {
@@ -262,7 +229,9 @@ const RevisionsModal = ({
           setRevisionIndex={setRevisionIndex}
           currentPage={currentPage}
           totalPages={totalPages}
-          fetchRevisions={fetchRevisions}
+          fetchRevisions={(page: number) =>
+            fetchRevisions({ nextPage: page, currentDoc })
+          }
           currentUserPermissions={currentUserPermissions}
         />
         <div className='right' ref={contentSideRef}>

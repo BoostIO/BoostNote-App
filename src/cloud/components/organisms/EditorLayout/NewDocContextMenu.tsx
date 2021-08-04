@@ -45,6 +45,7 @@ const DocContextMenu = ({
   permissions,
   currentUserIsCoreMember,
   editorRef,
+  restoreRevision,
 }: DocContextMenuProps) => {
   const [sliceContributors, setSliceContributors] = useState(true)
   const { docsMap } = useNav()
@@ -210,6 +211,7 @@ const DocContextMenu = ({
         doc={currentDoc}
         editorRef={editorRef}
         currentUserIsCoreMember={currentUserIsCoreMember}
+        restoreRevision={restoreRevision}
       />
     </MetadataContainer>
   )

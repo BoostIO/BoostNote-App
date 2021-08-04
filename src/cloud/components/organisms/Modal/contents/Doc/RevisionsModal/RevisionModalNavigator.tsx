@@ -16,9 +16,9 @@ import { SerializedSubscription } from '../../../../../../interfaces/db/subscrip
 import { SerializedRevision } from '../../../../../../interfaces/db/revision'
 import { format } from 'date-fns'
 import { useUpDownNavigationListener } from '../../../../../../lib/keyboard'
-import Button from '../../../../../atoms/Button'
 import styled from '../../../../../../lib/styled'
 import { SerializedUserTeamPermissions } from '../../../../../../interfaces/db/userTeamPermissions'
+import Button from '../../../../../../../shared/components/atoms/Button'
 
 interface RevisionModalNavigatorProps {
   revisions: SerializedRevision[]
