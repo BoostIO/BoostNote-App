@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { mdiStar, mdiTrashCan, mdiStarOutline, mdiPencil } from '@mdi/js'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
@@ -8,6 +8,7 @@ import MetadataContainer from '../../../../shared/components/organisms/MetadataC
 import MetadataContainerRow from '../../../../shared/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { useModal } from '../../../../shared/lib/stores/modal'
+import { useNav } from '../../../lib/stores/nav'
 
 interface FolderContextMenuProps {
   currentFolder: SerializedFolderWithBookmark
@@ -15,13 +16,34 @@ interface FolderContextMenuProps {
 }
 
 const FolderContextMenu = ({
-  currentFolder,
+  currentFolder: folder,
   currentUserIsCoreMember,
 }: FolderContextMenuProps) => {
   const { toggleFolderBookmark, sendingMap } = useCloudApi()
   const { deleteFolder, openRenameFolderForm } = useCloudResourceModals()
   const { closeAllModals } = useModal()
   const { translate } = useI18n()
+  const { foldersMap } = useNav()
+
+  const currentFolder = useMemo(() => {
+    return foldersMap.get(folder.id)
+  }, [foldersMap, folder.id])
+
+  if (currentFolder == null) {
+    return (
+      <MetadataContainer>
+        <MetadataContainerRow
+          row={{
+            type: 'button',
+            props: {
+              label: 'Folder has been deleted',
+              disabled: true,
+            },
+          }}
+        />
+      </MetadataContainer>
+    )
+  }
 
   return (
     <MetadataContainer>
