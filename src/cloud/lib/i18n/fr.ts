@@ -77,7 +77,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.InviteWithOpenLink]: 'Inviter avec un lien ouvert',
   [lngKeys.InviteEmail]: 'Inviter par email',
   [lngKeys.RoleMemberDescription]:
-    "Les membres peuvent accéder à toutes les fonctionnalités excepté pour la facturation ainsi que la gestion de l'équipe",
+    "Les membres peuvent accéder à toutes les fonctionnalités excepté pour la facturation ainsi que la gestion de l'équipe.",
   [lngKeys.RoleAdminDescription]:
     "Les administrateurs peuvent accéder à la facturation, ainsi que promouvoir ou rétrograder les membres de l'équipe.",
   [lngKeys.RoleViewerDescription]:

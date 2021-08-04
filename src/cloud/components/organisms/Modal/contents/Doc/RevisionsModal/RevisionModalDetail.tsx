@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import { SerializedRevision } from '../../../../../../interfaces/db/revision'
 import { format } from 'date-fns'
-import CustomButton from '../../../../../atoms/buttons/CustomButton'
 import { useSettings } from '../../../../../../lib/stores/settings'
 import {
   StyledHeader,
@@ -10,6 +9,8 @@ import {
   MarkdownWrapper,
 } from './styled'
 import CodeMirrorEditor from '../../../../../../lib/editor/components/CodeMirrorEditor'
+import Button from '../../../../../../../shared/components/atoms/Button'
+import styled from '../../../../../../../shared/lib/styled'
 
 interface RevisionModalDetailProps {
   rev: SerializedRevision
@@ -45,7 +46,7 @@ const RevisionModalDetail = ({
   }, [settings])
 
   return (
-    <>
+    <Container>
       <StyledHeader className='align-left'>
         <StyledHeaderTitle>
           Updated at {format(new Date(rev.created), 'HH:mm, dd MMMM u')}
@@ -58,13 +59,13 @@ const RevisionModalDetail = ({
           )}
         </StyledHeaderDescription>
         {restoreRevision != null && (
-          <CustomButton
+          <Button
             variant='primary'
-            style={{ position: 'absolute', right: 60, top: 20 }}
+            className='restore__btn'
             onClick={() => onRestoreClick(rev)}
           >
             Restore
-          </CustomButton>
+          </Button>
         )}
       </StyledHeader>
       <MarkdownWrapper>
@@ -75,8 +76,16 @@ const RevisionModalDetail = ({
           }}
         />
       </MarkdownWrapper>
-    </>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  .restore__btn {
+    position: absolute;
+    right: 1px;
+    top: 20px;
+  }
+`
 
 export default RevisionModalDetail

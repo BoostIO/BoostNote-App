@@ -45,13 +45,14 @@ const DocContextMenu = ({
   permissions,
   currentUserIsCoreMember,
   editorRef,
+  restoreRevision,
 }: DocContextMenuProps) => {
   const [sliceContributors, setSliceContributors] = useState(true)
   const { docsMap } = useNav()
   const { translate } = useI18n()
 
   const currentDoc = useMemo(() => {
-    return docsMap.get(doc.id)!
+    return docsMap.get(doc.id)
   }, [docsMap, doc.id])
 
   const usersMap = useMemo(() => {
@@ -78,7 +79,27 @@ const DocContextMenu = ({
   }, [contributors, sliceContributors])
 
   const creator =
-    currentDoc.userId != null ? usersMap.get(currentDoc.userId) : undefined
+    currentDoc != null && currentDoc.userId != null
+      ? usersMap.get(currentDoc.userId)
+      : undefined
+
+  if (currentDoc == null) {
+    return (
+      <MetadataContainer
+        rows={[{ type: 'header', content: translate(lngKeys.DocInfo) }]}
+      >
+        <MetadataContainerRow
+          row={{
+            type: 'button',
+            props: {
+              label: 'Doc has been deleted',
+              disabled: true,
+            },
+          }}
+        />
+      </MetadataContainer>
+    )
+  }
 
   return (
     <MetadataContainer
@@ -190,6 +211,7 @@ const DocContextMenu = ({
         doc={currentDoc}
         editorRef={editorRef}
         currentUserIsCoreMember={currentUserIsCoreMember}
+        restoreRevision={restoreRevision}
       />
     </MetadataContainer>
   )
