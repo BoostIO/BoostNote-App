@@ -113,6 +113,10 @@ const Container = styled.div`
       margin: ${({ theme }) => theme.sizes.spaces.md}px 0;
     }
   }
+
+  img {
+    max-width: 100%;
+  }
 `
 
 export default SettingTabContent

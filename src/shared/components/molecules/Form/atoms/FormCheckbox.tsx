@@ -27,7 +27,9 @@ const Checkbox: AppComponent<CheckboxProps> = ({
   >
     <input type='form__checkbox' checked={checked} readOnly={true} />
     <div className={cc(['form__checkbox__custom'])} onClick={toggle}>
-      {checked && <Icon path={mdiCheck} size={16} />}
+      {checked && (
+        <Icon path={mdiCheck} className='form__checkbox__checked' size={16} />
+      )}
     </div>
   </Container>
 )
@@ -55,6 +57,12 @@ const Container = styled.label`
 
   &.form__checkbox--disabled {
     cursor: not-allowed;
+  }
+
+  .form__checkbox__checked {
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 
   &:hover {
