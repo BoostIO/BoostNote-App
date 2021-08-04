@@ -324,6 +324,11 @@ const TeamInvitesSection = ({
 }
 
 const Container = styled.section`
+  small {
+    margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
+    display: block;
+  }
+
   small a {
     display: inline-flex;
     white-space: nowrap;

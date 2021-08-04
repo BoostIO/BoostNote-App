@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { usePage } from '../../../lib/stores/pageStore'
 import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
 import { useSettings } from '../../../lib/stores/settings'
@@ -54,17 +54,29 @@ const BlockEditorTab = () => {
   const betaRegistration = useBetaRegistration()
   const [integrationsSet, { has, toggle }] = useSet<string>(new Set())
   const { translate } = useI18n()
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const isTabletScreenOrSmaller = useMediaQuery({
     maxWidth: commonTheme.breakpoints.tablet,
   })
+
+  useEffect(() => {
+    const registration = betaRegistration['betaRegistration']
+    if (
+      registration != null &&
+      (registration.state.integrations || []).length === 0 &&
+      containerRef.current != null
+    ) {
+      containerRef.current.scrollIntoView(false)
+    }
+  }, [betaRegistration])
 
   return (
     <SettingTabContent
       title='Block Editor'
       description={`Some information about our upcoming feature!`}
       body={
-        <Container>
+        <Container ref={containerRef}>
           <p>Hello everyone and thank you for your continued interest.</p>
           <p>
             As of late, we have been releasing features to help the
@@ -98,7 +110,7 @@ const BlockEditorTab = () => {
           <br />
           <img src='/static/images/blockeditor_1.png' />
           <Flexbox justifyContent='center'>
-            <small>
+            <small className='img__description'>
               <i>Block Editor concept mockup</i>
             </small>
           </Flexbox>
@@ -115,7 +127,7 @@ const BlockEditorTab = () => {
           <br />
           <img src='/static/images/blockeditor_2.png' />
           <Flexbox justifyContent='center'>
-            <small>
+            <small className='img__description'>
               <i>Each block can be maximized to have to clearer view</i>
             </small>
           </Flexbox>
@@ -146,6 +158,7 @@ const BlockEditorTab = () => {
                 </LoadingButton>
               ) : (
                 <LoadingButton
+                  size='lg'
                   type='submit'
                   variant='primary'
                   disabled={
@@ -228,6 +241,9 @@ const BlockEditorTab = () => {
 }
 
 const Container = styled.div`
+  .img__description {
+    line-height: ${({ theme }) => theme.sizes.fonts.xl}px;
+  }
   .registration__form {
     margin: ${({ theme }) => theme.sizes.spaces.l}px 0 !important;
   }
