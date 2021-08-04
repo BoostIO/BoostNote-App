@@ -297,7 +297,6 @@ const TeamInvitesSection = ({
           : role === 'member'
           ? translate(lngKeys.RoleMemberDescription)
           : translate(lngKeys.RoleViewerDescription)}
-        .
         <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'>
           {translate(lngKeys.SeeRoleDetails)}
           <Icon path={mdiOpenInNew} size={12} />
