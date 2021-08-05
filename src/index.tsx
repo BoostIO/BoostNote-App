@@ -11,7 +11,6 @@ import { RouterProvider } from './lib/router'
 import { combineProviders } from './lib/context'
 import { PreferencesProvider } from './lib/preferences'
 import { GeneralStatusProvider } from './lib/generalStatus'
-import { PreviewStyleProvider } from './lib/preview'
 import { StorageRouterProvider } from './lib/storageRouter'
 import { BoostHubStoreProvider } from './lib/boosthub'
 import { CloudIntroModalProvider } from './lib/cloudIntroModal'
@@ -29,7 +28,6 @@ const V2CombinedProvider = combineProviders(
 const CombinedProvider = combineProviders(
   V2CombinedProvider,
   BoostHubStoreProvider,
-  PreviewStyleProvider,
   MigrationProvider,
   GeneralStatusProvider,
   DialogProvider,
