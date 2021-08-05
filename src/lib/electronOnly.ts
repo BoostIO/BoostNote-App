@@ -1,5 +1,4 @@
 import { Stats, Dirent } from 'fs'
-import { JsonValue } from 'type-fest'
 import {
   BrowserWindowConstructorOptions,
   BrowserWindow,
@@ -34,8 +33,6 @@ const __ELECTRON_ONLY__: {
   ): Promise<Electron.SaveDialogReturnValue>
   openExternal(url: string): void
   openPath(fullPath: string, folderOnly?: boolean): void
-  parseCSON(value: string): JsonValue
-  stringifyCSON(value: any): string
   openNewWindow(options: BrowserWindowConstructorOptions): BrowserWindow
   openContextMenu(options: { menuItems: MenuItemConstructorOptions[] }): void
   getPathByName(name: string): string
@@ -78,8 +75,6 @@ const {
   showSaveDialog,
   openExternal,
   openPath,
-  parseCSON,
-  stringifyCSON,
   openNewWindow,
   openContextMenu,
   getPathByName,
@@ -138,8 +133,6 @@ export {
   showSaveDialog,
   openExternal,
   openPath,
-  parseCSON,
-  stringifyCSON,
   openNewWindow,
   openContextMenu,
   getPathByName,
