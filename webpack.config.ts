@@ -5,6 +5,7 @@ import express from 'express'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import packageJson from './package.json'
+import CompressionPlugin from 'compression-webpack-plugin'
 
 module.exports = (env, argv) => {
   const config: webpack.Configuration = {
@@ -111,6 +112,7 @@ module.exports = (env, argv) => {
     config.optimization = {
       minimize: true,
     }
+    config.plugins.push(new CompressionPlugin())
     if (process.env.TARGET === 'electron') {
       config.output.path = path.resolve(__dirname, 'electron/compiled')
     } else {
