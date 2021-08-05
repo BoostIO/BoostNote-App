@@ -6,6 +6,7 @@ import styled from '../../../lib/styled'
 import { useEffectOnce } from 'react-use'
 import ErrorPage from '../../../components/organisms/error/ErrorPage'
 import { useRouter } from '../../../lib/router'
+import { boostHubBaseUrl } from '../../../lib/consts'
 
 const AuthCallbackPage = () => {
   const [error, setError] = useState<any>()
@@ -16,7 +17,7 @@ const AuthCallbackPage = () => {
       setError('Could not contact parent')
       return
     }
-    window.opener.postMessage(query)
+    window.opener.postMessage(query, boostHubBaseUrl)
   })
 
   if (error != null) {
