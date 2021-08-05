@@ -35,6 +35,7 @@ import {
   mdiMagnify,
   mdiPaperclip,
   mdiPlusCircleOutline,
+  mdiTimelineAlert,
   mdiWeb,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
@@ -373,6 +374,13 @@ const Application = ({
               }
             />
           ) : null}
+          <SidebarButton
+            variant='subtle'
+            icon={<NotifyIcon text='!' size={16} path={mdiTimelineAlert} />}
+            id='sidebar__button__beta'
+            label={`Upcoming Beta`}
+            labelClick={() => openSettingsTab('blockeditor')}
+          />
         </SidebarButtonList>
         <ViewerDisclaimer />
       </>
