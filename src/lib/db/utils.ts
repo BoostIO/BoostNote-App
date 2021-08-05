@@ -4,7 +4,6 @@ import {
   ObjectMap,
   NoteDoc,
   FolderDoc,
-  TagDoc,
   NoteStorage,
   PopulatedTagDoc,
 } from './types'
@@ -200,24 +199,6 @@ export function createNotFoundError(message: string) {
 
 export function createConflictError(message: string) {
   return new DbClientError(message, DbClientErrorCode.Conflict)
-}
-
-export function isNoteDoc(
-  doc: PouchDB.Core.ExistingDocument<any>
-): doc is NoteDoc {
-  return doc._id.startsWith(NOTE_ID_PREFIX)
-}
-
-export function isFolderDoc(
-  doc: PouchDB.Core.ExistingDocument<any>
-): doc is FolderDoc {
-  return doc._id.startsWith(FOLDER_ID_PREFIX)
-}
-
-export function isTagDoc(
-  doc: PouchDB.Core.ExistingDocument<any>
-): doc is TagDoc {
-  return doc._id.startsWith(TAG_ID_PREFIX)
 }
 
 export function getAllParentFolderPathnames(pathname: string) {
