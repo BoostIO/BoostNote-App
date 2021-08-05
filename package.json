@@ -228,7 +228,7 @@
     "asar": false,
     "afterSign": "build-utils/afterSignHook.js",
     "mac": {
-      "icon": "static/icon.icns",
+      "icon": "static/boostnote-mac-icon.png",
       "hardenedRuntime": true,
       "entitlementsInherit": "macOs/entitlements.mac.plist",
       "entitlements": "macOs/entitlements.mac.plist"
