@@ -8,7 +8,6 @@
   const fs = require('fs')
   const FileType = require('file-type')
   const readChunk = require('read-chunk')
-  const CSON = require('cson-parser')
   const got = require('got')
   const isSvg = require('is-svg')
 
@@ -123,14 +122,6 @@
       console.warn(error)
       return ''
     }
-  }
-
-  function parseCSON(value) {
-    return CSON.parse(value)
-  }
-
-  function stringifyCSON(value) {
-    return CSON.stringify(value)
   }
 
   function openNewWindow(options) {
@@ -251,8 +242,6 @@
   window.__ELECTRON_ONLY__.mkdir = mkdir
   window.__ELECTRON_ONLY__.readFileType = readFileType
   window.__ELECTRON_ONLY__.readFileTypeFromBuffer = readFileTypeFromBuffer
-  window.__ELECTRON_ONLY__.parseCSON = parseCSON
-  window.__ELECTRON_ONLY__.stringifyCSON = stringifyCSON
   window.__ELECTRON_ONLY__.openNewWindow = openNewWindow
   window.__ELECTRON_ONLY__.openContextMenu = openContextMenu
   window.__ELECTRON_ONLY__.getPathByName = getPathByName

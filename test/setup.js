@@ -14,8 +14,6 @@ window.__ELECTRON_ONLY__ = {
   showOpenDialog: dummy,
   showSaveDialog: dummy,
   openExternal: dummy,
-  parseCSON: dummy,
-  stringifyCSON: dummy,
   openNewWindow: dummy,
   openContextMenu: dummy,
   getPathByName: dummy,
