@@ -6,6 +6,7 @@ import styled from '../../shared/lib/styled'
 import FormInput from '../../shared/components/molecules/Form/atoms/FormInput'
 import { openNew } from '../../lib/platform'
 import { usePreferences } from '../../lib/preferences'
+import { useLocalUI } from '../../lib/v2/hooks/local/useLocalUI'
 
 interface FSDbDeprecationPageProps {
   storage: FSNoteStorage
@@ -13,41 +14,56 @@ interface FSDbDeprecationPageProps {
 
 const FSDbDeprecationPage = ({ storage }: FSDbDeprecationPageProps) => {
   const { openTab } = usePreferences()
+  const { removeWorkspace } = useLocalUI()
 
   return (
     <Application content={{}}>
       <Container>
         <h1>Local space feature has been deprecated.</h1>
+
         <p>
-          Since, we have released the standalone local space app, we have
-          decided to discard this from the app. The stand alone app is using
-          same code base but lighter since it does not have any cloud features
-          and usage tracking.
+          We have decided to separate the local space feature from this app
+          because we have found that the goal of the local space feature is
+          different than the one of the cloud space feature.
         </p>
 
-        <p>To continue using the local space, you have two options.</p>
+        <p>
+          The deprecation will not delete any data. But, to continue accessing
+          the data, You need to follow one of these options below.
+        </p>
 
-        <ul>
-          <li>
-            <p>Migrate data to cloud space.</p>
-            <Button
-              onClick={() => {
-                openTab('migration')
-              }}
-            >
-              Migrate to cloud space
-            </Button>
-          </li>
-          <li>
-            <p>
-              Use data from the stand alone app. Check the below description.
-            </p>
-          </li>
-        </ul>
+        <h2>Option 1 : Migrate the data to cloud space</h2>
 
-        <h2>How to use the standalone app</h2>
+        <p>
+          The cloud space is the best option if you want to use the data with
+          your team and to access it from multiple devices. You can start it
+          from free plan with your team. (Revision control, Access control and
+          size of attachments are limited for free plan)
+        </p>
 
-        <p>You have two options to continue using this local space.</p>
+        <p>
+          This option will migrate your documents in this local space to the
+          cloud space but will not delete your local space data from your
+          machine.
+        </p>
+
+        <p>
+          <Button
+            onClick={() => {
+              openTab('migration')
+            }}
+          >
+            Migrate to cloud space
+          </Button>
+        </p>
+
+        <h2>Option 2 : Use the standalone app</h2>
+
+        <p>
+          If you want to keep your data more securely in your local device, the
+          standalone app should fit to you. It is technically using the same
+          code base of the deprecated local space but without any cloud modules.
+        </p>
 
         <ol>
           <li>
@@ -75,7 +91,14 @@ const FSDbDeprecationPage = ({ storage }: FSDbDeprecationPageProps) => {
               Remove this space from this app. (This action will not delete
               actual data of the local space.)
             </p>
-            <Button variant='danger'>Remove</Button>
+            <Button
+              variant='danger'
+              onClick={() => {
+                removeWorkspace(storage)
+              }}
+            >
+              Remove space
+            </Button>
           </li>
         </ol>
       </Container>
@@ -91,5 +114,14 @@ const Container = styled.div`
 
   .pathname {
     width: 100%;
+  }
+
+  ul,
+  ol {
+    padding-inline-start: 2em;
+  }
+
+  p {
+    line-height: 1.6;
   }
 `

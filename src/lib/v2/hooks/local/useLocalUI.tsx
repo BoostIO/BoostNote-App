@@ -16,10 +16,7 @@ export function useLocalUI() {
     async (workspace: NoteStorage) => {
       messageBox({
         title: `Remove "${workspace.name}" Space`,
-        message:
-          workspace.type === 'fs'
-            ? "This operation won't delete the actual space folder. You can add it to the app again."
-            : t('storage.removeMessage'),
+        message: "This operation won't delete the actual space folder.",
         iconType: DialogIconTypes.Warning,
         buttons: [
           {
