@@ -59,14 +59,7 @@ module.exports = (env, argv) => {
       new webpack.DefinePlugin({
         'process.env.VERSION': JSON.stringify(packageJson.version),
       }),
-      new webpack.EnvironmentPlugin([
-        'NODE_ENV',
-        'AMPLIFY_AUTH_IDENTITY_POOL_ID',
-        'AMPLIFY_AUTH_REGION',
-        'AMPLIFY_PINPOINT_APPID',
-        'AMPLIFY_PINPOINT_REGION',
-        'BOOST_HUB_BASE_URL',
-      ]),
+      new webpack.EnvironmentPlugin(['NODE_ENV', 'BOOST_HUB_BASE_URL']),
       new CopyPlugin({
         patterns: [
           {
