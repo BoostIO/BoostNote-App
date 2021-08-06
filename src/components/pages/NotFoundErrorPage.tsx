@@ -4,7 +4,7 @@ import React from 'react'
 import EmojiIcon from '../../cloud/components/atoms/EmojiIcon'
 import { useRouter } from '../../lib/router'
 import Button from '../../shared/components/atoms/Button'
-import { usePreferences } from '../../mobile/lib/preferences'
+import { usePreferences } from '../../lib/preferences'
 
 const NotFoundErrorPage = ({}) => {
   const { push } = useRouter()
