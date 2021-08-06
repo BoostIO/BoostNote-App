@@ -8,7 +8,7 @@ import React, {
   useMemo,
 } from 'react'
 import { PageDataContext, PageDataProps } from './types'
-import { useCommittedRef, useRefCallback } from '../../hooks'
+import { useCommittedRef, useRefEffect } from '../../hooks'
 import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedUser } from '../../../interfaces/db/user'
@@ -32,7 +32,7 @@ function usePageDataStore(pageProps: any) {
     setPageData(pageProps)
   }, [pageProps])
 
-  const [setPartialPageData, setPartialPageDataRef] = useRefCallback(
+  const setPartialPageData = useCallback(
     (val: any) => {
       setPageData((prevState: any) => {
         return Object.assign(
@@ -44,6 +44,7 @@ function usePageDataStore(pageProps: any) {
     },
     [setPageData]
   )
+  const setPartialPageDataRef = useRefEffect(setPartialPageData)
 
   const team: undefined | SerializedTeam = pageData.team
   const permissions: undefined | SerializedUserTeamPermissions[] =
