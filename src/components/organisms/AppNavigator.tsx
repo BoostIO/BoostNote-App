@@ -173,9 +173,28 @@ const TopLevelNavigator = () => {
     })
 
     generalStatus.boostHubTeams.forEach((boostHubTeam, index) => {
+      const roles = (boostHubTeam.permissions || []).reduce(
+        (acc, val) => {
+          if (val.role === 'viewer') {
+            acc.viewers = acc.viewers + 1
+          } else {
+            acc.members = acc.members + 1
+          }
+          return acc
+        },
+        { viewers: 0, members: 0 }
+      )
+
       spaces.push({
         label: boostHubTeam.name,
         icon: boostHubTeam.iconUrl,
+        subscriptionPlan:
+          boostHubTeam.subscription != null
+            ? boostHubTeam.subscription.plan
+            : undefined,
+        description: `${roles.members} Members ${
+          roles.viewers > 0 ? `- ${roles.viewers} Viewers` : ''
+        }`,
         active: activeBoostHubTeamDomain === boostHubTeam.domain,
         tooltip: `${osName === 'macos' ? '⌘' : 'Ctrl'} ${
           entries(storageMap).length + index + 1
