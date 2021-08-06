@@ -16,6 +16,8 @@
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/ban-types": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
     "react/prop-types": "off",
     "react/display-name": "off"
   },

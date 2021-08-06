@@ -17,6 +17,7 @@ export function useRefCallback<T extends (...args: any[]) => any>(
   callback: T,
   deps: React.DependencyList
 ) {
+  /* eslint-disable react-hooks/exhaustive-deps */
   const cb = useCallback(callback, deps)
 
   const callbackRef = useRef(cb)

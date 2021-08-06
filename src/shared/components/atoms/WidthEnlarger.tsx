@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react'
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import throttle from 'lodash/throttle'
 import { clamp } from 'ramda'
 import styled from '../../lib/styled'
@@ -43,16 +43,15 @@ const WidthEnlarger: React.FC<WidthEnlargerProps> = ({
     setDragging(false)
   }, [])
 
-  const moveDragging = useCallback(
-    throttle((event: MouseEvent) => {
+  const moveDragging = useMemo(() => {
+    return throttle((event: MouseEvent) => {
       event.preventDefault()
       const diff = event.clientX - dragStartXPositionRef.current
       setLeftWidth(
         clamp(minWidth, maxWidth, previousLeftWidthRef.current + diff)
       )
-    }, 1000 / 30),
-    []
-  )
+    }, 1000 / 30)
+  }, [minWidth, maxWidth])
 
   useEffect(() => {
     if (dragging && !mouseupListenerIsSetRef.current) {
