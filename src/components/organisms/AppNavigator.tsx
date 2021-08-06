@@ -25,6 +25,7 @@ import { useCloudIntroModal } from '../../lib/cloudIntroModal'
 import { DialogIconTypes, useDialog } from '../../shared/lib/stores/dialog'
 import styled from '../../shared/lib/styled'
 import SidebarPopOver from '../../shared/components/organisms/Sidebar/atoms/SidebarPopOver'
+import { capitalize } from 'lodash'
 
 const TopLevelNavigator = () => {
   const { storageMap, removeStorage } = useDb()
@@ -190,8 +191,8 @@ const TopLevelNavigator = () => {
         icon: boostHubTeam.iconUrl,
         subscriptionPlan:
           boostHubTeam.subscription != null
-            ? boostHubTeam.subscription.plan
-            : undefined,
+            ? capitalize(boostHubTeam.subscription.plan)
+            : 'Free',
         description: `${roles.members} Members ${
           roles.viewers > 0 ? `- ${roles.viewers} Viewers` : ''
         }`,
