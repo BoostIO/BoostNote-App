@@ -129,7 +129,6 @@
     "@mdi/react": "^1.2.1",
     "@stripe/react-stripe-js": "^1.2.0",
     "@stripe/stripe-js": "^1.11.0",
-    "axios": "^0.21.1",
     "chart.js": "^2.9.4",
     "classcat": "^4.0.2",
     "codemirror": "^5.59.2",

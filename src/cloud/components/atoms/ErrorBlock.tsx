@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { AxiosError } from 'axios'
 import ColoredBlock from './ColoredBlock'
 import { nodeEnv } from '../../lib/consts'
 import ky from 'ky'
@@ -56,16 +55,5 @@ export async function getErrorMessage(error: unknown): Promise<string> {
     return message
   }
 
-  if (isAxiosError(error)) {
-    return error.response!.data
-  }
-
   return typeof error === 'string' ? error : (error as Error).message
-}
-
-function isAxiosError(error: unknown): error is AxiosError {
-  if ((error as AxiosError).response != null) {
-    return true
-  }
-  return false
 }
