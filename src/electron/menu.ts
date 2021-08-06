@@ -108,12 +108,8 @@ export function getTemplateFromKeymap(
             },
             { type: 'separator' },
             {
-              label: 'Add Cloud Space',
+              label: 'Add Space',
               click: createEmitIpcMenuItemHandler('create-cloud-space'),
-            },
-            {
-              label: 'Add Local Space',
-              click: createEmitIpcMenuItemHandler('create-local-space'),
             },
             { type: 'separator' },
             {
