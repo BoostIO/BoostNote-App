@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from 'react'
 import { usePreferences } from '../../lib/preferences'
 import { useGlobalKeyDownHandler } from '../../lib/keyboard'
-import { mdiClose, mdiTruckDeliveryOutline } from '@mdi/js'
+import { mdiClose } from '@mdi/js'
 import { useDb } from '../../lib/db'
 import { useRouteParams } from '../../lib/routeParams'
 import MigrationTab from './MigrationTab'
@@ -135,10 +135,7 @@ const PreferencesModal = () => {
     <FullScreenContainer>
       <ContentContainer>
         <ModalHeader>
-          <ModalTitle>
-            <Icon size={26} path={mdiTruckDeliveryOutline} /> Migrate to Cloud
-            Space
-          </ModalTitle>
+          <ModalTitle>Migrate to Cloud Space</ModalTitle>
           <CloseButton onClick={togglePreferencesModal}>
             <Icon path={mdiClose} />
           </CloseButton>
