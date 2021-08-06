@@ -18,6 +18,7 @@ import { useStorageRouter } from '../../lib/storageRouter'
 import Icon from '../../shared/components/atoms/Icon'
 import styled from '../../shared/lib/styled'
 import Button from '../../shared/components/atoms/Button'
+import { useToast } from '../../shared/lib/stores/toast'
 
 interface MigrationPageProps {
   storage: NoteStorage
@@ -55,6 +56,7 @@ const MigrationTab = ({ storage }: MigrationPageProps) => {
   } = useGeneralStatus()
   const { get, start, end } = useMigrations()
   const { navigateToNote } = useStorageRouter()
+  const { pushMessage } = useToast()
 
   const runningJob = get(storage.id)
 
@@ -62,7 +64,7 @@ const MigrationTab = ({ storage }: MigrationPageProps) => {
     initState(boostHubTeams, runningJob)
   )
   const [workspaceErr, setWorkspaceErr] = useState<Error | null>(null)
-  const { openTab, setClosed } = usePreferences()
+  const { setClosed } = usePreferences()
 
   useEffect(() => {
     if (runningJob != null) {
@@ -99,12 +101,18 @@ const MigrationTab = ({ storage }: MigrationPageProps) => {
   const cancel = useCallback(() => {
     end(storage.id)
     setMigrationState(transitionCancel(boostHubTeams))
-  }, [boostHubTeams, end, storage.id])
+    setClosed(true)
+  }, [boostHubTeams, end, storage.id, setClosed])
 
   const finish = useCallback(() => {
     end(storage.id)
-    openTab('storage')
-  }, [end, openTab, storage])
+    setClosed(true)
+    pushMessage({
+      type: 'success',
+      title: 'The migration has been finished',
+      description: 'Please check migrated data in the destination cloud space',
+    })
+  }, [end, storage.id, setClosed, pushMessage])
 
   if (migrationState.step === 'login') {
     return (
@@ -159,7 +167,7 @@ const MigrationTab = ({ storage }: MigrationPageProps) => {
           </Flexbox>
         </FormGroup>
         <Flexbox justifyContent='flex-end'>
-          <Button variant={'transparent'} onClick={() => openTab('storage')}>
+          <Button variant={'transparent'} onClick={() => setClosed(true)}>
             Cancel
           </Button>
           <Button
