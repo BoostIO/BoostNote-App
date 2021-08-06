@@ -27,6 +27,7 @@ const ContainerView = ({
   actions,
   canvas,
   nested,
+  realtime,
 }: ContainerViewProps) => {
   const { openModal, closeAllModals } = useModal()
   const [addSelectOpen, setAddSelectOpen] = useState(false)
@@ -73,21 +74,37 @@ const ContainerView = ({
                   actions={actions}
                   nested={true}
                   canvas={canvas}
+                  realtime={realtime}
                 />
               )
             case 'embed':
               return (
                 <AspectRatio width={16} height={9}>
-                  <EmbedView block={child} actions={actions} canvas={canvas} />
+                  <EmbedView
+                    block={child}
+                    actions={actions}
+                    canvas={canvas}
+                    realtime={realtime}
+                  />
                 </AspectRatio>
               )
             case 'markdown':
               return (
-                <MarkdownView block={child} actions={actions} canvas={canvas} />
+                <MarkdownView
+                  block={child}
+                  actions={actions}
+                  canvas={canvas}
+                  realtime={realtime}
+                />
               )
             case 'table':
               return (
-                <TableView block={child} actions={actions} canvas={canvas} />
+                <TableView
+                  block={child}
+                  actions={actions}
+                  canvas={canvas}
+                  realtime={realtime}
+                />
               )
             default:
               return (
