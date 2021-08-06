@@ -55,6 +55,14 @@ const FSDbDeprecationPage = ({ storage }: FSDbDeprecationPageProps) => {
           >
             Migrate to cloud space
           </Button>
+          <Button
+            variant='danger'
+            onClick={() => {
+              removeWorkspace(storage)
+            }}
+          >
+            Remove space
+          </Button>
         </p>
 
         <h2>Option 2 : Use the standalone app</h2>
