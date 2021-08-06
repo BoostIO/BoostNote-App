@@ -40,7 +40,7 @@ export function getTemplateFromKeymap(
               },
               { type: 'separator' },
               {
-                label: 'Add Cloud Space',
+                label: 'Add Space',
                 click: createEmitIpcMenuItemHandler('create-cloud-space'),
               },
               { type: 'separator' },
