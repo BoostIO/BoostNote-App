@@ -37,8 +37,8 @@ const FSDbDeprecationPage = ({ storage }: FSDbDeprecationPageProps) => {
         <p>
           The cloud space is the best option if you want to use the data with
           your team and to access it from multiple devices. You can start it
-          from free plan with your team. (Revision control, Access control and
-          size of attachments are limited for free plan)
+          from free plan with your team (revision control, access control and
+          size of attachments are limited for free plan).
         </p>
 
         <p>
@@ -88,8 +88,8 @@ const FSDbDeprecationPage = ({ storage }: FSDbDeprecationPageProps) => {
           </li>
           <li>
             <p>
-              Remove this space from this app. (This action will not delete
-              actual data of the local space.)
+              Remove this space from this app (this action will not delete
+              actual data of the local space).
             </p>
             <Button
               variant='danger'
