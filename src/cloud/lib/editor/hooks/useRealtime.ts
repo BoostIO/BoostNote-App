@@ -11,7 +11,7 @@ export type PresenceChange<T> =
   | { type: 'disconnected'; sessionId: number }
 
 export interface RealtimeArgs<T extends { id: string }> {
-  token?: string
+  token: string
   id: string
   userInfo?: T
 }
@@ -79,9 +79,7 @@ const useRealtime = <T extends { id: string }>({
       })
       .catch((error) => console.error(error))
 
-    // TODO: Get Collaboration Token
-    const authToken = token != null ? token : ''
-    const provider = new WebsocketProvider('', authToken, doc, {
+    const provider = new WebsocketProvider('', token, doc, {
       WebSocketPolyfill: constructor,
       resyncInterval: 10000,
     })
