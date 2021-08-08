@@ -359,7 +359,7 @@ export function getTemplateFromKeymap(
         {
           label: 'Learn More',
           click: async () => {
-            await shell.openExternal('https://boosthub.io')
+            await shell.openExternal('https://boostnote.io')
           },
         },
       ] as MenuItemConstructorOptions[],
