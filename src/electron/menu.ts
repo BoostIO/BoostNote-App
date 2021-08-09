@@ -282,10 +282,10 @@ export function getTemplateFromKeymap(
         { role: 'forcereload' },
         { role: 'toggledevtools' },
         { type: 'separator' },
-        // { role: 'resetzoom' },
-        // { role: 'zoomin' },
-        // { role: 'zoomout' },
-        // { type: 'separator' },
+        { role: 'resetzoom' },
+        { role: 'zoomin' },
+        { role: 'zoomout' },
+        { type: 'separator' },
         { role: 'togglefullscreen' },
       ] as MenuItemConstructorOptions[],
     },
@@ -293,7 +293,6 @@ export function getTemplateFromKeymap(
       label: 'Window',
       submenu: [
         { role: 'minimize' },
-        { role: 'zoom' },
         ...(mac
           ? [
               { type: 'separator' },
