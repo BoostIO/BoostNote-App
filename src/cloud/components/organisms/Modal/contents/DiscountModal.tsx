@@ -24,6 +24,20 @@ const DiscountModal = () => {
   const { team, subscription, permissions = [] } = usePage()
   const { translate } = useI18n()
 
+  const eligible = useMemo(() => {
+    if (team == null) {
+      return false
+    }
+    return isEligibleForDiscount(team, permissions)
+  }, [team, permissions])
+
+  const isTimeEligible = useMemo(() => {
+    if (team == null) {
+      return false
+    }
+    return isTimeEligibleForDiscount(team)
+  }, [team])
+
   if (team == null) {
     return null
   }
@@ -40,14 +54,6 @@ const DiscountModal = () => {
 
   const eligibilityEnd = new Date(team.createdAt)
   eligibilityEnd.setDate(eligibilityEnd.getDate() + newTeamDiscountDays)
-
-  const eligible = useMemo(() => {
-    return isEligibleForDiscount(team, permissions)
-  }, [team, permissions])
-
-  const isTimeEligible = useMemo(() => {
-    return isTimeEligibleForDiscount(team)
-  }, [team])
 
   return (
     <Container className='discount__modal'>
