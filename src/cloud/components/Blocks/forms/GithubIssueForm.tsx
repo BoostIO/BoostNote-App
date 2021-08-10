@@ -394,7 +394,10 @@ const GithubIssueSelector = ({
                 <input
                   type='checkbox'
                   onChange={toggleAll}
-                  checked={filteredIssues.length === selectedIssues.size}
+                  checked={
+                    filteredIssues.length > 0 &&
+                    filteredIssues.length === selectedIssues.size
+                  }
                 />{' '}
                 Title
               </td>
