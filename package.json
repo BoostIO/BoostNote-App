@@ -170,7 +170,7 @@
     "overlayscrollbars-react": "^0.2.3",
     "ow": "^0.13.2",
     "pako": "^1.0.11",
-    "path-parse": "^1.0.6",
+    "path-parse": "^1.0.7",
     "path-to-regexp": "^2.4.0",
     "plur": "^4.0.0",
     "ramda": "^0.26.1",
