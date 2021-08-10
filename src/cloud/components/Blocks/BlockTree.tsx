@@ -35,7 +35,7 @@ const BlockTree = ({
     >
       <div className='block__tree__label'>
         <BlockIcon block={root} size={16} />
-        <span onClick={() => onSelect(root)}>{capitalize(root.type)}</span>
+        <span onClick={() => onSelect(root)}>{blockTitle(root)}</span>
         <span onClick={() => onDelete(root)}>
           <Icon
             className='block__tree__action'
@@ -61,14 +61,27 @@ const BlockTree = ({
   )
 }
 
+function blockTitle(block: Block) {
+  switch (block.type) {
+    case 'github.issue':
+      return block.data.number != null
+        ? `#${block.data.number}`
+        : 'Github Issue'
+    default:
+      return capitalize(block.type)
+  }
+}
+
 const StyledBlockTree = styled.div<{ depth: number }>`
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+  position: relative;
 
   &.block__tree--active > .block__tree__label {
     background-color: ${({ theme }) => theme.colors.background.secondary};
   }
 
   & > .block__tree__label {
+    position: relative;
     padding-left: ${({ depth }) => 18 + (depth as number) * 15}px;
     display: flex;
     width: 100%;
@@ -87,9 +100,11 @@ const StyledBlockTree = styled.div<{ depth: number }>`
     text-decoration: none;
     margin: 0;
     overflow: hidden;
+
     & > span:first-of-type {
       flex-grow: 1;
     }
+
     & svg {
       color: ${({ theme }) => theme.colors.text.subtle};
       margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
@@ -105,6 +120,27 @@ const StyledBlockTree = styled.div<{ depth: number }>`
       & .block__tree__action {
         display: block;
       }
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      width: 8px;
+      top: 0;
+      left: ${({ depth }) => 5 + (depth as number) * 15}px;
+      border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
+      height: 50%;
+    }
+  }
+  & > .block__tree__children {
+    position: relative;
+    &:before {
+      content: '';
+      position: absolute;
+      border-left: 1px solid ${({ theme }) => theme.colors.border.second};
+      top: 0;
+      left: ${({ depth }) => 5 + (depth as number) * 15}px;
+      height: calc(100% - 13px);
     }
   }
 `
