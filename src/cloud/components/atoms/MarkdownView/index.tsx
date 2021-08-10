@@ -46,6 +46,7 @@ import throttle from 'lodash.throttle'
 import CodeFence from '../../../../shared/components/atoms/markdown/CodeFence'
 import { agentType, sendPostMessage } from '../../../../mobile/lib/nativeMobile'
 import { TableOfContents } from '../../molecules/TableOfContents'
+import ExpandableImage from '../../../../shared/components/molecules/Image/ExpandableImage'
 
 const remarkAdmonitionOptions = {
   tag: ':::',
@@ -156,6 +157,9 @@ const MarkdownView = ({
       createElement: React.createElement,
       Fragment: React.Fragment,
       components: {
+        img: ({ src }: any) => {
+          return <ExpandableImage src={src} />
+        },
         a: ({ href, children }: any) => {
           if (agentType === 'ios-native' || agentType === 'android-native') {
             return (
