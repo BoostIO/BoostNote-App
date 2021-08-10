@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from '../../../../../shared/lib/styled'
 import Countdown from 'react-countdown'
 import {
   isEligibleForDiscount,
   newTeamDiscountDays,
   membersForDiscount,
+  isTimeEligibleForDiscount,
 } from '../../../../lib/subscription'
 import PlanTables from '../../Subscription/PlanTables'
 import { useSettings } from '../../../../lib/stores/settings'
@@ -14,8 +15,7 @@ import Banner from '../../../../../shared/components/atoms/Banner'
 import { mdiExclamation } from '@mdi/js'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
-import { TFunction } from 'i18next'
-import { withTranslation, Translation } from 'react-i18next'
+import { Translation } from 'react-i18next'
 import Button from '../../../../../shared/components/atoms/Button'
 
 const DiscountModal = () => {
@@ -41,7 +41,14 @@ const DiscountModal = () => {
   const eligibilityEnd = new Date(team.createdAt)
   eligibilityEnd.setDate(eligibilityEnd.getDate() + newTeamDiscountDays)
 
-  const eligible = isEligibleForDiscount(team, permissions)
+  const eligible = useMemo(() => {
+    return isEligibleForDiscount(team, permissions)
+  }, [team, permissions])
+
+  const isTimeEligible = useMemo(() => {
+    return isTimeEligibleForDiscount(team)
+  }, [team])
+
   return (
     <Container className='discount__modal'>
       <header className='discount__modal__header'>
@@ -65,14 +72,25 @@ const DiscountModal = () => {
             </Button>
           </h5>
         )}
-        <div className='discount__modal__description'>
-          {translate(lngKeys.DiscountModalTimeRemaining)}
-        </div>
-        <Countdown renderer={DiscountCountdownRenderer} date={eligibilityEnd} />
+        {isTimeEligible ? (
+          <>
+            <div className='discount__modal__description'>
+              {translate(lngKeys.DiscountModalTimeRemaining)}
+            </div>
+            <Countdown
+              renderer={DiscountCountdownRenderer}
+              date={eligibilityEnd}
+            />
+          </>
+        ) : (
+          <div className='discount__modal__description'>
+            {translate(lngKeys.DiscountModalExpired)}
+          </div>
+        )}
         <PlanTables
           team={team}
           selectedPlan={'free'}
-          discounted={true}
+          discounted={isTimeEligible}
           onStandardCallback={
             eligible
               ? () => {
@@ -115,7 +133,7 @@ const DiscountCountdownRenderer = ({
   completed: boolean
 }) => {
   if (completed) {
-    return withTranslation()(DiscountExpired)
+    return null
   }
 
   return (
@@ -149,12 +167,6 @@ const DiscountCountdownRenderer = ({
         </div>
       )}
     </Translation>
-  )
-}
-
-const DiscountExpired = ({ t }: { t: TFunction }) => {
-  return (
-    <div className='countdown__expired'>{t(lngKeys.DiscountModalExpired)}</div>
   )
 }
 

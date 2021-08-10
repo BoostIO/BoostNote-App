@@ -1,6 +1,7 @@
 export enum MixpanelActionTrackTypes {
   AccountCreate = 'account.create',
   AccountDelete = 'account.delete',
+  DiscountSidebar = 'discount.sidebar',
   DocArchive = 'doc.archive',
   DocBookmarkCreate = 'doc.bookmark.create',
   DocBookmarkDelete = 'doc.bookmark.delete',
@@ -128,6 +129,7 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.InviteFromDocPage
   | MixpanelActionTrackTypes.InviteFromFolderPage
   | MixpanelActionTrackTypes.InviteFromSidenav
+  | MixpanelActionTrackTypes.DiscountSidebar
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 
