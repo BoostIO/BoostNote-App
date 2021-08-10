@@ -1,11 +1,12 @@
 import React from 'react'
 import { ViewProps } from '../BlockContent'
-import { mdiLinkBoxOutline } from '@mdi/js'
+import { mdiLink } from '@mdi/js'
 import styled from '../../../../design/lib/styled'
 import Icon from '../../../../design/components/atoms/Icon'
 import { GithubIssueBlock } from '../../../api/blocks'
 
 const GithubIssueView = ({ block }: ViewProps<GithubIssueBlock>) => {
+  console.log(block)
   return (
     <StyledGithubIssueView>
       <h1>{block.data.title}</h1>
@@ -16,7 +17,7 @@ const GithubIssueView = ({ block }: ViewProps<GithubIssueBlock>) => {
             <a href={block.data.html_url}>
               <div>
                 <span>#{block.data.number}</span>
-                <Icon path={mdiLinkBoxOutline} />
+                <Icon path={mdiLink} />
               </div>
             </a>
           </div>
@@ -42,18 +43,11 @@ const GithubIssueView = ({ block }: ViewProps<GithubIssueBlock>) => {
         <div>
           <div>Linked PR</div>
           <div>
-            <a
-              href={
-                block.data.pull_request != null
-                  ? block.data.pull_request.html_url
-                  : '#'
-              }
-            >
-              #
-              {block.data.pull_request != null
-                ? block.data.pull_request.number
-                : ''}
-            </a>
+            {block.data.pull_request != null && (
+              <a href={block.data.pull_request.html_url}>
+                #{block.data.pull_request.number || block.data.number}
+              </a>
+            )}
           </div>
         </div>
       </div>
