@@ -365,12 +365,13 @@ const Application = ({
               icon={<NotifyIcon text='!' size={16} path={mdiGiftOutline} />}
               id='sidebar__button__promo'
               label={translate(lngKeys.SidebarNewUserDiscount)}
-              labelClick={() =>
-                openModal(<DiscountModal />, {
+              labelClick={() => {
+                trackEvent(MixpanelActionTrackTypes.DiscountSidebar)
+                return openModal(<DiscountModal />, {
                   showCloseIcon: true,
                   width: 'large',
                 })
-              }
+              }}
             />
           ) : null}
         </SidebarButtonList>
