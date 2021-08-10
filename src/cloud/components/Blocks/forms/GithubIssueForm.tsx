@@ -187,6 +187,7 @@ const GithubIssueSelector = ({
   const [currentRepo, setCurrentRepo] = useState<Repo | null>(null)
   const [issues, setIssues] = useState<Issue[]>([])
   const [selectedIssues, setSelectedIssues] = useState<Set<Issue>>(new Set())
+  const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const [search, setSearch] = useState('')
   const { pushApiErrorMessage } = useToast()
@@ -232,6 +233,7 @@ const GithubIssueSelector = ({
   useEffect(() => {
     setIssues([])
     setSelectedIssues(new Set())
+    setPage(1)
     if (currentRepo != null) {
       setIsLoading(true)
       getAction(integrationRef.current, 'repo:issues', {
@@ -244,6 +246,25 @@ const GithubIssueSelector = ({
       setIsLoading(false)
     }
   }, [currentRepo])
+
+  const getMore = useCallback(async () => {
+    if (currentRepo != null) {
+      try {
+        setIsLoading(true)
+        const issues = await getAction(integrationRef.current, 'repo:issues', {
+          owner: currentRepo.owner.login,
+          repo: currentRepo.name,
+          page: page + 1,
+        })
+        setPage(page + 1)
+        setIssues((prev) => prev.concat(issues))
+      } catch (err) {
+        errorHandleRef.current(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  }, [currentRepo, page])
 
   const setIntegration = useCallback(
     ({ value }) => {
@@ -434,6 +455,9 @@ const GithubIssueSelector = ({
             ))}
           </tbody>
         </table>
+        <div className='github-issue__form__more'>
+          <Button onClick={getMore}>Get More</Button>
+        </div>
       </div>
       <div className='github-issue__form__action'>
         <Button
@@ -491,6 +515,12 @@ const StyledGithubIssueForm = styled.div`
   & .github-issue__form__table {
     flex-grow: 1;
     overflow: auto;
+  }
+
+  & .github-issue__form__more {
+    display: flex;
+    justify-content: end;
+    margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
   }
 
   & .github-issue__form__action {
