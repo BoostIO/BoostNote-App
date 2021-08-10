@@ -6,7 +6,6 @@ import Icon from '../../../../design/components/atoms/Icon'
 import { GithubIssueBlock } from '../../../api/blocks'
 
 const GithubIssueView = ({ block }: ViewProps<GithubIssueBlock>) => {
-  console.log(block)
   return (
     <StyledGithubIssueView>
       <h1>{block.data.title}</h1>
