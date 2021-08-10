@@ -16,7 +16,7 @@ interface Actions {
 }
 
 export type State =
-  | { type: 'initialising' }
+  | { type: 'initialising'; actions: Actions }
   | {
       type: 'working'
       integrations: SerializedTeamIntegration[]
