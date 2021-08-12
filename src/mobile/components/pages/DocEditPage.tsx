@@ -46,6 +46,7 @@ import { useModal } from '../../../shared/lib/stores/modal'
 import DocInfoModal from '../organisms/modals/DocInfoModal'
 import { SerializedRevision } from '../../../cloud/interfaces/db/revision'
 import { osName } from '../../../lib/platform'
+import { BaseTheme } from '../../../shared/lib/styled/types'
 
 interface EditorProps {
   doc: SerializedDocWithBookmark
@@ -319,6 +320,12 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
   }, [editorMode])
 
   const { settings } = useSettings()
+  const fontSize = useMemo(() => {
+    return settings['general.editorFontSize']
+  }, [settings])
+  const fontFamily = useMemo(() => {
+    return settings['general.editorFontFamily']
+  }, [settings])
   const editorConfig: CodeMirror.EditorConfiguration = useMemo(() => {
     const editorTheme = settings['general.editorTheme']
     const theme =
@@ -502,7 +509,11 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     >
       <Container>
         <StyledEditor className={editorMode}>
-          <StyledEditorWrapper className={`layout-${editorMode}`}>
+          <StyledEditorWrapper
+            className={`layout-${editorMode}`}
+            fontFamily={fontFamily}
+            fontSize={fontSize}
+          >
             <>
               <CodeMirrorEditor
                 bind={bindCallback}
@@ -615,7 +626,12 @@ const StyledLoadingView = styled.div`
   }
 `
 
-const StyledEditorWrapper = styled.div`
+interface FontOptionsProps {
+  fontSize: string
+  fontFamily: string
+}
+
+const StyledEditorWrapper = styled.div<BaseTheme & FontOptionsProps>`
   position: relative;
   height: auto;
   &.layout-edit {
@@ -623,6 +639,13 @@ const StyledEditorWrapper = styled.div`
   }
   &.layout-preview {
     display: none;
+  }
+
+  & .CodeMirror * {
+    font-size: ${({ fontSize }) =>
+      fontSize == null ? 'inherit' : `${fontSize}px`};
+    font-family: ${({ fontFamily }) =>
+      fontFamily == null ? 'monospace' : fontFamily};
   }
 `
 

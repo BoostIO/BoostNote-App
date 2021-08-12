@@ -50,6 +50,8 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SettingsEditorTheme]: 'エディタテーマ',
   [lngKeys.SettingsCodeBlockTheme]: 'コードブロックテーマ',
   [lngKeys.SettingsEditorKeyMap]: 'エディタのキーマップ',
+  [lngKeys.SettingsEditorFontSize]: 'エディタのフォントサイズ',
+  [lngKeys.SettingsEditorFontFamily]: 'エディタフォントファミリ',
   [lngKeys.SettingsLight]: 'ライト',
   [lngKeys.SettingsDark]: 'ダーク',
   [lngKeys.SettingsNotifFrequencies]: 'メール設定',

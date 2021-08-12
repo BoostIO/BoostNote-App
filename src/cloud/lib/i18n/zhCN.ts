@@ -50,6 +50,8 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SettingsEditorTheme]: '编辑主题',
   [lngKeys.SettingsCodeBlockTheme]: '代码块主题',
   [lngKeys.SettingsEditorKeyMap]: '编辑器键映射',
+  [lngKeys.SettingsEditorFontSize]: '编辑器字体大小',
+  [lngKeys.SettingsEditorFontFamily]: '编辑器字体系列',
   [lngKeys.SettingsLight]: 'Light',
   [lngKeys.SettingsDark]: 'Dark',
   [lngKeys.SettingsNotifFrequencies]: 'Email updates',
