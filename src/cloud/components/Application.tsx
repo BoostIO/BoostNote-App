@@ -127,8 +127,13 @@ const Application = ({
   })
 
   useEffectOnce(() => {
-    if (query.settings === 'upgrade') {
-      openSettingsTab('teamUpgrade')
+    switch (query.settings) {
+      case 'upgrade':
+        return openSettingsTab('teamUpgrade')
+      case 'members':
+        return openSettingsTab('teamMembers')
+      default:
+        return
     }
   })
 

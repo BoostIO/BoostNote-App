@@ -469,6 +469,8 @@ const jpTranslation: TranslationSource = {
     'メンバー権限を変更するためには、有料プランを購入する必要があります。アップグレードをご検討いただけますと幸いです。',
 
   [lngKeys.GeneralDocuments]: 'Documents',
+  [lngKeys.RequestSent]: 'Request sent',
+  [lngKeys.RequestAsk]: 'Ask to edit',
 }
 
 export default {
