@@ -15,6 +15,7 @@ export type TeamLinkIntent =
   | 'timeline'
   | 'delete'
   | 'shared'
+  | 'requests/deny'
 
 export interface TeamIdProps {
   id: string

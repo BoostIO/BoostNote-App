@@ -61,6 +61,7 @@ import EmojiPicker from '../../shared/components/molecules/EmojiPicker'
 import { NotificationsProvider } from '../../shared/lib/stores/notifications'
 import { TeamIntegrationsProvider } from '../../shared/lib/stores/integrations'
 import { TeamStorageProvider } from '../lib/stores/teamStorage'
+import DenyRequestsPage from '../pages/[teamId]/requests/deny'
 
 const CombinedProvider = combineProviders(
   TeamStorageProvider,
@@ -387,6 +388,12 @@ function getPageComponent(pathname: string): PageSpec | null {
 
   if (splittedPathnames.length >= 2) {
     switch (splittedPathnames[1]) {
+      case 'requests': {
+        return {
+          Component: DenyRequestsPage,
+          getInitialProps: DenyRequestsPage.getInitialProps,
+        }
+      }
       case 'shared':
         return {
           Component: SharedDocsListPage,
