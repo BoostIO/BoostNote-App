@@ -99,6 +99,7 @@ export enum MixpanelActionTrackTypes {
   InviteFromDocPage = 'invite.doc',
   InviteFromFolderPage = 'invite.folder',
   InviteFromSidenav = 'invite.sidenav',
+  SendEditRequest = 'send.editrequest',
 }
 
 export type MixpanelFrontEvent =
@@ -130,6 +131,7 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.InviteFromFolderPage
   | MixpanelActionTrackTypes.InviteFromSidenav
   | MixpanelActionTrackTypes.DiscountSidebar
+  | MixpanelActionTrackTypes.SendEditRequest
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 

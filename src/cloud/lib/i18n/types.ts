@@ -423,6 +423,8 @@ export enum lngKeys {
   SettingsRolesRestrictedDescription = 'settings.roles.restricted.description',
 
   GeneralDocuments = 'general.documents',
+  RequestAsk = 'request.ask',
+  RequestSent = 'request.requested',
 }
 
 export type TranslationSource = {

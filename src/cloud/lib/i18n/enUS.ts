@@ -467,6 +467,8 @@ const enTranslation: TranslationSource = {
     'In order to promote the user to this specific role, your space needs to have an active subscription. Please consider upgrading your plan.',
 
   [lngKeys.GeneralDocuments]: 'Documents',
+  [lngKeys.RequestSent]: 'Request sent',
+  [lngKeys.RequestAsk]: 'Ask to edit',
 }
 
 export default {
