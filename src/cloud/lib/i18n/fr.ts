@@ -51,6 +51,8 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsEditorTheme]: "Thème de l'éditeur",
   [lngKeys.SettingsCodeBlockTheme]: 'Thème des blocs de code',
   [lngKeys.SettingsEditorKeyMap]: "KeyMap pour l'éditeur",
+  [lngKeys.SettingsEditorFontSize]: "Taille de la police de l'éditeur",
+  [lngKeys.SettingsEditorFontFamily]: "Famille de polices de l'éditeur",
   [lngKeys.SettingsLight]: 'Clair',
   [lngKeys.SettingsDark]: 'Sombre',
   [lngKeys.SettingsNotifFrequencies]: 'Fréquence de mises à jour par mail',

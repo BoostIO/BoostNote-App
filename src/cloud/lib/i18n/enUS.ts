@@ -50,6 +50,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsEditorTheme]: 'Editor Theme',
   [lngKeys.SettingsCodeBlockTheme]: 'Code Block Theme',
   [lngKeys.SettingsEditorKeyMap]: 'Editor Keymap',
+  [lngKeys.SettingsEditorFontSize]: 'Editor Font Size',
+  [lngKeys.SettingsEditorFontFamily]: 'Editor Font Family',
   [lngKeys.SettingsLight]: 'Light',
   [lngKeys.SettingsDark]: 'Dark',
   [lngKeys.SettingsNotifFrequencies]: 'Email updates',

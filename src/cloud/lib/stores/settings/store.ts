@@ -22,6 +22,9 @@ export const baseUserSettings: UserSettings = {
   'general.editorKeyMap': 'default',
   'general.editorIndentType': 'spaces',
   'general.editorIndentSize': 2,
+  'general.editorFontSize': 15,
+  'general.editorFontFamily':
+    'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
 }
 
 export type SettingsTab =

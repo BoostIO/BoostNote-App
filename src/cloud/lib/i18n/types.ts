@@ -120,6 +120,8 @@ export enum lngKeys {
   SettingsEditorTheme = 'settings.editorTheme',
   SettingsCodeBlockTheme = 'settings.codeblockTheme',
   SettingsEditorKeyMap = 'settings.editorKeyMap',
+  SettingsEditorFontSize = 'settings.editorFontSize',
+  SettingsEditorFontFamily = 'settings.editorFontFamily',
   SettingsLight = 'settings.light',
   SettingsDark = 'settings.dark',
   SettingsNotifFrequencies = 'settings.notificationsFrequency',

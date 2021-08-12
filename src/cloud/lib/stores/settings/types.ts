@@ -13,6 +13,8 @@ export interface UserSettings {
   'general.editorKeyMap': CodeMirrorKeyMap
   'general.editorIndentType': GeneralEditorIndentType
   'general.editorIndentSize': GeneralEditorIndentSize
+  'general.editorFontSize': number
+  'general.editorFontFamily': string
 }
 
 export const codeMirrorEditorThemes = [

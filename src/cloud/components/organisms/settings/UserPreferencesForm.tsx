@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { ChangeEventHandler, useCallback, useState } from 'react'
 import {
   useSettings,
   GeneralThemeOptions,
@@ -19,10 +19,18 @@ import FormSelect, {
 } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
 import FormRow from '../../../../shared/components/molecules/Form/templates/FormRow'
 import { lngKeys } from '../../../lib/i18n/types'
+import { useDebounce } from 'react-use'
 
 const UserPreferencesForm = () => {
   const { settings, setSettings } = useSettings()
   const { t } = useTranslation()
+
+  const [fontSize, setFontSize] = useState(
+    settings['general.editorFontSize'].toString()
+  )
+  const [fontFamily, setFontFamily] = useState(
+    settings['general.editorFontFamily']
+  )
 
   const selectLanguage = useCallback(
     (formOption: FormSelectOption) => {
@@ -100,6 +108,41 @@ const UserPreferencesForm = () => {
     [setSettings]
   )
 
+  const updateFontSize: ChangeEventHandler<HTMLInputElement> = useCallback(
+    (event) => {
+      setFontSize(event.target.value)
+    },
+    [setFontSize]
+  )
+  useDebounce(
+    () => {
+      const parsedFontSize = parseInt(fontSize, 10)
+      if (!Number.isNaN(parsedFontSize)) {
+        setSettings({
+          'general.editorFontSize': parsedFontSize,
+        })
+      }
+    },
+    500,
+    [fontSize, setSettings]
+  )
+
+  const updateFontFamily: ChangeEventHandler<HTMLInputElement> = useCallback(
+    (event) => {
+      setFontFamily(event.target.value)
+    },
+    [setFontFamily]
+  )
+  useDebounce(
+    () => {
+      setSettings({
+        'general.editorFontFamily': fontFamily,
+      })
+    },
+    500,
+    [fontFamily, setSettings]
+  )
+
   return (
     <Form
       rows={[
@@ -159,6 +202,32 @@ const UserPreferencesForm = () => {
                   onChange={selectTheme}
                 />
               ),
+            },
+          ],
+        },
+        {
+          title: t(lngKeys.SettingsEditorFontSize),
+          items: [
+            {
+              type: 'input',
+              props: {
+                type: 'number',
+                value: fontSize,
+                onChange: updateFontSize,
+              },
+            },
+          ],
+        },
+        {
+          title: t(lngKeys.SettingsEditorFontFamily),
+          items: [
+            {
+              type: 'input',
+              props: {
+                type: 'text',
+                value: fontFamily,
+                onChange: updateFontFamily,
+              },
             },
           ],
         },

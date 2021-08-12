@@ -95,6 +95,7 @@ import DocShare from '../DocShare'
 import EditorLayout from '../../organisms/EditorLayout'
 import PreferencesContextMenuWrapper from '../../molecules/PreferencesContextMenuWrapper'
 import InviteCTAButton from '../InviteCTAButton'
+import { BaseTheme } from '../../../../shared/lib/styled/types'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -596,6 +597,12 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
   )
 
   const { settings } = useSettings()
+  const fontSize = useMemo(() => {
+    return settings['general.editorFontSize']
+  }, [settings])
+  const fontFamily = useMemo(() => {
+    return settings['general.editorFontFamily']
+  }, [settings])
   const editorConfig: CodeMirror.EditorConfiguration = useMemo(() => {
     const editorTheme = settings['general.editorTheme']
     const theme =
@@ -1077,7 +1084,11 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
             </StyledLayoutDimensions>
           )}
           <StyledEditor className={editorLayout}>
-            <StyledEditorWrapper className={`layout-${editorLayout}`}>
+            <StyledEditorWrapper
+              className={`layout-${editorLayout}`}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+            >
               <>
                 <CodeMirrorEditor
                   bind={bindCallback}
@@ -1241,8 +1252,11 @@ const ToolbarRow = styled.div`
   border: solid 1px ${({ theme }) => theme.divideBorderColor};
   border-radius: 5px;
 `
-
-const StyledEditorWrapper = styled.div`
+interface FontOptionsProps {
+  fontSize: string
+  fontFamily: string
+}
+const StyledEditorWrapper = styled.div<BaseTheme & FontOptionsProps>`
   position: relative;
   height: auto;
   width: 50%;
@@ -1251,6 +1265,13 @@ const StyledEditorWrapper = styled.div`
   }
   &.layout-preview {
     display: none;
+  }
+
+  & .CodeMirror * {
+    font-size: ${({ fontSize }) =>
+      fontSize == null ? 'inherit' : `${fontSize}px`};
+    font-family: ${({ fontFamily }) =>
+      fontFamily == null ? 'monospace' : fontFamily};
   }
 `
 
