@@ -68,6 +68,10 @@ import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { deleteSmartFolder } from '../../api/teams/smart-folder'
 
 import { format as formatDate } from 'date-fns'
+import {
+  DocDataTransferItem,
+  FolderDataTransferItem,
+} from '../../interfaces/resources'
 
 export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
@@ -271,7 +275,10 @@ export function useCloudApi() {
   )
 
   const updateFolderApi = useCallback(
-    async (target: SerializedFolder, body: UpdateFolderRequestBody) => {
+    async (
+      target: SerializedFolder | FolderDataTransferItem,
+      body: UpdateFolderRequestBody
+    ) => {
       await send(target.id, 'update', {
         api: () => updateFolder({ id: target.teamId }, target.id, body),
         cb: ({ folders, docs, workspaces }: UpdateFolderResponseBody) => {
@@ -312,7 +319,10 @@ export function useCloudApi() {
   )
 
   const updateDocApi = useCallback(
-    async (target: SerializedDoc, body: UpdateDocRequestBody) => {
+    async (
+      target: SerializedDoc | DocDataTransferItem,
+      body: UpdateDocRequestBody
+    ) => {
       await send(target.id, 'update', {
         api: () => updateDoc(target.teamId, target.id, body),
         cb: ({ folders, doc, workspaces }: UpdateDocResponseBody) => {

@@ -47,10 +47,16 @@ import {
   CollapsableType,
   useSidebarCollapse,
 } from '../../stores/sidebarCollapse'
-import { getDocId, getDocTitle, getFolderId } from '../../utils/patterns'
+import {
+  docToDataTransferItem,
+  folderToDataTransferItem,
+  getDocId,
+  getDocTitle,
+  getFolderId,
+} from '../../utils/patterns'
 import { useCloudApi } from '../useCloudApi'
 import { useCloudResourceModals } from '../useCloudResourceModals'
-import { useCloudSidebarDnd } from './useCloudSidebarDnd'
+import { useCloudDnd } from './useCloudDnd'
 import { getDocStatusHref, getSmartFolderHref } from '../../href'
 import CreateSmartFolderModal from '../../../components/organisms/Modal/contents/SmartFolder/CreateSmartFolderModal'
 import UpdateSmartFolderModal from '../../../components/organisms/Modal/contents/SmartFolder/UpdateSmartFolderModal'
@@ -65,6 +71,7 @@ import {
   SidebarNavControls,
   SidebarTreeChildRow,
 } from '../../../../shared/components/organisms/Sidebar/molecules/SidebarTree'
+import { CATEGORY_DRAG_TRANSFER_DATA_JSON } from '../../../interfaces/resources'
 
 export function useCloudSidebarTree() {
   const { team, currentUserIsCoreMember } = usePage()
@@ -94,11 +101,12 @@ export function useCloudSidebarTree() {
   } = useSidebarCollapse()
 
   const {
-    draggedCategory,
-    draggedResource,
     dropInDocOrFolder,
     dropInWorkspace,
-  } = useCloudSidebarDnd()
+    saveFolderTransferData,
+    saveDocTransferData,
+    clearDragTransferData,
+  } = useCloudDnd()
 
   const {
     sendingMap: treeSendingMap,
@@ -235,7 +243,8 @@ export function useCloudSidebarTree() {
       const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
         ? {
             dropIn: true,
-            onDrop: () => dropInWorkspace(wp.id, updateFolder, updateDoc),
+            onDrop: (event: any) =>
+              dropInWorkspace(event, wp.id, updateFolder, updateDoc),
             controls: [
               {
                 icon: mdiTextBoxPlus,
@@ -310,13 +319,17 @@ export function useCloudSidebarTree() {
 
       const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
         ? {
-            onDrop: (position: SidebarDragState) =>
-              dropInDocOrFolder({ type: 'folder', result: folder }, position),
-            onDragStart: () => {
-              draggedResource.current = { type: 'folder', result: folder }
+            onDrop: (event: any, position: SidebarDragState) =>
+              dropInDocOrFolder(
+                event,
+                { type: 'folder', resource: folderToDataTransferItem(folder) },
+                position
+              ),
+            onDragStart: (event: any) => {
+              saveFolderTransferData(event, folder)
             },
-            onDragEnd: () => {
-              draggedResource.current = undefined
+            onDragEnd: (event: any) => {
+              clearDragTransferData(event)
             },
             dropIn: true,
             dropAround: sortingOrder === 'drag' ? true : false,
@@ -426,13 +439,17 @@ export function useCloudSidebarTree() {
         ? {
             dropAround: sortingOrder === 'drag' ? true : false,
             navigateTo: () => push(href),
-            onDrop: (position: SidebarDragState) =>
-              dropInDocOrFolder({ type: 'doc', result: doc }, position),
-            onDragStart: () => {
-              draggedResource.current = { type: 'doc', result: doc }
+            onDrop: (event: any, position: SidebarDragState) =>
+              dropInDocOrFolder(
+                event,
+                { type: 'doc', resource: docToDataTransferItem(doc) },
+                position
+              ),
+            onDragStart: (event: any) => {
+              saveDocTransferData(event, doc)
             },
-            onDragEnd: () => {
-              draggedResource.current = undefined
+            onDragEnd: (event: any) => {
+              clearDragTransferData(event)
             },
             contextControls: [
               {
@@ -837,8 +854,6 @@ export function useCloudSidebarTree() {
 
     return tree as SidebarNavCategory[]
   }, [
-    showSearchScreen,
-    translate,
     initialLoadDone,
     team,
     pathname,
@@ -848,9 +863,12 @@ export function useCloudSidebarTree() {
     workspacesMap,
     smartFoldersMap,
     tagsMap,
+    translate,
+    currentUserIsCoreMember,
+    openWorkspaceCreateForm,
+    showSearchScreen,
     sideBarOpenedWorkspaceIdsSet,
     getFoldEvents,
-    push,
     dropInWorkspace,
     updateFolder,
     updateDoc,
@@ -858,13 +876,15 @@ export function useCloudSidebarTree() {
     createFolder,
     openWorkspaceEditForm,
     deleteWorkspace,
-    sideBarOpenedFolderIdsSet,
+    push,
     treeSendingMap,
+    sideBarOpenedFolderIdsSet,
     dropInDocOrFolder,
-    draggedResource,
+    saveFolderTransferData,
     toggleFolderBookmark,
     openRenameFolderForm,
     deleteFolder,
+    saveDocTransferData,
     toggleDocBookmark,
     openRenameDocForm,
     deleteDoc,
@@ -874,8 +894,6 @@ export function useCloudSidebarTree() {
     createWorkspace,
     sideBarOpenedLinksIdsSet,
     toggleItem,
-    currentUserIsCoreMember,
-    openWorkspaceCreateForm,
   ])
 
   const treeWithOrderedCategories = useMemo(() => {
@@ -907,16 +925,23 @@ export function useCloudSidebarTree() {
 
     orderedTree.forEach((category) => {
       category.drag = {
-        onDragStart: () => {
-          draggedCategory.current = category.label
+        onDragStart: (event: any) => {
+          event.dataTransfer.setData(
+            category.label,
+            CATEGORY_DRAG_TRANSFER_DATA_JSON
+          )
         },
-        onDragEnd: () => {
-          draggedCategory.current = undefined
+        onDragEnd: (event: any) => {
+          clearDragTransferData(event)
         },
-        onDrop: () => {
-          if (draggedCategory.current == null) {
+        onDrop: (event: any) => {
+          const draggedCategory = event.dataTransfer.getData(
+            CATEGORY_DRAG_TRANSFER_DATA_JSON
+          )
+          if (draggedCategory.length === 0) {
             return
           }
+
           const orderedItems = orderedCategories.splice(0)
           const categoryIndex = orderedItems.includes(category.label)
             ? orderedItems.indexOf(category.label)
@@ -947,12 +972,7 @@ export function useCloudSidebarTree() {
     })
 
     return orderedTree
-  }, [
-    tree,
-    preferences.sidebarOrderedCategories,
-    setPreferences,
-    draggedCategory,
-  ])
+  }, [tree, preferences.sidebarOrderedCategories, setPreferences])
 
   return {
     tree,
@@ -1024,7 +1044,7 @@ type CloudTreeItem = {
   contextControls?: MenuItem[]
   dropIn?: boolean
   dropAround?: boolean
-  onDragStart?: () => void
-  onDrop?: (position?: SidebarDragState) => void
-  onDragEnd?: () => void
+  onDragStart?: (event: any) => void
+  onDrop?: (event: any, position?: SidebarDragState) => void
+  onDragEnd?: (event: any) => void
 }

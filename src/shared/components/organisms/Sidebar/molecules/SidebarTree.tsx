@@ -3,7 +3,7 @@ import styled from '../../../../lib/styled'
 import cc from 'classcat'
 import { FoldingProps } from '../../../atoms/FoldingWrapper'
 import { ControlButtonProps } from '../../../../lib/types'
-import { MenuItem } from '../../../../lib/stores/contextMenu/types'
+import { MenuItem } from '../../../../lib/stores/contextMenu'
 import SidebarTreeForm from '../atoms/SidebarTreeForm'
 import { DraggedTo, onDragLeaveCb, SidebarDragState } from '../../../../lib/dnd'
 import SidebarItem from '../atoms/SidebarTreeItem'
@@ -34,9 +34,9 @@ export interface SidebarNavCategory {
   footer?: React.ReactNode
   lastCategory?: boolean
   drag?: {
-    onDragStart: () => void
-    onDragEnd: () => void
-    onDrop: () => void
+    onDragStart: (event: any) => void
+    onDragEnd: (event: any) => void
+    onDrop: (event: any) => void
   }
 }
 
@@ -59,9 +59,9 @@ interface SidebarNavRow {
   contextControls?: MenuItem[]
   dropIn?: boolean
   dropAround?: boolean
-  onDragStart?: () => void
-  onDrop?: (position?: SidebarDragState) => void
-  onDragEnd?: () => void
+  onDragStart?: (event: any) => void
+  onDrop?: (event: any, position?: SidebarDragState) => void
+  onDragEnd?: (event: any) => void
 }
 
 export type SidebarNavControls =
@@ -233,15 +233,15 @@ const SidebarCategory = ({
       onDragStart={(event) => {
         event.stopPropagation()
         setDraggingCategory(true)
-        category.drag!.onDragStart()
+        category.drag!.onDragStart(event)
       }}
       onDragLeave={(event) => {
         onDragLeaveCb(event, dragRef, () => {
           setDraggedOver(false)
         })
       }}
-      onDragEnd={() => {
-        category.drag!.onDragEnd()
+      onDragEnd={(event) => {
+        category.drag!.onDragEnd(event)
       }}
       onDragOver={(event) => {
         event.preventDefault()
@@ -250,7 +250,7 @@ const SidebarCategory = ({
       }}
       onDrop={(event) => {
         event.stopPropagation()
-        category.drag!.onDrop()
+        category.drag!.onDrop(event)
         setDraggedOver(false)
       }}
     >
@@ -312,7 +312,7 @@ const SidebarNestedTreeRow = ({
     (event: any) => {
       event.stopPropagation()
       if (row.onDragStart != null) {
-        row.onDragStart()
+        row.onDragStart(event)
       }
       setDraggingItem(true)
     },
@@ -323,7 +323,7 @@ const SidebarNestedTreeRow = ({
     (event: React.DragEvent, position: SidebarDragState) => {
       event.preventDefault()
       if (row.onDrop != null) {
-        row.onDrop(position)
+        row.onDrop(event, position)
       }
       setDraggedOver(undefined)
       setDraggingItem(false)
@@ -379,9 +379,9 @@ const SidebarNestedTreeRow = ({
             setDraggedOver(undefined)
           })
         }}
-        onDragEnd={() => {
+        onDragEnd={(event) => {
           if (row.onDragEnd != null) {
-            row.onDragEnd()
+            row.onDragEnd(event)
           }
         }}
         onDragOver={(event) => {
