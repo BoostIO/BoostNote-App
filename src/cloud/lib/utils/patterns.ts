@@ -1,10 +1,22 @@
 import { join } from 'path'
 import { SerializedTeam } from '../../interfaces/db/team'
-import { SerializedFolder } from '../../interfaces/db/folder'
+import {
+  SerializedFolder,
+  SerializedFolderWithBookmark,
+} from '../../interfaces/db/folder'
 import { getHexFromUUID, getUUIDFromHex } from './string'
 import slugify from 'slugify'
-import { SerializedDoc } from '../../interfaces/db/doc'
-import { NavResource } from '../../interfaces/resources'
+import {
+  SerializedDoc,
+  SerializedDocWithBookmark,
+} from '../../interfaces/db/doc'
+import {
+  DOC_DRAG_TRANSFER_DATA_JSON,
+  DocDataTransferItem,
+  FOLDER_DRAG_TRANSFER_DATA_JSON,
+  FolderDataTransferItem,
+  NavResource,
+} from '../../interfaces/resources'
 import { isArray } from 'util'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { SerializedOpenInvite } from '../../interfaces/db/openInvite'
@@ -78,11 +90,69 @@ export function getDocIdFromString(id: string) {
   return [prefixDocs, getHexFromUUID(id)].join('')
 }
 
+export function getDraggedResource(event: any): NavResource | null {
+  const docData = event.dataTransfer.getData(DOC_DRAG_TRANSFER_DATA_JSON)
+  if (docData.length === 0) {
+    const folderData = event.dataTransfer.getData(
+      FOLDER_DRAG_TRANSFER_DATA_JSON
+    )
+    if (folderData.length === 0) {
+      return null
+    }
+    try {
+      return {
+        type: 'folder',
+        resource: JSON.parse(folderData) as FolderDataTransferItem,
+      }
+    } catch (err) {
+      console.warn('Invalid drag data encountered', err)
+      return null
+    }
+  } else {
+    try {
+      return {
+        type: 'doc',
+        resource: JSON.parse(docData) as DocDataTransferItem,
+      }
+    } catch (err) {
+      console.warn('Invalid drag data encountered', err)
+      return null
+    }
+  }
+}
+
 export function getResourceId(source: NavResource) {
   if (source.type === 'doc') {
-    return getDocId(source.result)
+    return getDocIdFromString(source.resource.id)
   } else {
-    return getFolderId(source.result)
+    return getFolderIdFromString(source.resource.id)
+  }
+}
+
+export function folderToDataTransferItem(
+  folder: SerializedFolderWithBookmark
+): FolderDataTransferItem {
+  return {
+    workspaceId: folder.workspaceId,
+    teamId: folder.teamId,
+    id: folder.id,
+    emoji: folder.emoji,
+    name: folder.name,
+    description: folder.description,
+    url: getFolderURL(folder),
+  }
+}
+
+export function docToDataTransferItem(
+  doc: SerializedDocWithBookmark
+): DocDataTransferItem {
+  return {
+    workspaceId: doc.workspaceId,
+    teamId: doc.teamId,
+    id: doc.id,
+    emoji: doc.emoji,
+    title: doc.title,
+    url: getDocURL(doc),
   }
 }
 

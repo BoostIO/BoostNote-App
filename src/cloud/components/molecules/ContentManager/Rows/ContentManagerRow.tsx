@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import cc from 'classcat'
 import Checkbox from '../../../atoms/Checkbox'
 import styled from '../../../../../shared/lib/styled'
 import { AppComponent } from '../../../../../shared/lib/types'
 import EmojiIcon from '../../../atoms/EmojiIcon'
+import { onDragLeaveCb } from '../../../../../shared/lib/dnd'
 
 interface ContentManagerRowProps {
   type?: 'header' | 'row'
@@ -15,6 +16,9 @@ interface ContentManagerRowProps {
   emoji?: string
   defaultIcon?: string
   showCheckbox: boolean
+  onDragStart?: (event: any) => void
+  onDragEnd?: (event: any) => void
+  onDrop?: (event: any) => void
 }
 
 const ContentManagerRow: AppComponent<ContentManagerRowProps> = ({
@@ -29,6 +33,9 @@ const ContentManagerRow: AppComponent<ContentManagerRowProps> = ({
   defaultIcon,
   showCheckbox,
   onSelect,
+  onDragStart,
+  onDragEnd,
+  onDrop,
 }) => {
   const LabelTag = labelHref != null || labelOnclick != null ? 'a' : 'div'
 
@@ -45,9 +52,46 @@ const ContentManagerRow: AppComponent<ContentManagerRowProps> = ({
     [labelOnclick]
   )
 
+  const [draggedOver, setDraggedOver] = useState(false)
+  const dragRef = useRef<HTMLDivElement>(null)
+
   return (
     <StyledContentManagerRow
-      className={cc(['cm__row', `cm__row--${type}`, className])}
+      className={cc([
+        'cm__row',
+        `cm__row--${type}`,
+        className,
+        draggedOver && 'content__manager__row--draggedOver',
+      ])}
+      draggable={true}
+      onDrop={(event: any) => {
+        event.stopPropagation()
+        if (onDrop != null) {
+          onDrop(event)
+        }
+        setDraggedOver(false)
+      }}
+      onDragStart={(event: any) => {
+        event.stopPropagation()
+        if (onDragStart != null) {
+          onDragStart(event)
+        }
+      }}
+      onDragOver={(event: any) => {
+        event.preventDefault()
+        event.stopPropagation()
+        setDraggedOver(true)
+      }}
+      onDragLeave={(event: any) => {
+        onDragLeaveCb(event, dragRef, () => {
+          setDraggedOver(false)
+        })
+      }}
+      onDragEnd={(event: any) => {
+        if (onDragEnd != null) {
+          onDragEnd(event)
+        }
+      }}
     >
       {showCheckbox && (
         <Checkbox
@@ -56,7 +100,12 @@ const ContentManagerRow: AppComponent<ContentManagerRowProps> = ({
           onChange={onSelect}
         />
       )}
-      <LabelTag className='cm__row__label' onClick={navigate} href={labelHref}>
+      <LabelTag
+        draggable={true}
+        className='cm__row__label'
+        onClick={navigate}
+        href={labelHref}
+      >
         <div className='cm__row__emoji'>
           <EmojiIcon
             className='emoji-icon'
@@ -154,5 +203,9 @@ const StyledContentManagerRow = styled.div`
     &.row__checkbox--checked {
       opacity: 1;
     }
+  }
+
+  &.content__manager__row--draggedOver {
+    background: ${({ theme }) => theme.colors.background.quaternary};
   }
 `

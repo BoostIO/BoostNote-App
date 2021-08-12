@@ -1,20 +1,30 @@
-import { useCallback, useRef } from 'react'
+import { useCallback } from 'react'
 import { UpdateDocRequestBody } from '../../../api/teams/docs'
 import { UpdateFolderRequestBody } from '../../../api/teams/folders'
 import { moveResource } from '../../../api/teams/resources'
-import { SerializedDoc } from '../../../interfaces/db/doc'
-import { SerializedFolder } from '../../../interfaces/db/folder'
-import { NavResource } from '../../../interfaces/resources'
+import {
+  CATEGORY_DRAG_TRANSFER_DATA_JSON,
+  DOC_DRAG_TRANSFER_DATA_JSON,
+  DocDataTransferItem,
+  FOLDER_DRAG_TRANSFER_DATA_JSON,
+  FolderDataTransferItem,
+  NavResource,
+} from '../../../interfaces/resources'
 import { useNav } from '../../stores/nav'
 import { usePage } from '../../stores/pageStore'
-import { getResourceId } from '../../utils/patterns'
+import {
+  docToDataTransferItem,
+  folderToDataTransferItem,
+  getDraggedResource,
+  getResourceId,
+} from '../../utils/patterns'
 import { SidebarDragState } from '../../../../shared/lib/dnd'
 import { useToast } from '../../../../shared/lib/stores/toast'
 import { getMapFromEntityArray } from '../../../../shared/lib/utils/array'
+import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
+import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
 
-export function useCloudSidebarDnd() {
-  const draggedCategory = useRef<string>()
-  const draggedResource = useRef<NavResource>()
+export function useCloudDnd() {
   const {
     updateFoldersMap,
     updateDocsMap,
@@ -26,21 +36,23 @@ export function useCloudSidebarDnd() {
 
   const dropInWorkspace = useCallback(
     async (
+      event: any,
       workspaceId: string,
       updateFolder: (
-        folder: SerializedFolder,
+        folder: FolderDataTransferItem,
         body: UpdateFolderRequestBody
       ) => Promise<void>,
       updateDoc: (
-        doc: SerializedDoc,
+        doc: DocDataTransferItem,
         body: UpdateDocRequestBody
       ) => Promise<void>
     ) => {
-      if (draggedResource.current == null) {
+      const draggedResource = getDraggedResource(event)
+      if (draggedResource === null) {
         return
       }
 
-      if (draggedResource.current.result.workspaceId === workspaceId) {
+      if (draggedResource.resource.workspaceId === workspaceId) {
         pushMessage({
           title: 'Oops',
           description: 'Resource is already present in this space',
@@ -48,24 +60,20 @@ export function useCloudSidebarDnd() {
         return
       }
 
-      if (draggedResource.current.type === 'folder') {
-        const folder = draggedResource.current.result
-        updateFolder(folder, {
+      if (draggedResource.type === 'folder') {
+        const folder = draggedResource.resource
+        await updateFolder(folder, {
           workspaceId: workspaceId,
           description: folder.description,
           folderName: folder.name,
           emoji: folder.emoji,
-        }).then(() => {
-          draggedResource.current = undefined
         })
-      } else if (draggedResource.current.type === 'doc') {
-        const doc = draggedResource.current.result
-        updateDoc(doc, {
+      } else if (draggedResource.type === 'doc') {
+        const doc = draggedResource.resource
+        await updateDoc(doc, {
           workspaceId: workspaceId,
           title: doc.title,
           emoji: doc.emoji,
-        }).then(() => {
-          draggedResource.current = undefined
         })
       }
     },
@@ -74,25 +82,27 @@ export function useCloudSidebarDnd() {
 
   const dropInDocOrFolder = useCallback(
     async (
+      event: any,
       targetedResource: NavResource,
       targetedPosition: SidebarDragState
     ) => {
-      if (draggedResource.current == null || targetedPosition == null) {
+      const draggedResource = getDraggedResource(event)
+      if (draggedResource === null || targetedPosition == null) {
         return
       }
 
       if (
-        draggedResource.current.type === targetedResource.type &&
-        draggedResource.current.result.id === targetedResource.result.id
+        draggedResource.type === targetedResource.type &&
+        draggedResource.resource.id === targetedResource.resource.id
       ) {
         return
       }
 
       try {
-        const originalResourceId = getResourceId(draggedResource.current)
+        const originalResourceId = getResourceId(draggedResource)
         const pos = targetedPosition
         const { folders, docs, workspaces } = await moveResource(
-          { id: draggedResource.current.result.teamId },
+          { id: draggedResource.resource.teamId },
           originalResourceId,
           {
             targetedPosition: pos,
@@ -117,8 +127,6 @@ export function useCloudSidebarDnd() {
         if (pageDoc != null && changedDocs.get(pageDoc.id) != null) {
           setCurrentPath(changedDocs.get(pageDoc.id)!.folderPathname)
         }
-
-        draggedResource.current = undefined
       } catch (error) {
         pushApiErrorMessage(error)
       }
@@ -134,10 +142,47 @@ export function useCloudSidebarDnd() {
     ]
   )
 
+  const saveFolderTransferData = useCallback(
+    (event: any, folder: SerializedFolderWithBookmark) => {
+      const folderDataTransferItem = folderToDataTransferItem(folder)
+      event.dataTransfer.setData(
+        FOLDER_DRAG_TRANSFER_DATA_JSON,
+        JSON.stringify(folderDataTransferItem)
+      )
+      event.dataTransfer.setData(
+        'text/plain',
+        `${folderDataTransferItem.name} ${folderDataTransferItem.url}`
+      )
+    },
+    []
+  )
+
+  const saveDocTransferData = useCallback(
+    (event: any, doc: SerializedDocWithBookmark) => {
+      const docDataTransferItem = docToDataTransferItem(doc)
+      event.dataTransfer.setData(
+        DOC_DRAG_TRANSFER_DATA_JSON,
+        JSON.stringify(docDataTransferItem)
+      )
+      event.dataTransfer.setData(
+        'text/plain',
+        `${docDataTransferItem.title} ${docDataTransferItem.url}`
+      )
+    },
+    []
+  )
+
+  const clearDragTransferData = useCallback((event: any) => {
+    event.dataTransfer.setData(DOC_DRAG_TRANSFER_DATA_JSON, '')
+    event.dataTransfer.setData(FOLDER_DRAG_TRANSFER_DATA_JSON, '')
+    event.dataTransfer.setData(CATEGORY_DRAG_TRANSFER_DATA_JSON, '')
+  }, [])
+
   return {
-    draggedCategory,
-    draggedResource,
     dropInWorkspace,
     dropInDocOrFolder,
+    saveFolderTransferData,
+    saveDocTransferData,
+    clearDragTransferData,
   }
 }

@@ -1,7 +1,7 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  SerializedDocWithBookmark,
   DocStatus,
+  SerializedDocWithBookmark,
 } from '../../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { useSet } from 'react-use'
@@ -9,7 +9,13 @@ import {
   sortByAttributeAsc,
   sortByAttributeDesc,
 } from '../../../lib/utils/array'
-import { getDocTitle, getDocId, getFolderId } from '../../../lib/utils/patterns'
+import {
+  docToDataTransferItem,
+  folderToDataTransferItem,
+  getDocId,
+  getDocTitle,
+  getFolderId,
+} from '../../../lib/utils/patterns'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { StyledContentManagerList } from './styled'
 import Checkbox from '../../atoms/Checkbox'
@@ -32,6 +38,8 @@ import ContentManagerCell from './ContentManagerCell'
 import Flexbox from '../../../../shared/components/atoms/Flexbox'
 import ContentManagerStatusFilter from './ContentManagerStatusFilter'
 import VerticalScroller from '../../../../shared/components/atoms/VerticalScroller'
+import { useCloudDnd } from '../../../lib/hooks/sidebar/useCloudDnd'
+import { DraggedTo } from '../../../../shared/lib/dnd'
 
 export type ContentManagerParent =
   | { type: 'folder'; item: SerializedFolderWithBookmark }
@@ -209,6 +217,54 @@ const ContentManager = ({
     [setPreferences]
   )
 
+  const {
+    dropInDocOrFolder,
+    saveFolderTransferData,
+    saveDocTransferData,
+    clearDragTransferData,
+  } = useCloudDnd()
+
+  const onDragStartFolder = useCallback(
+    (event: any, folder: SerializedFolderWithBookmark) => {
+      saveFolderTransferData(event, folder)
+    },
+    [saveFolderTransferData]
+  )
+
+  const onDropFolder = useCallback(
+    (event, folder: SerializedFolderWithBookmark) =>
+      dropInDocOrFolder(
+        event,
+        { type: 'folder', resource: folderToDataTransferItem(folder) },
+        DraggedTo.insideFolder
+      ),
+    [dropInDocOrFolder]
+  )
+
+  const onDragStartDoc = useCallback(
+    (event: any, doc: SerializedDocWithBookmark) => {
+      saveDocTransferData(event, doc)
+    },
+    [saveDocTransferData]
+  )
+
+  const onDropDoc = useCallback(
+    (event: any, doc: SerializedDocWithBookmark) =>
+      dropInDocOrFolder(
+        event,
+        { type: 'doc', resource: docToDataTransferItem(doc) },
+        DraggedTo.beforeItem
+      ),
+    [dropInDocOrFolder]
+  )
+
+  const onDragEnd = useCallback(
+    (event: any) => {
+      clearDragTransferData(event)
+    },
+    [clearDragTransferData]
+  )
+
   return (
     <Container>
       <VerticalScroller className='cm__scroller'>
@@ -283,6 +339,9 @@ const ContentManager = ({
                     checked={hasFolder(folder.id)}
                     onSelect={() => toggleFolder(folder.id)}
                     currentUserIsCoreMember={currentUserIsCoreMember}
+                    onDrop={onDropFolder}
+                    onDragEnd={onDragEnd}
+                    onDragStart={onDragStartFolder}
                   />
                 ))}
 
@@ -331,6 +390,9 @@ const ContentManager = ({
                   onSelect={() => toggleDoc(doc.id)}
                   showPath={page != null}
                   currentUserIsCoreMember={currentUserIsCoreMember}
+                  onDrop={onDropDoc}
+                  onDragEnd={onDragEnd}
+                  onDragStart={onDragStartDoc}
                 />
               ))}
               {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}

@@ -8,6 +8,7 @@ import { useNav } from '../../../../lib/stores/nav'
 import { useTranslation } from 'react-i18next'
 import { lngKeys } from '../../../../lib/i18n/types'
 import { useRouter } from '../../../../lib/router'
+
 interface ContentManagerFolderRowProps {
   team: SerializedTeam
   folder: SerializedFolderWithBookmark
@@ -16,6 +17,9 @@ interface ContentManagerFolderRowProps {
   checked?: boolean
   onSelect: (val: boolean) => void
   currentUserIsCoreMember: boolean
+  onDragStart: (event: any, folder: SerializedFolderWithBookmark) => void
+  onDragEnd: (event: any) => void
+  onDrop: (event: any, folder: SerializedFolderWithBookmark) => void
 }
 
 const ContentmanagerFolderRow = ({
@@ -24,6 +28,9 @@ const ContentmanagerFolderRow = ({
   checked,
   currentUserIsCoreMember,
   onSelect,
+  onDragStart,
+  onDragEnd,
+  onDrop,
 }: ContentManagerFolderRowProps) => {
   const { t } = useTranslation()
   const { docsMap, foldersMap } = useNav()
@@ -51,6 +58,9 @@ const ContentmanagerFolderRow = ({
       emoji={folder.emoji}
       labelHref={href}
       labelOnclick={() => push(href)}
+      onDragStart={(event: any) => onDragStart(event, folder)}
+      onDragEnd={(event: any) => onDragEnd(event)}
+      onDrop={(event: any) => onDrop(event, folder)}
     >
       <ContentManagerCell>
         {childrenFolders} {t(lngKeys.GeneralFolders).toLocaleLowerCase()}{' '}

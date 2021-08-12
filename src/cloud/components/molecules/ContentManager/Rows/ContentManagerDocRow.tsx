@@ -33,6 +33,9 @@ interface ContentManagerDocRowProps {
   currentUserIsCoreMember: boolean
   onSelect: (val: boolean) => void
   setUpdating: React.Dispatch<React.SetStateAction<string[]>>
+  onDragStart: (event: any, doc: SerializedDocWithBookmark) => void
+  onDragEnd: (event: any) => void
+  onDrop: (event: any, doc: SerializedDocWithBookmark) => void
 }
 
 const ContentManagerDocRow = ({
@@ -43,6 +46,9 @@ const ContentManagerDocRow = ({
   showPath,
   currentUserIsCoreMember,
   onSelect,
+  onDragStart,
+  onDragEnd,
+  onDrop,
 }: ContentManagerDocRowProps) => {
   const { permissions = [] } = usePage()
   const { push } = useRouter()
@@ -165,6 +171,9 @@ const ContentManagerDocRow = ({
       labelOnclick={() => push(href)}
       defaultIcon={mdiFileDocumentOutline}
       emoji={doc.emoji}
+      onDragStart={(event: any) => onDragStart(event, doc)}
+      onDragEnd={(event: any) => onDragEnd(event)}
+      onDrop={(event: any) => onDrop(event, doc)}
     >
       <ContentManagerCell fullWidth={true}>
         <DocAssigneeSelect
