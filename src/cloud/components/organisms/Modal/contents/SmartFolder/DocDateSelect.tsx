@@ -139,14 +139,17 @@ interface DatePickerButtonProps {
 }
 
 const DatePickerButton = forwardRef<HTMLButtonElement, DatePickerButtonProps>(
-  ({
-    customIconPath = mdiCalendar,
-    date,
-    onClick,
-    placeholder = 'Select Date',
-  }: DatePickerButtonProps) => {
+  (
+    {
+      customIconPath = mdiCalendar,
+      date,
+      onClick,
+      placeholder = 'Select Date',
+    }: DatePickerButtonProps,
+    ref
+  ) => {
     return (
-      <ButtonContainer type='button' onClick={onClick}>
+      <ButtonContainer ref={ref} type='button' onClick={onClick}>
         <Icon path={customIconPath} />
         {date != null ? formatDate(date, 'MMM dd, yyyy') : placeholder}
       </ButtonContainer>
