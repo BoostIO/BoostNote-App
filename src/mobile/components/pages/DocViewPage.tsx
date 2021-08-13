@@ -275,7 +275,7 @@ const Container = styled.div`
     padding: 0 ${({ theme }) => theme.space.xlarge}px;
   }
 
-  &.view__content {
+  .view__content {
     height: 100%;
     width: 50%;
     padding-top: ${({ theme }) => theme.space.small}px;
