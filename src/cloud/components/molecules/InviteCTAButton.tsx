@@ -74,7 +74,7 @@ const EditRequestButton = ({ team }: { team: SerializedTeam }) => {
     }
     createEditRequest(team.id)
     trackEvent(MixpanelActionTrackTypes.SendEditRequest)
-  }, [])
+  }, [activeRequest, createEditRequest, team.id])
 
   return (
     <LoadingButton
