@@ -438,7 +438,7 @@ function getSelectionContext(
 
 function getOffset(node: Node) {
   const nonTextNode = node.TEXT_NODE
-    ? node.parentElement != null && node.parentElement.nodeName == 'A'
+    ? node.parentElement != null && node.parentElement.nodeName === 'A'
       ? node.parentElement.parentElement
       : node.parentElement
     : node
