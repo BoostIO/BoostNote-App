@@ -10,7 +10,7 @@ export async function getRequestDeniedPageData({
   signal,
 }: GetInitialPropsParameters) {
   const [, teamId] = pathname.split('/')
-  console.log(search)
+
   const data = await callApi<RequestDeniedResponseBody>(
     'api/pages/teams/requests/deny',
     {
