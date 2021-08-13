@@ -75,23 +75,27 @@ const ExpandableImage = ({ src }: ExpandableImageProps) => {
             </ImageOptionsContainer>
             <Image src={src} />
           </EnlargedImageContainer>
-          {showingEnlargedImage && <DimBackground />}
+          {showingEnlargedImage && (
+            <DimBackground onClick={() => setShowingEnlargedImage(false)} />
+          )}
         </FullImageContainer>
       )}
     </Container>
   )
 }
 
-const EnlargedImageContainer = styled.div`
+const EnlargedImageContainer = styled.span`
   position: relative;
+  display: block;
   z-index: 9000;
 
   margin-left: 10%;
   margin-right: 10%;
 `
 
-const ImageOptionsContainer = styled.div`
+const ImageOptionsContainer = styled.span`
   position: relative;
+  display: block;
   .enlarged--image--btn-style {
     position: absolute;
     top: 0;
@@ -107,7 +111,7 @@ const ImageOptionsContainer = styled.div`
   }
 `
 
-const FullImageContainer = styled.div`
+const FullImageContainer = styled.span`
   position: fixed;
   z-index: 9000;
   top: 0;
@@ -120,7 +124,7 @@ const FullImageContainer = styled.div`
   align-items: center;
 `
 
-const DimBackground = styled.div`
+const DimBackground = styled.span`
   position: absolute;
   z-index: 6001;
   top: 0;
@@ -130,9 +134,10 @@ const DimBackground = styled.div`
   background-color: rgba(0, 0, 0, 0.85);
 `
 
-const ImageContainer = styled.div`
+const ImageContainer = styled.span`
   position: relative;
   cursor: pointer;
+  display: block;
 `
 
 const ImageActionButton = styled.button`
@@ -163,6 +168,6 @@ const ImageActionButton = styled.button`
   }
 `
 
-const Container = styled.div``
+const Container = styled.span``
 
 export default ExpandableImage
