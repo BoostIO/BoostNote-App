@@ -193,7 +193,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
       }
 
       if (usingElectron) {
-        sendToElectron('team-update', event.data.team)
+        sendToElectron('team-update', { ...team, ...eventTeam })
       }
     },
     [
