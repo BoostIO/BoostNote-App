@@ -36,7 +36,7 @@ export function getTemplateFromKeymap(
               {
                 label: 'Preferences',
                 accelerator: 'Cmd+,',
-                click: createEmitIpcMenuItemHandler('preferences'),
+                click: createEmitIpcMenuItemHandler('toggle-settings'),
               },
               { type: 'separator' },
               {
@@ -120,7 +120,7 @@ export function getTemplateFromKeymap(
             {
               label: 'Preferences',
               accelerator: 'Ctrl+,',
-              click: createEmitIpcMenuItemHandler('preferences'),
+              click: createEmitIpcMenuItemHandler('toggle-settings'),
             },
             { type: 'separator' },
             { role: 'quit' },

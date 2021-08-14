@@ -122,6 +122,9 @@ const BoostHubTeamsShowPage = ({
     const applyItalicStyle = () => {
       webviewControlRef.current!.sendMessage('apply-italic-style')
     }
+    const toggleSettings = () => {
+      webviewControlRef.current!.sendMessage('toggle-settings')
+    }
     addIpcListener('new-doc', newDocHandler)
     addIpcListener('new-folder', newFolderHandler)
     addIpcListener('save-as', saveAsHandler)
@@ -134,6 +137,7 @@ const BoostHubTeamsShowPage = ({
     addIpcListener('toggle-split-edit-mode', toggleSplitEditMode)
     addIpcListener('apply-bold-style', applyBoldStyle)
     addIpcListener('apply-italic-style', applyItalicStyle)
+    addIpcListener('toggle-settings', toggleSettings)
 
     return () => {
       boostHubOpenDiscountModalEventEmitter.unlisten(
