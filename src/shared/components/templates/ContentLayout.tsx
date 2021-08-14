@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import styled from '../../lib/styled'
 import { AppComponent } from '../../lib/types'
 import DoublePane from '../atoms/DoublePane'
@@ -28,7 +28,7 @@ const ContentLayout: AppComponent<ContentLayoutProps> = ({
   reduced,
   header,
 }) => {
-  const rightSideContentRef = React.createRef<HTMLDivElement>()
+  const rightSideContentRef = useRef<HTMLDivElement>(null)
   const keydownHandler = useCallback(
     async (event: KeyboardEvent) => {
       if (isFocusRightSideShortcut(event)) {

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useNav } from '../../../../lib/stores/nav'
 import { sortByAttributeAsc } from '../../../../lib/utils/array'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
@@ -28,7 +28,7 @@ const ImportModalSelectFolder = ({
   onSelect,
 }: ImportModalSelectFolderProps) => {
   const { foldersMap, workspacesMap } = useNav()
-  const wrapperRef = React.createRef<HTMLDivElement>()
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const { translate } = useI18n()
 
   const sortedWorkspaces = useMemo(() => {

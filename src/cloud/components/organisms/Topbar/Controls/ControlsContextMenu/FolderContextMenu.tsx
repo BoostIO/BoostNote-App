@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useRef } from 'react'
 import { usePage } from '../../../../../lib/stores/pageStore'
 import { useNav } from '../../../../../lib/stores/nav'
 import {
@@ -48,7 +48,7 @@ const FolderContextMenu = ({
   const { openRenameFolderForm } = useCloudResourceModals()
   const { translate } = useI18n()
 
-  const menuRef = React.createRef<HTMLDivElement>()
+  const menuRef = useRef<HTMLDivElement>(null)
   useEffectOnce(() => {
     menuRef.current!.focus()
   })

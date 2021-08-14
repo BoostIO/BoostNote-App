@@ -211,6 +211,9 @@ const App = () => {
 
     const boostHubTeamUpdateEventHandler = (event: BoostHubTeamUpdateEvent) => {
       const updatedTeam = event.detail.team
+      if (updatedTeam.id == null) {
+        return
+      }
       setGeneralStatus((previousGeneralStatus) => {
         const teamMap =
           previousGeneralStatus.boostHubTeams!.reduce((map, team) => {
