@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useEffectOnce } from 'react-use'
 import { useLeftToRightNavigationListener } from '../../lib/keyboard'
 
@@ -9,7 +9,7 @@ const LeftToRightList: React.FC<LeftToRightListProps> = ({
   className,
   children,
 }) => {
-  const listRef = React.createRef<HTMLDivElement>()
+  const listRef = useRef<HTMLDivElement>(null)
   useEffectOnce(() => {
     if (listRef.current != null) {
       listRef.current.focus()

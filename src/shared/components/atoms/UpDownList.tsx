@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useEffectOnce } from 'react-use'
 import { focusFirstChildFromElement } from '../../lib/dom'
 import { useUpDownNavigationListener } from '../../lib/keyboard'
@@ -14,7 +14,7 @@ const UpDownList: React.FC<UpDownListProps> = ({
   ignoreFocus,
   onBlur,
 }) => {
-  const listRef = React.createRef<HTMLDivElement>()
+  const listRef = useRef<HTMLDivElement>(null)
 
   const onBlurHandler = (event: any) => {
     if (onBlur == null) {

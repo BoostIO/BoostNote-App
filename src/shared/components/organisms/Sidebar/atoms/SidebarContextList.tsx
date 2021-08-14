@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useEffectOnce } from 'react-use'
 import { focusFirstChildFromElement } from '../../../../lib/dom'
 import {
@@ -18,7 +18,7 @@ const SidebarContextList: AppComponent<SidebarContextListProps> = ({
   children,
   onBlur,
 }) => {
-  const listRef = React.createRef<HTMLDivElement>()
+  const listRef = useRef<HTMLDivElement>(null)
   useEffectOnce(() => {
     if (listRef.current != null) {
       listRef.current.focus()

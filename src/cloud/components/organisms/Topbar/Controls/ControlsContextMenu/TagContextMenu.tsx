@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useRef } from 'react'
 import { usePage } from '../../../../../lib/stores/pageStore'
 import { useNav } from '../../../../../lib/stores/nav'
 import ContextMenuItem from './ControlsContextMenuItem'
@@ -46,7 +46,7 @@ const TagContextMenu = ({
   const { pushApiErrorMessage } = useToast()
   const { messageBox } = useDialog()
 
-  const menuRef = React.createRef<HTMLDivElement>()
+  const menuRef = useRef<HTMLDivElement>(null)
   useEffectOnce(() => {
     menuRef.current!.focus()
   })

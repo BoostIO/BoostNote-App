@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect, useRef } from 'react'
 import { useSettings } from '../../../lib/stores/settings'
 import {
   preventKeyboardEventPropagation,
@@ -57,8 +57,8 @@ const SettingsComponent = () => {
     openSettingsTab,
     settingsOpeningOptions,
   } = useSettings()
-  const contentSideRef = React.createRef<HTMLDivElement>()
-  const menuRef = React.createRef<HTMLDivElement>()
+  const contentSideRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
   const { team, subscription, currentUserPermissions } = usePage<
     PageStoreWithTeam
   >()

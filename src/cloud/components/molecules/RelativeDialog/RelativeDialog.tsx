@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
   StyledRelativeDialog,
   StyledWrapper,
@@ -17,7 +17,7 @@ const RelativeDialog = ({
   closed,
   setClosed,
 }: React.PropsWithChildren<RelativeDialogProps>) => {
-  const dialogRef: React.RefObject<HTMLDivElement> = React.createRef()
+  const dialogRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!closed) {

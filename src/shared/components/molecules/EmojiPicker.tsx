@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { Picker, EmojiData } from 'emoji-mart'
 import styled from '../../lib/styled'
 import Button from '../atoms/Button'
@@ -13,7 +13,7 @@ import {
 
 const EmojiPicker = () => {
   const { closed, closeEmojiPicker, position, callback } = useEmoji()
-  const pickerRef: React.RefObject<HTMLDivElement> = React.createRef()
+  const pickerRef = useRef<HTMLDivElement>(null)
   const { windowSize } = useWindow()
   const { pushApiErrorMessage } = useToast()
 

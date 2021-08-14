@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useEffectOnce } from 'react-use'
 import { getFirstFocusableChildOfElement } from '../../../lib/dom'
 import { FormattingTool } from './types'
@@ -45,7 +45,7 @@ const EditorHeaderToolDropdown = ({
   closeDropdowndown,
   onFormatCallback,
 }: EditorHeaderToolDropdownProps) => {
-  const menuRef = React.createRef<HTMLDivElement>()
+  const menuRef = useRef<HTMLDivElement>(null)
 
   useEffectOnce(() => {
     const focusableElement = getFirstFocusableChildOfElement(menuRef.current!)

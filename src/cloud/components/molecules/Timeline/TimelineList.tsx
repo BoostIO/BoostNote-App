@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { SerializedAppEvent } from '../../../interfaces/db/appEvents'
 import { useNav } from '../../../lib/stores/nav'
 import { getOriginalDocId } from '../../../lib/utils/patterns'
@@ -28,7 +28,7 @@ const TimelineList = ({
   workspacesMap,
 }: TimelineListProps) => {
   const { docsMap } = useNav()
-  const listRef = React.createRef<HTMLDivElement>()
+  const listRef = useRef<HTMLDivElement>(null)
   useUpDownNavigationListener(listRef)
 
   const timelineDocs = useMemo(() => {

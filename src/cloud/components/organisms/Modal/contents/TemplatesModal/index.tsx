@@ -67,8 +67,8 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
     currentParentFolderId,
   } = useNav()
   const { pushApiErrorMessage } = useToast()
-  const contentSideRef = React.createRef<HTMLDivElement>()
-  const menuRef = React.createRef<HTMLDivElement>()
+  const contentSideRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
   const [filter, setFilter] = useState<string>('')
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>()
   const [templateTitle, setTemplateTitle] = useState<string>('')
