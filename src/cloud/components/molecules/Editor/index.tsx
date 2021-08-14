@@ -597,12 +597,9 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
   )
 
   const { settings } = useSettings()
-  const fontSize = useMemo(() => {
-    return settings['general.editorFontSize']
-  }, [settings])
-  const fontFamily = useMemo(() => {
-    return settings['general.editorFontFamily']
-  }, [settings])
+  const fontSize = settings['general.editorFontSize']
+  const fontFamily = settings['general.editorFontFamily']
+
   const editorConfig: CodeMirror.EditorConfiguration = useMemo(() => {
     const editorTheme = settings['general.editorTheme']
     const theme =
