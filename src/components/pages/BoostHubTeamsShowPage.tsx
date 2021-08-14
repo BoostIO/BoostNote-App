@@ -86,8 +86,8 @@ const BoostHubTeamsShowPage = ({
       toggleSettingsMembersHandler
     )
 
-    const newNoteHandler = () => {
-      webviewControlRef.current!.sendMessage('new-note')
+    const newDocHandler = () => {
+      webviewControlRef.current!.sendMessage('new-doc')
     }
     const newFolderHandler = () => {
       webviewControlRef.current!.sendMessage('new-folder')
@@ -122,7 +122,7 @@ const BoostHubTeamsShowPage = ({
     const applyItalicStyle = () => {
       webviewControlRef.current!.sendMessage('apply-italic-style')
     }
-    addIpcListener('new-note', newNoteHandler)
+    addIpcListener('new-doc', newDocHandler)
     addIpcListener('new-folder', newFolderHandler)
     addIpcListener('save-as', saveAsHandler)
     addIpcListener('search', searchHandler)
@@ -153,7 +153,7 @@ const BoostHubTeamsShowPage = ({
       boostHubToggleSidebarNotificationsEventEmitter.unlisten(
         toggleSidebarNotificationsHandler
       )
-      removeIpcListener('new-note', newNoteHandler)
+      removeIpcListener('new-doc', newDocHandler)
       removeIpcListener('new-folder', newFolderHandler)
       removeIpcListener('save-as', saveAsHandler)
       removeIpcListener('search', searchHandler)

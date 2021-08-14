@@ -35,7 +35,7 @@ export const toggleSettingsEventEmitter = createCustomEventEmitter(
   'toggle-settings'
 )
 
-export const newNoteEventEmitter = createCustomEventEmitter('new-note')
+export const newDocEventEmitter = createCustomEventEmitter('new-doc')
 
 export const newFolderEventEmitter = createCustomEventEmitter('new-folder')
 

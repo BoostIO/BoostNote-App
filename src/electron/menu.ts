@@ -66,8 +66,8 @@ export function getTemplateFromKeymap(
         ? [
             {
               type: 'normal',
-              label: 'New Note',
-              click: createEmitIpcMenuItemHandler('new-note'),
+              label: 'New Document',
+              click: createEmitIpcMenuItemHandler('new-doc'),
               accelerator: 'Cmd + N',
             },
             {
@@ -89,8 +89,8 @@ export function getTemplateFromKeymap(
         : ([
             {
               type: 'normal',
-              label: 'New Note',
-              click: createEmitIpcMenuItemHandler('new-note'),
+              label: 'New Document',
+              click: createEmitIpcMenuItemHandler('new-doc'),
               accelerator: 'Ctrl + N',
             },
             {

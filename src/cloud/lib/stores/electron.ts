@@ -1,7 +1,7 @@
 import { createStoreContext } from '../utils/context'
 import {
   toggleSettingsEventEmitter,
-  newNoteEventEmitter,
+  newDocEventEmitter,
   newFolderEventEmitter,
   searchEventEmitter,
   toggleSideNavigatorEventEmitter,
@@ -150,8 +150,8 @@ const useElectronStore = (): ElectronStore => {
     addHostListener('toggle-settings', () => {
       toggleSettingsEventEmitter.dispatch()
     })
-    addHostListener('new-note', () => {
-      newNoteEventEmitter.dispatch()
+    addHostListener('new-doc', () => {
+      newDocEventEmitter.dispatch()
     })
     addHostListener('new-folder', () => {
       newFolderEventEmitter.dispatch()

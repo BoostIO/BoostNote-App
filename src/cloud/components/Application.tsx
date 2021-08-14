@@ -18,6 +18,7 @@ import {
   searchEventEmitter,
   toggleSidebarSearchEventEmitter,
   toggleSidebarNotificationsEventEmitter,
+  newDocEventEmitter,
 } from '../lib/utils/events'
 import { usePathnameChangeEffect, useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
@@ -93,6 +94,7 @@ const Application = ({
     workspacesMap,
     currentParentFolderId,
     currentWorkspaceId,
+    currentPath,
   } = useNav()
   const {
     team,
@@ -109,7 +111,7 @@ const Application = ({
   const [popOverState, setPopOverState] = useState<PopOverState>(null)
   const { openSettingsTab, closeSettingsTab } = useSettings()
   const { usingElectron, sendToElectron } = useElectron()
-  const { openNewFolderForm } = useCloudResourceModals()
+  const { openNewDocForm, openNewFolderForm } = useCloudResourceModals()
   const [showFuzzyNavigation, setShowFuzzyNavigation] = useState(false)
   const {
     treeWithOrderedCategories,
@@ -181,15 +183,43 @@ const Application = ({
     })
   }, [openNewFolderForm, currentParentFolderId, team, currentWorkspaceId])
 
+  const openCreateDocModal = useCallback(() => {
+    openNewDocForm(
+      {
+        team,
+        parentFolderId: currentParentFolderId,
+        workspaceId: currentWorkspaceId,
+      },
+      {
+        precedingRows: [
+          {
+            description: `${
+              workspacesMap.get(currentWorkspaceId || '')?.name
+            }${currentPath}`,
+          },
+        ],
+      }
+    )
+  }, [
+    openNewDocForm,
+    team,
+    currentParentFolderId,
+    currentWorkspaceId,
+    workspacesMap,
+    currentPath,
+  ])
+
   useEffect(() => {
     if (team == null || currentUserPermissions == null) {
       return
     }
+    newDocEventEmitter.listen(openCreateDocModal)
     newFolderEventEmitter.listen(openCreateFolderModal)
     return () => {
       newFolderEventEmitter.unlisten(openCreateFolderModal)
+      newDocEventEmitter.unlisten(openCreateDocModal)
     }
-  }, [team, currentUserPermissions, openCreateFolderModal])
+  }, [team, currentUserPermissions, openCreateFolderModal, openCreateDocModal])
 
   const overrideBrowserCtrlsHandler = useCallback(
     async (event: KeyboardEvent) => {
