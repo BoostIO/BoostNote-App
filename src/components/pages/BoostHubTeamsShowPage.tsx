@@ -169,6 +169,7 @@ const BoostHubTeamsShowPage = ({
       removeIpcListener('toggle-split-edit-mode', toggleSplitEditMode)
       removeIpcListener('apply-bold-style', applyBoldStyle)
       removeIpcListener('apply-italic-style', applyItalicStyle)
+      removeIpcListener('toggle-settings', toggleSettings)
     }
   }, [active])
 
