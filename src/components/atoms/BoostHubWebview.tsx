@@ -32,12 +32,12 @@ import {
   boosthubNotificationCountsEventEmitter,
   boostHubSidebarSpaceEventEmitter,
   boostHubAppRouterEventEmitter,
+  boostHubCreateCloudSpaceEventEmitter,
 } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu, openExternal } from '../../lib/electronOnly'
 import { DidFailLoadEvent } from 'electron/main'
 import styled from '../../shared/lib/styled'
-import { useRouter } from '../../lib/router'
 
 export interface WebviewControl {
   focus(): void
@@ -70,7 +70,6 @@ const BoostHubWebview = ({
   const { preferences } = usePreferences()
   const { signOut } = useBoostHub()
   const domReadyRef = useRef<boolean>(false)
-  const { push } = useRouter()
   const cloudUser = preferences['cloud.user']
 
   const accessToken = useMemo(() => {
@@ -146,7 +145,7 @@ const BoostHubWebview = ({
     const ipcMessageEventHandler = (event: IpcMessageEvent) => {
       switch (event.channel) {
         case 'new-space':
-          push('/app/boosthub/teams')
+          boostHubCreateCloudSpaceEventEmitter.dispatch()
           break
         case 'router':
           boostHubAppRouterEventEmitter.dispatch({ target: event.args[0] })

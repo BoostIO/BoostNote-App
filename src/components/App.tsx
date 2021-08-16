@@ -25,6 +25,7 @@ import {
   BoostHubSubscriptionDeleteEvent,
   boostHubSubscriptionDeleteEventEmitter,
   boostHubSubscriptionUpdateEventEmitter,
+  boostHubCreateCloudSpaceEventEmitter,
 } from '../lib/events'
 import { useRouteParams } from '../lib/routeParams'
 import { useStorageRouter } from '../lib/storageRouter'
@@ -174,17 +175,6 @@ const App = () => {
   })
 
   useEffect(() => {
-    const createCloudSpaceHandler = () => {
-      push('/app/boosthub/teams')
-    }
-    addIpcListener('create-cloud-space', createCloudSpaceHandler)
-
-    return () => {
-      removeIpcListener('create-cloud-space', createCloudSpaceHandler)
-    }
-  }, [push])
-
-  useEffect(() => {
     const boostHubTeamCreateEventHandler = (event: BoostHubTeamCreateEvent) => {
       const createdTeam = event.detail.team
       setGeneralStatus((previousGeneralStatus) => {
@@ -305,6 +295,10 @@ const App = () => {
       push(`/app/storages`)
     }
 
+    const boostHubCreateCloudSpaceEventHandler = () => {
+      push('/app/boosthub/teams')
+    }
+
     boostHubSubscriptionDeleteEventEmitter.listen(
       boostHubSubscriptionDeleteEventHandler
     )
@@ -317,6 +311,9 @@ const App = () => {
     boostHubAccountDeleteEventEmitter.listen(boostHubAccountDeleteEventHandler)
     boostHubCreateLocalSpaceEventEmitter.listen(
       boostHubCreateLocalSpaceEventHandler
+    )
+    boostHubCreateCloudSpaceEventEmitter.listen(
+      boostHubCreateCloudSpaceEventHandler
     )
     return () => {
       boostHubSubscriptionDeleteEventEmitter.unlisten(
@@ -333,6 +330,9 @@ const App = () => {
       )
       boostHubCreateLocalSpaceEventEmitter.unlisten(
         boostHubCreateLocalSpaceEventHandler
+      )
+      boostHubCreateCloudSpaceEventEmitter.unlisten(
+        boostHubCreateCloudSpaceEventHandler
       )
     }
   }, [push, setPreferences, setGeneralStatus])
@@ -356,12 +356,24 @@ const App = () => {
     },
     [storageMap, boostHubTeams, navigateToStorage, push]
   )
+
   useEffect(() => {
     addIpcListener('switch-workspace', switchWorkspaceHandler)
     return () => {
       removeIpcListener('switch-workspace', switchWorkspaceHandler)
     }
   }, [switchWorkspaceHandler])
+
+  useEffect(() => {
+    const createCloudSpaceHandler = () => {
+      boostHubCreateCloudSpaceEventEmitter.dispatch()
+    }
+    addIpcListener('create-cloud-space', createCloudSpaceHandler)
+
+    return () => {
+      removeIpcListener('create-cloud-space', createCloudSpaceHandler)
+    }
+  }, [push])
 
   useBoostNoteProtocol()
 

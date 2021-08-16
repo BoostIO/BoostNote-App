@@ -118,6 +118,10 @@ export const boostHubCreateLocalSpaceEventEmitter = createCustomEventEmitter(
   'BoostHub:createLocalSpace'
 )
 
+export const boostHubCreateCloudSpaceEventEmitter = createCustomEventEmitter(
+  'BoostHub:createCloudSpace'
+)
+
 export const boostHubToggleSidebarTreeEventEmitter = createCustomEventEmitter(
   'BoostHub:toggleSidebarTree'
 )
