@@ -474,10 +474,10 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsRolesRestrictedTitle]: 'Ce rôle est restraint',
   [lngKeys.SettingsRolesRestrictedDescription]:
     "Afin de promouvoir l'utilisateur à ce rôle, votre espace doit posséder un abonnement actif. Veuillez considérer upgrader votre plan.",
-
   [lngKeys.GeneralDocuments]: 'Documents',
   [lngKeys.RequestSent]: 'Demande envoyée',
   [lngKeys.RequestAsk]: 'Demander à éditer',
+  [lngKeys.UploadLimit]: 'La taille limite des fichiers est {{sizeInMb}}Mo',
 }
 
 export default {

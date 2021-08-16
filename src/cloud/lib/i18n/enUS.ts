@@ -471,6 +471,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.GeneralDocuments]: 'Documents',
   [lngKeys.RequestSent]: 'Request sent',
   [lngKeys.RequestAsk]: 'Ask to edit',
+  [lngKeys.UploadLimit]:
+    'The maximum allowed size for uploads is {{sizeInMb}}Mb',
 }
 
 export default {

@@ -16,6 +16,7 @@ import NavigationBarButton from '../../atoms/NavigationBarButton'
 import { SettingsTabTypes } from './types'
 import { mdiArrowLeft } from '@mdi/js'
 import Icon from '../../../../shared/components/atoms/Icon'
+import { allowedUploadSizeInMb } from '../../../../cloud/lib/upload'
 
 interface AccountSettingsTabProps {
   setActiveTab: (tab: SettingsTabTypes | null) => void
@@ -77,8 +78,22 @@ const AccountSettingsTab = ({ setActiveTab }: AccountSettingsTabProps) => {
       await saveUserInfo({ displayName })
       const user = { ...currentUser!, displayName }
       if (iconFile != null) {
-        const { icon } = await updateUserIcon(iconFile)
-        user.icon = icon
+        try {
+          const { icon } = await updateUserIcon(iconFile)
+          user.icon = icon
+        } catch (error) {
+          if (error.response.status === 413) {
+            pushMessage({
+              title: 'Error',
+              description: `Your file is too big`,
+            })
+          } else {
+            pushMessage({
+              title: error.response.status,
+              description: error.message,
+            })
+          }
+        }
       }
       if (currentEmailNotifications != emailNotifications) {
         const { settings } = await saveUserSettings({
@@ -130,6 +145,7 @@ const AccountSettingsTab = ({ setActiveTab }: AccountSettingsTabProps) => {
             rows={[
               {
                 title: 'Profile Picture',
+                description: `The maximum allowed size for uploads is ${allowedUploadSizeInMb}Mb`,
                 items: [
                   {
                     type: 'image',

@@ -427,6 +427,8 @@ export enum lngKeys {
   GeneralDocuments = 'general.documents',
   RequestAsk = 'request.ask',
   RequestSent = 'request.requested',
+
+  UploadLimit = 'upload.limit',
 }
 
 export type TranslationSource = {
