@@ -39,7 +39,7 @@ import {
   mdiWeb,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
-import { sendToHost, useElectron, usingElectron } from '../lib/stores/electron'
+import { sendToHost, usingElectron } from '../lib/stores/electron'
 import ContentLayout, {
   ContentLayoutProps,
 } from '../../shared/components/templates/ContentLayout'
@@ -110,7 +110,6 @@ const Application = ({
   const { push, query, goBack, goForward, pathname } = useRouter()
   const [popOverState, setPopOverState] = useState<PopOverState>(null)
   const { openSettingsTab, closeSettingsTab } = useSettings()
-  const { usingElectron, sendToElectron } = useElectron()
   const { openNewDocForm, openNewFolderForm } = useCloudResourceModals()
   const [showFuzzyNavigation, setShowFuzzyNavigation] = useState(false)
   const {
@@ -290,14 +289,8 @@ const Application = ({
   )
 
   const onSpaceClick = useCallback(() => {
-    if (!usingElectron) {
-      setPopOverState('spaces')
-      return
-    }
-
-    setPopOverState(null)
-    sendToElectron('sidebar-spaces')
-  }, [usingElectron, sendToElectron])
+    setPopOverState('spaces')
+  }, [])
 
   const sidebarHeader = useMemo(() => {
     return (
@@ -493,43 +486,64 @@ const Application = ({
 export default Application
 
 function buildSpacesBottomRows(push: (url: string) => void, t: TFunction) {
-  return [
-    {
-      label: t(lngKeys.CreateNewSpace),
-      icon: mdiPlusCircleOutline,
-      linkProps: {
-        href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,
-        onClick: (event: React.MouseEvent) => {
-          event.preventDefault()
-          push(`/cooperate`)
+  return usingElectron
+    ? [
+        {
+          label: t(lngKeys.CreateNewSpace),
+          icon: mdiPlusCircleOutline,
+          linkProps: {
+            href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,
+            onClick: (event: React.MouseEvent) => {
+              event.preventDefault()
+              sendToHost('new-space')
+            },
+          },
         },
-      },
-    },
-    {
-      label: t(lngKeys.DownloadDesktopApp),
-      icon: mdiDownload,
-      linkProps: {
-        href: 'https://github.com/BoostIO/BoostNote.next/releases/latest',
-        target: '_blank',
-        rel: 'noopener noreferrer',
-      },
-    },
-    {
-      label: t(lngKeys.LogOut),
-      icon: mdiLogoutVariant,
-      linkProps: {
-        href: '/api/oauth/signout',
-        onClick: (event: React.MouseEvent) => {
-          event.preventDefault()
-          if (usingElectron) {
-            sendToHost('sign-out')
-          } else {
-            window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout`
-          }
+        {
+          label: t(lngKeys.LogOut),
+          icon: mdiLogoutVariant,
+          linkProps: {
+            href: '/api/oauth/signout',
+            onClick: (event: React.MouseEvent) => {
+              event.preventDefault()
+              sendToHost('sign-out')
+            },
+          },
         },
-      },
-    },
-  ]
+      ]
+    : [
+        {
+          label: t(lngKeys.CreateNewSpace),
+          icon: mdiPlusCircleOutline,
+          linkProps: {
+            href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,
+            onClick: (event: React.MouseEvent) => {
+              event.preventDefault()
+              push(`/cooperate`)
+            },
+          },
+        },
+        {
+          label: t(lngKeys.DownloadDesktopApp),
+          icon: mdiDownload,
+          linkProps: {
+            href: 'https://github.com/BoostIO/BoostNote.next/releases/latest',
+            target: '_blank',
+            rel: 'noopener noreferrer',
+          },
+        },
+        {
+          label: t(lngKeys.LogOut),
+          icon: mdiLogoutVariant,
+          linkProps: {
+            href: '/api/oauth/signout',
+            onClick: (event: React.MouseEvent) => {
+              event.preventDefault()
+              window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout`
+            },
+          },
+        },
+      ]
 }
 
 function isCodeMirrorTextAreaEvent(event: KeyboardEvent) {
