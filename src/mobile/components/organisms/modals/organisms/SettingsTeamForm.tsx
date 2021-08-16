@@ -12,6 +12,7 @@ import { useToast } from '../../../../../shared/lib/stores/toast'
 import Form from '../../../../../shared/components/molecules/Form'
 import FormRow from '../../../../../shared/components/molecules/Form/templates/FormRow'
 import styled from '../../../../../shared/lib/styled'
+import { allowedUploadSizeInMb } from '../../../../../cloud/lib/upload'
 
 interface SettingsTeamFormProps {
   team: SerializedTeam
@@ -68,8 +69,22 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
         }
         const { team: updatedTeam } = await updateTeam(currentTeam.id, body)
         if (iconFile != null) {
-          const { icon } = await updateTeamIcon(team, iconFile)
-          updatedTeam.icon = icon
+          try {
+            const { icon } = await updateTeamIcon(team, iconFile)
+            updatedTeam.icon = icon
+          } catch (error) {
+            if (error.response.status === 413) {
+              pushMessage({
+                title: 'Error',
+                description: `Your file is too big`,
+              })
+            } else {
+              pushMessage({
+                title: error.response.status,
+                description: error.message,
+              })
+            }
+          }
         }
 
         setPartialPageData({ team: updatedTeam })
@@ -111,6 +126,7 @@ const SettingsTeamForm = ({ team, teamConversion }: SettingsTeamFormProps) => {
       rows={[
         {
           title: 'Logo',
+          description: `The maximum allowed size for uploads is ${allowedUploadSizeInMb}Mb`,
           items: [
             {
               type: 'image',

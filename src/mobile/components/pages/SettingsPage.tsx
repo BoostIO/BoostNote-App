@@ -73,8 +73,10 @@ const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
         await saveUserInfo({ displayName })
         const user = { ...currentUser!, displayName }
         if (iconFile != null) {
-          const { icon } = await updateUserIcon(iconFile)
-          user.icon = icon
+          try {
+            const { icon } = await updateUserIcon(iconFile)
+            user.icon = icon
+          } catch (error) {}
         }
         setPartialGlobalData({ currentUser: user })
         const finalRedirect =

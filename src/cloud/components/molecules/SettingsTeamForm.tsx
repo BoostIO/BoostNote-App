@@ -12,6 +12,7 @@ import { useToast } from '../../../shared/lib/stores/toast'
 import Form from '../../../shared/components/molecules/Form'
 import { useTranslation } from 'react-i18next'
 import { lngKeys } from '../../lib/i18n/types'
+import { allowedUploadSizeInMb } from '../../lib/upload'
 
 interface SettingsTeamFormProps {
   team: SerializedTeam
@@ -48,16 +49,28 @@ const SettingsTeamForm = ({ team }: SettingsTeamFormProps) => {
         const body: any = { name }
         const { team: updatedTeam } = await updateTeam(currentTeam.id, body)
         if (iconFile != null) {
-          const { icon } = await updateTeamIcon(team, iconFile)
-          updatedTeam.icon = icon
+          try {
+            const { icon } = await updateTeamIcon(team, iconFile)
+            updatedTeam.icon = icon
+          } catch (error) {
+            if (error.response.status === 413) {
+              pushMessage({
+                title: 'Error',
+                description: `Your file is too big`,
+              })
+            } else {
+              pushMessage({
+                title: error.response.status,
+                description: error.message,
+              })
+            }
+          }
         }
-
         setPartialPageData({ team: updatedTeam })
         setTeamInGlobal(updatedTeam)
         if (usingElectron) {
           sendToElectron('team-update', updatedTeam)
         }
-        console.log(router.pathname)
         const subPath = router.pathname.split('/')
         subPath.splice(0, 2)
         const newUrl = `${getTeamURL(updatedTeam)}${
@@ -95,6 +108,9 @@ const SettingsTeamForm = ({ team }: SettingsTeamFormProps) => {
       rows={[
         {
           title: t(lngKeys.GeneralLogo),
+          description: t(lngKeys.UploadLimit, {
+            sizeInMb: allowedUploadSizeInMb,
+          }),
           items: [
             {
               type: 'image',
