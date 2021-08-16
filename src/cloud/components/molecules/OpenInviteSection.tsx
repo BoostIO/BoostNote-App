@@ -170,7 +170,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
     }
   }, [team, openInvites, selectedInviteRole])
 
-  const onFormSubmit = useCallback(() => {
+  const copyInviteLinkUrlToClipboard = useCallback(() => {
     if (selectedInvite == null) {
       return
     }
@@ -201,7 +201,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
       </StyledFlex>
       {selectedInvite != null && (
         <StyledOpenLinkSection>
-          <Form onSubmit={onFormSubmit}>
+          <Form>
             {isSmallScreen ? (
               <>
                 <FormRow fullWidth={true}>
@@ -288,6 +288,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
                     props: {
                       type: 'button',
                       label: copyButtonLabel,
+                      onClick: copyInviteLinkUrlToClipboard,
                     },
                   }}
                 />
