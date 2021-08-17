@@ -24,6 +24,7 @@ import WorkspaceAccess from '../../../../cloud/components/organisms/Modal/conten
 import ModalContainer from './atoms/ModalContainer'
 import ModalFormWrapper from './atoms/ModalFormWrapper'
 import MobileFormControl from '../../atoms/MobileFormControl'
+import styled from '../../../../shared/lib/styled'
 
 interface MobileWorkspaceModalProps {
   title: string
@@ -244,7 +245,7 @@ const MobileWorkspaceModal = ({
                     {
                       type: 'node',
                       element: (
-                        <small>
+                        <WorkspaceVisibilityDescription>
                           {isPublic
                             ? translate(lngKeys.ModalsWorkspacePublicDisclaimer)
                             : `${translate(
@@ -256,7 +257,7 @@ const MobileWorkspaceModal = ({
                                     )
                                   : ''
                               }`}
-                        </small>
+                        </WorkspaceVisibilityDescription>
                       ),
                     },
                     {
@@ -323,3 +324,7 @@ const MobileWorkspaceModal = ({
 }
 
 export default MobileWorkspaceModal
+
+const WorkspaceVisibilityDescription = styled.p`
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+`

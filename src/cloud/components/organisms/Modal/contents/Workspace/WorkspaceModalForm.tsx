@@ -23,6 +23,7 @@ import { useI18n } from '../../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../../lib/i18n/types'
 import FormRow from '../../../../../../shared/components/molecules/Form/templates/FormRow'
 import { useEffectOnce } from 'react-use'
+import styled from '../../../../../../shared/lib/styled'
 
 interface WorkspaceModalFormProps {
   workspace?: SerializedWorkspace
@@ -224,7 +225,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
               {
                 type: 'node',
                 element: (
-                  <small>
+                  <WorkspaceVisibilityDescription>
                     {isPublic
                       ? translate(lngKeys.ModalsWorkspacePublicDisclaimer)
                       : `${translate(
@@ -234,7 +235,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
                             ? translate(lngKeys.ModalsWorkspacePrivateOwner)
                             : ''
                         }`}
-                  </small>
+                  </WorkspaceVisibilityDescription>
                 ),
               },
               {
@@ -299,3 +300,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
 }
 
 export default WorkspaceModalForm
+
+const WorkspaceVisibilityDescription = styled.p`
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+`
