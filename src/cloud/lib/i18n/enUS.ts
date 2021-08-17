@@ -76,8 +76,12 @@ const enTranslation: TranslationSource = {
   [lngKeys.SpaceDomain]: 'Space domain',
   [lngKeys.TeamDomainShow]: 'Your url will look like this:',
   [lngKeys.TeamDomainWarning]: "Caution: You can't change it after this step.",
-  [lngKeys.InviteWithOpenLink]: 'Invite with an open Link',
-  [lngKeys.InviteEmail]: 'Invite with Email',
+  [lngKeys.InviteRoleDetails]: 'Click to see role details.',
+  [lngKeys.InviteAddWithLink]: 'Add with link',
+  [lngKeys.InviteEmail]: 'Add by Email',
+  [lngKeys.InviteByEmailMore]: 'Add another team member',
+  [lngKeys.InviteFailError]:
+    'Invite failed because of incorrect email data. Please provide valid email and role.',
   [lngKeys.RoleMemberDescription]:
     'Members can access all features, except team management, billing.',
   [lngKeys.RoleAdminDescription]:

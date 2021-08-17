@@ -76,8 +76,12 @@ const frTranslation: TranslationSource = {
   [lngKeys.TeamDomainShow]: "L'url sera:",
   [lngKeys.TeamDomainWarning]:
     'Attention: Vous ne pourrez pas changer de domaine après cette étape.',
-  [lngKeys.InviteWithOpenLink]: 'Inviter avec un lien ouvert',
+  [lngKeys.InviteAddWithLink]: 'Inviter avec un lien ouvert',
   [lngKeys.InviteEmail]: 'Inviter par email',
+  [lngKeys.InviteByEmailMore]: "Ajouter un autre membre de l'équipe",
+  [lngKeys.InviteFailError]:
+    "L'invitation a échoué en raison de données de courrier électronique incorrectes. Veuillez fournir une adresse e-mail et un rôle valides.",
+  [lngKeys.InviteRoleDetails]: 'Cliquez pour voir les détails du rôle.',
   [lngKeys.RoleMemberDescription]:
     "Les membres peuvent accéder à toutes les fonctionnalités excepté pour la facturation ainsi que la gestion de l'équipe.",
   [lngKeys.RoleAdminDescription]:

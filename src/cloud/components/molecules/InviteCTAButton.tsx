@@ -12,20 +12,18 @@ import { SerializedTeam } from '../../interfaces/db/team'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import { usePage } from '../../lib/stores/pageStore'
-import { useSettings } from '../../lib/stores/settings'
+import { mdiPlus } from '@mdi/js'
+import InviteMembersModal from './InviteMembersModal'
 
 interface InviteCTAButtonProps {
   origin?: 'folder-page' | 'doc-page'
 }
 
 const InviteCTAButton = ({ origin }: InviteCTAButtonProps) => {
-  const { translate } = useI18n()
-  const { openSettingsTab } = useSettings()
-  const { closeAllModals } = useModal()
+  const { openModal } = useModal()
 
   const onClick = useCallback(() => {
-    openSettingsTab('teamMembers')
-    closeAllModals()
+    openModal(<InviteMembersModal />, { showCloseIcon: true })
 
     switch (origin) {
       case 'folder-page':
@@ -35,14 +33,28 @@ const InviteCTAButton = ({ origin }: InviteCTAButtonProps) => {
       default:
         return
     }
-  }, [origin, openSettingsTab, closeAllModals])
+  }, [openModal, origin])
 
   return (
-    <Button variant='primary' type='button' size='sm' onClick={onClick}>
-      {translate(lngKeys.GeneralInvite)}
-    </Button>
+    <InviteButtonContainer>
+      <Button
+        type={'button'}
+        variant={'icon'}
+        iconPath={mdiPlus}
+        onClick={onClick}
+      />
+    </InviteButtonContainer>
   )
 }
+
+const InviteButtonContainer = styled.div`
+  background-color: ${({ theme }) => theme.colors.variants.primary.base};
+  border-radius: 100%;
+
+  .button__icon {
+    color: ${({ theme }) => theme.colors.variants.primary.text};
+  }
+`
 
 const EditRequestButton = ({ team }: { team: SerializedTeam }) => {
   const { translate } = useI18n()

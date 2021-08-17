@@ -148,8 +148,11 @@ export enum lngKeys {
   TeamDomainShow = 'team.domain.show',
   TeamDomainWarning = 'team.domain.warning',
 
-  InviteWithOpenLink = 'invite.openlink',
+  InviteAddWithLink = 'invite.url',
   InviteEmail = 'invite.email',
+  InviteByEmailMore = 'invite.more.by.email',
+  InviteFailError = 'invite.failed.invites',
+  InviteRoleDetails = 'invite.role.details.tooltip.',
   RoleMemberDescription = 'role.member.description',
   RoleAdminDescription = 'role.admin.description',
   RoleViewerDescription = 'role.viewer.description',
