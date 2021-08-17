@@ -11,6 +11,7 @@ import { stringify } from 'yaml'
 import { useI18n } from '../useI18n'
 import { lngKeys } from '../../i18n/types'
 import { capitalize } from 'lodash'
+import { sendToHost, usingElectron } from '../../stores/electron'
 
 export function useCloudSidebarSpaces() {
   const {
@@ -65,33 +66,39 @@ export function useCloudSidebarSpaces() {
           href,
           onClick: (event: React.MouseEvent) => {
             event.preventDefault()
-            push(href)
+            if (usingElectron) {
+              sendToHost('request-app-navigate', `/${globalTeam.domain}`)
+            } else {
+              push(href)
+            }
           },
         },
       })
     })
 
-    invites.forEach((invite) => {
-      const query = { t: invite.team.id, i: getHexFromUUID(invite.id) }
-      const href = `${process.env.BOOST_HUB_BASE_URL}/invite?${stringify(
-        query
-      )}`
-      rows.push({
-        label: `${invite.team.name}`,
-        description: '( Invited )',
-        icon:
-          invite.team.icon != null
-            ? buildIconUrl(invite.team.icon.location)
-            : undefined,
-        linkProps: {
-          href,
-          onClick: (event: React.MouseEvent) => {
-            event.preventDefault()
-            push(`/invite?${stringify(query)}`)
+    if (!usingElectron) {
+      invites.forEach((invite) => {
+        const query = { t: invite.team.id, i: getHexFromUUID(invite.id) }
+        const href = `${process.env.BOOST_HUB_BASE_URL}/invite?${stringify(
+          query
+        )}`
+        rows.push({
+          label: `${invite.team.name}`,
+          description: '( Invited )',
+          icon:
+            invite.team.icon != null
+              ? buildIconUrl(invite.team.icon.location)
+              : undefined,
+          linkProps: {
+            href,
+            onClick: (event: React.MouseEvent) => {
+              event.preventDefault()
+              push(`/invite?${stringify(query)}`)
+            },
           },
-        },
+        })
       })
-    })
+    }
 
     return rows
   }, [counts, invites, teams, push, team, translate, permissions, subscription])
