@@ -23,12 +23,16 @@ export const StyledContent = styled.div`
 export const MarkdownWrapper = styled.div`
   flex: 1 1 auto;
   height: 100%;
-  padding: 0 ${({ theme }) => theme.space.default}px;
-  overflow-y: hidden;
 
   .CodeMirrorWrapper,
   .CodeMirrorWrapper .CodeMirror-wrap {
-    height: 100%;
+    height: 500px;
+  }
+
+  .CodeMirror-scroll {
+    overflow-y: scroll !important;
+    position: relative;
+    z-index: 0;
   }
 `
 
