@@ -219,6 +219,8 @@ function useNavStore(pageProps: any): NavContext {
     setTemplatesMap((prev) => new Map([...prev, ...maps.templatesData]))
   }, [pageProps])
 
+  const getAllResourcesAbortController = useRef<AbortController | null>(null)
+
   useEffect(() => {
     const getAllResources = async () => {
       if (team == null) {
@@ -240,6 +242,12 @@ function useNavStore(pageProps: any): NavContext {
         setInitialLoadDone(false)
         prevTeamId.current = team.id
 
+        const abortController = new AbortController()
+        if (getAllResourcesAbortController.current != null) {
+          getAllResourcesAbortController.current.abort()
+        }
+        getAllResourcesAbortController.current = abortController
+
         const [
           {
             folders,
@@ -250,7 +258,16 @@ function useNavStore(pageProps: any): NavContext {
             appEvents = [],
           },
           { templates = [] },
-        ] = await Promise.all([getResources(team.id), getAllTemplates(team.id)])
+        ] = await Promise.all([
+          getResources(team.id, undefined, abortController.signal),
+          getAllTemplates(team.id, abortController.signal),
+        ])
+
+        getAllResourcesAbortController.current = null
+
+        if (abortController.signal.aborted) {
+          return
+        }
 
         const maps = getTagsFoldersDocsMapsFromProps({
           folders,

@@ -5,9 +5,10 @@ export interface GetTemplatesResponseBody {
   templates: SerializedTemplate[]
 }
 
-export async function getAllTemplates(teamId: string) {
+export async function getAllTemplates(teamId: string, signal?: AbortSignal) {
   const data = await callApi<GetTemplatesResponseBody>(`api/templates`, {
     search: { teamId },
+    signal,
   })
   return data
 }
