@@ -47,12 +47,14 @@ export interface GetResourcesResponseBody {
 
 export async function getResources(
   teamId: string,
-  query: GetResourcesRequestQuery = { resourcesIds: [], workspacesIds: [] }
+  query: GetResourcesRequestQuery = { resourcesIds: [], workspacesIds: [] },
+  signal?: AbortSignal
 ) {
   const data = await callApi<GetResourcesResponseBody>(
     `api/teams/${teamId}/resources`,
     {
       search: querystring.stringify(query as any),
+      signal,
     }
   )
   return data
