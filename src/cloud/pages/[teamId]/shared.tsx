@@ -6,14 +6,15 @@ import { useTitle } from 'react-use'
 import { mdiWeb } from '@mdi/js'
 import Application from '../../components/Application'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
-import { getTeamLinkHref } from '../../components/atoms/Link/TeamLink'
+import { getTeamLinkHref } from '../../components/Link/TeamLink'
 import { useRouter } from '../../lib/router'
 import { topParentId } from '../../lib/mappers/topbarTree'
-import ContentManager from '../../components/molecules/ContentManager'
+import ContentManager from '../../components/ContentManager'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import { capitalize } from 'lodash'
-import InviteCTAButton from '../../components/molecules/InviteCTAButton'
+import InviteCTAButton from '../../components/Buttons/InviteCTAButton'
+import FolderPageInviteSection from '../../components/Onboarding/FolderPageInviteSection'
 
 const SharedDocsListPage = () => {
   const { team, currentUserIsCoreMember } = usePage()
@@ -56,6 +57,7 @@ const SharedDocsListPage = () => {
         },
       }}
     >
+      <FolderPageInviteSection />
       <ContentManager
         team={team}
         documents={sharedDocs}

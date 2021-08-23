@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, useCallback } from 'react'
 import NavigatorItem from './NavigatorItem'
-import SidebarTreeForm from '../../../../shared/components/organisms/Sidebar/atoms/SidebarTreeForm'
+import SidebarTreeForm from '../../../../design/components/organisms/Sidebar/atoms/SidebarTreeForm'
 import { NavigatorRow } from '../../../lib/sidebar/useNavigatorTree'
 
 const NavigatorNestedTreeRow = ({

@@ -1,7 +1,7 @@
 import React from 'react'
 import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
-import RoundedImage from '../../../../shared/components/atoms/RoundedImage'
-import styled from '../../../../shared/lib/styled'
+import RoundedImage from '../../../../design/components/atoms/RoundedImage'
+import styled from '../../../../design/lib/styled'
 import { buildIconUrl } from '../../../../cloud/api/files'
 import { boostHubBaseUrl } from '../../../../cloud/lib/consts'
 

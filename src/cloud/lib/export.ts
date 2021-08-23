@@ -11,13 +11,13 @@ import rehypeKatex from 'rehype-katex'
 import { mergeDeepRight, prop } from 'ramda'
 import gh from 'hast-util-sanitize/lib/github.json'
 import { downloadString } from './download'
-import rehypeCodeMirror from '../../shared/lib/codemirror/rehypeCodeMirror'
+import rehypeCodeMirror from '../../design/lib/codemirror/rehypeCodeMirror'
 import { SerializedDoc } from '../interfaces/db/doc'
 import { filenamify } from './utils/string'
 import { UserSettings } from './stores/settings'
-import { getGlobalCss } from '../components/GlobalStyle'
-import { selectTheme } from './styled'
 import { boostHubBaseUrl } from './consts'
+import { selectV2Theme } from '../../design/lib/styled/styleFunctions'
+import { getGlobalCss } from '../../design/components/atoms/GlobalStyle'
 
 export function filenamifyTitle(title: string): string {
   return filenamify(title.toLowerCase().replace(/\s+/g, '-'))
@@ -152,7 +152,7 @@ const generatePrintToPdfHTML = (
   const cssLinks = cssHrefs
     .map((href) => cssStyleLinkGenerator(href))
     .join('\n')
-  const themedGlobalCss = getGlobalCss(selectTheme(generalThemeName))
+  const themedGlobalCss = getGlobalCss(selectV2Theme(generalThemeName))
   const previewStyleCssEl = previewStyle ? `` : ''
 
   return `<!DOCTYPE html>

@@ -1,5 +1,5 @@
 import { KeyboardEvent } from 'react'
-import { osName } from '../shared/lib/platform'
+import { osName } from '../design/lib/platform'
 
 interface ModifierItem {
   ctrl?: boolean

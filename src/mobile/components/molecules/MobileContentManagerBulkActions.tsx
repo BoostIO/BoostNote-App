@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import Flexbox from '../../../cloud/components/atoms/Flexbox'
+import Flexbox from '../../../design/components/atoms/Flexbox'
 import { mdiFolderMoveOutline, mdiTrashCanOutline } from '@mdi/js'
 import { SerializedDocWithBookmark } from '../../../cloud/interfaces/db/doc'
 import { SerializedTeam } from '../../../cloud/interfaces/db/team'
@@ -12,11 +12,11 @@ import {
 } from '../../../cloud/lib/utils/patterns'
 import { SerializedFolderWithBookmark } from '../../../cloud/interfaces/db/folder'
 import { destroyFolder } from '../../../cloud/api/teams/folders'
-import { getMapFromEntityArray } from '../../../shared/lib/utils/array'
-import { useDialog, DialogIconTypes } from '../../../shared/lib/stores/dialog'
+import { getMapFromEntityArray } from '../../../design/lib/utils/array'
+import { useDialog, DialogIconTypes } from '../../../design/lib/stores/dialog'
 import { SerializedWorkspace } from '../../../cloud/interfaces/db/workspace'
-import { useModal } from '../../../shared/lib/stores/modal'
-import HeaderAction from '../../../cloud/components/molecules/ContentManager/Actions/HeaderAction'
+import { useModal } from '../../../design/lib/stores/modal'
+import HeaderAction from '../../../cloud/components/ContentManager/Actions/HeaderAction'
 import MobileResourceMoveModal from '../organisms/modals/MobileResourceMoveModal'
 
 interface ContentManagerBulkActionsProps {

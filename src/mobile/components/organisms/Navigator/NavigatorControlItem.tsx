@@ -1,7 +1,7 @@
 import React, { MouseEventHandler } from 'react'
-import styled from '../../../../shared/lib/styled'
-import Icon from '../../../../shared/components/atoms/Icon'
-import { overflowEllipsis } from '../../../../shared/lib/styled/styleFunctions'
+import styled from '../../../../design/lib/styled'
+import Icon from '../../../../design/components/atoms/Icon'
+import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
 
 interface NavigatorControlItemProps {
   iconPath: string

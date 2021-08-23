@@ -1,4 +1,4 @@
-import { createStoreContext } from '../../../../shared/lib/utils/context'
+import { createStoreContext } from '../../../../design/lib/utils/context'
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { Thread, Comment } from '../../../interfaces/db/comments'
 import {
@@ -9,7 +9,7 @@ import {
   deleteThread,
   getThread,
 } from '../../../api/comments/thread'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../design/lib/stores/toast'
 import {
   listThreadComments,
   createComment,
@@ -24,7 +24,7 @@ import { max } from 'date-fns'
 import sortBy from 'ramda/es/sortBy'
 import take from 'ramda/es/take'
 import uniqBy from 'ramda/es/uniqBy'
-import { mergeOnId } from '../../../../shared/lib/utils/array'
+import { mergeOnId } from '../../../../design/lib/utils/array'
 
 type DocThreadsObserver = (threads: Thread[]) => void
 type ThreadObserver = (comments: Comment[]) => void

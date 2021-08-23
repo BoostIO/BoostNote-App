@@ -1,11 +1,11 @@
-import { getDocLinkHref } from '../../components/atoms/Link/DocLink'
-import { getFolderHref } from '../../components/atoms/Link/FolderLink'
+import { getDocLinkHref } from '../../components/Link/DocLink'
+import { getFolderHref } from '../../components/Link/FolderLink'
 import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { getDocTitle } from '../utils/patterns'
-import { getMapValues } from '../../../shared/lib/utils/array'
-import { ContentManagerItemProps } from '../../../shared/lib/mappers/types'
+import { getMapValues } from '../../../design/lib/utils/array'
+import { ContentManagerItemProps } from '../../../design/lib/mappers/types'
 
 type CloudCategories = 'folders' | 'documents' | 'archived'
 

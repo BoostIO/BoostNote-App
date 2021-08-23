@@ -2,13 +2,13 @@ import React from 'react'
 import { useTitle } from 'react-use'
 import Application from '../../../components/Application'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
-import InviteCTAButton from '../../../components/molecules/InviteCTAButton'
+import InviteCTAButton from '../../../components/Buttons/InviteCTAButton'
 import {
   getRequestDeniedPageData,
   RequestDeniedResponseBody,
 } from '../../../api/pages/teams/requests'
-import styled from '../../../../shared/lib/styled'
-import Banner from '../../../../shared/components/atoms/Banner'
+import styled from '../../../../design/lib/styled'
+import Banner from '../../../../design/components/atoms/Banner'
 
 const DenyRequestsPage = ({}: RequestDeniedResponseBody) => {
   useTitle('Deny Edit Request')

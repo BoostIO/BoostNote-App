@@ -3,10 +3,10 @@ import { useEffectOnce } from 'react-use'
 import {
   ButtonProps,
   LoadingButton,
-} from '../../../../shared/components/atoms/Button'
-import Form from '../../../../shared/components/molecules/Form'
-import { FormRowProps } from '../../../../shared/components/molecules/Form/templates/FormRow'
-import styled from '../../../../shared/lib/styled'
+} from '../../../../design/components/atoms/Button'
+import Form from '../../../../design/components/molecules/Form'
+import { FormRowProps } from '../../../../design/components/molecules/Form/templates/FormRow'
+import styled from '../../../../design/lib/styled'
 import ModalContainer from './atoms/ModalContainer'
 import MobileFormControl from '../../atoms/MobileFormControl'
 

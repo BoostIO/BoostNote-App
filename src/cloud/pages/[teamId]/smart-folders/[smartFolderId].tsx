@@ -4,7 +4,7 @@ import { useNav } from '../../../lib/stores/nav'
 import { useTitle } from 'react-use'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
 import Application from '../../../components/Application'
-import ErrorLayout from '../../../../shared/components/templates/ErrorLayout'
+import ErrorLayout from '../../../../design/components/templates/ErrorLayout'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
 import {
   AssigneesCondition,
@@ -16,14 +16,15 @@ import {
   UpdateDateCondition,
 } from '../../../interfaces/db/smartFolder'
 import { addDays, subDays } from 'date-fns'
-import ContentManager from '../../../components/molecules/ContentManager'
+import ContentManager from '../../../components/ContentManager'
 import { getTeamIndexPageData } from '../../../api/pages/teams'
-import styled from '../../../../shared/lib/styled'
-import { localizeDate } from '../../../components/organisms/Modal/contents/SmartFolder/DocDateSelect'
-import InviteCTAButton from '../../../components/molecules/InviteCTAButton'
+import styled from '../../../../design/lib/styled'
+import { localizeDate } from '../../../components/Modal/contents/SmartFolder/DocDateSelect'
+import InviteCTAButton from '../../../components/Buttons/InviteCTAButton'
 import { mdiDotsHorizontal } from '@mdi/js'
-import { useModal } from '../../../../shared/lib/stores/modal'
-import SmartFolderContextMenu from '../../../components/organisms/SmartFolderContextMenu'
+import { useModal } from '../../../../design/lib/stores/modal'
+import SmartFolderContextMenu from '../../../components/SmartFolderContextMenu'
+import FolderPageInviteSection from '../../../components/Onboarding/FolderPageInviteSection'
 
 function validateAssignees(
   doc: SerializedDocWithBookmark,
@@ -310,6 +311,7 @@ const SmartFolderPage = (params: any) => {
         },
       }}
     >
+      <FolderPageInviteSection />
       <ContentManager
         team={team}
         documents={documents}

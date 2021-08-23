@@ -9,8 +9,8 @@ import {
   toggleSettingsEventEmitter,
   toggleSettingsMembersEventEmitter,
 } from '../../utils/events'
-import { useToast } from '../../../../shared/lib/stores/toast'
-import { UpgradeTabOpeningOptions } from '../../../components/organisms/settings/UpgradeTab'
+import { useToast } from '../../../../design/lib/stores/toast'
+import { UpgradeTabOpeningOptions } from '../../../components/Settings/UpgradeTab'
 import { isEqual } from 'lodash'
 
 export const baseUserSettings: UserSettings = {

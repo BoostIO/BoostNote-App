@@ -1,12 +1,11 @@
 import React, { useMemo } from 'react'
 import Page from '../../../components/Page'
-import DefaultLayout from '../../../components/layouts/DefaultLayout'
 import {
   getResourceShowPageData,
   ResourceShowPageResponseBody,
 } from '../../../api/pages/teams'
-import DocPage from '../../../components/organisms/DocPage'
-import FolderPage from '../../../components/organisms/FolderPage'
+import DocPage from '../../../components/DocPage'
+import FolderPage from '../../../components/FolderPage'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
 import { parse as parseQuery } from 'querystring'
 
@@ -32,11 +31,7 @@ const ResourceIndex = (props: ResourceShowPageResponseBody) => {
         break
     }
 
-    return (
-      <Page>
-        <DefaultLayout>{innerPage}</DefaultLayout>
-      </Page>
-    )
+    return <Page>{innerPage}</Page>
   }, [props])
 
   return content

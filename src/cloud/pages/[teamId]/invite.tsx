@@ -1,20 +1,20 @@
 import React, { useMemo, useCallback, useState } from 'react'
 import Page from '../../components/Page'
-import Container from '../../components/layouts/Container'
-import TitleComponent from '../../components/atoms/TitleComponent'
-import styled from '../../../cloud/lib/styled'
+import Container from '../../components/Layouts/CenteredContainer'
+import TitleComponent from '../../components/TitleComponent'
 import { useGlobalData } from '../../lib/stores/globalData'
-import CustomButton from '../../components/atoms/buttons/CustomButton'
-import ErrorBlock from '../../components/atoms/ErrorBlock'
+import ErrorBlock from '../../components/ErrorBlock'
 import { useRouter } from '../../lib/router'
 import { createPermissions } from '../../api/teams/permissions'
 import { getTeamURL } from '../../lib/utils/patterns'
-import SignInForm from '../../components/molecules/SignInForm'
+import SignInForm from '../../components/SignInForm'
 import {
   TeamOpenInvitePageData,
   getTeamOpenInvitePageData,
 } from '../../api/pages/teams/invite'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
+import Button from '../../../design/components/atoms/Button'
+import styled from '../../../design/lib/styled'
 
 const OpenInvitePage = ({ invite }: TeamOpenInvitePageData) => {
   const { globalData } = useGlobalData()
@@ -58,14 +58,14 @@ const OpenInvitePage = ({ invite }: TeamOpenInvitePageData) => {
     } else {
       return (
         <div className='content text-center flex'>
-          <CustomButton
+          <Button
+            className='join-button'
             variant='primary'
             disabled={sending}
             onClick={() => acceptInvite()}
-            style={{ margin: 'auto' }}
           >
             Join
-          </CustomButton>
+          </Button>
         </div>
       )
     }
@@ -97,7 +97,7 @@ const OpenInvitePage = ({ invite }: TeamOpenInvitePageData) => {
 
 const StyledInvitePage = styled.div`
   height: 100vh;
-  background-color: ${({ theme }) => theme.boldBackgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -120,21 +120,25 @@ const StyledInvitePageCard = styled.div`
   height: auto;
   overflow: hidden auto;
   margin: 20px auto;
-  padding: ${({ theme }) => theme.space.xlarge}px
-    ${({ theme }) => theme.space.large}px;
-  background-color: ${({ theme }) => theme.baseBackgroundColor};
+  padding: ${({ theme }) => theme.sizes.spaces.xl}px
+    ${({ theme }) => theme.sizes.spaces.l}px;
+  background-color: ${({ theme }) => theme.colors.background.secondary};
   box-shadow: 0 2px 40px 0 rgba(0, 0, 0, 0.06);
   border-radius: 5px;
   text-align: center;
 
+  .join-button {
+    margin: auto;
+  }
+
   h1 {
-    margin-bottom: ${({ theme }) => theme.space.default}px;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
   }
   hr {
-    margin: ${({ theme }) => theme.space.large}px 0;
+    margin: ${({ theme }) => theme.sizes.spaces.l}px 0;
   }
   button + button {
-    margin-left: ${({ theme }) => theme.space.small}px;
+    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 `
 

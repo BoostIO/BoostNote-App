@@ -1,18 +1,18 @@
 import React, { useCallback } from 'react'
 import { useGlobalData } from '../../../cloud/lib/stores/globalData'
-import SignInForm from '../../../cloud/components/molecules/SignInForm'
+import SignInForm from '../../../cloud/components/SignInForm'
 import { useRouter } from '../../../cloud/lib/router'
-import styled from '../../../shared/lib/styled'
+import styled from '../../../design/lib/styled'
 import {
   useContextMenu,
   MenuTypes,
   NormalMenuItem,
-} from '../../../shared/lib/stores/contextMenu'
+} from '../../../design/lib/stores/contextMenu'
 import SpaceMenuItemLabel from '../organisms/Navigator/SpaceMenuItemLabel'
-import Icon from '../../../shared/components/atoms/Icon'
+import Icon from '../../../design/components/atoms/Icon'
 import { mdiUnfoldMoreHorizontal } from '@mdi/js'
-import UserIcon from '../../../cloud/components/atoms/UserIcon'
-import Button from '../../../shared/components/atoms/Button'
+import UserIcon from '../../../cloud/components/UserIcon'
+import Button from '../../../design/components/atoms/Button'
 import useSignOut from '../../lib/signOut'
 import { mobileBaseUrl } from '../../../cloud/lib/consts'
 import NativeMobileAuthForm from '../organisms/NativeMobileAuthForm'

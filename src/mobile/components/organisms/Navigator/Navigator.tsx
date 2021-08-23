@@ -1,11 +1,11 @@
 import React, { useCallback, MouseEvent } from 'react'
 import cc from 'classcat'
-import styled from '../../../../shared/lib/styled'
-import Spinner from '../../../../shared/components/atoms/Spinner'
+import styled from '../../../../design/lib/styled'
+import Spinner from '../../../../design/components/atoms/Spinner'
 import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
 import NavigatorSpaceSelector from './NavigatorSpaceSelector'
 import NavigatorTree from './NavigatorTree'
-import Icon from '../../../../shared/components/atoms/Icon'
+import Icon from '../../../../design/components/atoms/Icon'
 import { useGlobalData } from '../../../../cloud/lib/stores/globalData'
 import { usePreferences } from '../../../lib/preferences'
 import {
@@ -16,7 +16,7 @@ import {
 import {
   useContextMenu,
   MenuTypes,
-} from '../../../../shared/lib/stores/contextMenu'
+} from '../../../../design/lib/stores/contextMenu'
 import { NavigatorCategory } from '../../../lib/sidebar/useNavigatorTree'
 
 type NavigatorProps = {

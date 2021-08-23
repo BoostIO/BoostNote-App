@@ -1,4 +1,4 @@
-import { osName } from '../../../../shared/lib/platform'
+import { osName } from '../../../../design/lib/platform'
 import { NoteStorage } from '../../../db/types'
 import React from 'react'
 

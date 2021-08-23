@@ -13,14 +13,14 @@ import {
   boostHubToggleSidebarNotificationsEventEmitter,
 } from '../../lib/events'
 import { DidFailLoadEvent } from 'electron/main'
-import styled from '../../shared/lib/styled'
+import styled from '../../design/lib/styled'
 import {
   border,
   borderBottom,
   textOverflow,
-} from '../../shared/lib/styled/styleFunctions'
+} from '../../design/lib/styled/styleFunctions'
 import { uiTextColor } from '../../lib/styled/styleFunctionsLocal'
-import Button from '../../shared/components/atoms/Button'
+import Button from '../../design/components/atoms/Button'
 
 interface BoostHubTeamsShowPageProps {
   active: boolean

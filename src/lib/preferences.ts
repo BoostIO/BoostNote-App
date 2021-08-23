@@ -17,7 +17,7 @@ import {
   KeymapItem,
   KeymapItemEditableProps,
 } from './keymap'
-import { ThemeTypes } from '../shared/lib/styled/types'
+import { ThemeTypes } from '../design/lib/styled/types'
 
 export type GeneralLanguageOptions = 'en-US'
 export type EditorIndentTypeOptions = 'tab' | 'spaces'

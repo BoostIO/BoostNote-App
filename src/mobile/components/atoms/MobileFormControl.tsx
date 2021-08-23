@@ -1,4 +1,4 @@
-import styled from '../../../shared/lib/styled'
+import styled from '../../../design/lib/styled'
 
 const MobileFormControl = styled.div`
   margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;

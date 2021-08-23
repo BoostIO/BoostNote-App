@@ -1,6 +1,6 @@
 import React, { MouseEventHandler } from 'react'
-import styled from '../../../shared/lib/styled'
-import Icon from '../../../shared/components/atoms/Icon'
+import styled from '../../../design/lib/styled'
+import Icon from '../../../design/components/atoms/Icon'
 
 interface NavigationBarIconButtonProps {
   onClick: MouseEventHandler<HTMLButtonElement>

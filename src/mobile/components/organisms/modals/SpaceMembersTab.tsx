@@ -3,8 +3,7 @@ import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import {
   useDialog,
   DialogIconTypes,
-} from '../../../../shared/lib/stores/dialog'
-import CustomButton from '../../../../cloud/components/atoms/buttons/CustomButton'
+} from '../../../../design/lib/stores/dialog'
 import { SerializedUserTeamPermissions } from '../../../../cloud/interfaces/db/userTeamPermissions'
 import { useGlobalData } from '../../../../cloud/lib/stores/globalData'
 import {
@@ -12,25 +11,26 @@ import {
   updatePermissionRole,
 } from '../../../../cloud/api/teams/permissions'
 import { useSettings } from '../../../../cloud/lib/stores/settings'
-import ColoredBlock from '../../../../cloud/components/atoms/ColoredBlock'
-import { Spinner } from '../../../../cloud/components/atoms/Spinner'
-import OpenInvitesSection from '../../../../cloud/components/molecules/OpenInviteSection'
-import UserIcon from '../../../../cloud/components/atoms/UserIcon'
-import styled from '../../../../cloud/lib/styled'
+import OpenInvitesSection from '../../../../cloud/components/OpenInviteSection'
+import UserIcon from '../../../../cloud/components/UserIcon'
 import { arraysAreIdentical } from '../../../../cloud/lib/utils/array'
 import { getUserEmailsFromPermissions } from '../../../../cloud/api/teams/permissions/emails'
 import { useRouter } from '../../../../cloud/lib/router'
 import { mdiArrowLeft } from '@mdi/js'
 import { useSet } from 'react-use'
-import { useToast } from '../../../../shared/lib/stores/toast'
-import SettingTabContent from '../../../../shared/components/organisms/Settings/atoms/SettingTabContent'
-import Flexbox from '../../../../shared/components/atoms/Flexbox'
-import { SimpleFormSelect } from '../../../../shared/components/molecules/Form/atoms/FormSelect'
+import { useToast } from '../../../../design/lib/stores/toast'
+import SettingTabContent from '../../../../design/components/organisms/Settings/atoms/SettingTabContent'
+import Flexbox from '../../../../design/components/atoms/Flexbox'
+import { SimpleFormSelect } from '../../../../design/components/molecules/Form/atoms/FormSelect'
 import ModalFormWrapper from './atoms/ModalFormWrapper'
 import NavigationBarButton from '../../atoms/NavigationBarButton'
-import Icon from '../../../../shared/components/atoms/Icon'
+import Icon from '../../../../design/components/atoms/Icon'
 import ModalContainer from './atoms/ModalContainer'
 import { SettingsTabTypes } from './types'
+import { LoadingButton } from '../../../../design/components/atoms/Button'
+import Spinner from '../../../../design/components/atoms/Spinner'
+import styled from '../../../../design/lib/styled'
+import ColoredBlock from '../../../../design/components/atoms/ColoredBlock'
 
 interface SpaceMembersTabProps {
   setActiveTab: (tabType: SettingsTabTypes | null) => void
@@ -360,20 +360,17 @@ const SpaceMembersTab = ({ setActiveTab }: SpaceMembersTabProps) => {
                         )}
                         {(targetPermissionsAreUsersOwn ||
                           currentUserIsAdmin) && (
-                          <CustomButton
+                          <LoadingButton
+                            spinning={sending === `${permission.id}-delete`}
                             variant='transparent'
                             onClick={() => removePermissions(permission)}
                             disabled={sending != null}
-                            style={{ width: 80 }}
+                            className='btn__member__remove'
                           >
-                            {sending === `${permission.id}-delete` ? (
-                              <Spinner />
-                            ) : currentUserPermissions.id === permission.id ? (
-                              'Leave'
-                            ) : (
-                              'Remove'
-                            )}
-                          </CustomButton>
+                            {currentUserPermissions.id === permission.id
+                              ? 'Leave'
+                              : 'Remove'}
+                          </LoadingButton>
                         )}
                       </div>
                     </td>
@@ -390,23 +387,27 @@ const SpaceMembersTab = ({ setActiveTab }: SpaceMembersTabProps) => {
 
 const StyledMembersTable = styled.table`
   width: 100%;
-  margin-top: ${({ theme }) => theme.space.default}px;
+  margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
+
+  .btn__member__remove {
+    width: 80px;
+  }
 
   .table-header {
     text-align: left;
-    border-top: 1px solid ${({ theme }) => theme.subtleBorderColor};
+    border-top: 1px solid ${({ theme }) => theme.colors.border.second};
 
     th {
-      padding: ${({ theme }) => theme.space.xsmall}px 0;
-      color: ${({ theme }) => theme.subtleTextColor};
-      font-size: ${({ theme }) => theme.fontSizes.small}px;
+      padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
+      color: ${({ theme }) => theme.colors.text.subtle};
+      font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
       font-weight: normal;
     }
   }
 
   .table-body {
     tr {
-      border-top: 1px solid ${({ theme }) => theme.subtleBorderColor};
+      border-top: 1px solid ${({ theme }) => theme.colors.text.subtle};
 
       td {
         &:first-child {
@@ -422,11 +423,11 @@ const StyledMembersTable = styled.table`
     .user-action {
       display: flex;
       align-items: center;
-      padding: ${({ theme }) => theme.space.xsmall}px 0;
+      padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
     }
 
     .user-info-icon {
-      margin-right: ${({ theme }) => theme.space.small}px;
+      margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
     }
 
     .user-action {
@@ -454,14 +455,14 @@ const StyledMembername = styled.div`
 
   p {
     margin: 0;
-    color: ${({ theme }) => theme.baseTextColor};
-    padding-right: ${({ theme }) => theme.space.xsmall}px;
+    color: ${({ theme }) => theme.colors.text.primary};
+    padding-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 
   span {
-    color: ${({ theme }) => theme.subtleTextColor};
-    margin-left: ${({ theme }) => theme.space.xsmall}px;
-    font-size: ${({ theme }) => theme.fontSizes.small}px;
+    color: ${({ theme }) => theme.colors.text.subtle};
+    margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
     padding: 2px 5px;
   }
 `

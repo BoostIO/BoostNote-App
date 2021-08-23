@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StatusFilter } from '../../components/atoms/ThreadStatusFilterControl'
+import { StatusFilter } from '../../components/ThreadStatusFilterControl'
 import { TeamPermissionType } from '../../interfaces/db/userTeamPermissions'
 import { lngKeys } from '../i18n/types'
 

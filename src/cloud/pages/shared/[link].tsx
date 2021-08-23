@@ -3,16 +3,17 @@ import {
   SharePageDataResponseBody,
   getSharedPagedData,
 } from '../../api/pages/shared'
-import { StyledDocPage } from '../../components/organisms/DocPage/styles'
-import SharePageTopbar from '../../components/organisms/SharePageTopBar'
-import SharedDocPage from '../../components/organisms/DocPage/SharedDocPage'
-import styled from '../../lib/styled'
-import Icon from '../../components/atoms/Icon'
+import { StyledDocPage } from '../../components/DocPage/styles'
+import SharePageTopbar from '../../components/SharePageTopBar'
+import SharedDocPage from '../../components/DocPage/SharedDocPage'
 import { mdiLockOutline } from '@mdi/js'
-import { inputStyle, primaryButtonStyle } from '../../lib/styled/styleFunctions'
 import { getSharedLink } from '../../api/share'
-import { Spinner } from '../../components/atoms/Spinner'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
+import { LoadingButton } from '../../../design/components/atoms/Button'
+import styled from '../../../design/lib/styled'
+import Icon from '../../../design/components/atoms/Icon'
+import Form from '../../../design/components/molecules/Form'
+import FormRow from '../../../design/components/molecules/Form/templates/FormRow'
 
 const SharedPage = (props: SharePageDataResponseBody) => {
   const [fetching, setFetching] = useState(false)
@@ -73,43 +74,55 @@ const SharedPage = (props: SharePageDataResponseBody) => {
       <SharePageTopbar />
       <Container>
         <div className='share__card'>
-          <Icon className='share__card__icon' path={mdiLockOutline} size={72} />
+          <Icon
+            className='share__card__icon'
+            path={mdiLockOutline}
+            size={100}
+          />
           <div className='share__card__heading'>
             This link is password protected
           </div>
           <p className='share__card__description'>
             Enter the password below to view this document
           </p>
-          <form className='share__link__form' onSubmit={onSubmitPassword}>
-            <label className='share__card__label' htmlFor='password-input'>
-              Password
-            </label>
-            <input
-              type='text'
-              value={password}
-              disabled={fetching}
-              onChange={onPasswordChange}
-              id='password-input'
-              className='share__card__row'
-              autoComplete='off'
+          <Form className='share__link__form' onSubmit={onSubmitPassword}>
+            <FormRow
+              row={{
+                title: 'Password',
+                items: [
+                  {
+                    type: 'input',
+                    props: {
+                      type: 'text',
+                      value: password,
+                      disabled: fetching,
+                      onChange: onPasswordChange,
+                      id: 'password-input',
+                      className: 'share__card__row',
+                      autoComplete: 'off',
+                    },
+                  },
+                ],
+              }}
+              fullWidth={true}
             />
             {error != null && (
-              <div className='share__link__form__error share__card__row'>
+              <FormRow className='share__link__form__error share__card__row'>
                 {error}
-              </div>
+              </FormRow>
             )}
-            <button
-              type='submit'
-              className='share__card__row'
-              disabled={fetching}
-            >
-              {fetching ? (
-                <Spinner className='relative spinner' />
-              ) : (
-                'View this document'
-              )}
-            </button>
-          </form>
+            <FormRow>
+              <LoadingButton
+                type='submit'
+                className='share__card__row'
+                disabled={fetching}
+                spinning={fetching}
+                variant='primary'
+              >
+                View this document
+              </LoadingButton>
+            </FormRow>
+          </Form>
         </div>
       </Container>
     </StyledDocPage>
@@ -126,7 +139,7 @@ const Container = styled.div`
   flex: 1 1 auto;
 
   .share__card {
-    margin-top: ${({ theme }) => theme.space.default}px;
+    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
     margin-left: auto;
     margin-right: auto;
     width: 96%;
@@ -134,13 +147,9 @@ const Container = styled.div`
     text-align: center;
   }
 
-  .share__card__icon {
-    color: ${({ theme }) => theme.subtleIconColor};
-  }
-
   .share__card__heading {
-    font-size: ${({ theme }) => theme.fontSizes.xxxlarge}px;
-    margin: ${({ theme }) => theme.space.default}px 0;
+    font-size: ${({ theme }) => theme.sizes.spaces.xl}px;
+    margin: ${({ theme }) => theme.sizes.spaces.df}px 0;
   }
 
   .share__link__form {
@@ -149,31 +158,8 @@ const Container = styled.div`
 
     .share__link__form__error {
       text-align: center;
-      color: ${({ theme }) => theme.dangerBackgroundColor};
+      color: ${({ theme }) => theme.colors.variants.danger.base};
     }
-
-    input {
-      ${inputStyle}
-      width: 100%;
-      height: 40px;
-      padding: 0 ${({ theme }) => theme.space.xsmall}px;
-    }
-
-    button[type='submit'] {
-      ${primaryButtonStyle};
-      width: 100%;
-      height: 40px;
-      border-radius: 3px;
-    }
-  }
-
-  .share__card__row + .share__card__row {
-    margin-top: ${({ theme }) => theme.space.default}px;
-  }
-
-  .share__card__label {
-    color: ${({ theme }) => theme.subtleTextColor};
-    display: block;
   }
 `
 

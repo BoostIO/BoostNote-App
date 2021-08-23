@@ -1,15 +1,15 @@
 import React, { useMemo, useCallback, useState } from 'react'
 import { usePage } from '../../../../../../cloud/lib/stores/pageStore'
 import { SerializedUser } from '../../../../../../cloud/interfaces/db/user'
-import { FormSelectOption } from '../../../../../../shared/components/molecules/Form/atoms/FormSelect'
-import styled from '../../../../../../shared/lib/styled'
-import UserIcon from '../../../../../../cloud/components/atoms/UserIcon'
+import { FormSelectOption } from '../../../../../../design/components/molecules/Form/atoms/FormSelect'
+import styled from '../../../../../../design/lib/styled'
+import UserIcon from '../../../../../../cloud/components/UserIcon'
 import Select from 'react-select'
 import cc from 'classcat'
 import {
   contextMenuFormItem,
   textOverflow,
-} from '../../../../../../shared/lib/styled/styleFunctions'
+} from '../../../../../../design/lib/styled/styleFunctions'
 import { useI18n } from '../../../../../../cloud/lib/hooks/useI18n'
 import { lngKeys } from '../../../../../../cloud/lib/i18n/types'
 

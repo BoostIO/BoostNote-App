@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react'
-import { useModal } from '../../../../shared/lib/stores/modal'
+import { useModal } from '../../../../design/lib/stores/modal'
 import {
   createSmartFolder,
   CreateSmartFolderRequestBody,
 } from '../../../../cloud/api/teams/smart-folder'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../../cloud/lib/stores/nav'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../design/lib/stores/toast'
 import { getSmartFolderHref } from '../../../../cloud/lib/href'
 import { useRouter } from '../../../../cloud/lib/router'
 import ModalContainer from './atoms/ModalContainer'

@@ -328,6 +328,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.AttachmentsPlanUpgradeDisclaimer]: 'If you need more space, please',
   [lngKeys.AttachmentsUpgradeLink]: 'upgrade your plan.',
 
+  [lngKeys.FolderInfo]: 'Folder Info',
   [lngKeys.DocInfo]: 'Doc Info',
   [lngKeys.Assignees]: 'Assignees',
   [lngKeys.Unassigned]: 'Unassigned',
@@ -473,6 +474,12 @@ const enTranslation: TranslationSource = {
   [lngKeys.RequestAsk]: 'Ask to edit',
   [lngKeys.UploadLimit]:
     'The maximum allowed size for uploads is {{sizeInMb}}Mb',
+
+  [lngKeys.OnboardingFolderSectionTitle]: 'Welcome to Boost Note!',
+  [lngKeys.OnboardingFolderSectionDisclaimer]:
+    'Invite your teammates to this space',
+
+  [lngKeys.GeneralContent]: 'Content',
 }
 
 export default {

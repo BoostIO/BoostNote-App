@@ -2,7 +2,6 @@ import React, { useEffect, useMemo } from 'react'
 import { usePage } from '../../../cloud/lib/stores/pageStore'
 import { getDocTitle } from '../../../cloud/lib/utils/patterns'
 import { useNav } from '../../../cloud/lib/stores/nav'
-import ColoredBlock from '../../../cloud/components/atoms/ColoredBlock'
 import DocEditPage from './DocEditPage'
 import DocViewPage from './DocViewPage'
 import { useTitle } from 'react-use'
@@ -14,6 +13,7 @@ import {
 import { SerializedUser } from '../../../cloud/interfaces/db/user'
 import { SerializedRevision } from '../../../cloud/interfaces/db/revision'
 import AppLayout from '../layouts/AppLayout'
+import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 
 interface DocPageProps {
   doc: SerializedDocWithBookmark
@@ -90,7 +90,15 @@ const DocPage = ({ doc, contributors, backLinks }: DocPageProps) => {
   if (currentDoc == null || team == null) {
     return (
       <AppLayout>
-        <ColoredBlock variant='danger' style={{ marginTop: '100px' }}>
+        <ColoredBlock
+          variant='danger'
+          style={{
+            width: '96%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginTop: '100px',
+          }}
+        >
           <h3>Oops...</h3>
           <p>The document has been deleted.</p>
         </ColoredBlock>
@@ -101,7 +109,15 @@ const DocPage = ({ doc, contributors, backLinks }: DocPageProps) => {
   if (currentUser == null) {
     return (
       <AppLayout>
-        <ColoredBlock variant='danger' style={{ marginTop: '100px' }}>
+        <ColoredBlock
+          variant='danger'
+          style={{
+            width: '96%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginTop: '100px',
+          }}
+        >
           <h3>Oops...</h3>
           <p>You need to be connected to access this document.</p>
         </ColoredBlock>

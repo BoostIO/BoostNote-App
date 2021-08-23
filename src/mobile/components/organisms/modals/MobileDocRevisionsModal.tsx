@@ -9,20 +9,20 @@ import { useSettings } from '../../../../cloud/lib/stores/settings'
 import {
   useDialog,
   DialogIconTypes,
-} from '../../../../shared/lib/stores/dialog'
-import styled from '../../../../shared/lib/styled'
+} from '../../../../design/lib/stores/dialog'
+import styled from '../../../../design/lib/styled'
 import { compareDateString } from '../../../../cloud/lib/date'
 import { trackEvent } from '../../../../cloud/api/track'
 import { MixpanelActionTrackTypes } from '../../../../cloud/interfaces/analytics/mixpanel'
-import { useModal } from '../../../../shared/lib/stores/modal'
+import { useModal } from '../../../../design/lib/stores/modal'
 import ModalContainer from './atoms/ModalContainer'
-import RevisionModalNavigator from '../../../../cloud/components/organisms/Modal/contents/Doc/RevisionsModal/RevisionModalNavigator'
-import Spinner from '../../../../shared/components/atoms/Spinner'
-import ErrorBlock from '../../../../cloud/components/atoms/ErrorBlock'
-import Button from '../../../../shared/components/atoms/Button'
-import RevisionModalDetail from '../../../../cloud/components/organisms/Modal/contents/Doc/RevisionsModal/RevisionModalDetail'
-import { focusFirstChildFromElement } from '../../../../shared/lib/dom'
-import IconMdi from '../../../../cloud/components/atoms/IconMdi'
+import RevisionModalNavigator from '../../../../cloud/components/Modal/contents/Doc/RevisionsModal/RevisionModalNavigator'
+import Spinner from '../../../../design/components/atoms/Spinner'
+import ErrorBlock from '../../../../cloud/components/ErrorBlock'
+import Button from '../../../../design/components/atoms/Button'
+import RevisionModalDetail from '../../../../cloud/components/Modal/contents/Doc/RevisionsModal/RevisionModalDetail'
+import { focusFirstChildFromElement } from '../../../../design/lib/dom'
+import Icon from '../../../../design/components/atoms/Icon'
 
 interface MobileDocRevisionsModalProps {
   currentDoc: SerializedDocWithBookmark
@@ -166,11 +166,7 @@ const MobileDocRevisionsModal = ({
     if (subscription == null && currentUserPermissions != null) {
       return (
         <div>
-          <IconMdi
-            path={mdiBackupRestore}
-            size={60}
-            style={{ marginBottom: 20 }}
-          />
+          <Icon path={mdiBackupRestore} size={50} className='backup_icon' />
           <p>
             Let&apos;s upgrade to the Pro plan now and protect your shared
             documents with a password.
@@ -247,4 +243,8 @@ const StyledContent = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  .backup_icon {
+    margin-bottom: 20px;
+  }
 `

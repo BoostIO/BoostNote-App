@@ -341,6 +341,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.OpenInBrowser]: 'Ouvrir dans le navigateur',
   [lngKeys.GeneralPickYourDestination]: 'Choisissez la destination',
 
+  [lngKeys.FolderInfo]: 'Info du dossier',
   [lngKeys.DocInfo]: 'Info du document',
   [lngKeys.Assignees]: 'Assigné à',
   [lngKeys.Unassigned]: 'Non assigné',
@@ -478,6 +479,11 @@ const frTranslation: TranslationSource = {
   [lngKeys.RequestSent]: 'Demande envoyée',
   [lngKeys.RequestAsk]: 'Demander à éditer',
   [lngKeys.UploadLimit]: 'La taille limite des fichiers est {{sizeInMb}}Mo',
+
+  [lngKeys.OnboardingFolderSectionTitle]: 'Bienvenue sur Boost Note!',
+  [lngKeys.OnboardingFolderSectionDisclaimer]:
+    'Invitez vos coéquipiers dans cet espace',
+  [lngKeys.GeneralContent]: 'Contenu',
 }
 
 export default {

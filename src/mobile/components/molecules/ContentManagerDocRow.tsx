@@ -10,7 +10,7 @@ import {
   mdiFolderMoveOutline,
   mdiFileDocumentOutline,
 } from '@mdi/js'
-import DocLink from '../../../cloud/components/atoms/Link/DocLink'
+import DocLink from '../../../cloud/components/Link/DocLink'
 import cc from 'classcat'
 import ContentManagerRowLinkContent from './ContentManagerRowLinkContent'
 import {
@@ -20,15 +20,15 @@ import {
   DestroyDocBookmarkResponseBody,
 } from '../../../cloud/api/teams/docs/bookmarks'
 import { useNav } from '../../../cloud/lib/stores/nav'
-import Flexbox from '../../../cloud/components/atoms/Flexbox'
+import Flexbox from '../../../design/components/atoms/Flexbox'
 import { SerializedWorkspace } from '../../../cloud/interfaces/db/workspace'
 import { usePage } from '../../../cloud/lib/stores/pageStore'
 import { SerializedUser } from '../../../cloud/interfaces/db/user'
-import { useToast } from '../../../shared/lib/stores/toast'
-import { useModal } from '../../../shared/lib/stores/modal'
+import { useToast } from '../../../design/lib/stores/toast'
+import { useModal } from '../../../design/lib/stores/modal'
 import RowAction, {
   ContentManagerRowAction,
-} from '../../../cloud/components/molecules/ContentManager/Actions/RowAction'
+} from '../../../cloud/components/ContentManager/Actions/RowAction'
 import MobileResourceMoveModal from '../organisms/modals/MobileResourceMoveModal'
 
 interface ContentManagerDocRowProps {

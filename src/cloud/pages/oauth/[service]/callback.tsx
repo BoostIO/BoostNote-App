@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import Page from '../../../components/Page'
-import Container from '../../../components/layouts/Container'
-import Spinner from '../../../components/atoms/CustomSpinner'
-import styled from '../../../lib/styled'
+import Container from '../../../components/Layouts/CenteredContainer'
 import { useEffectOnce } from 'react-use'
-import ErrorPage from '../../../components/organisms/error/ErrorPage'
+import ErrorPage from '../../../components/Error/ErrorPage'
 import { useRouter } from '../../../lib/router'
 import { boostHubBaseUrl } from '../../../lib/consts'
+import Spinner from '../../../../design/components/atoms/Spinner'
+import styled from '../../../../design/lib/styled'
 
 const AuthCallbackPage = () => {
   const [error, setError] = useState<any>()
@@ -48,13 +48,13 @@ export const StyledAuthCallbackPage = styled.div`
 `
 
 export const StyledAuthCallbackCard = styled.div`
-  background-color: ${({ theme }) => theme.subtleBackgroundColor};
-  color: ${({ theme }) => theme.baseTextColor};
-  box-shadow: ${({ theme }) => theme.baseShadowColor};
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  color: ${({ theme }) => theme.colors.text.primary};
+  box-shadow: ${({ theme }) => theme.colors.shadow};
   width: 100%;
   max-width: 600px;
-  padding: ${({ theme }) => theme.space.xlarge}px
-    ${({ theme }) => theme.space.large}px;
+  padding: ${({ theme }) => theme.sizes.spaces.xl}px
+    ${({ theme }) => theme.sizes.spaces.l}px;
   border-radius: 5px;
   text-align: center;
 `

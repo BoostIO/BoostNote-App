@@ -19,26 +19,26 @@ import {
   mdiWeb,
   mdiDotsHorizontal,
 } from '@mdi/js'
-import { FoldingProps } from '../../../shared/components/atoms/FoldingWrapper'
-import { SidebarTreeSortingOrder } from '../../../shared/lib/sidebar'
+import { FoldingProps } from '../../../design/components/atoms/FoldingWrapper'
+import { SidebarTreeSortingOrder } from '../../../design/lib/sidebar'
 import {
   MenuItem,
   MenuTypes,
   useContextMenu,
-} from '../../../shared/lib/stores/contextMenu'
-import { useModal } from '../../../shared/lib/stores/modal'
+} from '../../../design/lib/stores/contextMenu'
+import { useModal } from '../../../design/lib/stores/modal'
 import {
   getMapValues,
   sortByAttributeAsc,
   sortByAttributeDesc,
-} from '../../../shared/lib/utils/array'
+} from '../../../design/lib/utils/array'
 import {
   getDocLinkHref,
   getFolderHref,
   getTagHref,
   getTeamLinkHref,
 } from '../../lib/href'
-import { getWorkspaceHref } from '../../../cloud/components/atoms/Link/WorkspaceLink'
+import { getWorkspaceHref } from '../../../cloud/components/Link/WorkspaceLink'
 import { SerializedWorkspace } from '../../../cloud/interfaces/db/workspace'
 import { useRouter } from '../../../cloud/lib/router'
 import {
@@ -59,7 +59,7 @@ import {
 } from '../../../cloud/lib/utils/patterns'
 import { useCloudApi } from '../../../cloud/lib/hooks/useCloudApi'
 import { getDocStatusHref, getSmartFolderHref } from '../href'
-import { useDialog } from '../../../shared/lib/stores/dialog'
+import { useDialog } from '../../../design/lib/stores/dialog'
 import { useAppStatus } from '../appStatus'
 import SmartFolderCreateModal from '../../components/organisms/modals/SmartFolderCreateModal'
 import SmartFolderUpdateModal from '../../components/organisms/modals/SmartFolderUpdateModal'

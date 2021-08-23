@@ -1,23 +1,23 @@
 import { mdiPlus } from '@mdi/js'
 import { TFunction } from 'i18next'
 import React, { useCallback, useState } from 'react'
-import { LoadingButton } from '../../../../../shared/components/atoms/Button'
-import Switch from '../../../../../shared/components/atoms/Switch'
-import Form from '../../../../../shared/components/molecules/Form'
-import { FormSelectOption } from '../../../../../shared/components/molecules/Form/atoms/FormSelect'
-import FormRow from '../../../../../shared/components/molecules/Form/templates/FormRow'
-import FormRowItem from '../../../../../shared/components/molecules/Form/templates/FormRowItem'
-import styled from '../../../../../shared/lib/styled'
+import { LoadingButton } from '../../../../../design/components/atoms/Button'
+import Switch from '../../../../../design/components/atoms/Switch'
+import Form from '../../../../../design/components/molecules/Form'
+import { FormSelectOption } from '../../../../../design/components/molecules/Form/atoms/FormSelect'
+import FormRow from '../../../../../design/components/molecules/Form/templates/FormRow'
+import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
+import styled from '../../../../../design/lib/styled'
 import {
   UpdateSmartFolderRequestBody,
   CreateSmartFolderRequestBody,
 } from '../../../../../cloud/api/teams/smart-folder'
 import { useI18n } from '../../../../../cloud/lib/hooks/useI18n'
 import { lngKeys } from '../../../../../cloud/lib/i18n/types'
-import { EditibleSecondaryCondition } from '../../../../../cloud/components/organisms/Modal/contents/SmartFolder/interfaces'
-import SecondaryConditionItem from '../../../../../cloud/components/organisms/Modal/contents/SmartFolder/SecondaryConditionItem'
-import { StyledModalSeparator } from '../../../../../cloud/components/organisms/Modal/contents/Forms/styled'
+import { EditibleSecondaryCondition } from '../../../../../cloud/components/Modal/contents/SmartFolder/interfaces'
+import SecondaryConditionItem from '../../../../../cloud/components/Modal/contents/SmartFolder/SecondaryConditionItem'
 import MobileFormControl from '../../../atoms/MobileFormControl'
+import BorderSeparator from '../../../../../design/components/atoms/BorderSeparator'
 
 interface SmartFolderFormProps {
   action: 'Create' | 'Update'
@@ -116,7 +116,7 @@ const SmartFolderForm = ({
         <FormRow
           fullWidth={true}
           row={{
-            items: [{ type: 'node', element: <StyledModalSeparator /> }],
+            items: [{ type: 'node', element: <BorderSeparator /> }],
           }}
         />
 
@@ -192,7 +192,7 @@ const SmartFolderForm = ({
         <FormRow
           fullWidth={true}
           row={{
-            items: [{ type: 'node', element: <StyledModalSeparator /> }],
+            items: [{ type: 'node', element: <BorderSeparator /> }],
           }}
         />
 

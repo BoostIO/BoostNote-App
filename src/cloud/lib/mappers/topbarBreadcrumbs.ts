@@ -8,11 +8,11 @@ import {
   mdiTrashCanOutline,
 } from '@mdi/js'
 import { TFunction } from 'i18next'
-import { TopbarBreadcrumbProps } from '../../../shared/components/organisms/Topbar'
-import { getDocLinkHref } from '../../components/atoms/Link/DocLink'
-import { getFolderHref } from '../../components/atoms/Link/FolderLink'
-import { getTeamLinkHref } from '../../components/atoms/Link/TeamLink'
-import { getWorkspaceHref } from '../../components/atoms/Link/WorkspaceLink'
+import { TopbarBreadcrumbProps } from '../../../design/components/organisms/Topbar'
+import { getDocLinkHref } from '../../components/Link/DocLink'
+import { getFolderHref } from '../../components/Link/FolderLink'
+import { getTeamLinkHref } from '../../components/Link/TeamLink'
+import { getWorkspaceHref } from '../../components/Link/WorkspaceLink'
 import { SerializedDoc } from '../../interfaces/db/doc'
 import {
   SerializedFolder,

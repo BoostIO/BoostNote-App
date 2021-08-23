@@ -22,13 +22,11 @@ import {
   getFolderId,
 } from '../../../cloud/lib/utils/patterns'
 import { SerializedWorkspace } from '../../../cloud/interfaces/db/workspace'
-import { StyledContentManagerList } from '../../../cloud/components/molecules/ContentManager/styled'
-import Checkbox from '../../../cloud/components/atoms/Checkbox'
+import { StyledContentManagerList } from '../../../cloud/components/ContentManager/styled'
 import { SerializedTeam } from '../../../cloud/interfaces/db/team'
-import { CustomSelectOption } from '../../../cloud/components/atoms/Select/CustomSelect'
 import SortingOption, {
   sortingOrders,
-} from '../../../cloud/components/molecules/ContentManager/SortingOption'
+} from '../../../cloud/components/ContentManager/SortingOption'
 import ContentManagerDocRow from '../molecules/ContentManagerDocRow'
 import ContentManagerFolderRow from '../molecules/ContentManagerFolderRow'
 import { difference } from 'ramda'
@@ -37,15 +35,19 @@ import {
   mdiFolderPlusOutline,
   mdiFormatListChecks,
 } from '@mdi/js'
-import Button, { LoadingButton } from '../../../shared/components/atoms/Button'
-import styled from '../../../shared/lib/styled'
-import DocStatusIcon from '../../../cloud/components/atoms/DocStatusIcon'
-import { isChildNode } from '../../../shared/lib/dom'
+import Button, { LoadingButton } from '../../../design/components/atoms/Button'
+import styled from '../../../design/lib/styled'
+import DocStatusIcon from '../../../cloud/components/DocStatusIcon'
+import { isChildNode } from '../../../design/lib/dom'
 import { usePreferences } from '../../lib/preferences'
-import EmptyRow from '../../../cloud/components/molecules/ContentManager/Rows/EmptyRow'
+import EmptyRow from '../../../cloud/components/ContentManager/Rows/EmptyRow'
 import cc from 'classcat'
 import MobileContentManagerBulkActions from '../molecules/MobileContentManagerBulkActions'
 import { useMobileResourceModals } from '../../lib/useMobileResourceModals'
+import { FormSelectOption } from '../../../design/components/molecules/Form/atoms/FormSelect'
+import Checkbox, {
+  CheckboxWithLabel,
+} from '../../../design/components/molecules/Form/atoms/FormCheckbox'
 
 export type ContentManagerParent =
   | { type: 'folder'; item: SerializedFolderWithBookmark }
@@ -79,7 +81,7 @@ const ContentManager = ({
     'new-doc' | 'new-folder' | undefined
   >()
   const { openNewDocForm, openNewFolderForm } = useMobileResourceModals()
-  const [order, setOrder] = useState<typeof sortingOrders[number]['data']>(
+  const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
     preferences.folderSortingOrder
   )
 
@@ -228,9 +230,9 @@ const ContentManager = ({
   }, [resetDocs, resetFolders])
 
   const onChangeOrder = useCallback(
-    (val: CustomSelectOption) => {
-      setOrder(val.data)
-      setPreferences({ folderSortingOrder: val.data })
+    (val: FormSelectOption) => {
+      setOrder(val.value)
+      setPreferences({ folderSortingOrder: val.value as any })
     },
     [setPreferences]
   )
@@ -303,7 +305,7 @@ const ContentManager = ({
                 'header__left__checkbox',
                 selectingAllItems && 'header__left__checkbox--checked',
               ])}
-              onChange={selectingAllItems ? unselectAllItems : selectAllItems}
+              toggle={selectingAllItems ? unselectAllItems : selectAllItems}
             />
           )}
 
@@ -334,7 +336,7 @@ const ContentManager = ({
                 selectingAllFolders && 'header__checkbox--checked',
               ])}
               checked={selectingAllFolders}
-              onChange={selectingAllFolders ? resetFolders : selectAllFolders}
+              toggle={selectingAllFolders ? resetFolders : selectAllFolders}
             />
           )}
           <div className='header__label'>FOLDERS</div>
@@ -375,7 +377,7 @@ const ContentManager = ({
                 selectingAllDocs && 'header__checkbox--checked',
               ])}
               checked={selectingAllDocs}
-              onChange={selectingAllDocs ? resetDocs : selectAllDocs}
+              toggle={selectingAllDocs ? resetDocs : selectAllDocs}
             />
           )}
           <div className='header__label'>DOCUMENTS</div>
@@ -407,10 +409,10 @@ const ContentManager = ({
               tabIndex={-1}
             >
               <div className='header__filter-menu__menu-item'>
-                <Checkbox
+                <CheckboxWithLabel
                   className='header__filter-menu__menu-item__checkbox'
                   checked={statusFilterSet.has('in_progress')}
-                  onChange={() => toggleStatusFilter('in_progress')}
+                  toggle={() => toggleStatusFilter('in_progress')}
                   label={
                     <div className='header__filter-menu__menu-item__checkbox__label'>
                       <DocStatusIcon
@@ -426,10 +428,10 @@ const ContentManager = ({
                 />
               </div>
               <div className='header__filter-menu__menu-item'>
-                <Checkbox
+                <CheckboxWithLabel
                   className='header__filter-menu__menu-item__checkbox'
                   checked={statusFilterSet.has('paused')}
-                  onChange={() => toggleStatusFilter('paused')}
+                  toggle={() => toggleStatusFilter('paused')}
                   label={
                     <div className='header__filter-menu__menu-item__checkbox__label'>
                       <DocStatusIcon
@@ -445,10 +447,10 @@ const ContentManager = ({
                 />
               </div>
               <div className='header__filter-menu__menu-item'>
-                <Checkbox
+                <CheckboxWithLabel
                   className='header__filter-menu__menu-item__checkbox'
                   checked={statusFilterSet.has('completed')}
-                  onChange={() => toggleStatusFilter('completed')}
+                  toggle={() => toggleStatusFilter('completed')}
                   label={
                     <div className='header__filter-menu__menu-item__checkbox__label'>
                       <DocStatusIcon
@@ -464,12 +466,15 @@ const ContentManager = ({
                 />
               </div>
               <div className='header__filter-menu__menu-item'>
-                <Checkbox
+                <CheckboxWithLabel
                   className='header__filter-menu__menu-item__checkbox'
                   checked={statusFilterSet.has('archived')}
-                  onChange={() => toggleStatusFilter('archived')}
+                  toggle={() => toggleStatusFilter('archived')}
                   label={
-                    <div className='header__filter-menu__menu-item__checkbox__label'>
+                    <div
+                      className='header__filter-menu__menu-item__checkbox__label'
+                      onClick={() => toggleStatusFilter('archived')}
+                    >
                       <DocStatusIcon
                         className='header__filter-menu__menu-item__checkbox__label__icon'
                         size={16}

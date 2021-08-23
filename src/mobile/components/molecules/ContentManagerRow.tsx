@@ -1,8 +1,8 @@
 import React from 'react'
 import cc from 'classcat'
-import Checkbox from '../../../cloud/components/atoms/Checkbox'
-import Flexbox from '../../../cloud/components/atoms/Flexbox'
-import styled from '../../../shared/lib/styled'
+import Flexbox from '../../../design/components/atoms/Flexbox'
+import styled from '../../../design/lib/styled'
+import Checkbox from '../../../design/components/molecules/Form/atoms/FormCheckbox'
 
 interface ContentManagerRowProps {
   checked?: boolean
@@ -26,7 +26,7 @@ const ContentManagerRow = ({
       <Checkbox
         className={cc(['row__checkbox', checked && 'row__checkbox--checked'])}
         checked={checked}
-        onChange={onSelect}
+        toggle={() => onSelect(!checked)}
       />
     )}
     <Flexbox

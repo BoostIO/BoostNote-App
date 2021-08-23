@@ -1,6 +1,6 @@
 import { SerializedDoc } from '../../cloud/interfaces/db/doc'
 import { SerializedTeam } from '../../cloud/interfaces/db/team'
-import { DocLinkIntent } from '../../cloud/components/atoms/Link/DocLink'
+import { DocLinkIntent } from '../../cloud/components/Link/DocLink'
 import querystring from 'querystring'
 import {
   getDocURL,
@@ -11,7 +11,7 @@ import {
 import {
   TeamIdProps,
   TeamLinkIntent,
-} from '../../cloud/components/atoms/Link/TeamLink'
+} from '../../cloud/components/Link/TeamLink'
 import { SerializedSmartFolder } from '../../cloud/interfaces/db/smartFolder'
 import { SerializedFolder } from '../../cloud/interfaces/db/folder'
 import { SerializedTag } from '../../cloud/interfaces/db/tag'

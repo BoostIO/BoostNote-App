@@ -4,7 +4,7 @@ import {
   getSettingsPageData,
   SettingsPageResponseBody,
 } from '../../api/pages/settings'
-import ErrorBlock from '../../components/atoms/ErrorBlock'
+import ErrorBlock from '../../components/ErrorBlock'
 import cc from 'classcat'
 import { getTeamURL } from '../../lib/utils/patterns'
 import { buildIconUrl } from '../../api/files'
@@ -13,14 +13,14 @@ import { useGlobalData } from '../../lib/stores/globalData'
 import { useRouter } from '../../lib/router'
 import { parse as parseQuery } from 'querystring'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
-import Form from '../../../shared/components/molecules/Form'
-import FormRow from '../../../shared/components/molecules/Form/templates/FormRow'
-import FormImage from '../../../shared/components/molecules/Form/atoms/FormImage'
-import FormRowItem from '../../../shared/components/molecules/Form/templates/FormRowItem'
-import { LoadingButton } from '../../../shared/components/atoms/Button'
-import ButtonGroup from '../../../shared/components/atoms/ButtonGroup'
-import styled from '../../../shared/lib/styled'
-import OnboardingLayout from '../../components/organisms/Onboarding/layouts/OnboardingLayout'
+import Form from '../../../design/components/molecules/Form'
+import FormRow from '../../../design/components/molecules/Form/templates/FormRow'
+import FormImage from '../../../design/components/molecules/Form/atoms/FormImage'
+import FormRowItem from '../../../design/components/molecules/Form/templates/FormRowItem'
+import { LoadingButton } from '../../../design/components/atoms/Button'
+import ButtonGroup from '../../../design/components/atoms/ButtonGroup'
+import styled from '../../../design/lib/styled'
+import OnboardingLayout from '../../components/Onboarding/OnboardingLayout'
 
 const SettingsPage = ({ currentUser }: SettingsPageResponseBody) => {
   const [displayName, setDisplayName] = useState<string>(

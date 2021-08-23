@@ -5,12 +5,12 @@ import React, {
   MouseEvent,
   useCallback,
 } from 'react'
-import { FoldingProps } from '../../../../shared/components/atoms/FoldingWrapper'
-import { MenuItem } from '../../../../shared/lib/stores/contextMenu'
-import { ControlButtonProps } from '../../../../shared/lib/types'
+import { FoldingProps } from '../../../../design/components/atoms/FoldingWrapper'
+import { MenuItem } from '../../../../design/lib/stores/contextMenu'
+import { ControlButtonProps } from '../../../../design/lib/types'
 import NavigatorItem from './NavigatorItem'
 import cc from 'classcat'
-import SidebarTreeForm from '../../../../shared/components/organisms/Sidebar/atoms/SidebarTreeForm'
+import SidebarTreeForm from '../../../../design/components/organisms/Sidebar/atoms/SidebarTreeForm'
 import NavigatorNestedTreeRow from './NavigatorNestedTreeRow'
 import {
   NavigatorControl,

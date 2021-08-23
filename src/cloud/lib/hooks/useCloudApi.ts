@@ -62,8 +62,8 @@ import {
   getTeamURL,
   getWorkspaceURL,
 } from '../utils/patterns'
-import useBulkApi from '../../../shared/lib/hooks/useBulkApi'
-import { getMapFromEntityArray } from '../../../shared/lib/utils/array'
+import useBulkApi from '../../../design/lib/hooks/useBulkApi'
+import { getMapFromEntityArray } from '../../../design/lib/utils/array'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { deleteSmartFolder } from '../../api/teams/smart-folder'
 

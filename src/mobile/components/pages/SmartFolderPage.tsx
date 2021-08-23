@@ -3,7 +3,7 @@ import { usePage } from '../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../cloud/lib/stores/nav'
 import { useTitle } from 'react-use'
 import { SerializedDocWithBookmark } from '../../../cloud/interfaces/db/doc'
-import ErrorLayout from '../../../shared/components/templates/ErrorLayout'
+import ErrorLayout from '../../../design/components/templates/ErrorLayout'
 import { GetInitialPropsParameters } from '../../../cloud/interfaces/pages'
 import {
   AssigneesCondition,
@@ -17,10 +17,10 @@ import {
 import { addDays, subDays } from 'date-fns'
 import DocOnlyContentManager from '../organisms/DocOnlyContentManager'
 import { getTeamIndexPageData } from '../../../cloud/api/pages/teams'
-import { localizeDate } from '../../../cloud/components/organisms/Modal/contents/SmartFolder/DocDateSelect'
+import { localizeDate } from '../../../cloud/components/Modal/contents/SmartFolder/DocDateSelect'
 import AppLayout from '../layouts/AppLayout'
 import { mdiFolderCogOutline } from '@mdi/js'
-import Icon from '../../../shared/components/atoms/Icon'
+import Icon from '../../../design/components/atoms/Icon'
 
 function validateAssignees(
   doc: SerializedDocWithBookmark,

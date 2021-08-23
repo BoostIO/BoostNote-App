@@ -1,8 +1,8 @@
 import React from 'react'
 import NavigationBarContainer from '../../../atoms/NavigationBarContainer'
-import styled from '../../../../../shared/lib/styled'
+import styled from '../../../../../design/lib/styled'
 import NavigationBarButton from '../../../atoms/NavigationBarButton'
-import { useModal } from '../../../../../shared/lib/stores/modal'
+import { useModal } from '../../../../../design/lib/stores/modal'
 
 interface ModalContainerProps {
   title: string

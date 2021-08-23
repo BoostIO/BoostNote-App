@@ -1,12 +1,12 @@
 import React from 'react'
-import Flexbox from '../../../cloud/components/atoms/Flexbox'
+import Flexbox from '../../../design/components/atoms/Flexbox'
 import { getShortFormattedBoosthubDateTime } from '../../../cloud/lib/date'
-import EmojiIcon from '../../../cloud/components/atoms/EmojiIcon'
+import EmojiIcon from '../../../cloud/components/EmojiIcon'
 import { SerializedUser } from '../../../cloud/interfaces/db/user'
-import EditorsIcons from '../../../cloud/components/atoms/EditorsIcons'
+import EditorsIcons from '../../../cloud/components/EditorsIcons'
 import { DocStatus } from '../../../cloud/interfaces/db/doc'
-import DocStatusIcon from '../../../cloud/components/atoms/DocStatusIcon'
-import styled from '../../../shared/lib/styled'
+import DocStatusIcon from '../../../cloud/components/DocStatusIcon'
+import styled from '../../../design/lib/styled'
 
 interface ContentManagerRowLinkContentProps {
   status?: DocStatus
@@ -57,7 +57,7 @@ const ContentManagerRowLinkContent = ({
       )}
     </Flexbox>
 
-    <Flexbox flex='0 2 auto' shrink={0} className='date'>
+    <Flexbox flex='0 0 auto' className='date'>
       {getShortFormattedBoosthubDateTime(date)}
       {editors != null && editors.length > 0 && (
         <EditorsIcons editors={editors} />

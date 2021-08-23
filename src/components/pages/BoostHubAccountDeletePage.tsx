@@ -3,7 +3,7 @@ import { boostHubAccountDeletePageUrl } from '../../lib/boosthub'
 import PageDraggableHeader from '../atoms/PageDraggableHeader'
 import { mdiAccountGroup } from '@mdi/js'
 import BoostHubWebview from '../atoms/BoostHubWebview'
-import styled from '../../shared/lib/styled'
+import styled from '../../design/lib/styled'
 
 const BoostHubAccountDeletePage = () => {
   return (

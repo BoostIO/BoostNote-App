@@ -5,7 +5,7 @@ import {
   State,
   Actions,
   ModeTransition,
-} from '../../../cloud/components/organisms/CommentManager'
+} from '../../components/Comments/CommentManager'
 
 function useCommentManagerState(docId: string): [State, Actions] {
   const {

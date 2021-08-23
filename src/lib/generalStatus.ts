@@ -5,7 +5,7 @@ import { generalStatusKey } from './localStorageKeys'
 import { createStoreContext } from './context'
 import { getFolderItemId, getStorageItemId } from './nav'
 import { SerializedSubscription } from '../cloud/interfaces/db/subscription'
-import { SidebarTreeSortingOrder } from '../shared/lib/sidebar'
+import { SidebarTreeSortingOrder } from '../design/lib/sidebar'
 import { SerializedUserTeamPermissions } from '../cloud/interfaces/db/userTeamPermissions'
 
 export type ViewModeType = 'edit' | 'preview' | 'split'

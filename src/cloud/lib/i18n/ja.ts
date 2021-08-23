@@ -316,6 +316,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.AttachmentsPlanUpgradeDisclaimer]: '追加の容量が必要な場合',
   [lngKeys.AttachmentsUpgradeLink]: 'プランをアップグレードしてください。',
 
+  [lngKeys.FolderInfo]: 'フォルダーの情報',
   [lngKeys.DocInfo]: 'ドキュメントの情報',
   [lngKeys.Assignees]: 'アサイン',
   [lngKeys.Unassigned]: '誰もアサインされていません',
@@ -475,6 +476,11 @@ const jpTranslation: TranslationSource = {
   [lngKeys.RequestAsk]: 'Ask to edit',
   [lngKeys.UploadLimit]:
     'The maximum allowed size for uploads is {{sizeInMb}}Mb',
+
+  [lngKeys.OnboardingFolderSectionTitle]: 'Welcome to Boost Note!',
+  [lngKeys.OnboardingFolderSectionDisclaimer]:
+    'Invite your teammates to this space',
+  [lngKeys.GeneralContent]: 'Content',
 }
 
 export default {

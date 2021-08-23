@@ -3,8 +3,8 @@ import {
   useContextMenu,
   MenuTypes,
   MenuItem,
-} from '../../../../../../shared/lib/stores/contextMenu'
-import Icon from '../../../../../../shared/components/atoms/Icon'
+} from '../../../../../../design/lib/stores/contextMenu'
+import Icon from '../../../../../../design/components/atoms/Icon'
 import {
   mdiPlayCircleOutline,
   mdiPauseCircleOutline,
@@ -12,11 +12,11 @@ import {
   mdiArchiveOutline,
   mdiCheckCircleOutline,
 } from '@mdi/js'
-import styled from '../../../../../../cloud/lib/styled'
 import { DocStatus } from '../../../../../../cloud/interfaces/db/doc'
 import DocPropertyValueButton from './DocPropertyValueButton'
 import { useI18n } from '../../../../../../cloud/lib/hooks/useI18n'
 import { lngKeys } from '../../../../../../cloud/lib/i18n/types'
+import styled from '../../../../../../design/lib/styled'
 
 interface DocStatusSelectProps {
   sending?: boolean
@@ -136,16 +136,16 @@ const Container = styled.div`
     margin-right: 5px;
   }
   .status_icon--in-progress {
-    color: ${({ theme }) => theme.infoTextColor};
+    color: ${({ theme }) => theme.colors.variants.info.base};
   }
   .status_icon--paused {
-    color: ${({ theme }) => theme.secondaryTextColor};
+    color: ${({ theme }) => theme.colors.variants.secondary.base};
   }
   .status_icon--completed {
-    color: ${({ theme }) => theme.successTextColor};
+    color: ${({ theme }) => theme.colors.variants.success.base};
   }
   .status_icon--archived {
-    color: ${({ theme }) => theme.warningTextColor};
+    color: ${({ theme }) => theme.colors.variants.warning.base};
   }
 `
 
@@ -153,16 +153,16 @@ const ContextMenuItemContainer = styled.div`
   display: flex;
   align-items: center;
   .status_icon--in-progress {
-    color: ${({ theme }) => theme.infoTextColor};
+    color: ${({ theme }) => theme.colors.variants.info.base};
   }
   .status_icon--paused {
-    color: ${({ theme }) => theme.secondaryTextColor};
+    color: ${({ theme }) => theme.colors.variants.secondary.base};
   }
   .status_icon--completed {
-    color: ${({ theme }) => theme.successTextColor};
+    color: ${({ theme }) => theme.colors.variants.success.base};
   }
   .status_icon--archived {
-    color: ${({ theme }) => theme.warningTextColor};
+    color: ${({ theme }) => theme.colors.variants.warning.base};
   }
 `
 

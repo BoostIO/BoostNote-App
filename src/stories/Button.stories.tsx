@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/react/types-6-0'
-import Button from '../shared/components/atoms/Button'
+import Button from '../design/components/atoms/Button'
 import { createThemedTemplate } from './utils/themes'
 
 const { Template, themeArgType } = createThemedTemplate(Button)

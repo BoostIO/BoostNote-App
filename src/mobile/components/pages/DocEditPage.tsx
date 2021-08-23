@@ -1,13 +1,12 @@
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { getColorFromString } from '../../../cloud/lib/utils/string'
-import styled from '../../../shared/lib/styled'
+import styled from '../../../design/lib/styled'
 import {
   SerializedDocWithBookmark,
   SerializedDoc,
 } from '../../../cloud/interfaces/db/doc'
 import { useSettings } from '../../../cloud/lib/stores/settings'
 import useRealtime from '../../../cloud/lib/editor/hooks/useRealtime'
-import Spinner from '../../../cloud/components/atoms/CustomSpinner'
 import attachFileHandlerToCodeMirrorEditor, {
   OnFileCallback,
 } from '../../../cloud/lib/editor/plugins/fileHandler'
@@ -16,7 +15,6 @@ import { SerializedTeam } from '../../../cloud/interfaces/db/team'
 import { getDocTitle } from '../../../cloud/lib/utils/patterns'
 import { SerializedUser } from '../../../cloud/interfaces/db/user'
 import { usePreferences } from '../../lib/preferences'
-import { rightSidePageLayout } from '../../../cloud/lib/styled/styleFunctions'
 import { useRouter } from '../../../cloud/lib/router'
 import {
   pasteFormatPlugin,
@@ -33,20 +31,22 @@ import {
 } from '../../../cloud/lib/utils/events'
 import { ScrollSync, scrollSyncer } from '../../../cloud/lib/editor/scrollSync'
 import CodeMirrorEditor from '../../../cloud/lib/editor/components/CodeMirrorEditor'
-import MarkdownView from '../../../cloud/components/atoms/MarkdownView'
-import { useToast } from '../../../shared/lib/stores/toast'
-import Icon from '../../../cloud/components/atoms/Icon'
-import EditorSelectionStatus from '../../../cloud/components/molecules/Editor/EditorSelectionStatus'
-import EditorThemeSelect from '../../../cloud/components/molecules/Editor/EditorThemeSelect'
+import MarkdownView from '../../../cloud/components/MarkdownView'
+import { useToast } from '../../../design/lib/stores/toast'
+import EditorSelectionStatus from '../../../cloud/components/Editor/EditorSelectionStatus'
+import EditorThemeSelect from '../../../cloud/components/Editor/EditorThemeSelect'
 import AppLayout from '../layouts/AppLayout'
-import EditorIndentationStatus from '../../../cloud/components/molecules/Editor/EditorIndentationStatus'
+import EditorIndentationStatus from '../../../cloud/components/Editor/EditorIndentationStatus'
 import { getDocLinkHref } from '../../lib/href'
 import NavigationBarButton from '../atoms/NavigationBarButton'
-import { useModal } from '../../../shared/lib/stores/modal'
+import { useModal } from '../../../design/lib/stores/modal'
 import DocInfoModal from '../organisms/modals/DocInfoModal'
 import { SerializedRevision } from '../../../cloud/interfaces/db/revision'
 import { osName } from '../../../lib/platform'
-import { BaseTheme } from '../../../shared/lib/styled/types'
+import { BaseTheme } from '../../../design/lib/styled/types'
+import Spinner from '../../../design/components/atoms/Spinner'
+import { rightSidePageLayout } from '../../../design/lib/styled/styleFunctions'
+import Icon from '../../../design/components/atoms/Icon'
 
 interface EditorProps {
   doc: SerializedDocWithBookmark

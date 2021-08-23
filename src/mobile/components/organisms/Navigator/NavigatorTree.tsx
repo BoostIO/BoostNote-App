@@ -1,15 +1,15 @@
 import React, { useCallback } from 'react'
-import { FoldingProps } from '../../../../shared/components/atoms/FoldingWrapper'
-import { MenuItem } from '../../../../shared/lib/stores/contextMenu'
+import { FoldingProps } from '../../../../design/components/atoms/FoldingWrapper'
+import { MenuItem } from '../../../../design/lib/stores/contextMenu'
 import NavigatorCategory from './NavigatorCategory'
-import styled from '../../../../shared/lib/styled'
+import styled from '../../../../design/lib/styled'
 import { mdiAccountMultiplePlusOutline, mdiCogOutline } from '@mdi/js'
 import NavigatorControlItem from './NavigatorControlItem'
 import {
   NavigatorRow,
   NavigatorControl,
 } from '../../../lib/sidebar/useNavigatorTree'
-import { useModal } from '../../../../shared/lib/stores/modal'
+import { useModal } from '../../../../design/lib/stores/modal'
 import SettingsModal from '../modals/SettingsModal'
 
 interface NavigatorTreeProps {

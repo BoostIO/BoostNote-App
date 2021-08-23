@@ -4,10 +4,10 @@ import {
   getWorkspaceShowPageData,
   WorkspacesShowPageResponseBody,
 } from '../../../api/pages/teams/workspaces'
-import WorkspacePage from '../../../components/organisms/WorkspacePage'
+import WorkspacePage from '../../../components/WorkspacePage'
 import { useNav } from '../../../lib/stores/nav'
-import ColoredBlock from '../../../components/atoms/ColoredBlock'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
+import ColoredBlock from '../../../../design/components/atoms/ColoredBlock'
 
 const WorkspaceShowPage = ({
   pageWorkspace,
@@ -21,7 +21,15 @@ const WorkspaceShowPage = ({
   if (workspace == null) {
     return (
       <Application content={{}}>
-        <ColoredBlock variant='danger' style={{ marginTop: '40px' }}>
+        <ColoredBlock
+          variant='danger'
+          style={{
+            width: '96%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginTop: '40px',
+          }}
+        >
           <h3>Oops...</h3>
           <p>The folder has been deleted.</p>
         </ColoredBlock>

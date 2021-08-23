@@ -12,7 +12,7 @@ import { useEffectOnce } from 'react-use'
 import { useSettings } from '../lib/stores/settings'
 import { shortcuts } from '../lib/shortcuts'
 import { useSearch } from '../lib/stores/search'
-import AnnouncementAlert from './atoms/AnnouncementAlert'
+import AnnouncementAlert from './AnnouncementAlert'
 import {
   newFolderEventEmitter,
   searchEventEmitter,
@@ -22,19 +22,17 @@ import {
 } from '../lib/utils/events'
 import { usePathnameChangeEffect, useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
-import EventSource from './organisms/EventSource'
-import ApplicationLayout from '../../shared/components/molecules/ApplicationLayout'
+import EventSource from './EventSource'
+import ApplicationLayout from '../../design/components/molecules/ApplicationLayout'
 import { useGlobalData } from '../lib/stores/globalData'
-import { mapUsers } from '../../shared/lib/mappers/users'
+import { mapUsers } from '../../design/lib/mappers/users'
 import {
   mdiCog,
   mdiDownload,
   mdiGiftOutline,
-  mdiImport,
   mdiInbox,
   mdiLogoutVariant,
   mdiMagnify,
-  mdiPaperclip,
   mdiPlusCircleOutline,
   mdiWeb,
 } from '@mdi/js'
@@ -42,37 +40,37 @@ import { buildIconUrl } from '../api/files'
 import { sendToHost, usingElectron } from '../lib/stores/electron'
 import ContentLayout, {
   ContentLayoutProps,
-} from '../../shared/components/templates/ContentLayout'
+} from '../../design/components/templates/ContentLayout'
 import cc from 'classcat'
 import { useCloudResourceModals } from '../lib/hooks/useCloudResourceModals'
 import { mapTopbarTree } from '../lib/mappers/topbarTree'
-import FuzzyNavigation from '../../shared/components/organisms/FuzzyNavigation'
+import FuzzyNavigation from '../../design/components/organisms/FuzzyNavigation'
 import {
   mapFuzzyNavigationItems,
   mapFuzzyNavigationRecentItems,
 } from '../lib/mappers/fuzzyNavigation'
-import { useModal } from '../../shared/lib/stores/modal'
-import NewDocButton from './molecules/NewDocButton'
+import { useModal } from '../../design/lib/stores/modal'
+import NewDocButton from './Buttons/NewDocButton'
 import { useCloudSidebarTree } from '../lib/hooks/sidebar/useCloudSidebarTree'
 import { isTimeEligibleForDiscount } from '../lib/subscription'
-import DiscountModal from './organisms/Modal/contents/DiscountModal'
+import DiscountModal from './Modal/contents/DiscountModal'
 import { Notification as UserNotification } from '../interfaces/db/notifications'
-import useNotificationState from '../../shared/lib/hooks/useNotificationState'
-import { useNotifications } from '../../shared/lib/stores/notifications'
+import useNotificationState from '../../design/lib/hooks/useNotificationState'
+import { useNotifications } from '../../design/lib/stores/notifications'
 import '../lib/i18n'
 import { useI18n } from '../lib/hooks/useI18n'
 import { TFunction } from 'i18next'
 import { lngKeys } from '../lib/i18n/types'
 import Sidebar, {
   PopOverState,
-} from '../../shared/components/organisms/Sidebar'
-import SidebarHeader from '../../shared/components/organisms/Sidebar/atoms/SidebarHeader'
-import SidebarButtonList from '../../shared/components/organisms/Sidebar/molecules/SidebarButtonList'
-import NotifyIcon from '../../shared/components/atoms/NotifyIcon'
-import { getTeamLinkHref } from './atoms/Link/TeamLink'
-import SidebarButton from '../../shared/components/organisms/Sidebar/atoms/SidebarButton'
-import CloudGlobalSearch from './organisms/CloudGlobalSearch'
-import ViewerDisclaimer from './molecules/ViewerDisclaimer'
+} from '../../design/components/organisms/Sidebar'
+import SidebarHeader from '../../design/components/organisms/Sidebar/atoms/SidebarHeader'
+import SidebarButtonList from '../../design/components/organisms/Sidebar/molecules/SidebarButtonList'
+import NotifyIcon from '../../design/components/atoms/NotifyIcon'
+import { getTeamLinkHref } from './Link/TeamLink'
+import SidebarButton from '../../design/components/organisms/Sidebar/atoms/SidebarButton'
+import CloudGlobalSearch from './CloudGlobalSearch'
+import ViewerDisclaimer from './ViewerDisclaimer'
 import { useCloudSidebarSpaces } from '../lib/hooks/sidebar/useCloudSidebarSpaces'
 import { trackEvent } from '../api/track'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
@@ -363,13 +361,6 @@ const Application = ({
         <SidebarButtonList
           rows={[
             {
-              label: translate(lngKeys.GeneralAttachments),
-              icon: mdiPaperclip,
-              variant: 'subtle',
-              labelClick: () => openSettingsTab('attachments'),
-              id: 'sidebar__button__attachments',
-            },
-            {
               label: translate(lngKeys.GeneralShared),
               icon: mdiWeb,
               variant: 'subtle',
@@ -377,13 +368,6 @@ const Application = ({
               active: getTeamLinkHref(team, 'shared') === pathname,
               labelClick: () => push(getTeamLinkHref(team, 'shared')),
               id: 'sidebar__button__shared',
-            },
-            {
-              label: translate(lngKeys.GeneralImport),
-              icon: mdiImport,
-              variant: 'subtle',
-              labelClick: () => openSettingsTab('import'),
-              id: 'sidebar__button__import',
             },
           ]}
         >
@@ -406,15 +390,7 @@ const Application = ({
         <ViewerDisclaimer />
       </>
     )
-  }, [
-    openModal,
-    openSettingsTab,
-    team,
-    pathname,
-    push,
-    translate,
-    subscription,
-  ])
+  }, [openModal, team, pathname, push, translate, subscription])
 
   return (
     <>

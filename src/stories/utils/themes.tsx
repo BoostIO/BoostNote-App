@@ -1,9 +1,9 @@
 import React, { FC, PropsWithChildren, ComponentType } from 'react'
 import { Story } from '@storybook/react/types-6-0'
 import { ThemeProvider } from 'styled-components'
-import { ThemeTypes } from '../../shared/lib/styled/types'
-import { selectV2Theme } from '../../shared/lib/styled/styleFunctions'
-import styled from '../../shared/lib/styled'
+import { ThemeTypes } from '../../design/lib/styled/types'
+import { selectV2Theme } from '../../design/lib/styled/styleFunctions'
+import styled from '../../design/lib/styled'
 
 interface ThemedWrapperProps {
   theme?: ThemeTypes
