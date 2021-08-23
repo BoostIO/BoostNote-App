@@ -18,14 +18,14 @@ autoUpdater.on('update-available', () => {
   foundUpdates = true
   if (updater == null) {
     const notification = new Notification({
-      title: 'Found Updates!',
+      title: 'Boost Note Founds Updates!',
       body: 'Click here to update',
     })
     notification.addListener('click', () => {
       dialog
         .showMessageBox({
           type: 'info',
-          title: 'Found Updates',
+          title: 'Found Updates - Boost Note',
           message: 'Found updates, do you want update now?',
           buttons: ['Sure', 'No'],
         })
@@ -40,7 +40,7 @@ autoUpdater.on('update-available', () => {
     dialog
       .showMessageBox({
         type: 'info',
-        title: 'Found Updates',
+        title: 'Found Updates - Boost Note',
         message: 'Found updates, do you want update now?',
         buttons: ['Sure', 'No'],
       })
@@ -58,7 +58,7 @@ autoUpdater.on('update-available', () => {
 autoUpdater.on('update-not-available', () => {
   if (updater != null) {
     dialog.showMessageBox({
-      title: 'No Updates',
+      title: 'No Updates - Boost Note',
       message: 'Current version is up-to-date.',
     })
     updater.enabled = true
@@ -69,7 +69,7 @@ autoUpdater.on('update-not-available', () => {
 autoUpdater.on('update-downloaded', () => {
   dialog
     .showMessageBox({
-      title: 'Updates downloaded',
+      title: 'Updates downloaded - Boost Note',
       message: 'To install the update, the app must be restarted.',
       buttons: ['Restart and Install', 'Not Yet'],
     })
