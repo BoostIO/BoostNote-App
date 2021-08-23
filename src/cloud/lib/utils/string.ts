@@ -69,3 +69,35 @@ export function capitalize(str: string) {
 export function stringifyUrl(url: Url): string {
   return typeof url === 'string' ? url : formatUrl(url)
 }
+
+export function isUrlOrPath(str: string): boolean {
+  try {
+    new URL(str)
+    return true
+  } catch {
+    try {
+      str = str.startsWith('/') ? `http://x.yy${str}` : `http://x.yy/${str}`
+      new URL(str)
+      return true
+    } catch {
+      return false
+    }
+  }
+}
+
+export function isNumberString(str: string) {
+  return !isNaN(Number(str))
+}
+
+export function parseBoolean(str: string, deflt = false) {
+  const lower = str.toLowerCase()
+  if (lower === 'true' || lower === '1') {
+    return true
+  }
+
+  if (lower === 'false' || lower === '0') {
+    return false
+  }
+
+  return deflt
+}
