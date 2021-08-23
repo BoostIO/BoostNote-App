@@ -39,11 +39,18 @@ const BoostUserCell = ({ value, onUpdate }: BoostUserCellProps) => {
   )
 
   return (
-    <div onClick={openSelector}>{user != null && <UserIcon user={user} />}</div>
+    <Container onClick={openSelector}>
+      {user != null && <UserIcon user={user} />}
+    </Container>
   )
 }
 
 export default BoostUserCell
+
+const Container = styled.div`
+  cursor: pointer;
+  min-height: 40px;
+`
 
 interface UserSelectProps {
   users: SerializedUser[]
@@ -68,7 +75,6 @@ const UserSelect = ({ users, onSelect }: UserSelectProps) => {
 }
 
 const UserSelectContainer = styled.div`
-  cursor: pointer;
   & .user__select__item {
     display: flex;
     cursor: pointer;
