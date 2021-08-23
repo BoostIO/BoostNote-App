@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { CellProps } from '.'
-import styled from '../../../../../../shared/lib/styled'
+import styled from '../../../../../design/lib/styled'
 
 interface TextCellProps extends CellProps {
   validation?: (value: string) => boolean

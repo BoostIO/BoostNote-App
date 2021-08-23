@@ -1,16 +1,16 @@
 import { flip } from 'ramda'
 import React, { useCallback, useMemo, useState } from 'react'
-import { capitalize } from '../../../../../../lib/string'
-import Switch from '../../../../../../shared/components/atoms/Switch'
-import MetadataContainerBreak from '../../../../../../shared/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
-import MetadataContainerRow from '../../../../../../shared/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import Switch from '../../../../../design/components/atoms/Switch'
+import MetadataContainerBreak from '../../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
+import MetadataContainerRow from '../../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import styled from '../../../../../design/lib/styled'
 import {
   addColumn,
   DataType,
   deleteColumn,
   Table,
-} from '../../../../../lib/blocks/table'
-import styled from '../../../../../lib/styled'
+} from '../../../../lib/blocks/table'
+import { capitalize } from '../../../../lib/utils/string'
 import DataTypeMenu from './DataTypeMenu'
 
 interface TableSettingsProps {

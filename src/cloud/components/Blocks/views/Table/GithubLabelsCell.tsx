@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from '../../../../../../shared/lib/styled'
+import styled from '../../../../../design/lib/styled'
 
 interface Label {
   name: string

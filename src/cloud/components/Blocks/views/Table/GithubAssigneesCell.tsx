@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyledUserIcon } from '../../../../atoms/UserIcon'
+import { StyledUserIcon } from '../../../UserIcon'
 
 interface Assignee {
   id: number
