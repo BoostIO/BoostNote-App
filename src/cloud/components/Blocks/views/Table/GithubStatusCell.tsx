@@ -3,9 +3,9 @@ import React from 'react'
 import {
   SuccessIcon,
   WarningIcon,
-} from '../../../../../../shared/components/atoms/Icon'
-import styled from '../../../../../../shared/lib/styled'
-import { capitalize } from '../../../../../lib/utils/string'
+} from '../../../../../design/components/atoms/Icon'
+import styled from '../../../../../design/lib/styled'
+import { capitalize } from '../../../../lib/utils/string'
 
 interface GithubStatusCellProps {
   state: 'open' | 'closed'

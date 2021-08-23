@@ -5,13 +5,13 @@ import {
   mdiTrashCanOutline,
 } from '@mdi/js'
 import React, { useCallback, useState } from 'react'
-import FormInput from '../../../../../../shared/components/molecules/Form/atoms/FormInput'
-import MetadataContainerBreak from '../../../../../../shared/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
-import MetadataContainerRow from '../../../../../../shared/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import { useModal } from '../../../../../../shared/lib/stores/modal'
-import styled from '../../../../../../shared/lib/styled'
-import { Column, DataType } from '../../../../../lib/blocks/table'
-import { capitalize } from '../../../../../lib/utils/string'
+import FormInput from '../../../../../design/components/molecules/Form/atoms/FormInput'
+import MetadataContainerBreak from '../../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
+import MetadataContainerRow from '../../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import { useModal } from '../../../../../design/lib/stores/modal'
+import styled from '../../../../../design/lib/styled'
+import { Column, DataType } from '../../../../lib/blocks/table'
+import { capitalize } from '../../../../lib/utils/string'
 import DataTypeMenu from './DataTypeMenu'
 
 interface ColumnSettingsProps {

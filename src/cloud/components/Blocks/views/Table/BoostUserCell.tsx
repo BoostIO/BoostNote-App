@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { CellProps } from '.'
-import FilterableSelectList from '../../../../../../shared/components/molecules/FilterableSelectList'
-import { useModal } from '../../../../../../shared/lib/stores/modal'
-import styled from '../../../../../../shared/lib/styled'
-import { SerializedUser } from '../../../../../interfaces/db/user'
-import { usePage } from '../../../../../lib/stores/pageStore'
-import UserIcon from '../../../../atoms/UserIcon'
+import FilterableSelectList from '../../../../../design/components/molecules/FilterableSelectList'
+import { useModal } from '../../../../../design/lib/stores/modal'
+import styled from '../../../../../design/lib/styled'
+import { SerializedUser } from '../../../../interfaces/db/user'
+import { usePage } from '../../../../lib/stores/pageStore'
+import UserIcon from '../../../UserIcon'
 
 interface BoostUserCellProps extends CellProps {}
 
