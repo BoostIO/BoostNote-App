@@ -30,7 +30,16 @@ function useModalStore(): ModalsContext {
           alignment: options.alignment || 'bottom-left',
         },
       }
-      setModals([modal])
+
+      if (!options.keepAll) {
+        setModals([modal])
+      } else {
+        setModals((prev) => {
+          const newArray = prev.slice()
+          newArray.push(modal)
+          return newArray
+        })
+      }
     },
     []
   )
