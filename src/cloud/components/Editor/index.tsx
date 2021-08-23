@@ -59,7 +59,6 @@ import EditorKeyMapSelect from './EditorKeyMapSelect'
 import EditorThemeSelect from './EditorThemeSelect'
 import DocContextMenu from '../DocPage/NewDocContextMenu'
 import {
-  focusTitleEventEmitter,
   focusEditorEventEmitter,
   toggleSplitEditModeEventEmitter,
   togglePreviewModeEventEmitter,
@@ -106,6 +105,7 @@ interface EditorProps {
   revisionHistory: SerializedRevision[]
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
+  docIsEditable?: boolean
 }
 
 interface EditorPosition {
@@ -121,13 +121,23 @@ interface SelectionState {
   }[]
 }
 
-const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
+const Editor = ({
+  doc,
+  team,
+  user,
+  contributors,
+  backLinks,
+  docIsEditable,
+}: EditorProps) => {
   const { translate } = useI18n()
   const {
     currentUserPermissions,
     permissions,
     currentUserIsCoreMember,
   } = usePage()
+  const showViewPageRef = useRef<boolean>(
+    !docIsEditable || !currentUserIsCoreMember
+  )
   const { pushMessage, pushApiErrorMessage } = useToast()
   const [color] = useState(() => getColorFromString(user.id))
   const { preferences, setPreferences } = usePreferences()
@@ -135,7 +145,9 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const fileUploadHandlerRef = useRef<OnFileCallback>()
   const [editorLayout, setEditorLayout] = useState<LayoutMode>(
-    preferences.lastEditorMode != 'preview'
+    !docIsEditable || !currentUserIsCoreMember
+      ? 'preview'
+      : preferences.lastEditorMode != 'preview'
       ? preferences.lastEditorEditLayout
       : 'preview'
   )
@@ -148,7 +160,20 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     cb: Callback
   } | null>(null)
   const initialRenderDone = useRef(false)
-  const titleRef = useRef<HTMLInputElement>(null)
+  const { docsMap, workspacesMap, foldersMap, loadDoc } = useNav()
+  const suggestionsRef = useRef<Hint[]>([])
+  const { sendingMap, toggleDocBookmark } = useCloudApi()
+  const {
+    openRenameDocForm,
+    openRenameFolderForm,
+    openNewFolderForm,
+    openNewDocForm,
+    openWorkspaceEditForm,
+    deleteDoc,
+    deleteFolder,
+    deleteWorkspace,
+  } = useCloudResourceModals()
+
   const [selection, setSelection] = useState<SelectionState>({
     currentCursor: {
       line: 0,
@@ -167,19 +192,6 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
       },
     ],
   })
-  const { docsMap, workspacesMap, foldersMap, loadDoc } = useNav()
-  const suggestionsRef = useRef<Hint[]>([])
-  const { sendingMap, toggleDocBookmark } = useCloudApi()
-  const {
-    openRenameDocForm,
-    openRenameFolderForm,
-    openNewFolderForm,
-    openNewDocForm,
-    openWorkspaceEditForm,
-    deleteDoc,
-    deleteFolder,
-    deleteWorkspace,
-  } = useCloudResourceModals()
 
   const userInfo = useMemo(() => {
     return {
@@ -198,55 +210,51 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
 
   const [commentState, commentActions] = useCommentManagerState(doc.id)
 
-  useEffect(() => {
-    const { thread } = parse(router.search.slice(1))
-    const threadId = Array.isArray(thread) ? thread[0] : thread
-    if (threadId != null) {
-      commentActions.setMode({ mode: 'thread', thread: { id: threadId } })
-      setPreferences({ docContextMode: 'comment' })
-    }
-  }, [router, commentActions, setPreferences])
+  const { openModal, openContextModal } = useModal()
 
-  const normalizedCommentState = useMemo(() => {
-    if (commentState.mode === 'list_loading' || permissions == null) {
-      return commentState
-    }
+  const otherUsers = useMemo(() => {
+    return connectedUsers.filter((pUser) => pUser.id !== user.id)
+  }, [connectedUsers, user])
 
-    const normalizedState = { ...commentState }
-
-    const updatedUsers = new Map(
-      permissions.map((permission) => [permission.user.id, permission.user])
+  const breadcrumbs = useMemo(() => {
+    const breadcrumbs = mapTopbarBreadcrumbs(
+      translate,
+      team,
+      foldersMap,
+      workspacesMap,
+      push,
+      {
+        pageDoc: {
+          ...doc,
+          head: { ...(doc.head || {}) },
+        } as SerializedDoc,
+      },
+      openRenameFolderForm,
+      openRenameDocForm,
+      openNewDocForm,
+      openNewFolderForm,
+      openWorkspaceEditForm,
+      deleteDoc,
+      deleteFolder,
+      deleteWorkspace
     )
-
-    normalizedState.threads = normalizedState.threads.map((thread) => {
-      if (thread.status.by == null) {
-        return thread
-      }
-      const normalizedUser =
-        updatedUsers.get(thread.status.by.id) || thread.status.by
-
-      return { ...thread, status: { ...thread.status, by: normalizedUser } }
-    })
-
-    if (normalizedState.mode === 'thread') {
-      if (normalizedState.thread.status.by != null) {
-        const normalizedUser =
-          updatedUsers.get(normalizedState.thread.status.by.id) ||
-          normalizedState.thread.status.by
-        normalizedState.thread = {
-          ...normalizedState.thread,
-          status: { ...normalizedState.thread.status, by: normalizedUser },
-        }
-      }
-
-      normalizedState.comments = normalizedState.comments.map((comment) => {
-        const normalizedUser = updatedUsers.get(comment.user.id) || comment.user
-        return { ...comment, user: normalizedUser }
-      })
-    }
-
-    return normalizedState
-  }, [commentState, permissions])
+    return breadcrumbs
+  }, [
+    translate,
+    team,
+    foldersMap,
+    workspacesMap,
+    doc,
+    push,
+    openRenameDocForm,
+    openRenameFolderForm,
+    openNewFolderForm,
+    openNewDocForm,
+    deleteDoc,
+    deleteFolder,
+    openWorkspaceEditForm,
+    deleteWorkspace,
+  ])
 
   const users = useMemo(() => {
     if (permissions == null) {
@@ -255,6 +263,88 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
 
     return permissions.map((permission) => permission.user)
   }, [permissions])
+
+  const docIsNew = !!state?.new
+  const previewRef = useRef<HTMLDivElement>(null)
+  const syncScroll = useRef<ScrollSync>()
+  const [scrollSync, setScrollSync] = useState(true)
+  const [viewComments, setViewComments] = useState<HighlightRange[]>([])
+
+  const { settings } = useSettings()
+  const fontSize = settings['general.editorFontSize']
+  const fontFamily = settings['general.editorFontFamily']
+
+  const editorConfig: CodeMirror.EditorConfiguration = useMemo(() => {
+    const editorTheme = settings['general.editorTheme']
+    const theme =
+      editorTheme == null || editorTheme === 'default'
+        ? settings['general.theme'] === 'light'
+          ? 'default'
+          : 'material-darker'
+        : editorTheme === 'solarized-dark'
+        ? 'solarized dark'
+        : editorTheme
+    const keyMap = resolveKeyMap(settings['general.editorKeyMap'])
+    const editorIndentType = settings['general.editorIndentType']
+    const editorIndentSize = settings['general.editorIndentSize']
+
+    return {
+      mode: 'markdown',
+      lineNumbers: true,
+      lineWrapping: true,
+      theme,
+      indentWithTabs: editorIndentType === 'tab',
+      indentUnit: editorIndentSize,
+      tabSize: editorIndentSize,
+      keyMap,
+      extraKeys: {
+        Enter: 'newlineAndIndentContinueMarkdownList',
+        Tab: 'indentMore',
+      },
+    }
+  }, [settings])
+
+  const shortcodeConvertMenuStyle: React.CSSProperties = useMemo(() => {
+    if (shortcodeConvertMenu == null || editorRef.current == null) {
+      return {}
+    }
+
+    const editorScroll = editorRef.current.getScrollInfo()
+    const bottomPositioning =
+      shortcodeConvertMenu.pos.from.bottom - editorScroll.top
+
+    return {
+      position: 'absolute',
+      top: `${
+        bottomPositioning + 125 > editorScroll.clientHeight
+          ? bottomPositioning - 140
+          : bottomPositioning
+      }px`,
+      left: `${
+        (shortcodeConvertMenu.pos.to.left -
+          shortcodeConvertMenu.pos.from.left) /
+          2 +
+        shortcodeConvertMenu.pos.from.left
+      }px`,
+    }
+  }, [shortcodeConvertMenu])
+
+  const onRender = useRef(() => {
+    if (!initialRenderDone.current && window.location.hash) {
+      const ele = document.getElementById(window.location.hash.substr(1))
+      if (ele != null) {
+        ele.scrollIntoView(true)
+      }
+      initialRenderDone.current = true
+    }
+    if (previewRef.current != null && editorRef.current != null) {
+      if (syncScroll.current == null) {
+        syncScroll.current = scrollSyncer(editorRef.current, previewRef.current)
+      } else {
+        syncScroll.current.rebuild()
+      }
+    }
+  })
 
   const newRangeThread = useCallback(
     (selection: SelectionContext) => {
@@ -277,7 +367,6 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     [realtime, commentActions, setPreferences]
   )
 
-  const [viewComments, setViewComments] = useState<HighlightRange[]>([])
   const calculatePositions = useCallback(() => {
     if (commentState.mode === 'list_loading' || realtime == null) {
       return
@@ -318,18 +407,6 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     setViewComments(comments)
   }, [commentState, realtime, commentActions, connState])
 
-  useEffect(() => {
-    if (realtime != null) {
-      realtime.doc.on('update', calculatePositions)
-      return () => realtime.doc.off('update', calculatePositions)
-    }
-    return undefined
-  }, [realtime, calculatePositions])
-
-  useEffect(() => {
-    calculatePositions()
-  }, [calculatePositions])
-
   const commentClick = useCallback(
     (ids: string[]) => {
       if (commentState.mode !== 'list_loading') {
@@ -362,52 +439,6 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     [setPreferences]
   )
 
-  const docIsNew = !!state?.new
-  useEffect(() => {
-    if (docRef.current !== doc.id) {
-      if (docIsNew) {
-        changeEditorLayout(preferences.lastEditorEditLayout)
-        if (titleRef.current != null) {
-          titleRef.current.focus()
-        }
-      } else {
-        setEditorLayout(
-          preferences.lastEditorMode === 'preview'
-            ? 'preview'
-            : preferences.lastEditorEditLayout
-        )
-      }
-      docRef.current = doc.id
-    }
-  }, [
-    doc.id,
-    docIsNew,
-    preferences.lastEditorEditLayout,
-    preferences.lastEditorMode,
-    changeEditorLayout,
-  ])
-
-  useEffect(() => {
-    if (editorLayout === 'preview') {
-      return
-    }
-
-    if (editorRef.current != null) {
-      editorRef.current.focus()
-    }
-  }, [editorLayout])
-
-  useEffect(() => {
-    if (!initialLoadDone) {
-      return
-    }
-    if (editorRef.current != null) {
-      editorRef.current.focus()
-    } else if (titleRef.current != null) {
-      titleRef.current.focus()
-    }
-  }, [initialLoadDone, docIsNew])
-
   const editPageKeydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
       if (isEditSessionSaveShortcut(event)) {
@@ -417,88 +448,6 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     }
   }, [])
   useGlobalKeyDownHandler(editPageKeydownHandler)
-
-  useEffect(() => {
-    if (team != null) {
-      fileUploadHandlerRef.current = async (file) => {
-        try {
-          const { file: fileInfo } = await uploadFile(team, file, doc)
-          const url = buildTeamFileUrl(team, fileInfo.name)
-          if (file.type.match(/image\/.*/)) {
-            return { type: 'img', url, alt: file.name }
-          } else {
-            return { type: 'file', url, title: file.name }
-          }
-        } catch (err) {
-          pushApiErrorMessage(err)
-          return null
-        }
-      }
-    } else {
-      fileUploadHandlerRef.current = undefined
-    }
-  }, [team, pushMessage, pushApiErrorMessage, doc])
-
-  useEffect(() => {
-    return () => {
-      setInitialLoadDone(false)
-    }
-  }, [doc.id])
-
-  useEffect(() => {
-    if (connState === 'synced' || connState === 'loaded') {
-      setInitialLoadDone(true)
-    }
-  }, [connState])
-
-  useEffect(() => {
-    suggestionsRef.current = Array.from(docsMap.values()).map((doc) => {
-      const workspace = workspacesMap.get(doc.workspaceId)
-      const path = `${workspace != null ? workspace.name : ''}${
-        doc.folderPathname === '/' ? '' : doc.folderPathname
-      }`
-      return {
-        text: `[[ boostnote.doc id="${doc.id}" ]]`,
-        displayText: `${path}/${getDocTitle(doc)}`,
-      }
-    })
-  }, [docsMap, workspacesMap])
-
-  const previewRef = useRef<HTMLDivElement>(null)
-  const syncScroll = useRef<ScrollSync>()
-  const [scrollSync, setScrollSync] = useState(true)
-
-  useEffect(() => {
-    if (syncScroll.current != null) {
-      scrollSync ? syncScroll.current.unpause() : syncScroll.current.pause()
-    }
-  }, [scrollSync])
-
-  const onRender = useRef(() => {
-    if (!initialRenderDone.current && window.location.hash) {
-      const ele = document.getElementById(window.location.hash.substr(1))
-      if (ele != null) {
-        ele.scrollIntoView(true)
-      }
-      initialRenderDone.current = true
-    }
-    if (previewRef.current != null && editorRef.current != null) {
-      if (syncScroll.current == null) {
-        syncScroll.current = scrollSyncer(editorRef.current, previewRef.current)
-      } else {
-        syncScroll.current.rebuild()
-      }
-    }
-  })
-
-  useEffect(() => {
-    return () => {
-      if (syncScroll.current != null) {
-        syncScroll.current.destroy()
-        syncScroll.current = undefined
-      }
-    }
-  }, [doc])
 
   const bindCallback = useCallback((editor: CodeMirror.Editor) => {
     setEditorContent(editor.getValue())
@@ -580,12 +529,6 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     )
   }, [])
 
-  useEffect(() => {
-    if (editorRef.current != null) {
-      editorRef.current.refresh()
-    }
-  }, [editorLayout])
-
   const onTemplatePickCallback = useCallback(
     (template: SerializedTemplate) => {
       if (editorRef.current == null || realtime == null) {
@@ -595,40 +538,6 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     },
     [realtime]
   )
-
-  const { settings } = useSettings()
-  const fontSize = settings['general.editorFontSize']
-  const fontFamily = settings['general.editorFontFamily']
-
-  const editorConfig: CodeMirror.EditorConfiguration = useMemo(() => {
-    const editorTheme = settings['general.editorTheme']
-    const theme =
-      editorTheme == null || editorTheme === 'default'
-        ? settings['general.theme'] === 'light'
-          ? 'default'
-          : 'material-darker'
-        : editorTheme === 'solarized-dark'
-        ? 'solarized dark'
-        : editorTheme
-    const keyMap = resolveKeyMap(settings['general.editorKeyMap'])
-    const editorIndentType = settings['general.editorIndentType']
-    const editorIndentSize = settings['general.editorIndentSize']
-
-    return {
-      mode: 'markdown',
-      lineNumbers: true,
-      lineWrapping: true,
-      theme,
-      indentWithTabs: editorIndentType === 'tab',
-      indentUnit: editorIndentSize,
-      tabSize: editorIndentSize,
-      keyMap,
-      extraKeys: {
-        Enter: 'newlineAndIndentContinueMarkdownList',
-        Tab: 'indentMore',
-      },
-    }
-  }, [settings])
 
   const setEditorRefContent = useCallback(
     (newValueOrUpdater: string | ((prevValue: string) => string)) => {
@@ -644,10 +553,6 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     [editorRef, editorContent]
   )
 
-  const otherUsers = useMemo(() => {
-    return connectedUsers.filter((pUser) => pUser.id !== user.id)
-  }, [connectedUsers, user])
-
   const onRestoreRevisionCallback = useCallback(
     (rev: SerializedRevision) => {
       if (realtime == null) {
@@ -660,7 +565,6 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     [realtime, setEditorRefContent]
   )
 
-  const { openModal, openContextModal } = useModal()
   const onEditorTemplateToolClick = useCallback(() => {
     openModal(<TemplatesModal callback={onTemplatePickCallback} />, {
       width: 'large',
@@ -690,31 +594,6 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     },
     [loadDoc, team]
   )
-
-  const shortcodeConvertMenuStyle: React.CSSProperties = useMemo(() => {
-    if (shortcodeConvertMenu == null || editorRef.current == null) {
-      return {}
-    }
-
-    const editorScroll = editorRef.current.getScrollInfo()
-    const bottomPositioning =
-      shortcodeConvertMenu.pos.from.bottom - editorScroll.top
-
-    return {
-      position: 'absolute',
-      top: `${
-        bottomPositioning + 125 > editorScroll.clientHeight
-          ? bottomPositioning - 140
-          : bottomPositioning
-      }px`,
-      left: `${
-        (shortcodeConvertMenu.pos.to.left -
-          shortcodeConvertMenu.pos.from.left) /
-          2 +
-        shortcodeConvertMenu.pos.from.left
-      }px`,
-    }
-  }, [shortcodeConvertMenu])
 
   const focusEditor = useCallback(() => {
     if (editorLayout === 'preview') {
@@ -757,76 +636,6 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     },
     [editorLayout]
   )
-
-  const focusTitleInputRef = useRef<() => void>()
-  useEffect(() => {
-    const handler = () => {
-      if (focusTitleInputRef.current == null) {
-        return
-      }
-      focusTitleInputRef.current()
-    }
-    focusTitleEventEmitter.listen(handler)
-
-    return () => {
-      focusTitleEventEmitter.unlisten(handler)
-    }
-  }, [])
-
-  useEffect(() => {
-    focusEditorEventEmitter.listen(focusEditor)
-    return () => {
-      focusEditorEventEmitter.unlisten(focusEditor)
-    }
-  }, [focusEditor])
-
-  useEffect(() => {
-    focusEditorHeadingEventEmitter.listen(focusEditorHeading)
-    return () => {
-      focusEditorHeadingEventEmitter.unlisten(focusEditorHeading)
-    }
-  }, [focusEditorHeading])
-
-  const breadcrumbs = useMemo(() => {
-    const breadcrumbs = mapTopbarBreadcrumbs(
-      translate,
-      team,
-      foldersMap,
-      workspacesMap,
-      push,
-      {
-        pageDoc: {
-          ...doc,
-          head: { ...(doc.head || {}) },
-        } as SerializedDoc,
-      },
-      openRenameFolderForm,
-      openRenameDocForm,
-      openNewDocForm,
-      openNewFolderForm,
-      openWorkspaceEditForm,
-      deleteDoc,
-      deleteFolder,
-      deleteWorkspace
-    )
-    return breadcrumbs
-  }, [
-    translate,
-    team,
-    foldersMap,
-    workspacesMap,
-    doc,
-    push,
-    openRenameDocForm,
-    openRenameFolderForm,
-    openNewFolderForm,
-    openNewDocForm,
-    deleteDoc,
-    deleteFolder,
-    openWorkspaceEditForm,
-    deleteWorkspace,
-  ])
-
   const updateLayout = useCallback(
     (mode: LayoutMode) => {
       if (editorLayout === 'preview' && mode !== 'preview') {
@@ -842,6 +651,9 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
   )
 
   const toggleViewMode = useCallback(() => {
+    if (showViewPageRef.current) {
+      return
+    }
     if (editorLayout === 'preview') {
       changeEditorLayout(preferences.lastEditorEditLayout)
       return
@@ -860,6 +672,206 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     doc.id,
   ])
 
+  const toggleSplitEditMode = useCallback(() => {
+    if (showViewPageRef.current) {
+      return
+    }
+    updateLayout(editorLayout === 'split' ? 'editor' : 'split')
+  }, [updateLayout, editorLayout])
+
+  useEffect(() => {
+    showViewPageRef.current = !docIsEditable || !currentUserIsCoreMember
+  }, [currentUserIsCoreMember, docIsEditable])
+
+  useEffect(() => {
+    if (editorLayout === 'preview') {
+      return
+    }
+
+    if (editorRef.current != null) {
+      editorRef.current.focus()
+    }
+  }, [editorLayout])
+
+  useEffect(() => {
+    if (!initialLoadDone) {
+      return
+    }
+    if (editorRef.current != null) {
+      editorRef.current.focus()
+    }
+  }, [initialLoadDone, docIsNew])
+
+  useEffect(() => {
+    const { thread } = parse(router.search.slice(1))
+    const threadId = Array.isArray(thread) ? thread[0] : thread
+    if (threadId != null) {
+      commentActions.setMode({ mode: 'thread', thread: { id: threadId } })
+      setPreferences({ docContextMode: 'comment' })
+    }
+  }, [router, commentActions, setPreferences])
+
+  const normalizedCommentState = useMemo(() => {
+    if (commentState.mode === 'list_loading' || permissions == null) {
+      return commentState
+    }
+
+    const normalizedState = { ...commentState }
+
+    const updatedUsers = new Map(
+      permissions.map((permission) => [permission.user.id, permission.user])
+    )
+
+    normalizedState.threads = normalizedState.threads.map((thread) => {
+      if (thread.status.by == null) {
+        return thread
+      }
+      const normalizedUser =
+        updatedUsers.get(thread.status.by.id) || thread.status.by
+
+      return { ...thread, status: { ...thread.status, by: normalizedUser } }
+    })
+
+    if (normalizedState.mode === 'thread') {
+      if (normalizedState.thread.status.by != null) {
+        const normalizedUser =
+          updatedUsers.get(normalizedState.thread.status.by.id) ||
+          normalizedState.thread.status.by
+        normalizedState.thread = {
+          ...normalizedState.thread,
+          status: { ...normalizedState.thread.status, by: normalizedUser },
+        }
+      }
+
+      normalizedState.comments = normalizedState.comments.map((comment) => {
+        const normalizedUser = updatedUsers.get(comment.user.id) || comment.user
+        return { ...comment, user: normalizedUser }
+      })
+    }
+
+    return normalizedState
+  }, [commentState, permissions])
+
+  useEffect(() => {
+    if (team != null) {
+      fileUploadHandlerRef.current = async (file) => {
+        try {
+          const { file: fileInfo } = await uploadFile(team, file, doc)
+          const url = buildTeamFileUrl(team, fileInfo.name)
+          if (file.type.match(/image\/.*/)) {
+            return { type: 'img', url, alt: file.name }
+          } else {
+            return { type: 'file', url, title: file.name }
+          }
+        } catch (err) {
+          pushApiErrorMessage(err)
+          return null
+        }
+      }
+    } else {
+      fileUploadHandlerRef.current = undefined
+    }
+  }, [team, pushMessage, pushApiErrorMessage, doc])
+
+  useEffect(() => {
+    return () => {
+      setInitialLoadDone(false)
+    }
+  }, [doc.id])
+
+  useEffect(() => {
+    if (connState === 'synced' || connState === 'loaded') {
+      setInitialLoadDone(true)
+    }
+  }, [connState])
+
+  useEffect(() => {
+    suggestionsRef.current = Array.from(docsMap.values()).map((doc) => {
+      const workspace = workspacesMap.get(doc.workspaceId)
+      const path = `${workspace != null ? workspace.name : ''}${
+        doc.folderPathname === '/' ? '' : doc.folderPathname
+      }`
+      return {
+        text: `[[ boostnote.doc id="${doc.id}" ]]`,
+        displayText: `${path}/${getDocTitle(doc)}`,
+      }
+    })
+  }, [docsMap, workspacesMap])
+
+  useEffect(() => {
+    if (syncScroll.current != null) {
+      scrollSync ? syncScroll.current.unpause() : syncScroll.current.pause()
+    }
+  }, [scrollSync])
+
+  useEffect(() => {
+    return () => {
+      if (syncScroll.current != null) {
+        syncScroll.current.destroy()
+        syncScroll.current = undefined
+      }
+    }
+  }, [doc])
+
+  useEffect(() => {
+    if (editorRef.current != null) {
+      editorRef.current.refresh()
+    }
+  }, [editorLayout])
+
+  useEffect(() => {
+    focusEditorEventEmitter.listen(focusEditor)
+    return () => {
+      focusEditorEventEmitter.unlisten(focusEditor)
+    }
+  }, [focusEditor])
+
+  useEffect(() => {
+    focusEditorHeadingEventEmitter.listen(focusEditorHeading)
+    return () => {
+      focusEditorHeadingEventEmitter.unlisten(focusEditorHeading)
+    }
+  }, [focusEditorHeading])
+
+  useEffect(() => {
+    if (realtime != null) {
+      realtime.doc.on('update', calculatePositions)
+      return () => realtime.doc.off('update', calculatePositions)
+    }
+    return undefined
+  }, [realtime, calculatePositions])
+
+  useEffect(() => {
+    calculatePositions()
+  }, [calculatePositions])
+
+  useEffect(() => {
+    if (docRef.current !== doc.id) {
+      if (showViewPageRef.current) {
+        setEditorLayout('preview')
+        docRef.current = doc.id
+        return
+      }
+
+      if (docIsNew) {
+        changeEditorLayout(preferences.lastEditorEditLayout)
+      } else {
+        setEditorLayout(
+          preferences.lastEditorMode === 'preview'
+            ? 'preview'
+            : preferences.lastEditorEditLayout
+        )
+      }
+      docRef.current = doc.id
+    }
+  }, [
+    doc.id,
+    docIsNew,
+    preferences.lastEditorEditLayout,
+    preferences.lastEditorMode,
+    changeEditorLayout,
+  ])
+
   useEffect(() => {
     togglePreviewModeEventEmitter.listen(toggleViewMode)
     return () => {
@@ -867,20 +879,12 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     }
   }, [toggleViewMode])
 
-  const toggleSplitEditMode = useCallback(() => {
-    updateLayout(editorLayout === 'split' ? 'editor' : 'split')
-  }, [updateLayout, editorLayout])
-
   useEffect(() => {
     toggleSplitEditModeEventEmitter.listen(toggleSplitEditMode)
     return () => {
       toggleSplitEditModeEventEmitter.unlisten(toggleSplitEditMode)
     }
   }, [toggleSplitEditMode])
-
-  const toggleBookmarkForDoc = useCallback(() => {
-    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
-  }, [toggleDocBookmark, doc.teamId, doc.id, doc.bookmarked])
 
   if (!initialLoadDone) {
     return (
@@ -909,7 +913,9 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
                   spinning={sendingMap.has(doc.id)}
                   size='sm'
                   iconPath={doc.bookmarked ? mdiStar : mdiStarOutline}
-                  onClick={toggleBookmarkForDoc}
+                  onClick={() =>
+                    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
+                  }
                 />
 
                 <PresenceIcons user={userInfo} users={otherUsers} />
@@ -972,30 +978,34 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
                   },
                 ]
               : []),
-            {
-              type: 'button',
-              variant: 'icon',
-              iconPath: mdiPencil,
-              active: editorLayout === 'editor',
-              onClick: () => updateLayout('editor'),
-            },
-            {
-              type: 'button',
-              variant: 'icon',
-              iconPath: mdiViewSplitVertical,
-              active: editorLayout === 'split',
-              onClick: () => updateLayout('split'),
-            },
-            {
-              type: 'button',
-              variant: 'icon',
-              iconPath: mdiEyeOutline,
-              active: editorLayout === 'preview',
-              onClick: () => updateLayout('preview'),
-            },
-            {
-              type: 'separator',
-            },
+            ...(docIsEditable && currentUserIsCoreMember
+              ? [
+                  {
+                    type: 'button',
+                    variant: 'icon',
+                    iconPath: mdiPencil,
+                    active: editorLayout === 'editor',
+                    onClick: () => updateLayout('editor'),
+                  },
+                  {
+                    type: 'button',
+                    variant: 'icon',
+                    iconPath: mdiViewSplitVertical,
+                    active: editorLayout === 'split',
+                    onClick: () => updateLayout('split'),
+                  },
+                  {
+                    type: 'button',
+                    variant: 'icon',
+                    iconPath: mdiEyeOutline,
+                    active: editorLayout === 'preview',
+                    onClick: () => updateLayout('preview'),
+                  },
+                  {
+                    type: 'separator',
+                  },
+                ]
+              : []),
             {
               type: 'button',
               variant: 'secondary',

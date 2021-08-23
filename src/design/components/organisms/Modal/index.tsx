@@ -260,6 +260,7 @@ const Container = styled.div`
 
   .modal__window--context {
     border: 1px solid ${({ theme }) => theme.colors.border.main};
+    height: auto !important;
     position: fixed !important;
     margin: 0 !important;
     right: 0;

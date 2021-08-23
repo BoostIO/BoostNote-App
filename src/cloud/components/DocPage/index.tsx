@@ -2,8 +2,6 @@ import React, { useEffect, useMemo } from 'react'
 import { usePage } from '../../lib/stores/pageStore'
 import { getDocTitle } from '../../lib/utils/patterns'
 import { useNav } from '../../lib/stores/nav'
-import EditPage from './Edit'
-import ViewPage from './View'
 import { useTitle } from 'react-use'
 import {
   useGlobalKeyDownHandler,
@@ -22,6 +20,7 @@ import { SerializedUser } from '../../interfaces/db/user'
 import { SerializedRevision } from '../../interfaces/db/revision'
 import { useRouter } from '../../lib/router'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
+import Editor from '../Editor'
 
 interface DocPageProps {
   doc: SerializedDocWithBookmark
@@ -57,10 +56,6 @@ const DocPage = ({
     }
     return mapDoc
   }, [docsMap, doc])
-
-  const currentBacklinks = useMemo(() => {
-    return backLinks.map((doc) => docsMap.get(doc.id) || doc)
-  }, [docsMap, backLinks])
 
   const pageTitle = useMemo(() => {
     if (currentDoc == null || team == null) {
@@ -175,24 +170,15 @@ const DocPage = ({
     )
   }
 
-  return docIsEditable ? (
-    <EditPage
+  return (
+    <Editor
       team={team}
-      doc={currentDoc}
+      doc={doc}
       user={currentUser}
       contributors={contributors}
-      backLinks={currentBacklinks}
+      backLinks={backLinks}
       revisionHistory={revisionHistory}
-    />
-  ) : (
-    <ViewPage
-      team={team}
-      doc={currentDoc}
-      editable={docIsEditable}
-      contributors={contributors}
-      backLinks={currentBacklinks}
-      user={currentUser}
-      revisionHistory={revisionHistory}
+      docIsEditable={docIsEditable}
     />
   )
 }

@@ -126,8 +126,9 @@ const DocPageHeader = ({
             variant='transparent'
             className={cc([
               'doc__page__header__title',
-              'doc__page__header__title--button',
+              !currentUserIsCoreMember && 'doc__page__header__title--disabled',
             ])}
+            disabled={!currentUserIsCoreMember}
             onClick={() => openRenameDocForm(doc)}
           >
             <span className='doc__page__header__label'>
@@ -233,6 +234,12 @@ const Container = styled.div`
     color: ${({ theme }) => theme.colors.text.primary};
     width: fit-content;
     width: 100%;
+    justify-content: flex-start;
+
+    .doc__page__header__icon {
+      display: none;
+      margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
 
     .button__label {
       max-width: 100%;
@@ -242,11 +249,8 @@ const Container = styled.div`
       ${overflowEllipsis}
     }
 
-    &.doc__page__header__title--button {
-      justify-content: flex-start;
+    &:not(.doc__page__header__title--disabled) {
       .doc__page__header__icon {
-        display: none;
-        margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
         flex: 0 0 auto;
       }
       &:hover {
