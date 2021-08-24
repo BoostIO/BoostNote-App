@@ -488,6 +488,10 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
 const TemplatesModalContainer = styled.div`
   height: 80vh;
 
+  > .two__pane {
+    height: 100%;
+  }
+
   .two__pane__left > *,
   .templates__navigator {
     height: 100%;
