@@ -45,8 +45,6 @@ const BoostUserCell = ({ value, onUpdate }: BoostUserCellProps) => {
   )
 }
 
-export default BoostUserCell
-
 const Container = styled.div`
   cursor: pointer;
   min-height: 40px;
@@ -91,3 +89,5 @@ const UserSelectContainer = styled.div`
     }
   }
 `
+
+export default BoostUserCell
