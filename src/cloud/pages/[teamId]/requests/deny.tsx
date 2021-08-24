@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTitle } from 'react-use'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
-import InviteCTAButton from '../../../components/Buttons/InviteCTAButton'
+import InviteCTAButton from '../../../components/buttons/InviteCTAButton'
 import {
   getRequestDeniedPageData,
   RequestDeniedResponseBody,

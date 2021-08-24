@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
-import { SectionList, SectionListItem } from './Settings/styled'
+import { SectionList, SectionListItem } from './settings/styled'
 import { SerializedTeamInvite } from '../interfaces/db/teamInvite'
 import { useDialog, DialogIconTypes } from '../../design/lib/stores/dialog'
 import { usePage } from '../lib/stores/pageStore'

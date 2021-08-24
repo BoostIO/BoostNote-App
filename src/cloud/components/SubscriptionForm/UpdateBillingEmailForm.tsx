@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { SectionIntroduction, SectionFlexRow } from '../Settings/styled'
+import { SectionIntroduction, SectionFlexRow } from '../settings/styled'
 import { SerializedSubscription } from '../../interfaces/db/subscription'
 import { updateSubEmail } from '../../api/teams/subscription/update'
 import { useToast } from '../../../design/lib/stores/toast'

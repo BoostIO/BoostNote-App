@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import styled from '../../../design/lib/styled'
 import { useGlobalData } from '../../../cloud/lib/stores/globalData'
-import ErrorPage from '../../../cloud/components/Error/ErrorPage'
+import ErrorPage from '../../../cloud/components/error/ErrorPage'
 import { useDialog, DialogIconTypes } from '../../../design/lib/stores/dialog'
 import { useTranslation } from 'react-i18next'
 import { deleteUser } from '../../../cloud/api/users'

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { SectionIntroduction } from '../Settings/styled'
+import { SectionIntroduction } from '../settings/styled'
 import { SerializedSubscription } from '../../interfaces/db/subscription'
 import { redeemPromo } from '../../api/teams/subscription'
 import { useToast } from '../../../design/lib/stores/toast'

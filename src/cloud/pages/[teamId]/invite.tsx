@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useState } from 'react'
 import Page from '../../components/Page'
-import Container from '../../components/Layouts/CenteredContainer'
+import Container from '../../components/layouts/CenteredContainer'
 import TitleComponent from '../../components/TitleComponent'
 import { useGlobalData } from '../../lib/stores/globalData'
 import ErrorBlock from '../../components/ErrorBlock'

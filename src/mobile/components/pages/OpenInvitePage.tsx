@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState } from 'react'
-import Container from '../../../cloud/components/Layouts/CenteredContainer'
+import Container from '../../../cloud/components/layouts/CenteredContainer'
 import TitleComponent from '../../../cloud/components/TitleComponent'
 import { useGlobalData } from '../../../cloud/lib/stores/globalData'
 import ErrorBlock from '../../../cloud/components/ErrorBlock'

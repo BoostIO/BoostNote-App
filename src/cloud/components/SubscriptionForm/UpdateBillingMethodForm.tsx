@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react'
-import { SectionIntroduction, SectionFlexRow } from '../Settings/styled'
+import { SectionIntroduction, SectionFlexRow } from '../settings/styled'
 import { SerializedSubscription } from '../../interfaces/db/subscription'
 import { updateSubMethod } from '../../api/teams/subscription/update'
 import { useElements, useStripe, CardElement } from '@stripe/react-stripe-js'

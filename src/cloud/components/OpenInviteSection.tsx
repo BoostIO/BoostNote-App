@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
-import { SectionRow } from './Settings/styled'
+import { SectionRow } from './settings/styled'
 import { useDialog, DialogIconTypes } from '../../design/lib/stores/dialog'
 import { usePage } from '../lib/stores/pageStore'
 import { useEffectOnce } from 'react-use'

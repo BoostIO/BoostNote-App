@@ -681,7 +681,7 @@ function useNavStore(pageProps: any): NavContext {
 
       if (
         draggedResource.type === targetedResource.type &&
-        draggedResource.result.id === targetedResource.result.id
+        draggedResource.resource.id === targetedResource.resource.id
       ) {
         return
       }

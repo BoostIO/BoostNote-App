@@ -10,7 +10,7 @@ import { darkTheme } from '../../../design/lib/styled/dark'
 import styled from '../../../design/lib/styled'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Button from '../../../design/components/atoms/Button'
-import ErrorSection from './ErrorSection'
+import ErrorSection from './../error/ErrorSection'
 
 interface ErrorPageProps {
   error: Error

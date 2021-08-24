@@ -20,7 +20,7 @@ import { intercomAppId } from '../../cloud/lib/consts'
 
 import CodeMirrorStyle from '../../cloud/components/CodeMirrorStyle'
 import { GetInitialPropsParameters } from '../../cloud/interfaces/pages'
-import ErrorPage from '../../cloud/components/Error/ErrorPage'
+import ErrorPage from '../../cloud/components/error/ErrorPage'
 import { NavProvider } from '../../cloud/lib/stores/nav'
 import { useRealtimeConn } from '../../cloud/lib/stores/realtimeConn'
 import { selectV2Theme } from '../../design/lib/styled/styleFunctions'

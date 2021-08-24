@@ -1,28 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import {
-  DocStatus,
-  SerializedDocWithBookmark,
-} from '../../../interfaces/db/doc'
-import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
+import { DocStatus, SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
 import { useSet } from 'react-use'
-import {
-  sortByAttributeAsc,
-  sortByAttributeDesc,
-} from '../../../lib/utils/array'
+import { sortByAttributeAsc, sortByAttributeDesc } from '../../lib/utils/array'
 import {
   docToDataTransferItem,
   folderToDataTransferItem,
   getDocId,
   getDocTitle,
   getFolderId,
-} from '../../../lib/utils/patterns'
-import { SerializedWorkspace } from '../../../interfaces/db/workspace'
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
-import { SerializedDocWithBookmark, DocStatus } from '../../interfaces/db/doc'
-import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
-import { useSet } from 'react-use'
-import { sortByAttributeAsc, sortByAttributeDesc } from '../../lib/utils/array'
-import { getDocTitle, getDocId, getFolderId } from '../../lib/utils/patterns'
+} from '../../lib/utils/patterns'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { StyledContentManagerList } from './styled'
 import { SerializedTeam } from '../../interfaces/db/team'
@@ -42,8 +29,8 @@ import { useI18n } from '../../lib/hooks/useI18n'
 import ContentManagerCell from './ContentManagerCell'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import ContentManagerStatusFilter from './ContentManagerStatusFilter'
-import { useCloudDnd } from '../../../lib/hooks/sidebar/useCloudDnd'
-import { DraggedTo } from '../../../../shared/lib/dnd'
+import { useCloudDnd } from '../../lib/hooks/sidebar/useCloudDnd'
+import { DraggedTo } from '../../../design/lib/dnd'
 import VerticalScroller from '../../../design/components/atoms/VerticalScroller'
 import { FormSelectOption } from '../../../design/components/molecules/Form/atoms/FormSelect'
 import Checkbox from '../../../design/components/molecules/Form/atoms/FormCheckbox'

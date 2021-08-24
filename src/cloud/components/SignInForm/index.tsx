@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
-import GoogleLoginButton from '../Buttons/login/GoogleLoginButton'
-import GithubLoginButton from '../Buttons/login/GithubLoginButton'
+import GoogleLoginButton from '../buttons/login/GoogleLoginButton'
+import GithubLoginButton from '../buttons/login/GithubLoginButton'
 import styled from '../../../design/lib/styled'
 import ErrorBlock from '../ErrorBlock'
 import EmailForm from './EmailForm'

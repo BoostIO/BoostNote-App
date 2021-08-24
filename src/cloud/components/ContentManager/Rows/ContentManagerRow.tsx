@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react'
 import cc from 'classcat'
-import { onDragLeaveCb } from '../../../../../shared/lib/dnd'
+import { onDragLeaveCb } from '../../../../design/lib/dnd'
 import styled from '../../../../design/lib/styled'
 import { AppComponent } from '../../../../design/lib/types'
 import EmojiIcon from '../../EmojiIcon'

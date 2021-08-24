@@ -46,7 +46,7 @@ import {
   mapFuzzyNavigationRecentItems,
 } from '../lib/mappers/fuzzyNavigation'
 import { useModal } from '../../design/lib/stores/modal'
-import NewDocButton from './Buttons/NewDocButton'
+import NewDocButton from './buttons/NewDocButton'
 import { useCloudSidebarTree } from '../lib/hooks/sidebar/useCloudSidebarTree'
 import { isTimeEligibleForDiscount } from '../lib/subscription'
 import DiscountModal from './Modal/contents/DiscountModal'

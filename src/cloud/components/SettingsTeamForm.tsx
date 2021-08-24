@@ -11,8 +11,8 @@ import { getTeamURL } from '../lib/utils/patterns'
 import { useToast } from '../../design/lib/stores/toast'
 import Form from '../../design/components/molecules/Form'
 import { useTranslation } from 'react-i18next'
-import { lngKeys } from '../../lib/i18n/types'
-import { allowedUploadSizeInMb } from '../../lib/upload'
+import { lngKeys } from '../lib/i18n/types'
+import { allowedUploadSizeInMb } from '../lib/upload'
 
 interface SettingsTeamFormProps {
   team: SerializedTeam

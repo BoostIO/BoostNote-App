@@ -53,7 +53,7 @@ import {
 import { useCloudApi } from '../useCloudApi'
 import { useCloudResourceModals } from '../useCloudResourceModals'
 import { useCloudDnd } from './useCloudDnd'
-import { getDocStatusHref, getSmartFolderHref } from '../../href'
+import { getSmartFolderHref } from '../../href'
 import CreateSmartFolderModal from '../../../components/Modal/contents/SmartFolder/CreateSmartFolderModal'
 import UpdateSmartFolderModal from '../../../components/Modal/contents/SmartFolder/UpdateSmartFolderModal'
 import { useDialog } from '../../../../design/lib/stores/dialog'
@@ -834,6 +834,7 @@ export function useCloudSidebarTree() {
     createWorkspace,
     sideBarOpenedLinksIdsSet,
     toggleItem,
+    clearDragTransferData,
   ])
 
   const treeWithOrderedCategories = useMemo(() => {

@@ -5,7 +5,7 @@ import { useNav } from '../../lib/stores/nav'
 import ContentManager from '../ContentManager'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import { useI18n } from '../../lib/hooks/useI18n'
-import InviteCTAButton from '../Buttons/InviteCTAButton'
+import InviteCTAButton from '../buttons/InviteCTAButton'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import {
