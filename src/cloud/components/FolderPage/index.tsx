@@ -23,14 +23,10 @@ import {
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
 import ContentManager from '../ContentManager'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
-import Application from '../Application'
-import ErrorLayout from '../../../design/components/templates/ErrorLayout'
-import { useRouter } from '../../lib/router'
 import { LoadingButton } from '../../../design/components/atoms/Button'
 import FolderContextMenu from './NewFolderContextMenu'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
-import { mapTopbarBreadcrumbs } from '../../lib/mappers/topbarBreadcrumbs'
 import { useI18n } from '../../lib/hooks/useI18n'
 import InviteCTAButton from '../Buttons/InviteCTAButton'
 import { useModal } from '../../../design/lib/stores/modal'
@@ -39,6 +35,10 @@ import MetadataContainerRow from '../../../design/components/organisms/MetadataC
 import { lngKeys } from '../../lib/i18n/types'
 import { TopbarControlProps } from '../../../design/components/organisms/Topbar'
 import FolderPageInviteSection from '../Onboarding/FolderPageInviteSection'
+import ApplicationPage from '../ApplicationPage'
+import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
+import ApplicationTopbar from '../ApplicationTopbar'
+import ApplicationContent from '../ApplicationContent'
 
 const FolderPage = () => {
   const { pageFolder, team, currentUserIsCoreMember } = usePage()
@@ -50,16 +50,11 @@ const FolderPage = () => {
     currentWorkspaceId,
   } = useNav()
   const { toggleFolderBookmark, sendingMap } = useCloudApi()
-  const { push } = useRouter()
   const {
-    openRenameDocForm,
     openRenameFolderForm,
     openNewFolderForm,
     openNewDocForm,
     deleteFolder,
-    openWorkspaceEditForm,
-    deleteDoc,
-    deleteWorkspace,
   } = useCloudResourceModals()
   const { translate } = useI18n()
   const { openContextModal } = useModal()
@@ -71,60 +66,6 @@ const FolderPage = () => {
 
     return foldersMap.get(pageFolder.id)
   }, [foldersMap, pageFolder])
-
-  const topBarBreadcrumbs = useMemo(() => {
-    if (team == null) {
-      return []
-    }
-
-    if (!currentUserIsCoreMember) {
-      return mapTopbarBreadcrumbs(
-        translate,
-        team,
-        foldersMap,
-        workspacesMap,
-        push,
-        {
-          pageFolder: currentFolder,
-        }
-      )
-    }
-
-    return mapTopbarBreadcrumbs(
-      translate,
-      team,
-      foldersMap,
-      workspacesMap,
-      push,
-      {
-        pageFolder: currentFolder,
-      },
-      openRenameFolderForm,
-      openRenameDocForm,
-      openNewDocForm,
-      openNewFolderForm,
-      openWorkspaceEditForm,
-      deleteDoc,
-      deleteFolder,
-      deleteWorkspace
-    )
-  }, [
-    translate,
-    currentFolder,
-    foldersMap,
-    workspacesMap,
-    push,
-    team,
-    openRenameFolderForm,
-    openRenameDocForm,
-    openNewFolderForm,
-    openNewDocForm,
-    deleteDoc,
-    deleteWorkspace,
-    deleteFolder,
-    openWorkspaceEditForm,
-    currentUserIsCoreMember,
-  ])
 
   const childDocs = useMemo(() => {
     if (currentFolder == null) {
@@ -316,64 +257,57 @@ const FolderPage = () => {
 
   if (team == null) {
     return (
-      <Application
-        content={{
-          reduced: true,
-        }}
-      >
-        <ErrorLayout message={'Team is missing'} />
-      </Application>
+      <ApplicationPage topbarPlaceholder={true}>
+        <ApplicationContent reduced={true}>
+          <ColoredBlock variant='danger'>{'Team is missing'}</ColoredBlock>
+        </ApplicationContent>
+      </ApplicationPage>
     )
   }
 
   if (currentFolder == null) {
     return (
-      <Application
-        content={{
-          reduced: true,
-        }}
-      >
-        <ErrorLayout message={'The folder has been deleted'} />
-      </Application>
+      <ApplicationPage topbarPlaceholder={true}>
+        <ApplicationContent reduced={true}>
+          <ColoredBlock variant='danger'>
+            {'The folder has been deleted'}
+          </ColoredBlock>
+        </ApplicationContent>
+      </ApplicationPage>
     )
   }
 
   return (
-    <Application
-      content={{
-        topbar: {
-          breadcrumbs: topBarBreadcrumbs,
-          children: (
-            <LoadingButton
-              variant='icon'
-              disabled={sendingMap.has(currentFolder.id)}
-              spinning={sendingMap.has(currentFolder.id)}
-              size='sm'
-              iconPath={currentFolder.bookmarked ? mdiStar : mdiStarOutline}
-              onClick={() =>
-                toggleFolderBookmark(
-                  currentFolder.teamId,
-                  currentFolder.id,
-                  currentFolder.bookmarked
-                )
-              }
-            />
-          ),
-          controls: topbarControls,
-        },
-      }}
-    >
-      <FolderPageInviteSection />
-      <ContentManager
-        team={team}
-        documents={childDocs}
-        folders={childFolders}
-        workspacesMap={workspaceMap}
-        currentFolderId={currentFolder.id}
-        currentWorkspaceId={currentFolder.workspaceId}
-        currentUserIsCoreMember={currentUserIsCoreMember}
-      />
-    </Application>
+    <ApplicationPage>
+      <ApplicationTopbar controls={topbarControls}>
+        <LoadingButton
+          variant='icon'
+          disabled={sendingMap.has(currentFolder.id)}
+          spinning={sendingMap.has(currentFolder.id)}
+          size='sm'
+          iconPath={currentFolder.bookmarked ? mdiStar : mdiStarOutline}
+          onClick={() =>
+            toggleFolderBookmark(
+              currentFolder.teamId,
+              currentFolder.id,
+              currentFolder.bookmarked
+            )
+          }
+        />
+      </ApplicationTopbar>
+      <ApplicationContent>
+        <FolderPageInviteSection />
+        <ContentManager
+          team={team}
+          documents={childDocs}
+          folders={childFolders}
+          workspacesMap={workspaceMap}
+          currentFolderId={currentFolder.id}
+          currentWorkspaceId={currentFolder.workspaceId}
+          currentUserIsCoreMember={currentUserIsCoreMember}
+        />
+      </ApplicationContent>
+    </ApplicationPage>
   )
 }
 

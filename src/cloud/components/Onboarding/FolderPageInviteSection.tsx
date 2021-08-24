@@ -1,6 +1,6 @@
 import { mdiClose } from '@mdi/js'
 import copy from 'copy-to-clipboard'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Button from '../../../design/components/atoms/Button'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Flexbox from '../../../design/components/atoms/Flexbox'
@@ -26,6 +26,7 @@ const InviteSection = ({ team }: { team: SerializedTeam }) => {
   const { teamPreferences, toggleItem } = useTeamPreferences()
   const { translate, getRoleLabel } = useI18n()
   const store = useOpenInvites()
+  const mountedRef = useRef(false)
   const [selectedInvite, setSelectedInvite] = useState<SerializedOpenInvite>()
   const [copyButtonLabel, setCopyButtonLabel] = useState<string>(
     translate(lngKeys.GeneralCopyVerb)
@@ -46,7 +47,18 @@ const InviteSection = ({ team }: { team: SerializedTeam }) => {
   }, [selectedInvite, team, translate])
 
   useEffect(() => {
-    if (store.state === 'loaded' && store.openInvites.length > 0) {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (
+      mountedRef.current &&
+      store.state === 'loaded' &&
+      store.openInvites.length > 0
+    ) {
       setSelectedInvite(store.openInvites[0])
     }
   }, [store])

@@ -60,6 +60,7 @@ import styled from '../../design/lib/styled'
 import { darkTheme } from '../../design/lib/styled/dark'
 import Spinner from '../../design/components/atoms/Spinner'
 import { TeamPreferencesProvider } from '../lib/stores/teamPreferences'
+import Application from './Application'
 
 const CombinedProvider = combineProviders(
   TeamStorageProvider,
@@ -254,7 +255,13 @@ const Router = () => {
         <CombinedProvider>
           <NavProvider pageProps={pageInfo.pageProps as any}>
             <V2ThemeProvider>
-              {<pageInfo.Component {...pageInfo.pageProps} />}
+              {isApplicationPagePathname(pathname) ? (
+                <Application>
+                  <pageInfo.Component {...pageInfo.pageProps} />
+                </Application>
+              ) : (
+                <pageInfo.Component {...pageInfo.pageProps} />
+              )}
 
               <GlobalStyleV2 />
               <CodeMirrorStyle />
@@ -348,6 +355,24 @@ function isHomepagePathname(pathname: string) {
     default:
       return false
   }
+}
+
+function isApplicationPagePathname(pathname: string) {
+  if (isHomepagePathname(pathname)) return false
+
+  const [, ...splittedPathnames] = pathname.split('/')
+
+  if (
+    (splittedPathnames[0] === 'account' && splittedPathnames[1] === 'delete') ||
+    (splittedPathnames.length >= 1 &&
+      ['account', 'cooperate', 'settings', 'shared'].includes(
+        splittedPathnames[0]
+      ))
+  ) {
+    return false
+  }
+
+  return true
 }
 
 function getPageComponent(pathname: string): PageSpec | null {

@@ -1,6 +1,5 @@
 import React from 'react'
 import { useTitle } from 'react-use'
-import Application from '../../../components/Application'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
 import InviteCTAButton from '../../../components/Buttons/InviteCTAButton'
 import {
@@ -9,29 +8,29 @@ import {
 } from '../../../api/pages/teams/requests'
 import styled from '../../../../design/lib/styled'
 import Banner from '../../../../design/components/atoms/Banner'
+import ApplicationTopbar from '../../../components/ApplicationTopbar'
+import ApplicationPage from '../../../components/ApplicationPage'
+import ApplicationContent from '../../../components/ApplicationContent'
 
 const DenyRequestsPage = ({}: RequestDeniedResponseBody) => {
   useTitle('Deny Edit Request')
 
   return (
-    <Application
-      content={{
-        reduced: true,
-        topbar: {
-          breadcrumbs: [],
-          controls: [
-            {
-              type: 'node',
-              element: <InviteCTAButton key='invite-cta' />,
-            },
-          ],
-        },
-      }}
-    >
-      <Container>
-        <Banner variant='warning'>The request has been deleted</Banner>
-      </Container>
-    </Application>
+    <ApplicationPage topbarPlaceholder={true}>
+      <ApplicationTopbar
+        controls={[
+          {
+            type: 'node',
+            element: <InviteCTAButton key='invite-cta' />,
+          },
+        ]}
+      />
+      <ApplicationContent reduced={true}>
+        <Container>
+          <Banner variant='warning'>The request has been deleted</Banner>
+        </Container>
+      </ApplicationContent>
+    </ApplicationPage>
   )
 }
 

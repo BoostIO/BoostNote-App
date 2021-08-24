@@ -266,4 +266,4 @@ const Container = styled.div`
   }
 `
 
-export default SidebarSpaces
+export default React.memo(SidebarSpaces)

@@ -33,7 +33,6 @@ import {
 import { buildIconUrl } from '../../api/files'
 import { SerializedRevision } from '../../interfaces/db/revision'
 import EditorTemplateButton from './EditorTemplateButton'
-import Application from '../Application'
 import {
   mdiRepeat,
   mdiRepeatOff,
@@ -73,8 +72,6 @@ import { LoadingButton } from '../../../design/components/atoms/Button'
 import { trackEvent } from '../../api/track'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
-import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
-import { mapTopbarBreadcrumbs } from '../../lib/mappers/topbarBreadcrumbs'
 import { useModal } from '../../../design/lib/stores/modal'
 import PresenceIcons from '../Topbar/PresenceIcons'
 import { TopbarControlProps } from '../../../design/components/organisms/Topbar'
@@ -95,6 +92,9 @@ import Spinner from '../../../design/components/atoms/Spinner'
 import styled from '../../../design/lib/styled'
 import { rightSidePageLayout } from '../../../design/lib/styled/styleFunctions'
 import Icon from '../../../design/components/atoms/Icon'
+import ApplicationTopbar from '../ApplicationTopbar'
+import ApplicationPage from '../ApplicationPage'
+import ApplicationContent from '../ApplicationContent'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -154,25 +154,16 @@ const Editor = ({
   const [editorContent, setEditorContent] = useState('')
   const docRef = useRef<string>('')
   const router = useRouter()
-  const { state, push } = router
+  const { state } = router
   const [shortcodeConvertMenu, setShortcodeConvertMenu] = useState<{
     pos: PositionRange
     cb: Callback
   } | null>(null)
   const initialRenderDone = useRef(false)
-  const { docsMap, workspacesMap, foldersMap, loadDoc } = useNav()
+  const { docsMap, workspacesMap, loadDoc } = useNav()
   const suggestionsRef = useRef<Hint[]>([])
   const { sendingMap, toggleDocBookmark } = useCloudApi()
-  const {
-    openRenameDocForm,
-    openRenameFolderForm,
-    openNewFolderForm,
-    openNewDocForm,
-    openWorkspaceEditForm,
-    deleteDoc,
-    deleteFolder,
-    deleteWorkspace,
-  } = useCloudResourceModals()
+  const mountedRef = useRef(false)
 
   const [selection, setSelection] = useState<SelectionState>({
     currentCursor: {
@@ -215,46 +206,6 @@ const Editor = ({
   const otherUsers = useMemo(() => {
     return connectedUsers.filter((pUser) => pUser.id !== user.id)
   }, [connectedUsers, user])
-
-  const breadcrumbs = useMemo(() => {
-    const breadcrumbs = mapTopbarBreadcrumbs(
-      translate,
-      team,
-      foldersMap,
-      workspacesMap,
-      push,
-      {
-        pageDoc: {
-          ...doc,
-          head: { ...(doc.head || {}) },
-        } as SerializedDoc,
-      },
-      openRenameFolderForm,
-      openRenameDocForm,
-      openNewDocForm,
-      openNewFolderForm,
-      openWorkspaceEditForm,
-      deleteDoc,
-      deleteFolder,
-      deleteWorkspace
-    )
-    return breadcrumbs
-  }, [
-    translate,
-    team,
-    foldersMap,
-    workspacesMap,
-    doc,
-    push,
-    openRenameDocForm,
-    openRenameFolderForm,
-    openNewFolderForm,
-    openNewDocForm,
-    deleteDoc,
-    deleteFolder,
-    openWorkspaceEditForm,
-    deleteWorkspace,
-  ])
 
   const users = useMemo(() => {
     if (permissions == null) {
@@ -680,6 +631,13 @@ const Editor = ({
   }, [updateLayout, editorLayout])
 
   useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
+  }, [])
+
+  useEffect(() => {
     showViewPageRef.current = !docIsEditable || !currentUserIsCoreMember
   }, [currentUserIsCoreMember, docIsEditable])
 
@@ -780,7 +738,10 @@ const Editor = ({
   }, [doc.id])
 
   useEffect(() => {
-    if (connState === 'synced' || connState === 'loaded') {
+    if (
+      mountedRef.current &&
+      (connState === 'synced' || connState === 'loaded')
+    ) {
       setInitialLoadDone(true)
     }
   }, [connState])
@@ -846,6 +807,7 @@ const Editor = ({
   }, [calculatePositions])
 
   useEffect(() => {
+    if (!mountedRef.current) return
     if (docRef.current !== doc.id) {
       if (showViewPageRef.current) {
         setEditorLayout('preview')
@@ -888,40 +850,33 @@ const Editor = ({
 
   if (!initialLoadDone) {
     return (
-      <Application content={{}}>
-        <StyledLoadingView>
-          <h3>Loading..</h3>
-          <span>
-            <Spinner />
-          </span>
-        </StyledLoadingView>
-      </Application>
+      <StyledLoadingView>
+        <h3>Loading..</h3>
+        <span>
+          <Spinner />
+        </span>
+      </StyledLoadingView>
     )
   }
-  return (
-    <Application
-      content={{
-        reduced: false,
-        topbar: {
-          breadcrumbs,
-          children:
-            currentUserPermissions != null ? (
-              <StyledTopbarChildrenContainer>
-                <LoadingButton
-                  variant='icon'
-                  disabled={sendingMap.has(doc.id)}
-                  spinning={sendingMap.has(doc.id)}
-                  size='sm'
-                  iconPath={doc.bookmarked ? mdiStar : mdiStarOutline}
-                  onClick={() =>
-                    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
-                  }
-                />
 
-                <PresenceIcons user={userInfo} users={otherUsers} />
-              </StyledTopbarChildrenContainer>
-            ) : null,
-          controls: [
+  return (
+    <ApplicationPage
+      right={
+        preferences.docContextMode === 'comment' ? (
+          <PreferencesContextMenuWrapper>
+            <CommentManager
+              state={normalizedCommentState}
+              user={user}
+              users={users}
+              {...commentActions}
+            />
+          </PreferencesContextMenuWrapper>
+        ) : null
+      }
+    >
+      <ApplicationTopbar
+        controls={
+          [
             {
               type: 'node',
               element: <InviteCTAButton origin='doc-page' key='invite-cta' />,
@@ -1041,119 +996,132 @@ const Editor = ({
                 )
               },
             },
-          ] as TopbarControlProps[],
-        },
-        right:
-          preferences.docContextMode === 'comment' ? (
-            <PreferencesContextMenuWrapper>
-              <CommentManager
-                state={normalizedCommentState}
-                user={user}
-                users={users}
-                {...commentActions}
-              />
-            </PreferencesContextMenuWrapper>
-          ) : null,
-      }}
-    >
-      <EditorLayout
-        doc={doc}
-        docIsEditable={true}
-        fullWidth={editorLayout !== 'preview'}
-        team={team}
+          ] as TopbarControlProps[]
+        }
       >
-        <Container>
-          {editorLayout !== 'preview' && (
-            <StyledLayoutDimensions className={editorLayout}>
-              <ToolbarRow>
-                <EditorToolButton
-                  tooltip={
-                    scrollSync
-                      ? translate(lngKeys.EditorToolbarTooltipScrollSyncDisable)
-                      : translate(lngKeys.EditorToolbarTooltipScrollSyncEnable)
-                  }
-                  path={scrollSync ? mdiRepeatOff : mdiRepeat}
-                  onClick={toggleScrollSync}
-                  className='scroll-sync'
-                />
-                <EditorToolbar editorRef={editorRef} />
-                <EditorToolbarUpload
-                  editorRef={editorRef}
-                  fileUploadHandlerRef={fileUploadHandlerRef}
-                />
-                <EditorToolButton
-                  tooltip={translate(lngKeys.EditorToolbarTooltipTemplate)}
-                  path={mdiFileDocumentOutline}
-                  onClick={onEditorTemplateToolClick}
-                />
-              </ToolbarRow>
-            </StyledLayoutDimensions>
-          )}
-          <StyledEditor className={editorLayout}>
-            <StyledEditorWrapper
-              className={`layout-${editorLayout}`}
-              fontFamily={fontFamily}
-              fontSize={fontSize}
-            >
-              <>
-                <CodeMirrorEditor
-                  bind={bindCallback}
-                  config={editorConfig}
-                  realtime={realtime}
-                />
-                {editorContent === '' && (
-                  <EditorTemplateButton
-                    onTemplatePickCallback={onTemplatePickCallback}
-                  />
-                )}
-                {shortcodeConvertMenu !== null && (
-                  <StyledShortcodeConvertMenu style={shortcodeConvertMenuStyle}>
-                    <button onClick={() => shortcodeConvertMenu.cb(false)}>
-                      Dismiss
-                    </button>
-                    <button onClick={() => shortcodeConvertMenu.cb(true)}>
-                      Create embed
-                    </button>
-                  </StyledShortcodeConvertMenu>
-                )}
-              </>
-            </StyledEditorWrapper>
-            <StyledPreview className={`layout-${editorLayout}`}>
-              <MarkdownView
-                content={editorContent}
-                updateContent={setEditorRefContent}
-                headerLinks={editorLayout === 'preview'}
-                onRender={onRender.current}
-                className='scroller'
-                getEmbed={getEmbed}
-                scrollerRef={previewRef}
-                comments={viewComments}
-                commentClick={commentClick}
-                SelectionMenu={({ selection }) => (
-                  <StyledSelectionMenu>
-                    <div onClick={() => newRangeThread(selection)}>
-                      <Icon size={20} path={mdiCommentTextOutline} />
-                    </div>
-                  </StyledSelectionMenu>
-                )}
-              />
-            </StyledPreview>
-          </StyledEditor>
+        {currentUserPermissions != null && (
+          <StyledTopbarChildrenContainer>
+            <LoadingButton
+              variant='icon'
+              disabled={sendingMap.has(doc.id)}
+              spinning={sendingMap.has(doc.id)}
+              size='sm'
+              iconPath={doc.bookmarked ? mdiStar : mdiStarOutline}
+              onClick={() =>
+                toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked)
+              }
+            />
 
-          {editorLayout !== 'preview' && (
-            <StyledBottomBar>
-              <EditorSelectionStatus
-                cursor={selection.currentCursor}
-                selections={selection.currentSelections}
-              />
-              <EditorKeyMapSelect />
-              <EditorThemeSelect />
-              <EditorIndentationStatus />
-            </StyledBottomBar>
-          )}
-        </Container>
-      </EditorLayout>
-    </Application>
+            <PresenceIcons user={userInfo} users={otherUsers} />
+          </StyledTopbarChildrenContainer>
+        )}
+      </ApplicationTopbar>
+      <ApplicationContent>
+        <EditorLayout
+          doc={doc}
+          docIsEditable={true}
+          fullWidth={editorLayout !== 'preview'}
+          team={team}
+        >
+          <Container>
+            {editorLayout !== 'preview' && (
+              <StyledLayoutDimensions className={editorLayout}>
+                <ToolbarRow>
+                  <EditorToolButton
+                    tooltip={
+                      scrollSync
+                        ? translate(
+                            lngKeys.EditorToolbarTooltipScrollSyncDisable
+                          )
+                        : translate(
+                            lngKeys.EditorToolbarTooltipScrollSyncEnable
+                          )
+                    }
+                    path={scrollSync ? mdiRepeatOff : mdiRepeat}
+                    onClick={toggleScrollSync}
+                    className='scroll-sync'
+                  />
+                  <EditorToolbar editorRef={editorRef} />
+                  <EditorToolbarUpload
+                    editorRef={editorRef}
+                    fileUploadHandlerRef={fileUploadHandlerRef}
+                  />
+                  <EditorToolButton
+                    tooltip={translate(lngKeys.EditorToolbarTooltipTemplate)}
+                    path={mdiFileDocumentOutline}
+                    onClick={onEditorTemplateToolClick}
+                  />
+                </ToolbarRow>
+              </StyledLayoutDimensions>
+            )}
+            <StyledEditor className={editorLayout}>
+              <StyledEditorWrapper
+                className={`layout-${editorLayout}`}
+                fontFamily={fontFamily}
+                fontSize={fontSize}
+              >
+                <>
+                  <CodeMirrorEditor
+                    bind={bindCallback}
+                    config={editorConfig}
+                    realtime={realtime}
+                  />
+                  {editorContent === '' && (
+                    <EditorTemplateButton
+                      onTemplatePickCallback={onTemplatePickCallback}
+                    />
+                  )}
+                  {shortcodeConvertMenu !== null && (
+                    <StyledShortcodeConvertMenu
+                      style={shortcodeConvertMenuStyle}
+                    >
+                      <button onClick={() => shortcodeConvertMenu.cb(false)}>
+                        Dismiss
+                      </button>
+                      <button onClick={() => shortcodeConvertMenu.cb(true)}>
+                        Create embed
+                      </button>
+                    </StyledShortcodeConvertMenu>
+                  )}
+                </>
+              </StyledEditorWrapper>
+              <StyledPreview className={`layout-${editorLayout}`}>
+                <MarkdownView
+                  content={editorContent}
+                  updateContent={setEditorRefContent}
+                  headerLinks={editorLayout === 'preview'}
+                  onRender={onRender.current}
+                  className='scroller'
+                  getEmbed={getEmbed}
+                  scrollerRef={previewRef}
+                  comments={viewComments}
+                  commentClick={commentClick}
+                  SelectionMenu={({ selection }) => (
+                    <StyledSelectionMenu>
+                      <div onClick={() => newRangeThread(selection)}>
+                        <Icon size={20} path={mdiCommentTextOutline} />
+                      </div>
+                    </StyledSelectionMenu>
+                  )}
+                />
+              </StyledPreview>
+            </StyledEditor>
+
+            {editorLayout !== 'preview' && (
+              <StyledBottomBar>
+                <EditorSelectionStatus
+                  cursor={selection.currentCursor}
+                  selections={selection.currentSelections}
+                />
+                <EditorKeyMapSelect />
+                <EditorThemeSelect />
+                <EditorIndentationStatus />
+              </StyledBottomBar>
+            )}
+          </Container>
+        </EditorLayout>
+      </ApplicationContent>
+    </ApplicationPage>
   )
 }
 

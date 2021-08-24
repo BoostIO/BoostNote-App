@@ -38,12 +38,8 @@ import {
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
 import { sendToHost, usingElectron } from '../lib/stores/electron'
-import ContentLayout, {
-  ContentLayoutProps,
-} from '../../design/components/templates/ContentLayout'
 import cc from 'classcat'
 import { useCloudResourceModals } from '../lib/hooks/useCloudResourceModals'
-import { mapTopbarTree } from '../lib/mappers/topbarTree'
 import FuzzyNavigation from '../../design/components/organisms/FuzzyNavigation'
 import {
   mapFuzzyNavigationItems,
@@ -76,17 +72,14 @@ import { trackEvent } from '../api/track'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 
 interface ApplicationProps {
-  content: ContentLayoutProps
   className?: string
 }
 
 const Application = ({
-  content: { topbar, ...content },
   children,
 }: React.PropsWithChildren<ApplicationProps>) => {
   const { preferences, setPreferences } = usePreferences()
   const {
-    initialLoadDone,
     docsMap,
     foldersMap,
     workspacesMap,
@@ -105,7 +98,7 @@ const Application = ({
   const {
     globalData: { currentUser },
   } = useGlobalData()
-  const { push, query, goBack, goForward, pathname } = useRouter()
+  const { push, query, pathname } = useRouter()
   const [popOverState, setPopOverState] = useState<PopOverState>(null)
   const { openSettingsTab, closeSettingsTab } = useSettings()
   const { openNewDocForm, openNewFolderForm } = useCloudResourceModals()
@@ -154,21 +147,6 @@ const Application = ({
   const users = useMemo(() => {
     return mapUsers(permissions, currentUser)
   }, [permissions, currentUser])
-
-  const topbarTree = useMemo(() => {
-    if (team == null) {
-      return undefined
-    }
-
-    return mapTopbarTree(
-      team,
-      initialLoadDone,
-      docsMap,
-      foldersMap,
-      workspacesMap,
-      push
-    )
-  }, [team, initialLoadDone, docsMap, foldersMap, workspacesMap, push])
 
   const { spaces } = useCloudSidebarSpaces()
 
@@ -435,23 +413,7 @@ const Application = ({
           />
         }
         pageBody={
-          showSearchScreen ? (
-            <CloudGlobalSearch team={team} />
-          ) : (
-            <ContentLayout
-              {...content}
-              topbar={{
-                ...topbar,
-                tree: topbarTree,
-                navigation: {
-                  goBack,
-                  goForward,
-                },
-              }}
-            >
-              {children}
-            </ContentLayout>
-          )
+          showSearchScreen ? <CloudGlobalSearch team={team} /> : children
         }
       />
       <AnnouncementAlert />

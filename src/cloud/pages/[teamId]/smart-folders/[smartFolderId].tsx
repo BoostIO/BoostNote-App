@@ -3,8 +3,6 @@ import { usePage } from '../../../lib/stores/pageStore'
 import { useNav } from '../../../lib/stores/nav'
 import { useTitle } from 'react-use'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
-import Application from '../../../components/Application'
-import ErrorLayout from '../../../../design/components/templates/ErrorLayout'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
 import {
   AssigneesCondition,
@@ -25,6 +23,10 @@ import { mdiDotsHorizontal } from '@mdi/js'
 import { useModal } from '../../../../design/lib/stores/modal'
 import SmartFolderContextMenu from '../../../components/SmartFolderContextMenu'
 import FolderPageInviteSection from '../../../components/Onboarding/FolderPageInviteSection'
+import ApplicationPage from '../../../components/ApplicationPage'
+import ColoredBlock from '../../../../design/components/atoms/ColoredBlock'
+import ApplicationTopbar from '../../../components/ApplicationTopbar'
+import ApplicationContent from '../../../components/ApplicationContent'
 
 function validateAssignees(
   doc: SerializedDocWithBookmark,
@@ -244,82 +246,76 @@ const SmartFolderPage = (params: any) => {
 
   if (!initialLoadDone) {
     return (
-      <Application
-        content={{
-          reduced: true,
-        }}
-      >
-        Loading...
-      </Application>
+      <ApplicationPage topbarPlaceholder={true}>
+        <ApplicationContent reduced={true}>Loading...</ApplicationContent>
+      </ApplicationPage>
     )
   }
 
   if (team == null) {
     return (
-      <Application
-        content={{
-          reduced: true,
-        }}
-      >
-        <ErrorLayout message={'Team is missing'} />
-      </Application>
+      <ApplicationPage topbarPlaceholder={true}>
+        <ApplicationContent reduced={true}>
+          <ColoredBlock variant='danger'>{'Team is missing'}</ColoredBlock>
+        </ApplicationContent>
+      </ApplicationPage>
     )
   }
 
   if (smartFolder == null) {
     return (
-      <Application
-        content={{
-          reduced: true,
-        }}
-      >
-        <ErrorLayout message={'The smart folder has been deleted'} />
-      </Application>
+      <ApplicationPage topbarPlaceholder={true}>
+        <ApplicationContent reduced={true}>
+          <ColoredBlock variant='danger'>
+            {'The smart folder has been deleted'}
+          </ColoredBlock>
+        </ApplicationContent>
+      </ApplicationPage>
     )
   }
 
   return (
-    <Application
-      content={{
-        topbar: {
-          controls: [
-            {
-              type: 'node',
-              element: <InviteCTAButton key='invite-cta' />,
+    <ApplicationPage>
+      <ApplicationTopbar
+        controls={[
+          {
+            type: 'node',
+            element: <InviteCTAButton key='invite-cta' />,
+          },
+          {
+            type: 'button',
+            variant: 'icon',
+            iconPath: mdiDotsHorizontal,
+            onClick: (event) => {
+              openContextModal(
+                event,
+                <SmartFolderContextMenu
+                  smartFolder={smartFolder}
+                  team={team}
+                />,
+                {
+                  alignment: 'bottom-right',
+                  removePadding: true,
+                  hideBackground: true,
+                }
+              )
             },
-            {
-              type: 'button',
-              variant: 'icon',
-              iconPath: mdiDotsHorizontal,
-              onClick: (event) => {
-                openContextModal(
-                  event,
-                  <SmartFolderContextMenu
-                    smartFolder={smartFolder}
-                    team={team}
-                  />,
-                  {
-                    alignment: 'bottom-right',
-                    removePadding: true,
-                    hideBackground: true,
-                  }
-                )
-              },
-            },
-          ],
-          children: <SmartFolderLabel>{smartFolder.name}</SmartFolderLabel>,
-        },
-      }}
-    >
-      <FolderPageInviteSection />
-      <ContentManager
-        team={team}
-        documents={documents}
-        workspacesMap={workspacesMap}
-        page={'smart-folder'}
-        currentUserIsCoreMember={currentUserIsCoreMember}
-      />
-    </Application>
+          },
+        ]}
+      >
+        <SmartFolderLabel>{smartFolder.name}</SmartFolderLabel>
+      </ApplicationTopbar>
+      <ApplicationContent>
+        <FolderPageInviteSection />
+        <ContentManager
+          team={team}
+          documents={documents}
+          workspacesMap={workspacesMap}
+          page={'smart-folder'}
+          currentUserIsCoreMember={currentUserIsCoreMember}
+        />
+      </ApplicationContent>
+    </ApplicationPage>
   )
 }
 

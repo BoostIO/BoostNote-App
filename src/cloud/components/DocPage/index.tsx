@@ -15,12 +15,12 @@ import {
   SerializedDocWithBookmark,
   SerializedDoc,
 } from '../../interfaces/db/doc'
-import Application from '../Application'
 import { SerializedUser } from '../../interfaces/db/user'
 import { SerializedRevision } from '../../interfaces/db/revision'
 import { useRouter } from '../../lib/router'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Editor from '../Editor'
+import ApplicationPage from '../ApplicationPage'
 
 interface DocPageProps {
   doc: SerializedDocWithBookmark
@@ -134,7 +134,7 @@ const DocPage = ({
 
   if (currentDoc == null || team == null) {
     return (
-      <Application content={{}}>
+      <ApplicationPage topbarPlaceholder={true}>
         <ColoredBlock
           variant='danger'
           style={{
@@ -147,13 +147,13 @@ const DocPage = ({
           <h3>Oops...</h3>
           <p>The document has been deleted.</p>
         </ColoredBlock>
-      </Application>
+      </ApplicationPage>
     )
   }
 
   if (currentUser == null) {
     return (
-      <Application content={{}}>
+      <ApplicationPage topbarPlaceholder={true}>
         <ColoredBlock
           variant='danger'
           style={{
@@ -166,7 +166,7 @@ const DocPage = ({
           <h3>Oops...</h3>
           <p>You need to be connected to access this document.</p>
         </ColoredBlock>
-      </Application>
+      </ApplicationPage>
     )
   }
 

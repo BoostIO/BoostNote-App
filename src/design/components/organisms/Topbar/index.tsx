@@ -315,4 +315,29 @@ const Container = styled.div`
   }
 `
 
+export const TopbarPlaceholder = ({
+  children,
+}: React.PropsWithChildren<{}>) => (
+  <PlaceholderContainer className='topbar topbar--placeholder'>
+    {children}
+  </PlaceholderContainer>
+)
+
+const PlaceholderContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: ${rightSideTopBarHeight}px;
+  background: ${({ theme }) => theme.colors.background.primary};
+  border-bottom: 1px solid transparent;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1;
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+  flex: 0 0 auto;
+  padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
+  padding-right: ${({ theme }) => theme.sizes.spaces.l}px;
+`
+
 export default Topbar

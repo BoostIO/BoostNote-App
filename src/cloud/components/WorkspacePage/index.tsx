@@ -3,10 +3,7 @@ import { usePage } from '../../lib/stores/pageStore'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { useNav } from '../../lib/stores/nav'
 import ContentManager from '../ContentManager'
-import Application from '../Application'
-import { useRouter } from '../../lib/router'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
-import { mapWorkspaceBreadcrumb } from '../../lib/mappers/topbarBreadcrumbs'
 import { useI18n } from '../../lib/hooks/useI18n'
 import InviteCTAButton from '../Buttons/InviteCTAButton'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
@@ -23,6 +20,10 @@ import { useModal } from '../../../design/lib/stores/modal'
 import FolderPageInviteSection from '../Onboarding/FolderPageInviteSection'
 import { TopbarControlProps } from '../../../design/components/organisms/Topbar'
 import WorkspaceContextMenu from './WorkspaceContextMenu'
+import ApplicationPage from '../ApplicationPage'
+import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
+import ApplicationTopbar from '../ApplicationTopbar'
+import ApplicationContent from '../ApplicationContent'
 
 interface WorkspacePage {
   workspace: SerializedWorkspace
@@ -31,49 +32,10 @@ interface WorkspacePage {
 const WorkspacePage = ({ workspace }: WorkspacePage) => {
   const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, foldersMap } = useNav()
-  const { push } = useRouter()
-  const {
-    openNewFolderForm,
-    openNewDocForm,
-    openWorkspaceEditForm,
-    deleteWorkspace,
-  } = useCloudResourceModals()
+  const { openNewFolderForm, openNewDocForm } = useCloudResourceModals()
   const { sendingMap } = useCloudApi()
   const { translate } = useI18n()
   const { openContextModal } = useModal()
-
-  const topbarBreadcrumbs = useMemo(() => {
-    if (team == null) {
-      return []
-    }
-
-    if (!currentUserIsCoreMember) {
-      return [mapWorkspaceBreadcrumb(translate, team, workspace, push)]
-    }
-
-    return [
-      mapWorkspaceBreadcrumb(
-        translate,
-        team,
-        workspace,
-        push,
-        openNewDocForm,
-        openNewFolderForm,
-        openWorkspaceEditForm,
-        deleteWorkspace
-      ),
-    ]
-  }, [
-    translate,
-    team,
-    workspace,
-    push,
-    openNewFolderForm,
-    openNewDocForm,
-    openWorkspaceEditForm,
-    deleteWorkspace,
-    currentUserIsCoreMember,
-  ])
 
   const childFolders = useMemo(() => {
     if (workspace == null) {
@@ -196,28 +158,30 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
   ])
 
   if (team == null) {
-    return <Application content={{}} />
+    return (
+      <ApplicationPage topbarPlaceholder={true}>
+        <ApplicationContent reduced={true}>
+          <ColoredBlock variant='danger'>{'Team is missing'}</ColoredBlock>
+        </ApplicationContent>
+      </ApplicationPage>
+    )
   }
 
   return (
-    <Application
-      content={{
-        topbar: {
-          breadcrumbs: topbarBreadcrumbs,
-          controls: topbarControls,
-        },
-      }}
-    >
-      <FolderPageInviteSection />
-      <ContentManager
-        team={team}
-        documents={childDocs}
-        folders={childFolders}
-        workspacesMap={workspaceMap}
-        currentWorkspaceId={workspace.id}
-        currentUserIsCoreMember={currentUserIsCoreMember}
-      />
-    </Application>
+    <ApplicationPage>
+      <ApplicationTopbar controls={topbarControls} />
+      <ApplicationContent>
+        <FolderPageInviteSection />
+        <ContentManager
+          team={team}
+          documents={childDocs}
+          folders={childFolders}
+          workspacesMap={workspaceMap}
+          currentWorkspaceId={workspace.id}
+          currentUserIsCoreMember={currentUserIsCoreMember}
+        />
+      </ApplicationContent>
+    </ApplicationPage>
   )
 }
 
