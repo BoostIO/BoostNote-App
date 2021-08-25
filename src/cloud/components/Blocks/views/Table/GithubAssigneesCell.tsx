@@ -1,11 +1,12 @@
 import { StyledUserIcon } from '../../../UserIcon'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { GithubCellProps } from '.'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import { getAction, postAction } from '../../../../api/integrations'
 import styled from '../../../../../design/lib/styled'
 import FilterableSelectList from '../../../../../design/components/molecules/FilterableSelectList'
 import Spinner from '../../../../../design/components/atoms/Spinner'
+import { useToast } from '../../../../../design/lib/stores/toast'
 
 interface Assignee {
   id: number
@@ -15,17 +16,23 @@ interface Assignee {
 
 const GitHubAssigneesCell = ({ data, onUpdate }: GithubCellProps) => {
   const { openContextModal, closeAllModals } = useModal()
+  const { pushApiErrorMessage } = useToast()
+
   const addAssignees = useCallback(
     async (assignees: string[]) => {
-      const [owner, repo] = data.repository.full_name.split('/')
-      const issue = await postAction(
-        { id: data.integrationId },
-        'issue:assign',
-        { owner, repo, issue_number: data.number },
-        { assignees }
-      )
-      await onUpdate({ ...data, ...issue })
-      closeAllModals()
+      try {
+        const [owner, repo] = data.repository.full_name.split('/')
+        const issue = await postAction(
+          { id: data.integrationId },
+          'issue:assign',
+          { owner, repo, issue_number: data.number },
+          { assignees }
+        )
+        await onUpdate({ ...data, ...issue })
+        closeAllModals()
+      } catch (error) {
+        pushApiErrorMessage(error)
+      }
     },
     [data]
   )
@@ -62,24 +69,34 @@ interface AssigneeSelectProps {
 
 const AssigneeSelect = ({ data, onSelect }: AssigneeSelectProps) => {
   const [users, setUsers] = useState<Assignee[] | null>(null)
+  const { pushApiErrorMessage } = useToast()
+
+  const pushErrorRef = useRef(pushApiErrorMessage)
+  useEffect(() => {
+    pushErrorRef.current = pushApiErrorMessage
+  }, [pushApiErrorMessage])
 
   useEffect(() => {
     let cancel = false
     const cb = async () => {
-      if (
-        data.integrationId != null &&
-        data.repository != null &&
-        data.repository.full_name != null
-      ) {
-        const [owner, repo] = data.repository.full_name.split('/')
-        const users = await getAction(
-          { id: data.integrationId },
-          'repo:collaborators',
-          { owner, repo }
-        )
-        if (!cancel) {
-          setUsers(users)
+      try {
+        if (
+          data.integrationId != null &&
+          data.repository != null &&
+          data.repository.full_name != null
+        ) {
+          const [owner, repo] = data.repository.full_name.split('/')
+          const users = await getAction(
+            { id: data.integrationId },
+            'repo:collaborators',
+            { owner, repo }
+          )
+          if (!cancel) {
+            setUsers(users)
+          }
         }
+      } catch (error) {
+        pushErrorRef.current(error)
       }
     }
     cb()
