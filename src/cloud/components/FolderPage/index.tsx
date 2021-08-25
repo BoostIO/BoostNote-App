@@ -257,7 +257,7 @@ const FolderPage = () => {
 
   if (team == null) {
     return (
-      <ApplicationPage topbarPlaceholder={true}>
+      <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>
           <ColoredBlock variant='danger'>{'Team is missing'}</ColoredBlock>
         </ApplicationContent>
@@ -267,7 +267,7 @@ const FolderPage = () => {
 
   if (currentFolder == null) {
     return (
-      <ApplicationPage topbarPlaceholder={true}>
+      <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>
           <ColoredBlock variant='danger'>
             {'The folder has been deleted'}

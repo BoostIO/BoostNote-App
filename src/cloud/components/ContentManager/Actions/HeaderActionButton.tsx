@@ -1,33 +1,24 @@
 import React from 'react'
 import { LoadingButton } from '../../../../design/components/atoms/Button'
 import WithTooltip from '../../../../design/components/atoms/WithTooltip'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
-import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 
-export type UnsignedItem =
-  | SerializedDocWithBookmark
-  | SerializedFolderWithBookmark
-
-export type ContentManagerRowAction<T extends UnsignedItem> = {
+type ContentManagerHeaderAction = {
   iconPath: string
   tooltip?: string
-  id: number
-  onClick: (item: T) => void
+  onClick: () => void
 }
 
-interface RowActionProps<T extends UnsignedItem> {
-  action: ContentManagerRowAction<T>
-  item: T
+interface HeaderActionButtonProps {
+  action: ContentManagerHeaderAction
   sending?: boolean
   disabled?: boolean
 }
 
-const RowAction = <T extends UnsignedItem>({
+const HeaderActionButton = ({
   action,
-  item,
   disabled,
   sending = false,
-}: RowActionProps<T>) => {
+}: HeaderActionButtonProps) => {
   if (action.tooltip != null) {
     return (
       <WithTooltip tooltip={action.tooltip}>
@@ -35,9 +26,10 @@ const RowAction = <T extends UnsignedItem>({
           variant='icon'
           iconSize={20}
           iconPath={action.iconPath}
-          spinning={sending}
-          onClick={() => action.onClick(item)}
+          onClick={action.onClick}
           disabled={disabled}
+          className='valign-super'
+          spinning={sending}
         />
       </WithTooltip>
     )
@@ -48,11 +40,12 @@ const RowAction = <T extends UnsignedItem>({
       variant='icon'
       iconSize={20}
       iconPath={action.iconPath}
-      spinning={sending}
-      onClick={() => action.onClick(item)}
+      onClick={action.onClick}
       disabled={disabled}
+      className='valign-super'
+      spinning={sending}
     />
   )
 }
 
-export default RowAction
+export default HeaderActionButton

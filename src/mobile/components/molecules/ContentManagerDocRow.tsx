@@ -26,10 +26,9 @@ import { usePage } from '../../../cloud/lib/stores/pageStore'
 import { SerializedUser } from '../../../cloud/interfaces/db/user'
 import { useToast } from '../../../design/lib/stores/toast'
 import { useModal } from '../../../design/lib/stores/modal'
-import RowAction, {
-  ContentManagerRowAction,
-} from '../../../cloud/components/ContentManager/Actions/RowAction'
+import RowActionButton from '../../../cloud/components/ContentManager/Actions/RowActionButton'
 import MobileResourceMoveModal from '../organisms/modals/MobileResourceMoveModal'
+import { ContentManagerRowAction } from '../../../cloud/interfaces/components/ContentManager/types'
 
 interface ContentManagerDocRowProps {
   team: SerializedTeam
@@ -252,7 +251,7 @@ const ContentManagerDocRow = ({
       rowActions={
         <Flexbox flex='0 0 auto' className='actions'>
           {actions.map((action) => (
-            <RowAction
+            <RowActionButton
               action={action}
               item={doc}
               key={`${action.id}`}

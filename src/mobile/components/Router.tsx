@@ -56,6 +56,8 @@ import MobileGlobalStyle from './MobileGlobalStyle'
 import styled from '../../design/lib/styled'
 import Spinner from '../../design/components/atoms/Spinner'
 import GlobalStyle from '../../design/components/atoms/GlobalStyle'
+import { BaseTheme } from '../../design/lib/styled/types'
+import { darkTheme } from '../../design/lib/styled/dark'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -216,18 +218,22 @@ const Router = () => {
 
   if (!initialized) {
     return (
-      <ThemeProvider>
-        <LoadingScreen message='Fetching global data...' />
-        <GlobalStyle />
-      </ThemeProvider>
+      <SettingsProvider>
+        <V2ThemeProvider theme={darkTheme}>
+          <LoadingScreen message='Fetching global data...' />
+          <GlobalStyle />
+        </V2ThemeProvider>
+      </SettingsProvider>
     )
   }
   if (pageInfo == null) {
     return (
-      <V2ThemeProvider>
-        <LoadingScreen message='Fetching page data...' />
-        <GlobalStyle />
-      </V2ThemeProvider>
+      <SettingsProvider>
+        <V2ThemeProvider theme={darkTheme}>
+          <LoadingScreen message='Fetching page data...' />
+          <GlobalStyle />
+        </V2ThemeProvider>
+      </SettingsProvider>
     )
   }
 
@@ -290,13 +296,53 @@ const LoadingScreen = ({ message }: LoadingScreenProps) => {
   )
 }
 
-const V2ThemeProvider: React.FC = ({ children }) => {
+const V2ThemeProvider: React.FC<{ theme?: BaseTheme }> = ({
+  children,
+  theme,
+}) => {
   const { settings } = useSettings()
+  const { pathname } = useRouter()
   return (
-    <ThemeProvider theme={selectV2Theme(settings['general.theme'])}>
+    <ThemeProvider
+      theme={
+        theme != null
+          ? theme
+          : isHomepagePathname(pathname)
+          ? darkTheme
+          : selectV2Theme(settings['general.theme'])
+      }
+    >
       {children}
     </ThemeProvider>
   )
+}
+
+function isHomepagePathname(pathname: string) {
+  if (pathname.startsWith('/integrations/')) {
+    return true
+  }
+  if (pathname.startsWith('/shared/')) {
+    return true
+  }
+  if (pathname.startsWith('/desktop/')) {
+    return true
+  }
+  switch (pathname) {
+    case '/':
+    case '/features':
+    case '/pricing':
+    case '/integrations':
+    case '/signin':
+    case '/signup':
+    case '/terms':
+    case '/policy':
+    case '/gdpr-policy':
+    case '/shared':
+    case '/desktop':
+      return true
+    default:
+      return false
+  }
 }
 
 function getPageComponent(pathname: string): PageSpec | null {

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import HeaderAction from './HeaderAction'
+import HeaderActionButton from './HeaderActionButton'
 import { mdiFileUndoOutline, mdiTrashCanOutline } from '@mdi/js'
 import {
   useDialog,
@@ -125,7 +125,7 @@ const ContentManagerArchivesBulkActions = ({
 
   return (
     <Flexbox flex='0 0 auto' style={{ marginLeft: 15 }}>
-      <HeaderAction
+      <HeaderActionButton
         action={{
           iconPath: mdiFileUndoOutline,
           onClick: bulkUnarchiveCallback,
@@ -134,7 +134,7 @@ const ContentManagerArchivesBulkActions = ({
         disabled={disabled}
         sending={sending === ArchivesBulkActions.unarchive}
       />
-      <HeaderAction
+      <HeaderActionButton
         action={{
           iconPath: mdiTrashCanOutline,
           onClick: bulkDeleteCallback,

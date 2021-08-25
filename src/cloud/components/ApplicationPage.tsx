@@ -5,11 +5,11 @@ import ContentLayout, {
 } from '../../design/components/templates/ContentLayout'
 
 type ApplicationPageProps = {
-  topbarPlaceholder?: boolean
+  showingTopbarPlaceholder?: boolean
 } & ContentLayoutProps
 
 const ApplicationPage = ({
-  topbarPlaceholder,
+  showingTopbarPlaceholder: topbarPlaceholder,
   children,
   ...props
 }: PropsWithChildren<ApplicationPageProps>) => {

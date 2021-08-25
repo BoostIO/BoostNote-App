@@ -61,6 +61,7 @@ import { darkTheme } from '../../design/lib/styled/dark'
 import Spinner from '../../design/components/atoms/Spinner'
 import { TeamPreferencesProvider } from '../lib/stores/teamPreferences'
 import Application from './Application'
+import { BaseTheme } from '../../design/lib/styled/types'
 
 const CombinedProvider = combineProviders(
   TeamStorageProvider,
@@ -231,7 +232,7 @@ const Router = () => {
   if (!initialized) {
     return (
       <SettingsProvider>
-        <V2ThemeProvider>
+        <V2ThemeProvider theme={darkTheme}>
           <LoadingScreen message='Fetching global data...' />
           <GlobalStyleV2 />
         </V2ThemeProvider>
@@ -241,7 +242,7 @@ const Router = () => {
   if (pageInfo == null) {
     return (
       <SettingsProvider>
-        <V2ThemeProvider>
+        <V2ThemeProvider theme={darkTheme}>
           <LoadingScreen message='Fetching page data...' />
           <GlobalStyleV2 />
         </V2ThemeProvider>
@@ -313,13 +314,18 @@ const LoadingScreen = ({ message }: LoadingScreenProps) => {
   )
 }
 
-const V2ThemeProvider: React.FC = ({ children }) => {
+const V2ThemeProvider: React.FC<{ theme?: BaseTheme }> = ({
+  children,
+  theme,
+}) => {
   const { settings } = useSettings()
   const { pathname } = useRouter()
   return (
     <ThemeProvider
       theme={
-        isHomepagePathname(pathname)
+        theme != null
+          ? theme
+          : isHomepagePathname(pathname)
           ? darkTheme
           : selectV2Theme(settings['general.theme'])
       }
@@ -363,12 +369,18 @@ function isApplicationPagePathname(pathname: string) {
   const [, ...splittedPathnames] = pathname.split('/')
 
   if (
-    (splittedPathnames[0] === 'account' && splittedPathnames[1] === 'delete') ||
+    (splittedPathnames.length >= 2 &&
+      splittedPathnames[0] === 'account' &&
+      splittedPathnames[1] === 'delete') ||
     (splittedPathnames.length >= 1 &&
       ['account', 'cooperate', 'settings', 'shared'].includes(
         splittedPathnames[0]
       ))
   ) {
+    return false
+  }
+
+  if (splittedPathnames.length >= 2 && splittedPathnames[1] === 'delete') {
     return false
   }
 

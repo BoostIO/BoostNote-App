@@ -1,11 +1,11 @@
 import React from 'react'
 import {
-  ContentLayoutContent,
-  ContentLayoutContentProps,
+  ContentWrapper,
+  ContentWrapperProps,
 } from '../../design/components/templates/ContentLayout'
 
-const ApplicationContent: React.FC<ContentLayoutContentProps> = ({
-  children,
-}) => <ContentLayoutContent>{children}</ContentLayoutContent>
+const ApplicationContent: React.FC<ContentWrapperProps> = ({ children }) => (
+  <ContentWrapper>{children}</ContentWrapper>
+)
 
 export default ApplicationContent

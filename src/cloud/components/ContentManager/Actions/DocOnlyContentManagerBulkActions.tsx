@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import HeaderAction from './HeaderAction'
+import HeaderActionButton from './HeaderActionButton'
 import { mdiFolderMoveOutline, mdiTrashCanOutline } from '@mdi/js'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../interfaces/db/team'
@@ -166,7 +166,7 @@ const DocOnlyContentManagerBulkActions = ({
     }
 
     return (
-      <HeaderAction
+      <HeaderActionButton
         action={{
           iconPath: mdiTrashCanOutline,
           onClick: bulkDeleteCallback,
@@ -184,7 +184,7 @@ const DocOnlyContentManagerBulkActions = ({
 
   return (
     <Flexbox flex='0 0 auto' style={{ marginLeft: 15 }}>
-      <HeaderAction
+      <HeaderActionButton
         action={{
           iconPath: mdiFolderMoveOutline,
           onClick: openMoveForm,

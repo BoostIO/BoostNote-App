@@ -24,7 +24,7 @@ const SharedDocsListPage = () => {
 
   if (team == null) {
     return (
-      <ApplicationPage topbarPlaceholder={true}>
+      <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>
           <ColoredBlock variant='danger'>{'Team is missing'}</ColoredBlock>
         </ApplicationContent>

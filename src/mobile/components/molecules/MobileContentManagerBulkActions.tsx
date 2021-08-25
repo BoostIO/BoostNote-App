@@ -16,7 +16,7 @@ import { getMapFromEntityArray } from '../../../design/lib/utils/array'
 import { useDialog, DialogIconTypes } from '../../../design/lib/stores/dialog'
 import { SerializedWorkspace } from '../../../cloud/interfaces/db/workspace'
 import { useModal } from '../../../design/lib/stores/modal'
-import HeaderAction from '../../../cloud/components/ContentManager/Actions/HeaderAction'
+import HeaderActionButton from '../../../cloud/components/ContentManager/Actions/HeaderActionButton'
 import MobileResourceMoveModal from '../organisms/modals/MobileResourceMoveModal'
 
 interface ContentManagerBulkActionsProps {
@@ -283,7 +283,7 @@ const MobileContentManagerBulkActions = ({
     }
 
     return (
-      <HeaderAction
+      <HeaderActionButton
         action={{
           iconPath: mdiTrashCanOutline,
           onClick: bulkDeleteCallback,
@@ -308,7 +308,7 @@ const MobileContentManagerBulkActions = ({
 
   return (
     <Flexbox flex='0 0 auto' style={{ marginLeft: 15 }}>
-      <HeaderAction
+      <HeaderActionButton
         action={{
           iconPath: mdiFolderMoveOutline,
           onClick: openMoveForm,

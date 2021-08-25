@@ -16,7 +16,7 @@ const DenyRequestsPage = ({}: RequestDeniedResponseBody) => {
   useTitle('Deny Edit Request')
 
   return (
-    <ApplicationPage topbarPlaceholder={true}>
+    <ApplicationPage showingTopbarPlaceholder={true}>
       <ApplicationTopbar
         controls={[
           {

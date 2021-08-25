@@ -134,7 +134,7 @@ const DocPage = ({
 
   if (currentDoc == null || team == null) {
     return (
-      <ApplicationPage topbarPlaceholder={true}>
+      <ApplicationPage showingTopbarPlaceholder={true}>
         <ColoredBlock
           variant='danger'
           style={{
@@ -153,7 +153,7 @@ const DocPage = ({
 
   if (currentUser == null) {
     return (
-      <ApplicationPage topbarPlaceholder={true}>
+      <ApplicationPage showingTopbarPlaceholder={true}>
         <ColoredBlock
           variant='danger'
           style={{

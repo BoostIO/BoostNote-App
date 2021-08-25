@@ -1,24 +1,24 @@
 import React from 'react'
 import { LoadingButton } from '../../../../design/components/atoms/Button'
 import WithTooltip from '../../../../design/components/atoms/WithTooltip'
+import {
+  ContentManagerRowAction,
+  UnsignedItem,
+} from '../../../interfaces/components/ContentManager/types'
 
-type ContentManagerHeaderAction = {
-  iconPath: string
-  tooltip?: string
-  onClick: () => void
-}
-
-interface HeaderActionProps {
-  action: ContentManagerHeaderAction
+interface RowActionProps<T extends UnsignedItem> {
+  action: ContentManagerRowAction<T>
+  item: T
   sending?: boolean
   disabled?: boolean
 }
 
-const HeaderAction = ({
+const RowActionButton = <T extends UnsignedItem>({
   action,
+  item,
   disabled,
   sending = false,
-}: HeaderActionProps) => {
+}: RowActionProps<T>) => {
   if (action.tooltip != null) {
     return (
       <WithTooltip tooltip={action.tooltip}>
@@ -26,10 +26,9 @@ const HeaderAction = ({
           variant='icon'
           iconSize={20}
           iconPath={action.iconPath}
-          onClick={action.onClick}
-          disabled={disabled}
-          className='valign-super'
           spinning={sending}
+          onClick={() => action.onClick(item)}
+          disabled={disabled}
         />
       </WithTooltip>
     )
@@ -40,12 +39,11 @@ const HeaderAction = ({
       variant='icon'
       iconSize={20}
       iconPath={action.iconPath}
-      onClick={action.onClick}
-      disabled={disabled}
-      className='valign-super'
       spinning={sending}
+      onClick={() => action.onClick(item)}
+      disabled={disabled}
     />
   )
 }
 
-export default HeaderAction
+export default RowActionButton

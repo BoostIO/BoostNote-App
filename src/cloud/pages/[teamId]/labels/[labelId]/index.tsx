@@ -49,7 +49,7 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
 
   if (team == null) {
     return (
-      <ApplicationPage topbarPlaceholder={true}>
+      <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>
           <ColoredBlock variant='danger'>{'Team is missing'}</ColoredBlock>
         </ApplicationContent>
@@ -59,7 +59,7 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
 
   if (pageTag == null) {
     return (
-      <ApplicationPage topbarPlaceholder={true}>
+      <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>
           <ColoredBlock variant='danger'>
             <h3>Oops...</h3>

@@ -246,7 +246,7 @@ const SmartFolderPage = (params: any) => {
 
   if (!initialLoadDone) {
     return (
-      <ApplicationPage topbarPlaceholder={true}>
+      <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>Loading...</ApplicationContent>
       </ApplicationPage>
     )
@@ -254,7 +254,7 @@ const SmartFolderPage = (params: any) => {
 
   if (team == null) {
     return (
-      <ApplicationPage topbarPlaceholder={true}>
+      <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>
           <ColoredBlock variant='danger'>{'Team is missing'}</ColoredBlock>
         </ApplicationContent>
@@ -264,7 +264,7 @@ const SmartFolderPage = (params: any) => {
 
   if (smartFolder == null) {
     return (
-      <ApplicationPage topbarPlaceholder={true}>
+      <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>
           <ColoredBlock variant='danger'>
             {'The smart folder has been deleted'}

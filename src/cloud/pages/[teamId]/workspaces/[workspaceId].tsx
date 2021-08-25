@@ -21,7 +21,7 @@ const WorkspaceShowPage = ({
 
   if (workspace == null) {
     return (
-      <ApplicationPage topbarPlaceholder={true}>
+      <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>
           <ColoredBlock variant='danger'>
             {'The folder has been deleted'}

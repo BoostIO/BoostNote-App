@@ -82,23 +82,23 @@ export const ChartedContentLayout: AppComponent<ChartedContentLayoutProps> = ({
       ) : (
         <TopbarPlaceholder />
       )}
-      <ContentLayoutContent reduced={reduced} header={header}>
+      <ContentWrapper reduced={reduced} header={header}>
         {children}
-      </ContentLayoutContent>
+      </ContentWrapper>
     </ContentLayout>
   )
 }
 
-export interface ContentLayoutContentProps {
+export interface ContentWrapperProps {
   header?: React.ReactNode
   reduced?: boolean
 }
 
-export const ContentLayoutContent = ({
+export const ContentWrapper = ({
   reduced,
   header,
   children,
-}: PropsWithChildren<ContentLayoutContentProps>) => {
+}: PropsWithChildren<ContentWrapperProps>) => {
   return (
     <div className='layout__content'>
       <div className='layout__content__wrapper'>

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
+import { generateSecret } from '../../../../cloud/lib/utils/secret'
 import { createStoreContext } from '../../utils/context'
-import { generateSecret } from '../../utils/secret'
 
 export interface ToastMessage {
   id: string

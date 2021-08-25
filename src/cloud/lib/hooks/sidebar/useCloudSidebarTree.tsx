@@ -913,7 +913,12 @@ export function useCloudSidebarTree() {
     })
 
     return orderedTree
-  }, [tree, preferences.sidebarOrderedCategories, setPreferences])
+  }, [
+    tree,
+    preferences.sidebarOrderedCategories,
+    setPreferences,
+    clearDragTransferData,
+  ])
 
   return {
     tree,
