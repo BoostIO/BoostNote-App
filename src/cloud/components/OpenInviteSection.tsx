@@ -189,7 +189,7 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
   return (
     <section>
       <StyledFlex>
-        <h2 style={{ margin: 0 }}>{translate(lngKeys.InviteWithOpenLink)}</h2>
+        <h2 style={{ margin: 0 }}>{translate(lngKeys.InviteAddWithLink)}</h2>
         {userPermissions.role !== 'viewer' && (
           <Switch
             disabled={fetching || sending}
