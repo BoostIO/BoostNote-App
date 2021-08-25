@@ -24,6 +24,7 @@ import { lngKeys } from '../../../../lib/i18n/types'
 import FormRow from '../../../../../design/components/molecules/Form/templates/FormRow'
 import { useEffectOnce } from 'react-use'
 import ButtonGroup from '../../../../../design/components/atoms/ButtonGroup'
+import Flexbox from '../../../../../design/components/atoms/Flexbox'
 
 interface WorkspaceModalFormProps {
   workspace?: SerializedWorkspace
@@ -225,7 +226,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
               {
                 type: 'node',
                 element: (
-                  <small>
+                  <Flexbox alignItems='center'>
                     {isPublic
                       ? translate(lngKeys.ModalsWorkspacePublicDisclaimer)
                       : `${translate(
@@ -235,7 +236,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
                             ? translate(lngKeys.ModalsWorkspacePrivateOwner)
                             : ''
                         }`}
-                  </small>
+                  </Flexbox>
                 ),
               },
               {

@@ -24,6 +24,7 @@ import WorkspaceAccess from '../../../../cloud/components/Modal/contents/Workspa
 import ModalContainer from './atoms/ModalContainer'
 import ModalFormWrapper from './atoms/ModalFormWrapper'
 import MobileFormControl from '../../atoms/MobileFormControl'
+import Flexbox from '../../../../design/components/atoms/Flexbox'
 
 interface MobileWorkspaceModalProps {
   title: string
@@ -244,7 +245,7 @@ const MobileWorkspaceModal = ({
                     {
                       type: 'node',
                       element: (
-                        <small>
+                        <Flexbox alignItems='center'>
                           {isPublic
                             ? translate(lngKeys.ModalsWorkspacePublicDisclaimer)
                             : `${translate(
@@ -256,7 +257,7 @@ const MobileWorkspaceModal = ({
                                     )
                                   : ''
                               }`}
-                        </small>
+                        </Flexbox>
                       ),
                     },
                     {
