@@ -21,12 +21,20 @@ import HyperlinkCell from './HyperlinkCell'
 import TableSettings from './TableSettings'
 import ColumnSettings from './ColumnSettings'
 import BoostUserCell from './BoostUserCell'
-import { TableBlock } from '../../../../api/blocks'
+import { Block, TableBlock } from '../../../../api/blocks'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import Icon from '../../../../../design/components/atoms/Icon'
 import Button from '../../../../../design/components/atoms/Button'
 import { isNumberString, isUrlOrPath } from '../../../../lib/utils/string'
 import styled from '../../../../../design/lib/styled'
+import { StyledUserIcon } from '../../../UserIcon'
+
+type Issue = TableBlock['children'][number]['data']
+
+export interface GithubCellProps {
+  data: Issue
+  onUpdate: (data: Issue) => Promise<void>
+}
 
 export interface CellProps {
   value: string
@@ -111,6 +119,13 @@ const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
     []
   )
 
+  const updateIssueBlock = useCallback(
+    async (block: Block) => {
+      await actions.update(block)
+    },
+    [actions]
+  )
+
   const importIssues = useCallback(() => {
     openModal(
       <GithubIssueForm
@@ -166,6 +181,7 @@ const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
                         row={child}
                         data={table.row_data.get(child.id) || {}}
                         updateCell={updateCell}
+                        updateBlock={updateIssueBlock}
                       />
                     </td>
                   ))}
@@ -193,9 +209,16 @@ interface TableCellProps {
     column: Column,
     value: string
   ) => Promise<void> | void
+  updateBlock: (block: Block) => Promise<void>
 }
 
-const TableCell = ({ column, row, data, updateCell }: TableCellProps) => {
+const TableCell = ({
+  column,
+  row,
+  data,
+  updateCell,
+  updateBlock,
+}: TableCellProps) => {
   const update = useCallback(
     (value: string) => {
       updateCell(row.id, column, value)
@@ -205,7 +228,13 @@ const TableCell = ({ column, row, data, updateCell }: TableCellProps) => {
 
   switch (column.data_type) {
     case 'prop':
-      return <GithubCell prop={column.default || ''} data={row.data} />
+      return (
+        <GithubCell
+          prop={column.default || ''}
+          data={row.data}
+          onUpdate={(data) => updateBlock({ ...row, data })}
+        />
+      )
     case 'number':
       return (
         <TextCell
@@ -234,27 +263,40 @@ const TableCell = ({ column, row, data, updateCell }: TableCellProps) => {
   }
 }
 
-interface GithubCell {
-  prop: string
-  data: any
-}
-
-const GithubCell = ({ prop, data }: GithubCell) => {
+const GithubCell = ({
+  prop,
+  data,
+  onUpdate,
+}: GithubCellProps & { prop: string }) => {
   switch (prop) {
     case 'assignees':
-      return <GitHubAssigneesCell assignees={data.assignees || []} />
+      return <GitHubAssigneesCell data={data} onUpdate={onUpdate} />
     case 'owner':
       return data.repository != null ? (
-        <GitHubAssigneesCell assignees={[data.repository.owner]} />
+        <div>
+          <StyledUserIcon className='subtle'>
+            <img
+              src={data.repository.owner.avatar_url}
+              alt={data.repository.owner.login[0]}
+            />
+          </StyledUserIcon>
+        </div>
       ) : null
     case 'creator':
       return data.milestone != null ? (
-        <GitHubAssigneesCell assignees={[data.milestone.creator]} />
+        <div>
+          <StyledUserIcon className='subtle'>
+            <img
+              src={data.milestone.creator.avatar_url}
+              alt={data.milestone.creator.login[0]}
+            />
+          </StyledUserIcon>
+        </div>
       ) : null
     case 'state':
-      return <GithubStatusCell state={data.state} />
+      return <GithubStatusCell data={data} onUpdate={onUpdate} />
     case 'labels':
-      return <GithubLabelsCell labels={data.labels || []} />
+      return <GithubLabelsCell data={data} onUpdate={onUpdate} />
     case 'pull_request':
       const url = data?.pull_request?.html_url || ''
       return <HyperlinkCell href={url} label={getPRNumFromUrl(url)} />
