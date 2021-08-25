@@ -76,14 +76,7 @@ const UserSelectContainer = styled.div`
   & .user__select__item {
     display: flex;
     cursor: pointer;
-    padding: ${({ theme }) => theme.sizes.spaces.sm}px 0;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
     align-items: center;
-
-    &:first-child {
-      border-top: 1px solid ${({ theme }) => theme.colors.border.second};
-    }
-
     & .user__icon {
       margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
     }
