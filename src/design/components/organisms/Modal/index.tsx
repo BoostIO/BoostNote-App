@@ -293,6 +293,10 @@ const Container = styled.div`
     &.modal__window__width--large {
       width: 1100px;
     }
+
+    &.modal__window__width--full {
+      width: 100%;
+    }
   }
 
   .modal__window__close {
