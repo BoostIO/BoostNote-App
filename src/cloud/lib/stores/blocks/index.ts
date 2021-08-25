@@ -1,5 +1,4 @@
 import { createStoreContext } from '../../utils/context'
-import { useToast } from '../../../../shared/lib/stores/toast'
 import { useRef, useCallback } from 'react'
 import {
   Block,
@@ -8,6 +7,7 @@ import {
   updateBlock,
   createBlock,
 } from '../../../api/blocks'
+import { useToast } from '../../../../design/lib/stores/toast'
 
 type BlocksObserver = (blocks: Block) => void
 
