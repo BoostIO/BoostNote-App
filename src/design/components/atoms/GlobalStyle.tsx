@@ -72,6 +72,7 @@ scrollbar-height: 8px;
 ::-webkit-scrollbar-button {
   display: none
 }
+
 `
 
 export default createGlobalStyle<BaseTheme>`

@@ -18,6 +18,7 @@ export enum shortcuts {
   teamPicker = 's',
   teamMembers = 'i',
   search = 'p',
+  pageSearch = 'f',
 }
 
 /** GLOBAL **/
@@ -31,6 +32,14 @@ export function isFocusLeftSideShortcut(event: KeyboardEvent) {
     !isActiveElementAnInput()
   )
 }
+
+export function isPageSearchShortcut(event: KeyboardEvent) {
+  return (
+    isWithGeneralCtrlKey(event) &&
+    event.key.toLowerCase() === shortcuts.pageSearch
+  )
+}
+
 export function isFocusRightSideShortcut(event: KeyboardEvent) {
   // cmd + shift + arrowRight
   return (
