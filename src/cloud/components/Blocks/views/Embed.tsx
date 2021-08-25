@@ -1,7 +1,7 @@
 import React from 'react'
+import styled from '../../../../design/lib/styled'
+import { EmbedBlock } from '../../../api/blocks'
 import { ViewProps } from '../BlockContent'
-import { EmbedBlock } from '../../../../api/blocks'
-import styled from '../../../../lib/styled'
 
 const EmbedView = ({ block }: ViewProps<EmbedBlock>) => {
   return (

@@ -7,11 +7,11 @@ import React, {
   useRef,
   ChangeEventHandler,
 } from 'react'
-import { FormSelect } from '../../../../components/atoms/form'
 import Button from '../../../../design/components/atoms/Button'
 import Icon from '../../../../design/components/atoms/Icon'
 import Spinner from '../../../../design/components/atoms/Spinner'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
+import FormSelect from '../../../../design/components/molecules/Form/atoms/FormSelect'
 import FormRow from '../../../../design/components/molecules/Form/templates/FormRow'
 import FormRowItem from '../../../../design/components/molecules/Form/templates/FormRowItem'
 import { useTeamIntegrations } from '../../../../design/lib/stores/integrations'

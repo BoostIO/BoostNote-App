@@ -1,18 +1,18 @@
 import React from 'react'
-import Application from '../../Application'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { ContainerBlock } from '../../api/blocks'
+import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import ApplicationPage from '../ApplicationPage'
 import BlockContent from './BlockContent'
-import { Block } from '../../../api/blocks'
 
 interface BlockEditorProps {
-  doc: SerializedDocWithBookmark & { rootBlock: Block<any, any> }
+  doc: SerializedDocWithBookmark & { rootBlock: ContainerBlock }
 }
 
 const BlockEditor = ({ doc }: BlockEditorProps) => {
   return (
-    <Application content={{}}>
+    <ApplicationPage>
       <BlockContent doc={doc} />
-    </Application>
+    </ApplicationPage>
   )
 }
 
