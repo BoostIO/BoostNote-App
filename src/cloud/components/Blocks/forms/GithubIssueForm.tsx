@@ -234,12 +234,19 @@ const GithubIssueSelector = ({
     setIssues([])
     setSelectedIssues(new Set())
     setPage(1)
+    const integrationId = integrationRef.current.id
     if (currentRepo != null) {
       setIsLoading(true)
       getAction(integrationRef.current, 'repo:issues', {
         owner: currentRepo.owner.login,
         repo: currentRepo.name,
       })
+        .then((issues) =>
+          issues.map((issue) => {
+            issue.integrationId = integrationId
+            return issue
+          })
+        )
         .then(setIssues)
         .finally(() => setIsLoading(false))
         .catch(errorHandleRef.current)
@@ -251,10 +258,16 @@ const GithubIssueSelector = ({
     if (currentRepo != null) {
       try {
         setIsLoading(true)
-        const issues = await getAction(integrationRef.current, 'repo:issues', {
-          owner: currentRepo.owner.login,
-          repo: currentRepo.name,
-          page: page + 1,
+        const integrationId = integrationRef.current.id
+        const issues = (
+          await getAction(integrationRef.current, 'repo:issues', {
+            owner: currentRepo.owner.login,
+            repo: currentRepo.name,
+            page: page + 1,
+          })
+        ).map((issue) => {
+          issue.integrationId = integrationId
+          return issue
         })
         setPage(page + 1)
         setIssues((prev) => prev.concat(issues))
