@@ -27,6 +27,7 @@ const ExpandableImage = ({ src }: ExpandableImageProps) => {
 
     openModal(<ImagePreview src={src} />, {
       showCloseIcon: true,
+      hideBackground: true,
       width: 'full',
     })
     setShowingEnlargedImage(true)

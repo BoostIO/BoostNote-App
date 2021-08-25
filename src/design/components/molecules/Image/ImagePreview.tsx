@@ -15,7 +15,7 @@ const ImagePreview = ({ src }: ImagePreviewProps) => {
 }
 
 const Container = styled.div`
-  padding: 1em 10%;
+  padding: 20px 25px;
   display: flex;
   justify-content: center;
   align-items: center;

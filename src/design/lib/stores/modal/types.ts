@@ -22,6 +22,7 @@ export type ModalOpeningOptions = {
   showCloseIcon?: boolean
   keepAll?: boolean
   width?: 'large' | 'default' | 'small' | 'full' | number
+  hideBackground?: boolean
   title?: string
   onClose?: () => void
 }
