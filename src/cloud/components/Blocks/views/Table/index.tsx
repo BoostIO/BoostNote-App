@@ -283,13 +283,10 @@ const GithubCell = ({
         </div>
       ) : null
     case 'creator':
-      return data.milestone != null ? (
+      return data.user != null ? (
         <div>
           <StyledUserIcon className='subtle'>
-            <img
-              src={data.milestone.creator.avatar_url}
-              alt={data.milestone.creator.login[0]}
-            />
+            <img src={data.user.avatar_url} alt={data.user.login[0]} />
           </StyledUserIcon>
         </div>
       ) : null
@@ -301,7 +298,12 @@ const GithubCell = ({
       const url = data?.pull_request?.html_url || ''
       return <HyperlinkCell href={url} label={getPRNumFromUrl(url)} />
     case 'org':
-      return <HyperlinkCell href={''} />
+      return data.repository != null && data.repository.organization != null ? (
+        <HyperlinkCell
+          href={data.repository.organization.html_url}
+          label={data.repository.organization.login}
+        />
+      ) : null
     case 'repo':
       return (
         <HyperlinkCell
