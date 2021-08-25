@@ -14,7 +14,7 @@ import {
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 import Button from '../../../design/components/atoms/Button'
 import styled from '../../../design/lib/styled'
-import Container from '../../../cloud/components/Layouts/CenteredContainer'
+import Container from '../../../cloud/components/layouts/CenteredContainer'
 
 const OpenInvitePage = ({ invite }: TeamOpenInvitePageData) => {
   const { globalData } = useGlobalData()
