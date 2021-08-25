@@ -30,7 +30,7 @@ const GithubLabelsCell = ({ data, onUpdate }: GithubCellProps) => {
           { owner, repo, issue_number: data.number },
           { labels }
         )
-        await onUpdate(issue)
+        await onUpdate({ ...data, ...issue })
         closeAllModals()
       } catch (error) {
         pushApiErrorMessage(error)
