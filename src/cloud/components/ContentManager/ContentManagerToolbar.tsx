@@ -30,6 +30,9 @@ import DocStatusSelect from '../DocProperties/DocStatusSelect'
 import ContentManagerToolbarStatusPopup from './ContentManagerToolbarStatusPopup'
 import DocAssigneeSelect from '../DocProperties/DocAssigneeSelect'
 import DocLabelSelectionModal from '../DocProperties/DocLabelSelectionModal'
+import BulkActionProgress, {
+  BulkActionState,
+} from '../../../design/components/molecules/BulkActionProgress'
 
 interface ContentManagerToolbarProps {
   team: SerializedTeam
@@ -74,6 +77,10 @@ const ContentManagerToolbar = ({
   const { translate } = useI18n()
   const { messageBox } = useDialog()
   const { openModal, openContextModal, closeAllModals } = useModal()
+  const [
+    bulkActionState,
+    setBulkActionState,
+  ] = useState<BulkActionState | null>(null)
 
   const selectedDocsAreUpdating = useMemo(() => {
     return (
@@ -133,12 +140,31 @@ const ContentManagerToolbar = ({
       )
       setUpdating((prev) => [...prev, ...patternedIds])
       setSending(BulkActions.move)
+      setBulkActionState(() => {
+        return {
+          jobCount: patternedIds.length,
+          jobsCompleted: 0,
+        }
+      })
+
       for (const folderId of selectedFolders.values()) {
         await moveSingleFolder(folderId, workspaceId, parentFolderId)
+        setBulkActionState((prev) => {
+          return {
+            jobCount: patternedIds.length,
+            jobsCompleted: prev === null ? 0 : prev.jobsCompleted + 1,
+          }
+        })
       }
 
       for (const docId of selectedDocs.values()) {
         await moveSingleDoc(docId, workspaceId, parentFolderId)
+        setBulkActionState((prev) => {
+          return {
+            jobCount: patternedIds.length,
+            jobsCompleted: prev === null ? 0 : prev.jobsCompleted + 1,
+          }
+        })
       }
       setSending(undefined)
       setUpdating((prev) => difference(prev, patternedIds))
@@ -408,96 +434,101 @@ const ContentManagerToolbar = ({
   }
 
   return (
-    <Container className='cm__toolbar'>
-      <div className='cm__toolbar__wrapper'>
-        <span className='cm__selection'>
-          {selectedDocs.size + selectedFolders.size} selected
-        </span>
-        {selectedDocs.size > 0 && selectedFolders.size === 0 && (
-          <>
-            <LoadingButton
-              className='cm__tool'
-              variant='bordered'
-              iconPath={mdiTagMultipleOutline}
-              onClick={(event) => {
-                openContextModal(
-                  event,
-                  <DocLabelSelectionModal
-                    selectedTags={selectedDocumentsCommonValues.tags}
-                    sendTags={sendTags}
-                  />,
-                  {
-                    alignment: 'top-left',
-                    width: 300,
-                  }
-                )
-              }}
-              disabled={selectedDocsAreUpdating}
-              spinning={sending === BulkActions.label}
-            >
-              {translate(lngKeys.GeneralLabels)}
-              {selectedDocumentsCommonValues.tags.length > 0
-                ? ` (${selectedDocumentsCommonValues.tags.length})`
-                : null}
-            </LoadingButton>
-            <DocAssigneeSelect
-              isLoading={sending === BulkActions.assignees}
-              disabled={selectedDocsAreUpdating}
-              defaultValue={selectedDocumentsCommonValues.assignees}
-              readOnly={selectedDocsAreUpdating}
-              update={sendUpdateAssignees}
-              popupAlignment='top-left'
-            />
-            <DocStatusSelect
-              status={selectedDocumentsCommonValues.status}
-              sending={sending === BulkActions.status}
-              onStatusChange={sendUpdateStatus}
-              disabled={selectedDocsAreUpdating}
-              isReadOnly={selectedDocsAreUpdating}
-              onClick={(event) => {
-                openContextModal(
-                  event,
-                  <ContentManagerToolbarStatusPopup
-                    onStatusChange={sendUpdateStatus}
-                  />,
-                  {
-                    alignment: 'top-left',
-                    width: 300,
-                  }
-                )
-              }}
-            />
-            <DocDueDateSelect
-              dueDate={selectedDocumentsCommonValues.dueDate}
-              isReadOnly={selectedDocsAreUpdating}
-              sending={sending === BulkActions.duedate}
-              shortenedLabel={true}
-              onDueDateChange={sendUpdateDocDueDate}
-            />
-          </>
-        )}
-        <LoadingButton
-          className='cm__tool'
-          variant='bordered'
-          iconPath={mdiFolderMoveOutline}
-          onClick={openMoveForm}
-          disabled={selectedDocsAreUpdating || selectedFoldersAreUpdating}
-          spinning={sending === BulkActions.move}
-        >
-          {translate(lngKeys.GeneralMoveVerb)}
-        </LoadingButton>
-        <LoadingButton
-          className='cm__tool'
-          variant='bordered'
-          iconPath={mdiTrashCanOutline}
-          onClick={bulkDeleteCallback}
-          disabled={selectedDocsAreUpdating || selectedFoldersAreUpdating}
-          spinning={sending === BulkActions.delete}
-        >
-          {translate(lngKeys.GeneralDelete)}
-        </LoadingButton>
-      </div>
-    </Container>
+    <>
+      <Container className='cm__toolbar'>
+        <div className='cm__toolbar__wrapper'>
+          <span className='cm__selection'>
+            {selectedDocs.size + selectedFolders.size} selected
+          </span>
+          {selectedDocs.size > 0 && selectedFolders.size === 0 && (
+            <>
+              <LoadingButton
+                className='cm__tool'
+                variant='bordered'
+                iconPath={mdiTagMultipleOutline}
+                onClick={(event) => {
+                  openContextModal(
+                    event,
+                    <DocLabelSelectionModal
+                      selectedTags={selectedDocumentsCommonValues.tags}
+                      sendTags={sendTags}
+                    />,
+                    {
+                      alignment: 'top-left',
+                      width: 300,
+                    }
+                  )
+                }}
+                disabled={selectedDocsAreUpdating}
+                spinning={sending === BulkActions.label}
+              >
+                {translate(lngKeys.GeneralLabels)}
+                {selectedDocumentsCommonValues.tags.length > 0
+                  ? ` (${selectedDocumentsCommonValues.tags.length})`
+                  : null}
+              </LoadingButton>
+              <DocAssigneeSelect
+                isLoading={sending === BulkActions.assignees}
+                disabled={selectedDocsAreUpdating}
+                defaultValue={selectedDocumentsCommonValues.assignees}
+                readOnly={selectedDocsAreUpdating}
+                update={sendUpdateAssignees}
+                popupAlignment='top-left'
+              />
+              <DocStatusSelect
+                status={selectedDocumentsCommonValues.status}
+                sending={sending === BulkActions.status}
+                onStatusChange={sendUpdateStatus}
+                disabled={selectedDocsAreUpdating}
+                isReadOnly={selectedDocsAreUpdating}
+                onClick={(event) => {
+                  openContextModal(
+                    event,
+                    <ContentManagerToolbarStatusPopup
+                      onStatusChange={sendUpdateStatus}
+                    />,
+                    {
+                      alignment: 'top-left',
+                      width: 300,
+                    }
+                  )
+                }}
+              />
+              <DocDueDateSelect
+                dueDate={selectedDocumentsCommonValues.dueDate}
+                isReadOnly={selectedDocsAreUpdating}
+                sending={sending === BulkActions.duedate}
+                shortenedLabel={true}
+                onDueDateChange={sendUpdateDocDueDate}
+              />
+            </>
+          )}
+          <LoadingButton
+            className='cm__tool'
+            variant='bordered'
+            iconPath={mdiFolderMoveOutline}
+            onClick={openMoveForm}
+            disabled={selectedDocsAreUpdating || selectedFoldersAreUpdating}
+            spinning={sending === BulkActions.move}
+          >
+            {translate(lngKeys.GeneralMoveVerb)}
+          </LoadingButton>
+          <LoadingButton
+            className='cm__tool'
+            variant='bordered'
+            iconPath={mdiTrashCanOutline}
+            onClick={bulkDeleteCallback}
+            disabled={selectedDocsAreUpdating || selectedFoldersAreUpdating}
+            spinning={sending === BulkActions.delete}
+          >
+            {translate(lngKeys.GeneralDelete)}
+          </LoadingButton>
+        </div>
+      </Container>
+      {sending === BulkActions.move && (
+        <BulkActionProgress bulkActionState={bulkActionState} />
+      )}
+    </>
   )
 }
 
@@ -535,7 +566,7 @@ const Container = styled.div`
 
   .cm__selection,
   .cm__tool {
-    min-wdith: 80px;
+    min-width: 80px;
     width: auto;
   }
 

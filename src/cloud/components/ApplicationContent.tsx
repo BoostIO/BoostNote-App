@@ -12,7 +12,7 @@ const ApplicationContent: React.FC<ContentWrapperProps> = ({ children }) => {
   if (!initialLoadDone) {
     return (
       <ContentWrapper>
-        <Spinner style={{ marginLeft: 15, marginTop: 15 }} />
+        <Spinner variant='subtle' style={{ marginLeft: 15, marginTop: 15 }} />
       </ContentWrapper>
     )
   }

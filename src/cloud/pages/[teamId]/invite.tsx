@@ -1,6 +1,5 @@
 import React, { useMemo, useCallback, useState } from 'react'
 import Page from '../../components/Page'
-import Container from '../../components/layouts/CenteredContainer'
 import TitleComponent from '../../components/TitleComponent'
 import { useGlobalData } from '../../lib/stores/globalData'
 import ErrorBlock from '../../components/ErrorBlock'
@@ -15,6 +14,7 @@ import {
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 import Button from '../../../design/components/atoms/Button'
 import styled from '../../../design/lib/styled'
+import Container from '../../../cloud/components/layouts/CenteredContainer'
 
 const OpenInvitePage = ({ invite }: TeamOpenInvitePageData) => {
   const { globalData } = useGlobalData()
