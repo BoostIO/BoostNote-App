@@ -59,7 +59,6 @@ const InviteSection = ({ team }: { team: SerializedTeam }) => {
 
   useEffect(() => {
     const handler = (event: CustomEvent<OpenInviteLoadedEventDetail>) => {
-      console.log(event)
       if (mountedRef.current && event.detail.openInvites.length > 0) {
         setSelectedInvite(event.detail.openInvites[0])
       }
