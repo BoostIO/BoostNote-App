@@ -10,21 +10,21 @@ import { SerializedWorkspace } from '../../../cloud/interfaces/db/workspace'
 import {
   StyledContentManager,
   StyledContentManagerList,
-} from '../../../cloud/components/molecules/ContentManager/styled'
-import Checkbox from '../../../cloud/components/atoms/Checkbox'
+} from '../../../cloud/components/ContentManager/styled'
 import { SerializedTeam } from '../../../cloud/interfaces/db/team'
-import { CustomSelectOption } from '../../../cloud/components/atoms/Select/CustomSelect'
 import SortingOption, {
   sortingOrders,
-} from '../../../cloud/components/molecules/ContentManager/SortingOption'
-import Spinner from '../../../shared/components/atoms/Spinner'
+} from '../../../cloud/components/ContentManager/SortingOption'
+import Spinner from '../../../design/components/atoms/Spinner'
 import ContentManagerDocRow from '../molecules/ContentManagerDocRow'
 import { difference } from 'ramda'
 import { usePreferences } from '../../lib/preferences'
-import { StyledContentManagerHeader } from '../../../cloud/components/molecules/ContentManager'
-import EmptyRow from '../../../cloud/components/molecules/ContentManager/Rows/EmptyRow'
+import { StyledContentManagerHeader } from '../../../cloud/components/ContentManager'
+import EmptyRow from '../../../cloud/components/ContentManager/Rows/EmptyRow'
 import cc from 'classcat'
 import MobileContentManagerBulkActions from '../molecules/MobileContentManagerBulkActions'
+import { FormSelectOption } from '../../../design/components/molecules/Form/atoms/FormSelect'
+import Checkbox from '../../../design/components/molecules/Form/atoms/FormCheckbox'
 
 interface DocOnlyContentManagerProps {
   team: SerializedTeam
@@ -43,7 +43,7 @@ const DocOnlyContentManager = ({
 }: DocOnlyContentManagerProps) => {
   const { preferences, setPreferences } = usePreferences()
   const [sending] = useState<boolean>(false)
-  const [order, setOrder] = useState<typeof sortingOrders[number]['data']>(
+  const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
     preferences.folderSortingOrder
   )
 
@@ -98,9 +98,9 @@ const DocOnlyContentManager = ({
   }, [orderedDocs, addDoc])
 
   const onChangeOrder = useCallback(
-    (val: CustomSelectOption) => {
-      setOrder(val.data)
-      setPreferences({ folderSortingOrder: val.data })
+    (val: FormSelectOption) => {
+      setOrder(val.value)
+      setPreferences({ folderSortingOrder: val.value as any })
     },
     [setPreferences]
   )
@@ -121,7 +121,7 @@ const DocOnlyContentManager = ({
                 'header__left__checkbox',
                 selectingAllDocs && 'header__left__checkbox--checked',
               ])}
-              onChange={selectingAllDocs ? resetDocs : selectAllDocs}
+              toggle={selectingAllDocs ? resetDocs : selectAllDocs}
             />
             <MobileContentManagerBulkActions
               selectedDocs={selectedDocSet}

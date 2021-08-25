@@ -1,4 +1,4 @@
-import { StyledProps } from '../../shared/lib/styled/styleFunctions'
+import { StyledProps } from '../../design/lib/styled/styleFunctions'
 
 export const uiTextColor = ({
   theme,

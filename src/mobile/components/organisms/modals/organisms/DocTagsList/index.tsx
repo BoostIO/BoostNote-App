@@ -11,10 +11,10 @@ import { deleteTagFromDoc } from '../../../../../../cloud/api/teams/docs/tags'
 import { useNav } from '../../../../../../cloud/lib/stores/nav'
 import DocTagsListItem from './DocTagsListItem'
 import { SerializedTag } from '../../../../../../cloud/interfaces/db/tag'
-import IconMdi from '../../../../../../cloud/components/atoms/IconMdi'
 import { mdiChevronRight, mdiChevronDown } from '@mdi/js'
-import { useToast } from '../../../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../../../design/lib/stores/toast'
 import cc from 'classcat'
+import Icon from '../../../../../../design/components/atoms/Icon'
 
 interface DocTagsListProps {
   doc: SerializedDocWithBookmark
@@ -95,10 +95,10 @@ const DocTagsList = ({ doc, team, readOnly }: DocTagsListProps) => {
             {!expanded ? (
               <span style={{ whiteSpace: 'nowrap' }}>
                 +{tags.length - maxTagsDisplayed}
-                <IconMdi path={mdiChevronRight} size={14} />
+                <Icon path={mdiChevronRight} size={12} />
               </span>
             ) : (
-              <IconMdi path={mdiChevronDown} size={14} />
+              <Icon path={mdiChevronDown} size={12} />
             )}
           </StyledToolbarExpandTag>
         )}

@@ -2,8 +2,8 @@ import React, { useRef, useState, useCallback } from 'react'
 import { boostHubTeamsCreatePageUrl } from '../../lib/boosthub'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
 import { DidFailLoadEvent } from 'electron/main'
-import styled from '../../shared/lib/styled'
-import Button from '../../shared/components/atoms/Button'
+import styled from '../../design/lib/styled'
+import Button from '../../design/components/atoms/Button'
 
 const BoostHubTeamsCreatePage = () => {
   const controlRef = useRef<WebviewControl>()

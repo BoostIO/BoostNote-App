@@ -4,16 +4,16 @@ import { useNav } from '../../../../../../cloud/lib/stores/nav'
 import { createTag } from '../../../../../../cloud/api/teams/tags'
 import { SerializedTeam } from '../../../../../../cloud/interfaces/db/team'
 import { SerializedDocWithBookmark } from '../../../../../../cloud/interfaces/db/doc'
-import { Spinner } from '../../../../../../cloud/components/atoms/Spinner'
 import { isChildNode } from '../../../../../../cloud/lib/dom'
-import { useToast } from '../../../../../../shared/lib/stores/toast'
-import { contextMenuFormItem } from '../../../../../../shared/lib/styled/styleFunctions'
-import styled from '../../../../../../shared/lib/styled'
-import FormInput from '../../../../../../shared/components/molecules/Form/atoms/FormInput'
+import { useToast } from '../../../../../../design/lib/stores/toast'
+import { contextMenuFormItem } from '../../../../../../design/lib/styled/styleFunctions'
+import styled from '../../../../../../design/lib/styled'
+import FormInput from '../../../../../../design/components/molecules/Form/atoms/FormInput'
 import cc from 'classcat'
 import { lngKeys } from '../../../../../../cloud/lib/i18n/types'
 import { useI18n } from '../../../../../../cloud/lib/hooks/useI18n'
-import IconMdi from '../../../../../../cloud/components/atoms/IconMdi'
+import Spinner from '../../../../../../design/components/atoms/Spinner'
+import Icon from '../../../../../../design/components/atoms/Icon'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface TagsAutoCompleteInputProps {
@@ -167,7 +167,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
             id='tag__add__btn'
             onClick={activateAndFocus}
           >
-            <IconMdi path={mdiPlus} size={16} />
+            <Icon path={mdiPlus} size={16} />
           </button>
         )
       ) : (

@@ -1,39 +1,35 @@
 import React, { useCallback, useMemo } from 'react'
 import {
   mdiApplicationCog,
-  mdiArchiveOutline,
-  mdiCheckCircleOutline,
   mdiFileDocumentOutline,
   mdiTextBoxPlus,
   mdiFolderCogOutline,
   mdiFolderPlusOutline,
   mdiLock,
-  mdiPauseCircleOutline,
   mdiPencil,
-  mdiPlayCircleOutline,
   mdiPlus,
   mdiStar,
   mdiStarOutline,
   mdiTag,
   mdiTrashCanOutline,
 } from '@mdi/js'
-import { FoldingProps } from '../../../../shared/components/atoms/FoldingWrapper'
-import { SidebarDragState } from '../../../../shared/lib/dnd'
+import { FoldingProps } from '../../../../design/components/atoms/FoldingWrapper'
+import { SidebarDragState } from '../../../../design/lib/dnd'
 import {
   SidebarTreeSortingOrder,
   SidebarTreeSortingOrders,
-} from '../../../../shared/lib/sidebar'
-import { MenuItem, MenuTypes } from '../../../../shared/lib/stores/contextMenu'
-import { useModal } from '../../../../shared/lib/stores/modal'
+} from '../../../../design/lib/sidebar'
+import { MenuItem, MenuTypes } from '../../../../design/lib/stores/contextMenu'
+import { useModal } from '../../../../design/lib/stores/modal'
 import {
   getMapValues,
   sortByAttributeAsc,
   sortByAttributeDesc,
-} from '../../../../shared/lib/utils/array'
-import { getDocLinkHref } from '../../../components/atoms/Link/DocLink'
-import { getFolderHref } from '../../../components/atoms/Link/FolderLink'
-import { getTagHref } from '../../../components/atoms/Link/TagLink'
-import { getWorkspaceHref } from '../../../components/atoms/Link/WorkspaceLink'
+} from '../../../../design/lib/utils/array'
+import { getDocLinkHref } from '../../../components/Link/DocLink'
+import { getFolderHref } from '../../../components/Link/FolderLink'
+import { getTagHref } from '../../../components/Link/TagLink'
+import { getWorkspaceHref } from '../../../components/Link/WorkspaceLink'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { useRouter } from '../../router'
 import {
@@ -57,20 +53,20 @@ import {
 import { useCloudApi } from '../useCloudApi'
 import { useCloudResourceModals } from '../useCloudResourceModals'
 import { useCloudDnd } from './useCloudDnd'
-import { getDocStatusHref, getSmartFolderHref } from '../../href'
-import CreateSmartFolderModal from '../../../components/organisms/Modal/contents/SmartFolder/CreateSmartFolderModal'
-import UpdateSmartFolderModal from '../../../components/organisms/Modal/contents/SmartFolder/UpdateSmartFolderModal'
-import { useDialog } from '../../../../shared/lib/stores/dialog'
+import { getSmartFolderHref } from '../../href'
+import CreateSmartFolderModal from '../../../components/Modal/contents/SmartFolder/CreateSmartFolderModal'
+import UpdateSmartFolderModal from '../../../components/Modal/contents/SmartFolder/UpdateSmartFolderModal'
+import { useDialog } from '../../../../design/lib/stores/dialog'
 import { DocStatus } from '../../../interfaces/db/doc'
 import { useI18n } from '../useI18n'
 import { lngKeys } from '../../i18n/types'
-import { SidebarControls } from '../../../../shared/components/organisms/Sidebar/atoms/SidebarHeader'
+import { SidebarControls } from '../../../../design/components/organisms/Sidebar/atoms/SidebarHeader'
 import { useSearch } from '../../stores/search'
 import {
   SidebarNavCategory,
   SidebarNavControls,
   SidebarTreeChildRow,
-} from '../../../../shared/components/organisms/Sidebar/molecules/SidebarTree'
+} from '../../../../design/components/organisms/Sidebar/molecules/SidebarTree'
 import { CATEGORY_DRAG_TRANSFER_DATA_JSON } from '../../../interfaces/resources'
 
 export function useCloudSidebarTree() {
@@ -181,12 +177,6 @@ export function useCloudSidebarTree() {
           label: translate(lngKeys.GeneralSmartFolders),
           checked: !sideBarOpenedLinksIdsSet.has('hide-smart folders'),
           onClick: () => toggleItem('links', 'hide-smart folders'),
-        },
-        {
-          type: 'check',
-          label: translate(lngKeys.GeneralStatus),
-          checked: !sideBarOpenedLinksIdsSet.has('hide-status'),
-          onClick: () => toggleItem('links', 'hide-status'),
         },
       ],
       [translate(lngKeys.GeneralOrdering)]: Object.values(
@@ -792,56 +782,6 @@ export function useCloudSidebarTree() {
       })
     }
 
-    tree.push({
-      label: 'Status',
-      title: translate(lngKeys.GeneralStatus),
-      rows: [
-        {
-          id: 'sidenav-status-in-progress',
-          label: 'In Progress',
-          defaultIcon: mdiPlayCircleOutline,
-          href: getDocStatusHref(team, 'in-progress'),
-          active:
-            !showSearchScreen &&
-            getDocStatusHref(team, 'in-progress') === pathname,
-          navigateTo: () => push(getDocStatusHref(team, 'in-progress')),
-          depth: 0,
-        },
-        {
-          id: 'sidenav-status-paused',
-          label: 'Paused',
-          defaultIcon: mdiPauseCircleOutline,
-          href: getDocStatusHref(team, 'paused'),
-          active:
-            !showSearchScreen && getDocStatusHref(team, 'paused') === pathname,
-          navigateTo: () => push(getDocStatusHref(team, 'paused')),
-          depth: 0,
-        },
-        {
-          id: 'sidenav-status-completed',
-          label: 'Completed',
-          defaultIcon: mdiCheckCircleOutline,
-          href: getDocStatusHref(team, 'completed'),
-          active:
-            !showSearchScreen &&
-            getDocStatusHref(team, 'completed') === pathname,
-          navigateTo: () => push(getDocStatusHref(team, 'completed')),
-          depth: 0,
-        },
-        {
-          id: 'sidenav-status-archived',
-          label: 'Archived',
-          defaultIcon: mdiArchiveOutline,
-          href: getDocStatusHref(team, 'archived'),
-          active:
-            !showSearchScreen &&
-            getDocStatusHref(team, 'archived') === pathname,
-          navigateTo: () => push(getDocStatusHref(team, 'archived')),
-          depth: 0,
-        },
-      ],
-    })
-
     tree.forEach((category) => {
       const key = (category.label || '').toLocaleLowerCase()
       const foldKey = `fold-${key}`
@@ -894,6 +834,7 @@ export function useCloudSidebarTree() {
     createWorkspace,
     sideBarOpenedLinksIdsSet,
     toggleItem,
+    clearDragTransferData,
   ])
 
   const treeWithOrderedCategories = useMemo(() => {
@@ -972,7 +913,12 @@ export function useCloudSidebarTree() {
     })
 
     return orderedTree
-  }, [tree, preferences.sidebarOrderedCategories, setPreferences])
+  }, [
+    tree,
+    preferences.sidebarOrderedCategories,
+    setPreferences,
+    clearDragTransferData,
+  ])
 
   return {
     tree,

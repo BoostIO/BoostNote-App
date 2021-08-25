@@ -1,6 +1,6 @@
 import React, { FC, MouseEventHandler } from 'react'
-import styled from '../../shared/lib/styled'
-import { flexCenter } from '../../shared/lib/styled/styleFunctions'
+import styled from '../../design/lib/styled'
+import { flexCenter } from '../../design/lib/styled/styleFunctions'
 
 interface ModalContainerProps {
   onShadowClick: MouseEventHandler<HTMLDivElement>

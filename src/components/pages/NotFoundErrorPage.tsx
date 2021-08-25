@@ -1,9 +1,9 @@
 import Application from '../Application'
 import { mdiAlertBoxOutline } from '@mdi/js'
 import React from 'react'
-import EmojiIcon from '../../cloud/components/atoms/EmojiIcon'
+import EmojiIcon from '../../cloud/components/EmojiIcon'
 import { useRouter } from '../../lib/router'
-import Button from '../../shared/components/atoms/Button'
+import Button from '../../design/components/atoms/Button'
 import { usePreferences } from '../../lib/preferences'
 
 const NotFoundErrorPage = ({}) => {
@@ -18,7 +18,7 @@ const NotFoundErrorPage = ({}) => {
             <EmojiIcon
               defaultIcon={mdiAlertBoxOutline}
               style={{ marginRight: 10, marginLeft: 15 }}
-              size={24}
+              size={26}
             />
             <span style={{ marginRight: 10 }}>Page Not Found</span>
           </>

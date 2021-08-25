@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from '../../shared/lib/styled'
-import { border, selectStyle } from '../../shared/lib/styled/styleFunctions'
+import styled from '../../design/lib/styled'
+import { border, selectStyle } from '../../design/lib/styled/styleFunctions'
 
 interface FormHeadingProps {
   depth?: number

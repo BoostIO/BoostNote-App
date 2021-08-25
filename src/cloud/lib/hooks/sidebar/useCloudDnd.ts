@@ -18,11 +18,11 @@ import {
   getDraggedResource,
   getResourceId,
 } from '../../utils/patterns'
-import { SidebarDragState } from '../../../../shared/lib/dnd'
-import { useToast } from '../../../../shared/lib/stores/toast'
-import { getMapFromEntityArray } from '../../../../shared/lib/utils/array'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SidebarDragState } from '../../../../design/lib/dnd'
+import { useToast } from '../../../../design/lib/stores/toast'
+import { getMapFromEntityArray } from '../../../../design/lib/utils/array'
 
 export function useCloudDnd() {
   const {

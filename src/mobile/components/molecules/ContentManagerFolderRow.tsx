@@ -8,7 +8,7 @@ import {
   mdiFolderMoveOutline,
   mdiTrashCanOutline,
 } from '@mdi/js'
-import FolderLink from '../../../cloud/components/atoms/Link/FolderLink'
+import FolderLink from '../../../cloud/components/Link/FolderLink'
 import ContentManagerRowLinkContent from './ContentManagerRowLinkContent'
 import { useNav } from '../../../cloud/lib/stores/nav'
 import {
@@ -17,14 +17,13 @@ import {
   destroyFolderBookmark,
   createFolderBookmark,
 } from '../../../cloud/api/teams/folders/bookmarks'
-import RowAction, {
-  ContentManagerRowAction,
-} from '../../../cloud/components/molecules/ContentManager/Actions/RowAction'
-import Flexbox from '../../../cloud/components/atoms/Flexbox'
+import RowActionButton from '../../../cloud/components/ContentManager/Actions/RowActionButton'
+import Flexbox from '../../../design/components/atoms/Flexbox'
 import { getFolderId } from '../../../cloud/lib/utils/patterns'
-import { useToast } from '../../../shared/lib/stores/toast'
-import { useModal } from '../../../shared/lib/stores/modal'
+import { useToast } from '../../../design/lib/stores/toast'
+import { useModal } from '../../../design/lib/stores/modal'
 import MobileResourceMoveModal from '../organisms/modals/MobileResourceMoveModal'
+import { ContentManagerRowAction } from '../../../cloud/interfaces/components/ContentManager/types'
 
 interface ContentManagerFolderRowProps {
   team: SerializedTeam
@@ -208,7 +207,7 @@ const ContentmanagerFolderRow = ({
       rowActions={
         <Flexbox flex='0 0 auto' className='actions'>
           {actions.map((action) => (
-            <RowAction
+            <RowActionButton
               action={action}
               item={folder}
               key={`${action.id}`}

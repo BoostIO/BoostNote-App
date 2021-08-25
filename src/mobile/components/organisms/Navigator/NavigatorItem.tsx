@@ -1,16 +1,16 @@
 import React, { useCallback } from 'react'
-import styled from '../../../../shared/lib/styled'
+import styled from '../../../../design/lib/styled'
 import cc from 'classcat'
-import Button from '../../../../shared/components/atoms/Button'
+import Button from '../../../../design/components/atoms/Button'
 import { mdiChevronDown, mdiChevronRight, mdiDotsHorizontal } from '@mdi/js'
 import { Emoji } from 'emoji-mart'
-import Icon from '../../../../shared/components/atoms/Icon'
-import { FoldingProps } from '../../../../shared/components/atoms/FoldingWrapper'
+import Icon from '../../../../design/components/atoms/Icon'
+import { FoldingProps } from '../../../../design/components/atoms/FoldingWrapper'
 import {
   MenuItem,
   useContextMenu,
-} from '../../../../shared/lib/stores/contextMenu'
-import { overflowEllipsis } from '../../../../shared/lib/styled/styleFunctions'
+} from '../../../../design/lib/stores/contextMenu'
+import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
 
 interface NavigatorItemProps {
   className?: string
@@ -89,7 +89,7 @@ const NavigatorItem: React.FC<NavigatorItemProps> = ({
           onClick={onClick}
           href={labelHref}
           id={`tree-${id}`}
-          tabIndex={1}
+          tabIndex={0}
           draggable={false}
         >
           {emoji != null ? (

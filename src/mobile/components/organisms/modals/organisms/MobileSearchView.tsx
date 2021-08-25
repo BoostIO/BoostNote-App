@@ -1,16 +1,16 @@
 import React, { useMemo, useRef } from 'react'
-import styled from '../../../../../shared/lib/styled'
+import styled from '../../../../../design/lib/styled'
 import MobileSearchHeader from '../atoms/MobileSearchHeader'
 import cc from 'classcat'
 import { useEffectOnce, useSet } from 'react-use'
 import SearchCategory from '../atoms/MobileSearchCategory'
-import Spinner from '../../../../../shared/components/atoms/Spinner'
-import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
+import Spinner from '../../../../../design/components/atoms/Spinner'
+import { overflowEllipsis } from '../../../../../design/lib/styled/styleFunctions'
 import plur from 'plur'
-import CloseButtonWrapper from '../../../../../shared/components/molecules/CloseButtonWrapper'
-import SidebarContextList from '../../../../../shared/components/organisms/Sidebar/atoms/SidebarContextList'
+import CloseButtonWrapper from '../../../../../design/components/molecules/CloseButtonWrapper'
+import SidebarContextList from '../../../../../design/components/organisms/Sidebar/atoms/SidebarContextList'
 import SearchItem from '../atoms/MobileSearchItem'
-import FormInput from '../../../../../shared/components/molecules/Form/atoms/FormInput'
+import FormInput from '../../../../../design/components/molecules/Form/atoms/FormInput'
 
 interface MobileSearchViewProps {
   searchQuery: string

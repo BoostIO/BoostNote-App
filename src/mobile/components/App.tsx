@@ -4,7 +4,7 @@ import { RouterProvider } from '../../cloud/lib/router'
 import { GlobalDataProvider } from '../../cloud/lib/stores/globalData'
 
 import { RealtimeConnProvider } from '../../cloud/lib/stores/realtimeConn'
-import { V2ToastProvider } from '../../shared/lib/stores/toast'
+import { V2ToastProvider } from '../../design/lib/stores/toast'
 import { useEffectOnce } from 'react-use'
 import { initAccessToken } from '../../cloud/lib/stores/electron'
 import '../../cloud/lib/i18n'

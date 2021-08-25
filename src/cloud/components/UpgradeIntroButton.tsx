@@ -4,9 +4,9 @@ import {
   MixpanelFrontEvent,
 } from '../interfaces/analytics/mixpanel'
 import { trackEvent } from '../api/track'
-import { useModal } from '../../shared/lib/stores/modal'
-import Button, { ButtonVariant } from '../../shared/components/atoms/Button'
-import IntroPopup, { IntroPopupVariant } from './organisms/IntroPopup'
+import { useModal } from '../../design/lib/stores/modal'
+import Button, { ButtonVariant } from '../../design/components/atoms/Button'
+import IntroPopup, { IntroPopupVariant } from './IntroducePlansPopup'
 
 interface UpgradeIntroButtonProps {
   origin: 'share.password' | 'share.expire' | 'revision' | 'guest' | 'limit'

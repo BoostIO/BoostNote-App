@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
 import { Thread } from '../../interfaces/db/comments'
-import Icon from '../../../shared/components/atoms/Icon'
-import styled from '../../../shared/lib/styled'
-import { MenuItem, MenuTypes } from '../../../shared/lib/stores/contextMenu'
+import Icon from '../../../design/components/atoms/Icon'
+import styled from '../../../design/lib/styled'
+import { MenuItem, MenuTypes } from '../../../design/lib/stores/contextMenu'
 import {
   mdiAlertCircleOutline,
   mdiAlertCircleCheckOutline,

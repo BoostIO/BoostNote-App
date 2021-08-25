@@ -21,7 +21,7 @@ import { usePage } from '../pageStore'
 import {
   useDialog,
   DialogIconTypes,
-} from '../../../../shared/lib/stores/dialog'
+} from '../../../../design/lib/stores/dialog'
 import { useRouter } from '../../router'
 import {
   createFolder,
@@ -58,7 +58,7 @@ import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { getMapFromEntityArray } from '../../utils/array'
 import { SerializedTemplate } from '../../../interfaces/db/template'
 import { getAllTemplates } from '../../../api/teams/docs/templates'
-import { useToast } from '../../../../shared/lib/stores/toast'
+import { useToast } from '../../../../design/lib/stores/toast'
 import { SerializedSmartFolder } from '../../../interfaces/db/smartFolder'
 export * from './types'
 
@@ -681,7 +681,7 @@ function useNavStore(pageProps: any): NavContext {
 
       if (
         draggedResource.type === targetedResource.type &&
-        draggedResource.result.id === targetedResource.result.id
+        draggedResource.resource.id === targetedResource.resource.id
       ) {
         return
       }

@@ -1,14 +1,14 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import styled from '../../../../shared/lib/styled'
+import styled from '../../../../design/lib/styled'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { SerializedWorkspace } from '../../../../cloud/interfaces/db/workspace'
 import { sortByAttributeAsc } from '../../../../cloud/lib/utils/array'
-import { useModal } from '../../../../shared/lib/stores/modal'
-import Button from '../../../../shared/components/atoms/Button'
+import { useModal } from '../../../../design/lib/stores/modal'
+import Button from '../../../../design/components/atoms/Button'
 import { useI18n } from '../../../../cloud/lib/hooks/useI18n'
 import { lngKeys } from '../../../../cloud/lib/i18n/types'
 import ModalContainer from './atoms/ModalContainer'
-import WorkspaceExplorer from '../../../../cloud/components/molecules/WorkspaceExplorer'
+import WorkspaceExplorer from '../../../../cloud/components/WorkspaceExplorer'
 import MobileFormControl from '../../atoms/MobileFormControl'
 
 interface MobileResourceMoveModalProps {

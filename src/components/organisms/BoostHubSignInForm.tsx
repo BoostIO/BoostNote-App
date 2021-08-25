@@ -26,9 +26,9 @@ import BoostHubFeatureIntro from '../molecules/BoostHubFeatureIntro'
 import { osName } from '../../lib/platform'
 import { fetchDesktopGlobalData } from '../../lib/boosthub'
 import { boostHubBaseUrl } from '../../cloud/lib/consts'
-import Icon from '../../shared/components/atoms/Icon'
-import styled from '../../shared/lib/styled'
-import Button from '../../shared/components/atoms/Button'
+import Icon from '../../design/components/atoms/Icon'
+import styled from '../../design/lib/styled'
+import Button from '../../design/components/atoms/Button'
 
 const BoostHubSignInForm = () => {
   const { setPreferences } = usePreferences()

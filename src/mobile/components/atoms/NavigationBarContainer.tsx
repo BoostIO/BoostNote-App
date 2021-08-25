@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from '../../../shared/lib/styled'
-import { textOverflow } from '../../../shared/lib/styled/styleFunctions'
+import styled from '../../../design/lib/styled'
+import { textOverflow } from '../../../design/lib/styled/styleFunctions'
 
 interface NavigationBarContainerProps {
   left?: React.ReactNode

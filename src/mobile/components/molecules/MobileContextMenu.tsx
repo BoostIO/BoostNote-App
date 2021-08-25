@@ -5,11 +5,11 @@ import {
   menuZIndex,
   NormalMenuItem,
   useContextMenu,
-} from '../../../shared/lib/stores/contextMenu'
-import { useWindow } from '../../../shared/lib/stores/window'
-import styled from '../../../shared/lib/styled'
-import Icon from '../../../shared/components/atoms/Icon'
-import UpDownList from '../../../shared/components/atoms/UpDownList'
+} from '../../../design/lib/stores/contextMenu'
+import { useWindow } from '../../../design/lib/stores/window'
+import styled from '../../../design/lib/styled'
+import Icon from '../../../design/components/atoms/Icon'
+import UpDownList from '../../../design/components/atoms/UpDownList'
 import cc from 'classcat'
 
 const menuHeight = 48

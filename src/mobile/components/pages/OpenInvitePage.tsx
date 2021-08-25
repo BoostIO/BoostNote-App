@@ -1,20 +1,20 @@
 import React, { useMemo, useCallback, useState } from 'react'
-import Container from '../../../cloud/components/layouts/Container'
-import TitleComponent from '../../../cloud/components/atoms/TitleComponent'
-import styled from '../../../cloud/lib/styled'
+import Container from '../../../cloud/components/layouts/CenteredContainer'
+import TitleComponent from '../../../cloud/components/TitleComponent'
 import { useGlobalData } from '../../../cloud/lib/stores/globalData'
-import CustomButton from '../../../cloud/components/atoms/buttons/CustomButton'
-import ErrorBlock from '../../../cloud/components/atoms/ErrorBlock'
+import ErrorBlock from '../../../cloud/components/ErrorBlock'
 import { useRouter } from '../../../cloud/lib/router'
 import { createPermissions } from '../../../cloud/api/teams/permissions'
 import { getTeamURL } from '../../../cloud/lib/utils/patterns'
-import SignInForm from '../../../cloud/components/molecules/SignInForm'
+import SignInForm from '../../../cloud/components/SignInForm'
 import {
   TeamOpenInvitePageData,
   getTeamOpenInvitePageData,
 } from '../../../cloud/api/pages/teams/invite'
 import { GetInitialPropsParameters } from '../../../cloud/interfaces/pages'
 import AppLayout from '../layouts/AppLayout'
+import Button from '../../../design/components/atoms/Button'
+import styled from '../../../design/lib/styled'
 
 const OpenInvitePage = ({ invite }: TeamOpenInvitePageData) => {
   const { globalData } = useGlobalData()
@@ -58,14 +58,14 @@ const OpenInvitePage = ({ invite }: TeamOpenInvitePageData) => {
     } else {
       return (
         <div className='content text-center flex'>
-          <CustomButton
+          <Button
+            className='btn__join'
             variant='primary'
             disabled={sending}
             onClick={() => acceptInvite()}
-            style={{ margin: 'auto' }}
           >
             Join
-          </CustomButton>
+          </Button>
         </div>
       )
     }
@@ -109,21 +109,25 @@ const StyledInvitePageCard = styled.div`
   height: auto;
   overflow: hidden auto;
   margin: 20px auto;
-  padding: ${({ theme }) => theme.space.xlarge}px
-    ${({ theme }) => theme.space.large}px;
-  background-color: ${({ theme }) => theme.baseBackgroundColor};
+  padding: ${({ theme }) => theme.sizes.spaces.xl}px
+    ${({ theme }) => theme.sizes.spaces.l}px;
+  background-color: ${({ theme }) => theme.colors.background.primary};
   box-shadow: 0 2px 40px 0 rgba(0, 0, 0, 0.06);
   border-radius: 5px;
   text-align: center;
 
+  .btn__join {
+    margin: 0 auto;
+  }
+
   h1 {
-    margin-bottom: ${({ theme }) => theme.space.default}px;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
   }
   hr {
-    margin: ${({ theme }) => theme.space.large}px 0;
+    margin: ${({ theme }) => theme.sizes.spaces.l}px 0;
   }
   button + button {
-    margin-left: ${({ theme }) => theme.space.small}px;
+    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 `
 

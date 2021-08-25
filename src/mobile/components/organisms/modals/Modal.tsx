@@ -1,5 +1,5 @@
 import React from 'react'
-import { useModal } from '../../../../shared/lib/stores/modal'
+import { useModal } from '../../../../design/lib/stores/modal'
 import { usePathnameChangeEffect } from '../../../../cloud/lib/router'
 
 const Modal = () => {

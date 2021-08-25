@@ -1,12 +1,12 @@
 import React from 'react'
 import { SerializedTeam } from '../../../../../../cloud/interfaces/db/team'
 import { StyledTag } from './styled'
-import IconMdi from '../../../../../../cloud/components/atoms/IconMdi'
 import { mdiClose } from '@mdi/js'
 import cc from 'classcat'
-import { Spinner } from '../../../../../../cloud/components/atoms/Spinner'
-import TagLink from '../../../../../../cloud/components/atoms/Link/TagLink'
+import TagLink from '../../../../../../cloud/components/Link/TagLink'
 import { SerializedTag } from '../../../../../../cloud/interfaces/db/tag'
+import Spinner from '../../../../../../design/components/atoms/Spinner'
+import Icon from '../../../../../../design/components/atoms/Icon'
 
 interface DocTagsListItemProps {
   tag: SerializedTag
@@ -38,7 +38,7 @@ const DocTagsListItem = ({
           {removing === tag.id ? (
             <Spinner size={12} className='relative  tag-spinner' />
           ) : (
-            <IconMdi path={mdiClose} />
+            <Icon path={mdiClose} size={12} />
           )}
         </div>
       )}

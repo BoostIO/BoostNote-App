@@ -1,15 +1,15 @@
 import React, { useCallback, useState } from 'react'
-import styled from '../../../../../shared/lib/styled'
-import { AppComponent } from '../../../../../shared/lib/types'
+import styled from '../../../../../design/lib/styled'
+import { AppComponent } from '../../../../../design/lib/types'
 import cc from 'classcat'
-import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
-import Button from '../../../../../shared/components/atoms/Button'
+import { overflowEllipsis } from '../../../../../design/lib/styled/styleFunctions'
+import Button from '../../../../../design/components/atoms/Button'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import { Emoji } from 'emoji-mart'
-import Icon from '../../../../../shared/components/atoms/Icon'
+import Icon from '../../../../../design/components/atoms/Icon'
 import FoldingWrapper, {
   FoldingProps,
-} from '../../../../../shared/components/atoms/FoldingWrapper'
+} from '../../../../../design/components/atoms/FoldingWrapper'
 import { escapeRegExp } from '../../../../../lib/string'
 
 interface MobileSearchItemProps {
@@ -96,7 +96,7 @@ const MobileSearchItem: AppComponent<MobileSearchItemProps & SharedProps> = ({
           onClick={onClick}
           href={labelHref}
           id={`search-${id}`}
-          tabIndex={1}
+          tabIndex={0}
         >
           <div className='sidebar__search__item__main'>
             {emoji != null ? (

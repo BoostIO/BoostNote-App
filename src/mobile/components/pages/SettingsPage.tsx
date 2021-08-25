@@ -1,21 +1,21 @@
 import React, { useCallback, useState } from 'react'
-import styled from '../../../shared/lib/styled'
+import styled from '../../../design/lib/styled'
 import { saveUserInfo, updateUserIcon } from '../../../cloud/api/users'
 import {
   getSettingsPageData,
   SettingsPageResponseBody,
 } from '../../../cloud/api/pages/settings'
-import ErrorBlock from '../../../cloud/components/atoms/ErrorBlock'
-import Spinner from '../../../shared/components/atoms/Spinner'
+import ErrorBlock from '../../../cloud/components/ErrorBlock'
+import Spinner from '../../../design/components/atoms/Spinner'
 import { getTeamURL } from '../../../cloud/lib/utils/patterns'
 import { buildIconUrl } from '../../../cloud/api/files'
-import Icon from '../../../shared/components/atoms/Icon'
+import Icon from '../../../design/components/atoms/Icon'
 import { mdiAccountCircleOutline } from '@mdi/js'
 import { useGlobalData } from '../../../cloud/lib/stores/globalData'
 import { useRouter } from '../../../cloud/lib/router'
 import { parse as parseQuery } from 'querystring'
 import { GetInitialPropsParameters } from '../../../cloud/interfaces/pages'
-import Button from '../../../shared/components/atoms/Button'
+import Button from '../../../design/components/atoms/Button'
 import NavigationBarContainer from '../atoms/NavigationBarContainer'
 
 import NavigationBarButton from '../atoms/NavigationBarButton'

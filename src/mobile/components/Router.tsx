@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from '../../cloud/lib/router'
-import styled, { selectTheme, darkTheme } from '../../cloud/lib/styled'
 import { ThemeProvider } from 'styled-components'
 import { useGlobalData } from '../../cloud/lib/stores/globalData'
 import { getGlobalData } from '../../cloud/api/global'
@@ -19,25 +18,23 @@ import { Mixpanel } from 'mixpanel-browser'
 import * as intercom from '../../cloud/lib/intercom'
 import { intercomAppId } from '../../cloud/lib/consts'
 
-import GlobalStyle from '../../cloud/components/GlobalStyle'
-import CodeMirrorStyle from '../../cloud/components/atoms/CodeMirrorStyle'
+import CodeMirrorStyle from '../../cloud/components/CodeMirrorStyle'
 import { GetInitialPropsParameters } from '../../cloud/interfaces/pages'
-import ErrorPage from '../../cloud/components/organisms/error/ErrorPage'
+import ErrorPage from '../../cloud/components/error/ErrorPage'
 import { NavProvider } from '../../cloud/lib/stores/nav'
 import { useRealtimeConn } from '../../cloud/lib/stores/realtimeConn'
-import Spinner from '../../cloud/components/atoms/CustomSpinner'
-import { selectV2Theme } from '../../shared/lib/styled/styleFunctions'
-import { V2ToastProvider } from '../../shared/lib/stores/toast'
-import { V2EmojiProvider } from '../../shared/lib/stores/emoji'
-import { V2WindowProvider } from '../../shared/lib/stores/window'
-import { V2ContextMenuProvider } from '../../shared/lib/stores/contextMenu'
-import { V2ModalProvider } from '../../shared/lib/stores/modal'
-import { V2DialogProvider } from '../../shared/lib/stores/dialog'
-import Toast from '../../shared/components/organisms/Toast'
-import Dialog from '../../shared/components/organisms/Dialog/Dialog'
+import { selectV2Theme } from '../../design/lib/styled/styleFunctions'
+import { V2ToastProvider } from '../../design/lib/stores/toast'
+import { V2EmojiProvider } from '../../design/lib/stores/emoji'
+import { V2WindowProvider } from '../../design/lib/stores/window'
+import { V2ContextMenuProvider } from '../../design/lib/stores/contextMenu'
+import { V2ModalProvider } from '../../design/lib/stores/modal'
+import { V2DialogProvider } from '../../design/lib/stores/dialog'
+import Toast from '../../design/components/organisms/Toast'
+import Dialog from '../../design/components/organisms/Dialog/Dialog'
 import MobileContextMenu from './molecules/MobileContextMenu'
 import { CommentsProvider } from '../../cloud/lib/stores/comments'
-import EmojiPicker from '../../shared/components/molecules/EmojiPicker'
+import EmojiPicker from '../../design/components/molecules/EmojiPicker'
 import CooperatePage from './pages/CooperatePage'
 import RootPage from './pages/RootPage'
 import CreateTeamPage from './pages/CreateTeamPage'
@@ -48,7 +45,6 @@ import DocStatusShowPage from './pages/DocStatusShowPage'
 import TagsShowPage from './pages/TagsShowPage'
 import SmartFolderPage from './pages/SmartFolderPage'
 import OpenInvitePage from './pages/OpenInvitePage'
-import BookmarksListPage from './pages/BookmarksListPage'
 import SharedDocsListPage from './pages/SharedDocsListPage'
 import DeleteTeamPage from './pages/TeamDeletePage'
 import DeleteAccountPage from './pages/DeleteAccountPage'
@@ -57,6 +53,11 @@ import { AppStatusProvider } from '../lib/appStatus'
 import WorkspacePage from './pages/WorkspacePage'
 import SettingsPage from './pages/SettingsPage'
 import MobileGlobalStyle from './MobileGlobalStyle'
+import styled from '../../design/lib/styled'
+import Spinner from '../../design/components/atoms/Spinner'
+import GlobalStyle from '../../design/components/atoms/GlobalStyle'
+import { BaseTheme } from '../../design/lib/styled/types'
+import { darkTheme } from '../../design/lib/styled/dark'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -217,18 +218,22 @@ const Router = () => {
 
   if (!initialized) {
     return (
-      <ThemeProvider theme={darkTheme}>
-        <LoadingScreen message='Fetching global data...' />
-        <GlobalStyle />
-      </ThemeProvider>
+      <SettingsProvider>
+        <V2ThemeProvider theme={darkTheme}>
+          <LoadingScreen message='Fetching global data...' />
+          <GlobalStyle />
+        </V2ThemeProvider>
+      </SettingsProvider>
     )
   }
   if (pageInfo == null) {
     return (
-      <ThemeProvider theme={darkTheme}>
-        <LoadingScreen message='Fetching page data...' />
-        <GlobalStyle />
-      </ThemeProvider>
+      <SettingsProvider>
+        <V2ThemeProvider theme={darkTheme}>
+          <LoadingScreen message='Fetching page data...' />
+          <GlobalStyle />
+        </V2ThemeProvider>
+      </SettingsProvider>
     )
   }
 
@@ -237,21 +242,19 @@ const Router = () => {
       <V2CombinedProvider>
         <CombinedProvider>
           <NavProvider pageProps={pageInfo.pageProps as any}>
-            <CustomThemeProvider>
-              <V2ThemeProvider>
-                {<pageInfo.Component {...pageInfo.pageProps} />}
+            <V2ThemeProvider>
+              {<pageInfo.Component {...pageInfo.pageProps} />}
 
-                <GlobalStyle />
-                <MobileGlobalStyle />
-                <CodeMirrorStyle />
-                <Toast />
-                <MobileContextMenu />
-                <EmojiPicker />
-                <Dialog />
+              <GlobalStyle />
+              <MobileGlobalStyle />
+              <CodeMirrorStyle />
+              <Toast />
+              <MobileContextMenu />
+              <EmojiPicker />
+              <Dialog />
 
-                <Modal />
-              </V2ThemeProvider>
-            </CustomThemeProvider>
+              <Modal />
+            </V2ThemeProvider>
           </NavProvider>
         </CombinedProvider>
       </V2CombinedProvider>
@@ -266,13 +269,13 @@ interface LoadingScreenProps {
 }
 
 const LoadingScreenContainer = styled.div`
-  background-color: ${({ theme }) => theme.baseBackgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  color: ${({ theme }) => theme.baseTextColor};
+  color: ${({ theme }) => theme.colors.text.primary};
   width: 100%;
   height: 100%;
   display: flex;
@@ -293,23 +296,53 @@ const LoadingScreen = ({ message }: LoadingScreenProps) => {
   )
 }
 
-const CustomThemeProvider: React.FC = ({ children }) => {
+const V2ThemeProvider: React.FC<{ theme?: BaseTheme }> = ({
+  children,
+  theme,
+}) => {
   const { settings } = useSettings()
-
+  const { pathname } = useRouter()
   return (
-    <ThemeProvider theme={selectTheme(settings['general.theme'])}>
+    <ThemeProvider
+      theme={
+        theme != null
+          ? theme
+          : isHomepagePathname(pathname)
+          ? darkTheme
+          : selectV2Theme(settings['general.theme'])
+      }
+    >
       {children}
     </ThemeProvider>
   )
 }
 
-const V2ThemeProvider: React.FC = ({ children }) => {
-  const { settings } = useSettings()
-  return (
-    <ThemeProvider theme={selectV2Theme(settings['general.theme'])}>
-      {children}
-    </ThemeProvider>
-  )
+function isHomepagePathname(pathname: string) {
+  if (pathname.startsWith('/integrations/')) {
+    return true
+  }
+  if (pathname.startsWith('/shared/')) {
+    return true
+  }
+  if (pathname.startsWith('/desktop/')) {
+    return true
+  }
+  switch (pathname) {
+    case '/':
+    case '/features':
+    case '/pricing':
+    case '/integrations':
+    case '/signin':
+    case '/signup':
+    case '/terms':
+    case '/policy':
+    case '/gdpr-policy':
+    case '/shared':
+    case '/desktop':
+      return true
+    default:
+      return false
+  }
 }
 
 function getPageComponent(pathname: string): PageSpec | null {
@@ -364,11 +397,6 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: DeleteTeamPage,
           getInitialProps: DeleteTeamPage.getInitialProps,
-        }
-      case 'bookmarks':
-        return {
-          Component: BookmarksListPage,
-          getInitialProps: BookmarksListPage.getInitialProps,
         }
       case 'invite':
         return {

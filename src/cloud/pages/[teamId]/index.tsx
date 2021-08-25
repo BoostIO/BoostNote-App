@@ -3,7 +3,7 @@ import {
   getTeamIndexPageData,
   TeamShowPageResponseBody,
 } from '../../api/pages/teams'
-import WorkspacePage from '../../components/organisms/WorkspacePage'
+import WorkspacePage from '../../components/WorkspacePage'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 
 const TeamIndex = ({ pageWorkspace }: TeamShowPageResponseBody) => {

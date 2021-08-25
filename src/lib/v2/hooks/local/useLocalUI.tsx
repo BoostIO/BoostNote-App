@@ -4,7 +4,7 @@ import { useDb } from '../../../db'
 import {
   DialogIconTypes,
   useDialog,
-} from '../../../../shared/lib/stores/dialog'
+} from '../../../../design/lib/stores/dialog'
 import { useTranslation } from 'react-i18next'
 
 export function useLocalUI() {

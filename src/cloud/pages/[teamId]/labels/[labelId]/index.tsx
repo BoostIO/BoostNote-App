@@ -1,25 +1,23 @@
 import React, { useMemo } from 'react'
-import Application from '../../../../components/Application'
 import {
   getTagsShowPageData,
   TagsShowPageResponseBody,
 } from '../../../../api/pages/teams/tags'
 import { useNav } from '../../../../lib/stores/nav'
 import { usePage } from '../../../../lib/stores/pageStore'
-import ColoredBlock from '../../../../components/atoms/ColoredBlock'
 import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
 import { GetInitialPropsParameters } from '../../../../interfaces/pages'
-import { topParentId } from '../../../../lib/mappers/topbarTree'
-import { mdiTag } from '@mdi/js'
-import { getTagHref } from '../../../../components/atoms/Link/TagLink'
-import { useRouter } from '../../../../lib/router'
-import ContentManager from '../../../../components/molecules/ContentManager'
-import InviteCTAButton from '../../../../components/molecules/InviteCTAButton'
+import ContentManager from '../../../../components/ContentManager'
+import InviteCTAButton from '../../../../components/buttons/InviteCTAButton'
+import ColoredBlock from '../../../../../design/components/atoms/ColoredBlock'
+import FolderPageInviteSection from '../../../../components/Onboarding/FolderPageInviteSection'
+import ApplicationPage from '../../../../components/ApplicationPage'
+import ApplicationTopbar from '../../../../components/ApplicationTopbar'
+import ApplicationContent from '../../../../components/ApplicationContent'
 
 const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
   const { docsMap, tagsMap, workspacesMap } = useNav()
   const { team, currentUserIsCoreMember } = usePage()
-  const { push } = useRouter()
 
   const pageTag = useMemo(() => {
     return tagsMap.get(pagePropsTag.id)
@@ -50,53 +48,49 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
   }, [docs, workspacesMap])
 
   if (team == null) {
-    return <Application content={{}} />
+    return (
+      <ApplicationPage showingTopbarPlaceholder={true}>
+        <ApplicationContent reduced={true}>
+          <ColoredBlock variant='danger'>{'Team is missing'}</ColoredBlock>
+        </ApplicationContent>
+      </ApplicationPage>
+    )
   }
 
   if (pageTag == null) {
     return (
-      <Application content={{}}>
-        <ColoredBlock variant='danger' style={{ marginTop: '40px' }}>
-          <h3>Oops...</h3>
-          <p>The Tag has been deleted.</p>
-        </ColoredBlock>
-      </Application>
+      <ApplicationPage showingTopbarPlaceholder={true}>
+        <ApplicationContent reduced={true}>
+          <ColoredBlock variant='danger'>
+            <h3>Oops...</h3>
+            <p>The Tag has been deleted.</p>
+          </ColoredBlock>
+        </ApplicationContent>
+      </ApplicationPage>
     )
   }
 
   return (
-    <Application
-      content={{
-        topbar: {
-          breadcrumbs: [
-            {
-              label: pageTag.text,
-              active: true,
-              parentId: topParentId,
-              icon: mdiTag,
-              link: {
-                href: getTagHref(pageTag, team, 'index'),
-                navigateTo: () => push(getTagHref(pageTag, team, 'index')),
-              },
-            },
-          ],
-          controls: [
-            {
-              type: 'node',
-              element: <InviteCTAButton key='invite-cta' />,
-            },
-          ],
-        },
-      }}
-    >
-      <ContentManager
-        team={team}
-        documents={docs}
-        page='tag'
-        workspacesMap={relatedWorkspaces}
-        currentUserIsCoreMember={currentUserIsCoreMember}
+    <ApplicationPage>
+      <ApplicationTopbar
+        controls={[
+          {
+            type: 'node',
+            element: <InviteCTAButton key='invite-cta' />,
+          },
+        ]}
       />
-    </Application>
+      <ApplicationContent>
+        <FolderPageInviteSection />
+        <ContentManager
+          team={team}
+          documents={docs}
+          page='tag'
+          workspacesMap={relatedWorkspaces}
+          currentUserIsCoreMember={currentUserIsCoreMember}
+        />
+      </ApplicationContent>
+    </ApplicationPage>
   )
 }
 

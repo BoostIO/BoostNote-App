@@ -1,5 +1,5 @@
 import { SerializedIcon } from '../../interfaces/db/icon'
-import { UserFeedbackFormData } from '../../components/organisms/FeedbackForm/types'
+import { UserFeedbackFormData } from '../../components/FeedbackForm/types'
 import { callApi } from '../../lib/client'
 
 export interface SaveUserRequestBody {

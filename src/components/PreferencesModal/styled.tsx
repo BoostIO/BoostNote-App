@@ -1,5 +1,5 @@
-import styled from '../../shared/lib/styled'
-import { selectStyle, inputStyle } from '../../shared/lib/styled/styleFunctions'
+import styled from '../../design/lib/styled'
+import { selectStyle, inputStyle } from '../../design/lib/styled/styleFunctions'
 
 export const Section = styled.section`
   margin-bottom: 2em;

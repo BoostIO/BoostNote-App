@@ -1,10 +1,10 @@
 import React, { FocusEventHandler, useState } from 'react'
-import { AppComponent } from '../../../../../shared/lib/types'
+import { AppComponent } from '../../../../../design/lib/types'
 import FoldingWrapper, {
   FoldingProps,
-} from '../../../../../shared/components/atoms/FoldingWrapper'
+} from '../../../../../design/components/atoms/FoldingWrapper'
 import cc from 'classcat'
-import Button from '../../../../../shared/components/atoms/Button'
+import Button from '../../../../../design/components/atoms/Button'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 
 interface MobileSearchCategoryProps {

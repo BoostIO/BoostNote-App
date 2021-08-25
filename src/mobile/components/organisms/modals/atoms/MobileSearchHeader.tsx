@@ -1,8 +1,8 @@
 import React from 'react'
-import styled from '../../../../../shared/lib/styled'
-import { AppComponent } from '../../../../../shared/lib/types'
+import styled from '../../../../../design/lib/styled'
+import { AppComponent } from '../../../../../design/lib/types'
 import cc from 'classcat'
-import { overflowEllipsis } from '../../../../../shared/lib/styled/styleFunctions'
+import { overflowEllipsis } from '../../../../../design/lib/styled/styleFunctions'
 
 interface MobileSearchHeaderProps {
   label: string

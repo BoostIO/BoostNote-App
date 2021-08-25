@@ -5,13 +5,13 @@ import {
 } from '../../../cloud/api/pages/teams/tags'
 import { useNav } from '../../../cloud/lib/stores/nav'
 import { usePage } from '../../../cloud/lib/stores/pageStore'
-import ColoredBlock from '../../../cloud/components/atoms/ColoredBlock'
 import { SerializedWorkspace } from '../../../cloud/interfaces/db/workspace'
 import { GetInitialPropsParameters } from '../../../cloud/interfaces/pages'
 import DocOnlyContentManager from '../organisms/DocOnlyContentManager'
 import AppLayout from '../layouts/AppLayout'
-import EmojiIcon from '../../../cloud/components/atoms/EmojiIcon'
+import EmojiIcon from '../../../cloud/components/EmojiIcon'
 import { mdiTag } from '@mdi/js'
+import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 
 const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
   const { docsMap, tagsMap, workspacesMap } = useNav()
@@ -52,7 +52,15 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
   if (pageTag == null) {
     return (
       <AppLayout>
-        <ColoredBlock variant='danger' style={{ marginTop: '40px' }}>
+        <ColoredBlock
+          variant='danger'
+          style={{
+            width: '96%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginTop: '100px',
+          }}
+        >
           <h3>Oops...</h3>
           <p>The Tag has been deleted.</p>
         </ColoredBlock>

@@ -4,10 +4,10 @@ import {
   DestroyWorkspaceResponseBody,
 } from '../../api/teams/workspaces'
 import { useNav } from '../stores/nav'
-import useApi from '../../../shared/lib/hooks/useApi'
-import { getMapFromEntityArray } from '../../../shared/lib/utils/array'
-import { useDialog } from '../../../shared/lib/stores/dialog'
-import { useToast } from '../../../shared/lib/stores/toast'
+import useApi from '../../../design/lib/hooks/useApi'
+import { getMapFromEntityArray } from '../../../design/lib/utils/array'
+import { useDialog } from '../../../design/lib/stores/dialog'
+import { useToast } from '../../../design/lib/stores/toast'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 
 export function useWorkspaceDelete() {

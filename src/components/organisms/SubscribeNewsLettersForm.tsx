@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { SectionHeader, SectionInput } from '../PreferencesModal/styled'
 import ky from 'ky'
 import { FormBlockquote } from '../atoms/form'
-import Button from '../../shared/components/atoms/Button'
+import Button from '../../design/components/atoms/Button'
 
 type Status = 'idle' | 'sending' | 'done'
 

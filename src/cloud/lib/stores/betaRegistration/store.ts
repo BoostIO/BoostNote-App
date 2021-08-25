@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useEffectOnce } from 'react-use'
-import useApi from '../../../../shared/lib/hooks/useApi'
+import useApi from '../../../../design/lib/hooks/useApi'
 import {
   getUserBetaRegistration,
   registerToBeta,

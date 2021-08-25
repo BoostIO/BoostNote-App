@@ -12,7 +12,7 @@ import { useBoostHub } from '../../lib/boosthub'
 import SidebarSpaces, {
   SidebarSpace,
   SidebarSpaceContentRow,
-} from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
+} from '../../design/components/organisms/Sidebar/molecules/SidebarSpaces'
 import { useStorageRouter } from '../../lib/storageRouter'
 import { MenuItemConstructorOptions } from 'electron/main'
 import { useTranslation } from 'react-i18next'
@@ -22,9 +22,9 @@ import {
 } from '../../lib/events'
 import CloudIntroModal from './CloudIntroModal'
 import { useCloudIntroModal } from '../../lib/cloudIntroModal'
-import { DialogIconTypes, useDialog } from '../../shared/lib/stores/dialog'
-import styled from '../../shared/lib/styled'
-import SidebarPopOver from '../../shared/components/organisms/Sidebar/atoms/SidebarPopOver'
+import { DialogIconTypes, useDialog } from '../../design/lib/stores/dialog'
+import styled from '../../design/lib/styled'
+import SidebarPopOver from '../../design/components/organisms/Sidebar/atoms/SidebarPopOver'
 
 const TopLevelNavigator = () => {
   const { storageMap, removeStorage } = useDb()

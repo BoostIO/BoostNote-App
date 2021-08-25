@@ -2,10 +2,7 @@ import React, { useMemo, useState, useCallback } from 'react'
 import { getOAuthPageData, OAuthPageData } from '../../api/pages/oauth'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { stringify } from 'querystring'
-import CustomButton from '../../components/atoms/buttons/CustomButton'
-import styled from '../../lib/styled'
-import TeamIcon from '../../components/atoms/TeamIcon'
-import IconMdi from '../../components/atoms/IconMdi'
+import TeamIcon from '../../components/TeamIcon'
 import {
   mdiChevronDown,
   mdiCompareVertical,
@@ -13,9 +10,12 @@ import {
   mdiLockOpenOutline,
   mdiLockOutline,
 } from '@mdi/js'
-import UserIcon from '../../components/atoms/UserIcon'
+import UserIcon from '../../components/UserIcon'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 import { useRouter } from '../../lib/router'
+import Button from '../../../design/components/atoms/Button'
+import Icon from '../../../design/components/atoms/Icon'
+import styled from '../../../design/lib/styled'
 
 const OAuthAuthorizePage = (data: OAuthPageData) => {
   const router = useRouter()
@@ -106,7 +106,7 @@ const OAuthAuthorizePage = (data: OAuthPageData) => {
         <section>
           <StyledAuthDetails>
             <h2>{data.clientName}</h2>
-            <IconMdi path={mdiCompareVertical} size={40} />
+            <Icon path={mdiCompareVertical} size={50} />
             <StyledTeamSelect>
               {selectedTeam != null && (
                 <div className='team-info' onClick={toggleTeamSelect}>
@@ -115,7 +115,7 @@ const OAuthAuthorizePage = (data: OAuthPageData) => {
                   </StyledTeamIconWrapper>
                   <div className='label'>
                     <span>
-                      {selectedTeam.name} <IconMdi path={mdiChevronDown} />
+                      {selectedTeam.name} <Icon path={mdiChevronDown} />
                     </span>
                   </div>
                 </div>
@@ -150,13 +150,13 @@ const OAuthAuthorizePage = (data: OAuthPageData) => {
               </div>
             </StyledUserInfo>
             <a href={changeUserUrl} className='user-switch'>
-              <CustomButton variant='transparent'>Switch User</CustomButton>
+              <Button variant='transparent'>Switch User</Button>
             </a>
           </StyledAuthDetails>
         </section>
         <section>
           <StyledInfoSection>
-            <IconMdi path={mdiExclamationThick} size={24} />{' '}
+            <Icon path={mdiExclamationThick} size={20} />{' '}
             <div>
               <strong>{data.clientName}</strong> will only be able to access
               team resource <strong>you have permission for</strong>.
@@ -165,7 +165,7 @@ const OAuthAuthorizePage = (data: OAuthPageData) => {
         </section>
         <section>
           <StyledInfoSection>
-            <IconMdi path={mdiLockOpenOutline} size={24} />{' '}
+            <Icon path={mdiLockOpenOutline} size={20} />{' '}
             <div>
               <strong>{data.clientName}</strong> will be able to:
               <ul>
@@ -178,7 +178,7 @@ const OAuthAuthorizePage = (data: OAuthPageData) => {
         </section>
         <section>
           <StyledInfoSection>
-            <IconMdi path={mdiLockOutline} size={24} />{' '}
+            <Icon path={mdiLockOutline} size={20} />{' '}
             <div>
               <strong>{data.clientName}</strong> will be <strong>NOT</strong>{' '}
               able to:
@@ -193,12 +193,12 @@ const OAuthAuthorizePage = (data: OAuthPageData) => {
         </section>
         <section>
           <StyledButtonWrapper>
-            <CustomButton variant='transparent'>
+            <Button variant='transparent'>
               <a href={denyUrl}>Deny</a>
-            </CustomButton>
-            <CustomButton>
+            </Button>
+            <Button>
               <a href={authUrl}>Authorize</a>
-            </CustomButton>
+            </Button>
           </StyledButtonWrapper>
         </section>
       </main>
@@ -219,12 +219,12 @@ const StyledOAuthPage = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: ${({ theme }) => theme.baseBackgroundColor};
+  background-color: ${({ theme }) => theme.colors.background.primary};
 
   .logo {
     display: flex;
     justify-content: center;
-    margin: ${({ theme }) => theme.space.default}px 0;
+    margin: ${({ theme }) => theme.sizes.spaces.df}px 0;
 
     & img {
       height: 70px;
@@ -233,19 +233,19 @@ const StyledOAuthPage = styled.div`
   }
 
   main {
-    background-color: ${({ theme }) => theme.baseBackgroundColor};
-    color: ${({ theme }) => theme.emphasizedTextColor};
+    background-color: ${({ theme }) => theme.colors.background.primary};
+    color: ${({ theme }) => theme.colors.text.primary};
     box-shadow: 0 2px 40px 0 rgba(0, 0, 0, 0.06);
     width: 100%;
     max-width: 600px;
-    padding: ${({ theme }) => theme.space.small}px
-      ${({ theme }) => theme.space.small}px;
+    padding: ${({ theme }) => theme.sizes.spaces.sm}px
+      ${({ theme }) => theme.sizes.spaces.sm}px;
     margin: 0 auto;
 
     & > section {
-      border-bottom: 1px solid ${({ theme }) => theme.subtleBorderColor};
-      padding: ${({ theme }) => theme.space.small}px
-        ${({ theme }) => theme.space.default}px;
+      border-bottom: 1px solid ${({ theme }) => theme.colors.text.subtle};
+      padding: ${({ theme }) => theme.sizes.spaces.sm}px
+        ${({ theme }) => theme.sizes.spaces.df}px;
 
       &:last-child {
         border-bottom: none;
@@ -255,7 +255,7 @@ const StyledOAuthPage = styled.div`
 
   header {
     text-align: center;
-    font-size: ${({ theme }) => theme.fontSizes.medium}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.md}px;
   }
 `
 
@@ -265,7 +265,7 @@ const StyledAuthDetails = styled.div`
   align-items: center;
 
   svg {
-    color: ${({ theme }) => theme.subtleIconColor};
+    color: ${({ theme }) => theme.colors.text.subtle};
   }
 
   .user-switch {
@@ -274,10 +274,10 @@ const StyledAuthDetails = styled.div`
 `
 
 const StyledUserInfo = styled.div`
-  margin-top: ${({ theme }) => theme.space.small}px;
+  margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
 
   p {
-    margin-bottom: ${({ theme }) => theme.space.xsmall}px;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 
   .user-details {
@@ -285,7 +285,7 @@ const StyledUserInfo = styled.div`
     justify-content: center;
     align-items: center;
     & > span {
-      margin-left: ${({ theme }) => theme.space.small}px;
+      margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
     }
   }
 `
@@ -295,7 +295,7 @@ const StyledInfoSection = styled.div`
   align-items: center;
 
   svg {
-    margin-right: ${({ theme }) => theme.space.default}px;
+    margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
     flex: 0 0 auto;
   }
 `
@@ -304,9 +304,9 @@ const StyledTeamSelect = styled.div`
   .team-select-wrapper {
     position: relative;
     .team-select {
-      border: 1px solid ${({ theme }) => theme.baseBorderColor};
+      border: 1px solid ${({ theme }) => theme.colors.border.main};
       position: absolute;
-      background-color: ${({ theme }) => theme.baseBackgroundColor};
+      background-color: ${({ theme }) => theme.colors.background.primary};
       z-index: 100;
       width: 100%;
     }
@@ -319,16 +319,16 @@ const StyledTeamSelect = styled.div`
     position: relative;
     width: 100%;
     box-sizing: border-box;
-    padding: ${({ theme }) => theme.space.xsmall}px;
+    padding: ${({ theme }) => theme.sizes.spaces.xsm}px;
     text-align: left;
     vertical-align: middle;
     &:hover,
     &.active {
-      background-color: ${({ theme }) => theme.subtleBackgroundColor};
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
     }
 
     .label {
-      font-size: ${({ theme }) => theme.fontSizes.large}px;
+      font-size: ${({ theme }) => theme.sizes.fonts.l}px;
     }
   }
 `
@@ -339,8 +339,8 @@ const StyledTeamIconWrapper = styled.div`
   flex: 0 0 auto;
   width: 40px;
   height: 40px;
-  margin-right: ${({ theme }) => theme.space.xsmall}px;
-  background: ${({ theme }) => theme.secondaryBackgroundColor};
+  margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+  background: ${({ theme }) => theme.colors.background.secondary};
   border-radius: 4px;
   overflow: hidden;
 

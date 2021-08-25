@@ -5,7 +5,7 @@ import {
   MixpanelFrontEvent,
 } from '../interfaces/analytics/mixpanel'
 import { trackEvent } from '../api/track'
-import Button, { ButtonVariant } from '../../shared/components/atoms/Button'
+import Button, { ButtonVariant } from '../../design/components/atoms/Button'
 
 interface UpgradeBadgeProps {
   origin: 'share.password' | 'share.expire' | 'revision' | 'limit'

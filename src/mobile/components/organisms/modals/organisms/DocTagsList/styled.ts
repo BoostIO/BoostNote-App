@@ -1,5 +1,4 @@
-import styled from '../../../../../../cloud/lib/styled'
-import { subtleBackgroundColor } from '../../../../../../cloud/lib/styled/styleFunctions'
+import styled from '../../../../../../design/lib/styled'
 
 export const StyledDocTagsListWrapper = styled.div`
   display: flex;
@@ -38,18 +37,18 @@ export const StyledDocTagsList = styled.div`
 `
 
 export const StyledDocTagsListIcon = styled.div`
-  color: ${({ theme }) => theme.subtleTextColor};
+  color: ${({ theme }) => theme.colors.text.subtle};
 `
 
 export const StyledTag = styled.div`
   display: flex;
   flex-wrap: wrap;
   padding: 2px 5px;
-  ${subtleBackgroundColor}
+  background: ${({ theme }) => theme.colors.background.secondary};
   position: relative;
-  margin: 0 ${({ theme }) => theme.space.xxsmall}px;
-  color: ${({ theme }) => theme.baseTextColor};
-  font-size: ${({ theme }) => theme.fontSizes.small}px;
+  margin: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
   border-radius: 3px;
   vertical-align: middle;
   height: 25px;
@@ -62,10 +61,10 @@ export const StyledTag = styled.div`
   .removeTag {
     display: inline-block;
     cursor: pointer;
-    margin-left: ${({ theme }) => theme.space.xxsmall}px;
+    margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
     &:hover,
     &:focus {
-      color: ${({ theme }) => theme.emphasizedTextColor};
+      color: ${({ theme }) => theme.colors.text.primary};
     }
 
     &disabled {
@@ -80,7 +79,7 @@ export const StyledTag = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     cursor: pointer;
-    color: ${({ theme }) => theme.baseTextColor};
+    color: ${({ theme }) => theme.colors.text.primary};
     text-decoration: none;
     &:hover,
     &:focus {
@@ -90,7 +89,7 @@ export const StyledTag = styled.div`
 
   .tag-spinner {
     margin-top: -3px;
-    margin-right: ${({ theme }) => theme.space.xxsmall}px;
+    margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 
   &.bg-none {
@@ -103,30 +102,30 @@ export const StyledTag = styled.div`
 
   &.size-s {
     height: 100%;
-    padding: ${({ theme }) => theme.space.xxsmall}px
-      ${({ theme }) => theme.space.xsmall}px;
-    font-size: ${({ theme }) => theme.fontSizes.xsmall}px;
+    padding: ${({ theme }) => theme.sizes.spaces.xsm}px
+      ${({ theme }) => theme.sizes.spaces.xsm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.xsm}px;
     line-height: 1;
   }
 
   &.ml-xsmall {
-    margin-left: ${({ theme }) => theme.space.xsmall}px;
+    margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 `
 
 export const StyledToolbarExpandTag = styled.button`
   height: 24px;
-  color: ${({ theme }) => theme.subtleTextColor};
-  font-size: ${({ theme }) => theme.fontSizes.small}px;
+  color: ${({ theme }) => theme.colors.text.subtle};
+  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
   background: none;
   padding: 0;
   display: flex;
   align-items: center;
   margin-top: 6px;
-  margin-right: ${({ theme }) => theme.space.xsmall}px;
+  margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
 
   &:hover,
   &:focus {
-    color: ${({ theme }) => theme.emphasizedTextColor};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 `

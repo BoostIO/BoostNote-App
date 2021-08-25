@@ -37,7 +37,7 @@ import {
 import { usePreferences } from '../../lib/preferences'
 import { openContextMenu, openExternal } from '../../lib/electronOnly'
 import { DidFailLoadEvent } from 'electron/main'
-import styled from '../../shared/lib/styled'
+import styled from '../../design/lib/styled'
 
 export interface WebviewControl {
   focus(): void

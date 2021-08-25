@@ -1,14 +1,10 @@
 import React, { useCallback, useState } from 'react'
-import styled from '../../lib/styled'
-import Container from '../../components/layouts/Container'
 import Page from '../../components/Page'
-import { useDialog, DialogIconTypes } from '../../../shared/lib/stores/dialog'
-import { useToast } from '../../../shared/lib/stores/toast'
+import { useDialog, DialogIconTypes } from '../../../design/lib/stores/dialog'
+import { useToast } from '../../../design/lib/stores/toast'
 import { useTranslation } from 'react-i18next'
-import CustomButton from '../../components/atoms/buttons/CustomButton'
-import { Spinner } from '../../components/atoms/Spinner'
-import FeedbackForm from '../../components/organisms/FeedbackForm'
-import { UserFeedbackFormData } from '../../components/organisms/FeedbackForm/types'
+import FeedbackForm from '../../components/FeedbackForm'
+import { UserFeedbackFormData } from '../../components/FeedbackForm/types'
 import {
   DeleteTeamPageResponseBody,
   getDeleteTeamPageData,
@@ -18,6 +14,10 @@ import { sendFeedback } from '../../api/feedback'
 import { useElectron } from '../../lib/stores/electron'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 import { useRouter } from '../../lib/router'
+import { LoadingButton } from '../../../design/components/atoms/Button'
+import Card from '../../../design/components/atoms/Card'
+import Flexbox from '../../../design/components/atoms/Flexbox'
+import { useGlobalData } from '../../lib/stores/globalData'
 
 const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
   const [sendingRemoval, setSendingRemoval] = useState<boolean>(false)
@@ -26,6 +26,7 @@ const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
   const { push } = useRouter()
   const { t } = useTranslation()
   const { usingElectron, sendToElectron } = useElectron()
+  const { setPartialGlobalData, globalData } = useGlobalData()
 
   const [feedback, setFeedback] = useState<UserFeedbackFormData>({
     needFeatures: false,
@@ -68,6 +69,10 @@ const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
                 await sendFeedback(feedback)
               } catch (error) {
               } finally {
+                const cleanedUpTeams = globalData.teams
+                  .slice()
+                  .filter((t) => t.id !== team.id)
+                setPartialGlobalData({ teams: cleanedUpTeams })
                 if (usingElectron) {
                   sendToElectron('team-delete', team)
                 } else {
@@ -93,33 +98,32 @@ const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
     feedback,
     sendToElectron,
     usingElectron,
+    globalData,
+    setPartialGlobalData,
   ])
 
   return (
     <Page>
-      <Container>
-        <StyledAccountDeletePage>
-          <StyledAccountDeleteCard>
-            <h1>Delete your team: {team.name}?</h1>
-
-            <p>
-              Please let us know the reasons why so that we can further improve
-              our product.
-            </p>
-            <FeedbackForm
-              feedback={feedback}
-              onChangeFeedback={onChangeFeedbackHandler}
-            />
-            <CustomButton
-              variant='danger'
-              disabled={sendingRemoval}
-              onClick={deleteHandler}
-            >
-              {sendingRemoval ? <Spinner /> : t('general.delete')}
-            </CustomButton>
-          </StyledAccountDeleteCard>
-        </StyledAccountDeletePage>
-      </Container>
+      <Flexbox style={{ height: '100vh' }} justifyContent='center'>
+        <Card title={`Delete your team: ${team.name}?`}>
+          <p>
+            Please let us know the reasons why so that we can further improve
+            our product.
+          </p>
+          <FeedbackForm
+            feedback={feedback}
+            onChangeFeedback={onChangeFeedbackHandler}
+          />
+          <LoadingButton
+            spinning={sendingRemoval}
+            variant='danger'
+            disabled={sendingRemoval}
+            onClick={deleteHandler}
+          >
+            {t('general.delete')}
+          </LoadingButton>
+        </Card>
+      </Flexbox>
     </Page>
   )
 }
@@ -128,65 +132,5 @@ DeleteTeamPage.getInitialProps = async (params: GetInitialPropsParameters) => {
   const result = await getDeleteTeamPageData(params)
   return result
 }
-
-const StyledAccountDeletePage = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-`
-
-const StyledAccountDeleteCard = styled.div`
-  background-color: ${({ theme }) => theme.subtleBackgroundColor};
-  color: ${({ theme }) => theme.baseTextColor};
-  box-shadow: ${({ theme }) => theme.baseShadowColor};
-  width: 100%;
-  max-width: 1000px;
-  padding: ${({ theme }) => theme.space.xlarge}px
-    ${({ theme }) => theme.space.large}px;
-  border-radius: 5px;
-
-  h1,
-  p {
-    text-align: center;
-  }
-
-  .btn-register,
-  .btn-registered {
-    display: inline-block;
-    margin-top: ${({ theme }) => theme.space.default}px;
-  }
-
-  .btn-register + .btn-registered {
-    margin-left: ${({ theme }) => theme.space.default}px;
-  }
-
-  .btn-signin {
-    display: block;
-    margin: ${({ theme }) => theme.space.large}px auto
-      ${({ theme }) => theme.space.small}px;
-  }
-
-  .content {
-    max-width: 480px;
-    width: 96%;
-    margin: ${({ theme }) => theme.space.xxlarge}px auto;
-
-    &.flex {
-      display: flex;
-      justify-content: space-between;
-      button {
-        flex: 1 1 auto;
-        margin: 0 ${({ theme }) => theme.space.default}px;
-      }
-    }
-  }
-
-  strong {
-    display: block;
-    font-size: ${({ theme }) => theme.fontSizes.xlarge}px;
-    margin: ${({ theme }) => theme.space.large}px 0;
-  }
-`
 
 export default DeleteTeamPage

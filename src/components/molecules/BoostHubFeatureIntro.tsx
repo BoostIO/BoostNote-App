@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react'
-import Image from '../atoms/Image'
+import Image from '../../design/components/atoms/Image'
 import { mdiAccountPlus, mdiHistory, mdiChartBar } from '@mdi/js'
 import { openNew } from '../../lib/platform'
 import { boostHubLearnMorePageUrl } from '../../lib/boosthub'
-import Icon from '../../shared/components/atoms/Icon'
-import styled from '../../shared/lib/styled'
-import { border, flexCenter } from '../../shared/lib/styled/styleFunctions'
+import Icon from '../../design/components/atoms/Icon'
+import styled from '../../design/lib/styled'
+import { border, flexCenter } from '../../design/lib/styled/styleFunctions'
 
 const BoostHubFeatureIntro = () => {
   const openLearnMorePage = useCallback(() => {

@@ -1,7 +1,8 @@
-import { SidebarState } from '../../../../shared/lib/sidebar'
-import { LayoutMode } from '../../../components/layouts/DocEditLayout'
-import { SidebarTreeSortingOrder } from '../../../../shared/lib/sidebar'
+import { SidebarState } from '../../../../design/lib/sidebar'
+import { SidebarTreeSortingOrder } from '../../../../design/lib/sidebar'
 import { DocStatus } from '../../../interfaces/db/doc'
+
+export type LayoutMode = 'split' | 'preview' | 'editor'
 
 export interface Preferences {
   docContextMode: 'hidden' | 'comment'

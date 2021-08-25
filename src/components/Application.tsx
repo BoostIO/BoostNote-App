@@ -1,17 +1,18 @@
 import React, { useCallback, useEffect } from 'react'
-import ContentLayout, {
-  ContentLayoutProps,
-} from '../shared/components/templates/ContentLayout'
+import {
+  ChartedContentLayout,
+  ChartedContentLayoutProps,
+} from '../design/components/templates/ContentLayout'
 import { useRouter } from '../lib/router'
 import { LocalSpaceRouteParams, useRouteParams } from '../lib/routeParams'
 import { useDb } from '../lib/db'
 import { useGeneralStatus } from '../lib/generalStatus'
 import { addIpcListener, removeIpcListener } from '../lib/electronOnly'
 import SidebarContainer from './organisms/SidebarContainer'
-import ApplicationLayout from '../shared/components/molecules/ApplicationLayout'
+import ApplicationLayout from '../design/components/molecules/ApplicationLayout'
 
 interface ApplicationProps {
-  content: ContentLayoutProps
+  content: ChartedContentLayoutProps
   className?: string
   hideSidebar?: boolean
 }
@@ -78,7 +79,7 @@ const Application = ({
     <ApplicationLayout
       sidebar={<SidebarContainer workspace={storage} />}
       pageBody={
-        <ContentLayout
+        <ChartedContentLayout
           {...content}
           topbar={{
             ...topbar,
@@ -89,7 +90,7 @@ const Application = ({
           }}
         >
           {children}
-        </ContentLayout>
+        </ChartedContentLayout>
       }
     />
   )

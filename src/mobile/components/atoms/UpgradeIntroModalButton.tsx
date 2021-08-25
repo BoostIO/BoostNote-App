@@ -4,8 +4,8 @@ import {
   MixpanelFrontEvent,
 } from '../../../cloud/interfaces/analytics/mixpanel'
 import { trackEvent } from '../../../cloud/api/track'
-import { useModal } from '../../../shared/lib/stores/modal'
-import Button, { ButtonVariant } from '../../../shared/components/atoms/Button'
+import { useModal } from '../../../design/lib/stores/modal'
+import Button, { ButtonVariant } from '../../../design/components/atoms/Button'
 import UpgradeIntroModal, {
   IntroPopupVariant as UpgradeIntroModalVariant,
 } from '../organisms/modals/UpgradeIntroModal'

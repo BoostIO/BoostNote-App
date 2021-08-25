@@ -1,19 +1,18 @@
 import React, { useCallback, useState } from 'react'
-import styled from '../../lib/styled'
-import Container from '../../components/layouts/Container'
 import { useGlobalData } from '../../lib/stores/globalData'
 import Page from '../../components/Page'
-import ErrorPage from '../../components/organisms/error/ErrorPage'
-import { useDialog, DialogIconTypes } from '../../../shared/lib/stores/dialog'
+import ErrorPage from '../../components/error/ErrorPage'
+import { useDialog, DialogIconTypes } from '../../../design/lib/stores/dialog'
 import { useTranslation } from 'react-i18next'
-import CustomButton from '../../components/atoms/buttons/CustomButton'
-import { Spinner } from '../../components/atoms/Spinner'
 import { deleteUser } from '../../api/users'
-import FeedbackForm from '../../components/organisms/FeedbackForm'
-import { UserFeedbackFormData } from '../../components/organisms/FeedbackForm/types'
+import FeedbackForm from '../../components/FeedbackForm'
+import { UserFeedbackFormData } from '../../components/FeedbackForm/types'
 import { useElectron } from '../../lib/stores/electron'
 import { boostHubBaseUrl } from '../../lib/consts'
-import { useToast } from '../../../shared/lib/stores/toast'
+import { useToast } from '../../../design/lib/stores/toast'
+import { LoadingButton } from '../../../design/components/atoms/Button'
+import Flexbox from '../../../design/components/atoms/Flexbox'
+import Card from '../../../design/components/atoms/Card'
 
 const AccountDeletePage = () => {
   const { globalData } = useGlobalData()
@@ -105,91 +104,28 @@ const AccountDeletePage = () => {
 
   return (
     <Page>
-      <Container>
-        <StyledAccountDeletePage>
-          <StyledAccountDeleteCard>
-            <h1>{t('settings.account.delete')}</h1>
-
-            <p>
-              Please let us know the reasons why so that we can further improve
-              our product.
-            </p>
-            <FeedbackForm
-              feedback={feedback}
-              onChangeFeedback={onChangeFeedbackHandler}
-            />
-            <CustomButton
-              variant='danger'
-              disabled={sendingRemoval}
-              onClick={deleteHandler}
-            >
-              {sendingRemoval ? <Spinner /> : t('general.delete')}
-            </CustomButton>
-          </StyledAccountDeleteCard>
-        </StyledAccountDeletePage>
-      </Container>
+      <Flexbox style={{ height: '100vh' }} justifyContent='center'>
+        <Card title={t('settings.account.delete')}>
+          <p>
+            Please let us know the reasons why so that we can further improve
+            our product.
+          </p>
+          <FeedbackForm
+            feedback={feedback}
+            onChangeFeedback={onChangeFeedbackHandler}
+          />
+          <LoadingButton
+            spinning={sendingRemoval}
+            variant='danger'
+            disabled={sendingRemoval}
+            onClick={deleteHandler}
+          >
+            {t('general.delete')}
+          </LoadingButton>
+        </Card>
+      </Flexbox>
     </Page>
   )
 }
-
-const StyledAccountDeletePage = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-`
-
-const StyledAccountDeleteCard = styled.div`
-  background-color: ${({ theme }) => theme.subtleBackgroundColor};
-  color: ${({ theme }) => theme.baseTextColor};
-  box-shadow: ${({ theme }) => theme.baseShadowColor};
-  width: 100%;
-  max-width: 1000px;
-  padding: ${({ theme }) => theme.space.xlarge}px
-    ${({ theme }) => theme.space.large}px;
-  border-radius: 5px;
-
-  h1,
-  p {
-    text-align: center;
-  }
-
-  .btn-register,
-  .btn-registered {
-    display: inline-block;
-    margin-top: ${({ theme }) => theme.space.default}px;
-  }
-
-  .btn-register + .btn-registered {
-    margin-left: ${({ theme }) => theme.space.default}px;
-  }
-
-  .btn-signin {
-    display: block;
-    margin: ${({ theme }) => theme.space.large}px auto
-      ${({ theme }) => theme.space.small}px;
-  }
-
-  .content {
-    max-width: 480px;
-    width: 96%;
-    margin: ${({ theme }) => theme.space.xxlarge}px auto;
-
-    &.flex {
-      display: flex;
-      justify-content: space-between;
-      button {
-        flex: 1 1 auto;
-        margin: 0 ${({ theme }) => theme.space.default}px;
-      }
-    }
-  }
-
-  strong {
-    display: block;
-    font-size: ${({ theme }) => theme.fontSizes.xlarge}px;
-    margin: ${({ theme }) => theme.space.large}px 0;
-  }
-`
 
 export default AccountDeletePage

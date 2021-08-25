@@ -5,7 +5,7 @@ import { mdiClose } from '@mdi/js'
 import { useDb } from '../../lib/db'
 import { useRouteParams } from '../../lib/routeParams'
 import MigrationTab from './MigrationTab'
-import styled from '../../shared/lib/styled'
+import styled from '../../design/lib/styled'
 import {
   border,
   backgroundColor,
@@ -13,8 +13,8 @@ import {
   borderLeft,
   closeIconColor,
   flexCenter,
-} from '../../shared/lib/styled/styleFunctions'
-import Icon from '../../shared/components/atoms/Icon'
+} from '../../design/lib/styled/styleFunctions'
+import Icon from '../../design/components/atoms/Icon'
 
 const FullScreenContainer = styled.div`
   z-index: 7000;

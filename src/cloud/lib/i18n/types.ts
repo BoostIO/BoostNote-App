@@ -354,6 +354,7 @@ export enum lngKeys {
   DocExportMarkdown = 'doc.export.markdown',
   DocExportHtml = 'doc.export.html',
 
+  FolderInfo = 'Folder.Info',
   DocInfo = 'Doc.Info',
   Assignees = 'Assignees',
   Unassigned = 'Unassigned',
@@ -429,6 +430,10 @@ export enum lngKeys {
   RequestSent = 'request.requested',
 
   UploadLimit = 'upload.limit',
+  OnboardingFolderSectionTitle = 'onboarding.folder.section.title',
+  OnboardingFolderSectionDisclaimer = 'onboarding.folder.section.disclaimer',
+
+  GeneralContent = 'general.content',
 }
 
 export type TranslationSource = {

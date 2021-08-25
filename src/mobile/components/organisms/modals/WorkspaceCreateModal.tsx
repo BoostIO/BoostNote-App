@@ -4,8 +4,7 @@ import ModalFormWrapper from './atoms/ModalFormWrapper'
 
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 
-import { Spinner } from '../../../../cloud/components/atoms/Spinner'
-import ErrorBlock from '../../../../cloud/components/atoms/ErrorBlock'
+import ErrorBlock from '../../../../cloud/components/ErrorBlock'
 import { useGlobalData } from '../../../../cloud/lib/stores/globalData'
 import { SerializedUserTeamPermissions } from '../../../../cloud/interfaces/db/userTeamPermissions'
 import {
@@ -14,20 +13,14 @@ import {
 } from '../../../../cloud/api/teams/workspaces'
 import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
 import { useNav } from '../../../../cloud/lib/stores/nav'
-import Flexbox from '../../../../cloud/components/atoms/Flexbox'
-import { useModal } from '../../../../shared/lib/stores/modal'
-import Switch from '../../../../shared/components/atoms/Switch'
-import Button from '../../../../shared/components/atoms/Button'
-import {
-  ModaLineHeader,
-  ModalLine,
-} from '../../../../cloud/components/organisms/Modal/contents/styled'
-import WorkspaceAccess from '../../../../cloud/components/organisms/Modal/contents/Workspace/WorkspaceAccess'
-import {
-  StyledModalForm,
-  StyledModalFormInput,
-} from '../../../../cloud/components/organisms/Modal/contents/Forms/styled'
+import Flexbox from '../../../../design/components/atoms/Flexbox'
+import { useModal } from '../../../../design/lib/stores/modal'
+import Switch from '../../../../design/components/atoms/Switch'
+import { LoadingButton } from '../../../../design/components/atoms/Button'
+import WorkspaceAccess from '../../../../cloud/components/Modal/contents/Workspace/WorkspaceAccess'
 import { useEffectOnce } from 'react-use'
+import Form from '../../../../design/components/molecules/Form'
+import FormRow from '../../../../design/components/molecules/Form/templates/FormRow'
 
 const WorkspaceCreateModal = () => {
   const { team, permissions } = usePage()
@@ -139,22 +132,25 @@ const WorkspaceCreateModal = () => {
   return (
     <ModalContainer title='Create a workspace' closeLabel='Cancel'>
       <ModalFormWrapper>
-        <StyledModalForm onSubmit={onSubmit}>
-          <ModalLine>
-            <ModaLineHeader>Name</ModaLineHeader>
-          </ModalLine>
-          <ModalLine className='svg-initial-style' style={{ marginBottom: 30 }}>
-            <StyledModalFormInput
-              ref={nameInputRef}
-              placeholder='Workspace name'
-              value={name}
-              onChange={onChangeWorkspaceNameHandler}
-            />
-          </ModalLine>
-          <ModalLine>
-            <ModaLineHeader>Make private</ModaLineHeader>
-          </ModalLine>
-          <ModalLine style={{ marginBottom: 30 }}>
+        <Form onSubmit={onSubmit}>
+          <FormRow
+            row={{
+              title: 'Name',
+              items: [
+                {
+                  type: 'input',
+                  props: {
+                    ref: nameInputRef,
+                    placeholder: 'Workspace name',
+                    value: name,
+                    onChange: onChangeWorkspaceNameHandler,
+                  },
+                },
+              ],
+            }}
+          />
+          <FormRow row={{ title: 'Make Private' }} />
+          <FormRow>
             <Flexbox justifyContent='space-between'>
               {isPublic ? (
                 <span>
@@ -175,33 +171,36 @@ const WorkspaceCreateModal = () => {
                 />
               </Flexbox>
             </Flexbox>
-          </ModalLine>{' '}
+          </FormRow>
           {!isPublic && (
-            <WorkspaceAccess
-              permissions={permissions}
-              selectedPermissions={selectedPermissions}
-              setSelectedPermissions={setSelectedPermissions}
-              currentUser={currentUser}
-            />
+            <FormRow>
+              <WorkspaceAccess
+                permissions={permissions}
+                selectedPermissions={selectedPermissions}
+                setSelectedPermissions={setSelectedPermissions}
+                currentUser={currentUser}
+              />
+            </FormRow>
           )}
           {error != null && (
-            <ModalLine>
+            <FormRow>
               <ErrorBlock
                 error={error}
                 style={{ margin: 0, width: '100%', marginTop: 20 }}
               />
-            </ModalLine>
+            </FormRow>
           )}
-          <ModalLine className='justify-center svg-initial-style'>
-            <Button variant='primary' type='submit' disabled={sending}>
-              {sending ? (
-                <Spinner size={16} style={{ fontSize: 16, marginRight: 0 }} />
-              ) : (
-                'Create'
-              )}
-            </Button>
-          </ModalLine>
-        </StyledModalForm>
+          <FormRow className='justify-center svg-initial-style'>
+            <LoadingButton
+              variant='primary'
+              type='submit'
+              disabled={sending}
+              spinning={sending}
+            >
+              Create
+            </LoadingButton>
+          </FormRow>
+        </Form>
       </ModalFormWrapper>
     </ModalContainer>
   )

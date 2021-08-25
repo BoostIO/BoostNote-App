@@ -1,15 +1,14 @@
 import React, { useCallback, useState } from 'react'
-import styled from '../../../shared/lib/styled'
+import styled from '../../../design/lib/styled'
 import { useGlobalData } from '../../../cloud/lib/stores/globalData'
-import ErrorPage from '../../../cloud/components/organisms/error/ErrorPage'
-import { useDialog, DialogIconTypes } from '../../../shared/lib/stores/dialog'
+import ErrorPage from '../../../cloud/components/error/ErrorPage'
+import { useDialog, DialogIconTypes } from '../../../design/lib/stores/dialog'
 import { useTranslation } from 'react-i18next'
-import { Spinner } from '../../../cloud/components/atoms/Spinner'
 import { deleteUser } from '../../../cloud/api/users'
-import { UserFeedbackFormData } from '../../../cloud/components/organisms/FeedbackForm/types'
-import { useToast } from '../../../shared/lib/stores/toast'
+import { UserFeedbackFormData } from '../../../cloud/components/FeedbackForm/types'
+import { useToast } from '../../../design/lib/stores/toast'
 import NavigationBarContainer from '../atoms/NavigationBarContainer'
-import Button from '../../../shared/components/atoms/Button'
+import { LoadingButton } from '../../../design/components/atoms/Button'
 import useSignOut from '../../lib/signOut'
 
 const AccountDeletePage = () => {
@@ -182,14 +181,15 @@ const AccountDeletePage = () => {
           </div>
 
           <div className='body__form__control'>
-            <Button
+            <LoadingButton
+              spinning={sendingRemoval}
               className='body__form__control__button'
               variant='danger'
               disabled={sendingRemoval}
               onClick={deleteHandler}
             >
-              {sendingRemoval ? <Spinner /> : t('general.delete')}
-            </Button>
+              {t('general.delete')}
+            </LoadingButton>
           </div>
         </div>
       </div>

@@ -296,6 +296,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.AttachmentsPlanUpgradeDisclaimer]: '如果你需要更多的空间，请',
   [lngKeys.AttachmentsUpgradeLink]: '升级你的计划。',
 
+  [lngKeys.FolderInfo]: 'Folder Info',
   [lngKeys.DocInfo]: '文档信息',
   [lngKeys.Assignees]: '分配给',
   [lngKeys.Unassigned]: '未分配',
@@ -451,6 +452,11 @@ const zhTranslation: TranslationSource = {
   [lngKeys.RequestAsk]: 'Ask to edit',
   [lngKeys.UploadLimit]:
     'The maximum allowed size for uploads is {{sizeInMb}}Mb',
+
+  [lngKeys.OnboardingFolderSectionTitle]: 'Welcome to Boost Note!',
+  [lngKeys.OnboardingFolderSectionDisclaimer]:
+    'Invite your teammates to this space',
+  [lngKeys.GeneralContent]: 'Content',
 }
 
 export default {

@@ -3,16 +3,16 @@ import {
   useContextMenu,
   MenuTypes,
   NormalMenuItem,
-} from '../../../../shared/lib/stores/contextMenu'
+} from '../../../../design/lib/stores/contextMenu'
 import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
 import { useRouter } from '../../../../cloud/lib/router'
 import { SerializedTeamInvite } from '../../../../cloud/interfaces/db/teamInvite'
 import { getHexFromUUID } from '../../../../cloud/lib/utils/string'
 import { stringify as stringifyQueryString } from 'querystring'
-import RoundedImage from '../../../../shared/components/atoms/RoundedImage'
-import Icon from '../../../../shared/components/atoms/Icon'
+import RoundedImage from '../../../../design/components/atoms/RoundedImage'
+import Icon from '../../../../design/components/atoms/Icon'
 import { mdiUnfoldMoreHorizontal } from '@mdi/js'
-import styled from '../../../../shared/lib/styled'
+import styled from '../../../../design/lib/styled'
 import SpaceMenuItemLabel from './SpaceMenuItemLabel'
 import useSignOut from '../../../lib/signOut'
 import { buildIconUrl } from '../../../../cloud/api/files'

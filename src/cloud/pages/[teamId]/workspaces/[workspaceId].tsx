@@ -1,13 +1,14 @@
 import React, { useMemo } from 'react'
-import Application from '../../../components/Application'
 import {
   getWorkspaceShowPageData,
   WorkspacesShowPageResponseBody,
 } from '../../../api/pages/teams/workspaces'
-import WorkspacePage from '../../../components/organisms/WorkspacePage'
 import { useNav } from '../../../lib/stores/nav'
-import ColoredBlock from '../../../components/atoms/ColoredBlock'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
+import ColoredBlock from '../../../../design/components/atoms/ColoredBlock'
+import ApplicationPage from '../../../components/ApplicationPage'
+import WorkspacePage from '../../../components/WorkspacePage'
+import ApplicationContent from '../../../components/ApplicationContent'
 
 const WorkspaceShowPage = ({
   pageWorkspace,
@@ -20,12 +21,13 @@ const WorkspaceShowPage = ({
 
   if (workspace == null) {
     return (
-      <Application content={{}}>
-        <ColoredBlock variant='danger' style={{ marginTop: '40px' }}>
-          <h3>Oops...</h3>
-          <p>The folder has been deleted.</p>
-        </ColoredBlock>
-      </Application>
+      <ApplicationPage showingTopbarPlaceholder={true}>
+        <ApplicationContent reduced={true}>
+          <ColoredBlock variant='danger'>
+            {'The folder has been deleted'}
+          </ColoredBlock>
+        </ApplicationContent>
+      </ApplicationPage>
     )
   }
 

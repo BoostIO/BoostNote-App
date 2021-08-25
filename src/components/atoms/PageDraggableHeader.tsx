@@ -1,10 +1,10 @@
 import React, { MouseEventHandler } from 'react'
-import Icon from '../../shared/components/atoms/Icon'
-import styled from '../../shared/lib/styled'
+import Icon from '../../design/components/atoms/Icon'
+import styled from '../../design/lib/styled'
 import {
   borderBottom,
   flexCenter,
-} from '../../shared/lib/styled/styleFunctions'
+} from '../../design/lib/styled/styleFunctions'
 
 const Container = styled.div`
   display: flex;

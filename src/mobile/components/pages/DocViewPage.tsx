@@ -3,26 +3,26 @@ import {
   SerializedDocWithBookmark,
   SerializedDoc,
 } from '../../../cloud/interfaces/db/doc'
-import styled from '../../../cloud/lib/styled'
 import { usePreferences } from '../../lib/preferences'
-import { rightSideTopBarHeight } from '../../../cloud/components/organisms/RightSideTopBar/styled'
-import { rightSidePageLayout } from '../../../cloud/lib/styled/styleFunctions'
 import { SerializedUser } from '../../../cloud/interfaces/db/user'
-import MarkdownView from '../../../cloud/components/atoms/MarkdownView'
+import MarkdownView from '../../../cloud/components/MarkdownView'
 import useRealtime from '../../../cloud/lib/editor/hooks/useRealtime'
 import { buildIconUrl } from '../../../cloud/api/files'
 import { getColorFromString } from '../../../cloud/lib/utils/string'
 import { createAbsolutePositionFromRelativePosition } from 'yjs'
 import useCommentManagerState from '../../../cloud/lib/hooks/useCommentManagerState'
 import { HighlightRange } from '../../../cloud/lib/rehypeHighlight'
-import Spinner from '../../../shared/components/atoms/Spinner'
+import Spinner from '../../../design/components/atoms/Spinner'
 import AppLayout from '../layouts/AppLayout'
 import NavigationBarButton from '../atoms/NavigationBarButton'
-import Icon from '../../../shared/components/atoms/Icon'
+import Icon from '../../../design/components/atoms/Icon'
 import { mdiDotsHorizontal } from '@mdi/js'
 import DocInfoModal from '../organisms/modals/DocInfoModal'
-import { useModal } from '../../../shared/lib/stores/modal'
+import { useModal } from '../../../design/lib/stores/modal'
 import { SerializedTeam } from '../../../cloud/interfaces/db/team'
+import styled from '../../../design/lib/styled'
+import { rightSidePageLayout } from '../../../design/lib/styled/styleFunctions'
+import { rightSideTopBarHeight } from '../../../design/components/organisms/Topbar'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -241,7 +241,7 @@ const StyledLoadingView = styled.div`
 `
 
 const StyledPlaceholderContent = styled.div`
-  color: ${({ theme }) => theme.subtleTextColor};
+  color: ${({ theme }) => theme.colors.text.subtle};
 `
 
 const Container = styled.div`
@@ -267,18 +267,18 @@ const Container = styled.div`
     height: auto;
     min-height: calc(
       100vh - ${rightSideTopBarHeight}px -
-        ${({ theme }) => theme.space.xlarge}px
+        ${({ theme }) => theme.sizes.spaces.xl}px
     );
     font-size: 15px;
     ${rightSidePageLayout}
     margin: auto;
-    padding: 0 ${({ theme }) => theme.space.xlarge}px;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.xl}px;
   }
 
   .view__content {
     height: 100%;
     width: 50%;
-    padding-top: ${({ theme }) => theme.space.small}px;
+    padding-top: ${({ theme }) => theme.sizes.spaces.sm}px;
     margin: 0 auto;
     width: 100%;
 

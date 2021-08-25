@@ -14,20 +14,20 @@ import {
 } from '../../lib/routeParams'
 import { mdiLogin, mdiLogout, mdiPlus } from '@mdi/js'
 import { useTranslation } from 'react-i18next'
-import styled from '../../shared/lib/styled'
+import styled from '../../design/lib/styled'
 import cc from 'classcat'
 import { useGeneralStatus } from '../../lib/generalStatus'
-import { AppUser } from '../../shared/lib/mappers/users'
+import { AppUser } from '../../design/lib/mappers/users'
 import { useLocalUI } from '../../lib/v2/hooks/local/useLocalUI'
 import { mapLocalSpace } from '../../lib/v2/mappers/local/sidebarSpaces'
-import { osName } from '../../shared/lib/platform'
+import { osName } from '../../design/lib/platform'
 import {
   SidebarSpace,
   SidebarSpaceContentRow,
-} from '../../shared/components/organisms/Sidebar/molecules/SidebarSpaces'
+} from '../../design/components/organisms/Sidebar/molecules/SidebarSpaces'
 import { useBoostHub } from '../../lib/boosthub'
-import Sidebar from '../../shared/components/organisms/Sidebar'
-import SidebarHeader from '../../shared/components/organisms/Sidebar/atoms/SidebarHeader'
+import Sidebar from '../../design/components/organisms/Sidebar'
+import SidebarHeader from '../../design/components/organisms/Sidebar/atoms/SidebarHeader'
 import plur from 'plur'
 
 interface SidebarContainerProps {

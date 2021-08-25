@@ -1,4 +1,4 @@
-import { UserFeedbackFormData } from '../../components/organisms/FeedbackForm/types'
+import { UserFeedbackFormData } from '../../components/FeedbackForm/types'
 import { callApi } from '../../lib/client'
 
 export async function sendFeedback(body: UserFeedbackFormData) {

@@ -6,10 +6,10 @@ import { SerializedDocWithBookmark } from '../../../cloud/interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../cloud/interfaces/db/folder'
 import ContentManager from '../organisms/ContentManager'
 import { SerializedWorkspace } from '../../../cloud/interfaces/db/workspace'
-import ErrorLayout from '../../../shared/components/templates/ErrorLayout'
+import ErrorLayout from '../../../design/components/templates/ErrorLayout'
 import AppLayout from '../layouts/AppLayout'
-import FolderContextMenu from '../../../cloud/components/organisms/Topbar/Controls/ControlsContextMenu/FolderContextMenu'
-import EmojiIcon from '../../../cloud/components/atoms/EmojiIcon'
+import FolderContextMenu from '../../../cloud/components/Topbar/Controls/ControlsContextMenu/FolderContextMenu'
+import EmojiIcon from '../../../cloud/components/EmojiIcon'
 import { mdiFolder } from '@mdi/js'
 
 const FolderPage = () => {
@@ -122,6 +122,7 @@ const FolderPage = () => {
           currentUserIsCoreMember={currentUserIsCoreMember}
         />
       )}
+
       <ContentManager
         team={team}
         documents={childDocs}

@@ -5,7 +5,7 @@ import { useSearch } from '../../../../cloud/lib/stores/search'
 import { useRouter } from '../../../../cloud/lib/router'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { getFolderHref, getDocLinkHref } from '../../../lib/href'
-import useApi from '../../../../shared/lib/hooks/useApi'
+import useApi from '../../../../design/lib/hooks/useApi'
 import {
   GetSearchResultsRequestQuery,
   getSearchResultsV2,

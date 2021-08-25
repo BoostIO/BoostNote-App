@@ -2,7 +2,6 @@ import React, { useState, useCallback, useMemo, useRef } from 'react'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import {
-  // mdiHistory,
   mdiClockOutline,
   mdiLabelMultipleOutline,
   mdiArrowBottomLeft,
@@ -24,34 +23,27 @@ import {
   updateDocAssignees,
 } from '../../../../cloud/api/teams/docs'
 import { SerializedRevision } from '../../../../cloud/interfaces/db/revision'
-// import { MixpanelActionTrackTypes } from '../../../../cloud/interfaces/analytics/mixpanel'
-// import { trackEvent } from '../../../../cloud/api/track'
 import { SerializedUser } from '../../../../cloud/interfaces/db/user'
-import Flexbox from '../../../../cloud/components/atoms/Flexbox'
-import UserIcon from '../../../../cloud/components/atoms/UserIcon'
-import SmallButton from '../../../../cloud/components/atoms/SmallButton'
+import Flexbox from '../../../../design/components/atoms/Flexbox'
+import UserIcon from '../../../../cloud/components/UserIcon'
 import DocTagsList from './organisms/DocTagsList'
-import DocLink from '../../../../cloud/components/atoms/Link/DocLink'
+import DocLink from '../../../../cloud/components/Link/DocLink'
 import { getDocTitle } from '../../../../cloud/lib/utils/patterns'
 import { usePreferences } from '../../../lib/preferences'
 import cc from 'classcat'
-import Icon from '../../../../shared/components/atoms/Icon'
+import Icon from '../../../../design/components/atoms/Icon'
 import plur from 'plur'
-// import Button from '../../../../shared/components/atoms/Button'
-// import { revisionHistoryStandardDays } from '../../../../cloud/lib/subscription'
-import { useToast } from '../../../../shared/lib/stores/toast'
-// import { useModal } from '../../../../shared/lib/stores/modal'
-import styled from '../../../../shared/lib/styled'
+import { useToast } from '../../../../design/lib/stores/toast'
+import styled from '../../../../design/lib/styled'
 import { format as formatDate } from 'date-fns'
 import { useI18n } from '../../../../cloud/lib/hooks/useI18n'
 import { lngKeys } from '../../../../cloud/lib/i18n/types'
-// import UpgradeIntroModalButton from '../../atoms/UpgradeIntroModalButton'
 import DocDueDateSelect from './organisms/DocContextMenu/DocDueDateSelect'
 import DocAssigneeSelect from './organisms/DocContextMenu/DocAssigneeSelect'
 import ModalContainer from './atoms/ModalContainer'
 import DocInfoModalShareSection from './organisms/DocInfoModalShareSection'
 import DocStatusSelect from './organisms/DocContextMenu/DocStatusSelect'
-// import MobileDocRevisionsModal from './MobileDocRevisionsModal'
+import Button from '../../../../design/components/atoms/Button'
 
 interface DocInfoModalProps {
   currentDoc: SerializedDocWithBookmark
@@ -451,14 +443,15 @@ DocInfoModalProps) => {
                       ))}
 
                       {contributors.length > 5 && (
-                        <SmallButton
+                        <Button
+                          size='sm'
                           variant='transparent'
                           onClick={() => setSliceContributors((prev) => !prev)}
                         >
                           {contributorsState.sliced > 0
                             ? `+${contributorsState.sliced}`
                             : '-'}
-                        </SmallButton>
+                        </Button>
                       )}
                     </Flexbox>
                   </div>
@@ -656,6 +649,7 @@ const Container = styled.div`
     margin-bottom: 0;
     margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
     cursor: inherit;
+    white-space: nowrap;
   }
 
   .context__content {

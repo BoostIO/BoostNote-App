@@ -1,6 +1,6 @@
 import isElectron from 'is-electron'
 import { openExternal } from './electronOnly'
-export { osName } from '../shared/lib/platform'
+export { osName } from '../design/lib/platform'
 
 export const appIsElectron = isElectron()
 
