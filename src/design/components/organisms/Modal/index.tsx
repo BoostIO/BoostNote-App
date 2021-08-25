@@ -184,6 +184,7 @@ const ModalItem = ({
         className={cc([
           'modal__window',
           `modal__window__width--${modal.width}`,
+          modal.hideBackground && 'modal__window--no-bg',
           modal.position != null && `modal__window--context`,
         ])}
       >
@@ -223,7 +224,7 @@ const Container = styled.div`
     opacity: 0.7;
   }
 
-  .modal__window--context.modal__window--no-bg {
+  .modal__window--no-bg {
     background: none !important;
   }
 
