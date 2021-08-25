@@ -244,7 +244,7 @@ const MobileWorkspaceModal = ({
                     {
                       type: 'node',
                       element: (
-                        <small>
+                        <p>
                           {isPublic
                             ? translate(lngKeys.ModalsWorkspacePublicDisclaimer)
                             : `${translate(
@@ -256,7 +256,7 @@ const MobileWorkspaceModal = ({
                                     )
                                   : ''
                               }`}
-                        </small>
+                        </p>
                       ),
                     },
                     {
