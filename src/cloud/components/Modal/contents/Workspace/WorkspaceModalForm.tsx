@@ -225,7 +225,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
               {
                 type: 'node',
                 element: (
-                  <small>
+                  <p>
                     {isPublic
                       ? translate(lngKeys.ModalsWorkspacePublicDisclaimer)
                       : `${translate(
@@ -235,7 +235,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
                             ? translate(lngKeys.ModalsWorkspacePrivateOwner)
                             : ''
                         }`}
-                  </small>
+                  </p>
                 ),
               },
               {
