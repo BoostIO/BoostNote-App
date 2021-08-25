@@ -67,16 +67,18 @@ const ColumnSettings = ({
             col.data_type === 'prop' ? 'GITHUB PARAMETER' : 'PROPERTY TYPE',
         }}
       />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            label: capitalize(col.data_type),
-            iconPath: mdiAccountCircleOutline,
-            onClick: openTypeSelector,
-          },
-        }}
-      />
+      {col.data_type !== 'prop' && (
+        <MetadataContainerRow
+          row={{
+            type: 'button',
+            props: {
+              label: capitalize(col.data_type),
+              iconPath: mdiAccountCircleOutline,
+              onClick: openTypeSelector,
+            },
+          }}
+        />
+      )}
       <MetadataContainerBreak />
       <MetadataContainerRow
         row={{
