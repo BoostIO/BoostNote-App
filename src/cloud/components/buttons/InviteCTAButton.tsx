@@ -1,3 +1,4 @@
+import { mdiAccountPlus } from '@mdi/js'
 import React, { useCallback, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 import Button, { LoadingButton } from '../../../design/components/atoms/Button'
@@ -12,20 +13,17 @@ import { SerializedTeam } from '../../interfaces/db/team'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import { usePage } from '../../lib/stores/pageStore'
-import { useSettings } from '../../lib/stores/settings'
+import InviteMembersModal from '../Modal/InviteMembers/InviteMembersModal'
 
 interface InviteCTAButtonProps {
   origin?: 'folder-page' | 'doc-page'
 }
 
 const InviteCTAButton = ({ origin }: InviteCTAButtonProps) => {
-  const { translate } = useI18n()
-  const { openSettingsTab } = useSettings()
-  const { closeAllModals } = useModal()
+  const { openModal } = useModal()
 
   const onClick = useCallback(() => {
-    openSettingsTab('teamMembers')
-    closeAllModals()
+    openModal(<InviteMembersModal />, { showCloseIcon: true })
 
     switch (origin) {
       case 'folder-page':
@@ -35,12 +33,16 @@ const InviteCTAButton = ({ origin }: InviteCTAButtonProps) => {
       default:
         return
     }
-  }, [origin, openSettingsTab, closeAllModals])
+  }, [origin, openModal])
 
   return (
-    <Button variant='primary' type='button' size='sm' onClick={onClick}>
-      {translate(lngKeys.GeneralInvite)}
-    </Button>
+    <Button
+      variant='primary'
+      type='button'
+      iconPath={mdiAccountPlus}
+      size='sm'
+      onClick={onClick}
+    />
   )
 }
 

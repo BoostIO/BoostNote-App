@@ -76,8 +76,12 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SpaceDomain]: 'スペースドメイン',
   [lngKeys.TeamDomainShow]: 'Urlはこのようになります：',
   [lngKeys.TeamDomainWarning]: '注意：設定後Urlを変更することはできません。',
-  [lngKeys.InviteWithOpenLink]: 'リンクでメンバー招待',
+  [lngKeys.InviteAddWithLink]: 'リンクでメンバー招待',
   [lngKeys.InviteEmail]: 'メールでメンバー招待',
+  [lngKeys.InviteByEmailMore]: '別のチームメンバーを追加する',
+  [lngKeys.InviteFailError]:
+    'メールデータが正しくないため、招待に失敗しました。有効なメールアドレスと役割を入力してください。',
+  [lngKeys.InviteRoleDetails]: 'クリックして役割の詳細を表示します。',
   [lngKeys.RoleMemberDescription]:
     'Member権限のユーザーは「チーム設定」「請求」以外の全ての機能にアクセスすることが出来ます。',
   [lngKeys.RoleAdminDescription]:
