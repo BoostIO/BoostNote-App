@@ -10,26 +10,32 @@ import Icon, {
   WarningIcon,
 } from '../../../../../design/components/atoms/Icon'
 import { useModal } from '../../../../../design/lib/stores/modal'
+import { useToast } from '../../../../../design/lib/stores/toast'
 import styled from '../../../../../design/lib/styled'
 import { postAction } from '../../../../api/integrations'
 import { capitalize } from '../../../../lib/utils/string'
 
 const GithubStatusCell = ({ data, onUpdate }: GithubCellProps) => {
   const { openContextModal, closeAllModals } = useModal()
+  const { pushApiErrorMessage } = useToast()
 
   const updateState = useCallback(
     async (state: 'open' | 'closed') => {
-      const [owner, repo] = data.repository.full_name.split('/')
-      const issue = await postAction(
-        { id: data.integrationId },
-        'issue:update',
-        { owner, repo, issue_number: data.number },
-        { state }
-      )
-      await onUpdate({ ...data, ...issue })
-      closeAllModals()
+      try {
+        const [owner, repo] = data.repository.full_name.split('/')
+        const issue = await postAction(
+          { id: data.integrationId },
+          'issue:update',
+          { owner, repo, issue_number: data.number },
+          { state }
+        )
+        await onUpdate({ ...data, ...issue })
+        closeAllModals()
+      } catch (error) {
+        pushApiErrorMessage(error)
+      }
     },
-    [data, onUpdate, closeAllModals]
+    [data, onUpdate, closeAllModals, pushApiErrorMessage]
   )
 
   const openStateSelect: React.MouseEventHandler = useCallback(

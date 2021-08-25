@@ -1,10 +1,11 @@
 import styled from '../../../../../design/lib/styled'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { GithubCellProps } from '.'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import { getAction, postAction } from '../../../../api/integrations'
 import FilterableSelectList from '../../../../../design/components/molecules/FilterableSelectList'
 import Spinner from '../../../../../design/components/atoms/Spinner'
+import { useToast } from '../../../../../design/lib/stores/toast'
 
 interface Label {
   name: string
@@ -14,18 +15,26 @@ interface Label {
 
 const GithubLabelsCell = ({ data, onUpdate }: GithubCellProps) => {
   const { openContextModal, closeAllModals } = useModal()
+  const { pushApiErrorMessage } = useToast()
+
   const addLabel = useCallback(
     async (toAdd: Label[]) => {
-      const labels = data.labels.concat(toAdd).map((label: Label) => label.name)
-      const [owner, repo] = data.repository.full_name.split('/')
-      const issue = await postAction(
-        { id: data.integrationId },
-        'issue:update',
-        { owner, repo, issue_number: data.number },
-        { labels }
-      )
-      await onUpdate(issue)
-      closeAllModals()
+      try {
+        const labels = data.labels
+          .concat(toAdd)
+          .map((label: Label) => label.name)
+        const [owner, repo] = data.repository.full_name.split('/')
+        const issue = await postAction(
+          { id: data.integrationId },
+          'issue:update',
+          { owner, repo, issue_number: data.number },
+          { labels }
+        )
+        await onUpdate(issue)
+        closeAllModals()
+      } catch (error) {
+        pushApiErrorMessage(error)
+      }
     },
     [data]
   )
@@ -75,24 +84,34 @@ interface LabelSelectProps {
 
 const GithubLabelsSelect = ({ data, onUpdate }: LabelSelectProps) => {
   const [labels, setLabels] = useState<Label[] | null>(null)
+  const { pushApiErrorMessage } = useToast()
+
+  const pushErrorRef = useRef(pushApiErrorMessage)
+  useEffect(() => {
+    pushErrorRef.current = pushApiErrorMessage
+  }, [pushApiErrorMessage])
 
   useEffect(() => {
     let cancel = false
     const cb = async () => {
-      if (
-        data.integrationId != null &&
-        data.repository != null &&
-        data.repository.full_name != null
-      ) {
-        const [owner, repo] = data.repository.full_name.split('/')
-        const labels = await getAction(
-          { id: data.integrationId },
-          'repo:labels',
-          { owner, repo }
-        )
-        if (!cancel) {
-          setLabels(labels)
+      try {
+        if (
+          data.integrationId != null &&
+          data.repository != null &&
+          data.repository.full_name != null
+        ) {
+          const [owner, repo] = data.repository.full_name.split('/')
+          const labels = await getAction(
+            { id: data.integrationId },
+            'repo:labels',
+            { owner, repo }
+          )
+          if (!cancel) {
+            setLabels(labels)
+          }
         }
+      } catch (error) {
+        pushErrorRef.current(error)
       }
     }
     cb()
