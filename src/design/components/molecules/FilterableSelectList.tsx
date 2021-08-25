@@ -32,8 +32,8 @@ const FilterableSelectList: AppComponent<FilterableSelectListProps> = ({
         <ul>
           {items
             .filter(([key]) => key.includes(filter))
-            .map(([, node]) => {
-              return <li>{node}</li>
+            .map(([key, node]) => {
+              return <li key={key}>{node}</li>
             })}
         </ul>
       </VerticalScroller>
@@ -46,8 +46,17 @@ export default FilterableSelectList
 const Container = styled.div`
   & ul {
     margin: 0;
+    padding: 0;
     margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
     list-style: none;
-    padding: 0;
+    & > li {
+      padding: ${({ theme }) => theme.sizes.spaces.sm}px 0;
+      border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
+      align-items: center;
+
+      &:first-child {
+        border-top: 1px solid ${({ theme }) => theme.colors.border.second};
+      }
+    }
   }
 `
