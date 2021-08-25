@@ -58,6 +58,7 @@ import Spinner from '../../design/components/atoms/Spinner'
 import GlobalStyle from '../../design/components/atoms/GlobalStyle'
 import { BaseTheme } from '../../design/lib/styled/types'
 import { darkTheme } from '../../design/lib/styled/dark'
+import { ElectronProvider } from '../../cloud/lib/stores/electron'
 
 const CombinedProvider = combineProviders(
   SidebarCollapseProvider,
@@ -65,7 +66,8 @@ const CombinedProvider = combineProviders(
   SettingsProvider,
   SearchProvider,
   ExternalEntitiesProvider,
-  CommentsProvider
+  CommentsProvider,
+  ElectronProvider
 )
 
 const V2CombinedProvider = combineProviders(

@@ -1,16 +1,12 @@
 import React, { useCallback, useMemo, MouseEvent } from 'react'
 import {
   mdiApplicationCog,
-  mdiArchiveOutline,
-  mdiCheckCircleOutline,
   mdiFileDocumentOutline,
   mdiFilePlusOutline,
   mdiFolderCogOutline,
   mdiFolderPlusOutline,
   mdiLock,
-  mdiPauseCircleOutline,
   mdiPencil,
-  mdiPlayCircleOutline,
   mdiPlus,
   mdiStar,
   mdiStarOutline,
@@ -58,7 +54,7 @@ import {
   getFolderId,
 } from '../../../cloud/lib/utils/patterns'
 import { useCloudApi } from '../../../cloud/lib/hooks/useCloudApi'
-import { getDocStatusHref, getSmartFolderHref } from '../href'
+import { getSmartFolderHref } from '../href'
 import { useDialog } from '../../../design/lib/stores/dialog'
 import { useAppStatus } from '../appStatus'
 import SmartFolderCreateModal from '../../components/organisms/modals/SmartFolderCreateModal'
@@ -787,60 +783,6 @@ export function useNavigatorTree() {
           navigateTo: () => {
             setShowingNavigator(false)
             push(getTeamLinkHref(team, 'shared'))
-          },
-          depth: 0,
-        },
-      ],
-    })
-
-    tree.push({
-      label: 'Status',
-      rows: [
-        {
-          id: 'sidenav-status-in-progress',
-          label: 'In Progress',
-          defaultIcon: mdiPlayCircleOutline,
-          href: getDocStatusHref(team, 'in-progress'),
-          active: getDocStatusHref(team, 'in-progress') === pathname,
-          navigateTo: () => {
-            setShowingNavigator(false)
-            push(getDocStatusHref(team, 'in-progress'))
-          },
-          depth: 0,
-        },
-        {
-          id: 'sidenav-status-paused',
-          label: 'Paused',
-          defaultIcon: mdiPauseCircleOutline,
-          href: getDocStatusHref(team, 'paused'),
-          active: getDocStatusHref(team, 'paused') === pathname,
-          navigateTo: () => {
-            setShowingNavigator(false)
-            push(getDocStatusHref(team, 'paused'))
-          },
-          depth: 0,
-        },
-        {
-          id: 'sidenav-status-completed',
-          label: 'Completed',
-          defaultIcon: mdiCheckCircleOutline,
-          href: getDocStatusHref(team, 'completed'),
-          active: getDocStatusHref(team, 'completed') === pathname,
-          navigateTo: () => {
-            setShowingNavigator(false)
-            push(getDocStatusHref(team, 'completed'))
-          },
-          depth: 0,
-        },
-        {
-          id: 'sidenav-status-archived',
-          label: 'Archived',
-          defaultIcon: mdiArchiveOutline,
-          href: getDocStatusHref(team, 'archived'),
-          active: getDocStatusHref(team, 'archived') === pathname,
-          navigateTo: () => {
-            setShowingNavigator(false)
-            push(getDocStatusHref(team, 'archived'))
           },
           depth: 0,
         },

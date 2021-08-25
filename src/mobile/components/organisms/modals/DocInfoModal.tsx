@@ -649,6 +649,7 @@ const Container = styled.div`
     margin-bottom: 0;
     margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
     cursor: inherit;
+    white-space: nowrap;
   }
 
   .context__content {
