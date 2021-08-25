@@ -6,6 +6,7 @@ import {
   IpcRendererEvent,
   WebContents,
   PrintToPDFOptions,
+  FindInPageOptions,
 } from 'electron'
 import { CookiesSetDetails, CookiesGetFilter, Cookie } from 'electron/main'
 import { Got } from 'got'
@@ -59,6 +60,10 @@ const __ELECTRON_ONLY__: {
   getCookie(filter: CookiesGetFilter): Promise<Cookie[]>
   removeCookie(url: string, name: string): Promise<void>
   setBadgeCount(count: number): boolean
+  findInPage(text: string, options?: FindInPageOptions): number
+  stopFindInPage(
+    action: 'clearSelection' | 'keepSelection' | 'activateSelection'
+  ): void
   got: Got
 } = (window as any).__ELECTRON_ONLY__
 
@@ -92,6 +97,8 @@ const {
   getCookie,
   removeCookie,
   setBadgeCount,
+  findInPage,
+  stopFindInPage,
   got,
 } = __ELECTRON_ONLY__ || {}
 
@@ -150,5 +157,7 @@ export {
   getCookie,
   removeCookie,
   setBadgeCount,
+  findInPage,
+  stopFindInPage,
   got,
 }

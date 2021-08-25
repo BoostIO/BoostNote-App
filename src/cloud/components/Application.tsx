@@ -10,7 +10,7 @@ import {
 import { isActiveElementAnInput, InputableDomElement } from '../lib/dom'
 import { useEffectOnce } from 'react-use'
 import { useSettings } from '../lib/stores/settings'
-import { shortcuts } from '../lib/shortcuts'
+import { isPageSearchShortcut, shortcuts } from '../lib/shortcuts'
 import { useSearch } from '../lib/stores/search'
 import AnnouncementAlert from './AnnouncementAlert'
 import {
@@ -70,6 +70,11 @@ import ViewerDisclaimer from './ViewerDisclaimer'
 import { useCloudSidebarSpaces } from '../lib/hooks/sidebar/useCloudSidebarSpaces'
 import { trackEvent } from '../api/track'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
+import {
+  InPageSearch,
+  InPageSearchContainer,
+} from './molecules/PageSearch/InPageSearchPortal'
+import isElectron from 'is-electron'
 
 interface ApplicationProps {
   className?: string
@@ -111,6 +116,7 @@ const Application = ({
   const { translate } = useI18n()
 
   const { history, showSearchScreen, setShowSearchScreen } = useSearch()
+  const [showInPageSearch, setShowInPageSearch] = useState(false)
 
   usePathnameChangeEffect(() => {
     setShowFuzzyNavigation(false)
@@ -213,6 +219,11 @@ const Application = ({
         }
         preventKeyboardEventPropagation(event)
         ;(document.activeElement as InputableDomElement).blur()
+      }
+
+      if (isElectron() && isPageSearchShortcut(event)) {
+        preventKeyboardEventPropagation(event)
+        setShowInPageSearch(true)
       }
     },
     [openSettingsTab, team]
@@ -417,6 +428,10 @@ const Application = ({
         }
       />
       <AnnouncementAlert />
+      {isElectron() && <InPageSearchContainer id={'inPageSearchContainer'} />}
+      {showInPageSearch && (
+        <InPageSearch onSearchClose={() => setShowInPageSearch(false)} />
+      )}
     </>
   )
 }

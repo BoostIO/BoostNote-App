@@ -66,6 +66,35 @@ function convertHtmlStringToPdfBlob(htmlString, printOptions) {
     })
   })
 }
+
+function findInPage(text, options) {
+  const webContents = remote.getCurrentWebContents()
+  if (webContents) {
+    return webContents.findInPage(text, options)
+  }
+}
+
+function stopFindInPage(action) {
+  const webContents = remote.getCurrentWebContents()
+  if (webContents) {
+    return webContents.stopFindInPage(action)
+  }
+}
+
+function addWebContentsEvent(eventName, callback) {
+  const webContents = remote.getCurrentWebContents()
+  if (webContents) {
+    return webContents.on(eventName, callback)
+  }
+}
+
+function removeWebContentsEvent(eventName, callback) {
+  const webContents = remote.getCurrentWebContents()
+  if (webContents) {
+    return webContents.removeListener(eventName, callback)
+  }
+}
+
 window.__ELECTRON_ONLY__ = {}
 window.__ELECTRON_ONLY__.sendToHost = sendToHost
 window.__ELECTRON_ONLY__.convertHtmlStringToPdfBlob = convertHtmlStringToPdfBlob
@@ -75,6 +104,10 @@ window.__ELECTRON_ONLY__.removeHostListener = removeHostListener
 window.__ELECTRON_ONLY__.removeAllHostListeners = removeAllHostListeners
 window.__ELECTRON_ONLY__.addHostListenerOnce = addHostListenerOnce
 window.__ELECTRON_ONLY__.openInBrowser = openInBrowser
+window.__ELECTRON_ONLY__.findInPage = findInPage
+window.__ELECTRON_ONLY__.stopFindInPage = stopFindInPage
+window.__ELECTRON_ONLY__.addWebContentsEvent = addWebContentsEvent
+window.__ELECTRON_ONLY__.removeWebContentsEvent = removeWebContentsEvent
 
 const handler = (event) => {
   event.preventDefault()

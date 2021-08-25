@@ -20,6 +20,14 @@ import { IpcRendererEvent } from 'electron'
 import { useEffectOnce } from 'react-use'
 import ltSemver from 'semver/functions/lt'
 
+export function addToWebContents(eventName: string, callback: any) {
+  ;(window as any).__ELECTRON_ONLY__.addWebContentsEvent(eventName, callback)
+}
+
+export function removeFromWebContents(eventName: string, callback: any) {
+  ;(window as any).__ELECTRON_ONLY__.removeWebContentsEvent(eventName, callback)
+}
+
 export function sendToHost(channel: string, ...args: any[]) {
   ;(window as any).__ELECTRON_ONLY__.sendToHost(channel, ...args)
 }
