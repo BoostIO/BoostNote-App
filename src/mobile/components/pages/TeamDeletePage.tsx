@@ -11,7 +11,6 @@ import {
 } from '../../../cloud/api/pages/teams/delete'
 import { destroyTeam } from '../../../cloud/api/teams'
 import { sendFeedback } from '../../../cloud/api/feedback'
-import { useElectron } from '../../../cloud/lib/stores/electron'
 import { GetInitialPropsParameters } from '../../../cloud/interfaces/pages'
 import { useRouter } from '../../../cloud/lib/router'
 import { LoadingButton } from '../../../design/components/atoms/Button'
@@ -24,7 +23,6 @@ const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
   const { pushMessage } = useToast()
   const { push } = useRouter()
   const { t } = useTranslation()
-  const { usingElectron, sendToElectron } = useElectron()
 
   const [feedback, setFeedback] = useState<UserFeedbackFormData>({
     needFeatures: false,
@@ -67,11 +65,7 @@ const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
                 await sendFeedback(feedback)
               } catch (error) {
               } finally {
-                if (usingElectron) {
-                  sendToElectron('team-delete', team)
-                } else {
-                  push(redirectTo)
-                }
+                push(redirectTo)
               }
             } catch (error) {
               pushMessage({
@@ -84,15 +78,7 @@ const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
         },
       ],
     })
-  }, [
-    messageBox,
-    team,
-    pushMessage,
-    push,
-    feedback,
-    sendToElectron,
-    usingElectron,
-  ])
+  }, [messageBox, team, pushMessage, push, feedback])
 
   return (
     <Page>

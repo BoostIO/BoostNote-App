@@ -6,8 +6,6 @@ import {
   mdiContentCopy,
   mdiOpenInNew,
   mdiFolderMultipleOutline,
-  mdiArrowRight,
-  mdiStarOutline,
   mdiApplicationCog,
 } from '@mdi/js'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
@@ -154,17 +152,6 @@ const WorkspaceContextMenu = ({
         row={{
           type: 'button',
           props: {
-            id: 'metadata-bookmark',
-            disabled: true,
-            label: translate(lngKeys.GeneralBookmarkVerb),
-            iconPath: mdiStarOutline,
-          },
-        }}
-      />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
             id: 'metadata-copy-link',
             label: translate(lngKeys.GeneralCopyTheLink),
             iconPath: mdiContentCopy,
@@ -204,33 +191,23 @@ const WorkspaceContextMenu = ({
               },
             }}
           />
-          <MetadataContainerRow
-            row={{
-              type: 'button',
-              props: {
-                disabled: true,
-                id: 'metadata-move',
-                label: translate(lngKeys.GeneralMoveVerb),
-                iconPath: mdiArrowRight,
-              },
-            }}
-          />
-          <MetadataContainerRow
-            row={{
-              type: 'button',
-              props: {
-                disabled:
-                  sendingMap.has(currentWorkspace.id) || workspace.default,
-                id: 'metadata-delete',
-                label: translate(lngKeys.GeneralDelete),
-                iconPath: mdiTrashCan,
-                onClick: () => {
-                  closeAllModals()
-                  deleteWorkspace(currentWorkspace)
+          {!workspace.default && (
+            <MetadataContainerRow
+              row={{
+                type: 'button',
+                props: {
+                  disabled: sendingMap.has(currentWorkspace.id),
+                  id: 'metadata-delete',
+                  label: translate(lngKeys.GeneralDelete),
+                  iconPath: mdiTrashCan,
+                  onClick: () => {
+                    closeAllModals()
+                    deleteWorkspace(currentWorkspace)
+                  },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          )}
         </>
       )}
     </MetadataContainer>
