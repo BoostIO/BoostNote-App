@@ -21,6 +21,7 @@ import { useRouter } from '../../lib/router'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Editor from '../Editor'
 import ApplicationPage from '../ApplicationPage'
+import BlockEditor from '../Blocks/BlockEditor'
 
 interface DocPageProps {
   doc: SerializedDocWithBookmark
@@ -170,7 +171,7 @@ const DocPage = ({
     )
   }
 
-  return (
+  return doc.rootBlock == null ? (
     <Editor
       team={team}
       doc={currentDoc}
@@ -180,6 +181,8 @@ const DocPage = ({
       revisionHistory={revisionHistory}
       docIsEditable={docIsEditable}
     />
+  ) : (
+    <BlockEditor doc={doc} />
   )
 }
 

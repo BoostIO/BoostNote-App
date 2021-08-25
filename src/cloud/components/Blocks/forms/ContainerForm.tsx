@@ -1,10 +1,10 @@
 import React, { useRef, useState, useCallback } from 'react'
-import { useI18n } from '../../../../lib/hooks/useI18n'
 import { useEffectOnce } from 'react-use'
-import Form from '../../../../../shared/components/molecules/Form'
-import { lngKeys } from '../../../../lib/i18n/types'
+import Form from '../../../../design/components/molecules/Form'
+import { ContainerBlock } from '../../../api/blocks'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 import { FormProps } from '../BlockContent'
-import { ContainerBlock } from '../../../../api/blocks'
 
 const ContainerForm = ({ onSubmit }: FormProps<ContainerBlock>) => {
   const inputRef = useRef<HTMLInputElement>(null)
