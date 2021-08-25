@@ -1,7 +1,7 @@
 import { mdiClose } from '@mdi/js'
 import copy from 'copy-to-clipboard'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import Button from '../../../design/components/atoms/Button'
+import Button, { LoadingButton } from '../../../design/components/atoms/Button'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import Form from '../../../design/components/molecules/Form'
@@ -18,6 +18,10 @@ import {
   OpenInvitesProvider,
   useOpenInvites,
 } from '../../lib/stores/openInvites'
+import {
+  OpenInviteLoadedEvent,
+  OpenInviteLoadedEventDetail,
+} from '../../lib/stores/openInvites/store'
 import { usePage } from '../../lib/stores/pageStore'
 import { useTeamPreferences } from '../../lib/stores/teamPreferences'
 import { getOpenInviteURL, getTeamURL } from '../../lib/utils/patterns'
@@ -54,20 +58,45 @@ const InviteSection = ({ team }: { team: SerializedTeam }) => {
   }, [])
 
   useEffect(() => {
-    if (
-      mountedRef.current &&
-      store.state === 'loaded' &&
-      store.openInvites.length > 0
-    ) {
-      setSelectedInvite(store.openInvites[0])
+    const handler = (event: CustomEvent<OpenInviteLoadedEventDetail>) => {
+      console.log(event)
+      if (mountedRef.current && event.detail.openInvites.length > 0) {
+        setSelectedInvite(event.detail.openInvites[0])
+      }
     }
-  }, [store])
+    OpenInviteLoadedEvent.listen(handler)
 
-  if (
-    teamPreferences['hide-onboarding-invite'] ||
-    store.state === 'loading' ||
-    selectedInvite == null
-  ) {
+    return () => {
+      OpenInviteLoadedEvent.unlisten(handler)
+    }
+  }, [])
+
+  if (teamPreferences['hide-onboarding-invite'] || store.state === 'loading') {
+    return null
+  }
+
+  if (store.state === 'error') {
+    return (
+      <FolderPageInviteSectionContainer>
+        <ColoredBlock variant='secondary' className='invite__section__block'>
+          <Flexbox alignItems='flex-start' justifyContent='space-between'>
+            <h5>{translate(lngKeys.OnboardingFolderSectionTitle)}</h5>
+          </Flexbox>
+          <p>{store.error}</p>
+          <LoadingButton
+            variant='bordered'
+            onClick={store.actions.get.send}
+            spinning={store.actions.get.inProgress}
+            disabled={store.actions.get.inProgress}
+          >
+            Reload
+          </LoadingButton>
+        </ColoredBlock>
+      </FolderPageInviteSectionContainer>
+    )
+  }
+
+  if (selectedInvite == null) {
     return null
   }
 

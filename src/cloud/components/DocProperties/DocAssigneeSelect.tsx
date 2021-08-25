@@ -7,9 +7,8 @@ import { lngKeys } from '../../lib/i18n/types'
 import DocPropertyValueButton from './DocPropertyValueButton'
 import { mdiAccountCircleOutline } from '@mdi/js'
 import { useModal } from '../../../design/lib/stores/modal'
-import SearchableList, {
-  SearchableListOption,
-} from '../../../design/components/molecules/SearchableList'
+import { SearchableListOption } from '../../../design/components/molecules/SearchableOptionList'
+import SearchableOptionListPopup from '../SearchableOptionListPopup'
 
 interface DocAssigneeSelectProps {
   disabled?: boolean
@@ -154,7 +153,7 @@ const DocAssigneeModal = ({
 
   return (
     <ModalContainer>
-      <SearchableList
+      <SearchableOptionListPopup
         query={query}
         setQuery={setQuery}
         options={availableOptions}
