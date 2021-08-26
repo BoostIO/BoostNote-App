@@ -173,7 +173,7 @@ const DocPage = ({
   return (
     <Editor
       team={team}
-      doc={doc}
+      doc={currentDoc}
       user={currentUser}
       contributors={contributors}
       backLinks={backLinks}
