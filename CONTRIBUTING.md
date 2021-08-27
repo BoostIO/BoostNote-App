@@ -10,7 +10,7 @@ propose changes to this document in a pull request.
 ## Submitting Issues
 
 - Before creating an issue please read the notes below and include as many details as
-  possible with your report. You can create an issue [here](https://github.com/BoostIO/BoostNote.next/issues/new).
+  possible with your report. You can create an issue [here](https://github.com/BoostIO/BoostNote-App/issues/new).
   If you can, please include:
   - The version of App you are using
   - The operating system you are using
@@ -19,5 +19,5 @@ propose changes to this document in a pull request.
 - Other things that will help resolve your issue:
   - Screenshots and animated GIFs
   - Error output that appears in your terminal, dev tools or as an alert
-  - Perform a [cursory search](https://github.com/BoostIO/Boostnote.next/issues?utf8=✓&q=is%3Aissue+)
+  - Perform a [cursory search](https://github.com/BoostIO/BoostNote-App/issues?utf8=✓&q=is%3Aissue+)
     to see if a similar issue has already been submitted

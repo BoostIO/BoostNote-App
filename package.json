@@ -6,7 +6,7 @@
   "main": "app/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BoostIO/Boostnote.next.git"
+    "url": "https://github.com/BoostIO/BoostNote-App.git"
   },
   "scripts": {
     "dev:cloud": "env-cmd cross-env NODE_ENV=development TARGET=electron TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack-dev-server --mode development --config webpack.cloud.config.ts",

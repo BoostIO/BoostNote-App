@@ -16,21 +16,21 @@ Let us know what you think should happen!
 
 # Steps to reproduce
 
-<!-- 
+<!--
 Please be thorough, issues we can reproduce are easier to fix!
 -->
 
-1. 
-2. 
-3. 
+1. 2. 3.
 
 # Environment
 
 ## Desktop/Web
+
 - Boost Note.next version: <!-- 1.x.x -->
 - OS version and name: <!-- Windows 10 / Ubuntu 18.04 / etc -->
 
 ## Mobile
+
 - Boost Note app version: <!-- x.x.x -->
 - OS version and name: <!-- Android Oreo / iOS 13 / etc -->
 <!--

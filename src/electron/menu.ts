@@ -309,9 +309,7 @@ export function getTemplateFromKeymap(
         {
           label: 'GitHub',
           click: async () => {
-            await shell.openExternal(
-              'https://github.com/BoostIO/Boostnote.next'
-            )
+            await shell.openExternal('https://github.com/BoostIO/BoostNote-App')
           },
         },
         {

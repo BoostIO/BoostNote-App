@@ -34,17 +34,17 @@ export function getAppLinkFromUserAgent() {
   if (userAgent.indexOf('Windows') != -1) {
     download.os = 'Windows'
     download.link =
-      'https://github.com/BoostIO/BoostNote.next/releases/latest/download/boost-note-win.exe'
+      'https://github.com/BoostIO/BoostNote-App/releases/latest/download/boost-note-win.exe'
   }
   if (userAgent.indexOf('Mac') != -1) {
     download.os = 'Mac'
     download.link =
-      'https://github.com/BoostIO/BoostNote.next/releases/latest/download/boost-note-mac.dmg'
+      'https://github.com/BoostIO/BoostNote-App/releases/latest/download/boost-note-mac.dmg'
   }
   if (userAgent.indexOf('Linux') != -1) {
     download.os = 'Linux'
     download.link =
-      'https://github.com/BoostIO/BoostNote.next/releases/latest/download/boost-note-linux.deb'
+      'https://github.com/BoostIO/BoostNote-App/releases/latest/download/boost-note-linux.deb'
   }
   return download
 }

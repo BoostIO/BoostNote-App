@@ -465,7 +465,7 @@ function buildSpacesBottomRows(push: (url: string) => void, t: TFunction) {
           label: t(lngKeys.DownloadDesktopApp),
           icon: mdiDownload,
           linkProps: {
-            href: 'https://github.com/BoostIO/BoostNote.next/releases/latest',
+            href: 'https://github.com/BoostIO/BoostNote-App/releases/latest',
             target: '_blank',
             rel: 'noopener noreferrer',
           },
