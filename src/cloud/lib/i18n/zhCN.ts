@@ -56,6 +56,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SettingsDark]: 'Dark',
   [lngKeys.SettingsNotifFrequencies]: 'Email updates',
   [lngKeys.SettingsIndentType]: '编辑器缩进类型',
+  [lngKeys.SettingsShowEditorToolbar]: '编辑器工具栏',
   [lngKeys.SettingsIndentSize]: '编辑器缩进大小',
   [lngKeys.SettingsUserForum]: '用户论坛（新！）',
   [lngKeys.ManagePreferences]: '管理您的首选项。',
