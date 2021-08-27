@@ -37,7 +37,7 @@ const ContextMenuClose = () => {
         variant='icon'
         iconPath={mdiChevronRight}
         className='context__menu__close'
-        onClick={() => setPreferences({ docContextMode: undefined })}
+        onClick={() => setPreferences({ docContextMode: 'hidden' })}
       />
     </ButtonContainer>
   )
