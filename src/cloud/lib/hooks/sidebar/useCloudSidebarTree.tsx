@@ -612,6 +612,7 @@ export function useCloudSidebarTree() {
           label: smartFolder.name,
           defaultIcon: mdiFolderCogOutline,
           depth: 0,
+          href,
           active: !showSearchScreen && href === currentPathWithDomain,
           navigateTo: () => push(href),
           contextControls: !currentUserIsCoreMember
