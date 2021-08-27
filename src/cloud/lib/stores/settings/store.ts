@@ -25,6 +25,7 @@ export const baseUserSettings: UserSettings = {
   'general.editorFontSize': 15,
   'general.editorFontFamily':
     'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
+  'general.showEditorToolbar': true,
 }
 
 export type SettingsTab =

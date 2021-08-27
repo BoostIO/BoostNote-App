@@ -1025,36 +1025,37 @@ const Editor = ({
           team={team}
         >
           <Container>
-            {editorLayout !== 'preview' && (
-              <StyledLayoutDimensions className={editorLayout}>
-                <ToolbarRow>
-                  <EditorToolButton
-                    tooltip={
-                      scrollSync
-                        ? translate(
-                            lngKeys.EditorToolbarTooltipScrollSyncDisable
-                          )
-                        : translate(
-                            lngKeys.EditorToolbarTooltipScrollSyncEnable
-                          )
-                    }
-                    path={scrollSync ? mdiRepeatOff : mdiRepeat}
-                    onClick={toggleScrollSync}
-                    className='scroll-sync'
-                  />
-                  <EditorToolbar editorRef={editorRef} />
-                  <EditorToolbarUpload
-                    editorRef={editorRef}
-                    fileUploadHandlerRef={fileUploadHandlerRef}
-                  />
-                  <EditorToolButton
-                    tooltip={translate(lngKeys.EditorToolbarTooltipTemplate)}
-                    path={mdiFileDocumentOutline}
-                    onClick={onEditorTemplateToolClick}
-                  />
-                </ToolbarRow>
-              </StyledLayoutDimensions>
-            )}
+            {editorLayout !== 'preview' &&
+              settings['general.showEditorToolbar'] && (
+                <StyledLayoutDimensions className={editorLayout}>
+                  <ToolbarRow>
+                    <EditorToolButton
+                      tooltip={
+                        scrollSync
+                          ? translate(
+                              lngKeys.EditorToolbarTooltipScrollSyncDisable
+                            )
+                          : translate(
+                              lngKeys.EditorToolbarTooltipScrollSyncEnable
+                            )
+                      }
+                      path={scrollSync ? mdiRepeatOff : mdiRepeat}
+                      onClick={toggleScrollSync}
+                      className='scroll-sync'
+                    />
+                    <EditorToolbar editorRef={editorRef} />
+                    <EditorToolbarUpload
+                      editorRef={editorRef}
+                      fileUploadHandlerRef={fileUploadHandlerRef}
+                    />
+                    <EditorToolButton
+                      tooltip={translate(lngKeys.EditorToolbarTooltipTemplate)}
+                      path={mdiFileDocumentOutline}
+                      onClick={onEditorTemplateToolClick}
+                    />
+                  </ToolbarRow>
+                </StyledLayoutDimensions>
+              )}
             <StyledEditor className={editorLayout}>
               <StyledEditorWrapper
                 className={`layout-${editorLayout}`}

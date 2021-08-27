@@ -56,6 +56,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SettingsDark]: 'ダーク',
   [lngKeys.SettingsNotifFrequencies]: 'メール設定',
   [lngKeys.SettingsIndentType]: 'エディタインデントの種類',
+  [lngKeys.SettingsShowEditorToolbar]: 'エディターツールバー',
   [lngKeys.SettingsIndentSize]: 'エディタインデントのサイズ',
   [lngKeys.SettingsUserForum]: 'ユーザーフォーラム（New!!）',
   [lngKeys.ManagePreferences]: 'あなた好みにカスタマイズしましょう。',

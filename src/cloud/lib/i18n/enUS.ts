@@ -56,6 +56,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsDark]: 'Dark',
   [lngKeys.SettingsNotifFrequencies]: 'Email updates',
   [lngKeys.SettingsIndentType]: 'Editor Indent Type',
+  [lngKeys.SettingsShowEditorToolbar]: 'Editor Toolbar',
   [lngKeys.SettingsIndentSize]: 'Editor Indent Size',
   [lngKeys.SettingsUserForum]: 'User Forum (New!)',
   [lngKeys.ManagePreferences]: 'Manage your preferences.',
