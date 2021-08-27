@@ -12,7 +12,7 @@
 Boost Note is a collaborative real-time markdown note app
 for developer teams.
 
-## 👷 Core Team(Maintainer)
+## 👷 Core Team(Maintainers)
 
 - [Rokt33r](https://github.com/rokt33r)
 - [ButteryCrumpet](https://github.com/ButteryCrumpet)
