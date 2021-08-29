@@ -111,6 +111,7 @@ const fetchCorrectMdThemeName = (theme: string, appTheme: string) => {
 const getCssLinks = (settings: UserSettings) => {
   const cssHrefs: string[] = []
 
+  cssHrefs.push(boostHubBaseUrl + '/app/codemirror/theme/codemirror.css')
   cssHrefs.push(boostHubBaseUrl + '/app/katex/katex.min.css')
   cssHrefs.push(boostHubBaseUrl + '/app/remark-admonitions/classic.css')
 
@@ -204,7 +205,7 @@ export async function convertMarkdownToPdfExportableHtml(
     .use(rehypeSanitize, schema)
     .use(rehypeCodeMirror, {
       ignoreMissing: true,
-      theme: preferences['markdown.codeBlockTheme'],
+      theme: preferences['general.codeBlockTheme'],
     })
     .use(rehypeKatex, { output: 'htmlAndMathml' })
     .use(rehypeStringify)
