@@ -252,6 +252,7 @@ const Editor = ({
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
       },
+      scrollPastEnd: true,
     }
   }, [settings])
 
