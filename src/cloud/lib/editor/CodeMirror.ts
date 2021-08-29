@@ -8,6 +8,7 @@ import 'codemirror/keymap/vim'
 import 'codemirror/addon/hint/show-hint'
 import 'codemirror/keymap/sublime'
 import 'codemirror/keymap/emacs'
+import 'codemirror/addon/scroll/scrollpastend'
 import { loadMode } from '../../../design/lib/codemirror/util'
 
 loadMode(CodeMirror)

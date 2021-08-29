@@ -352,6 +352,7 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
       },
+      scrollPastEnd: true,
     }
   }, [settings])
 
