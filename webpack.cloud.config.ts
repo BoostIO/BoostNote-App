@@ -81,6 +81,13 @@ module.exports = (env, argv) => {
       new CopyPlugin({
         patterns: [
           {
+            from: path.join(
+              __dirname,
+              'node_modules/codemirror/lib/codemirror.css'
+            ),
+            to: 'app/codemirror/theme/codemirror.css',
+          },
+          {
             from: path.join(__dirname, 'node_modules/codemirror/theme'),
             to: 'app/codemirror/theme',
           },
