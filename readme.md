@@ -12,7 +12,7 @@
 Boost Note is a collaborative real-time markdown note app
 for developer teams.
 
-## 👷 Core Team(Maintainers)
+## 👷 Core Team (maintainers)
 
 - [Rokt33r](https://github.com/rokt33r)
 - [ButteryCrumpet](https://github.com/ButteryCrumpet)
@@ -25,7 +25,7 @@ for developer teams.
 
 - [🌎 Web App (boostnote.io)](https://boostnote.io)
 - [🍎 macOS (.dmg)](https://github.com/BoostIO/BoostNote-App/releases/latest/download/boost-note-mac.dmg)
-- [🪟 Windows (.exe NSIS)](https://github.com/BoostIO/BoostNote-App/releases/latest/download/boost-note-win.exe)
+- [:framed_picture: Windows (.exe NSIS)](https://github.com/BoostIO/BoostNote-App/releases/latest/download/boost-note-win.exe)
 - [🐧 Linux (.deb)](https://github.com/BoostIO/BoostNote-App/releases/latest/download/boost-note-linux.deb)
 - [🐧 Linux (.rpm)](https://github.com/BoostIO/BoostNote-App/releases/latest/download/boost-note-linux.rpm)
 
@@ -53,15 +53,15 @@ If you're interested in our project, you can participate in many different ways.
 
 ### Sharing your idea
 
-To improve the app, we need your idea! It could be a new feature or an improvement for existing features. If you have any, please create a discussion in [Feature Requests category](https://github.com/BoostIO/BoostNote-App/discussions/categories/feature-requests)
+To improve the app, we need your idea! It could be a new feature or an improvement for existing features. If you have any, please create a discussion in [Feature Requests category](https://github.com/BoostIO/BoostNote-App/discussions/categories/feature-requests).
 
 You can also find existing discussions which the core team is actively working on from [issues with "discussion" label](https://github.com/BoostIO/BoostNote-App/issues?q=is%3Aissue+is%3Aopen+label%3A%22discussion+%3Aspeech_balloon%3A%22).
 
 ### Helping community
 
-There are many ways to help our community. You can share how you're using our app by writing an article. You can write it in [General discussion page](https://github.com/BoostIO/BoostNote-App/discussions/categories/general), external developer community(Dev.to or Reddit) and your blog if you have one.
+There are many ways to help our community. You can share how you're using our app by writing an article. You can write it in [General discussion page](https://github.com/BoostIO/BoostNote-App/discussions/categories/general), external developer community (Dev.to or Reddit) and your blog if you have one.
 
-Also, you can help other users by answering their questions in [here](https://github.com/BoostIO/BoostNote-App/discussions/categories/q-a)
+Also, you can help other users by answering their questions in [here](https://github.com/BoostIO/BoostNote-App/discussions/categories/q-a).
 
 ### Resolving existing issues
 
