@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { CellProps } from '.'
-import styled from '../../../../../design/lib/styled'
+import styled from '../../../../design/lib/styled'
+import { BlockPropertyProps } from './types'
 
-interface TextCellProps extends CellProps {
+interface TextCellProps extends BlockPropertyProps {
   validation?: (value: string) => boolean
 }
 

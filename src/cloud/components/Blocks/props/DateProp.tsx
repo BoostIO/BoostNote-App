@@ -1,10 +1,10 @@
 import { format, isValid } from 'date-fns'
 import React, { useCallback, useMemo } from 'react'
 import DatePicker, { ReactDatePickerProps } from 'react-datepicker'
-import { CellProps } from '.'
-import styled from '../../../../../design/lib/styled'
+import styled from '../../../../design/lib/styled'
+import { BlockPropertyProps } from './types'
 
-const DateCell = ({ value, onUpdate }: CellProps) => {
+const DateCell = ({ value, onUpdate }: BlockPropertyProps) => {
   const date = useMemo(() => {
     const parsed = new Date(value)
     return isValid(parsed) ? parsed : null

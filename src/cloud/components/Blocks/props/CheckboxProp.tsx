@@ -1,8 +1,8 @@
 import React from 'react'
-import { CellProps } from '.'
-import { parseBoolean } from '../../../../lib/utils/string'
+import { parseBoolean } from '../../../lib/utils/string'
+import { BlockPropertyProps } from './types'
 
-const CheckboxCell = ({ value, onUpdate }: CellProps) => {
+const CheckboxCell = ({ value, onUpdate }: BlockPropertyProps) => {
   return (
     <div>
       <input

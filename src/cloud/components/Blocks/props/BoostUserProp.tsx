@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { CellProps } from '.'
-import FilterableSelectList from '../../../../../design/components/molecules/FilterableSelectList'
-import { useModal } from '../../../../../design/lib/stores/modal'
-import styled from '../../../../../design/lib/styled'
-import { SerializedUser } from '../../../../interfaces/db/user'
-import { usePage } from '../../../../lib/stores/pageStore'
-import UserIcon from '../../../UserIcon'
+import FilterableSelectList from '../../../../design/components/molecules/FilterableSelectList'
+import { useModal } from '../../../../design/lib/stores/modal'
+import styled from '../../../../design/lib/styled'
+import { SerializedUser } from '../../../interfaces/db/user'
+import { usePage } from '../../../lib/stores/pageStore'
+import UserIcon from '../../UserIcon'
+import { BlockPropertyProps } from './types'
 
-interface BoostUserCellProps extends CellProps {}
+interface BoostUserCellProps extends BlockPropertyProps {}
 
 const BoostUserCell = ({ value, onUpdate }: BoostUserCellProps) => {
   const { permissions = [] } = usePage()
