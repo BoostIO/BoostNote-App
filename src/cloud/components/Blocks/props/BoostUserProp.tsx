@@ -7,9 +7,9 @@ import { usePage } from '../../../lib/stores/pageStore'
 import UserIcon from '../../UserIcon'
 import { BlockPropertyProps } from './types'
 
-interface BoostUserCellProps extends BlockPropertyProps {}
+interface BoostUserPropProps extends BlockPropertyProps {}
 
-const BoostUserCell = ({ value, onUpdate }: BoostUserCellProps) => {
+const BoostUserProp = ({ value, onUpdate }: BoostUserPropProps) => {
   const { permissions = [] } = usePage()
   const { openContextModal } = useModal()
 
@@ -83,4 +83,4 @@ const UserSelectContainer = styled.div`
   }
 `
 
-export default BoostUserCell
+export default BoostUserProp
