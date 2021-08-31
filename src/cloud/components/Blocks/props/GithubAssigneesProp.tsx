@@ -67,7 +67,7 @@ const Container = styled.div`
 `
 
 interface AssigneeSelectProps {
-  data: GithubCellProps['data']
+  data: GithubIssueBlock['data']
   onSelect: (names: string[]) => Promise<void>
 }
 
