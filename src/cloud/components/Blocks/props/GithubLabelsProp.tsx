@@ -82,7 +82,7 @@ const StyledGithubLabels = styled.div`
 `
 
 interface LabelSelectProps {
-  data: GithubCellProps['data']
+  data: GithubIssueBlock['data']
   onUpdate: (labels: Label[]) => Promise<void>
 }
 
