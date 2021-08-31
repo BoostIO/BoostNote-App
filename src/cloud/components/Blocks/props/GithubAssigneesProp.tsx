@@ -1,12 +1,13 @@
-import { StyledUserIcon } from '../../../UserIcon'
+import { StyledUserIcon } from '../../UserIcon'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { GithubCellProps } from '.'
-import { useModal } from '../../../../../design/lib/stores/modal'
-import { getAction, postAction } from '../../../../api/integrations'
-import styled from '../../../../../design/lib/styled'
-import FilterableSelectList from '../../../../../design/components/molecules/FilterableSelectList'
-import Spinner from '../../../../../design/components/atoms/Spinner'
-import { useToast } from '../../../../../design/lib/stores/toast'
+import { useModal } from '../../../../design/lib/stores/modal'
+import { getAction, postAction } from '../../../api/integrations'
+import styled from '../../../../design/lib/styled'
+import FilterableSelectList from '../../../../design/components/molecules/FilterableSelectList'
+import Spinner from '../../../../design/components/atoms/Spinner'
+import { useToast } from '../../../../design/lib/stores/toast'
+import { BlockDataProps } from './types'
+import { GithubIssueBlock } from '../../../api/blocks'
 
 interface Assignee {
   id: number
@@ -14,7 +15,10 @@ interface Assignee {
   login: string
 }
 
-const GitHubAssigneesCell = ({ data, onUpdate }: GithubCellProps) => {
+const GitHubAssigneesCell = ({
+  data,
+  onUpdate,
+}: BlockDataProps<GithubIssueBlock>) => {
   const { openContextModal, closeAllModals } = useModal()
   const { pushApiErrorMessage } = useToast()
 

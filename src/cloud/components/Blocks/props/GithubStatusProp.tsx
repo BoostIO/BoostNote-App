@@ -4,18 +4,22 @@ import {
   mdiCheck,
 } from '@mdi/js'
 import React, { useCallback } from 'react'
-import { GithubCellProps } from '.'
 import Icon, {
   SuccessIcon,
   WarningIcon,
-} from '../../../../../design/components/atoms/Icon'
-import { useModal } from '../../../../../design/lib/stores/modal'
-import { useToast } from '../../../../../design/lib/stores/toast'
-import styled from '../../../../../design/lib/styled'
-import { postAction } from '../../../../api/integrations'
-import { capitalize } from '../../../../lib/utils/string'
+} from '../../../../design/components/atoms/Icon'
+import { useModal } from '../../../../design/lib/stores/modal'
+import { useToast } from '../../../../design/lib/stores/toast'
+import styled from '../../../../design/lib/styled'
+import { GithubIssueBlock } from '../../../api/blocks'
+import { postAction } from '../../../api/integrations'
+import { capitalize } from '../../../lib/utils/string'
+import { BlockDataProps } from './types'
 
-const GithubStatusCell = ({ data, onUpdate }: GithubCellProps) => {
+const GithubStatusCell = ({
+  data,
+  onUpdate,
+}: BlockDataProps<GithubIssueBlock>) => {
   const { openContextModal, closeAllModals } = useModal()
   const { pushApiErrorMessage } = useToast()
 

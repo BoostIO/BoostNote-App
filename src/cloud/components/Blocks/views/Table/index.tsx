@@ -11,16 +11,16 @@ import {
   setCellData,
   syncTo,
 } from '../../../../lib/blocks/table'
-import TextCell from './TextCell'
-import CheckboxCell from './CheckboxCell'
-import DateCell from './DateCell'
-import GitHubAssigneesCell from './GithubAssigneesCell'
-import GithubStatusCell from './GithubStatusCell'
-import GithubLabelsCell from './GithubLabelsCell'
-import HyperlinkCell from './HyperlinkCell'
+import TextCell from '../../props/TextProp'
+import CheckboxCell from '../../props/CheckboxProp'
+import DateCell from '../../props/DateProp'
+import GitHubAssigneesCell from '../../props/GithubAssigneesProp'
+import GithubStatusCell from '../../props/GithubStatusProp'
+import GithubLabelsCell from '../../props/GithubLabelsProp'
+import HyperlinkCell from '../../props/HyperlinkProp'
 import TableSettings from './TableSettings'
 import ColumnSettings from './ColumnSettings'
-import BoostUserCell from './BoostUserCell'
+import BoostUserCell from '../../props/BoostUserProp'
 import { Block, TableBlock } from '../../../../api/blocks'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import Icon from '../../../../../design/components/atoms/Icon'
@@ -28,18 +28,9 @@ import Button from '../../../../../design/components/atoms/Button'
 import { isNumberString, isUrlOrPath } from '../../../../lib/utils/string'
 import styled from '../../../../../design/lib/styled'
 import { StyledUserIcon } from '../../../UserIcon'
+import { BlockDataProps } from '../../props/types'
 
-type Issue = TableBlock['children'][number]['data']
-
-export interface GithubCellProps {
-  data: Issue
-  onUpdate: (data: Issue) => Promise<void>
-}
-
-export interface CellProps {
-  value: string
-  onUpdate: (val: string) => Promise<void> | void
-}
+type GithubCellProps = BlockDataProps<TableBlock['children'][number]>
 
 const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
   const { openModal, openContextModal, closeAllModals } = useModal()
