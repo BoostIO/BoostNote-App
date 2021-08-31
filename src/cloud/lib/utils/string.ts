@@ -90,6 +90,10 @@ export function isNumberString(str: string) {
 }
 
 export function parseBoolean(str: string, deflt = false) {
+  if (typeof str !== 'string') {
+    return deflt
+  }
+
   const lower = str.toLowerCase()
   if (lower === 'true' || lower === '1') {
     return true

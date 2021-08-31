@@ -80,7 +80,7 @@ const StyledStatus = styled.div`
 `
 
 interface StateSelectProps {
-  data: GithubCellProps['data']
+  data: GithubIssueBlock['data']
   onUpdate: (state: 'closed' | 'open') => Promise<void>
 }
 
