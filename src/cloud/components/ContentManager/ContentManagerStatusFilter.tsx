@@ -177,10 +177,6 @@ const Container = styled.div`
     height: 32px;
     padding: 0 4px;
   }
-  .cm__filter-menu__menu-item__checkbox {
-    height: 100%;
-    width: 100%;
-  }
   .cm__filter-menu__menu-item__checkbox__label {
     display: flex;
     align-items: center;
