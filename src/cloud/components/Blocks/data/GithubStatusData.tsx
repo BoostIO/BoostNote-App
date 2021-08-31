@@ -16,7 +16,7 @@ import { postAction } from '../../../api/integrations'
 import { capitalize } from '../../../lib/utils/string'
 import { BlockDataProps } from './types'
 
-const GithubStatusCell = ({
+const GithubStatusData = ({
   data,
   onUpdate,
 }: BlockDataProps<GithubIssueBlock>) => {
@@ -116,4 +116,4 @@ const StateSelectContainer = styled.div`
   }
 `
 
-export default GithubStatusCell
+export default GithubStatusData

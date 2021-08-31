@@ -14,7 +14,7 @@ interface Label {
   description: string
 }
 
-const GithubLabelsCell = ({
+const GithubLabelsData = ({
   data,
   onUpdate,
 }: BlockDataProps<GithubIssueBlock>) => {
@@ -156,4 +156,4 @@ const LabelSelectContainer = styled.div`
     cursor: pointer;
   }
 `
-export default GithubLabelsCell
+export default GithubLabelsData

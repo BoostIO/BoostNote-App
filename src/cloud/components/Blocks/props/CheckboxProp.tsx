@@ -2,7 +2,7 @@ import React from 'react'
 import { parseBoolean } from '../../../lib/utils/string'
 import { BlockPropertyProps } from './types'
 
-const CheckboxCell = ({ value, onUpdate }: BlockPropertyProps) => {
+const CheckboxProp = ({ value, onUpdate }: BlockPropertyProps) => {
   return (
     <div>
       <input
@@ -14,4 +14,4 @@ const CheckboxCell = ({ value, onUpdate }: BlockPropertyProps) => {
   )
 }
 
-export default CheckboxCell
+export default CheckboxProp

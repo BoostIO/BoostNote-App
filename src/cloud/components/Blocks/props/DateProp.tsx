@@ -4,7 +4,7 @@ import DatePicker, { ReactDatePickerProps } from 'react-datepicker'
 import styled from '../../../../design/lib/styled'
 import { BlockPropertyProps } from './types'
 
-const DateCell = ({ value, onUpdate }: BlockPropertyProps) => {
+const DateProp = ({ value, onUpdate }: BlockPropertyProps) => {
   const date = useMemo(() => {
     const parsed = new Date(value)
     return isValid(parsed) ? parsed : null
@@ -39,7 +39,7 @@ const DateCell = ({ value, onUpdate }: BlockPropertyProps) => {
   )
 }
 
-export default DateCell
+export default DateProp
 
 const Container = styled.div`
   cursor: pointer;
