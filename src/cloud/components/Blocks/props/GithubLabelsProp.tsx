@@ -1,11 +1,12 @@
-import styled from '../../../../../design/lib/styled'
+import styled from '../../../../design/lib/styled'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { GithubCellProps } from '.'
-import { useModal } from '../../../../../design/lib/stores/modal'
-import { getAction, postAction } from '../../../../api/integrations'
-import FilterableSelectList from '../../../../../design/components/molecules/FilterableSelectList'
-import Spinner from '../../../../../design/components/atoms/Spinner'
-import { useToast } from '../../../../../design/lib/stores/toast'
+import { useModal } from '../../../../design/lib/stores/modal'
+import { getAction, postAction } from '../../../api/integrations'
+import FilterableSelectList from '../../../../design/components/molecules/FilterableSelectList'
+import Spinner from '../../../../design/components/atoms/Spinner'
+import { useToast } from '../../../../design/lib/stores/toast'
+import { BlockDataProps } from './types'
+import { GithubIssueBlock } from '../../../api/blocks'
 
 interface Label {
   name: string
@@ -13,7 +14,10 @@ interface Label {
   description: string
 }
 
-const GithubLabelsCell = ({ data, onUpdate }: GithubCellProps) => {
+const GithubLabelsCell = ({
+  data,
+  onUpdate,
+}: BlockDataProps<GithubIssueBlock>) => {
   const { openContextModal, closeAllModals } = useModal()
   const { pushApiErrorMessage } = useToast()
 
