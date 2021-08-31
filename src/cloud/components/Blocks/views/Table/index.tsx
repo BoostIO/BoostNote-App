@@ -11,16 +11,16 @@ import {
   setCellData,
   syncTo,
 } from '../../../../lib/blocks/table'
-import TextCell from '../../props/TextProp'
-import CheckboxCell from '../../props/CheckboxProp'
-import DateCell from '../../props/DateProp'
-import GitHubAssigneesCell from '../../props/GithubAssigneesProp'
-import GithubStatusCell from '../../props/GithubStatusProp'
-import GithubLabelsCell from '../../props/GithubLabelsProp'
-import HyperlinkCell from '../../props/HyperlinkProp'
+import TextProp from '../../props/TextProp'
+import CheckboxProp from '../../props/CheckboxProp'
+import DateProp from '../../props/DateProp'
+import GitHubAssigneesData from '../../data/GithubAssigneesData'
+import GithubStatusData from '../../data/GithubStatusData'
+import GithubLabelsData from '../../data/GithubLabelsData'
+import HyperlinkProp from '../../props/HyperlinkProp'
 import TableSettings from './TableSettings'
 import ColumnSettings from './ColumnSettings'
-import BoostUserCell from '../../props/BoostUserProp'
+import BoostUserProp from '../../props/BoostUserProp'
 import { Block, TableBlock } from '../../../../api/blocks'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import Icon from '../../../../../design/components/atoms/Icon'
@@ -28,7 +28,7 @@ import Button from '../../../../../design/components/atoms/Button'
 import { isNumberString, isUrlOrPath } from '../../../../lib/utils/string'
 import styled from '../../../../../design/lib/styled'
 import { StyledUserIcon } from '../../../UserIcon'
-import { BlockDataProps } from '../../props/types'
+import { BlockDataProps } from '../../data/types'
 
 type GithubCellProps = BlockDataProps<TableBlock['children'][number]>
 
@@ -228,29 +228,29 @@ const TableCell = ({
       )
     case 'number':
       return (
-        <TextCell
+        <TextProp
           value={data[column.id] || ''}
           onUpdate={update}
           validation={isNumberString}
         />
       )
     case 'date':
-      return <DateCell value={data[column.id] || ''} onUpdate={update} />
+      return <DateProp value={data[column.id] || ''} onUpdate={update} />
     case 'url':
       return (
-        <TextCell
+        <TextProp
           value={data[column.id] || ''}
           onUpdate={update}
           validation={isUrlOrPath}
         />
       )
     case 'checkbox':
-      return <CheckboxCell value={data[column.id] || ''} onUpdate={update} />
+      return <CheckboxProp value={data[column.id] || ''} onUpdate={update} />
     case 'user':
-      return <BoostUserCell value={data[column.id] || ''} onUpdate={update} />
+      return <BoostUserProp value={data[column.id] || ''} onUpdate={update} />
     case 'text':
     default:
-      return <TextCell value={data[column.id] || ''} onUpdate={update} />
+      return <TextProp value={data[column.id] || ''} onUpdate={update} />
   }
 }
 
@@ -261,7 +261,7 @@ const GithubCell = ({
 }: GithubCellProps & { prop: string }) => {
   switch (prop) {
     case 'assignees':
-      return <GitHubAssigneesCell data={data} onUpdate={onUpdate} />
+      return <GitHubAssigneesData data={data} onUpdate={onUpdate} />
     case 'owner':
       return data.repository != null ? (
         <div>
@@ -282,22 +282,22 @@ const GithubCell = ({
         </div>
       ) : null
     case 'state':
-      return <GithubStatusCell data={data} onUpdate={onUpdate} />
+      return <GithubStatusData data={data} onUpdate={onUpdate} />
     case 'labels':
-      return <GithubLabelsCell data={data} onUpdate={onUpdate} />
+      return <GithubLabelsData data={data} onUpdate={onUpdate} />
     case 'pull_request':
       const url = data?.pull_request?.html_url || ''
-      return <HyperlinkCell href={url} label={getPRNumFromUrl(url)} />
+      return <HyperlinkProp href={url} label={getPRNumFromUrl(url)} />
     case 'org':
       return data.repository != null && data.repository.organization != null ? (
-        <HyperlinkCell
+        <HyperlinkProp
           href={data.repository.organization.html_url}
           label={data.repository.organization.login}
         />
       ) : null
     case 'repo':
       return (
-        <HyperlinkCell
+        <HyperlinkProp
           href={data?.repository?.html_url}
           label={data?.repository?.full_name}
         />
@@ -308,7 +308,7 @@ const GithubCell = ({
       return <div>{data.body}</div>
     case 'milestone':
       return (
-        <HyperlinkCell
+        <HyperlinkProp
           href={data?.milestone?.html_url || ''}
           label={data?.milestone?.title}
         />

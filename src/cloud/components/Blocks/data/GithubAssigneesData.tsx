@@ -15,7 +15,7 @@ interface Assignee {
   login: string
 }
 
-const GitHubAssigneesCell = ({
+const GitHubAssigneesData = ({
   data,
   onUpdate,
 }: BlockDataProps<GithubIssueBlock>) => {
@@ -144,4 +144,4 @@ const GithubUserSelectContainer = styled.div`
     }
   }
 `
-export default GitHubAssigneesCell
+export default GitHubAssigneesData

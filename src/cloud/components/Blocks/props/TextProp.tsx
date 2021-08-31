@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from '../../../../design/lib/styled'
 import { BlockPropertyProps } from './types'
 
-interface TextCellProps extends BlockPropertyProps {
+interface TextPropProps extends BlockPropertyProps {
   validation?: (value: string) => boolean
 }
 
-const TextCell = ({ value, onUpdate, validation }: TextCellProps) => {
+const TextProp = ({ value, onUpdate, validation }: TextPropProps) => {
   const [mode, setMode] = useState<'view' | 'edit'>('view')
   const [internal, setInternal] = useState(value)
   const [hasError, setHasError] = useState(false)
@@ -56,7 +56,7 @@ const TextCell = ({ value, onUpdate, validation }: TextCellProps) => {
   )
 }
 
-export default TextCell
+export default TextProp
 
 const StyledTextCell = styled.div`
   min-height: 20px;
