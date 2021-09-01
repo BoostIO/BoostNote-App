@@ -46,6 +46,7 @@ import BlockEditorTab from './BlockEditorTab'
 import AttachmentsTab from './AttachmentsTab'
 import ImportTab from './ImportTab'
 import TeamSubLimit from './TeamSubLimit'
+import { ExternalLink } from '../../../design/components/atoms/Link'
 const SettingsComponent = () => {
   const { t } = useTranslation()
   const {
@@ -129,8 +130,42 @@ const SettingsComponent = () => {
         return (
           <SettingTabContent
             title={t(lngKeys.CommunityFeedback)}
-            description={t(lngKeys.CommunityFeedbackSubtitle)}
+            description={
+              <>
+                <p>{t(lngKeys.CommunityFeedbackSubtitle)}</p>
+              </>
+            }
             body={<AppFeedbackForm />}
+            footer={
+              <>
+                <p>
+                  You can also request features, report bugs, and ask questions
+                  from{' '}
+                  <ExternalLink href='https://github.com/BoostIO/BoostNote-App'>
+                    our GitHub repository
+                  </ExternalLink>
+                  .
+                </p>
+
+                <ul>
+                  <li>
+                    <ExternalLink href='https://github.com/BoostIO/BoostNote-App/discussions/categories/feature-requests'>
+                      Feature Requests
+                    </ExternalLink>
+                  </li>
+                  <li>
+                    <ExternalLink href='https://github.com/BoostIO/BoostNote-App/issues'>
+                      Bug Reports
+                    </ExternalLink>
+                  </li>
+                  <li>
+                    <ExternalLink href='https://github.com/BoostIO/BoostNote-App/discussions/categories/q-a'>
+                      Q&amp;A
+                    </ExternalLink>
+                  </li>
+                </ul>
+              </>
+            }
           />
         )
       case 'attachments':
