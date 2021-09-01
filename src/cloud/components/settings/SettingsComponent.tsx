@@ -272,7 +272,7 @@ const SettingsComponent = () => {
           />
           <SettingNavLinkItem
             label={t(lngKeys.SettingsUserForum)}
-            href='https://forum.boostnote.io/'
+            href='https://github.com/BoostIO/BoostNote-App/discussions'
             id='forum-link'
           />
 
