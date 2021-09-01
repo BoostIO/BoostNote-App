@@ -5,7 +5,6 @@ export function load(appId: string) {
     w.intercomSettings = {
       ...(w.intercomSettings || {}),
       hide_default_launcher: true,
-      custom_launcher_selector: '.helper-message',
     }
     if (typeof ic === 'function') {
       ic('reattach_activator')
@@ -46,7 +45,6 @@ export function boot(appId: string, options = {}) {
       app_id: appId,
       ...options,
       hide_default_launcher: true,
-      custom_launcher_selector: '.helper-message',
     })
 }
 

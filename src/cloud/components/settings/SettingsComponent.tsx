@@ -31,7 +31,6 @@ import Button from '../../../design/components/atoms/Button'
 import SettingSidenav from '../../../design/components/organisms/Settings/molecules/SettingSidenav'
 import AppFeedbackForm from '../AppFeedbackForm'
 import SettingTabContent from '../../../design/components/organisms/Settings/atoms/SettingTabContent'
-import { intercomAppId } from '../../lib/consts'
 import { lngKeys } from '../../lib/i18n/types'
 import PersonalInfoTab from './PersonalInfoTab'
 import PreferencesTab from './PreferencesTab'
@@ -283,13 +282,6 @@ const SettingsComponent = () => {
             id='setting-support-link'
           />
 
-          {intercomAppId != null && (
-            <SettingNavButtonItem
-              label={t(lngKeys.SendUsAMessage)}
-              id='settings-helper-btn'
-              className='helper-message'
-            />
-          )}
           <SettingNavButtonItem
             label={t(lngKeys.CommunityFeedback)}
             active={settingsTab === 'feedback'}
