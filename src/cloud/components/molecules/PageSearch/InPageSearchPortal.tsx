@@ -12,7 +12,7 @@ import {
   mdiMagnify,
 } from '@mdi/js'
 import { findInPage, stopFindInPage } from '../../../../lib/electronOnly'
-import { useDebounce } from 'react-use'
+import { useDebounce, useEffectOnce } from 'react-use'
 import cc from 'classcat'
 import {
   addToWebContents,
@@ -37,14 +37,20 @@ const InPageSearchPortal = ({ children }: { children: any }) => {
 }
 
 export interface InPageSearchProps {
+  searchQuery: string
   onSearchClose: () => void
+  onSearchQueryChange?: (newSearchQuery: string) => void
 }
 
 const INPUT_HIDE_TIMEOUT = 10
 const INPUT_DEBOUNCE_TIMEOUT = 600
 
-export const InPageSearch = ({ onSearchClose }: InPageSearchProps) => {
-  const [searchQuery, setSearchQuery] = useState<string>('')
+export const InPageSearch = ({
+  searchQuery,
+  onSearchClose,
+  onSearchQueryChange,
+}: InPageSearchProps) => {
+  const [searchValue, setSearchValue] = useState<string>(searchQuery)
   const [findRequestId, setFindRequestId] = useState<number | null>(null)
   const [hidingInput, setHidingInput] = useState<boolean>(false)
   const searchTextAreaRef = useRef<HTMLTextAreaElement>(null)
@@ -53,9 +59,12 @@ export const InPageSearch = ({ onSearchClose }: InPageSearchProps) => {
 
   const updateSearchValue: ChangeEventHandler<HTMLTextAreaElement> = useCallback(
     (event) => {
-      setSearchQuery(event.target.value)
+      setSearchValue(event.target.value)
+      if (onSearchQueryChange != null) {
+        onSearchQueryChange(event.target.value)
+      }
     },
-    []
+    [onSearchQueryChange]
   )
 
   const closeSearch = useCallback(() => {
@@ -84,7 +93,7 @@ export const InPageSearch = ({ onSearchClose }: InPageSearchProps) => {
     (direction: 'next' | 'previous') => {
       setHidingInput(true)
       if (findRequestId != null) {
-        findInPage(searchQuery, {
+        findInPage(searchValue, {
           matchCase: caseSensitiveSearch,
           forward: direction == 'next',
           findNext: false,
@@ -93,10 +102,10 @@ export const InPageSearch = ({ onSearchClose }: InPageSearchProps) => {
 
       setTimeout(() => {
         setHidingInput(false)
-        focusSearchTextAreaInput(searchQuery.length)
+        focusSearchTextAreaInput()
       }, INPUT_HIDE_TIMEOUT)
     },
-    [caseSensitiveSearch, findRequestId, focusSearchTextAreaInput, searchQuery]
+    [caseSensitiveSearch, findRequestId, focusSearchTextAreaInput, searchValue]
   )
 
   const toggleCaseSensitiveSearch = useCallback(
@@ -153,30 +162,30 @@ export const InPageSearch = ({ onSearchClose }: InPageSearchProps) => {
 
   useDebounce(
     async () => {
-      if (searchQuery.trim() === '') {
+      if (searchValue.trim() === '') {
         setNumberOfMatches(null)
         return
       }
 
       setHidingInput(true)
-      const findRequestId = findInPage(searchQuery, {
+      const findRequestId = findInPage(searchValue, {
         matchCase: caseSensitiveSearch,
         findNext: true,
       })
       setFindRequestId(findRequestId)
       setTimeout(() => {
         setHidingInput(false)
-        focusSearchTextAreaInput(searchQuery.length)
+        focusSearchTextAreaInput()
       }, INPUT_HIDE_TIMEOUT)
     },
     INPUT_DEBOUNCE_TIMEOUT,
-    [searchQuery, caseSensitiveSearch]
+    [searchValue, caseSensitiveSearch]
   )
 
-  useEffect(() => {
-    focusSearchTextAreaInput(searchQuery.length)
+  useEffectOnce(() => {
+    focusSearchTextAreaInput(searchValue.length, searchValue == '')
     setFindRequestId(null)
-  }, [focusSearchTextAreaInput, searchQuery])
+  })
 
   useEffect(() => {
     addToWebContents(
@@ -189,6 +198,7 @@ export const InPageSearch = ({ onSearchClose }: InPageSearchProps) => {
       removeFromWebContents('found-in-page', listenInPageSearchResults)
     }
   }, [listenInPageSearchResults])
+
   return (
     <InPageSearchPortal>
       <SearchContainer
@@ -225,7 +235,7 @@ export const InPageSearch = ({ onSearchClose }: InPageSearchProps) => {
             className={cc([hidingInput && 'search__input__hidden'])}
             onClick={focusSearchTextAreaInput}
             rows={1}
-            value={searchQuery}
+            value={searchValue}
             // onInput={updateSearchValue}
             onChange={updateSearchValue}
             // onChange={() => undefined}
