@@ -117,6 +117,7 @@ const Application = ({
 
   const { history, showSearchScreen, setShowSearchScreen } = useSearch()
   const [showInPageSearch, setShowInPageSearch] = useState(false)
+  const [inPageSearchQuery, setInPageSearchQuery] = useState<string>('')
 
   usePathnameChangeEffect(() => {
     setShowFuzzyNavigation(false)
@@ -223,10 +224,15 @@ const Application = ({
 
       if (isElectron() && isPageSearchShortcut(event)) {
         preventKeyboardEventPropagation(event)
-        setShowInPageSearch(true)
+        if (showInPageSearch) {
+          setShowInPageSearch(false)
+          setShowInPageSearch(true)
+        } else {
+          setShowInPageSearch(true)
+        }
       }
     },
-    [openSettingsTab, team]
+    [openSettingsTab, showInPageSearch, team]
   )
   useGlobalKeyDownHandler(overrideBrowserCtrlsHandler)
 
@@ -430,7 +436,11 @@ const Application = ({
       <AnnouncementAlert />
       {isElectron() && <InPageSearchContainer id={'inPageSearchContainer'} />}
       {showInPageSearch && (
-        <InPageSearch onSearchClose={() => setShowInPageSearch(false)} />
+        <InPageSearch
+          searchQuery={inPageSearchQuery}
+          onSearchQueryChange={setInPageSearchQuery}
+          onSearchClose={() => setShowInPageSearch(false)}
+        />
       )}
     </>
   )
