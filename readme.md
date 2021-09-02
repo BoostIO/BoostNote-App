@@ -55,8 +55,6 @@ If you're interested in our project, you can participate in many different ways.
 
 To improve the app, we need your idea! It could be a new feature or an improvement for existing features. If you have any, please create a discussion in [Feature Requests category](https://github.com/BoostIO/BoostNote-App/discussions/categories/feature-requests).
 
-You can also find existing discussions which the core team is actively working on from [issues with "discussion" label](https://github.com/BoostIO/BoostNote-App/issues?q=is%3Aissue+is%3Aopen+label%3A%22discussion+%3Aspeech_balloon%3A%22).
-
 ### Helping community
 
 There are many ways to help our community. You can share how you're using our app by writing an article. You can write it in [General discussion page](https://github.com/BoostIO/BoostNote-App/discussions/categories/general), external developer community (Dev.to or Reddit) and your blog if you have one.
