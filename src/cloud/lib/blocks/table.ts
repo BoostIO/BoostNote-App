@@ -1,207 +1,213 @@
-import { v4 as uuid } from 'uuid'
-import { Array as YArray, Map as YMap } from 'yjs'
+import { Array as YArray, Map as YMap, Doc as YDoc } from 'yjs'
+import {
+  getPropName,
+  getPropType,
+  isPropKey,
+  makePropKey,
+  PropKey,
+  PropType,
+} from './props'
 
-export type DataType =
-  | 'text'
-  | 'number'
-  | 'date'
-  | 'url'
-  | 'checkbox'
-  | 'user'
-  | 'prop'
+type DataPropCol = `prop:${string}:${string}`
+export type Column = PropKey | DataPropCol
 
-export interface Column {
-  id: string
-  name: string
-  data_type: DataType
-  default?: string
+export type YTable = YMap<YArray<string> | YMap<string>>
+
+export function getYTable(id: string, doc: YDoc): YTable {
+  return sanitize(doc.getMap(id))
 }
 
-export interface Table {
-  columns: Column[]
-  row_data: Map<string, Record<string, string>>
-}
+export function addColumn(column: Column, table: YTable): YTable {
+  table.doc?.transact(() => {
+    const [columns, excluded] = getStructure(table)
 
-export function createTable(columns: Omit<Column, 'id'>[]): Table {
-  return {
-    columns: columns.map((col) => ({ ...col, id: uuid() })),
-    row_data: new Map(),
-  }
-}
-
-export function addColumn(column: Omit<Column, 'id'>, table: Table): Table {
-  const id = uuid()
-  return { ...table, columns: [...table.columns, { id, ...column }] }
-}
-
-export function moveColumn(target: number, column: Column, table: Table) {
-  const index = table.columns.findIndex((col) => col.id === column.id)
-  if (index < 0 || target < 0) {
-    return table
-  }
-
-  const mutable = table.columns.slice()
-  mutable.splice(index, 1)
-  mutable.splice(target, 0, column)
-
-  return { ...table, columns: mutable }
-}
-
-export function deleteColumn(column: Column, table: Table) {
-  const row_data = new Map(table.row_data)
-  for (const [key, data] of row_data.entries()) {
-    row_data.set(key, unset(column.id, data))
-  }
-  const columns = table.columns.filter((col) => col.id !== column.id)
-  return { columns, row_data }
-}
-
-type Alteration = Partial<Column> & { id: Column['id']; fill?: string }
-
-export function alterColumn(
-  { id, fill, ...changes }: Alteration,
-  table: Table
-) {
-  const columns = table.columns.map((col) =>
-    col.id === id ? { ...col, ...changes } : col
-  )
-  const newTable: Table = { ...table, columns }
-  if (fill != null) {
-    newTable.row_data = new Map(table.row_data)
-    for (const [key, data] of newTable.row_data.entries()) {
-      newTable.row_data.set(key, { ...data, [id]: fill })
-    }
-  }
-  return newTable
-}
-
-export function setCellData(
-  rowId: string,
-  col: Column,
-  newData: string,
-  table: Table
-) {
-  const row_data = new Map(table.row_data)
-  row_data.set(rowId, { ...(row_data.get(rowId) || {}), [col.id]: newData })
-  return { ...table, row_data }
-}
-
-export function deleteRowData(id: string, table: Table) {
-  const row_data = new Map(table.row_data)
-  row_data.delete(id)
-  return { ...table, row_data }
-}
-
-function unset<T, K extends keyof T>(
-  prop: K,
-  { [prop]: _remove, ...rest }: T
-): Omit<T, K> {
-  return rest
-}
-
-function getCols(ytable: YTable): YArray<YMap<string>> {
-  let cols = ytable.get(0)
-  if (!(cols instanceof YArray)) {
-    ytable.insert(0, [new YArray()])
-    cols = ytable.get(0)
-  }
-  return cols as YArray<YMap<string>>
-}
-
-function getRows(ytable: YTable): YMap<YMap<string>> {
-  let rows = ytable.get(1)
-  if (!(rows instanceof YMap)) {
-    ytable.insert(0, [new YMap()])
-    rows = ytable.get(0)
-  }
-  return rows as YMap<YMap<string>>
-}
-
-function isColumn(col: any): col is Column {
-  return col.id != null && col.name != null && col.data_type != null
-}
-
-export function parseFrom(ytable: YTable): Table {
-  let cols = getCols(ytable)
-  let rows = getRows(ytable)
-
-  const columns: Column[] = []
-  for (const col of cols) {
-    const parsedCol = {
-      id: col.get('id'),
-      name: col.get('name'),
-      data_type: col.get('data_type'),
-      default: col.get('default'),
-    }
-    if (isColumn(parsedCol)) {
-      columns.push(parsedCol)
-    }
-  }
-
-  const row_data: Table['row_data'] = new Map()
-  for (const [id, row] of rows.entries()) {
-    row_data.set(id, Object.fromEntries(row.entries()))
-  }
-
-  return { columns, row_data }
-}
-
-type YTable = YArray<YArray<YMap<string>> | YMap<YMap<string>>>
-export function syncTo(ytable: YTable, table: Table, origin?: any) {
-  let cols = getCols(ytable)
-  let rows = getRows(ytable)
-
-  if (ytable.doc == null) {
-    return false
-  }
-
-  ytable.doc.transact(() => {
-    resize(table.columns.length, () => new YMap<string>(), cols)
-
-    for (const [i, column] of table.columns.entries()) {
-      syncObject(column, cols.get(i))
+    if (!new Set(column).has(column)) {
+      columns.push([column])
     }
 
-    for (const [key, row] of table.row_data.entries()) {
-      let map = rows.get(key)
-      if (map == null) {
-        map = new YMap()
-        rows.set(key, map)
+    excluded.delete(column)
+  })
+  return table
+}
+
+export function moveColumn(
+  target: number | 'left' | 'right',
+  column: Column,
+  table: YTable
+): YTable {
+  table.doc?.transact(() => {
+    const [columns] = getStructure(table)
+
+    let from = -1
+    for (let i = 0; i < columns.length; i++) {
+      if (columns.get(i) === column) {
+        from = i
       }
-      syncObject(row, map)
     }
-  }, origin)
 
-  return true
+    if (from < 0) {
+      return
+    }
+
+    const normalizedTarget =
+      typeof target === 'string'
+        ? target === 'left'
+          ? from - 1
+          : from + 1
+        : target
+
+    if (normalizedTarget < 0 || normalizedTarget === from) {
+      return
+    }
+
+    columns.delete(from)
+    columns.insert(Math.min(normalizedTarget, columns.length), [column])
+  })
+  return table
 }
 
-function syncObject(obj: Record<string, any>, yMap: YMap<any>) {
-  const existingKeys = new Set(yMap.keys())
-  for (const [key, value] of Object.entries(obj)) {
-    existingKeys.delete(key)
-    const currentValue = yMap.get(key)
-    if (currentValue !== value) {
-      yMap.set(key, value)
+export function deleteColumn(column: Column, table: YTable): YTable {
+  table.doc?.transact(() => {
+    const [columns, excluded] = getStructure(table)
+    for (let i = 0; i < columns.length; i++) {
+      if (columns.get(i) === column) {
+        columns.delete(i)
+      }
     }
-  }
 
-  for (const key of existingKeys.values()) {
-    yMap.delete(key)
-  }
+    excluded.set(column, column)
+  })
+  return table
 }
 
-function resize<T>(
-  length: number,
-  fill: (i: number) => T,
-  arr: YArray<T>
-): YArray<T> {
-  const diff = length - arr.length
-  if (diff > 0) {
-    for (let i = 0; i < diff; i++) {
-      arr.push([fill(arr.length + i)])
+export function renameColumn(
+  column: Column,
+  name: string,
+  table: YTable,
+  rows: YMap<string>[] = []
+) {
+  table.doc?.transact(() => {
+    const [columns] = getStructure(table)
+    const newKey = isDataPropCol(column)
+      ? makeDataPropCol(name, getDataPropColProp(column))
+      : makePropKey(name, getPropType(column))
+
+    if (isPropKey(column)) {
+      for (const row of rows) {
+        row.set(newKey, row.get(column) || '')
+        row.delete(column)
+      }
     }
-  } else if (diff < 0) {
-    arr.delete(arr.length + diff)
+
+    for (let i = 0; i < columns.length; i++) {
+      if (columns.get(i) === column) {
+        columns.delete(i)
+        columns.insert(i, [newKey])
+      }
+    }
+  })
+  return table
+}
+
+export function setColumnType(
+  column: PropKey,
+  type: PropType,
+  table: YTable,
+  rows: YMap<string>[] = []
+): YTable {
+  table.doc?.transact(() => {
+    const [columns] = getStructure(table)
+    const newKey = makePropKey(getPropName(column), type)
+    for (const row of rows) {
+      row.set(newKey, '')
+      row.delete(column)
+    }
+
+    for (let i = 0; i < columns.length; i++) {
+      if (columns.get(i) === column) {
+        columns.delete(i)
+        columns.insert(i, [newKey])
+      }
+    }
+  })
+
+  return table
+}
+
+export function getActiveColumns(
+  table: YTable,
+  additional: Column[] = []
+): Column[] {
+  const [columns, excluded] = getStructure(table)
+  return columns
+    .toArray()
+    .concat(additional.filter(notIn(new Set(columns))))
+    .filter(notIn(new Set(excluded.keys())))
+    .filter(isColumn)
+}
+
+export function sanitize(table: YTable) {
+  const [columns, excluded] = getStructure(table)
+
+  for (let i = columns.length - 1; i >= 0; i--) {
+    if (!isColumn(columns.get(i))) {
+      columns.delete(i)
+    }
   }
-  return arr
+
+  for (const key of excluded.keys()) {
+    if (!isColumn(key)) {
+      excluded.delete(key)
+    }
+  }
+
+  return table
+}
+
+function getStructure(table: YTable): [YArray<string>, YMap<string>] {
+  let cols = table.get('columns')
+  if (!(cols instanceof YArray)) {
+    table.set('columns', new YArray())
+    cols = table.get('columns')
+  }
+
+  let excluded = table.get('excluded')
+  if (!(excluded instanceof YMap)) {
+    table.set('excluded', new YMap())
+    excluded = table.get('excluded')
+  }
+
+  return [cols as YArray<string>, excluded as YMap<string>]
+}
+
+export function getColumnName(col: Column): string {
+  return isDataPropCol(col) ? getDataPropColName(col) : getPropName(col)
+}
+
+export function makeDataPropCol(name: string, prop: string): DataPropCol {
+  return `prop:${name}:${prop}`
+}
+
+export function isColumn(str: any): str is Column {
+  return isDataPropCol(str) || isPropKey(str)
+}
+
+export function isDataPropCol(str: any): str is DataPropCol {
+  return (
+    typeof str === 'string' &&
+    str.startsWith('prop:') &&
+    str.split(':').length === 3
+  )
+}
+
+export function getDataPropColName(col: DataPropCol): string {
+  return col.split(':')[1]
+}
+
+export function getDataPropColProp(col: DataPropCol): string {
+  return col.split(':')[2]
+}
+
+function notIn<T>(set: Set<T>) {
+  return (item: T) => !set.has(item)
 }
