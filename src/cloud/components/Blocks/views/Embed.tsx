@@ -1,9 +1,19 @@
 import React from 'react'
+import { ViewProps } from '.'
+import AspectRatio from '../../../../design/components/atoms/AspectRation'
 import styled from '../../../../design/lib/styled'
 import { EmbedBlock } from '../../../api/blocks'
-import { ViewProps } from '../BlockContent'
 
-const EmbedView = ({ block }: ViewProps<EmbedBlock>) => {
+const EmbedView = ({ block, isChild }: ViewProps<EmbedBlock>) => {
+  if (isChild) {
+    return (
+      <AspectRatio width={16} height={9}>
+        <StyledEmbedView>
+          <iframe src={block.data.url} allowFullScreen={true}></iframe>
+        </StyledEmbedView>
+      </AspectRatio>
+    )
+  }
   return (
     <StyledEmbedView>
       <iframe src={block.data.url} allowFullScreen={true}></iframe>

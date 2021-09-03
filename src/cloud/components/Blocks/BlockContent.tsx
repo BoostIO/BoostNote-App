@@ -11,13 +11,8 @@ import {
 import MarkdownForm from './forms/MarkdownForm'
 import EmbedForm from './forms/EmbedForm'
 import TableForm from './forms/TableForm'
-import TableView from './views/Table'
-import MarkdownView from './views/Markdown'
-import EmbedView from './views/Embed'
-import ContainerView from './views/Container'
-import GithubIssueView from './views/GithubIssue'
 import { Block, ContainerBlock } from '../../api/blocks'
-import { BlockActions, useDocBlocks } from '../../lib/hooks/useDocBlocks'
+import { useDocBlocks } from '../../lib/hooks/useDocBlocks'
 import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
 import { useModal } from '../../../design/lib/stores/modal'
 import { useI18n } from '../../lib/hooks/useI18n'
@@ -27,18 +22,11 @@ import BlockTree from './BlockTree'
 import Icon from '../../../design/components/atoms/Icon'
 import styled from '../../../design/lib/styled'
 import { find } from '../../../design/lib/utils/tree'
-import { WebsocketProvider } from 'y-websocket'
 import useRealtime from '../../lib/editor/hooks/useRealtime'
+import { BlockView } from './views'
 
-interface Canvas extends SerializedDocWithBookmark {
+export interface Canvas extends SerializedDocWithBookmark {
   rootBlock: ContainerBlock
-}
-
-export interface ViewProps<T extends Block> {
-  block: T
-  actions: BlockActions
-  canvas: Canvas
-  realtime: WebsocketProvider
 }
 
 export interface FormProps<T extends Block> {
@@ -101,62 +89,6 @@ const BlockContent = ({ doc }: BlockContentProps) => {
     openModal(<EmbedForm onSubmit={createBlock} />, modalOptions)
   }, [createBlock, openModal, modalOptions])
 
-  const content = useMemo(() => {
-    if (state.type === 'loading') {
-      return null
-    }
-    const active = currentBlock || state.block
-    switch (active.type) {
-      case 'container':
-        return (
-          <ContainerView
-            block={active}
-            actions={actions}
-            canvas={doc}
-            realtime={provider}
-          />
-        )
-      case 'embed':
-        return (
-          <EmbedView
-            block={active}
-            actions={actions}
-            canvas={doc}
-            realtime={provider}
-          />
-        )
-      case 'markdown':
-        return (
-          <MarkdownView
-            block={active}
-            actions={actions}
-            canvas={doc}
-            realtime={provider}
-          />
-        )
-      case 'table':
-        return (
-          <TableView
-            block={active}
-            actions={actions}
-            canvas={doc}
-            realtime={provider}
-          />
-        )
-      case 'github.issue':
-        return (
-          <GithubIssueView
-            block={active}
-            actions={actions}
-            canvas={doc}
-            realtime={provider}
-          />
-        )
-      default:
-        return <div>Block of type ${(active as any).type} is unsupported</div>
-    }
-  }, [currentBlock, state, actions, doc, provider])
-
   if (state.type === 'loading') {
     return <div>loading</div>
   }
@@ -210,7 +142,14 @@ const BlockContent = ({ doc }: BlockContentProps) => {
           )}
         </div>
       </div>
-      <div className='block__editor__view'>{content}</div>
+      <div className='block__editor__view'>
+        <BlockView
+          block={currentBlock || state.block}
+          actions={actions}
+          canvas={doc}
+          realtime={provider}
+        />
+      </div>
     </StyledBlockContent>
   )
 }
