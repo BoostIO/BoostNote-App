@@ -1,15 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ViewProps } from '../../BlockContent'
+import React, { useCallback, useEffect, useRef } from 'react'
+import { ViewProps } from '../'
 import { mdiCog, mdiPlus } from '@mdi/js'
 import GithubIssueForm from '../../forms/GithubIssueForm'
 import {
-  alterColumn,
   Column,
-  deleteColumn,
-  moveColumn,
-  parseFrom,
-  setCellData,
-  syncTo,
+  getColumnName,
+  getDataPropColProp,
+  isDataPropCol,
 } from '../../../../lib/blocks/table'
 import TextProp from '../../props/TextProp'
 import CheckboxProp from '../../props/CheckboxProp'
@@ -25,48 +22,54 @@ import { Block, TableBlock } from '../../../../api/blocks'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import Icon from '../../../../../design/components/atoms/Icon'
 import Button from '../../../../../design/components/atoms/Button'
-import { isNumberString, isUrlOrPath } from '../../../../lib/utils/string'
+import {
+  capitalize,
+  isNumberString,
+  isUrlOrPath,
+} from '../../../../lib/utils/string'
 import styled from '../../../../../design/lib/styled'
 import { StyledUserIcon } from '../../../UserIcon'
 import { BlockDataProps } from '../../data/types'
+import { getPropType } from '../../../../lib/blocks/props'
+import { useBlockTable } from '../../../../lib/hooks/useBlockTable'
+import BlockIcon from '../../BlockIcon'
 
 type GithubCellProps = BlockDataProps<TableBlock['children'][number]>
 
 const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
   const { openModal, openContextModal, closeAllModals } = useModal()
-  const realtimeRef = useRef(realtime.doc.getArray(block.id))
-  const [table, setTable] = useState(() => {
-    const arr = realtime.doc.getArray(block.id)
-    return parseFrom(arr as ArgsType<typeof parseFrom>[0])
-  })
-  const originRef = useRef({})
+  const { state, actions: tableActions } = useBlockTable(block, realtime.doc)
 
+  const subscriptionsRef = useRef<Set<(col: Column[]) => void>>(new Set())
   useEffect(() => {
-    const yarray = realtime.doc.getArray(block.id)
-    const listener: ArgsType<typeof yarray['observeDeep']>[0] = (_ev, tr) => {
-      if (tr.origin !== originRef.current) {
-        setTable(parseFrom(yarray as ArgsType<typeof parseFrom>[0]))
-      }
+    for (const subscription of subscriptionsRef.current) {
+      subscription(state.columns)
     }
-    yarray.observeDeep(listener)
-    realtimeRef.current = yarray
-    return () => {
-      yarray.unobserveDeep(listener)
-    }
-  }, [realtime])
+  }, [state.columns])
 
+  const tableActionsRef = useRef(tableActions)
   useEffect(() => {
-    syncTo(realtimeRef.current as any, table, originRef.current)
-  }, [table])
+    tableActionsRef.current = tableActions
+  }, [tableActions])
 
   const openTableSettings: React.MouseEventHandler = useCallback(
     (ev) => {
       openContextModal(
         ev,
         <TableSettings
-          table={table}
-          updateTable={(table, shouldClose) => {
-            setTable(table)
+          columns={state.columns}
+          subscribe={(fn) => {
+            subscriptionsRef.current.add(fn)
+            return () => subscriptionsRef.current.delete(fn)
+          }}
+          addColumn={(col, shouldClose) => {
+            tableActionsRef.current.addColumn(col)
+            if (shouldClose) {
+              closeAllModals()
+            }
+          }}
+          deleteColumn={(col, shouldClose) => {
+            tableActionsRef.current.deleteColumn(col)
             if (shouldClose) {
               closeAllModals()
             }
@@ -75,7 +78,7 @@ const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
         { alignment: 'bottom-right' }
       )
     },
-    [openContextModal, table]
+    [openContextModal, closeAllModals, state.columns]
   )
 
   const openColumnSettings = useCallback(
@@ -84,30 +87,24 @@ const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
         ev,
         <ColumnSettings
           col={col}
-          setColName={(name, col) =>
-            setTable((table) => alterColumn({ ...col, name }, table))
+          setColName={(col, name) =>
+            tableActionsRef.current.renameColumn(col, name)
           }
-          setColDataType={(data_type, col) =>
-            setTable((table) => alterColumn({ ...col, data_type }, table))
+          setColDataType={(col, type) =>
+            tableActionsRef.current.setColumnType(col, type)
           }
           deleteCol={(col) => {
-            setTable((table) => deleteColumn(col, table))
+            tableActionsRef.current.deleteColumn(col)
             closeAllModals()
           }}
-          moveColumn={(col, dir) => {
-            setTable((table) => {
-              const index = table.columns.findIndex(
-                (column) => column.id === col.id
-              )
-              const target = dir === 'left' ? index - 1 : index + 1
-              return index > -1 ? moveColumn(target, col, table) : table
-            })
-          }}
+          moveColumn={(col, dir) =>
+            tableActionsRef.current.moveColumn(col, dir)
+          }
         />,
         { width: 220 }
       )
     },
-    []
+    [closeAllModals, openContextModal]
   )
 
   const updateIssueBlock = useCallback(
@@ -131,10 +128,6 @@ const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
     )
   }, [openModal, actions, block])
 
-  const updateCell = useCallback((rowId: string, col: Column, data: string) => {
-    setTable((table) => setCellData(rowId, col, data, table))
-  }, [])
-
   return (
     <StyledTableView>
       <div className='block__table__view__wrapper'>
@@ -142,12 +135,13 @@ const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
           <thead>
             <tr>
               <th>Title</th>
-              {table.columns.map((col) => (
+              {state.columns.map((col) => (
                 <th
+                  key={col}
                   className='block__table__view--interactable'
                   onClick={(ev) => openColumnSettings(ev, col)}
                 >
-                  {col.name}
+                  {getColumnName(col)}
                 </th>
               ))}
               <th
@@ -164,14 +158,25 @@ const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
                 <tr key={child.id}>
                   <td>
                     <div>{child.data.title}</div>
+                    {child.children.map((ancestor) => {
+                      return (
+                        <div
+                          key={ancestor.id}
+                          className='block__table__view__child__label'
+                        >
+                          <BlockIcon block={ancestor} size={16} />
+                          <span>{blockTitle(ancestor)}</span>
+                        </div>
+                      )
+                    })}
                   </td>
-                  {table.columns.map((col) => (
-                    <td key={col.id}>
+                  {state.columns.map((col) => (
+                    <td key={col}>
                       <TableCell
                         column={col}
                         row={child}
-                        data={table.row_data.get(child.id) || {}}
-                        updateCell={updateCell}
+                        data={state.rowData.get(child.id) || {}}
+                        updateCell={tableActions.setCell}
                         updateBlock={updateIssueBlock}
                       />
                     </td>
@@ -217,40 +222,42 @@ const TableCell = ({
     [column, row, updateCell]
   )
 
-  switch (column.data_type) {
-    case 'prop':
-      return (
-        <GithubCell
-          prop={column.default || ''}
-          data={row.data}
-          onUpdate={(data) => updateBlock({ ...row, data })}
-        />
-      )
+  if (isDataPropCol(column)) {
+    return (
+      <GithubCell
+        prop={getDataPropColProp(column)}
+        data={row.data}
+        onUpdate={(data) => updateBlock({ ...row, data })}
+      />
+    )
+  }
+
+  switch (getPropType(column)) {
     case 'number':
       return (
         <TextProp
-          value={data[column.id] || ''}
+          value={data[column] || ''}
           onUpdate={update}
           validation={isNumberString}
         />
       )
     case 'date':
-      return <DateProp value={data[column.id] || ''} onUpdate={update} />
+      return <DateProp value={data[column] || ''} onUpdate={update} />
     case 'url':
       return (
         <TextProp
-          value={data[column.id] || ''}
+          value={data[column] || ''}
           onUpdate={update}
           validation={isUrlOrPath}
         />
       )
     case 'checkbox':
-      return <CheckboxProp value={data[column.id] || ''} onUpdate={update} />
+      return <CheckboxProp value={data[column] || ''} onUpdate={update} />
     case 'user':
-      return <BoostUserProp value={data[column.id] || ''} onUpdate={update} />
+      return <BoostUserProp value={data[column] || ''} onUpdate={update} />
     case 'text':
     default:
-      return <TextProp value={data[column.id] || ''} onUpdate={update} />
+      return <TextProp value={data[column] || ''} onUpdate={update} />
   }
 }
 
@@ -383,6 +390,48 @@ const StyledTableView = styled.div`
   & .block__table__view__import {
     border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
   }
+
+  & .block__table__view__child__label {
+    position: relative;
+    padding-left: 18px;
+    display: flex;
+    width: 100%;
+    height: 26px;
+    white-space: nowrap;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
+    cursor: pointer;
+
+    align-items: center;
+    flex: 1 1 auto;
+    background: none;
+    outline: 0;
+    border: 0;
+    text-align: left;
+    color: ${({ theme }) => theme.colors.text.secondary};
+    text-decoration: none;
+    margin: 0;
+    overflow: hidden;
+
+    & > span:first-of-type {
+      flex-grow: 1;
+    }
+
+    & svg {
+      color: ${({ theme }) => theme.colors.text.subtle};
+      margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
+  }
 `
+
+function blockTitle(block: Block) {
+  switch (block.type) {
+    case 'github.issue':
+      return block.data.number != null
+        ? `#${block.data.number}`
+        : 'Github Issue'
+    default:
+      return capitalize(block.type)
+  }
+}
 
 export default TableView
