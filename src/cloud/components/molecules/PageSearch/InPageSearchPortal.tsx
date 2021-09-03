@@ -15,8 +15,8 @@ import { findInPage, stopFindInPage } from '../../../../lib/electronOnly'
 import { useDebounce, useEffectOnce } from 'react-use'
 import cc from 'classcat'
 import {
-  addToWebContents,
-  removeFromWebContents,
+  addFoundInPageListener,
+  removeFoundInPageListener,
 } from '../../../lib/stores/electron'
 import Button from '../../../../design/components/atoms/Button'
 import Portal from '../../../../design/components/atoms/Portal'
@@ -152,12 +152,8 @@ export const InPageSearch = ({
     [closeSearch, navigateResults, toggleCaseSensitiveSearch]
   )
 
-  const listenInPageSearchResults = useCallback((results) => {
-    if (results == null || !results.matches) {
-      setNumberOfMatches(null)
-      return
-    }
-    setNumberOfMatches(results.matches)
+  const listenInPageSearchResults = useCallback((matches: number | null) => {
+    setNumberOfMatches(matches)
   }, [])
 
   useDebounce(
@@ -188,14 +184,9 @@ export const InPageSearch = ({
   })
 
   useEffect(() => {
-    addToWebContents(
-      'found-in-page',
-      (_: any, result: InPageSearchEventProps) => {
-        listenInPageSearchResults(result)
-      }
-    )
+    addFoundInPageListener(listenInPageSearchResults)
     return () => {
-      removeFromWebContents('found-in-page', listenInPageSearchResults)
+      removeFoundInPageListener(listenInPageSearchResults)
     }
   }, [listenInPageSearchResults])
 

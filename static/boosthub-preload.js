@@ -81,17 +81,26 @@ function stopFindInPage(action) {
   }
 }
 
-function addWebContentsEvent(eventName, callback) {
-  const webContents = remote.getCurrentWebContents()
-  if (webContents) {
-    return webContents.on(eventName, callback)
+function foundInPageListener(callback) {
+  return (_, result) => {
+    callback(result.matches)
   }
 }
 
-function removeWebContentsEvent(eventName, callback) {
+function addFoundInPageListener(callback) {
+  const webContents = remote.getCurrentWebContents()
+  if (webContents != null) {
+    webContents.on('found-in-page', foundInPageListener(callback))
+  }
+}
+
+function removeFoundInPageListener(callback) {
   const webContents = remote.getCurrentWebContents()
   if (webContents) {
-    return webContents.removeListener(eventName, callback)
+    return webContents.removeListener(
+      'found-in-page',
+      foundInPageListener(callback)
+    )
   }
 }
 
@@ -106,8 +115,8 @@ window.__ELECTRON_ONLY__.addHostListenerOnce = addHostListenerOnce
 window.__ELECTRON_ONLY__.openInBrowser = openInBrowser
 window.__ELECTRON_ONLY__.findInPage = findInPage
 window.__ELECTRON_ONLY__.stopFindInPage = stopFindInPage
-window.__ELECTRON_ONLY__.addWebContentsEvent = addWebContentsEvent
-window.__ELECTRON_ONLY__.removeWebContentsEvent = removeWebContentsEvent
+window.__ELECTRON_ONLY__.addFoundInPageListener = addFoundInPageListener
+window.__ELECTRON_ONLY__.removeFoundInPageListener = removeFoundInPageListener
 
 const handler = (event) => {
   event.preventDefault()
