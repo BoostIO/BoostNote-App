@@ -6,11 +6,11 @@ import {
   mdiText,
 } from '@mdi/js'
 import React from 'react'
-import MetadataContainerRow from '../../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import { DataType } from '../../../../lib/blocks/table'
+import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import { PropType } from '../../../lib/blocks/props'
 
 interface DataTypeMenuProps {
-  onSelect: (type: DataType) => void
+  onSelect: (type: PropType) => void
 }
 
 const DataTypeMenu = ({ onSelect }: DataTypeMenuProps) => {

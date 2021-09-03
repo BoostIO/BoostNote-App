@@ -4,20 +4,33 @@ import {
   mdiArrowRightBold,
   mdiTrashCanOutline,
 } from '@mdi/js'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import FormInput from '../../../../../design/components/molecules/Form/atoms/FormInput'
 import MetadataContainerBreak from '../../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import MetadataContainerRow from '../../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import styled from '../../../../../design/lib/styled'
-import { Column, DataType } from '../../../../lib/blocks/table'
+import {
+  getPropType,
+  isPropKey,
+  makePropKey,
+  PropKey,
+  PropType,
+} from '../../../../lib/blocks/props'
+import {
+  Column,
+  getColumnName,
+  getDataPropColProp,
+  isDataPropCol,
+  makeDataPropCol,
+} from '../../../../lib/blocks/table'
 import { capitalize } from '../../../../lib/utils/string'
-import DataTypeMenu from './DataTypeMenu'
+import DataTypeMenu from '../../props/DataTypeMenu'
 
 interface ColumnSettingsProps {
   col: Column
-  setColName: (name: string, col: Column) => void
-  setColDataType: (type: DataType, col: Column) => void
+  setColName: (col: Column, name: string) => void
+  setColDataType: (col: PropKey, type: PropType) => void
   deleteCol: (col: Column) => void
   moveColumn: (col: Column, direction: 'left' | 'right') => void
 }
@@ -29,32 +42,49 @@ const ColumnSettings = ({
   deleteCol,
   moveColumn,
 }: ColumnSettingsProps) => {
-  const [name, setName] = useState(col.name)
+  const [colKey, setColKey] = useState(col)
+  const [name, setName] = useState(getColumnName(col))
   const { openContextModal, closeAllModals } = useModal()
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (ev) => {
       setName(ev.target.value)
-      setColName(ev.target.value, col)
+      setColName(colKey, ev.target.value)
+      setColKey(
+        isDataPropCol(colKey)
+          ? makeDataPropCol(ev.target.value, getDataPropColProp(colKey))
+          : makePropKey(ev.target.value, getPropType(colKey))
+      )
     },
-    [col]
+    [colKey, setColName]
   )
+
+  useEffect(() => {
+    setColKey(col)
+  }, [col])
 
   const openTypeSelector: React.MouseEventHandler = useCallback(
     (ev) => {
-      openContextModal(
-        ev,
-        <DataTypeMenu
-          onSelect={(type) => {
-            setColDataType(type, col)
-            closeAllModals()
-          }}
-        />,
-        { width: 300, keepAll: true }
-      )
+      if (isPropKey(colKey)) {
+        openContextModal(
+          ev,
+          <DataTypeMenu
+            onSelect={(type) => {
+              setColDataType(colKey, type)
+              setColKey(makePropKey(name, type))
+              closeAllModals()
+            }}
+          />,
+          { width: 300, keepAll: true }
+        )
+      }
     },
-    [col]
+    [name, colKey, closeAllModals, openContextModal, setColDataType]
   )
+
+  const dataType = useMemo(() => {
+    return isDataPropCol(colKey) ? 'prop' : getPropType(colKey)
+  }, [colKey])
 
   return (
     <Container>
@@ -63,16 +93,15 @@ const ColumnSettings = ({
       <MetadataContainerRow
         row={{
           type: 'header',
-          content:
-            col.data_type === 'prop' ? 'GITHUB PARAMETER' : 'PROPERTY TYPE',
+          content: dataType === 'prop' ? 'GITHUB PARAMETER' : 'PROPERTY TYPE',
         }}
       />
-      {col.data_type !== 'prop' && (
+      {dataType !== 'prop' && (
         <MetadataContainerRow
           row={{
             type: 'button',
             props: {
-              label: capitalize(col.data_type),
+              label: capitalize(dataType),
               iconPath: mdiAccountCircleOutline,
               onClick: openTypeSelector,
             },
