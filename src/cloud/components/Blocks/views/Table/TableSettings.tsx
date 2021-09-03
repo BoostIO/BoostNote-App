@@ -1,21 +1,23 @@
-import { flip } from 'ramda'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Switch from '../../../../../design/components/atoms/Switch'
 import MetadataContainerBreak from '../../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import MetadataContainerRow from '../../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import styled from '../../../../../design/lib/styled'
+import { makePropKey, PropType } from '../../../../lib/blocks/props'
 import {
-  addColumn,
-  DataType,
-  deleteColumn,
-  Table,
+  Column,
+  getDataPropColProp,
+  isDataPropCol,
+  makeDataPropCol,
 } from '../../../../lib/blocks/table'
 import { capitalize } from '../../../../lib/utils/string'
-import DataTypeMenu from './DataTypeMenu'
+import DataTypeMenu from '../../props/DataTypeMenu'
 
 interface TableSettingsProps {
-  table: Table
-  updateTable: (table: Table, shouldClose?: boolean) => void
+  columns: Column[]
+  addColumn: (col: Column, shouldClose?: boolean) => void
+  deleteColumn: (col: Column, shouldClose?: boolean) => void
+  subscribe: (observer: (cols: Column[]) => void) => () => void
 }
 
 const GITHUB_PROPS = [
@@ -31,52 +33,43 @@ const GITHUB_PROPS = [
   'labels',
   'pull_request',
 ] as const
-const TableSettings = ({ table, updateTable }: TableSettingsProps) => {
-  const [internal, setInternal] = useState(table)
+const TableSettings = ({
+  columns,
+  addColumn,
+  deleteColumn,
+  subscribe,
+}: TableSettingsProps) => {
+  const [internal, setInternal] = useState(columns)
+
+  useEffect(() => {
+    return subscribe(setInternal)
+  }, [subscribe])
 
   const activeProps = useMemo(() => {
-    return new Set(
-      internal.columns
-        .filter((col) => col.data_type === 'prop')
-        .map((col) => col.default)
+    return new Map(
+      internal
+        .filter(isDataPropCol)
+        .map((prop) => [getDataPropColProp(prop), prop])
     )
   }, [internal])
 
-  const setTable = useCallback(
-    (table: Table, shouldClose = false) => {
-      setInternal(table)
-      updateTable(table, shouldClose)
-    },
-    [updateTable]
-  )
-
   const toggleProp = useCallback(
     (prop: string) => {
-      const existingCols = internal.columns.filter(
-        (col) => col.data_type === 'prop' && col.default === prop
-      )
-      if (existingCols.length > 0) {
-        setTable(existingCols.reduce(flip(deleteColumn), internal))
+      const propKey = activeProps.get(prop)
+      if (propKey != null) {
+        deleteColumn(propKey)
       } else {
-        setTable(
-          addColumn(
-            { data_type: 'prop', name: capitalize(prop), default: prop },
-            internal
-          )
-        )
+        addColumn(makeDataPropCol(capitalize(prop), prop))
       }
     },
-    [internal]
+    [addColumn, deleteColumn, activeProps]
   )
 
   const insertColumn = useCallback(
-    (type: DataType) => {
-      setTable(
-        addColumn({ data_type: type, name: capitalize(type) }, internal),
-        true
-      )
+    (type: PropType) => {
+      addColumn(makePropKey(capitalize(type), type), true)
     },
-    [internal]
+    [addColumn]
   )
 
   return (
@@ -85,6 +78,7 @@ const TableSettings = ({ table, updateTable }: TableSettingsProps) => {
       {GITHUB_PROPS.map((prop) => {
         return (
           <MetadataContainerRow
+            key={prop}
             className='table__settings__toggle'
             row={{
               type: 'content',
