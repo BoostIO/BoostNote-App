@@ -1,16 +1,10 @@
-import React, { useMemo } from 'react'
-import {
-  mdiCodeTags,
-  mdiTable,
-  mdiFileDocumentOutline,
-  mdiGithub,
-  mdiPackageVariantClosed,
-  mdiTrashCanOutline,
-} from '@mdi/js'
+import React from 'react'
+import { mdiTrashCanOutline } from '@mdi/js'
 import { Block } from '../../api/blocks'
 import styled from '../../../design/lib/styled'
 import { capitalize } from '../../lib/utils/string'
-import Icon, { IconSize } from '../../../design/components/atoms/Icon'
+import Icon from '../../../design/components/atoms/Icon'
+import BlockIcon from './BlockIcon'
 
 interface BlockTreeProps {
   root: Block
@@ -144,30 +138,5 @@ const StyledBlockTree = styled.div<{ depth: number }>`
     }
   }
 `
-
-interface BlockIconProps {
-  block: Block
-  size: IconSize
-}
-
-const BlockIcon = ({ block, size }: BlockIconProps) => {
-  const path = useMemo(() => {
-    if (block.type.startsWith('github')) {
-      return mdiGithub
-    }
-    switch (block.type) {
-      case 'embed':
-        return mdiCodeTags
-      case 'table':
-        return mdiTable
-      case 'markdown':
-        return mdiFileDocumentOutline
-      default:
-        return mdiPackageVariantClosed
-    }
-  }, [block.type])
-
-  return <Icon path={path} size={size} />
-}
 
 export default BlockTree
