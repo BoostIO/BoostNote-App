@@ -33,6 +33,7 @@ import { BlockDataProps } from '../../data/types'
 import { getPropType } from '../../../../lib/blocks/props'
 import { useBlockTable } from '../../../../lib/hooks/useBlockTable'
 import BlockIcon from '../../BlockIcon'
+import BlockProp from '../../props'
 
 type GithubCellProps = BlockDataProps<TableBlock['children'][number]>
 
@@ -172,13 +173,23 @@ const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
                   </td>
                   {state.columns.map((col) => (
                     <td key={col}>
-                      <TableCell
-                        column={col}
-                        row={child}
-                        data={state.rowData.get(child.id) || {}}
-                        updateCell={tableActions.setCell}
-                        updateBlock={updateIssueBlock}
-                      />
+                      {isDataPropCol(col) ? (
+                        <GithubCell
+                          prop={getDataPropColProp(col)}
+                          data={child.data}
+                          onUpdate={(data) =>
+                            updateIssueBlock({ ...child, data })
+                          }
+                        />
+                      ) : (
+                        <BlockProp
+                          type={getPropType(col)}
+                          value={(state.rowData.get(child.id) || {})[col] || ''}
+                          onChange={(val) =>
+                            tableActions.setCell(child.id, col, val)
+                          }
+                        />
+                      )}
                     </td>
                   ))}
                 </tr>
@@ -194,71 +205,6 @@ const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
       </div>
     </StyledTableView>
   )
-}
-
-interface TableCellProps {
-  column: Column
-  row: TableBlock['children'][number]
-  data: Record<string, string>
-  updateCell: (
-    rowId: string,
-    column: Column,
-    value: string
-  ) => Promise<void> | void
-  updateBlock: (block: Block) => Promise<void>
-}
-
-const TableCell = ({
-  column,
-  row,
-  data,
-  updateCell,
-  updateBlock,
-}: TableCellProps) => {
-  const update = useCallback(
-    (value: string) => {
-      updateCell(row.id, column, value)
-    },
-    [column, row, updateCell]
-  )
-
-  if (isDataPropCol(column)) {
-    return (
-      <GithubCell
-        prop={getDataPropColProp(column)}
-        data={row.data}
-        onUpdate={(data) => updateBlock({ ...row, data })}
-      />
-    )
-  }
-
-  switch (getPropType(column)) {
-    case 'number':
-      return (
-        <TextProp
-          value={data[column] || ''}
-          onUpdate={update}
-          validation={isNumberString}
-        />
-      )
-    case 'date':
-      return <DateProp value={data[column] || ''} onUpdate={update} />
-    case 'url':
-      return (
-        <TextProp
-          value={data[column] || ''}
-          onUpdate={update}
-          validation={isUrlOrPath}
-        />
-      )
-    case 'checkbox':
-      return <CheckboxProp value={data[column] || ''} onUpdate={update} />
-    case 'user':
-      return <BoostUserProp value={data[column] || ''} onUpdate={update} />
-    case 'text':
-    default:
-      return <TextProp value={data[column] || ''} onUpdate={update} />
-  }
 }
 
 const GithubCell = ({
