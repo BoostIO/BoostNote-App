@@ -14,7 +14,11 @@ interface BlockType<
 
 export type MarkdownBlock = BlockType<'markdown', null>
 export type EmbedBlock = BlockType<'embed', { url: string }>
-export type GithubIssueBlock = BlockType<'github.issue', any>
+export type GithubIssueBlock = BlockType<
+  'github.issue',
+  any,
+  MarkdownBlock | EmbedBlock | TableBlock | ContainerBlock
+>
 export type TableBlock = BlockType<
   'table',
   { columns: Record<string, string> },
