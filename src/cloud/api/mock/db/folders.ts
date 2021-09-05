@@ -1,5 +1,5 @@
 import { SerializedFolder } from '../../../interfaces/db/folder'
-import { generateMockId, getCurrentTime } from './utils'
+import { generateMockId, getCurrentTime, SetMap } from './utils'
 
 type MockFolder = Omit<
   SerializedFolder,
@@ -12,7 +12,7 @@ type MockFolder = Omit<
   | 'childDocs'
 >
 const folderMap = new Map<string, MockFolder>()
-const childFolderIdSetMap = new Map<string, Set<string>>()
+const childFolderIdSetMap = new SetMap<string>()
 
 interface CreateMockFolderParams {
   emoji?: string
@@ -51,7 +51,7 @@ export function createMockFolder({
   }
 
   if (parentFolderId != null) {
-    addChildFolder(parentFolderId, id)
+    childFolderIdSetMap.addValue(parentFolderId, id)
   }
 
   folderMap.set(id, newFolder)
@@ -64,7 +64,7 @@ export function getMockFolderById(id: string) {
 }
 
 export function getChildFolderList(id: string) {
-  const childFolderIdList = [...getChildFolderSet(id)]
+  const childFolderIdList = [...childFolderIdSetMap.getSet(id)]
 
   return childFolderIdList.reduce<MockFolder[]>((list, childFolderId) => {
     const childFolder = getMockFolderById(childFolderId)
@@ -79,25 +79,9 @@ export function removeFolder(id: string) {
   const childFolderList = getChildFolderList(id)
   for (const childFolder of childFolderList) {
     removeFolder(childFolder.id)
-    removeChildFolder(id, childFolder.id)
+    childFolderIdSetMap.removeValue(id, childFolder.id)
   }
 
   folderMap.delete(id)
-  childFolderIdSetMap.delete(id)
-}
-
-function getChildFolderSet(id: string) {
-  return childFolderIdSetMap.get(id) || new Set<string>()
-}
-
-function addChildFolder(id: string, childId: string) {
-  const childFolderIdSet = getChildFolderSet(id)
-  childFolderIdSet.add(childId)
-  childFolderIdSetMap.set(id, childFolderIdSet)
-}
-
-function removeChildFolder(id: string, childId: string) {
-  const childFolderIdSet = getChildFolderSet(id)
-  childFolderIdSet.delete(childId)
-  childFolderIdSetMap.set(id, childFolderIdSet)
+  childFolderIdSetMap.removeSet(id)
 }
