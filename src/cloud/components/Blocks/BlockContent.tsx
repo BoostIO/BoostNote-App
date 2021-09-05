@@ -190,6 +190,7 @@ const BlockContent = ({ doc }: BlockContentProps) => {
             onSelect={setCurrentBlock}
             onDelete={actions.remove}
             idPrefix='nav'
+            showFoldEvents={true}
           />
         </Scroller>
         <div className='block__editor__nav--actions'>
