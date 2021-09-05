@@ -1,10 +1,12 @@
-import { SerializedTeam } from '../../interfaces/db/team'
+import {
+  SerializedTeam,
+  SerializedTeamWithPermissions,
+} from '../../interfaces/db/team'
 import { SerializedIcon } from '../../interfaces/db/icon'
 import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
 import { callApi } from '../../lib/client'
 import { SerializedOpenInvite } from '../../interfaces/db/openInvite'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
-import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 
 export interface ListTeamsResponseBody {
   teams: SerializedTeam[]
@@ -22,7 +24,7 @@ export interface CreateTeamRequestBody {
 }
 
 export interface CreateTeamResponseBody {
-  team: SerializedTeam & { permissions: SerializedUserTeamPermissions[] }
+  team: SerializedTeamWithPermissions
   doc?: SerializedDocWithBookmark
   openInvite?: SerializedOpenInvite
   initialFolders: SerializedFolderWithBookmark[]
@@ -46,7 +48,7 @@ export interface UpdateTeamIconResponseBody {
 }
 
 export interface UpdateTeamResponseBody {
-  team: SerializedTeam & { permissions: SerializedUserTeamPermissions[] }
+  team: SerializedTeamWithPermissions
 }
 
 export interface DestroyTeamResponseBody {
