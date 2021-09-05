@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Switch from '../../../../../design/components/atoms/Switch'
+import MetadataContainer from '../../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerBreak from '../../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import MetadataContainerRow from '../../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import styled from '../../../../../design/lib/styled'
@@ -73,30 +74,33 @@ const TableSettings = ({
   )
 
   return (
-    <Container>
-      <MetadataContainerRow row={{ type: 'header', content: 'GITHUB' }} />
-      {GITHUB_PROPS.map((prop) => {
-        return (
-          <MetadataContainerRow
-            key={prop}
-            className='table__settings__toggle'
-            row={{
-              type: 'content',
-              label: prop,
-              content: (
-                <Switch
-                  checked={activeProps.has(prop)}
-                  onChange={() => toggleProp(prop)}
-                />
-              ),
-            }}
-          />
-        )
-      })}
-      <MetadataContainerBreak />
-      <MetadataContainerRow row={{ type: 'header', content: 'PROPERTIES' }} />
-      <DataTypeMenu onSelect={insertColumn} />
-    </Container>
+    <MetadataContainer>
+      <Container>
+        <MetadataContainerRow row={{ type: 'header', content: 'GITHUB' }} />
+        {GITHUB_PROPS.map((prop) => {
+          return (
+            <MetadataContainerRow
+              key={prop}
+              className='table__settings__toggle'
+              row={{
+                type: 'content',
+                label: prop,
+                content: (
+                  <Switch
+                    checked={activeProps.has(prop)}
+                    onChange={() => toggleProp(prop)}
+                    id={`github-prop-${prop}`}
+                  />
+                ),
+              }}
+            />
+          )
+        })}
+        <MetadataContainerBreak />
+        <MetadataContainerRow row={{ type: 'header', content: 'PROPERTIES' }} />
+        <DataTypeMenu onSelect={insertColumn} />
+      </Container>
+    </MetadataContainer>
   )
 }
 
