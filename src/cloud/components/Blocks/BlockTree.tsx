@@ -17,6 +17,7 @@ interface BlockTreeProps {
   active?: Block
   depth?: number
   className?: string
+  showFoldEvents?: boolean
 }
 
 const BlockTree = ({
@@ -27,6 +28,7 @@ const BlockTree = ({
   depth,
   active,
   className,
+  showFoldEvents,
 }: BlockTreeProps) => {
   const parentDepth = min(depth || 1, 6)
   return (
@@ -41,8 +43,8 @@ const BlockTree = ({
     >
       <NavigationItem
         className='block__editor__nav--item'
-        folded={root.folded}
-        folding={root.folding}
+        folded={showFoldEvents ? root.folded : undefined}
+        folding={showFoldEvents ? root.folding : undefined}
         id={`${idPrefix}-block-${root.id}`}
         label={blockTitle(root)}
         active={active && root.id === active.id}
@@ -66,6 +68,7 @@ const BlockTree = ({
             onDelete={onDelete}
             active={active}
             depth={parentDepth + 1}
+            showFoldEvents={showFoldEvents}
           />
         ))}
     </StyledBlockTree>
