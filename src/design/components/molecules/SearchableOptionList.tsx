@@ -7,24 +7,26 @@ import { useI18n } from '../../../cloud/lib/hooks/useI18n'
 import UpDownList from '../atoms/UpDownList'
 import FormRowItem from './Form/templates/FormRowItem'
 import { lngKeys } from '../../../cloud/lib/i18n/types'
-import VerticalScroller from '../atoms/VerticalScroller'
+import Scroller from '../atoms/Scroller'
 import Checkbox from './Form/atoms/FormCheckbox'
 import Button from '../atoms/Button'
 import { overflowEllipsis } from '../../lib/styled/styleFunctions'
 
 export interface SearchableListOption {
   icon?: React.ReactNode
-  label: string
+  label: string | React.ReactNode
   checked?: boolean
   onClick: () => void
 }
 
 export interface SearchableOptionListProps {
+  title?: string
   query: string
   setQuery: React.Dispatch<React.SetStateAction<string>>
   prefix?: string
   options: SearchableListOption[]
-  onSubmit: () => void
+  hideSubmit?: boolean
+  onSubmit?: () => void
   onCancel?: () => void
 }
 
@@ -34,6 +36,7 @@ const SearchableOptionList = React.forwardRef<
 >(
   (
     {
+      title,
       query,
       setQuery,
       className,
@@ -51,10 +54,13 @@ const SearchableOptionList = React.forwardRef<
         className={cc(['searchable__list', prefix, className])}
         prefix={prefix}
       >
+        {title != null && <h3>{title}</h3>}
         <Form
           onSubmit={(event) => {
             event.preventDefault()
-            onSubmit()
+            if (onSubmit != null) {
+              onSubmit()
+            }
           }}
           onCancel={onCancel}
           className='searchable__list__form'
@@ -69,7 +75,7 @@ const SearchableOptionList = React.forwardRef<
                 id='searchable__list__input'
               />
             </FormRowItem>
-            <VerticalScroller className='searchable__list__wrapper'>
+            <Scroller className='searchable__list__wrapper'>
               {options.map((option, i) => {
                 return (
                   <div className='searchable__list__item' key={`${i}`}>
@@ -95,17 +101,19 @@ const SearchableOptionList = React.forwardRef<
                 )
               })}
               {children}
-            </VerticalScroller>
+            </Scroller>
             <div className='searchable__list__break' />
-            <Button
-              type='submit'
-              variant='transparent'
-              className='searchable__list__submit'
-              id='searchable__list__submit'
-              size='sm'
-            >
-              {translate(lngKeys.GeneralSaveVerb)}
-            </Button>
+            {onSubmit != null && (
+              <Button
+                type='submit'
+                variant='transparent'
+                className='searchable__list__submit'
+                id='searchable__list__submit'
+                size='sm'
+              >
+                {translate(lngKeys.GeneralSaveVerb)}
+              </Button>
+            )}
           </UpDownList>
         </Form>
       </SearchableListContainer>

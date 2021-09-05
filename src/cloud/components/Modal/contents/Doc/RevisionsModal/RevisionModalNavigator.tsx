@@ -12,7 +12,7 @@ import {
 import { focusFirstChildFromElement } from '../../../../../../design/lib/dom'
 import Spinner from '../../../../../../design/components/atoms/Spinner'
 import plur from 'plur'
-import VerticalScroller from '../../../../../../design/components/atoms/VerticalScroller'
+import Scroller from '../../../../../../design/components/atoms/Scroller'
 import NavigationItem from '../../../../../../design/components/molecules/Navigation/NavigationItem'
 import Flexbox from '../../../../../../design/components/atoms/Flexbox'
 import { format } from 'date-fns'
@@ -76,7 +76,7 @@ const RevisionModalNavigator = React.forwardRef<
           </div>
         </header>
 
-        <VerticalScroller className='revisions__scroller'>
+        <Scroller className='revisions__scroller'>
           {revisions.map((rev) => (
             <NavigationItem
               key={rev.id}
@@ -101,7 +101,7 @@ const RevisionModalNavigator = React.forwardRef<
               }}
             />
           ))}
-        </VerticalScroller>
+        </Scroller>
         {currentPage < totalPages && (
           <Button
             variant='secondary'

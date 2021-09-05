@@ -2,7 +2,7 @@ import React from 'react'
 import styled from '../../../design/lib/styled'
 import { AppComponent } from '../../../design/lib/types'
 import cc from 'classcat'
-import VerticalScroller from '../../../design/components/atoms/VerticalScroller'
+import Scroller from '../../../design/components/atoms/Scroller'
 
 interface OnboardingLayoutProps {
   title: string
@@ -21,13 +21,13 @@ const OnboardingLayout: AppComponent<OnboardingLayoutProps> = ({
     className={cc(['onboarding', className])}
     contentWidth={contentWidth}
   >
-    <VerticalScroller className='onboarding__scroller'>
+    <Scroller className='onboarding__scroller'>
       <div className='onboarding__page'>
         <h1>{title}</h1>
         <p>{subtitle}</p>
         <div className='onboarding__content'>{children}</div>
       </div>
-    </VerticalScroller>
+    </Scroller>
   </Container>
 )
 

@@ -17,7 +17,7 @@ import SidebarTree, { SidebarNavCategory } from './molecules/SidebarTree'
 import SidebarPopOver from './atoms/SidebarPopOver'
 import SidebarSpaces, { SidebarSpaceProps } from './molecules/SidebarSpaces'
 import SidebarContextList from './atoms/SidebarContextList'
-import VerticalScroller from '../../atoms/VerticalScroller'
+import Scroller from '../../atoms/Scroller'
 
 export type PopOverState = null | 'spaces' | 'notifications'
 
@@ -79,14 +79,14 @@ const Sidebar = ({
       >
         <SidebarContextList className='sidebar--expanded__wrapper'>
           <div className='sidebar--expanded__wrapper__header'>{header}</div>
-          <VerticalScroller className='sidebar--expanded__wrapper__content'>
+          <Scroller className='sidebar--expanded__wrapper__content'>
             {tree == null ? (
               <Spinner className='sidebar__loader' />
             ) : (
               <SidebarTree tree={tree} />
             )}
             {treeBottomRows}
-          </VerticalScroller>
+          </Scroller>
         </SidebarContextList>
       </WidthEnlarger>
     </SidebarContainer>

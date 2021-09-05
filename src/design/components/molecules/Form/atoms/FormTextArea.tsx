@@ -2,6 +2,7 @@ import React, {
   ChangeEventHandler,
   MouseEventHandler,
   FocusEventHandler,
+  KeyboardEventHandler,
 } from 'react'
 import cc from 'classcat'
 import styled from '../../../../lib/styled'
@@ -30,6 +31,7 @@ export interface FormTextareaProps {
   onDoubleClick?: MouseEventHandler<HTMLTextAreaElement>
   onContextMenu?: MouseEventHandler<HTMLTextAreaElement>
   onFocus?: FocusEventHandler<HTMLTextAreaElement>
+  onKeyDown?: KeyboardEventHandler<HTMLTextAreaElement>
 }
 
 const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaProps>(
@@ -58,6 +60,7 @@ const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaProps>(
       onDoubleClick,
       onContextMenu,
       onFocus,
+      onKeyDown,
     },
     ref
   ) => {
@@ -87,6 +90,7 @@ const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaProps>(
         onDoubleClick={onDoubleClick}
         onContextMenu={onContextMenu}
         onFocus={onFocus}
+        onKeyDown={onKeyDown}
       />
     )
   }

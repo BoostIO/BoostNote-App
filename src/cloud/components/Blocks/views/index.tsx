@@ -15,6 +15,9 @@ export interface ViewProps<T extends Block> {
   canvas: Canvas
   realtime: WebsocketProvider
   isChild?: boolean
+  setCurrentBlock: React.Dispatch<React.SetStateAction<Block | null>>
+  scrollToElement: (elem: HTMLElement | null) => void
+  currentUserIsCoreMember: boolean
 }
 export const BlockView = ({
   block,
@@ -22,6 +25,9 @@ export const BlockView = ({
   canvas,
   realtime,
   isChild,
+  currentUserIsCoreMember,
+  scrollToElement,
+  setCurrentBlock,
 }: ViewProps<Block>) => {
   switch (block.type) {
     case 'container':
@@ -32,6 +38,9 @@ export const BlockView = ({
           isChild={isChild}
           canvas={canvas}
           realtime={realtime}
+          setCurrentBlock={setCurrentBlock}
+          scrollToElement={scrollToElement}
+          currentUserIsCoreMember={currentUserIsCoreMember}
         />
       )
     case 'embed':
@@ -42,6 +51,9 @@ export const BlockView = ({
           isChild={isChild}
           canvas={canvas}
           realtime={realtime}
+          setCurrentBlock={setCurrentBlock}
+          scrollToElement={scrollToElement}
+          currentUserIsCoreMember={currentUserIsCoreMember}
         />
       )
     case 'markdown':
@@ -52,6 +64,9 @@ export const BlockView = ({
           isChild={isChild}
           canvas={canvas}
           realtime={realtime}
+          setCurrentBlock={setCurrentBlock}
+          scrollToElement={scrollToElement}
+          currentUserIsCoreMember={currentUserIsCoreMember}
         />
       )
     case 'table':
@@ -62,6 +77,9 @@ export const BlockView = ({
           isChild={isChild}
           canvas={canvas}
           realtime={realtime}
+          setCurrentBlock={setCurrentBlock}
+          scrollToElement={scrollToElement}
+          currentUserIsCoreMember={currentUserIsCoreMember}
         />
       )
     case 'github.issue':
@@ -72,6 +90,9 @@ export const BlockView = ({
           isChild={isChild}
           canvas={canvas}
           realtime={realtime}
+          setCurrentBlock={setCurrentBlock}
+          scrollToElement={scrollToElement}
+          currentUserIsCoreMember={currentUserIsCoreMember}
         />
       )
     default:

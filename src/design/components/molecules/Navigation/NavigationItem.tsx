@@ -132,7 +132,7 @@ const NavItem: AppComponent<
           )}
           {children}
         </LabelTag>
-        {controls != null && (
+        {controls != null && controls.length > 0 && (
           <div className='navigation__item__controls'>
             {(controls || []).map((control, i) => (
               <Button

@@ -14,6 +14,7 @@ const initialContent: CollapsableContent = {
   folders: [],
   workspaces: [],
   links: [],
+  blocks: [],
 }
 
 function useSidebarCollapseStore(): SidebarCollapseContext {
@@ -82,6 +83,10 @@ function useSidebarCollapseStore(): SidebarCollapseContext {
     return new Set(currentTeamCollapsable.links)
   }, [currentTeamCollapsable])
 
+  const sideBarOpenedBlocksIdsSet = useMemo(() => {
+    return new Set(currentTeamCollapsable.blocks)
+  }, [currentTeamCollapsable])
+
   // LOAD FROM LOCAL STORAGE
   useEffect(() => {
     if (team == null) {
@@ -121,6 +126,7 @@ function useSidebarCollapseStore(): SidebarCollapseContext {
     sideBarOpenedFolderIdsSet,
     sideBarOpenedWorkspaceIdsSet,
     sideBarOpenedLinksIdsSet,
+    sideBarOpenedBlocksIdsSet,
     setToLocalStorage,
     toggleItem,
     unfoldItem,

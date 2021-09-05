@@ -5,6 +5,8 @@ import React, {
 } from 'react'
 import styled from '../../lib/styled'
 import cc from 'classcat'
+import Icon from './Icon'
+import { mdiOpenInNew } from '@mdi/js'
 
 export interface HyperLinkProps {
   id?: string
@@ -20,18 +22,17 @@ export interface HyperLinkProps {
   onClick?: MouseEventHandler
 }
 
-export const ExternalLink: React.FC<HyperLinkProps> = ({
-  className,
-  children,
-  ...props
-}) => (
+export const ExternalLink: React.FC<
+  HyperLinkProps & { showIcon?: boolean }
+> = ({ className, children, showIcon, ...props }) => (
   <Container
-    className={cc(['link', className])}
+    className={cc(['link', showIcon && `link--flex`, className])}
     rel='noopener noreferrer'
     target='_blank'
     {...props}
   >
     {children}
+    {showIcon && <Icon size={16} path={mdiOpenInNew} />}
   </Container>
 )
 
@@ -65,5 +66,14 @@ const Container = styled.a`
   &:focus {
     color: ${({ theme }) => theme.colors.text.link};
     opacity: 0.8;
+  }
+
+  &.link--flex {
+    display: inline-flex;
+    align-items: center;
+    .icon {
+      flex: 0 0 auto;
+      margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    }
   }
 `

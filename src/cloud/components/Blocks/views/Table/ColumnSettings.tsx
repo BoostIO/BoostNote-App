@@ -6,6 +6,7 @@ import {
 } from '@mdi/js'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import FormInput from '../../../../../design/components/molecules/Form/atoms/FormInput'
+import MetadataContainer from '../../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerBreak from '../../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import MetadataContainerRow from '../../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { useModal } from '../../../../../design/lib/stores/modal'
@@ -87,59 +88,76 @@ const ColumnSettings = ({
   }, [colKey])
 
   return (
-    <Container>
-      <MetadataContainerRow row={{ type: 'header', content: 'NAME' }} />
-      <FormInput value={name} onChange={onChange} />
-      <MetadataContainerRow
-        row={{
-          type: 'header',
-          content: dataType === 'prop' ? 'GITHUB PARAMETER' : 'PROPERTY TYPE',
-        }}
-      />
-      {dataType !== 'prop' && (
+    <MetadataContainer>
+      <Container>
+        <MetadataContainerRow row={{ type: 'header', content: 'NAME' }} />
+        <FormInput
+          value={name}
+          onChange={onChange}
+          id='column-input-setting'
+          onKeyDown={(ev) => {
+            if (ev.key === 'Enter' && !(ev.ctrlKey || ev.metaKey)) {
+              ev.preventDefault()
+              ev.stopPropagation()
+              closeAllModals()
+            }
+          }}
+        />
+        <MetadataContainerRow
+          row={{
+            type: 'header',
+            content: dataType === 'prop' ? 'GITHUB PARAMETER' : 'PROPERTY TYPE',
+          }}
+        />
+        {dataType !== 'prop' && (
+          <MetadataContainerRow
+            row={{
+              type: 'button',
+              props: {
+                label: capitalize(dataType),
+                iconPath: mdiAccountCircleOutline,
+                onClick: openTypeSelector,
+                id: 'column-setting-type',
+              },
+            }}
+          />
+        )}
+        <MetadataContainerBreak />
         <MetadataContainerRow
           row={{
             type: 'button',
             props: {
-              label: capitalize(dataType),
-              iconPath: mdiAccountCircleOutline,
-              onClick: openTypeSelector,
+              label: 'Move left',
+              iconPath: mdiArrowLeftBold,
+              onClick: () => moveColumn(col, 'left'),
+              id: 'column-setting-moveleft',
             },
           }}
         />
-      )}
-      <MetadataContainerBreak />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            label: 'Move left',
-            iconPath: mdiArrowLeftBold,
-            onClick: () => moveColumn(col, 'left'),
-          },
-        }}
-      />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            label: 'Move right',
-            iconPath: mdiArrowRightBold,
-            onClick: () => moveColumn(col, 'right'),
-          },
-        }}
-      />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            label: 'Delete',
-            iconPath: mdiTrashCanOutline,
-            onClick: () => deleteCol(col),
-          },
-        }}
-      />
-    </Container>
+        <MetadataContainerRow
+          row={{
+            type: 'button',
+            props: {
+              label: 'Move right',
+              iconPath: mdiArrowRightBold,
+              onClick: () => moveColumn(col, 'right'),
+              id: 'column-setting-moveright',
+            },
+          }}
+        />
+        <MetadataContainerRow
+          row={{
+            type: 'button',
+            props: {
+              label: 'Delete',
+              iconPath: mdiTrashCanOutline,
+              onClick: () => deleteCol(col),
+              id: 'column-setting-delete',
+            },
+          }}
+        />
+      </Container>
+    </MetadataContainer>
   )
 }
 

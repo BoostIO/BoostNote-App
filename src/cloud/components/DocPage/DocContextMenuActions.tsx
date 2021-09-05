@@ -62,6 +62,7 @@ export interface DocContextMenuActionsProps {
   currentUserIsCoreMember: boolean
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
   restoreRevision?: (revision: SerializedRevision) => void
+  isCanvas?: boolean
 }
 
 export function DocContextMenuActions({
@@ -70,6 +71,7 @@ export function DocContextMenuActions({
   currentUserIsCoreMember,
   editorRef,
   restoreRevision,
+  isCanvas,
 }: DocContextMenuActionsProps) {
   const { translate } = useI18n()
   const { sendingMap, toggleDocBookmark, send, updateDoc } = useCloudApi()
@@ -219,7 +221,7 @@ export function DocContextMenuActions({
           },
         }}
       />
-      {currentUserIsCoreMember && (
+      {currentUserIsCoreMember && !isCanvas && (
         <MetadataContainerRow
           row={{
             type: 'button',
@@ -234,35 +236,37 @@ export function DocContextMenuActions({
           }}
         />
       )}
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            id: 'metadata-history',
-            onClick: revisionNavigateCallback,
-            iconPath: mdiHistory,
-            disabled: subscription == null,
-            label:
-              subscription != null
-                ? subscription.plan === 'standard'
-                  ? translate(lngKeys.SeeLimitedHistory, {
-                      days: revisionHistoryStandardDays,
-                    })
-                  : translate(lngKeys.SeeFullHistory)
-                : translate(lngKeys.History),
-          },
-        }}
-      >
-        {subscription == null ? (
-          <UpgradeIntroButton
-            className='context__badge'
-            origin='revision'
-            variant='secondary'
-            popupVariant='version-history'
-            query={{ teamId: team.id, docId: doc.id }}
-          />
-        ) : null}
-      </MetadataContainerRow>
+      {!isCanvas && (
+        <MetadataContainerRow
+          row={{
+            type: 'button',
+            props: {
+              id: 'metadata-history',
+              onClick: revisionNavigateCallback,
+              iconPath: mdiHistory,
+              disabled: subscription == null,
+              label:
+                subscription != null
+                  ? subscription.plan === 'standard'
+                    ? translate(lngKeys.SeeLimitedHistory, {
+                        days: revisionHistoryStandardDays,
+                      })
+                    : translate(lngKeys.SeeFullHistory)
+                  : translate(lngKeys.History),
+            },
+          }}
+        >
+          {subscription == null ? (
+            <UpgradeIntroButton
+              className='context__badge'
+              origin='revision'
+              variant='secondary'
+              popupVariant='version-history'
+              query={{ teamId: team.id, docId: doc.id }}
+            />
+          ) : null}
+        </MetadataContainerRow>
+      )}
       <MetadataContainerRow
         row={{
           type: 'button',
@@ -291,40 +295,44 @@ export function DocContextMenuActions({
           }}
         />
       )}
-      <MetadataContainerBreak />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            id: 'metadata-export-markdown',
-            label: translate(lngKeys.DocExportMarkdown),
-            iconPath: mdiLanguageMarkdownOutline,
-            onClick: exportAsMarkdown,
-          },
-        }}
-      />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            id: 'metadata-export-html',
-            label: translate(lngKeys.DocExportHtml),
-            iconPath: mdiFileCodeOutline,
-            onClick: exportAsHtml,
-          },
-        }}
-      />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            id: 'metadata-export-pdf',
-            label: translate(lngKeys.DocExportPdf),
-            iconPath: mdiFilePdfOutline,
-            onClick: exportAsPdf,
-          },
-        }}
-      />
+      {!isCanvas && (
+        <>
+          <MetadataContainerBreak />
+          <MetadataContainerRow
+            row={{
+              type: 'button',
+              props: {
+                id: 'metadata-export-markdown',
+                label: translate(lngKeys.DocExportMarkdown),
+                iconPath: mdiLanguageMarkdownOutline,
+                onClick: exportAsMarkdown,
+              },
+            }}
+          />
+          <MetadataContainerRow
+            row={{
+              type: 'button',
+              props: {
+                id: 'metadata-export-html',
+                label: translate(lngKeys.DocExportHtml),
+                iconPath: mdiFileCodeOutline,
+                onClick: exportAsHtml,
+              },
+            }}
+          />
+          <MetadataContainerRow
+            row={{
+              type: 'button',
+              props: {
+                id: 'metadata-export-pdf',
+                label: translate(lngKeys.DocExportPdf),
+                iconPath: mdiFilePdfOutline,
+                onClick: exportAsPdf,
+              },
+            }}
+          />
+        </>
+      )}
       {currentUserIsCoreMember && (
         <>
           <MetadataContainerBreak />

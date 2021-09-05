@@ -6,7 +6,7 @@ import { isActiveElementAnInput } from '../../../lib/dom'
 import { useGlobalKeyDownHandler } from '../../../lib/keyboard'
 import styled from '../../../lib/styled'
 import Button from '../../atoms/Button'
-import VerticalScroller from '../../atoms/VerticalScroller'
+import Scroller from '../../atoms/Scroller'
 import { useWindow } from '../../../lib/stores/window'
 
 const Modal = () => {
@@ -129,7 +129,7 @@ const ContextModalItem = ({
       <div className='modal__window__scroller'>
         <div className='modal__bg__hidden' onClick={closeModal}></div>
         <div className='modal__window__anchor' />
-        <VerticalScroller
+        <Scroller
           className={cc([
             'modal__window',
             `modal__window__width--${modal.width}`,
@@ -145,7 +145,7 @@ const ContextModalItem = ({
             )}
             <div className='modal__content'>{modal.content}</div>
           </div>
-        </VerticalScroller>
+        </Scroller>
       </div>
     </>
   )
@@ -175,7 +175,7 @@ const ModalItem = ({
   )
 
   return (
-    <VerticalScroller
+    <Scroller
       className='modal__window__scroller'
       onClick={onScrollClickHandler}
     >
@@ -204,7 +204,7 @@ const ModalItem = ({
           <div className='modal__content'>{modal.content}</div>
         </div>
       </div>
-    </VerticalScroller>
+    </Scroller>
   )
 }
 

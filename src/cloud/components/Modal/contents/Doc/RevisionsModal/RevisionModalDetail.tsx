@@ -6,7 +6,7 @@ import styled from '../../../../../../design/lib/styled'
 import { useSettings } from '../../../../../lib/stores/settings'
 import Flexbox from '../../../../../../design/components/atoms/Flexbox'
 import CodeMirrorEditor from '../../../../../lib/editor/components/CodeMirrorEditor'
-import VerticalScroller from '../../../../../../design/components/atoms/VerticalScroller'
+import Scroller from '../../../../../../design/components/atoms/Scroller'
 import cc from 'classcat'
 
 interface RevisionModalDetailProps {
@@ -92,14 +92,14 @@ const RevisionModalDetail = ({
           }}
         />
       ) : (
-        <VerticalScroller className='codemirror__scroller'>
+        <Scroller className='codemirror__scroller'>
           <CodeMirrorEditor
             config={{
               ...editorConfig,
               value: rev.content,
             }}
           />
-        </VerticalScroller>
+        </Scroller>
       )}
     </Container>
   )

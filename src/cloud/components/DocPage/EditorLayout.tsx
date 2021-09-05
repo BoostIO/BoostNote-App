@@ -4,7 +4,7 @@ import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
 import DocPageHeader from './DocPageHeader'
 import cc from 'classcat'
 import { SerializedTeam } from '../../interfaces/db/team'
-import VerticalScroller from '../../../design/components/atoms/VerticalScroller'
+import Scroller from '../../../design/components/atoms/Scroller'
 
 interface EditorLayoutProps {
   docIsEditable: boolean
@@ -25,7 +25,7 @@ const EditorLayout = ({
       <Container
         className={cc(['editor__layout', 'editor__layout--minimized'])}
       >
-        <VerticalScroller className='editor__layout__scroll'>
+        <Scroller className='editor__layout__scroll'>
           <DocPageHeader
             className='editor__layout__header'
             docIsEditable={docIsEditable}
@@ -33,7 +33,7 @@ const EditorLayout = ({
             team={team}
           />
           <div className='editor__layout__content'>{children}</div>
-        </VerticalScroller>
+        </Scroller>
       </Container>
     )
   }
