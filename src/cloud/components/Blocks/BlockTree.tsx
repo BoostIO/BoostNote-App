@@ -57,7 +57,7 @@ const BlockTree = ({
             : [{ icon: mdiTrashCan, onClick: () => onDelete(root) }]
         }
       />
-      {!root.folded &&
+      {(!showFoldEvents || !root.folded) &&
         root.children.length > 0 &&
         (root.children as Block[]).map((child: Block) => (
           <BlockTree
