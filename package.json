@@ -171,7 +171,7 @@
     "ow": "^0.13.2",
     "pako": "^1.0.11",
     "path-parse": "^1.0.7",
-    "path-to-regexp": "^2.4.0",
+    "path-to-regexp": "^6.2.0",
     "plur": "^4.0.0",
     "ramda": "^0.26.1",
     "raw-loader": "^4.0.0",
