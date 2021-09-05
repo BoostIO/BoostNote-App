@@ -1,3 +1,4 @@
+import { createMockFolder } from './folders'
 import { createMockPermissions } from './permissions'
 import { createMockTeam } from './teams'
 import { createMockUser } from './users'
@@ -9,13 +10,18 @@ export function init() {
     displayName: 'dev-user',
   })
   const team = createMockTeam({ name: 'dev', domain: 'dev' })
-  createMockWorkspace({
+  const workspace = createMockWorkspace({
     teamId: team.id,
     default: true,
     public: true,
     name: 'Folders',
   })
   createMockPermissions({ userId: user.id, teamId: team.id, role: 'admin' })
+  createMockFolder({
+    name: 'Folder 1',
+    teamId: team.id,
+    workspaceId: workspace.id,
+  })
 
   return {
     user,
