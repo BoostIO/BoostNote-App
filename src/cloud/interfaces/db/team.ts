@@ -24,6 +24,10 @@ export interface SerializedUnserializableTeamProps {
 export type SerializedTeam = SerializedUnserializableTeamProps &
   SerializableTeamProps
 
+export type SerializedTeamWithPermissions = SerializedTeam & {
+  permissions: SerializedUserTeamPermissions[]
+}
+
 export interface TeamOnboardingState {
   import?: boolean
   settings?: boolean
