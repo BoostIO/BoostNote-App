@@ -60,7 +60,11 @@ module.exports = (env, argv) => {
       new webpack.DefinePlugin({
         'process.env.VERSION': JSON.stringify(packageJson.version),
       }),
-      new webpack.EnvironmentPlugin(['NODE_ENV', 'BOOST_HUB_BASE_URL']),
+      new webpack.EnvironmentPlugin([
+        'NODE_ENV',
+        'BOOST_HUB_BASE_URL',
+        'MOCK_BACKEND',
+      ]),
       new CopyPlugin({
         patterns: [
           {
