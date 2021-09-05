@@ -9,6 +9,8 @@ import { GetResourcesResponseBody } from '../teams/resources'
 import { GetTemplatesResponseBody } from '../teams/docs/templates'
 import { GetEditRequestsResponseBody } from '../editRequests'
 import { GetOpenInviteResponseBody } from '../teams/open-invites'
+import { getMockTeamFolders } from './db/folders'
+import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
 
 interface MockRouteHandlerParams {
   params: { [key: string]: any }
@@ -63,10 +65,25 @@ const routes: MockRoute[] = [
   },
   {
     pathname: 'api/teams/:teamId/resources',
-    handler: ({ params: _params }): GetResourcesResponseBody => {
+    handler: ({ params }): GetResourcesResponseBody => {
+      const { teamId } = params
+      const workspaces = getMockWorkspacesByTeamId(teamId)
+      const folders = getMockTeamFolders(teamId)
+
       return {
-        workspaces: [],
-        folders: [],
+        workspaces: workspaces,
+        folders: folders.map((mockFolder) => {
+          return {
+            ...mockFolder,
+            pathname: '',
+            positions: { id: 'mock', orderedIds: [], updatedAt: '' },
+            childDocs: [],
+            childFolders: [],
+            childDocsIds: [],
+            childFoldersIds: [],
+            bookmarked: false,
+          } as SerializedFolderWithBookmark
+        }),
         docs: [],
         tags: [],
         smartFolders: [],
