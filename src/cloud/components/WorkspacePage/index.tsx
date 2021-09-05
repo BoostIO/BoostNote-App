@@ -38,9 +38,6 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
   const { openContextModal } = useModal()
 
   const childFolders = useMemo(() => {
-    if (workspace == null) {
-      return []
-    }
     return [...foldersMap.values()].filter(
       (folder) =>
         folder.workspaceId === workspace.id && folder.parentFolderId == null
