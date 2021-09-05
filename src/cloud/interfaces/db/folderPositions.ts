@@ -8,7 +8,7 @@ export interface SerializableFolderPositionsProps {
 
 export interface SerializedUnserializableFolderPositionsProps {
   parentFolder?: SerializedFolder | string
-  team: SerializedTeam | string
+  team?: SerializedTeam | string
   updatedAt: string
 }
 
