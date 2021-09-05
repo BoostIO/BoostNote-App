@@ -1,7 +1,7 @@
 import { callApi } from '../../lib/client'
 import { SerializedEditRequest } from '../../interfaces/db/editRequest'
 
-interface GetEditRequestsResponseBody {
+export interface GetEditRequestsResponseBody {
   editRequests: SerializedEditRequest[]
 }
 
@@ -12,7 +12,7 @@ export async function getUserEditRequests(teamId?: string) {
   })
 }
 
-interface SendEditRequestResponseBody {
+export interface SendEditRequestResponseBody {
   editRequest?: SerializedEditRequest
 }
 
@@ -28,7 +28,7 @@ export async function sendEditRequest(teamId: string) {
   return result
 }
 
-interface DeleteEditRequestResponseBody {
+export interface DeleteEditRequestResponseBody {
   status: 'ok' | 'err'
   err: unknown
 }
