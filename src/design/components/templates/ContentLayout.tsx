@@ -132,6 +132,9 @@ const Container = styled.div`
     .two__pane__left {
       display: flex;
       flex-direction: column;
+      flex: 1 1 auto;
+      width: 100%;
+      height: 100%;
     }
 
     .topbar {

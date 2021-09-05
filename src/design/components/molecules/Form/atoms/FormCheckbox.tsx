@@ -84,10 +84,17 @@ export const CheckboxWithLabel: AppComponent<CheckboxWithLabelProps> = ({
   toggle,
   ...props
 }) => (
-  <CheckboxWithLabelContainer onClick={toggle}>
+  <CheckboxWithLabelContainer
+    onClick={(ev: React.MouseEvent) => {
+      ev.preventDefault()
+      if (toggle != null) {
+        toggle()
+      }
+    }}
+  >
     <Checkbox {...props} />
     {typeof label === 'string' ? (
-      <span className='form__checkbox__label'></span>
+      <span className='form__checkbox__label'>{label}</span>
     ) : (
       label
     )}

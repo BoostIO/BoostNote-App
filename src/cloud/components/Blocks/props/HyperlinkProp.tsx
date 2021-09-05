@@ -1,14 +1,20 @@
 import React from 'react'
+import { ExternalLink } from '../../../../design/components/atoms/Link'
 
 interface HyperlinkCellProps {
   href: string
-  label?: string
+  label?: React.ReactNode
 }
 
 const HyperlinkCell = ({ href, label }: HyperlinkCellProps) => {
+  if (href === '') {
+    return null
+  }
   return (
     <div>
-      <a href={href}>{label != null ? label : href}</a>
+      <ExternalLink showIcon={true} href={href}>
+        {label != null ? label : href}
+      </ExternalLink>
     </div>
   )
 }

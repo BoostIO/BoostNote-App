@@ -1,15 +1,10 @@
-import { mdiGithub, mdiPlus } from '@mdi/js'
-import React, {
-  useMemo,
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  ChangeEventHandler,
-} from 'react'
+import { mdiDownloadOutline, mdiGithub, mdiPlus } from '@mdi/js'
+import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react'
 import Button from '../../../../design/components/atoms/Button'
 import Icon from '../../../../design/components/atoms/Icon'
+import Scroller from '../../../../design/components/atoms/Scroller'
 import Spinner from '../../../../design/components/atoms/Spinner'
+import { CheckboxWithLabel } from '../../../../design/components/molecules/Form/atoms/FormCheckbox'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import FormSelect from '../../../../design/components/molecules/Form/atoms/FormSelect'
 import FormRow from '../../../../design/components/molecules/Form/templates/FormRow'
@@ -17,7 +12,6 @@ import FormRowItem from '../../../../design/components/molecules/Form/templates/
 import { useTeamIntegrations } from '../../../../design/lib/stores/integrations'
 import { useToast } from '../../../../design/lib/stores/toast'
 import styled from '../../../../design/lib/styled'
-import { GithubIssueBlock } from '../../../api/blocks'
 import { getAction, IntegrationActionTypes } from '../../../api/integrations'
 import { SerializedTeamIntegration } from '../../../interfaces/db/connections'
 import { usePage } from '../../../lib/stores/pageStore'
@@ -29,7 +23,7 @@ type State =
   | { stage: 'integrate' }
   | { stage: 'issue_select'; integrations: SerializedTeamIntegration[] }
 
-const GithubIssueForm = ({ onSubmit }: FormProps<GithubIssueBlock>) => {
+const GithubIssueForm = ({ onSubmit }: FormProps) => {
   const integrationState = useTeamIntegrations()
   const { team } = usePage()
   const [state, setState] = useState<State>({ stage: 'initialising' })
@@ -176,6 +170,8 @@ type Org = IntegrationActionTypes['orgs:list'][number]
 type Repo = IntegrationActionTypes['org:repos'][number]
 type Issue = IntegrationActionTypes['repo:issues'][number]
 
+const perPagePerQuery = 100
+
 const GithubIssueSelector = ({
   integrations,
   onImport,
@@ -206,7 +202,7 @@ const GithubIssueSelector = ({
     setOrganisations([])
     setCurrentOrg(null)
     setIsLoading(true)
-    getAction(currentIntegration, 'orgs:list')
+    getAction(currentIntegration, 'orgs:list', { per_page: perPagePerQuery })
       .then((orgs) => {
         setOrganisations(orgs)
         setCurrentOrg(orgs[0] || null)
@@ -220,7 +216,10 @@ const GithubIssueSelector = ({
     setCurrentRepo(null)
     if (currentOrg != null) {
       setIsLoading(true)
-      getAction(integrationRef.current, 'org:repos', { org: currentOrg.login })
+      getAction(integrationRef.current, 'org:repos', {
+        org: currentOrg.login,
+        per_page: perPagePerQuery,
+      })
         .then((repos) => {
           setRepos(repos)
           setCurrentRepo(repos[0] || null)
@@ -240,6 +239,7 @@ const GithubIssueSelector = ({
       getAction(integrationRef.current, 'repo:issues', {
         owner: currentRepo.owner.login,
         repo: currentRepo.name,
+        per_page: perPagePerQuery,
       })
         .then((issues) =>
           issues.map((issue) => {
@@ -264,6 +264,7 @@ const GithubIssueSelector = ({
             owner: currentRepo.owner.login,
             repo: currentRepo.name,
             page: page + 1,
+            per_page: perPagePerQuery,
           })
         ).map((issue) => {
           issue.integrationId = integrationId
@@ -332,33 +333,29 @@ const GithubIssueSelector = ({
         )
   }, [issues, search, selectedIssues])
 
-  const toggleAll: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (ev) => {
-      if (ev.target.checked) {
-        setSelectedIssues(new Set(issues))
-      } else {
-        setSelectedIssues(new Set())
-      }
-    },
-    [issues]
-  )
+  const toggleAll = useCallback(() => {
+    const allIssuesAreSelected =
+      filteredIssues.length > 0 && filteredIssues.length === selectedIssues.size
+    if (!allIssuesAreSelected) {
+      setSelectedIssues(new Set(issues))
+    } else {
+      setSelectedIssues(new Set())
+    }
+  }, [issues, filteredIssues.length, selectedIssues.size])
 
-  const createToggleSelect = useCallback(
-    (issue: Issue): ChangeEventHandler<HTMLInputElement> => {
-      return (ev) => {
-        const checked = ev.target.checked
-        setSelectedIssues((old) => {
-          if (checked) {
-            old.add(issue)
-          } else {
-            old.delete(issue)
-          }
-          return new Set(old)
-        })
-      }
-    },
-    []
-  )
+  const toggleIssue = useCallback((issue: Issue, selected: boolean) => {
+    return () => {
+      setSelectedIssues((old) => {
+        if (selected) {
+          old.add(issue)
+        } else {
+          old.delete(issue)
+        }
+        return new Set(old)
+      })
+    }
+  }, [])
+
   const runImport = useCallback(async () => {
     try {
       setIsLoading(true)
@@ -420,20 +417,19 @@ const GithubIssueSelector = ({
           />
         </FormRowItem>
       </FormRow>
-      <div className='github-issue__form__table'>
+      <Scroller className='github-issue__form__table'>
         <table>
           <thead>
             <tr>
               <td>
-                <input
-                  type='checkbox'
-                  onChange={toggleAll}
+                <CheckboxWithLabel
+                  toggle={toggleAll}
                   checked={
                     filteredIssues.length > 0 &&
                     filteredIssues.length === selectedIssues.size
                   }
-                />{' '}
-                Title
+                  label={'Title'}
+                />
               </td>
               <td>Assignees</td>
               <td>Status</td>
@@ -445,12 +441,11 @@ const GithubIssueSelector = ({
             {filteredIssues.map((issue) => (
               <tr key={issue.id}>
                 <td>
-                  <input
-                    type='checkbox'
+                  <CheckboxWithLabel
                     checked={selectedIssues.has(issue)}
-                    onChange={createToggleSelect(issue)}
+                    toggle={toggleIssue(issue, !selectedIssues.has(issue))}
+                    label={issue.title}
                   />
-                  <span>{issue.title}</span>
                 </td>
                 <td>
                   {issue.assignees
@@ -468,16 +463,35 @@ const GithubIssueSelector = ({
             ))}
           </tbody>
         </table>
-        <div className='github-issue__form__more'>
-          <Button onClick={getMore}>Get More</Button>
-        </div>
-      </div>
+        {search.trim() !== '' ? (
+          filteredIssues.length === 0 ? (
+            <div className='github-issue__form__placeholder'>
+              No results correspond to your search...
+            </div>
+          ) : null
+        ) : currentRepo != null ? (
+          issues.length !== 0 && issues.length % perPagePerQuery === 0 ? (
+            <div className='github-issue__form__more'>
+              <Button onClick={getMore}>Get More</Button>
+            </div>
+          ) : (
+            <div className='github-issue__form__placeholder'>
+              No more issues could be found...
+            </div>
+          )
+        ) : (
+          <div className='github-issue__form__placeholder'>
+            Please select a repository...
+          </div>
+        )}
+      </Scroller>
       <div className='github-issue__form__action'>
         <Button
           onClick={runImport}
           disabled={selectedIssues.size === 0}
           variant='primary'
         >
+          <Icon path={mdiDownloadOutline} size={16} />
           Import{' '}
           {selectedIssues.size > 0 && <span>({selectedIssues.size})</span>}
         </Button>
@@ -501,6 +515,12 @@ const StyledGithubIssueForm = styled.div`
   height: 80vh;
   display: flex;
   flex-direction: column;
+
+  .github-issue__form__placeholder {
+    padding: ${({ theme }) => theme.sizes.spaces.df}px 0;
+    text-align: center;
+    color: ${({ theme }) => theme.colors.text.subtle};
+  }
 
   & .github-issue__form__title {
     display: flex;
@@ -540,8 +560,14 @@ const StyledGithubIssueForm = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: ${({ theme }) => theme.sizes.spaces.md}px 0;
-    border-top: 1px solid ${({ theme }) => theme.colors.border.second};
+    button {
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: ${({ theme }) => theme.sizes.spaces.sm}px
+        ${({ theme }) => theme.sizes.spaces.df}px;
+    }
   }
 
   & table {

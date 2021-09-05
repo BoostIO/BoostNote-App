@@ -45,7 +45,7 @@ const MessageBoxDialogBody = ({
 
   return (
     <Container onKeyDown={handleBodyKeyDown}>
-      <LeftToRightList>
+      <LeftToRightList ignoreFocus={true}>
         {buttons == null ? (
           <Button variant='secondary' onClick={closeDialog}>
             Close

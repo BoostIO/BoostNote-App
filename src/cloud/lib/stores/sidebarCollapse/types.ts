@@ -1,4 +1,4 @@
-export type CollapsableType = 'folders' | 'workspaces' | 'links'
+export type CollapsableType = 'folders' | 'workspaces' | 'links' | 'blocks'
 export type CollapsableContent = {
   [type in CollapsableType]: string[]
 }
@@ -10,6 +10,7 @@ export interface SidebarCollapseContext {
   sideBarOpenedFolderIdsSet: Set<string>
   sideBarOpenedWorkspaceIdsSet: Set<string>
   sideBarOpenedLinksIdsSet: Set<string>
+  sideBarOpenedBlocksIdsSet: Set<string>
   setToLocalStorage: (teamId: string, content: CollapsableContent) => void
   toggleItem: (type: CollapsableType, id: string) => void
   foldItem: (type: CollapsableType, id: string) => void

@@ -25,7 +25,7 @@ export interface Actions {
   setCell: (row: string, col: Column, data: string) => void
 }
 
-interface State {
+export interface BlockState {
   columns: Column[]
   rowData: Map<string, Record<Column, string>>
 }
@@ -40,7 +40,7 @@ export function useBlockTable(block: TableBlock, ydoc: YDoc) {
   const actions = useMemo(() => {
     return buildActions(ytable, yrows)
   }, [ytable, yrows])
-  const [state, setState] = useState<State>(() => {
+  const [state, setState] = useState<BlockState>(() => {
     const rowData = Array.from(yrows).map<[string, Record<string, string>]>(
       ([id, map]) => [id, ymapToPropMap(map)]
     )

@@ -171,10 +171,10 @@ const DocPage = ({
     )
   }
 
-  return doc.rootBlock == null ? (
+  return currentDoc.rootBlock == null ? (
     <Editor
       team={team}
-      doc={doc}
+      doc={currentDoc}
       user={currentUser}
       contributors={contributors}
       backLinks={backLinks}
@@ -182,7 +182,7 @@ const DocPage = ({
       docIsEditable={docIsEditable}
     />
   ) : (
-    <BlockEditor doc={doc} />
+    <BlockEditor doc={currentDoc as any} team={team} />
   )
 }
 

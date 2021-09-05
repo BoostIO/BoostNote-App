@@ -3,11 +3,12 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useModal } from '../../../../design/lib/stores/modal'
 import { getAction, postAction } from '../../../api/integrations'
 import styled from '../../../../design/lib/styled'
-import FilterableSelectList from '../../../../design/components/molecules/FilterableSelectList'
 import Spinner from '../../../../design/components/atoms/Spinner'
 import { useToast } from '../../../../design/lib/stores/toast'
 import { BlockDataProps } from './types'
 import { GithubIssueBlock } from '../../../api/blocks'
+import SearchableOptionListPopup from '../../SearchableOptionListPopup'
+import Flexbox from '../../../../design/components/atoms/Flexbox'
 
 interface Assignee {
   id: number
@@ -38,33 +39,35 @@ const GitHubAssigneesData = ({
         pushApiErrorMessage(error)
       }
     },
-    [data]
+    [data, closeAllModals, onUpdate, pushApiErrorMessage]
   )
 
   const openAssigneeSelect: React.MouseEventHandler = useCallback(
     (ev) => {
+      //TOFIX PREVENT GITHUB UPDATE FOR NOW
+      return
       openContextModal(
         ev,
         <AssigneeSelect data={data} onSelect={addAssignees} />
       )
     },
-    [openContextModal, data]
+    [openContextModal, addAssignees, data]
   )
 
   return (
     <Container onClick={openAssigneeSelect}>
-      {data.assignees?.map((user: Assignee) => (
-        <StyledUserIcon className='subtle'>
-          <img src={user.avatar_url} alt={user.login[0]} />
-        </StyledUserIcon>
-      ))}
+      <Flexbox alignItems='center'>
+        {data.assignees?.map((user: Assignee) => (
+          <StyledUserIcon className='subtle' key={user.id}>
+            <img src={user.avatar_url} alt={user.login[0]} />
+          </StyledUserIcon>
+        ))}
+      </Flexbox>
     </Container>
   )
 }
 
-const Container = styled.div`
-  min-height: 40px;
-`
+const Container = styled.div``
 
 interface AssigneeSelectProps {
   data: GithubIssueBlock['data']
@@ -74,6 +77,7 @@ interface AssigneeSelectProps {
 const AssigneeSelect = ({ data, onSelect }: AssigneeSelectProps) => {
   const [users, setUsers] = useState<Assignee[] | null>(null)
   const { pushApiErrorMessage } = useToast()
+  const [filter, setFilter] = useState('')
 
   const pushErrorRef = useRef(pushApiErrorMessage)
   useEffect(() => {
@@ -115,20 +119,23 @@ const AssigneeSelect = ({ data, onSelect }: AssigneeSelectProps) => {
 
   return (
     <GithubUserSelectContainer>
-      <h3>Person</h3>
-      <FilterableSelectList
-        items={users.map((user) => [
-          user.login,
-          <div
-            className='user__select__item'
-            onClick={() => onSelect([user.login])}
-          >
-            <StyledUserIcon className='subtle'>
-              <img src={user.avatar_url} alt={user.login[0]} />
-            </StyledUserIcon>
-            {user.login}
-          </div>,
-        ])}
+      <SearchableOptionListPopup
+        query={filter}
+        setQuery={setFilter}
+        title='Person'
+        options={users.map((user) => {
+          return {
+            id: `person-${user.id}`,
+            icon: (
+              <StyledUserIcon className='subtle' style={{ marginRight: 4 }}>
+                <img src={user.avatar_url} alt={user.login[0]} />
+              </StyledUserIcon>
+            ),
+            label: user.login,
+            checked: false,
+            onClick: () => onSelect([user.login]),
+          }
+        })}
       />
     </GithubUserSelectContainer>
   )
