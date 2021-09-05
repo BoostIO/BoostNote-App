@@ -5,6 +5,7 @@ import { uniqWith } from 'ramda'
 import { useRealtimeConn } from '../../stores/realtimeConn'
 import { createCache } from '../../cache'
 import { useEffectOnce } from 'react-use'
+import { mockBackend } from '../../consts'
 
 export type PresenceChange<T> =
   | { type: 'connected'; sessionId: number; userInfo: T }
@@ -62,6 +63,9 @@ const useRealtime = <T extends { id: string }>({
   })
 
   useEffect(() => {
+    if (mockBackend) {
+      return
+    }
     if (constructor == null) {
       return
     }
