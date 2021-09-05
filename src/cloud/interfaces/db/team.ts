@@ -16,7 +16,7 @@ export interface SerializableTeamProps {
 
 export interface SerializedUnserializableTeamProps {
   subscription?: SerializedSubscription
-  permissions: SerializedUserTeamPermissions[]
+  permissions?: SerializedUserTeamPermissions[]
   createdAt: string
   updatedAt: string
 }
