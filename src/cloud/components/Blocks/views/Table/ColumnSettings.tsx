@@ -105,24 +105,26 @@ const ColumnSettings = ({
             }
           }}
         />
-        <MetadataContainerRow
-          row={{
-            type: 'header',
-            content: dataType === 'prop' ? 'GITHUB PARAMETER' : 'PROPERTY TYPE',
-          }}
-        />
         {dataType !== 'prop' && (
-          <MetadataContainerRow
-            row={{
-              type: 'button',
-              props: {
-                label: capitalize(dataType),
-                iconPath: mdiAccountCircleOutline,
-                onClick: openTypeSelector,
-                id: 'column-setting-type',
-              },
-            }}
-          />
+          <>
+            <MetadataContainerRow
+              row={{
+                type: 'header',
+                content: 'PROPERTY TYPE',
+              }}
+            />
+            <MetadataContainerRow
+              row={{
+                type: 'button',
+                props: {
+                  label: capitalize(dataType),
+                  iconPath: mdiAccountCircleOutline,
+                  onClick: openTypeSelector,
+                  id: 'column-setting-type',
+                },
+              }}
+            />
+          </>
         )}
         <MetadataContainerBreak />
         <MetadataContainerRow
