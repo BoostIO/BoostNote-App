@@ -8,6 +8,7 @@ import querystring from 'querystring'
 import { GetResourcesResponseBody } from '../teams/resources'
 import { GetTemplatesResponseBody } from '../teams/docs/templates'
 import { GetEditRequestsResponseBody } from '../editRequests'
+import { GetOpenInviteResponseBody } from '../teams/open-invites'
 
 interface MockRouteHandlerParams {
   params: { [key: string]: any }
@@ -88,6 +89,15 @@ const routes: MockRoute[] = [
       const { teamId: _teamId } = search
       return {
         editRequests: [],
+      }
+    },
+  },
+  {
+    pathname: 'api/teams/:teamId/open-invites',
+    handler: ({ params }): GetOpenInviteResponseBody => {
+      const { teamId: _teamId } = params
+      return {
+        invites: [],
       }
     },
   },
