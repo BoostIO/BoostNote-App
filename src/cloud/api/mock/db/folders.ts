@@ -1,7 +1,7 @@
 import { SerializedFolder } from '../../../interfaces/db/folder'
 import { generateMockId, getCurrentTime, SetMap } from './utils'
 
-type MockFolder = Omit<
+export type MockFolder = Omit<
   SerializedFolder,
   | 'team'
   | 'pathname'

@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { GlobalData } from '../../api/global'
 import { SerializedTeam } from '../../interfaces/db/team'
+import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 import { useCommittedRef } from '../hooks'
 import { createStoreContext } from '../utils/context'
 
@@ -35,7 +36,9 @@ function useGlobalDataStore() {
   )
 
   const setTeamInGlobal = useCallback(
-    (team: SerializedTeam) => {
+    (
+      team: SerializedTeam & { permissions: SerializedUserTeamPermissions[] }
+    ) => {
       const { teams } = globalData
       const teamIndex = teams.findIndex((t) => t.id === team.id)
       if (teamIndex === -1) {

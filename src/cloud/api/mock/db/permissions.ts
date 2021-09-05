@@ -4,7 +4,10 @@ import {
 } from '../../../interfaces/db/userTeamPermissions'
 import { generateMockId, getCurrentTime } from './utils'
 
-type MockPermission = Omit<SerializedUserTeamPermissions, 'user' | 'team'>
+export type MockPermission = Omit<
+  SerializedUserTeamPermissions,
+  'user' | 'team'
+>
 const permissionsMap = new Map<string, MockPermission>()
 const userPermissionsSetMap = new Map<string, Set<string>>()
 const teamPermissionsSetMap = new Map<string, Set<string>>()

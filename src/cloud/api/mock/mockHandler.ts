@@ -9,8 +9,15 @@ import { GetResourcesResponseBody } from '../teams/resources'
 import { GetTemplatesResponseBody } from '../teams/docs/templates'
 import { GetEditRequestsResponseBody } from '../editRequests'
 import { GetOpenInviteResponseBody } from '../teams/open-invites'
-import { getMockTeamFolders } from './db/folders'
-import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
+import { getMockFolderById, getMockTeamFolders } from './db/folders'
+import { populateDoc, populateFolder, populatePermissions } from './db/populate'
+import {
+  DocPageResourceProps,
+  FolderPageResourceProps,
+  ResourceShowPageResponseBody,
+} from '../pages/teams'
+import { getResourceFromSlug } from './db/utils'
+import { getMockDocById } from './db/docs'
 
 interface MockRouteHandlerParams {
   params: { [key: string]: any }
@@ -72,22 +79,61 @@ const routes: MockRoute[] = [
 
       return {
         workspaces: workspaces,
-        folders: folders.map((mockFolder) => {
-          return {
-            ...mockFolder,
-            pathname: '',
-            positions: { id: 'mock', orderedIds: [], updatedAt: '' },
-            childDocs: [],
-            childFolders: [],
-            childDocsIds: [],
-            childFoldersIds: [],
-            bookmarked: false,
-          } as SerializedFolderWithBookmark
-        }),
+        folders: folders.map(populateFolder),
         docs: [],
         tags: [],
         smartFolders: [],
         appEvents: [],
+      }
+    },
+  },
+  {
+    pathname: 'api/pages/teams/resources/show',
+    handler: ({ search }): ResourceShowPageResponseBody => {
+      const { teamId, resourceId: resourceSlug } = search
+
+      const globalProps = {
+        team,
+        folders: [],
+        docs: [],
+        permissions: getMockPermissionsListByTeamId(teamId as string).map(
+          populatePermissions
+        ),
+        workspaces: [],
+        tags: [],
+      }
+
+      const [type, resourceId] = getResourceFromSlug(resourceSlug as string)
+
+      if (type === 'fD') {
+        const folder = getMockFolderById(resourceId)
+        if (folder == null) {
+          throw new Error(`The folder does not exist (folderId: ${resourceId})`)
+        }
+        const folderPageResourceProps: FolderPageResourceProps = {
+          type: 'folder',
+          pageFolder: populateFolder(folder),
+        }
+        return {
+          ...globalProps,
+          ...folderPageResourceProps,
+        }
+      } else {
+        const doc = getMockDocById(resourceId)
+        if (doc == null) {
+          throw new Error(`The doc does not exist (docId: ${resourceId})`)
+        }
+        const docPageResourceProps: DocPageResourceProps = {
+          type: 'doc',
+          pageDoc: populateDoc(doc),
+          contributors: [],
+          backLinks: [],
+          revisionHistory: [],
+        }
+        return {
+          ...globalProps,
+          ...docPageResourceProps,
+        }
       }
     },
   },
