@@ -13,6 +13,7 @@ type MockFolder = Omit<
 >
 const folderMap = new Map<string, MockFolder>()
 const childFolderIdSetMap = new SetMap<string>()
+const teamFolderIdSetMap = new SetMap<string>()
 
 interface CreateMockFolderParams {
   emoji?: string
@@ -55,7 +56,8 @@ export function createMockFolder({
   }
 
   folderMap.set(id, newFolder)
-
+  teamFolderIdSetMap.addValue(teamId, id)
+  console.log('added folder', teamFolderIdSetMap)
   return newFolder
 }
 
@@ -66,22 +68,36 @@ export function getMockFolderById(id: string) {
 export function getChildFolderList(id: string) {
   const childFolderIdList = [...childFolderIdSetMap.getSet(id)]
 
-  return childFolderIdList.reduce<MockFolder[]>((list, childFolderId) => {
-    const childFolder = getMockFolderById(childFolderId)
-    if (childFolder != null) {
-      list.push(childFolder)
-    }
-    return list
-  }, [])
+  return getMockFolderListByIdList(childFolderIdList)
 }
 
-export function removeFolder(id: string) {
+export function removeMockFolder(id: string) {
+  const folder = getMockFolderById(id)
   const childFolderList = getChildFolderList(id)
   for (const childFolder of childFolderList) {
-    removeFolder(childFolder.id)
+    removeMockFolder(childFolder.id)
     childFolderIdSetMap.removeValue(id, childFolder.id)
   }
 
   folderMap.delete(id)
   childFolderIdSetMap.removeSet(id)
+  if (folder != null) {
+    teamFolderIdSetMap.addValue(folder.teamId, id)
+  }
+}
+
+export function getMockTeamFolders(teamId: string) {
+  const idList = [...teamFolderIdSetMap.getSet(teamId)]
+
+  return getMockFolderListByIdList(idList)
+}
+
+function getMockFolderListByIdList(idList: string[]) {
+  return idList.reduce<MockFolder[]>((list, folderId) => {
+    const folder = getMockFolderById(folderId)
+    if (folder != null) {
+      list.push(folder)
+    }
+    return list
+  }, [])
 }
