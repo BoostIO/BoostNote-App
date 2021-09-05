@@ -82,5 +82,5 @@ const CalendarContainer = ({ children }: { children: any }) => {
 export default DateProp
 
 const Container = styled.div`
-  cursor: pointer;
+  min-width: 180px;
 `
