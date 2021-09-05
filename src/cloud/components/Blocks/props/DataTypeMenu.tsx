@@ -6,7 +6,6 @@ import {
   mdiText,
 } from '@mdi/js'
 import React from 'react'
-import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { PropType } from '../../../lib/blocks/props'
 
@@ -16,7 +15,7 @@ interface DataTypeMenuProps {
 
 const DataTypeMenu = ({ onSelect }: DataTypeMenuProps) => {
   return (
-    <MetadataContainer>
+    <>
       <MetadataContainerRow
         row={{
           type: 'button',
@@ -83,7 +82,7 @@ const DataTypeMenu = ({ onSelect }: DataTypeMenuProps) => {
           },
         }}
       />
-    </MetadataContainer>
+    </>
   )
 }
 

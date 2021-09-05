@@ -30,6 +30,7 @@ import InfoBlock, {
 } from '../../../../design/components/organisms/InfoBlock'
 import BlockLayout from '../BlockLayout'
 import { getTableBlockInputId } from './Table'
+import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 
 const GithubIssueView = ({
   block,
@@ -82,14 +83,14 @@ const GithubIssueView = ({
     async (ev) => {
       openContextModal(
         ev,
-        <div>
+        <MetadataContainer>
           <DataTypeMenu
             onSelect={(type) => {
               createPropRef.current(type)
               closeAllModals()
             }}
           />
-        </div>,
+        </MetadataContainer>,
         { alignment: 'top-left' }
       )
     },
