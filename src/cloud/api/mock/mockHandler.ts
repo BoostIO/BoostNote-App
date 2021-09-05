@@ -14,7 +14,7 @@ interface MockRouteHandlerParams {
   params: { [key: string]: any }
   search: { [key: string]: string | number | boolean }
 }
-console.log(match, 'atch')
+
 interface MockRoute {
   pathname: string
   handler: (params: MockRouteHandlerParams) => any
