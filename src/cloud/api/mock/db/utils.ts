@@ -26,10 +26,12 @@ export class SetMap<T> {
   addValue(key: string, value: T) {
     const set = this.getSet(key)
     set.add(value)
+    this.map.set(key, set)
   }
 
   removeValue(key: string, value: T) {
     const set = this.getSet(key)
     set.delete(value)
+    this.map.set(key, set)
   }
 }
