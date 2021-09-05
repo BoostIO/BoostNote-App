@@ -1,12 +1,13 @@
 import styled from '../../../../design/lib/styled'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useModal } from '../../../../design/lib/stores/modal'
 import { getAction, postAction } from '../../../api/integrations'
-import FilterableSelectList from '../../../../design/components/molecules/FilterableSelectList'
 import Spinner from '../../../../design/components/atoms/Spinner'
 import { useToast } from '../../../../design/lib/stores/toast'
 import { BlockDataProps } from './types'
 import { GithubIssueBlock } from '../../../api/blocks'
+import SearchableOptionListPopup from '../../SearchableOptionListPopup'
+import Flexbox from '../../../../design/components/atoms/Flexbox'
 
 interface Label {
   name: string
@@ -40,24 +41,28 @@ const GithubLabelsData = ({
         pushApiErrorMessage(error)
       }
     },
-    [data]
+    [data, closeAllModals, onUpdate, pushApiErrorMessage]
   )
 
   const openSetLabelSelect: React.MouseEventHandler = useCallback(
     (ev) => {
+      //TOFIX PREVENT GITHUB UPDATE FOR NOW
+      return
       openContextModal(
         ev,
         <GithubLabelsSelect data={data} onUpdate={addLabel} />
       )
     },
-    [data, addLabel]
+    [data, addLabel, openContextModal]
   )
 
   return (
     <StyledGithubLabels onClick={openSetLabelSelect}>
       <ul>
         {data.labels.map((label: Label) => (
-          <li style={{ backgroundColor: `#${label.color}` }}>{label.name}</li>
+          <li style={{ backgroundColor: `#${label.color}` }} key={label.name}>
+            {label.name}
+          </li>
         ))}
       </ul>
     </StyledGithubLabels>
@@ -65,8 +70,6 @@ const GithubLabelsData = ({
 }
 
 const StyledGithubLabels = styled.div`
-  cursor: pointer;
-  min-height: 40px;
   & > ul {
     margin: 0;
     padding: 0;
@@ -77,6 +80,8 @@ const StyledGithubLabels = styled.div`
       padding: ${({ theme }) => theme.sizes.spaces.xsm}px;
       border-radius: 5px;
       font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+      text-shadow: 0 0 3px #000;
+      white-space: nowrap;
     }
   }
 `
@@ -89,6 +94,7 @@ interface LabelSelectProps {
 const GithubLabelsSelect = ({ data, onUpdate }: LabelSelectProps) => {
   const [labels, setLabels] = useState<Label[] | null>(null)
   const { pushApiErrorMessage } = useToast()
+  const [query, setQuery] = useState<string>('')
 
   const pushErrorRef = useRef(pushApiErrorMessage)
   useEffect(() => {
@@ -124,36 +130,38 @@ const GithubLabelsSelect = ({ data, onUpdate }: LabelSelectProps) => {
     }
   }, [data])
 
+  const filteredLabels = useMemo(() => {
+    if (labels == null) {
+      return []
+    }
+    const matches = labels.filter(
+      (label) => label.name.includes(query) || label.description.includes(query)
+    )
+    return matches.map((label) => {
+      return {
+        label: (
+          <Flexbox direction='column'>
+            <h4 style={{ margin: '6px 0px' }}>{label.name}</h4>
+            <div>{label.description || 'No description'}</div>
+          </Flexbox>
+        ),
+        onClick: () => onUpdate([label]),
+      }
+    })
+  }, [labels, onUpdate, query])
+
   if (labels == null) {
     return <Spinner />
   }
 
   return (
-    <LabelSelectContainer>
-      <h3>Person</h3>
-      <FilterableSelectList
-        items={labels.map((label) => [
-          label.name,
-          <div
-            className='label__select__item'
-            onClick={() => onUpdate([label])}
-          >
-            <h4>{label.name}</h4>
-            <div>{label.description || 'No description'}</div>
-          </div>,
-        ])}
-      />
-    </LabelSelectContainer>
+    <SearchableOptionListPopup
+      query={query}
+      setQuery={setQuery}
+      title='Labels'
+      options={filteredLabels}
+    />
   )
 }
 
-const LabelSelectContainer = styled.div`
-  & h4 {
-    margin: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
-  }
-
-  & .label__select__item {
-    cursor: pointer;
-  }
-`
 export default GithubLabelsData

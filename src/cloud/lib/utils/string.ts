@@ -71,18 +71,9 @@ export function stringifyUrl(url: Url): string {
 }
 
 export function isUrlOrPath(str: string): boolean {
-  try {
-    new URL(str)
-    return true
-  } catch {
-    try {
-      str = str.startsWith('/') ? `http://x.yy${str}` : `http://x.yy/${str}`
-      new URL(str)
-      return true
-    } catch {
-      return false
-    }
-  }
+  return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/\%?#[\]@!\$&'\(\)\*\+,;=.]+$/gim.test(
+    str
+  )
 }
 
 export function isNumberString(str: string) {

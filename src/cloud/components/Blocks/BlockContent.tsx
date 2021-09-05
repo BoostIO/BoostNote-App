@@ -1,36 +1,42 @@
-import React, { useCallback, useState, useMemo, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react'
 import {
   mdiPlus,
-  mdiChevronDown,
   mdiPackageVariantClosed,
   mdiCodeTags,
-  mdiTable,
   mdiFileDocumentOutline,
-  mdiChevronLeft,
 } from '@mdi/js'
-import MarkdownForm from './forms/MarkdownForm'
 import EmbedForm from './forms/EmbedForm'
-import TableForm from './forms/TableForm'
-import { Block, ContainerBlock } from '../../api/blocks'
+import { Block, BlockCreateRequestBody, ContainerBlock } from '../../api/blocks'
 import { useDocBlocks } from '../../lib/hooks/useDocBlocks'
 import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
 import { useModal } from '../../../design/lib/stores/modal'
-import { useI18n } from '../../lib/hooks/useI18n'
-import { lngKeys } from '../../lib/i18n/types'
-import ContainerForm from './forms/ContainerForm'
 import BlockTree from './BlockTree'
 import Icon from '../../../design/components/atoms/Icon'
 import styled from '../../../design/lib/styled'
 import { find } from '../../../design/lib/utils/tree'
 import useRealtime from '../../lib/editor/hooks/useRealtime'
 import { BlockView } from './views'
+import Scroller from '../../../design/components/atoms/Scroller'
+import UpDownList from '../../../design/components/atoms/UpDownList'
+import NavigationItem from '../../../design/components/molecules/Navigation/NavigationItem'
+import Flexbox from '../../../design/components/atoms/Flexbox'
+import { getBlockDomId } from '../../lib/blocks/dom'
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
+import { useToast } from '../../../design/lib/stores/toast'
+import { usePage } from '../../lib/stores/pageStore'
+import { getTableBlockInputId } from './views/Table'
+import {
+  CollapsableType,
+  useSidebarCollapse,
+} from '../../lib/stores/sidebarCollapse'
+import { FoldingProps } from '../../../design/components/atoms/FoldingWrapper'
 
 export interface Canvas extends SerializedDocWithBookmark {
   rootBlock: ContainerBlock
 }
 
-export interface FormProps<T extends Block> {
-  onSubmit: (block: Omit<T, 'id'>) => Promise<any>
+export interface FormProps {
+  onSubmit: (block: BlockCreateRequestBody) => Promise<any>
 }
 
 interface BlockContentProps {
@@ -38,22 +44,59 @@ interface BlockContentProps {
 }
 
 const BlockContent = ({ doc }: BlockContentProps) => {
+  const { currentUserIsCoreMember } = usePage()
   const { state, actions } = useDocBlocks(doc.rootBlock.id)
   const { openModal, closeAllModals } = useModal()
-  const { translate } = useI18n()
   const [currentBlock, setCurrentBlock] = useState<Block | null>(null)
-  const [showActions, setShowActions] = useState(true)
   const [provider] = useRealtime({
     token: doc.collaborationToken || '',
     id: doc.id,
   })
+  const { pushApiErrorMessage } = useToast()
+  const contentScrollerRef = useRef<OverlayScrollbarsComponent>(null)
+
+  const scrollToElement = useCallback((elem: HTMLElement | null) => {
+    if (elem != null && contentScrollerRef.current != null) {
+      const instance = contentScrollerRef.current.osInstance()
+      if (instance != null) {
+        instance.scroll({ el: elem, block: 'center' }, 300)
+      }
+    }
+  }, [])
 
   const createBlock = useCallback(
-    async (block: Omit<Block, 'id'>) => {
-      await actions.create(block, doc.rootBlock)
-      closeAllModals()
+    async (block: BlockCreateRequestBody) => {
+      try {
+        const newBlock = await actions.create(block, doc.rootBlock)
+        closeAllModals()
+        if (
+          (currentBlock != null && currentBlock.type !== 'container') ||
+          (currentBlock != null && doc.rootBlock.id !== currentBlock.id)
+        ) {
+          setCurrentBlock(newBlock)
+        } else {
+          const blockElem = document.getElementById(getBlockDomId(newBlock))
+          scrollToElement(blockElem)
+        }
+
+        if (newBlock.type === 'table') {
+          const titleElement = document.getElementById(
+            getTableBlockInputId(newBlock)
+          )
+          if (titleElement != null) titleElement.focus()
+        }
+      } catch (error) {
+        pushApiErrorMessage(error)
+      }
     },
-    [doc, actions, closeAllModals]
+    [
+      doc,
+      actions,
+      closeAllModals,
+      currentBlock,
+      scrollToElement,
+      pushApiErrorMessage,
+    ]
   )
 
   useEffect(() => {
@@ -66,28 +109,71 @@ const BlockContent = ({ doc }: BlockContentProps) => {
     }
   }, [state])
 
-  const modalOptions = useMemo(() => {
-    return {
-      showCloseIcon: true,
-      title: translate(lngKeys.ModalsCreateNewDocument),
-    }
-  }, [translate])
+  const createMarkdown = useCallback(() => {
+    return createBlock({
+      name: 'Markdown',
+      type: 'markdown',
+      children: [],
+      data: null,
+    })
+  }, [createBlock])
 
   const createContainer = useCallback(() => {
-    openModal(<ContainerForm onSubmit={createBlock} />, modalOptions)
-  }, [createBlock, openModal, modalOptions])
-
-  const createMarkdown = useCallback(() => {
-    openModal(<MarkdownForm onSubmit={createBlock} />, modalOptions)
-  }, [createBlock, openModal, modalOptions])
+    return createBlock({
+      name: '',
+      type: 'container',
+      children: [],
+      data: null,
+    })
+  }, [createBlock])
 
   const createTable = useCallback(() => {
-    openModal(<TableForm onSubmit={createBlock} />, modalOptions)
-  }, [createBlock, openModal, modalOptions])
+    return createBlock({
+      name: '',
+      type: 'table',
+      children: [],
+      data: { columns: {} },
+    })
+  }, [createBlock])
 
   const createEmbed = useCallback(() => {
-    openModal(<EmbedForm onSubmit={createBlock} />, modalOptions)
-  }, [createBlock, openModal, modalOptions])
+    openModal(<EmbedForm onSubmit={createBlock} />)
+  }, [createBlock, openModal])
+
+  const {
+    sideBarOpenedBlocksIdsSet,
+    sideBarOpenedLinksIdsSet,
+    toggleItem,
+    unfoldItem,
+    foldItem,
+  } = useSidebarCollapse()
+
+  const getFoldEvents = useCallback(
+    (type: CollapsableType, key: string, reversed?: boolean) => {
+      if (reversed) {
+        return {
+          fold: () => unfoldItem(type, key),
+          unfold: () => foldItem(type, key),
+          toggle: () => toggleItem(type, key),
+        }
+      }
+
+      return {
+        fold: () => foldItem(type, key),
+        unfold: () => unfoldItem(type, key),
+        toggle: () => toggleItem(type, key),
+      }
+    },
+    [toggleItem, unfoldItem, foldItem]
+  )
+
+  const navTree = useMemo(() => {
+    if (state.type === 'loading') {
+      return null
+    }
+
+    return getFoldedChild(state.block, sideBarOpenedBlocksIdsSet, getFoldEvents)
+  }, [getFoldEvents, state, sideBarOpenedBlocksIdsSet])
 
   if (state.type === 'loading') {
     return <div>loading</div>
@@ -95,60 +181,104 @@ const BlockContent = ({ doc }: BlockContentProps) => {
 
   return (
     <StyledBlockContent>
-      <div className='block__editor__nav'>
-        <BlockTree
-          root={state.block}
-          active={currentBlock || doc.rootBlock}
-          onSelect={setCurrentBlock}
-          onDelete={actions.remove}
-        />
+      <div id='block__editor__anchor' />
+      <UpDownList ignoreFocus={true} className='block__editor__nav'>
+        <Scroller className='block__editor__nav__scroller'>
+          <BlockTree
+            root={navTree != null ? navTree : state.block}
+            active={currentBlock || doc.rootBlock}
+            onSelect={setCurrentBlock}
+            onDelete={actions.remove}
+            idPrefix='nav'
+          />
+        </Scroller>
         <div className='block__editor__nav--actions'>
-          <div
+          <NavigationItem
+            labelClick={
+              getFoldEvents('links', 'block__editor-actions', true).toggle
+            }
             className='block__editor__nav--item'
-            onClick={() => setShowActions((state) => !state)}
-          >
-            <span>New Items</span>
-            <Icon
-              path={showActions ? mdiChevronDown : mdiChevronLeft}
-              size={16}
-            />
-          </div>
-          {showActions && (
-            <ul>
-              <li
-                onClick={createContainer}
+            id='block__editor__nav--new-items'
+            folded={!sideBarOpenedLinksIdsSet.has('block__editor-actions')}
+            folding={getFoldEvents('links', 'block__editor-actions', true)}
+            depth={0}
+            label='New Blocks'
+          />
+          {sideBarOpenedLinksIdsSet.has('block__editor-actions') && (
+            <>
+              <NavigationItem
+                labelClick={createContainer}
                 className='block__editor__nav--item'
-              >
-                <Icon path={mdiPackageVariantClosed} size={16} />
-                <span>Container</span>
-                <Icon path={mdiPlus} size={16} />
-              </li>
-              <li onClick={createMarkdown} className='block__editor__nav--item'>
-                <Icon path={mdiFileDocumentOutline} size={16} />
-                <span>Markdown</span>
-                <Icon path={mdiPlus} size={16} />
-              </li>
-              <li onClick={createTable} className='block__editor__nav--item'>
-                <Icon path={mdiTable} size={16} />
-                <span>Table</span>
-                <Icon path={mdiPlus} size={16} />
-              </li>
-              <li onClick={createEmbed} className='block__editor__nav--item'>
-                <Icon path={mdiCodeTags} size={16} />
-                <span>Embed</span>
-                <Icon path={mdiPlus} size={16} />
-              </li>
-            </ul>
+                id='block__editor__nav--container'
+                depth={1}
+                label={
+                  <Flexbox alignItems='center' justifyContent='space-between'>
+                    <span>Container</span>
+                    <Icon path={mdiPlus} size={16} />
+                  </Flexbox>
+                }
+                icon={{ type: 'icon', path: mdiPackageVariantClosed }}
+              />
+              <NavigationItem
+                labelClick={createMarkdown}
+                className='block__editor__nav--item'
+                id='block__editor__nav--markdown'
+                depth={1}
+                label={
+                  <Flexbox alignItems='center' justifyContent='space-between'>
+                    <span>Markdown</span>
+                    <Icon path={mdiPlus} size={16} />
+                  </Flexbox>
+                }
+                icon={{ type: 'icon', path: mdiFileDocumentOutline }}
+              />
+              <NavigationItem
+                labelClick={createTable}
+                className='block__editor__nav--item'
+                id='block__editor__nav--table'
+                depth={1}
+                label={
+                  <Flexbox alignItems='center' justifyContent='space-between'>
+                    <span>Table</span>
+                    <Icon path={mdiPlus} size={16} />
+                  </Flexbox>
+                }
+                icon={{ type: 'icon', path: mdiPackageVariantClosed }}
+              />
+              <NavigationItem
+                labelClick={createEmbed}
+                className='block__editor__nav--item'
+                id='block__editor__nav--embed'
+                depth={1}
+                label={
+                  <Flexbox alignItems='center' justifyContent='space-between'>
+                    <span>Embed</span>
+                    <Icon path={mdiPlus} size={16} />
+                  </Flexbox>
+                }
+                icon={{ type: 'icon', path: mdiCodeTags }}
+              />
+            </>
           )}
         </div>
-      </div>
+      </UpDownList>
       <div className='block__editor__view'>
-        <BlockView
-          block={currentBlock || state.block}
-          actions={actions}
-          canvas={doc}
-          realtime={provider}
-        />
+        <Scroller
+          className='block__editor__view__wrapper'
+          id='block__editor__view__wrapper'
+          ref={contentScrollerRef}
+        >
+          <BlockView
+            block={currentBlock || state.block}
+            actions={actions}
+            canvas={doc}
+            realtime={provider}
+            setCurrentBlock={setCurrentBlock}
+            scrollToElement={scrollToElement}
+            currentUserIsCoreMember={currentUserIsCoreMember}
+          />
+        </Scroller>
+        <div id='block__editor__view__toolbar-portal' />
       </div>
     </StyledBlockContent>
   )
@@ -156,71 +286,60 @@ const BlockContent = ({ doc }: BlockContentProps) => {
 
 const StyledBlockContent = styled.div`
   display: flex;
-  height: 100%;
+  flex: 1 1 auto;
+  overflow: hidden;
 
   & > .block__editor__nav {
     padding-top: ${({ theme }) => theme.sizes.spaces.df}px;
     display: flex;
     flex-direction: column;
-    border: 1px solid ${({ theme }) => theme.colors.border.main};
+    border-right: 1px solid ${({ theme }) => theme.colors.border.main};
     width: 240px;
     flex: 0 0 auto;
 
-    & > div:first-child {
+    .block__editor__nav__scroller {
       flex-grow: 1;
-    }
-
-    & .block__editor__nav--item {
-      display: flex;
-      width: 100%;
-      height: 26px;
-      white-space: nowrap;
-      font-size: ${({ theme }) => theme.sizes.fonts.df}px;
-      cursor: pointer;
-      padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
-
-      align-items: center;
-      flex: 1 1 auto;
-      background: none;
-      outline: 0;
-      border: 0;
-      text-align: left;
-      color: ${({ theme }) => theme.colors.text.secondary};
-      text-decoration: none;
-      margin: 0;
-      overflow: hidden;
-      svg {
-        color: ${({ theme }) => theme.colors.text.subtle};
-      }
-      span {
-        flex: 1 0 auto;
-      }
-
-      &:hover {
-        background-color: ${({ theme }) => theme.colors.background.secondary};
-      }
-    }
-  }
-
-  & .block__editor__nav--actions {
-    & > ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      & > li {
-        & span {
-          margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
-          flex: 1 0 auto;
-        }
-      }
     }
   }
 
   & .block__editor__view {
     flex: 1 1 auto;
     height: 100%;
-    overflow: auto;
+    position: relative;
+  }
+
+  & .block__editor__view__wrapper {
+    width: 100%;
+    height: 100%;
+    padding: ${({ theme }) => theme.sizes.spaces.md}px 0;
+    position: relative;
   }
 `
+
+function getFoldedChild(
+  targetBlock: Block,
+  sideBarOpenedBlocksIdsSet: Set<string>,
+  getFoldEvents: (
+    type: CollapsableType,
+    key: string,
+    reversed?: boolean | undefined
+  ) => FoldingProps
+): Block & {
+  folded?: boolean
+  folding?: FoldingProps
+} {
+  if ((targetBlock.children || []).length === 0) {
+    return targetBlock
+  }
+
+  return {
+    ...targetBlock,
+    folded: sideBarOpenedBlocksIdsSet.has(targetBlock.id),
+    folding: getFoldEvents('blocks', targetBlock.id, true),
+    children: targetBlock.children.map((child) =>
+      getFoldedChild(child, sideBarOpenedBlocksIdsSet, getFoldEvents)
+    ),
+  } as any
+}
 
 export default BlockContent

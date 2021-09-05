@@ -7,10 +7,17 @@ import { ViewProps } from './'
 import MarkdownPreview from '../../MarkdownView'
 import { CodemirrorBinding } from 'y-codemirror'
 import Spinner from '../../../../design/components/atoms/Spinner'
-import Icon from '../../../../design/components/atoms/Icon'
-import { mdiEyeOutline, mdiPencil } from '@mdi/js'
+import { mdiEyeOutline, mdiPencil, mdiTrashCanOutline } from '@mdi/js'
+import { getBlockDomId } from '../../../lib/blocks/dom'
+import cc from 'classcat'
+import BlockLayout from '../BlockLayout'
 
-const MarkdownView = ({ block, realtime }: ViewProps<MarkdownBlock>) => {
+const MarkdownView = ({
+  block,
+  realtime,
+  actions,
+  currentUserIsCoreMember,
+}: ViewProps<MarkdownBlock>) => {
   const [mode, setMode] = useState<'editor' | 'view'>('view')
   const [editorContent, setEditorContent] = useState('')
   const [synced, setSynced] = useState(realtime.synced)
@@ -46,11 +53,6 @@ const MarkdownView = ({ block, realtime }: ViewProps<MarkdownBlock>) => {
     }
   }, [settings])
 
-  useEffect(() => {
-    realtime.on('sync', setSynced)
-    return () => realtime.off('sync', setSynced)
-  }, [realtime])
-
   const bindCallback = useCallback(
     (editor: CodeMirror.Editor) => {
       setEditorContent(editor.getValue())
@@ -71,40 +73,66 @@ const MarkdownView = ({ block, realtime }: ViewProps<MarkdownBlock>) => {
 
   const toggleMode = useCallback(() => {
     setMode((mode) => (mode === 'view' ? 'editor' : 'view'))
-    editorRef.current && editorRef.current.refresh()
   }, [])
 
-  if (!synced) {
-    return (
-      <StyledMarkdownView className='block__markdown--mode-loading'>
-        <Spinner />
-      </StyledMarkdownView>
-    )
-  }
+  useEffect(() => {
+    realtime.on('sync', setSynced)
+    return () => realtime.off('sync', setSynced)
+  }, [realtime])
+
+  useEffect(() => {
+    if (mode === 'editor' && editorRef.current != null) {
+      editorRef.current.refresh()
+      editorRef.current.focus()
+    }
+  }, [mode])
 
   return (
-    <StyledMarkdownView className={`block__markdown--mode-${mode}`}>
-      <div className='block__markdown--toolbar' onClick={toggleMode}>
-        <Icon path={mode === 'view' ? mdiPencil : mdiEyeOutline} size={16} />
-      </div>
-      <div className='block__markdown--editor'>
-        <CodeMirrorEditor bind={bindCallback} config={editorConfig} />
-      </div>
-      <MarkdownPreview
-        className='block__markdown--preview'
-        content={editorContent}
-      />
-    </StyledMarkdownView>
+    <BlockLayout
+      controls={
+        currentUserIsCoreMember
+          ? [
+              {
+                iconPath: mode === 'view' ? mdiPencil : mdiEyeOutline,
+                onClick: toggleMode,
+              },
+              {
+                iconPath: mdiTrashCanOutline,
+                onClick: () => actions.remove(block),
+              },
+            ]
+          : undefined
+      }
+    >
+      <StyledMarkdownView
+        className={cc([
+          !synced
+            ? 'block__markdown--mode-loading'
+            : `block__markdown--mode-${mode}`,
+        ])}
+        id={getBlockDomId(block)}
+      >
+        {!synced ? (
+          <Spinner />
+        ) : (
+          <>
+            <div className='block__markdown--editor'>
+              <CodeMirrorEditor bind={bindCallback} config={editorConfig} />
+            </div>
+            <MarkdownPreview
+              className='block__markdown--preview'
+              content={editorContent}
+            />
+          </>
+        )}
+      </StyledMarkdownView>
+    </BlockLayout>
   )
 }
 
 const StyledMarkdownView = styled.div`
   position: relative;
   min-height: 20px;
-
-  &:hover .block__markdown--toolbar {
-    display: block;
-  }
 
   & .block__markdown--toolbar {
     display: none;
@@ -120,7 +148,6 @@ const StyledMarkdownView = styled.div`
   }
 
   & > .block__markdown--preview {
-    background-color: ${({ theme }) => theme.colors.background.primary};
     padding: 0;
   }
 

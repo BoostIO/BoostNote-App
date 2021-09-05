@@ -462,6 +462,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.OnboardingFolderSectionDisclaimer]:
     'Invite your teammates to this space',
   [lngKeys.GeneralContent]: 'Content',
+  [lngKeys.CreateNewCanvas]: 'Create new canvas (beta)',
 }
 
 export default {

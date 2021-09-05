@@ -489,6 +489,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.OnboardingFolderSectionDisclaimer]:
     'Invitez vos coéquipiers dans cet espace',
   [lngKeys.GeneralContent]: 'Contenu',
+  [lngKeys.CreateNewCanvas]: 'Créer un nouveau Canvas (beta)',
 }
 
 export default {

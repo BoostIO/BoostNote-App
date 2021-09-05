@@ -28,24 +28,26 @@ import DocContextMenuActions from './DocContextMenuActions'
 
 interface DocContextMenuProps {
   currentDoc: SerializedDocWithBookmark
-  contributors: SerializedUser[]
-  backLinks: SerializedDoc[]
+  contributors?: SerializedUser[]
+  backLinks?: SerializedDoc[]
   team: SerializedTeam
   permissions: SerializedUserTeamPermissions[]
   currentUserIsCoreMember: boolean
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
   restoreRevision?: (revision: SerializedRevision) => void
+  isCanvas?: boolean
 }
 
 const DocContextMenu = ({
   team,
   currentDoc: doc,
-  contributors,
-  backLinks,
+  contributors = [],
+  backLinks = [],
   permissions,
   currentUserIsCoreMember,
   editorRef,
   restoreRevision,
+  isCanvas,
 }: DocContextMenuProps) => {
   const [sliceContributors, setSliceContributors] = useState(true)
   const { docsMap } = useNav()
@@ -175,39 +177,40 @@ const DocContextMenu = ({
           ),
         }}
       />
-      <MetadataContainerRow
-        row={{
-          label: translate(lngKeys.Contributors),
-          type: 'content',
-          icon: mdiAccountMultiple,
-          content: (
-            <Flexbox wrap='wrap'>
-              {contributorsState.contributors.map((contributor) => (
-                <UserIcon
-                  key={contributor.id}
-                  user={usersMap.get(contributor.id) || contributor}
-                  className='subtle'
-                />
-              ))}
-
-              {contributors.length > 0 && (
-                <>
-                  <div style={{ marginRight: 5 }} />
-                  <Button
-                    size='sm'
-                    variant='transparent'
-                    onClick={() => setSliceContributors((prev) => !prev)}
-                  >
-                    {contributorsState.sliced > 0
-                      ? `+${contributorsState.sliced}`
-                      : '-'}
-                  </Button>
-                </>
-              )}
-            </Flexbox>
-          ),
-        }}
-      />
+      {!isCanvas && (
+        <MetadataContainerRow
+          row={{
+            label: translate(lngKeys.Contributors),
+            type: 'content',
+            icon: mdiAccountMultiple,
+            content: (
+              <Flexbox wrap='wrap'>
+                {contributorsState.contributors.map((contributor) => (
+                  <UserIcon
+                    key={contributor.id}
+                    user={usersMap.get(contributor.id) || contributor}
+                    className='subtle'
+                  />
+                ))}
+                {contributors.length > 0 && (
+                  <>
+                    <div style={{ marginRight: 5 }} />
+                    <Button
+                      size='sm'
+                      variant='transparent'
+                      onClick={() => setSliceContributors((prev) => !prev)}
+                    >
+                      {contributorsState.sliced > 0
+                        ? `+${contributorsState.sliced}`
+                        : '-'}
+                    </Button>
+                  </>
+                )}
+              </Flexbox>
+            ),
+          }}
+        />
+      )}
       <BackLinksList team={team} docs={backLinks} />
       <MetadataContainerBreak />
       <DocContextMenuActions
@@ -216,6 +219,7 @@ const DocContextMenu = ({
         editorRef={editorRef}
         currentUserIsCoreMember={currentUserIsCoreMember}
         restoreRevision={restoreRevision}
+        isCanvas={isCanvas}
       />
     </MetadataContainer>
   )

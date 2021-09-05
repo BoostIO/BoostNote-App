@@ -11,7 +11,7 @@ import FuzzyNavigationItem, {
 import Fuse from 'fuse.js'
 import CloseButtonWrapper from '../../molecules/CloseButtonWrapper'
 import cc from 'classcat'
-import VerticalScroller from '../../atoms/VerticalScroller'
+import Scroller from '../../atoms/Scroller'
 
 interface FuzzyNavigationProps {
   recentItems: FuzzyNavigationItemAttrbs[]
@@ -88,7 +88,7 @@ const FuzzyNavigation = ({
             }}
           />
         </CloseButtonWrapper>
-        <VerticalScroller className={cc(['fuzzy__scroller'])}>
+        <Scroller className={cc(['fuzzy__scroller'])}>
           {query === '' ? (
             <>
               <span className='fuzzy__label'>
@@ -121,7 +121,7 @@ const FuzzyNavigation = ({
               ))}
             </>
           )}
-        </VerticalScroller>
+        </Scroller>
       </UpDownList>
     </Container>
   )

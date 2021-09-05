@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { BlockView, ViewProps } from './'
-import { mdiLink } from '@mdi/js'
+import { mdiGithub, mdiPenPlus, mdiPlusBoxOutline } from '@mdi/js'
 import styled from '../../../../design/lib/styled'
 import Icon from '../../../../design/components/atoms/Icon'
-import { Block, GithubIssueBlock } from '../../../api/blocks'
+import { BlockCreateRequestBody, GithubIssueBlock } from '../../../api/blocks'
 import { useBlockProps } from '../../../lib/hooks/useBlockProps'
 import {
   getPropName,
@@ -13,39 +13,51 @@ import {
   PropType,
 } from '../../../lib/blocks/props'
 import BlockProp from '../props'
-import HyperlinkProp from '../props/HyperlinkProp'
 import GitHubAssigneesData from '../data/GithubAssigneesData'
 import GithubStatusData from '../data/GithubStatusData'
 import GithubLabelsData from '../data/GithubLabelsData'
-import Button from '../../../../design/components/atoms/Button'
 import { useModal } from '../../../../design/lib/stores/modal'
 import DataTypeMenu from '../props/DataTypeMenu'
 import { capitalize } from '../../../lib/utils/string'
-import { ToggleBlockCreate } from '../BlockCreate'
+import { getBlockDomId } from '../../../lib/blocks/dom'
+import Flexbox from '../../../../design/components/atoms/Flexbox'
+import { ExternalLink } from '../../../../design/components/atoms/Link'
+import BlockCreationModal from '../BlockCreationModal'
+import BlockToolbar from '../BlockToolbar'
+import EmbedForm from '../forms/EmbedForm'
+import InfoBlock, {
+  InfoBlockRow,
+} from '../../../../design/components/organisms/InfoBlock'
+import BlockLayout from '../BlockLayout'
+import { getTableBlockInputId } from './Table'
 
 const GithubIssueView = ({
   block,
   realtime,
   actions: blockActions,
   canvas,
+  currentUserIsCoreMember,
+  scrollToElement,
+  setCurrentBlock,
 }: ViewProps<GithubIssueBlock>) => {
   const [propsRecord, actions] = useBlockProps(block, realtime.doc)
-  const { openContextModal, closeAllModals } = useModal()
-  const [blockSelectOpen, setBlockSelectOpen] = useState(false)
+  const { openContextModal, closeAllModals, openModal } = useModal()
+
+  const prURL = block.data?.pull_request?.html_url || ''
+  const repoURL = new RegExp(
+    /(^https:\/\/github.com\/(?:([^\/]+)\/)+)(?:(?:issues|pull\/(?:[0-9]+)))$/,
+    'gi'
+  ).exec(block.data.html_url || '')
+  const isIssueURL = new RegExp(
+    /^https:\/\/github.com\/([^\/]+\/)+issues\/([0-9]+)$/,
+    'gi'
+  ).test(block.data.html_url || '')
 
   const updateBlock = useCallback(
     async (data: GithubIssueBlock['data']) => {
       await blockActions.update({ ...block, data: { ...block.data, ...data } })
     },
     [blockActions, block]
-  )
-
-  const createBlock = useCallback(
-    async (newBlock: Omit<Block, 'id'>) => {
-      await blockActions.create(newBlock, block)
-      setBlockSelectOpen(false)
-    },
-    [block, blockActions]
   )
 
   const createPropRef = useRef((type: PropType) => {
@@ -77,7 +89,8 @@ const GithubIssueView = ({
               closeAllModals()
             }}
           />
-        </div>
+        </div>,
+        { alignment: 'top-left' }
       )
     },
     [openContextModal, closeAllModals]
@@ -91,64 +104,99 @@ const GithubIssueView = ({
     return block.data?.pull_request?.html_url || ''
   }, [block.data])
 
-  return (
-    <StyledGithubIssueView>
-      <h1>{block.data.title}</h1>
-      <div className='github-issue__view__info'>
-        <div>
-          <div>Issue number</div>
-          <div>
-            <a href={block.data.html_url}>
-              <div>
-                <span>#{block.data.number}</span>
-                <Icon path={mdiLink} />
-              </div>
-            </a>
-          </div>
-        </div>
-        <div>
-          <div>Assignees</div>
-          <div>
-            <GitHubAssigneesData data={block.data} onUpdate={updateBlock} />
-          </div>
-        </div>
-        <div>
-          <div>Status</div>
-          <div>
-            <GithubStatusData data={block.data} onUpdate={updateBlock} />
-          </div>
-        </div>
-        <div>
-          <div>Labels</div>
-          <div>
-            <GithubLabelsData data={block.data} onUpdate={updateBlock} />
-          </div>
-        </div>
-        <div>
-          <div>Linked PR</div>
-          <div>
-            <HyperlinkProp href={prUrl} label={getPRNumFromUrl(prUrl)} />
-          </div>
-        </div>
+  const createBlock = useCallback(
+    async (newBlock: BlockCreateRequestBody) => {
+      const createdBlock = await blockActions.create(newBlock, block)
+      closeAllModals()
+      const blockElem = document.getElementById(getBlockDomId(createdBlock))
+      scrollToElement(blockElem)
 
-        {props.map(([key, value]) => {
-          return (
-            <div key={key}>
-              <div>{getPropName(key)}</div>
-              <div>
+      if (createdBlock.type === 'table') {
+        const titleElement = document.getElementById(
+          getTableBlockInputId(createdBlock)
+        )
+        if (titleElement != null) titleElement.focus()
+      }
+    },
+    [blockActions, block, closeAllModals, scrollToElement]
+  )
+
+  const createMarkdown = useCallback(() => {
+    return createBlock({
+      name: '',
+      type: 'markdown',
+      children: [],
+      data: null,
+    })
+  }, [createBlock])
+
+  const createTable = useCallback(() => {
+    return createBlock({
+      name: '',
+      type: 'table',
+      children: [],
+      data: { columns: {} },
+    })
+  }, [createBlock])
+
+  const createEmbed = useCallback(() => {
+    openModal(<EmbedForm onSubmit={createBlock} />, {
+      showCloseIcon: true,
+    })
+  }, [createBlock, openModal])
+
+  return (
+    <StyledGithubIssueView id={getBlockDomId(block)}>
+      <BlockLayout>
+        <Flexbox alignItems='center' className='github-issue__view__title'>
+          <Icon path={mdiGithub} size={26} />
+          <h1>{block.data.title}</h1>
+        </Flexbox>
+        <InfoBlock className='github-issue__view__info'>
+          {repoURL != null && (
+            <InfoBlockRow label='Repository'>
+              <ExternalLink href={repoURL[1]} showIcon={true}>
+                {repoURL[2]}
+              </ExternalLink>
+            </InfoBlockRow>
+          )}
+          {isIssueURL && (
+            <InfoBlockRow label='Issue number'>
+              <ExternalLink href={block.data.html_url || ''} showIcon={true}>
+                #{block.data.number}
+              </ExternalLink>
+            </InfoBlockRow>
+          )}
+          {prURL !== '' && (
+            <InfoBlockRow label='Linked PR'>
+              <ExternalLink href={prUrl} showIcon={true}>
+                #{block.data.pull_request.number || block.data.number}
+              </ExternalLink>
+            </InfoBlockRow>
+          )}
+          <InfoBlockRow label='Assignees'>
+            <GitHubAssigneesData data={block.data} onUpdate={updateBlock} />
+          </InfoBlockRow>
+          <InfoBlockRow label='Status'>
+            <GithubStatusData data={block.data} onUpdate={updateBlock} />
+          </InfoBlockRow>
+          <InfoBlockRow label='Labels'>
+            <GithubLabelsData data={block.data} onUpdate={updateBlock} />
+          </InfoBlockRow>
+          {props.map(([key, value]) => {
+            return (
+              <InfoBlockRow label={getPropName(key)} key={`custom-${key}`}>
                 <BlockProp
+                  currentUserIsCoreMember={currentUserIsCoreMember}
                   type={getPropType(key)}
                   value={value}
                   onChange={(newValue) => actions.set(key, newValue)}
                 />
-              </div>
-            </div>
-          )
-        })}
-      </div>
-      <div>
-        <Button onClick={openPropAdd}>+ Add Prop</Button>
-      </div>
+              </InfoBlockRow>
+            )
+          })}
+        </InfoBlock>
+      </BlockLayout>
       <div className='github-issue__view__children'>
         {block.children.map((child) => {
           return (
@@ -159,48 +207,63 @@ const GithubIssueView = ({
               isChild={true}
               canvas={canvas}
               realtime={realtime}
+              setCurrentBlock={setCurrentBlock}
+              scrollToElement={scrollToElement}
+              currentUserIsCoreMember={currentUserIsCoreMember}
             />
           )
         })}
       </div>
-      <ToggleBlockCreate
-        open={blockSelectOpen}
-        onChange={setBlockSelectOpen}
-        onSubmit={createBlock}
+      <BlockToolbar
+        controls={[
+          {
+            iconPath: mdiPenPlus,
+            label: 'Add Property',
+            onClick: (ev) => openPropAdd(ev),
+          },
+          {
+            iconPath: mdiPlusBoxOutline,
+            label: 'Add Block',
+            onClick: () =>
+              openModal(
+                <BlockCreationModal
+                  onMarkdownCreation={createMarkdown}
+                  onEmbedCreation={createEmbed}
+                  onTableCreation={createTable}
+                />,
+                {
+                  title: 'Add a block',
+                  showCloseIcon: true,
+                }
+              ),
+          },
+        ]}
       />
     </StyledGithubIssueView>
   )
 }
 
 const StyledGithubIssueView = styled.div`
-  .github-issue__view__info {
-    & > div {
-      display: flex;
-      align-items: center;
-      padding: ${({ theme }) => theme.sizes.spaces.sm}px 0;
-      & > div:first-child {
-        color: ${({ theme }) => theme.colors.text.subtle};
-      }
-
-      & > div {
-        min-width: 100px;
-      }
-    }
-
-    & a {
-      color: ${({ theme }) => theme.colors.text.primary};
-      text-decoration: none;
-    }
+  h1 {
+    margin: 0;
   }
 
-  .github-issue__view__children > * {
-    margin-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
+  .github-issue__view__title .icon {
+    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  .block__layout + .block__layout {
+    margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  .github-issue__view__info {
+    margin-top: ${({ theme }) => theme.sizes.spaces.md}px;
+
+    .text-cell__controls {
+      right: initial;
+      left: 100%;
+    }
   }
 `
-
-function getPRNumFromUrl(url: string) {
-  const num = url.split('/').pop()
-  return num != null && num !== '' ? `#${num}` : url
-}
 
 export default GithubIssueView

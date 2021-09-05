@@ -1,45 +1,53 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { ViewProps } from '../'
-import { mdiCog, mdiPlus } from '@mdi/js'
+import { mdiCog, mdiDownloadOutline, mdiTrashCanOutline } from '@mdi/js'
 import GithubIssueForm from '../../forms/GithubIssueForm'
 import {
   Column,
   getColumnName,
   getDataPropColProp,
   isDataPropCol,
+  getDataColumnIcon,
 } from '../../../../lib/blocks/table'
-import TextProp from '../../props/TextProp'
-import CheckboxProp from '../../props/CheckboxProp'
-import DateProp from '../../props/DateProp'
 import GitHubAssigneesData from '../../data/GithubAssigneesData'
 import GithubStatusData from '../../data/GithubStatusData'
 import GithubLabelsData from '../../data/GithubLabelsData'
 import HyperlinkProp from '../../props/HyperlinkProp'
 import TableSettings from './TableSettings'
 import ColumnSettings from './ColumnSettings'
-import BoostUserProp from '../../props/BoostUserProp'
 import { Block, TableBlock } from '../../../../api/blocks'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import Icon from '../../../../../design/components/atoms/Icon'
-import Button from '../../../../../design/components/atoms/Button'
-import {
-  capitalize,
-  isNumberString,
-  isUrlOrPath,
-} from '../../../../lib/utils/string'
 import styled from '../../../../../design/lib/styled'
 import { StyledUserIcon } from '../../../UserIcon'
 import { BlockDataProps } from '../../data/types'
 import { getPropType } from '../../../../lib/blocks/props'
 import { useBlockTable } from '../../../../lib/hooks/useBlockTable'
-import BlockIcon from '../../BlockIcon'
 import BlockProp from '../../props'
+import Scroller from '../../../../../design/components/atoms/Scroller'
+import { getBlockDomId } from '../../../../lib/blocks/dom'
+import Flexbox from '../../../../../design/components/atoms/Flexbox'
+import BlockLayout from '../../BlockLayout'
+import FormInput from '../../../../../design/components/molecules/Form/atoms/FormInput'
+import { useDebounce } from 'react-use'
+import BlockTree from '../../BlockTree'
 
 type GithubCellProps = BlockDataProps<TableBlock['children'][number]>
+interface TableViewProps extends ViewProps<TableBlock> {
+  setCurrentBlock: React.Dispatch<React.SetStateAction<Block | null>>
+}
 
-const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
+const TableView = ({
+  block,
+  actions,
+  realtime,
+  currentUserIsCoreMember,
+  setCurrentBlock,
+}: TableViewProps) => {
   const { openModal, openContextModal, closeAllModals } = useModal()
   const { state, actions: tableActions } = useBlockTable(block, realtime.doc)
+  const [tableTitle, setTableTitle] = useState(block.name || '')
+  const tableRef = useRef<string>(block.id)
 
   const subscriptionsRef = useRef<Set<(col: Column[]) => void>>(new Set())
   useEffect(() => {
@@ -118,8 +126,9 @@ const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
   const importIssues = useCallback(() => {
     openModal(
       <GithubIssueForm
-        onSubmit={(issueBlock) => {
-          return actions.create(issueBlock, block)
+        onSubmit={async (issueBlock) => {
+          await actions.create(issueBlock, block)
+          return closeAllModals()
         }}
       />,
       {
@@ -127,83 +136,150 @@ const TableView = ({ block, actions, realtime }: ViewProps<TableBlock>) => {
         showCloseIcon: true,
       }
     )
-  }, [openModal, actions, block])
+  }, [openModal, actions, block, closeAllModals])
 
+  const onTableNameChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      readyToBeSentRef.current = true
+      setTableTitle(e.target.value)
+    },
+    []
+  )
+  const readyToBeSentRef = useRef<boolean>(false)
+  const [, cancel] = useDebounce(
+    async () => {
+      if (readyToBeSentRef.current) {
+        await actions.update({
+          id: block.id,
+          type: block.type,
+          name: tableTitle,
+        })
+        readyToBeSentRef.current = false
+      } else {
+        cancel()
+      }
+    },
+    1000,
+    [tableTitle]
+  )
+
+  useEffect(() => {
+    if (tableRef.current !== block.id) {
+      tableRef.current = block.id
+      setTableTitle(block.name)
+    }
+  }, [block])
+
+  const anchorId = `block__${block.id}__table`
   return (
-    <StyledTableView>
-      <div className='block__table__view__wrapper'>
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              {state.columns.map((col) => (
-                <th
-                  key={col}
-                  className='block__table__view--interactable'
-                  onClick={(ev) => openColumnSettings(ev, col)}
-                >
-                  {getColumnName(col)}
-                </th>
-              ))}
-              <th
-                onClick={openTableSettings}
-                className='block__table__view--no-borders block__table__view--interactable'
-              >
-                <Icon path={mdiCog} />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {block.children.map((child) => {
-              return (
-                <tr key={child.id}>
-                  <td>
-                    <div>{child.data.title}</div>
-                    {child.children.map((ancestor) => {
-                      return (
-                        <div
-                          key={ancestor.id}
-                          className='block__table__view__child__label'
-                        >
-                          <BlockIcon block={ancestor} size={16} />
-                          <span>{blockTitle(ancestor)}</span>
-                        </div>
-                      )
-                    })}
-                  </td>
+    <BlockLayout
+      controls={
+        currentUserIsCoreMember
+          ? [
+              {
+                iconPath: mdiCog,
+                onClick: openTableSettings,
+              },
+              {
+                iconPath: mdiTrashCanOutline,
+                onClick: () => actions.remove(block),
+              },
+            ]
+          : undefined
+      }
+    >
+      <StyledTableView id={getBlockDomId(block)}>
+        <FormInput
+          placeholder='Untitled'
+          value={tableTitle}
+          onChange={onTableNameChange}
+          className='block__table__title'
+          id={getTableBlockInputId(block)}
+          disabled={!currentUserIsCoreMember}
+        />
+        <div id={anchorId} />
+        <div className='block__table__view__wrapper'>
+          <Scroller>
+            <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
                   {state.columns.map((col) => (
-                    <td key={col}>
-                      {isDataPropCol(col) ? (
-                        <GithubCell
-                          prop={getDataPropColProp(col)}
-                          data={child.data}
-                          onUpdate={(data) =>
-                            updateIssueBlock({ ...child, data })
-                          }
-                        />
-                      ) : (
-                        <BlockProp
-                          type={getPropType(col)}
-                          value={(state.rowData.get(child.id) || {})[col] || ''}
-                          onChange={(val) =>
-                            tableActions.setCell(child.id, col, val)
-                          }
-                        />
-                      )}
-                    </td>
+                    <th key={col} className='block__table__view--interactable'>
+                      <button onClick={(ev) => openColumnSettings(ev, col)}>
+                        <Flexbox alignItems='center'>
+                          <Icon
+                            path={getDataColumnIcon(col)}
+                            size={16}
+                            className='block__table__header__icon'
+                          />
+                          <span>{getColumnName(col)}</span>
+                        </Flexbox>
+                      </button>
+                    </th>
                   ))}
                 </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
-      <div className='block__table__view__import'>
-        <Button onClick={importIssues} variant='transparent' iconPath={mdiPlus}>
+              </thead>
+              <tbody>
+                {block.children.map((child) => {
+                  return (
+                    <tr key={child.id}>
+                      <td>
+                        <Flexbox
+                          direction='column'
+                          alignItems='baseline'
+                          justifyContent='center'
+                        >
+                          <BlockTree
+                            root={child}
+                            onSelect={setCurrentBlock}
+                            onDelete={actions.remove}
+                            className='table__title__tree'
+                          />
+                        </Flexbox>
+                      </td>
+                      {state.columns.map((col) => (
+                        <td key={col}>
+                          {isDataPropCol(col) ? (
+                            <GithubCell
+                              prop={getDataPropColProp(col)}
+                              data={child.data}
+                              onUpdate={(data) =>
+                                updateIssueBlock({ ...child, data })
+                              }
+                            />
+                          ) : (
+                            <BlockProp
+                              currentUserIsCoreMember={currentUserIsCoreMember}
+                              type={getPropType(col)}
+                              value={
+                                (state.rowData.get(child.id) || {})[col] || ''
+                              }
+                              onChange={(val) =>
+                                tableActions.setCell(child.id, col, val)
+                              }
+                            />
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </Scroller>
+        </div>
+
+        <button
+          className='block__table__view__import'
+          onClick={importIssues}
+          id={`block__table__import__${block.id}`}
+        >
+          <Icon path={mdiDownloadOutline} size={16} />
           Import
-        </Button>
-      </div>
-    </StyledTableView>
+        </button>
+      </StyledTableView>
+    </BlockLayout>
   )
 }
 
@@ -249,14 +325,31 @@ const GithubCell = ({
         />
       ) : null
     case 'repo':
+      const issueUrl = data.html_url || ''
+      const repoRegex = new RegExp(
+        /(^https:\/\/github.com\/(?:([^\/]+)\/)+)(?:(?:issues|pull\/(?:[0-9]+)))$/,
+        'gi'
+      )
+      const matches = repoRegex.exec(issueUrl)
       return (
         <HyperlinkProp
-          href={data?.repository?.html_url}
-          label={data?.repository?.full_name}
+          href={matches != null ? matches[1] : issueUrl}
+          label={
+            matches != null ? matches[2] : data.repository_url.split('/').pop()
+          }
         />
       )
     case 'issue_number':
-      return <div>#{data.number}</div>
+      const issueURL = data?.html_url || ''
+      const issueRegex = new RegExp(
+        /^https:\/\/github.com\/([^\/]+\/)+issues\/([0-9]+)$/,
+        'gi'
+      )
+      if (issueRegex.test(issueURL)) {
+        return <HyperlinkProp href={issueURL} label={`#${data.number}`} />
+      } else {
+        return null
+      }
     case 'body':
       return <div>{data.body}</div>
     case 'milestone':
@@ -279,10 +372,52 @@ function getPRNumFromUrl(url: string) {
 const StyledTableView = styled.div`
   position: relative;
 
+  .table__title__tree {
+    .navigation__item__label__ellipsis {
+      max-width: 300px;
+    }
+
+    .navigation__item__controls {
+      display: block;
+      opacity: 0;
+    }
+
+    .navigation__item__wrapper:hover .navigation__item__controls {
+      opacity: 1;
+    }
+  }
+
+  .table__title__tree:not(.block__editor__nav--tree)
+    > .block__editor__nav--item:first-of-type::before {
+    display: none;
+  }
+
+  .block__table__title {
+    width: 100%;
+    border: 0;
+    font-size: ${({ theme }) => theme.sizes.fonts.l}px;
+    font-weight: 600;
+  }
+
+  .block__table__cell--shrinked {
+    width: 1%;
+    white-space: nowrap;
+  }
+
   & .block__table__view--interactable {
     cursor: pointer;
+
+    &:active {
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
+    }
+
+    &:focus {
+      background-color: ${({ theme }) => theme.colors.background.quaternary};
+    }
+
     &:hover {
       color: ${({ theme }) => theme.colors.text.primary};
+      background-color: ${({ theme }) => theme.colors.background.secondary};
     }
   }
 
@@ -295,6 +430,8 @@ const StyledTableView = styled.div`
     width: 100%;
     text-align: left;
     border-collapse: separate;
+    position: relative;
+    z-index: 0;
   }
 
   & td:first-child,
@@ -309,6 +446,9 @@ const StyledTableView = styled.div`
   & td > div {
     height: 100%;
     width: 100%;
+    padding: ${({ theme }) => theme.sizes.spaces.sm}px;
+    display: flex;
+    align-items: center;
   }
 
   & .block__table__view--no-borders {
@@ -316,13 +456,37 @@ const StyledTableView = styled.div`
   }
 
   & th {
-    color: ${({ theme }) => theme.colors.text.secondary};
     border-top: 1px solid ${({ theme }) => theme.colors.border.main};
+    color: ${({ theme }) => theme.colors.text.subtle};
+
+    &:not(.block__table__view--interactable),
+    > button {
+      padding: ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
+
+    > button {
+      background: none;
+      color: ${({ theme }) => theme.colors.text.subtle};
+      border: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .block__table__header__icon {
+    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    flex: 0 0 auto;
   }
 
   & td {
     min-width: 130px;
     min-height: 20px;
+    height: 1px;
+  }
+
+  td,
+  th {
+    position: relative;
   }
 
   & td,
@@ -330,11 +494,25 @@ const StyledTableView = styled.div`
     width: 130px;
     border-right: 1px solid ${({ theme }) => theme.colors.border.main};
     border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
-    padding: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 
   & .block__table__view__import {
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
     border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
+    color: ${({ theme }) => theme.colors.text.subtle};
+    padding: ${({ theme }) => theme.sizes.spaces.sm}px
+      ${({ theme }) => theme.sizes.spaces.df}px;
+
+    background: ${({ theme }) => theme.colors.background.primary};
+    &:focus {
+      background: ${({ theme }) => theme.colors.background.quaternary};
+    }
+    &:hover {
+      background: ${({ theme }) => theme.colors.background.tertiary};
+    }
   }
 
   & .block__table__view__child__label {
@@ -369,15 +547,8 @@ const StyledTableView = styled.div`
   }
 `
 
-function blockTitle(block: Block) {
-  switch (block.type) {
-    case 'github.issue':
-      return block.data.number != null
-        ? `#${block.data.number}`
-        : 'Github Issue'
-    default:
-      return capitalize(block.type)
-  }
+export function getTableBlockInputId(block: Block) {
+  return `${block.id}-title`
 }
 
 export default TableView

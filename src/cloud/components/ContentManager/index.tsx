@@ -31,7 +31,7 @@ import Flexbox from '../../../design/components/atoms/Flexbox'
 import ContentManagerStatusFilter from './ContentManagerStatusFilter'
 import { useCloudDnd } from '../../lib/hooks/sidebar/useCloudDnd'
 import { DraggedTo } from '../../../design/lib/dnd'
-import VerticalScroller from '../../../design/components/atoms/VerticalScroller'
+import Scroller from '../../../design/components/atoms/Scroller'
 import { FormSelectOption } from '../../../design/components/molecules/Form/atoms/FormSelect'
 import Checkbox from '../../../design/components/molecules/Form/atoms/FormCheckbox'
 
@@ -261,7 +261,7 @@ const ContentManager = ({
 
   return (
     <Container>
-      <VerticalScroller className='cm__scroller'>
+      <Scroller className='cm__scroller'>
         <StyledContentManagerHeader>
           {folders != null ? (
             <div className='header__left'>
@@ -391,7 +391,7 @@ const ContentManager = ({
             </>
           )}
         </StyledContentManagerList>
-      </VerticalScroller>
+      </Scroller>
 
       {currentUserIsCoreMember && (
         <ContentManagerToolbar

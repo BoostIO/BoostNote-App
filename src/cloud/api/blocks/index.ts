@@ -1,7 +1,14 @@
 import { callApi } from '../../lib/client'
 
+type BlockTypeLabel =
+  | 'markdown'
+  | 'embed'
+  | 'github.issue'
+  | 'table'
+  | 'container'
+
 interface BlockType<
-  T extends string,
+  T extends BlockTypeLabel,
   D,
   C extends BlockType<any, any, any> = never
 > {
@@ -10,6 +17,7 @@ interface BlockType<
   name: string
   children: C[]
   data: D
+  createdAt: string
 }
 
 export type MarkdownBlock = BlockType<'markdown', null>
@@ -45,8 +53,9 @@ export async function getBlockTree(rootBlock: string): Promise<Block> {
   return block
 }
 
+export type BlockCreateRequestBody = Omit<Block, 'id' | 'createdAt'>
 export async function createBlock(
-  body: Omit<Block, 'id'>,
+  body: BlockCreateRequestBody,
   parent: string
 ): Promise<Block> {
   const { block } = await callApi(`api/blocks`, {
@@ -57,7 +66,12 @@ export async function createBlock(
   return block
 }
 
-export async function updateBlock(body: Block): Promise<Block> {
+export type BlockUpdateRequestBody = { id: string; type: string } & Partial<
+  Block
+>
+export async function updateBlock(
+  body: BlockUpdateRequestBody
+): Promise<Block> {
   const { block } = await callApi(`api/blocks/${body.id}`, {
     method: 'put',
     json: body,

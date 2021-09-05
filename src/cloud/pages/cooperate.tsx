@@ -86,6 +86,7 @@ const CooperatePage = () => {
           ...new Set(initialFolders.map((folder) => folder.workspaceId)),
         ],
         links: [],
+        blocks: [],
       })
 
       if (intent != null) {

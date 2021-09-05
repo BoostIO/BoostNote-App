@@ -7,8 +7,18 @@ import {
   PropKey,
   PropType,
 } from './props'
+import {
+  mdiAccountCircleOutline,
+  mdiCalendarOutline,
+  mdiCheckboxMarkedOutline,
+  mdiGithub,
+  mdiLink,
+  mdiText,
+} from '@mdi/js'
 
+// eslint-disable-next-line prettier/prettier
 type DataPropCol = `prop:${string}:${string}`
+
 export type Column = PropKey | DataPropCol
 
 export type YTable = YMap<YArray<string> | YMap<string>>
@@ -210,4 +220,28 @@ export function getDataPropColProp(col: DataPropCol): string {
 
 function notIn<T>(set: Set<T>) {
   return (item: T) => !set.has(item)
+}
+
+function getColType(col: Column): 'prop' | PropType {
+  return isDataPropCol(col) ? 'prop' : col.split(':')[1] as PropType
+}
+
+export function getDataColumnIcon(col: Column) { 
+  const type = getColType(col)
+  switch (type) {
+    case 'prop':
+      return mdiGithub
+    case 'date':
+      return mdiCalendarOutline
+    case 'user':
+      return mdiAccountCircleOutline
+    case 'url':
+      return mdiLink
+    case 'checkbox':
+      return mdiCheckboxMarkedOutline
+    case 'text':
+    case 'number':
+    default:
+      return mdiText
+  }
 }

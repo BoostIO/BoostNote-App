@@ -1,8 +1,24 @@
-import React, { useState, useCallback } from 'react'
-import { Block, ContainerBlock } from '../../../api/blocks'
+import React, { useCallback } from 'react'
+import { mdiPlusBoxOutline, mdiTrashCanOutline } from '@mdi/js'
+import EmbedForm from '../forms/EmbedForm'
+import {
+  Block,
+  BlockCreateRequestBody,
+  ContainerBlock,
+} from '../../../api/blocks'
 import styled from '../../../../design/lib/styled'
-import { ToggleBlockCreate } from '../BlockCreate'
 import { BlockView, ViewProps } from '.'
+import { getBlockDomId } from '../../../lib/blocks/dom'
+import { useModal } from '../../../../design/lib/stores/modal'
+import BlockCreationModal from '../BlockCreationModal'
+import BlockToolbar from '../BlockToolbar'
+import BlockLayout from '../BlockLayout'
+import { getTableBlockInputId } from './Table'
+
+interface ContainerViewProps extends ViewProps<ContainerBlock> {
+  setCurrentBlock: React.Dispatch<React.SetStateAction<Block | null>>
+  scrollToElement: (elem: HTMLElement | null) => void
+}
 
 const ContainerView = ({
   block,
@@ -10,20 +26,72 @@ const ContainerView = ({
   canvas,
   isChild,
   realtime,
-}: ViewProps<ContainerBlock>) => {
-  const [addSelectOpen, setAddSelectOpen] = useState(false)
+  currentUserIsCoreMember,
+  scrollToElement,
+  setCurrentBlock,
+}: ContainerViewProps) => {
+  const { openModal, closeAllModals } = useModal()
 
   const createBlock = useCallback(
-    async (newBlock: Omit<Block, 'id'>) => {
-      await actions.create(newBlock, block)
-      setAddSelectOpen(false)
+    async (newBlock: BlockCreateRequestBody) => {
+      const createdBlock = await actions.create(newBlock, block)
+      closeAllModals()
+      const blockElem = document.getElementById(getBlockDomId(createdBlock))
+      scrollToElement(blockElem)
+
+      if (createdBlock.type === 'table') {
+        const titleElement = document.getElementById(
+          getTableBlockInputId(createdBlock)
+        )
+        if (titleElement != null) titleElement.focus()
+      }
     },
-    [block, actions]
+    [block, actions, closeAllModals, scrollToElement]
   )
 
+  const createMarkdown = useCallback(() => {
+    return createBlock({
+      name: '',
+      type: 'markdown',
+      children: [],
+      data: null,
+    })
+  }, [createBlock])
+
+  const createTable = useCallback(() => {
+    return createBlock({
+      name: '',
+      type: 'table',
+      children: [],
+      data: { columns: {} },
+    })
+  }, [createBlock])
+
+  const createEmbed = useCallback(() => {
+    openModal(<EmbedForm onSubmit={createBlock} />, {
+      showCloseIcon: true,
+    })
+  }, [createBlock, openModal])
+
   return (
-    <StyledContainerView className={isChild && 'block__view--nested'}>
-      <h1>{canvas.rootBlock.id === block.id ? canvas.title : block.name}</h1>
+    <StyledContainerView
+      className={isChild && 'block__view--nested'}
+      id={getBlockDomId(block)}
+    >
+      <BlockLayout
+        controls={
+          currentUserIsCoreMember && isChild
+            ? [
+                {
+                  iconPath: mdiTrashCanOutline,
+                  onClick: () => actions.remove(block),
+                },
+              ]
+            : []
+        }
+      >
+        <h1>{canvas.rootBlock.id === block.id ? canvas.title : block.name}</h1>
+      </BlockLayout>
       <div className='block__view__container__content'>
         {block.children.map((child) => {
           return (
@@ -34,15 +102,33 @@ const ContainerView = ({
               isChild={true}
               canvas={canvas}
               realtime={realtime}
+              scrollToElement={scrollToElement}
+              setCurrentBlock={setCurrentBlock}
+              currentUserIsCoreMember={currentUserIsCoreMember}
             />
           )
         })}
       </div>
       {!isChild && (
-        <ToggleBlockCreate
-          open={addSelectOpen}
-          onChange={setAddSelectOpen}
-          onSubmit={createBlock}
+        <BlockToolbar
+          controls={[
+            {
+              iconPath: mdiPlusBoxOutline,
+              label: 'Add Block',
+              onClick: () =>
+                openModal(
+                  <BlockCreationModal
+                    onMarkdownCreation={createMarkdown}
+                    onEmbedCreation={createEmbed}
+                    onTableCreation={createTable}
+                  />,
+                  {
+                    title: 'Add a block',
+                    showCloseIcon: true,
+                  }
+                ),
+            },
+          ]}
         />
       )}
     </StyledContainerView>
@@ -51,8 +137,6 @@ const ContainerView = ({
 
 const StyledContainerView = styled.div`
   width: 100%;
-  padding: ${({ theme }) => theme.sizes.spaces.df}px
-    ${({ theme }) => theme.sizes.spaces.xl}px;
 
   & > & h1 {
     font-size: 5px;
@@ -67,7 +151,7 @@ const StyledContainerView = styled.div`
   }
 
   & .block__view__container__content > * {
-    margin-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 `
 
