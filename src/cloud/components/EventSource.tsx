@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { EventSourcePolyfill } from 'event-source-polyfill'
-import { sseUrl } from '../lib/consts'
+import { mockBackend, sseUrl } from '../lib/consts'
 import { useNumber } from 'react-use'
 import {
   ResourcesIdSortedByWorkspaceIds,
@@ -71,6 +71,9 @@ const EventSource = ({ teamId }: EventSourceProps) => {
 
   const setupEventSource = useCallback(
     (url: string) => {
+      if (mockBackend) {
+        return
+      }
       if (eventSourceRef.current != null) {
         eventSourceRef.current.close()
       }
