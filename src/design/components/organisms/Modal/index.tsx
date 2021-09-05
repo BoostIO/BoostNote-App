@@ -8,6 +8,8 @@ import styled from '../../../lib/styled'
 import Button from '../../atoms/Button'
 import Scroller from '../../atoms/Scroller'
 import { useWindow } from '../../../lib/stores/window'
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
+import { useEffectOnce } from 'react-use'
 
 const Modal = () => {
   const { modals, closeLastModal } = useModal()
@@ -64,6 +66,7 @@ const ContextModalItem = ({
     windowSize: { width: windowWidth, height: windowHeight },
   } = useWindow()
   const modalWidth = typeof modal.width === 'string' ? 400 : modal.width
+  const contentScrollerRef = useRef<OverlayScrollbarsComponent>(null)
 
   const style: CSSProperties | undefined = useMemo(() => {
     const properties: CSSProperties = {
@@ -124,12 +127,22 @@ const ContextModalItem = ({
     modal.maxHeight,
   ])
 
+  useEffectOnce(() => {
+    if (contentScrollerRef.current != null) {
+      const instance = contentScrollerRef.current.osInstance()
+      if (instance != null) {
+        instance.scroll({ top: 0 })
+      }
+    }
+  })
+
   return (
     <>
       <div className='modal__window__scroller'>
         <div className='modal__bg__hidden' onClick={closeModal}></div>
         <div className='modal__window__anchor' />
         <Scroller
+          ref={contentScrollerRef}
           className={cc([
             'modal__window',
             `modal__window__width--${modal.width}`,
