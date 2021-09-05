@@ -57,7 +57,7 @@ export function createMockFolder({
 
   folderMap.set(id, newFolder)
   teamFolderIdSetMap.addValue(teamId, id)
-  console.log('added folder', teamFolderIdSetMap)
+
   return newFolder
 }
 
