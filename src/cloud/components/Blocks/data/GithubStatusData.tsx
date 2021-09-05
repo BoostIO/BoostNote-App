@@ -44,6 +44,8 @@ const GithubStatusData = ({
 
   const openStateSelect: React.MouseEventHandler = useCallback(
     (ev) => {
+      //TOFIX PREVENT GITHUB UPDATE FOR NOW
+      return
       openContextModal(
         ev,
         <GithubStateSelect data={data} onUpdate={updateState} />
@@ -67,7 +69,6 @@ const GithubStatusData = ({
 const StyledStatus = styled.div`
   display: flex;
   align-items: center;
-  cursor: pointer;
 
   & > svg:first-child {
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;

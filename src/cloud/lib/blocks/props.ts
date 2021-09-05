@@ -8,6 +8,7 @@ const PROP_TYPES = [
 ] as const
 
 export type PropType = typeof PROP_TYPES[number]
+// eslint-disable-next-line prettier/prettier
 export type PropKey = `${string}:${PropType}`
 
 export function isPropKey(k: any): k is PropKey {

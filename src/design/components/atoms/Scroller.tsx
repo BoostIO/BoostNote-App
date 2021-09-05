@@ -1,23 +1,22 @@
-import React from 'react'
-import { AppComponent } from '../../lib/types'
+import React, { PropsWithChildren } from 'react'
 import cc from 'classcat'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 
-interface VerticalScrollerProps {
+interface ScrollerProps {
   style?: React.CSSProperties
   onClick?: React.MouseEventHandler
+  className?: string
+  id?: string
+  ref?: React.LegacyRef<OverlayScrollbarsComponent>
   overflowBehavior?: {
     x?: OverlayScrollbars.OverflowBehavior
     y?: OverlayScrollbars.OverflowBehavior
   }
 }
-const VerticalScroller: AppComponent<VerticalScrollerProps> = ({
-  style,
-  children,
-  className,
-  overflowBehavior,
-  onClick,
-}) => {
+const Scroller = React.forwardRef<
+  OverlayScrollbarsComponent,
+  PropsWithChildren<ScrollerProps>
+>(({ style, children, className, overflowBehavior, id, onClick }, ref) => {
   return (
     <OverlayScrollbarsComponent
       className={cc(['vertical__scroller', className])}
@@ -28,12 +27,14 @@ const VerticalScroller: AppComponent<VerticalScrollerProps> = ({
         },
         overflowBehavior,
       }}
+      id={id}
       onClick={onClick}
       style={style}
+      ref={ref}
     >
       {children}
     </OverlayScrollbarsComponent>
   )
-}
+})
 
-export default VerticalScroller
+export default React.memo(Scroller)

@@ -60,13 +60,13 @@ export const useLeftToRightNavigationListener = (
       }
 
       if (isSingleKeyEvent(event, 'arrowleft')) {
-        navigateToNextFocusableWithin(listRef.current, true)
+        navigateToPreviousFocusableWithin(listRef.current, true)
         preventKeyboardEventPropagation(event)
         return
       }
 
       if (isSingleKeyEvent(event, 'arrowright')) {
-        navigateToPreviousFocusableWithin(listRef.current, true)
+        navigateToNextFocusableWithin(listRef.current, true)
         preventKeyboardEventPropagation(event)
         return
       }

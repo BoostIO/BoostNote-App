@@ -6,6 +6,8 @@ import {
   deleteBlock,
   updateBlock,
   createBlock,
+  BlockUpdateRequestBody,
+  BlockCreateRequestBody,
 } from '../../../api/blocks'
 import { useToast } from '../../../../design/lib/stores/toast'
 
@@ -53,7 +55,7 @@ function useBlocksStore() {
   )
 
   const create = useCallback(
-    async (body: Omit<Block, 'id'>, parent: Block, root: string) => {
+    async (body: BlockCreateRequestBody, parent: Block, root: string) => {
       const block = await createBlock(body, parent.id)
       await getBlocks(root)
       return block
@@ -70,7 +72,7 @@ function useBlocksStore() {
   )
 
   const update = useCallback(
-    async (block: Block, root: string) => {
+    async (block: BlockUpdateRequestBody, root: string) => {
       const updated = await updateBlock(block)
       await getBlocks(root)
       return updated

@@ -1,12 +1,16 @@
 import { useBlocks } from '../stores/blocks'
 import { useEffect, useState, useMemo } from 'react'
-import { Block } from '../../api/blocks'
+import {
+  Block,
+  BlockCreateRequestBody,
+  BlockUpdateRequestBody,
+} from '../../api/blocks'
 
 type BlockState = { type: 'loading' } | { type: 'loaded'; block: Block }
 
 export interface BlockActions {
-  create: (block: Omit<Block, 'id'>, parent: Block) => Promise<Block>
-  update: (block: Block) => Promise<Block>
+  create: (block: BlockCreateRequestBody, parent: Block) => Promise<Block>
+  update: (block: BlockUpdateRequestBody) => Promise<Block>
   remove: (block: Block) => Promise<void>
 }
 

@@ -1,17 +1,28 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import FilterableSelectList from '../../../../design/components/molecules/FilterableSelectList'
+import { mdiAccountCircleOutline, mdiClose } from '@mdi/js'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import Icon from '../../../../design/components/atoms/Icon'
 import { useModal } from '../../../../design/lib/stores/modal'
 import styled from '../../../../design/lib/styled'
 import { SerializedUser } from '../../../interfaces/db/user'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 import { usePage } from '../../../lib/stores/pageStore'
+import DocPropertyValueButton from '../../DocProperties/DocPropertyValueButton'
+import SearchableOptionListPopup from '../../SearchableOptionListPopup'
 import UserIcon from '../../UserIcon'
 import { BlockPropertyProps } from './types'
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface BoostUserPropProps extends BlockPropertyProps {}
 
-const BoostUserProp = ({ value, onUpdate }: BoostUserPropProps) => {
+const BoostUserProp = ({
+  value,
+  onUpdate,
+  currentUserIsCoreMember,
+}: BoostUserPropProps) => {
   const { permissions = [] } = usePage()
-  const { openContextModal } = useModal()
+  const { openContextModal, closeAllModals } = useModal()
+  const { translate } = useI18n()
 
   const user = useMemo(() => {
     return permissions
@@ -30,57 +41,94 @@ const BoostUserProp = ({ value, onUpdate }: BoostUserPropProps) => {
         ev,
         <UserSelect
           users={permissions.map((perm) => perm.user)}
-          onSelect={(user) => onUpdateRef.current(user.id)}
+          showClearOption={user != null}
+          onSelect={(user) => {
+            if (user != null) {
+              onUpdateRef.current(user.id)
+            } else {
+              onUpdateRef.current('')
+            }
+            return closeAllModals()
+          }}
         />,
         { width: 300 }
       )
     },
-    [permissions]
+    [permissions, openContextModal, closeAllModals, user]
   )
 
   return (
     <Container onClick={openSelector}>
-      {user != null && <UserIcon user={user} />}
+      <DocPropertyValueButton
+        empty={user == null}
+        isReadOnly={!currentUserIsCoreMember}
+        iconPath={user == null ? mdiAccountCircleOutline : undefined}
+        onClick={openSelector}
+      >
+        {user != null ? (
+          <UserIcon user={user} />
+        ) : (
+          translate(lngKeys.Unassigned)
+        )}
+      </DocPropertyValueButton>
     </Container>
   )
 }
 
 const Container = styled.div`
-  cursor: pointer;
-  min-height: 40px;
+  justify-content: center;
 `
 
 interface UserSelectProps {
   users: SerializedUser[]
-  onSelect: (user: SerializedUser) => void
+  showClearOption: boolean
+  onSelect: (user?: SerializedUser) => void
 }
 
-const UserSelect = ({ users, onSelect }: UserSelectProps) => {
+const UserSelect = ({ users, onSelect, showClearOption }: UserSelectProps) => {
+  const [query, setQuery] = useState('')
+
+  const options = useMemo(() => {
+    const userOptions = users
+      .filter((user) => user.displayName.includes(query))
+      .map((user) => {
+        return {
+          label: user.displayName,
+          icon: (
+            <UserIcon
+              className='user__icon'
+              user={user}
+              style={{ marginRight: 4 }}
+            />
+          ),
+          onClick: () => onSelect(user),
+        }
+      })
+
+    return userOptions
+  }, [onSelect, query, users])
+
   return (
-    <UserSelectContainer>
-      <h3>Person</h3>
-      <FilterableSelectList
-        items={users.map((user) => [
-          user.displayName,
-          <div className='user__select__item' onClick={() => onSelect(user)}>
-            <UserIcon className='user__icon' user={user} />
-            {user.displayName}
-          </div>,
-        ])}
-      />
-    </UserSelectContainer>
+    <SearchableOptionListPopup
+      title='Person'
+      query={query}
+      setQuery={setQuery}
+      options={
+        showClearOption
+          ? [
+              ...options,
+              {
+                label: 'Clear',
+                icon: (
+                  <Icon size={16} path={mdiClose} style={{ marginRight: 4 }} />
+                ),
+                onClick: () => onSelect(undefined),
+              },
+            ]
+          : options
+      }
+    />
   )
 }
-
-const UserSelectContainer = styled.div`
-  & .user__select__item {
-    display: flex;
-    cursor: pointer;
-    align-items: center;
-    & .user__icon {
-      margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
-    }
-  }
-`
 
 export default BoostUserProp
