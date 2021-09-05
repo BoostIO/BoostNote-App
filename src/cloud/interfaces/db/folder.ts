@@ -24,7 +24,7 @@ export interface SerializedUnserializableFolderProps {
   positions: SerializedFolderPositions | string
   childDocs: SerializedDoc[]
   childFolders: SerializedFolder[]
-  team: SerializedTeam | string
+  team?: SerializedTeam | string
   createdAt: string
   updatedAt: string
 }
