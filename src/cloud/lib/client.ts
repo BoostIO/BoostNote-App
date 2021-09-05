@@ -1,14 +1,14 @@
 import { getAccessToken, usingElectron } from './stores/electron'
 import ky from 'ky'
-import { boostHubBaseUrl } from './consts'
+import { boostHubBaseUrl, mockBackend } from './consts'
+import { mockHandler } from '../api/mock/mockHandler'
 
-interface CallCloudJsonApiParameter {
+export interface CallCloudJsonApiParameter {
   headers?: any
   method?: 'get' | 'post' | 'put' | 'delete' | 'patch' | 'options'
   search?:
     | string
     | { [key: string]: string | number | boolean }
-    | Array<Array<string | number | boolean>>
     | URLSearchParams
   signal?: AbortSignal
   json?: any
@@ -32,6 +32,16 @@ export async function callApi<T = any>(
     body,
   }: CallCloudJsonApiParameter = {}
 ) {
+  if (mockBackend) {
+    return (mockHandler(pathname, {
+      method,
+      search,
+      headers,
+      signal,
+      json,
+      body,
+    }) as any) as T
+  }
   const mergedHeaders = {
     ...headers,
   }
