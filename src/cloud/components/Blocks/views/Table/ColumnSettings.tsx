@@ -69,13 +69,15 @@ const ColumnSettings = ({
       if (isPropKey(colKey)) {
         openContextModal(
           ev,
-          <DataTypeMenu
-            onSelect={(type) => {
-              setColDataType(colKey, type)
-              setColKey(makePropKey(name, type))
-              closeAllModals()
-            }}
-          />,
+          <MetadataContainer>
+            <DataTypeMenu
+              onSelect={(type) => {
+                setColDataType(colKey, type)
+                setColKey(makePropKey(name, type))
+                closeAllModals()
+              }}
+            />
+          </MetadataContainer>,
           { width: 300, keepAll: true }
         )
       }
