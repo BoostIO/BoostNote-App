@@ -10,7 +10,6 @@ import { getMapFromEntityArray } from '../../design/lib/utils/array'
 import { getResources } from '../api/teams/resources'
 import { SerializedWorkspace } from '../interfaces/db/workspace'
 import { SerializedTag } from '../interfaces/db/tag'
-import { SerializedUserTeamPermissions } from '../interfaces/db/userTeamPermissions'
 import { useGlobalData } from '../lib/stores/globalData'
 import { useNav } from '../lib/stores/nav'
 import { usePage } from '../lib/stores/pageStore'
@@ -121,7 +120,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
         teams: globalDataRef.current.teams.map((team) => {
           return {
             ...team,
-            permissions: (team.permissions as SerializedUserTeamPermissions[]).filter(
+            permissions: team.permissions.filter(
               (p) => p.user.id !== event.data.userId
             ),
           }
