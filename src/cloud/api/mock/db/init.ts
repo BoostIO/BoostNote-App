@@ -83,10 +83,10 @@ export function getDefaultMockUser() {
   return getMockUserById(defaultUserId)
 }
 
-export function getGeneralAppProps(teamId: string): GeneralAppProps {
-  const team = getMockTeamByDomain(teamId)
+export function getGeneralAppProps(domain: string): GeneralAppProps {
+  const team = getMockTeamByDomain(domain)
   if (team == null) {
-    throw new Error(`The team does not exist. (teamId: ${teamId})`)
+    throw new Error(`The team does not exist. (teamId: ${domain})`)
   }
   const defaultMockUser = getDefaultMockUser()
   const permissions =
