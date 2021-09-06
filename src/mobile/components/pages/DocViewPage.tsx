@@ -5,7 +5,6 @@ import {
 } from '../../../cloud/interfaces/db/doc'
 import { usePreferences } from '../../lib/preferences'
 import { SerializedUser } from '../../../cloud/interfaces/db/user'
-import MarkdownView from '../../../cloud/components/MarkdownView'
 import useRealtime from '../../../cloud/lib/editor/hooks/useRealtime'
 import { buildIconUrl } from '../../../cloud/api/files'
 import { getColorFromString } from '../../../cloud/lib/utils/string'
@@ -23,6 +22,7 @@ import { SerializedTeam } from '../../../cloud/interfaces/db/team'
 import styled from '../../../design/lib/styled'
 import { rightSidePageLayout } from '../../../design/lib/styled/styleFunctions'
 import { rightSideTopBarHeight } from '../../../design/components/organisms/Topbar'
+import CustomizedMarkdownPreviewer from '../../../cloud/components/MarkdownView/CustomizedMarkdownPreviewer'
 
 interface ViewPageProps {
   team: SerializedTeam
@@ -204,7 +204,7 @@ const ViewPage = ({
         <div className='view__wrapper'>
           <div className='view__content'>
             {realtimeContent !== '' ? (
-              <MarkdownView
+              <CustomizedMarkdownPreviewer
                 content={realtimeContent}
                 headerLinks={true}
                 onRender={onRender.current}

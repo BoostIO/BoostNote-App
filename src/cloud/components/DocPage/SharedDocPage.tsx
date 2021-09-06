@@ -7,9 +7,9 @@ import SyncStatus from '../Topbar/SyncStatus'
 import PresenceIcons from '../Topbar/PresenceIcons'
 import SharePageTopbar from '../SharePageTopBar'
 import { SerializedDoc } from '../../interfaces/db/doc'
-import MarkdownView from '../MarkdownView'
 import Spinner from '../../../design/components/atoms/Spinner'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
+import CustomizedMarkdownPreviewer from '../MarkdownView/CustomizedMarkdownPreviewer'
 
 interface SharedDocPageProps {
   doc: SerializedDoc
@@ -88,7 +88,7 @@ const SharedDocPage = ({ doc, token }: SharedDocPageProps) => {
         <>
           <StyledTitle>{doc.title}</StyledTitle>
           <StyledContent>
-            <MarkdownView
+            <CustomizedMarkdownPreviewer
               content={content}
               shortcodeHandler={() => (
                 <span style={{ color: 'red' }}>

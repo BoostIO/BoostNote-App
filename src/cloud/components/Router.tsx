@@ -63,8 +63,10 @@ import { TeamPreferencesProvider } from '../lib/stores/teamPreferences'
 import Application from './Application'
 import { BaseTheme } from '../../design/lib/styled/types'
 import { BlocksProvider } from '../lib/stores/blocks'
+import { PreviewStyleProvider } from '../../lib/preview'
 
 const CombinedProvider = combineProviders(
+  PreviewStyleProvider,
   TeamStorageProvider,
   SidebarCollapseProvider,
   OnboardingProvider,
