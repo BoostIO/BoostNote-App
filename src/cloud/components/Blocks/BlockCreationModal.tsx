@@ -1,4 +1,9 @@
-import { mdiCodeTags, mdiFileDocumentOutline, mdiTable } from '@mdi/js'
+import {
+  mdiCodeTags,
+  mdiFileDocumentOutline,
+  mdiPackageVariantClosed,
+  mdiTable,
+} from '@mdi/js'
 import React from 'react'
 import Button from '../../../design/components/atoms/Button'
 import Icon from '../../../design/components/atoms/Icon'
@@ -6,6 +11,7 @@ import LeftRightList from '../../../design/components/atoms/LeftRightList'
 import styled from '../../../design/lib/styled'
 
 interface BlockCreationModalProps {
+  onContainerCreation?: () => void
   onMarkdownCreation?: () => void
   onTableCreation?: () => void
   onEmbedCreation?: () => void
@@ -15,9 +21,21 @@ const BlockCreationModal = ({
   onMarkdownCreation,
   onEmbedCreation,
   onTableCreation,
+  onContainerCreation,
 }: BlockCreationModalProps) => (
   <Container>
     <LeftRightList className='block__creation__list'>
+      {onContainerCreation != null && (
+        <Button
+          variant='transparent'
+          id='block__creation__container'
+          onClick={onContainerCreation}
+          className='block__view__add__selector'
+        >
+          <Icon size={50} path={mdiPackageVariantClosed} />
+          <span>Page</span>
+        </Button>
+      )}
       {onMarkdownCreation != null && (
         <Button
           variant='transparent'

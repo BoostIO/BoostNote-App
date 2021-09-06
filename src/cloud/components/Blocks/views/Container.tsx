@@ -37,6 +37,11 @@ const ContainerView = ({
     async (newBlock: BlockCreateRequestBody) => {
       const createdBlock = await actions.create(newBlock, block)
       closeAllModals()
+
+      if (canvas.rootBlock.id === block.id) {
+        setCurrentBlock(createdBlock)
+        return
+      }
       const blockElem = document.getElementById(getBlockDomId(createdBlock))
       scrollToElement(blockElem)
 
@@ -52,8 +57,24 @@ const ContainerView = ({
         })
       }
     },
-    [block, actions, closeAllModals, scrollToElement]
+    [
+      block,
+      actions,
+      closeAllModals,
+      scrollToElement,
+      canvas.rootBlock.id,
+      setCurrentBlock,
+    ]
   )
+
+  const createContainer = useCallback(() => {
+    return createBlock({
+      name: 'Page',
+      type: 'container',
+      children: [],
+      data: null,
+    })
+  }, [createBlock])
 
   const createMarkdown = useCallback(() => {
     return createBlock({
@@ -79,6 +100,8 @@ const ContainerView = ({
     })
   }, [createBlock, openModal])
 
+  const isRootBlock = canvas.rootBlock.id === block.id
+
   return (
     <StyledContainerView
       className={isChild && 'block__view--nested'}
@@ -96,47 +119,49 @@ const ContainerView = ({
             : []
         }
       >
-        <h1>{canvas.rootBlock.id === block.id ? canvas.title : block.name}</h1>
+        {!isRootBlock && <h1>{block.name}</h1>}
       </BlockLayout>
       <div className='block__view__container__content'>
-        {block.children.map((child) => {
-          return (
-            <BlockView
-              key={child.id}
-              block={child}
-              actions={actions}
-              isChild={true}
-              canvas={canvas}
-              realtime={realtime}
-              scrollToElement={scrollToElement}
-              setCurrentBlock={setCurrentBlock}
-              currentUserIsCoreMember={currentUserIsCoreMember}
-            />
-          )
-        })}
+        {!isRootBlock &&
+          block.children.map((child) => {
+            return (
+              <BlockView
+                key={child.id}
+                block={child}
+                actions={actions}
+                isChild={true}
+                canvas={canvas}
+                realtime={realtime}
+                scrollToElement={scrollToElement}
+                setCurrentBlock={setCurrentBlock}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+              />
+            )
+          })}
       </div>
-      {!isChild && (
-        <BlockToolbar
-          controls={[
-            {
-              iconPath: mdiPlusBoxOutline,
-              label: 'Add Block',
-              onClick: () =>
-                openModal(
-                  <BlockCreationModal
-                    onMarkdownCreation={createMarkdown}
-                    onEmbedCreation={createEmbed}
-                    onTableCreation={createTable}
-                  />,
-                  {
-                    title: 'Add a block',
-                    showCloseIcon: true,
+      <BlockToolbar
+        controls={[
+          {
+            iconPath: mdiPlusBoxOutline,
+            label: 'Add Block',
+            onClick: () =>
+              openModal(
+                <BlockCreationModal
+                  onContainerCreation={
+                    isRootBlock ? createContainer : undefined
                   }
-                ),
-            },
-          ]}
-        />
-      )}
+                  onMarkdownCreation={createMarkdown}
+                  onEmbedCreation={createEmbed}
+                  onTableCreation={createTable}
+                />,
+                {
+                  title: 'Add a block',
+                  showCloseIcon: true,
+                }
+              ),
+          },
+        ]}
+      />
     </StyledContainerView>
   )
 }
