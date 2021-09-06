@@ -29,6 +29,10 @@ export const BlockView = ({
   scrollToElement,
   setCurrentBlock,
 }: ViewProps<Block>) => {
+  if (block == null) {
+    return null
+  }
+
   switch (block.type) {
     case 'container':
       return (

@@ -1,17 +1,6 @@
 import { callApi } from '../../lib/client'
 
-type BlockTypeLabel =
-  | 'markdown'
-  | 'embed'
-  | 'github.issue'
-  | 'table'
-  | 'container'
-
-interface BlockType<
-  T extends BlockTypeLabel,
-  D,
-  C extends BlockType<any, any, any> = never
-> {
+interface BlockType<T, D, C extends BlockType<any, any, any> = never> {
   type: T
   id: string
   name: string
