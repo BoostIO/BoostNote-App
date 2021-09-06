@@ -47,6 +47,7 @@ import AttachmentsTab from './AttachmentsTab'
 import ImportTab from './ImportTab'
 import TeamSubLimit from './TeamSubLimit'
 import { ExternalLink } from '../../../design/components/atoms/Link'
+import MarkdownTab from './MarkdownTab'
 const SettingsComponent = () => {
   const { t } = useTranslation()
   const {
@@ -108,6 +109,8 @@ const SettingsComponent = () => {
         return <PersonalInfoTab />
       case 'preferences':
         return <PreferencesTab />
+      case 'markdownPreview':
+        return <MarkdownTab />
       case 'teamInfo':
         return <TeamInfoTab />
       case 'teamMembers':
@@ -212,6 +215,12 @@ const SettingsComponent = () => {
             active={settingsTab === 'personalInfo'}
             id='settings-personalInfoTab-btn'
             onClick={() => openSettingsTab('personalInfo')}
+          />
+          <SettingNavButtonItem
+            label={t(lngKeys.SettingsMarkdownPreview)}
+            active={settingsTab === 'markdownPreview'}
+            id='settings-markdownPreviewTab-btn'
+            onClick={() => openSettingsTab('markdownPreview')}
           />
           <SettingNavButtonItem
             label={t(lngKeys.SettingsPreferences)}

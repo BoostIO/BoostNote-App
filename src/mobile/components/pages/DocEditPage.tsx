@@ -31,7 +31,6 @@ import {
 } from '../../../cloud/lib/utils/events'
 import { ScrollSync, scrollSyncer } from '../../../cloud/lib/editor/scrollSync'
 import CodeMirrorEditor from '../../../cloud/lib/editor/components/CodeMirrorEditor'
-import MarkdownView from '../../../cloud/components/MarkdownView'
 import { useToast } from '../../../design/lib/stores/toast'
 import EditorSelectionStatus from '../../../cloud/components/Editor/EditorSelectionStatus'
 import EditorThemeSelect from '../../../cloud/components/Editor/EditorThemeSelect'
@@ -54,6 +53,7 @@ import {
   freePlanUploadSizeMb,
   paidPlanUploadSizeMb,
 } from '../../../cloud/lib/subscription'
+import CustomizedMarkdownPreviewer from '../../../cloud/components/MarkdownView/CustomizedMarkdownPreviewer'
 
 interface EditorProps {
   doc: SerializedDocWithBookmark
@@ -560,7 +560,7 @@ const Editor = ({
             </>
           </StyledEditorWrapper>
           <StyledPreview className={`layout-${editorMode}`}>
-            <MarkdownView
+            <CustomizedMarkdownPreviewer
               content={editorContent}
               updateContent={setEditorRefContent}
               headerLinks={editorMode === 'preview'}

@@ -92,19 +92,6 @@ const UserPreferencesForm = () => {
     [setSettings]
   )
 
-  const selectCodeBlockTheme = useCallback(
-    (value: string) => {
-      setSettings({
-        'general.codeBlockTheme': value as CodeMirrorEditorTheme,
-      })
-
-      trackEvent(MixpanelActionTrackTypes.ThemeChangeCodeblock, {
-        theme: value,
-      })
-    },
-    [setSettings]
-  )
-
   const selectEditorKeyMap = useCallback(
     (value: string) => {
       setSettings({
@@ -351,19 +338,6 @@ const UserPreferencesForm = () => {
                 options: codeMirrorEditorThemes,
                 value: settings['general.editorTheme'],
                 onChange: selectEditorTheme,
-              },
-            },
-          ],
-        },
-        {
-          title: t(lngKeys.SettingsCodeBlockTheme),
-          items: [
-            {
-              type: 'select--string',
-              props: {
-                options: codeMirrorEditorThemes,
-                value: settings['general.codeBlockTheme'],
-                onChange: selectCodeBlockTheme,
               },
             },
           ],

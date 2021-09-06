@@ -32,7 +32,6 @@ import EmojiIcon from '../../../EmojiIcon'
 import { useSettings } from '../../../../lib/stores/settings'
 import cc from 'classcat'
 import CodeMirrorEditor from '../../../../lib/editor/components/CodeMirrorEditor'
-import MarkdownView from '../../../MarkdownView'
 import { useToast } from '../../../../../design/lib/stores/toast'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import Switch from '../../../../../design/components/atoms/Switch'
@@ -51,6 +50,7 @@ import UpDownList from '../../../../../design/components/atoms/UpDownList'
 import DoublePane from '../../../../../design/components/atoms/DoublePane'
 import plur from 'plur'
 import EditableInput from '../../../../../design/components/atoms/EditableInput'
+import CustomizedMarkdownPreviewer from '../../../MarkdownView/CustomizedMarkdownPreviewer'
 
 interface TemplatesModalProps {
   callback?: (template: SerializedTemplate) => void
@@ -421,7 +421,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
                 </div>
                 <div className={cc(['scroll', inPreview && 'preview'])}>
                   <div className='preview'>
-                    <MarkdownView
+                    <CustomizedMarkdownPreviewer
                       content={templateContent}
                       headerLinks={false}
                     />

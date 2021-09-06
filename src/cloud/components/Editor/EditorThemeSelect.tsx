@@ -58,7 +58,7 @@ const EditorThemeSelect = () => {
     []
   )
 
-  const selectIndentType = useCallback(
+  const selectEditorTheme = useCallback(
     (val: string) => {
       setSettings({
         'general.editorTheme': val as CodeMirrorEditorTheme,
@@ -70,7 +70,7 @@ const EditorThemeSelect = () => {
     [setSettings]
   )
 
-  const selectIndentSize = useCallback(
+  const selectCodeBlockTheme = useCallback(
     (val: string) => {
       setSettings({
         'general.codeBlockTheme': val as CodeMirrorEditorTheme,
@@ -108,7 +108,7 @@ const EditorThemeSelect = () => {
             >
               <FormRowItem>
                 <SimpleFormSelect
-                  onChange={selectIndentType}
+                  onChange={selectEditorTheme}
                   id='editorTheme'
                   className='menu__item__select'
                   value={editorTheme}
@@ -129,7 +129,7 @@ const EditorThemeSelect = () => {
             >
               <FormRowItem>
                 <SimpleFormSelect
-                  onChange={selectIndentSize}
+                  onChange={selectCodeBlockTheme}
                   id='codeBlockTheme'
                   className='menu__item__select'
                   value={codeBlockTheme}

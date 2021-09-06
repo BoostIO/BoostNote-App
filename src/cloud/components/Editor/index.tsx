@@ -65,7 +65,7 @@ import {
 } from '../../lib/utils/events'
 import { ScrollSync, scrollSyncer } from '../../lib/editor/scrollSync'
 import CodeMirrorEditor from '../../lib/editor/components/CodeMirrorEditor'
-import MarkdownView, { SelectionContext } from '../MarkdownView'
+import { SelectionContext } from '../MarkdownView'
 import { usePage } from '../../lib/stores/pageStore'
 import { useToast } from '../../../design/lib/stores/toast'
 import { LoadingButton } from '../../../design/components/atoms/Button'
@@ -102,6 +102,7 @@ import {
   paidPlanUploadSizeMb,
 } from '../../lib/subscription'
 import { nginxSizeLimitInMb } from '../../lib/upload'
+import CustomizedMarkdownPreviewer from '../MarkdownView/CustomizedMarkdownPreviewer'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -1115,7 +1116,7 @@ const Editor = ({
                 </>
               </StyledEditorWrapper>
               <StyledPreview className={`layout-${editorLayout}`}>
-                <MarkdownView
+                <CustomizedMarkdownPreviewer
                   content={editorContent}
                   updateContent={setEditorRefContent}
                   headerLinks={editorLayout === 'preview'}

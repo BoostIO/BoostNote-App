@@ -12,8 +12,7 @@ import rehypeSanitize from 'rehype-sanitize'
 import rehypeCodeMirror from '../../../design/lib/codemirror/rehypeCodeMirror'
 import rehypeSlug from 'rehype-slug'
 import { useEffectOnce } from 'react-use'
-import { defaultPreviewStyle } from './styles'
-import { useSettings } from '../../lib/stores/settings'
+import { CodeMirrorEditorTheme } from '../../lib/stores/settings'
 import {
   remarkCharts,
   Flowchart,
@@ -47,6 +46,7 @@ import CodeFence from '../../../design/components/atoms/markdown/CodeFence'
 import { agentType, sendPostMessage } from '../../../mobile/lib/nativeMobile'
 import { TableOfContents } from './TableOfContents'
 import ExpandableImage from '../../../design/components/molecules/Image/ExpandableImage'
+import { defaultPreviewStyle } from './styles'
 
 const remarkAdmonitionOptions = {
   tag: ':::',
@@ -96,7 +96,7 @@ export interface SelectionContext {
   text: string
 }
 
-interface SelectionState {
+export interface SelectionState {
   context: SelectionContext
   position: Rect
   selection: Selection
@@ -119,6 +119,9 @@ interface MarkdownViewProps {
   SelectionMenu?: React.ComponentType<{ selection: SelectionState['context'] }>
   comments?: HighlightRange[]
   commentClick?: (id: string[]) => void
+  codeFence?: boolean
+  previewStyle?: string
+  codeBlockTheme?: CodeMirrorEditorTheme
 }
 
 const MarkdownView = ({
@@ -133,10 +136,12 @@ const MarkdownView = ({
   SelectionMenu,
   comments,
   commentClick,
+  codeFence = true,
+  previewStyle,
+  codeBlockTheme = 'default',
 }: MarkdownViewProps) => {
   const [state, setState] = useState<MarkdownViewState>({ type: 'loading' })
   const modeLoadCallbackRef = useRef<() => any>()
-  const { settings } = useSettings()
   const checkboxIndexRef = useRef<number>(0)
   const onRenderRef = useRef(onRender)
   const { push } = useRouter()
@@ -246,8 +251,11 @@ const MarkdownView = ({
             </div>
           ) : null
         },
-        pre: CodeFence,
       },
+    }
+
+    if (codeFence) {
+      rehypeReactConfig.components.pre = CodeFence
     }
 
     if (headerLinks) {
@@ -281,7 +289,7 @@ const MarkdownView = ({
       .use(rehypeKatex)
       .use(rehypeCodeMirror, {
         ignoreMissing: true,
-        theme: settings['general.codeBlockTheme'],
+        theme: codeBlockTheme,
       })
       .use(rehypeMermaid)
       .use(rehypeHighlight, comments || [])
@@ -291,13 +299,14 @@ const MarkdownView = ({
 
     return parser
   }, [
-    content,
-    settings,
-    updateContent,
     shortcodeHandler,
+    codeFence,
     headerLinks,
     getEmbed,
+    codeBlockTheme,
     comments,
+    updateContent,
+    content,
     commentClick,
   ])
 
@@ -394,6 +403,49 @@ const MarkdownView = ({
     }
   }, [selectionInfo])
 
+  const StyledMarkdownPreview = useMemo(() => {
+    return styled.div`
+      position: relative;
+      ${defaultPreviewStyle};
+      ${previewStyle};
+
+      padding: 0 ${({ theme }) => theme.sizes.spaces.md}px
+        ${({ theme }) => theme.sizes.spaces.xl}px;
+
+      .block__gutter {
+        position: absolute;
+        left: 100%;
+        top: 0;
+        max-width: 40px;
+      }
+
+      .with__gutter {
+        position: relative;
+      }
+
+      .comment__count {
+        height: 20px;
+        display: flex;
+        align-items: flex-start;
+        color: ${({ theme }) => theme.colors.icon.default};
+        font-size: ${({ theme }) => theme.sizes.fonts.md}px;
+
+        &:hover {
+          cursor: pointer;
+          color: ${({ theme }) => theme.colors.text.primary};
+        }
+
+        svg {
+          margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+        }
+      }
+
+      .comment__count__number {
+        line-height: 1;
+      }
+    `
+  }, [previewStyle])
+
   return (
     <StyledMarkdownPreview
       className={className}
@@ -454,45 +506,6 @@ function getOffset(node: Node) {
 function isElement(node: Node): node is Element {
   return node.nodeType === 1
 }
-
-const StyledMarkdownPreview = styled.div`
-  position: relative;
-  ${defaultPreviewStyle}
-  padding: 0 ${({ theme }) => theme.sizes.spaces.md}px ${({ theme }) =>
-  theme.sizes.spaces.xl}px;
-
-  .block__gutter {
-    position: absolute;
-    left: 100%;
-    top: 0;
-    max-width: 40px;
-  }
-
-  .with__gutter {
-    position: relative;
-  }
-
-  .comment__count {
-    height: 20px;
-    display: flex;
-    align-items: flex-start;
-    color: ${({ theme }) => theme.colors.icon.default};
-    font-size: ${({ theme }) => theme.sizes.fonts.md}px;
-
-    &:hover {
-      cursor: pointer;
-      color: ${({ theme }) => theme.colors.text.primary}
-    }
-
-    svg {
-      margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
-    }
-  }
-
-  .comment__count__number {
-    line-height: 1;
-  }
-`
 
 const StyledTooltipContent = styled.div`
   background-color: ${({ theme }) => theme.colors.background.secondary};
