@@ -1,11 +1,13 @@
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
+import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { MockDoc } from './mockEntities/docs'
 import { MockFolder } from './mockEntities/folders'
 import { MockPermission } from './mockEntities/permissions'
 import { getMockTeamById } from './mockEntities/teams'
 import { getMockUserById } from './mockEntities/users'
+import { MockWorkspace } from './mockEntities/workspaces'
 
 export function populateFolder(
   mockFolder: MockFolder
@@ -42,5 +44,13 @@ export function populateDoc(mockDoc: MockDoc): SerializedDocWithBookmark {
     tags: [],
     bookmarked: false,
     team,
+  }
+}
+
+export function populateWorkspace(
+  mockWorkspace: MockWorkspace
+): SerializedWorkspace {
+  return {
+    ...mockWorkspace,
   }
 }

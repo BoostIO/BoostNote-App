@@ -15,7 +15,12 @@ import {
   getMockFolderById,
   getMockTeamFolders,
 } from './db/mockEntities/folders'
-import { populateDoc, populateFolder, populatePermissions } from './db/populate'
+import {
+  populateDoc,
+  populateFolder,
+  populatePermissions,
+  populateWorkspace,
+} from './db/populate'
 import {
   DocPageResourceProps,
   FolderPageResourceProps,
@@ -23,10 +28,9 @@ import {
   TeamShowPageResponseBody,
 } from '../pages/teams'
 import { getResourceFromSlug } from './db/utils'
-import { getMockDocById } from './db/mockEntities/docs'
+import { getMockDocById, getTeamMockDocs } from './db/mockEntities/docs'
 import { GlobalDataResponseBody } from '../global'
-import { getDefaultMockUserId } from './db/init'
-import { getMockUserById } from './db/mockEntities/users'
+import { getDefaultMockUser, getGeneralAppProps } from './db/init'
 
 interface MockRouteHandlerParams {
   params: { [key: string]: any }
@@ -34,6 +38,7 @@ interface MockRouteHandlerParams {
 }
 
 interface MockRoute {
+  method?: string
   pathname: string
   handler: (params: MockRouteHandlerParams) => any
 }
@@ -42,8 +47,7 @@ const routes: MockRoute[] = [
   {
     pathname: 'api/global',
     handler: (): GlobalDataResponseBody => {
-      const defaultUserId = getDefaultMockUserId()
-      const defaultUser = getMockUserById(defaultUserId || '')
+      const defaultUser = getDefaultMockUser()
       if (defaultUser == null) {
         return {
           teams: [],
@@ -87,19 +91,14 @@ const routes: MockRoute[] = [
         throw new Error(`Team does not exist (Domain: ${domain})`)
       }
 
+      const generalAppProps = getGeneralAppProps(team.id)
+
       const workspaces = getMockWorkspacesByTeamId(team.id)
       const defaultWorkspace = workspaces.find(
         (workspace) => workspace.default
       )!
       return {
-        team,
-        folders: [],
-        docs: [],
-        permissions: getMockPermissionsListByTeamId(team.id).map(
-          populatePermissions
-        ),
-        workspaces: workspaces,
-        tags: [],
+        ...generalAppProps,
         pageWorkspace: defaultWorkspace,
       }
     },
@@ -108,13 +107,16 @@ const routes: MockRoute[] = [
     pathname: 'api/teams/:teamId/resources',
     handler: ({ params }): GetResourcesResponseBody => {
       const { teamId } = params
-      const workspaces = getMockWorkspacesByTeamId(teamId)
+      const workspaces = getMockWorkspacesByTeamId(teamId).map(
+        populateWorkspace
+      )
       const folders = getMockTeamFolders(teamId)
+      const docs = getTeamMockDocs(teamId).map(populateDoc)
 
       return {
         workspaces: workspaces,
         folders: folders.map(populateFolder),
-        docs: [],
+        docs: docs,
         tags: [],
         smartFolders: [],
         appEvents: [],
@@ -130,16 +132,7 @@ const routes: MockRoute[] = [
         throw new Error(`The team does not exist. (teamId: ${teamId})`)
       }
 
-      const globalProps = {
-        team,
-        folders: [],
-        docs: [],
-        permissions: getMockPermissionsListByTeamId(teamId as string).map(
-          populatePermissions
-        ),
-        workspaces: [],
-        tags: [],
-      }
+      const globalProps = getGeneralAppProps(teamId as string)
 
       const [type, resourceId] = getResourceFromSlug(resourceSlug as string)
 
@@ -208,7 +201,12 @@ export async function mockHandler(
   pathname: string,
   apiParams: CallCloudJsonApiParameter
 ) {
+  const method = (apiParams.method || 'get').toLowerCase()
   for (const route of routes) {
+    const routeMethod = (route.method || 'get').toLowerCase()
+    if (method !== routeMethod) {
+      continue
+    }
     const matcher = match(route.pathname)
     const result = matcher(pathname)
 
