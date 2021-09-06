@@ -80,3 +80,11 @@ export const toggleSidebarNotificationsEventEmitter = createCustomEventEmitter(
 export const toggleSettingsMembersEventEmitter = createCustomEventEmitter(
   'toggle-settings-members'
 )
+
+export type MarkdownBlockEventDetails = {
+  type: string
+  id: string
+}
+export const markdownBlockEventEmitter = createCustomEventEmitter<
+  MarkdownBlockEventDetails
+>('blocks-markdown')
