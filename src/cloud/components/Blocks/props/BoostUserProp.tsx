@@ -12,14 +12,11 @@ import SearchableOptionListPopup from '../../SearchableOptionListPopup'
 import UserIcon from '../../UserIcon'
 import { BlockPropertyProps } from './types'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface BoostUserPropProps extends BlockPropertyProps {}
-
 const BoostUserProp = ({
   value,
   onUpdate,
   currentUserIsCoreMember,
-}: BoostUserPropProps) => {
+}: BlockPropertyProps) => {
   const { permissions = [] } = usePage()
   const { openContextModal, closeAllModals } = useModal()
   const { translate } = useI18n()

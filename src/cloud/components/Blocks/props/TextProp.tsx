@@ -97,7 +97,7 @@ const TextProp = ({
         </div>
       )}
       {contextPosition != null && (
-        <TextCellForm
+        <TextPropForm
           contextPosition={{
             left:
               contextPosition.left + formWidth < windowSize.width - 10
@@ -144,7 +144,7 @@ const Container = styled.div`
   }
 `
 
-const TextCellForm = ({
+const TextPropForm = ({
   contextPosition,
   placeholder,
   value,
