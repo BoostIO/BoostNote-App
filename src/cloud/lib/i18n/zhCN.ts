@@ -78,6 +78,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.InviteAddWithLink]: '使用打开的链接邀请',
   [lngKeys.InviteEmail]: '通过电子邮件邀请',
   [lngKeys.InviteByEmailMore]: '添加另一个团队成员',
+  [lngKeys.InviteMembersDocAssignButton]: '邀请成员分配',
   [lngKeys.InviteFailError]:
     '由于电子邮件数据不正确，邀请失败。请提供有效的电子邮件和角色。',
   [lngKeys.InviteRoleDetails]: '点击查看角色详情。',

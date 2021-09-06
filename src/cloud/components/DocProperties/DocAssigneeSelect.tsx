@@ -9,6 +9,10 @@ import { mdiAccountCircleOutline } from '@mdi/js'
 import { useModal } from '../../../design/lib/stores/modal'
 import { SearchableListOption } from '../../../design/components/molecules/SearchableOptionList'
 import SearchableOptionListPopup from '../SearchableOptionListPopup'
+import Button from '../../../design/components/atoms/Button'
+import InviteMembersModal from '../Modal/InviteMembers/InviteMembersModal'
+import { trackEvent } from '../../api/track'
+import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 interface DocAssigneeSelectProps {
   disabled?: boolean
@@ -116,6 +120,8 @@ const DocAssigneeModal = ({
   const { permissions = [] } = usePage()
   const [value, setValue] = useState<string[]>(selectedUsers)
   const [query, setQuery] = useState<string>('')
+  const { translate } = useI18n()
+  const { openModal } = useModal()
 
   const toggleUser = useCallback((userId: string) => {
     setValue((prev) => {
@@ -151,8 +157,22 @@ const DocAssigneeModal = ({
     })
   }, [matchedUsers, toggleUser, value])
 
+  const onInviteMoreMembers = useCallback(() => {
+    openModal(<InviteMembersModal />, { showCloseIcon: true })
+    return trackEvent(MixpanelActionTrackTypes.InviteFromDocPage)
+  }, [openModal])
+
   return (
     <ModalContainer>
+      <InviteButtonSection>
+        <Button
+          className={'invite__members__button-width'}
+          variant={'secondary'}
+          onClick={onInviteMoreMembers}
+        >
+          {translate(lngKeys.InviteMembersDocAssignButton)}
+        </Button>
+      </InviteButtonSection>
       <SearchableOptionListPopup
         query={query}
         setQuery={setQuery}
@@ -163,6 +183,20 @@ const DocAssigneeModal = ({
     </ModalContainer>
   )
 }
+
+const InviteButtonSection = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-direction: row;
+
+  margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
+
+  .invite__members__button-width {
+    width: 100%;
+  }
+`
 
 const ModalContainer = styled.div`
   .assignee__item__icon {

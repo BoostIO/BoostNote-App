@@ -152,6 +152,7 @@ export enum lngKeys {
   InviteAddWithLink = 'invite.url',
   InviteEmail = 'invite.email',
   InviteByEmailMore = 'invite.more.by.email',
+  InviteMembersDocAssignButton = 'invite.members.from.doc',
   InviteFailError = 'invite.failed.invites',
   InviteRoleDetails = 'invite.role.details.tooltip.',
   RoleMemberDescription = 'role.member.description',
