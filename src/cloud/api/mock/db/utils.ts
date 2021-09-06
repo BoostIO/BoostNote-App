@@ -9,11 +9,78 @@ export function getCurrentTime() {
   return new Date().toISOString()
 }
 
-export class SetMap<T> {
+export class MockDbMap<T> {
+  localStorageKey: string
+  map: Map<string, T>
+
+  constructor(localStorageKey: string) {
+    this.map = new Map()
+    this.localStorageKey = localStorageKey
+    this.load()
+  }
+
+  get(key: string) {
+    return this.map.get(key)
+  }
+
+  set(key: string, value: T) {
+    this.map.set(key, value)
+  }
+
+  delete(key: string) {
+    this.map.delete(key)
+  }
+  [Symbol.iterator]() {
+    return this.map.entries()
+  }
+
+  save() {
+    const data = [...this.map.entries()]
+
+    localStorage.setItem(this.localStorageKey, JSON.stringify(data))
+  }
+
+  load() {
+    const rawData = localStorage.getItem(this.localStorageKey)
+    const newMap = new Map()
+    this.map = newMap
+    if (rawData == null) {
+      return this
+    }
+    const data: [string, T][] = JSON.parse(rawData)
+
+    data.forEach(([key, value]) => {
+      newMap.set(key, value)
+    })
+    return this
+  }
+
+  values() {
+    return this.map.values()
+  }
+
+  entries() {
+    return this.map.entries()
+  }
+
+  keys() {
+    return this.map.keys()
+  }
+
+  reset() {
+    localStorage.removeItem(this.localStorageKey)
+    this.map = new Map()
+  }
+}
+
+export class MockDbSetMap<T> {
+  localStorageKey: string
   map: Map<string, Set<T>>
 
-  constructor() {
+  constructor(localStorageKey: string) {
     this.map = new Map()
+    this.localStorageKey = localStorageKey
+    this.load()
   }
 
   getSet(key: string) {
@@ -22,18 +89,49 @@ export class SetMap<T> {
 
   removeSet(key: string) {
     this.map.delete(key)
+    this.save()
   }
 
   addValue(key: string, value: T) {
     const set = this.getSet(key)
     set.add(value)
     this.map.set(key, set)
+    this.save()
   }
 
   removeValue(key: string, value: T) {
     const set = this.getSet(key)
     set.delete(value)
     this.map.set(key, set)
+    this.save()
+  }
+
+  save() {
+    const data = [...this.map.entries()].map(([key, set]) => {
+      return [key, [...set]]
+    })
+
+    localStorage.setItem(this.localStorageKey, JSON.stringify(data))
+  }
+
+  load() {
+    const rawData = localStorage.getItem(this.localStorageKey)
+    const newMap = new Map()
+    this.map = newMap
+    if (rawData == null) {
+      return this
+    }
+    const data: [string, T[]][] = JSON.parse(rawData)
+
+    data.forEach(([key, list]) => {
+      newMap.set(key, new Set(list))
+    })
+    return this
+  }
+
+  reset() {
+    localStorage.removeItem(this.localStorageKey)
+    this.map = new Map()
   }
 }
 
