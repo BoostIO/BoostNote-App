@@ -79,6 +79,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.InviteAddWithLink]: 'Inviter avec un lien ouvert',
   [lngKeys.InviteEmail]: 'Inviter par email',
   [lngKeys.InviteByEmailMore]: 'Ajouter un nouveau membre',
+  [lngKeys.InviteMembersDocAssignButton]: 'Inviter des membres à attribuer',
   [lngKeys.InviteFailError]:
     "L'invitation a échoué en raison de données incorrectes. Veuillez fournir une adresse e-mail et un rôle valides.",
   [lngKeys.InviteRoleDetails]: 'Cliquez pour voir les détails de rôle.',

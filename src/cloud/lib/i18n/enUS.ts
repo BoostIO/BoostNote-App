@@ -80,6 +80,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.InviteAddWithLink]: 'Add with link',
   [lngKeys.InviteEmail]: 'Add by Email',
   [lngKeys.InviteByEmailMore]: 'Add another team member',
+  [lngKeys.InviteMembersDocAssignButton]: 'Invite members to assign',
   [lngKeys.InviteFailError]:
     'Invite failed because of incorrect email data. Please provide valid email and role.',
   [lngKeys.RoleMemberDescription]:

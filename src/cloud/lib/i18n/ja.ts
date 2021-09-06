@@ -79,6 +79,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.InviteAddWithLink]: 'リンクでメンバー招待',
   [lngKeys.InviteEmail]: 'メールでメンバー招待',
   [lngKeys.InviteByEmailMore]: '別のチームメンバーを追加する',
+  [lngKeys.InviteMembersDocAssignButton]: 'メンバーに割り当てを依頼する',
   [lngKeys.InviteFailError]:
     'メールデータが正しくないため、招待に失敗しました。有効なメールアドレスと役割を入力してください。',
   [lngKeys.InviteRoleDetails]: 'クリックして役割の詳細を表示します。',
