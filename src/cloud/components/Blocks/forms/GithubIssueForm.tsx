@@ -181,6 +181,13 @@ const GithubIssueSelector = ({
   const [currentOrg, setCurrentOrg] = useState<Org | null>(null)
   const [repos, setRepos] = useState<Repo[]>([])
   const [currentRepo, setCurrentRepo] = useState<Repo | null>(null)
+  const [searchScope, setSearchScope] = useState<{
+    value: 'repo:issues' | 'repo:pulls'
+    label: string
+  }>({
+    label: 'Issues',
+    value: 'repo:issues',
+  })
   const [issues, setIssues] = useState<Issue[]>([])
   const [selectedIssues, setSelectedIssues] = useState<Set<Issue>>(new Set())
   const [page, setPage] = useState(1)
@@ -236,7 +243,7 @@ const GithubIssueSelector = ({
     const integrationId = integrationRef.current.id
     if (currentRepo != null) {
       setIsLoading(true)
-      getAction(integrationRef.current, 'repo:issues', {
+      getAction(integrationRef.current, searchScope.value, {
         owner: currentRepo.owner.login,
         repo: currentRepo.name,
         per_page: perPagePerQuery,
@@ -252,7 +259,7 @@ const GithubIssueSelector = ({
         .catch(errorHandleRef.current)
       setIsLoading(false)
     }
-  }, [currentRepo])
+  }, [currentRepo, searchScope.value])
 
   const getMore = useCallback(async () => {
     if (currentRepo != null) {
@@ -260,7 +267,7 @@ const GithubIssueSelector = ({
         setIsLoading(true)
         const integrationId = integrationRef.current.id
         const issues = (
-          await getAction(integrationRef.current, 'repo:issues', {
+          await getAction(integrationRef.current, searchScope.value, {
             owner: currentRepo.owner.login,
             repo: currentRepo.name,
             page: page + 1,
@@ -278,7 +285,7 @@ const GithubIssueSelector = ({
         setIsLoading(false)
       }
     }
-  }, [currentRepo, page])
+  }, [currentRepo, page, searchScope.value])
 
   const setIntegration = useCallback(
     ({ value }) => {
@@ -410,6 +417,17 @@ const GithubIssueSelector = ({
           />
         </FormRowItem>
         <FormRowItem>
+          <FormSelect
+            value={searchScope}
+            isLoading={isLoading}
+            options={[
+              { label: 'Issues', value: 'repo:issues' },
+              { label: 'Pulls', value: 'repo:pulls' },
+            ]}
+            onChange={setSearchScope}
+          />
+        </FormRowItem>
+        <FormRowItem>
           <FormInput
             placeholder='Search'
             value={search}
@@ -431,10 +449,11 @@ const GithubIssueSelector = ({
                   label={'Title'}
                 />
               </td>
+              <td>Number</td>
               <td>Assignees</td>
               <td>Status</td>
               <td>Labels</td>
-              <td>LinkedPR</td>
+              {searchScope.value === 'repo:issues' && <td>LinkedPR</td>}
             </tr>
           </thead>
           <tbody>
@@ -447,6 +466,7 @@ const GithubIssueSelector = ({
                     label={issue.title}
                   />
                 </td>
+                <td>{issue.number}</td>
                 <td>
                   {issue.assignees
                     .map((assignee: any) => assignee.login)
@@ -456,9 +476,11 @@ const GithubIssueSelector = ({
                 <td>
                   {issue.labels.map((label: any) => label.name).join(', ')}
                 </td>
-                <td>
-                  {issue.pull_request != null && issue.pull_request.html_url}
-                </td>
+                {searchScope.value === 'repo:issues' && (
+                  <td>
+                    {issue.pull_request != null && issue.pull_request.html_url}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -476,7 +498,9 @@ const GithubIssueSelector = ({
             </div>
           ) : (
             <div className='github-issue__form__placeholder'>
-              No more issues could be found...
+              No more{' '}
+              {searchScope.value === 'repo:issues' ? 'issues' : 'pull requests'}{' '}
+              could be found...
             </div>
           )
         ) : (
