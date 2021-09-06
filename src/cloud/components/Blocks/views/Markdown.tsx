@@ -11,6 +11,10 @@ import { mdiEyeOutline, mdiPencil, mdiTrashCanOutline } from '@mdi/js'
 import { getBlockDomId } from '../../../lib/blocks/dom'
 import cc from 'classcat'
 import BlockLayout from '../BlockLayout'
+import {
+  MarkdownBlockEventDetails,
+  markdownBlockEventEmitter,
+} from '../../../lib/utils/events'
 
 const MarkdownView = ({
   block,
@@ -87,6 +91,26 @@ const MarkdownView = ({
     }
   }, [mode])
 
+  useEffect(() => {
+    const handler = ({ detail }: CustomEvent<MarkdownBlockEventDetails>) => {
+      if (detail.id !== block.id) {
+        return
+      }
+
+      switch (detail.type) {
+        case 'edit':
+          setMode('editor')
+          return
+        case 'view':
+          setMode('view')
+        default:
+          return
+      }
+    }
+    markdownBlockEventEmitter.listen(handler)
+    return () => markdownBlockEventEmitter.unlisten(handler)
+  }, [block])
+
   return (
     <BlockLayout
       controls={
@@ -111,6 +135,8 @@ const MarkdownView = ({
             : `block__markdown--mode-${mode}`,
         ])}
         id={getBlockDomId(block)}
+        onEv
+        onFocus={() => setMode('editor')}
       >
         {!synced ? (
           <Spinner />
