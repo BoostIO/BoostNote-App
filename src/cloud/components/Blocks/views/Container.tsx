@@ -14,6 +14,7 @@ import BlockCreationModal from '../BlockCreationModal'
 import BlockToolbar from '../BlockToolbar'
 import BlockLayout from '../BlockLayout'
 import { getTableBlockInputId } from './Table'
+import { markdownBlockEventEmitter } from '../../../lib/utils/events'
 
 interface ContainerViewProps extends ViewProps<ContainerBlock> {
   setCurrentBlock: React.Dispatch<React.SetStateAction<Block | null>>
@@ -44,6 +45,11 @@ const ContainerView = ({
           getTableBlockInputId(createdBlock)
         )
         if (titleElement != null) titleElement.focus()
+      } else if (newBlock.type === 'markdown') {
+        markdownBlockEventEmitter.dispatch({
+          type: 'edit',
+          id: createdBlock.id,
+        })
       }
     },
     [block, actions, closeAllModals, scrollToElement]

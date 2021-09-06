@@ -30,6 +30,7 @@ import {
   useSidebarCollapse,
 } from '../../lib/stores/sidebarCollapse'
 import { FoldingProps } from '../../../design/components/atoms/FoldingWrapper'
+import { markdownBlockEventEmitter } from '../../lib/utils/events'
 
 export interface Canvas extends SerializedDocWithBookmark {
   rootBlock: ContainerBlock
@@ -84,6 +85,8 @@ const BlockContent = ({ doc }: BlockContentProps) => {
             getTableBlockInputId(newBlock)
           )
           if (titleElement != null) titleElement.focus()
+        } else if (newBlock.type === 'markdown') {
+          markdownBlockEventEmitter.dispatch({ type: 'edit', id: newBlock.id })
         }
       } catch (error) {
         pushApiErrorMessage(error)
