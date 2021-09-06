@@ -251,7 +251,8 @@ const BlockContent = ({ doc }: BlockContentProps) => {
           ref={contentScrollerRef}
         >
           <BlockView
-            block={currentBlock || state.block.children[0]}
+            isRootBlock={true}
+            block={currentBlock || state.block}
             actions={actions}
             canvas={doc}
             realtime={provider}
