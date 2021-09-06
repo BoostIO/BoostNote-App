@@ -31,6 +31,7 @@ import InfoBlock, {
 import BlockLayout from '../BlockLayout'
 import { getTableBlockInputId } from './Table'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
+import { markdownBlockEventEmitter } from '../../../lib/utils/events'
 
 const GithubIssueView = ({
   block,
@@ -117,6 +118,11 @@ const GithubIssueView = ({
           getTableBlockInputId(createdBlock)
         )
         if (titleElement != null) titleElement.focus()
+      } else if (newBlock.type === 'markdown') {
+        markdownBlockEventEmitter.dispatch({
+          type: 'edit',
+          id: createdBlock.id,
+        })
       }
     },
     [blockActions, block, closeAllModals, scrollToElement]
