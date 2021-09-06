@@ -3,7 +3,7 @@ import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { MockDoc } from './mockEntities/docs'
-import { MockFolder } from './mockEntities/folders'
+import { getMockFolderById, MockFolder } from './mockEntities/folders'
 import { MockPermission } from './mockEntities/permissions'
 import { getMockTeamById } from './mockEntities/teams'
 import { getMockUserById } from './mockEntities/users'
@@ -41,10 +41,28 @@ export function populateDoc(mockDoc: MockDoc): SerializedDocWithBookmark {
   const team = getMockTeamById(mockDoc.teamId)!
   return {
     ...mockDoc,
+    folderPathname: getFolderPathname(mockDoc.parentFolderId),
     tags: [],
     bookmarked: false,
     team,
   }
+}
+
+export function getFolderPathname(folderId?: string) {
+  if (folderId == null) {
+    return '/'
+  }
+  const folderNames = []
+  let parentFolder = getMockFolderById(folderId)
+  while (parentFolder != null) {
+    folderNames.push(parentFolder.name)
+    parentFolder =
+      parentFolder.parentFolderId != null
+        ? getMockFolderById(parentFolder.parentFolderId)
+        : undefined
+  }
+
+  return '/' + folderNames.reverse().join('/')
 }
 
 export function populateWorkspace(

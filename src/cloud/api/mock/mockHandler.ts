@@ -28,13 +28,19 @@ import {
   TeamShowPageResponseBody,
 } from '../pages/teams'
 import { getResourceFromSlug } from './db/utils'
-import { getMockDocById, getTeamMockDocs } from './db/mockEntities/docs'
+import {
+  createMockDoc,
+  getMockDocById,
+  getTeamMockDocs,
+} from './db/mockEntities/docs'
 import { GlobalDataResponseBody } from '../global'
 import { getDefaultMockUser, getGeneralAppProps } from './db/init'
+import { CreateDocRequestBody, CreateDocResponseBody } from '../teams/docs'
 
 interface MockRouteHandlerParams {
   params: { [key: string]: any }
   search: { [key: string]: string | number | boolean }
+  body: { [key: string]: any }
 }
 
 interface MockRoute {
@@ -91,7 +97,7 @@ const routes: MockRoute[] = [
         throw new Error(`Team does not exist (Domain: ${domain})`)
       }
 
-      const generalAppProps = getGeneralAppProps(team.id)
+      const generalAppProps = getGeneralAppProps(domain)
 
       const workspaces = getMockWorkspacesByTeamId(team.id)
       const defaultWorkspace = workspaces.find(
@@ -195,6 +201,35 @@ const routes: MockRoute[] = [
       }
     },
   },
+  {
+    method: 'post',
+    pathname: 'api/teams/:teamId/docs',
+    handler: ({ params, body }): CreateDocResponseBody => {
+      const defaultUser = getDefaultMockUser()
+      if (defaultUser == null) {
+        throw new Error('Need default user to create a mock doc')
+      }
+      const { teamId } = params
+      const {
+        workspaceId,
+        parentFolderId,
+        title,
+        emoji,
+      } = body as CreateDocRequestBody
+
+      const doc = createMockDoc({
+        title: title || '',
+        emoji,
+        parentFolderId,
+        generated: false,
+        teamId,
+        workspaceId: workspaceId!,
+        userId: defaultUser.id,
+      })
+
+      return { doc: populateDoc(doc) }
+    },
+  },
 ]
 
 export async function mockHandler(
@@ -216,6 +251,7 @@ export async function mockHandler(
     return route.handler({
       params: result.params,
       search: parseQuery(apiParams.search),
+      body: apiParams.json,
     })
   }
 

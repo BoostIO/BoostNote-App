@@ -6,7 +6,7 @@ import {
   MockDbSetMap,
 } from '../utils'
 
-export type MockDoc = Omit<SerializedDoc, 'team' | 'tags'>
+export type MockDoc = Omit<SerializedDoc, 'team' | 'tags' | 'folderPathname'>
 
 const docMap = new MockDbMap<MockDoc>('mock:docMap')
 const teamDocIdSetMap = new MockDbSetMap<string>('mock:teamDocIdSetMap')
@@ -19,7 +19,7 @@ export function resetMockDocs() {
 interface CraeteMockDocParams {
   title: string
   emoji?: string
-  folderPathname: string
+  parentFolderId?: string
   generated?: boolean
   teamId: string
   workspaceId: string
@@ -31,7 +31,7 @@ interface CraeteMockDocParams {
 export function createMockDoc({
   title,
   emoji,
-  folderPathname,
+  parentFolderId,
   generated = false,
   teamId,
   workspaceId,
@@ -42,11 +42,11 @@ export function createMockDoc({
   const id = generateMockId()
   const now = getCurrentTime()
 
-  const newDoc = {
+  const newDoc: MockDoc = {
     id,
     title,
     emoji,
-    folderPathname,
+    parentFolderId,
     generated,
     teamId,
     workspaceId,
