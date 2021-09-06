@@ -3,7 +3,7 @@ import { useEffectOnce } from 'react-use'
 import { MessageBoxButtonProps } from '../../../../lib/stores/dialog'
 import styled from '../../../../lib/styled'
 import Button from '../../../atoms/Button'
-import LeftToRightList from '../../../atoms/LeftToRightList'
+import LeftRightList from '../../../atoms/LeftRightList'
 
 type MessageBoxDialogProps = {
   buttons?: MessageBoxButtonProps[]
@@ -45,7 +45,7 @@ const MessageBoxDialogBody = ({
 
   return (
     <Container onKeyDown={handleBodyKeyDown}>
-      <LeftToRightList ignoreFocus={true}>
+      <LeftRightList ignoreFocus={true}>
         {buttons == null ? (
           <Button variant='secondary' onClick={closeDialog}>
             Close
@@ -69,7 +69,7 @@ const MessageBoxDialogBody = ({
             </Button>
           ))
         )}
-      </LeftToRightList>
+      </LeftRightList>
     </Container>
   )
 }

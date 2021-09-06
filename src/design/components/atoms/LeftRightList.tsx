@@ -7,7 +7,7 @@ interface LeftToRightListProps {
   className?: string
   ignoreFocus?: boolean
 }
-const LeftToRightList: React.FC<LeftToRightListProps> = ({
+const LeftRightList: React.FC<LeftToRightListProps> = ({
   className,
   children,
   ignoreFocus,
@@ -42,4 +42,4 @@ const LeftToRightList: React.FC<LeftToRightListProps> = ({
   )
 }
 
-export default LeftToRightList
+export default LeftRightList
