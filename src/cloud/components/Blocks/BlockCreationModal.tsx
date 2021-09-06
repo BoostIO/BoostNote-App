@@ -2,7 +2,7 @@ import { mdiCodeTags, mdiFileDocumentOutline, mdiTable } from '@mdi/js'
 import React from 'react'
 import Button from '../../../design/components/atoms/Button'
 import Icon from '../../../design/components/atoms/Icon'
-import LeftToRightList from '../../../design/components/atoms/LeftToRightList'
+import LeftRightList from '../../../design/components/atoms/LeftRightList'
 import styled from '../../../design/lib/styled'
 
 interface BlockCreationModalProps {
@@ -17,7 +17,7 @@ const BlockCreationModal = ({
   onTableCreation,
 }: BlockCreationModalProps) => (
   <Container>
-    <LeftToRightList className='block__creation__list'>
+    <LeftRightList className='block__creation__list'>
       {onMarkdownCreation != null && (
         <Button
           variant='transparent'
@@ -51,7 +51,7 @@ const BlockCreationModal = ({
           <span>Embed</span>
         </Button>
       )}
-    </LeftToRightList>
+    </LeftRightList>
   </Container>
 )
 
