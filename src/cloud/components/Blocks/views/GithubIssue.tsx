@@ -47,14 +47,19 @@ const GithubIssueView = ({
   const { openContextModal, closeAllModals, openModal } = useModal()
 
   const prURL = block.data?.pull_request?.html_url || ''
-  const repoURL = new RegExp(
-    /(^https:\/\/github.com\/(?:([^\/]+)\/)+)(?:(?:issues|pull\/(?:[0-9]+)))$/,
-    'gi'
-  ).exec(block.data.html_url || '')
-  const isIssueURL = new RegExp(
-    /^https:\/\/github.com\/([^\/]+\/)+issues\/([0-9]+)$/,
-    'gi'
-  ).test(block.data.html_url || '')
+  const htmlURLRegexes = useMemo(() => {
+    const url = block.data.html_url || ''
+    return {
+      repoUrl: new RegExp(
+        /(^https:\/\/github.com\/(?:([^\/]+)\/)+)(?:(?:issues|pull\/(?:[0-9]+)))$/,
+        'gi'
+      ).exec(url),
+      isIssueURL: new RegExp(
+        /^https:\/\/github.com\/([^\/]+\/)+issues\/([0-9]+)$/,
+        'gi'
+      ).test(url),
+    }
+  }, [block.data.html_url])
 
   const updateBlock = useCallback(
     async (data: GithubIssueBlock['data']) => {
@@ -161,14 +166,14 @@ const GithubIssueView = ({
           <h1>{block.data.title}</h1>
         </Flexbox>
         <InfoBlock className='github-issue__view__info'>
-          {repoURL != null && (
+          {htmlURLRegexes.repoUrl != null && (
             <InfoBlockRow label='Repository'>
-              <ExternalLink href={repoURL[1]} showIcon={true}>
-                {repoURL[2]}
+              <ExternalLink href={htmlURLRegexes.repoUrl[1]} showIcon={true}>
+                {htmlURLRegexes.repoUrl[2]}
               </ExternalLink>
             </InfoBlockRow>
           )}
-          {isIssueURL && (
+          {htmlURLRegexes.isIssueURL && (
             <InfoBlockRow label='Issue number'>
               <ExternalLink href={block.data.html_url || ''} showIcon={true}>
                 #{block.data.number}

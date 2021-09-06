@@ -78,13 +78,10 @@ const BlockTree = ({
 function blockTitle(block: Block) {
   switch (block.type) {
     case 'github.issue':
-      try {
-        return `${block.data.title}`
-      } catch (err) {
-        return 'Github Issue'
-      }
+      return block.data?.title || 'Github Issue'
     case 'embed':
     case 'table':
+    case 'container':
       return block.name.trim() === '' ? capitalize(block.type) : block.name
     default:
       return capitalize(block.type)

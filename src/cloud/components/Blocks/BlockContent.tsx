@@ -20,17 +20,14 @@ import Scroller from '../../../design/components/atoms/Scroller'
 import UpDownList from '../../../design/components/atoms/UpDownList'
 import NavigationItem from '../../../design/components/molecules/Navigation/NavigationItem'
 import Flexbox from '../../../design/components/atoms/Flexbox'
-import { getBlockDomId } from '../../lib/blocks/dom'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import { useToast } from '../../../design/lib/stores/toast'
 import { usePage } from '../../lib/stores/pageStore'
-import { getTableBlockInputId } from './views/Table'
 import {
   CollapsableType,
   useSidebarCollapse,
 } from '../../lib/stores/sidebarCollapse'
 import { FoldingProps } from '../../../design/components/atoms/FoldingWrapper'
-import { markdownBlockEventEmitter } from '../../lib/utils/events'
 
 export interface Canvas extends SerializedDocWithBookmark {
   rootBlock: ContainerBlock
@@ -70,36 +67,12 @@ const BlockContent = ({ doc }: BlockContentProps) => {
       try {
         const newBlock = await actions.create(block, doc.rootBlock)
         closeAllModals()
-        if (
-          (currentBlock != null && currentBlock.type !== 'container') ||
-          (currentBlock != null && doc.rootBlock.id !== currentBlock.id)
-        ) {
-          setCurrentBlock(newBlock)
-        } else {
-          const blockElem = document.getElementById(getBlockDomId(newBlock))
-          scrollToElement(blockElem)
-        }
-
-        if (newBlock.type === 'table') {
-          const titleElement = document.getElementById(
-            getTableBlockInputId(newBlock)
-          )
-          if (titleElement != null) titleElement.focus()
-        } else if (newBlock.type === 'markdown') {
-          markdownBlockEventEmitter.dispatch({ type: 'edit', id: newBlock.id })
-        }
+        setCurrentBlock(newBlock)
       } catch (error) {
         pushApiErrorMessage(error)
       }
     },
-    [
-      doc,
-      actions,
-      closeAllModals,
-      currentBlock,
-      scrollToElement,
-      pushApiErrorMessage,
-    ]
+    [doc, actions, closeAllModals, pushApiErrorMessage]
   )
 
   useEffect(() => {
@@ -123,7 +96,7 @@ const BlockContent = ({ doc }: BlockContentProps) => {
 
   const createContainer = useCallback(() => {
     return createBlock({
-      name: '',
+      name: 'Page',
       type: 'container',
       children: [],
       data: null,
@@ -172,10 +145,12 @@ const BlockContent = ({ doc }: BlockContentProps) => {
 
   const navTree = useMemo(() => {
     if (state.type === 'loading') {
-      return null
+      return []
     }
 
-    return getFoldedChild(state.block, sideBarOpenedBlocksIdsSet, getFoldEvents)
+    return state.block.children.map((child) =>
+      getFoldedChild(child, sideBarOpenedBlocksIdsSet, getFoldEvents)
+    )
   }, [getFoldEvents, state, sideBarOpenedBlocksIdsSet])
 
   if (state.type === 'loading') {
@@ -187,14 +162,17 @@ const BlockContent = ({ doc }: BlockContentProps) => {
       <div id='block__editor__anchor' />
       <UpDownList ignoreFocus={true} className='block__editor__nav'>
         <Scroller className='block__editor__nav__scroller'>
-          <BlockTree
-            root={navTree != null ? navTree : state.block}
-            active={currentBlock || doc.rootBlock}
-            onSelect={setCurrentBlock}
-            onDelete={actions.remove}
-            idPrefix='nav'
-            showFoldEvents={true}
-          />
+          {navTree.map((child) => (
+            <BlockTree
+              key={`nav-${child.id}`}
+              root={child}
+              active={currentBlock || doc.rootBlock}
+              onSelect={setCurrentBlock}
+              onDelete={actions.remove}
+              idPrefix='nav'
+              showFoldEvents={true}
+            />
+          ))}
         </Scroller>
         <div className='block__editor__nav--actions'>
           <NavigationItem
@@ -217,7 +195,7 @@ const BlockContent = ({ doc }: BlockContentProps) => {
                 depth={1}
                 label={
                   <Flexbox alignItems='center' justifyContent='space-between'>
-                    <span>Container</span>
+                    <span>Page</span>
                     <Icon path={mdiPlus} size={16} />
                   </Flexbox>
                 }
@@ -273,7 +251,7 @@ const BlockContent = ({ doc }: BlockContentProps) => {
           ref={contentScrollerRef}
         >
           <BlockView
-            block={currentBlock || state.block}
+            block={currentBlock || state.block.children[0]}
             actions={actions}
             canvas={doc}
             realtime={provider}
