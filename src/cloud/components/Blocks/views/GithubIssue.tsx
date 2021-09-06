@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { BlockView, ViewProps } from './'
-import { mdiGithub, mdiPenPlus, mdiPlusBoxOutline } from '@mdi/js'
+import { mdiGithub, mdiPlus, mdiPlusBoxOutline } from '@mdi/js'
 import styled from '../../../../design/lib/styled'
 import Icon from '../../../../design/components/atoms/Icon'
 import { BlockCreateRequestBody, GithubIssueBlock } from '../../../api/blocks'
@@ -32,6 +32,7 @@ import BlockLayout from '../BlockLayout'
 import { getTableBlockInputId } from './Table'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import { markdownBlockEventEmitter } from '../../../lib/utils/events'
+import Button from '../../../../design/components/atoms/Button'
 
 const GithubIssueView = ({
   block,
@@ -92,7 +93,7 @@ const GithubIssueView = ({
             }}
           />
         </MetadataContainer>,
-        { alignment: 'top-left' }
+        { alignment: 'bottom-left' }
       )
     },
     [openContextModal, closeAllModals]
@@ -202,6 +203,16 @@ const GithubIssueView = ({
               </InfoBlockRow>
             )
           })}
+          <div className='info__block__row'>
+            <Button
+              variant='secondary'
+              iconPath={mdiPlus}
+              iconSize={16}
+              onClick={(ev) => openPropAdd(ev)}
+            >
+              Add Prop
+            </Button>
+          </div>
         </InfoBlock>
       </BlockLayout>
       <div className='github-issue__view__children'>
@@ -223,11 +234,6 @@ const GithubIssueView = ({
       </div>
       <BlockToolbar
         controls={[
-          {
-            iconPath: mdiPenPlus,
-            label: 'Add Property',
-            onClick: (ev) => openPropAdd(ev),
-          },
           {
             iconPath: mdiPlusBoxOutline,
             label: 'Add Block',
