@@ -1,23 +1,32 @@
 import { CallCloudJsonApiParameter } from '../../lib/client'
 import { match } from 'path-to-regexp'
-import { getMockTeamByDomain } from './db/teams'
-import { init } from './db/init'
-import { getMockPermissionsListByTeamId } from './db/permissions'
-import { getMockWorkspacesByTeamId } from './db/workspaces'
+import { getMockTeamByDomain } from './db/mockEntities/teams'
+import {
+  getMockPermissionsListByTeamId,
+  getMockPermissionsListByUserId,
+} from './db/mockEntities/permissions'
+import { getMockWorkspacesByTeamId } from './db/mockEntities/workspaces'
 import querystring from 'querystring'
 import { GetResourcesResponseBody } from '../teams/resources'
 import { GetTemplatesResponseBody } from '../teams/docs/templates'
 import { GetEditRequestsResponseBody } from '../editRequests'
 import { GetOpenInviteResponseBody } from '../teams/open-invites'
-import { getMockFolderById, getMockTeamFolders } from './db/folders'
+import {
+  getMockFolderById,
+  getMockTeamFolders,
+} from './db/mockEntities/folders'
 import { populateDoc, populateFolder, populatePermissions } from './db/populate'
 import {
   DocPageResourceProps,
   FolderPageResourceProps,
   ResourceShowPageResponseBody,
+  TeamShowPageResponseBody,
 } from '../pages/teams'
 import { getResourceFromSlug } from './db/utils'
-import { getMockDocById } from './db/docs'
+import { getMockDocById } from './db/mockEntities/docs'
+import { GlobalDataResponseBody } from '../global'
+import { getDefaultMockUserId } from './db/init'
+import { getMockUserById } from './db/mockEntities/users'
 
 interface MockRouteHandlerParams {
   params: { [key: string]: any }
@@ -29,17 +38,38 @@ interface MockRoute {
   handler: (params: MockRouteHandlerParams) => any
 }
 
-const { user, team } = init()
-
 const routes: MockRoute[] = [
   {
     pathname: 'api/global',
-    handler: () => {
+    handler: (): GlobalDataResponseBody => {
+      const defaultUserId = getDefaultMockUserId()
+      const defaultUser = getMockUserById(defaultUserId || '')
+      if (defaultUser == null) {
+        return {
+          teams: [],
+          invites: [],
+        }
+      }
+      const defaultUserPermissions = getMockPermissionsListByUserId(
+        defaultUser.id
+      ).map(populatePermissions)
+
+      const teams = defaultUserPermissions.map((permission) => permission.team)
+
       return {
-        currentUser: user,
-        currentUserSettings: {},
+        currentUser: {
+          ...defaultUser,
+          permissions: defaultUserPermissions,
+        },
         currentUserOnboarding: {},
-        teams: [team],
+        teams: teams.map((team) => {
+          return {
+            ...team,
+            permissions: getMockPermissionsListByTeamId(team.id).map(
+              populatePermissions
+            ),
+          }
+        }),
         invites: [],
         realtimeAuth: 'mock',
       }
@@ -47,7 +77,7 @@ const routes: MockRoute[] = [
   },
   {
     pathname: 'api/pages/teams/show',
-    handler: ({ search }) => {
+    handler: ({ search }): TeamShowPageResponseBody => {
       const { teamId: domain } = search
       if (typeof domain !== 'string') {
         throw new Error(`Invalid domain (Domain: ${domain})`)
@@ -58,12 +88,16 @@ const routes: MockRoute[] = [
       }
 
       const workspaces = getMockWorkspacesByTeamId(team.id)
-      const defaultWorkspace = workspaces.find((workspace) => workspace.default)
+      const defaultWorkspace = workspaces.find(
+        (workspace) => workspace.default
+      )!
       return {
         team,
         folders: [],
         docs: [],
-        permissions: getMockPermissionsListByTeamId(team.id),
+        permissions: getMockPermissionsListByTeamId(team.id).map(
+          populatePermissions
+        ),
         workspaces: workspaces,
         tags: [],
         pageWorkspace: defaultWorkspace,
@@ -91,6 +125,10 @@ const routes: MockRoute[] = [
     pathname: 'api/pages/teams/resources/show',
     handler: ({ search }): ResourceShowPageResponseBody => {
       const { teamId, resourceId: resourceSlug } = search
+      const team = getMockTeamByDomain(teamId as string)
+      if (team == null) {
+        throw new Error(`The team does not exist. (teamId: ${teamId})`)
+      }
 
       const globalProps = {
         team,

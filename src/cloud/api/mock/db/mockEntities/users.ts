@@ -1,7 +1,11 @@
-import { SerializedUser } from '../../../interfaces/db/user'
-import { generateMockId, getCurrentTime } from './utils'
+import { SerializedUser } from '../../../../interfaces/db/user'
+import { generateMockId, getCurrentTime, MockDbMap } from '../utils'
 
-const userMap = new Map<string, SerializedUser>()
+const userMap = new MockDbMap<SerializedUser>('mock:userMap')
+
+export function resetMockUsers() {
+  userMap.reset()
+}
 
 interface CreateMockUserParams {
   displayName?: string

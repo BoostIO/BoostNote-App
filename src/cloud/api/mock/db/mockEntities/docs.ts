@@ -1,8 +1,13 @@
-import { DocStatus, SerializedDoc } from '../../../interfaces/db/doc'
-import { generateMockId, getCurrentTime } from './utils'
+import { DocStatus, SerializedDoc } from '../../../../interfaces/db/doc'
+import { generateMockId, getCurrentTime, MockDbMap } from '../utils'
 
 export type MockDoc = Omit<SerializedDoc, 'team' | 'tags'>
-const docMap = new Map<string, MockDoc>()
+
+const docMap = new MockDbMap<MockDoc>('mock:docMap')
+
+export function resetMockDocs() {
+  docMap.reset()
+}
 
 interface CraeteMockDocParams {
   title: string

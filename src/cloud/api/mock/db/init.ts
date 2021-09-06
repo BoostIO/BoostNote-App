@@ -1,15 +1,31 @@
-import { createMockFolder } from './folders'
-import { createMockPermissions } from './permissions'
-import { createMockTeam } from './teams'
-import { createMockUser } from './users'
-import { createMockWorkspace } from './workspaces'
+import { resetMockDocs } from './mockEntities/docs'
+import { createMockFolder, resetMockFolders } from './mockEntities/folders'
+import {
+  createMockPermissions,
+  resetMockPermissions,
+} from './mockEntities/permissions'
+import { createMockTeam, resetMockTeams } from './mockEntities/teams'
+import { createMockUser, resetMockUsers } from './mockEntities/users'
+import {
+  createMockWorkspace,
+  resetMockWorkspaces,
+} from './mockEntities/workspaces'
 
-export function init() {
-  const user = createMockUser({
-    uniqueName: 'dev-user',
-    displayName: 'dev-user',
-  })
-  const team = createMockTeam({ name: 'dev', domain: 'dev' })
+export const defaultUserProps = {
+  uniqueName: 'dev-user',
+  displayName: 'dev-user',
+}
+
+export const defaultTeamProps = {
+  name: 'dev',
+  domain: 'dev',
+}
+
+export function initMockData() {
+  resetMockData()
+  const user = createMockUser(defaultUserProps)
+  localStorage.setItem('mock:defaultUserId', user.id)
+  const team = createMockTeam(defaultTeamProps)
   const workspace = createMockWorkspace({
     teamId: team.id,
     default: true,
@@ -22,9 +38,18 @@ export function init() {
     teamId: team.id,
     workspaceId: workspace.id,
   })
+}
 
-  return {
-    user,
-    team,
-  }
+export function resetMockData() {
+  resetMockDocs()
+  resetMockFolders()
+  resetMockPermissions()
+  resetMockTeams()
+  resetMockUsers()
+  resetMockWorkspaces()
+  localStorage.removeItem('mock:defaultUserId')
+}
+
+export function getDefaultMockUserId() {
+  return localStorage.getItem('mock:defaultUserId')
 }
