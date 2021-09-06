@@ -4,13 +4,14 @@ import { useGlobalData } from '../../lib/stores/globalData'
 import { useRouter } from '../../lib/router'
 import { ThemeProvider } from 'styled-components'
 import SignInForm from '../SignInForm'
-import { nodeEnv } from '../../lib/consts'
+import { mockBackend, nodeEnv } from '../../lib/consts'
 import { usingElectron } from '../../lib/stores/electron'
 import { darkTheme } from '../../../design/lib/styled/dark'
 import styled from '../../../design/lib/styled'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Button from '../../../design/components/atoms/Button'
 import ErrorSection from './../error/ErrorSection'
+import { initMockData } from '../../api/mock/db/init'
 
 interface ErrorPageProps {
   error: Error
@@ -78,6 +79,16 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
               <h3>Or Sign in</h3>
               <SignInForm redirectTo={pathname + search} />
             </div>
+          )}
+          {mockBackend && (
+            <Button
+              onClick={() => {
+                initMockData()
+                window.location.reload()
+              }}
+            >
+              Reset Mock Data
+            </Button>
           )}
         </Container>
       </Page>

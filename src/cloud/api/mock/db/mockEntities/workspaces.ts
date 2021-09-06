@@ -1,13 +1,23 @@
-import { SerializedWorkspace } from '../../../interfaces/db/workspace'
-import { generateMockId, getCurrentTime } from './utils'
+import { SerializedWorkspace } from '../../../../interfaces/db/workspace'
+import {
+  generateMockId,
+  getCurrentTime,
+  MockDbMap,
+  MockDbSetMap,
+} from '../utils'
 
 export type MockWorkspace = Omit<
   SerializedWorkspace,
   'team' | 'owner' | 'permissions' | 'positions'
 >
 
-const teamWorkspaceSetMap = new Map<string, Set<string>>()
-const workspaceMap = new Map<string, SerializedWorkspace>()
+const workspaceMap = new MockDbMap<SerializedWorkspace>('mock:workspaceMap')
+const teamWorkspaceSetMap = new MockDbSetMap<string>('mock:teamWorkspaceSetMap')
+
+export function resetMockWorkspaces() {
+  workspaceMap.reset()
+  teamWorkspaceSetMap.reset()
+}
 
 interface CreateMockWorkspaceParams {
   teamId: string
@@ -41,8 +51,7 @@ export function createMockWorkspace({
   }
 
   workspaceMap.set(id, newWorkspace)
-
-  addTeamWorkspace(id, teamId)
+  teamWorkspaceSetMap.addValue(teamId, id)
 
   return newWorkspace
 }
@@ -54,7 +63,7 @@ export function removeMockWorkspace(id: string) {
   }
 
   workspaceMap.delete(id)
-  removeTeamWorkspace(id, workspace.teamId)
+  teamWorkspaceSetMap.removeValue(workspace.teamId, id)
 }
 
 export function getMockWorkspaceById(id: string) {
@@ -62,7 +71,7 @@ export function getMockWorkspaceById(id: string) {
 }
 
 export function getMockWorkspacesByTeamId(teamId: string) {
-  const workspaceIdList = [...getTeamWorkspaceSet(teamId)]
+  const workspaceIdList = [...teamWorkspaceSetMap.getSet(teamId)]
   return workspaceIdList.reduce<MockWorkspace[]>((list, workspaceId) => {
     const workspace = getMockWorkspaceById(workspaceId)
     if (workspace != null) {
@@ -71,20 +80,4 @@ export function getMockWorkspacesByTeamId(teamId: string) {
 
     return list
   }, [])
-}
-
-function getTeamWorkspaceSet(teamId: string) {
-  return teamWorkspaceSetMap.get(teamId) || new Set<string>()
-}
-
-function addTeamWorkspace(id: string, teamId: string) {
-  const teamWorkspaceSet = getTeamWorkspaceSet(teamId)
-  teamWorkspaceSet.add(id)
-  teamWorkspaceSetMap.set(teamId, teamWorkspaceSet)
-}
-
-function removeTeamWorkspace(id: string, teamId: string) {
-  const teamWorkspaceSet = getTeamWorkspaceSet(teamId)
-  teamWorkspaceSet.delete(id)
-  teamWorkspaceSetMap.set(teamId, teamWorkspaceSet)
 }

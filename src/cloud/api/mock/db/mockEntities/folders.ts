@@ -1,5 +1,10 @@
-import { SerializedFolder } from '../../../interfaces/db/folder'
-import { generateMockId, getCurrentTime, SetMap } from './utils'
+import { SerializedFolder } from '../../../../interfaces/db/folder'
+import {
+  generateMockId,
+  getCurrentTime,
+  MockDbMap,
+  MockDbSetMap,
+} from '../utils'
 
 export type MockFolder = Omit<
   SerializedFolder,
@@ -11,9 +16,15 @@ export type MockFolder = Omit<
   | 'childFolders'
   | 'childDocs'
 >
-const folderMap = new Map<string, MockFolder>()
-const childFolderIdSetMap = new SetMap<string>()
-const teamFolderIdSetMap = new SetMap<string>()
+const folderMap = new MockDbMap<MockFolder>('mock:folderMap')
+const childFolderIdSetMap = new MockDbSetMap<string>('mock:childFolderIdSet')
+const teamFolderIdSetMap = new MockDbSetMap<string>('mock:teamFolderIdSet')
+
+export function resetMockFolders() {
+  folderMap.reset()
+  childFolderIdSetMap.reset()
+  teamFolderIdSetMap.reset()
+}
 
 interface CreateMockFolderParams {
   emoji?: string

@@ -1,9 +1,15 @@
-import { SerializedTeam } from '../../../interfaces/db/team'
-import { generateMockId, getCurrentTime } from './utils'
+import { SerializedTeam } from '../../../../interfaces/db/team'
+import { generateMockId, getCurrentTime, MockDbMap } from '../utils'
 
 type MockTeam = Omit<SerializedTeam, 'permissions'>
-const teamMap = new Map<string, MockTeam>()
-const teamDomainMap = new Map<string, string>()
+
+const teamMap = new MockDbMap<MockTeam>('mock:teamMap')
+const teamDomainMap = new MockDbMap<string>('mock:teamDomainMap')
+
+export function resetMockTeams() {
+  teamMap.reset()
+  teamDomainMap.reset()
+}
 
 interface CreateMockTeamParams {
   name?: string

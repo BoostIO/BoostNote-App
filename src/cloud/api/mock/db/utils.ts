@@ -25,11 +25,14 @@ export class MockDbMap<T> {
 
   set(key: string, value: T) {
     this.map.set(key, value)
+    this.save()
   }
 
   delete(key: string) {
     this.map.delete(key)
+    this.save()
   }
+
   [Symbol.iterator]() {
     return this.map.entries()
   }
