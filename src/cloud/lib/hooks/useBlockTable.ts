@@ -25,7 +25,7 @@ export interface Actions {
   setCell: (row: string, col: Column, data: string) => void
 }
 
-export interface BlockState {
+interface BlockState {
   columns: Column[]
   rowData: Map<string, Record<Column, string>>
 }

@@ -2,7 +2,7 @@ import { mdiCodeTags, mdiFileDocumentOutline, mdiTable } from '@mdi/js'
 import React from 'react'
 import Button from '../../../design/components/atoms/Button'
 import Icon from '../../../design/components/atoms/Icon'
-import LeftToRightList from '../../../design/components/atoms/LeftRightList'
+import LeftToRightList from '../../../design/components/atoms/LeftToRightList'
 import styled from '../../../design/lib/styled'
 
 interface BlockCreationModalProps {

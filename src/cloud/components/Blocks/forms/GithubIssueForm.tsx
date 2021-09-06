@@ -343,10 +343,10 @@ const GithubIssueSelector = ({
     }
   }, [issues, filteredIssues.length, selectedIssues.size])
 
-  const toggleIssue = useCallback((issue: Issue, selected: boolean) => {
+  const toggleIssue = useCallback((issue: Issue) => {
     return () => {
       setSelectedIssues((old) => {
-        if (selected) {
+        if (!old.has(issue)) {
           old.add(issue)
         } else {
           old.delete(issue)
@@ -443,7 +443,7 @@ const GithubIssueSelector = ({
                 <td>
                   <CheckboxWithLabel
                     checked={selectedIssues.has(issue)}
-                    toggle={toggleIssue(issue, !selectedIssues.has(issue))}
+                    toggle={toggleIssue(issue)}
                     label={issue.title}
                   />
                 </td>
