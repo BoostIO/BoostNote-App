@@ -1,15 +1,36 @@
-import { resetMockDocs } from './mockEntities/docs'
-import { createMockFolder, resetMockFolders } from './mockEntities/folders'
+import { GeneralAppProps } from '../../../interfaces/api'
+import { getTeamMockDocs, resetMockDocs } from './mockEntities/docs'
+import {
+  createMockFolder,
+  getMockTeamFolders as getTeamMockFolders,
+  resetMockFolders,
+} from './mockEntities/folders'
 import {
   createMockPermissions,
+  getMockPermissionsListByUserId,
   resetMockPermissions,
 } from './mockEntities/permissions'
-import { createMockTeam, resetMockTeams } from './mockEntities/teams'
-import { createMockUser, resetMockUsers } from './mockEntities/users'
+import {
+  createMockTeam,
+  getMockTeamByDomain,
+  resetMockTeams,
+} from './mockEntities/teams'
+import {
+  createMockUser,
+  getMockUserById,
+  resetMockUsers,
+} from './mockEntities/users'
 import {
   createMockWorkspace,
+  getMockWorkspacesByTeamId,
   resetMockWorkspaces,
 } from './mockEntities/workspaces'
+import {
+  populateDoc,
+  populateFolder,
+  populatePermissions,
+  populateWorkspace,
+} from './populate'
 
 export const defaultUserProps = {
   uniqueName: 'dev-user',
@@ -50,6 +71,41 @@ export function resetMockData() {
   localStorage.removeItem('mock:defaultUserId')
 }
 
-export function getDefaultMockUserId() {
+function getDefaultMockUserId() {
   return localStorage.getItem('mock:defaultUserId')
+}
+
+export function getDefaultMockUser() {
+  const defaultUserId = getDefaultMockUserId()
+  if (defaultUserId == null) {
+    return undefined
+  }
+  return getMockUserById(defaultUserId)
+}
+
+export function getGeneralAppProps(teamId: string): GeneralAppProps {
+  const team = getMockTeamByDomain(teamId)
+  if (team == null) {
+    throw new Error(`The team does not exist. (teamId: ${teamId})`)
+  }
+  const defaultMockUser = getDefaultMockUser()
+  const permissions =
+    defaultMockUser != null
+      ? getMockPermissionsListByUserId(defaultMockUser.id).map(
+          populatePermissions
+        )
+      : []
+
+  const folders = getTeamMockFolders(team.id).map(populateFolder)
+  const docs = getTeamMockDocs(team.id).map(populateDoc)
+  const workspaces = getMockWorkspacesByTeamId(team.id).map(populateWorkspace)
+
+  return {
+    team,
+    folders,
+    docs,
+    permissions,
+    workspaces,
+    tags: [],
+  }
 }
