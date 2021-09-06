@@ -26,11 +26,12 @@ const EmbedForm = ({ onSubmit }: EmbedFormProps) => {
         )
         const regexResult = nameRegex.exec(url)
         const name = regexResult != null ? capitalize(regexResult[1]) : 'Embed'
+
         await onSubmit({
           name,
           type: 'embed',
           children: [],
-          data: { url },
+          data: { url: getEmbedURL(url) },
         })
       } finally {
       }
@@ -70,6 +71,18 @@ const EmbedForm = ({ onSubmit }: EmbedFormProps) => {
       </FormRow>
     </Form>
   )
+}
+
+function getEmbedURL(url: string) {
+  const isFigmaDefaultURL = /^(?:https:\/\/)?(?:www\.)?figma\.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/([^\?\n\r\/]+)?((?:\?[^\/]*?node-id=([^&\n\r\/]+))?[^\/]*?)(\/duplicate)?)?$/.test(
+    url
+  )
+  if (isFigmaDefaultURL) {
+    return `https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(
+      url
+    )}`
+  }
+  return getEmbedURL
 }
 
 export default EmbedForm
