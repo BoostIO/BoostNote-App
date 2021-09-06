@@ -95,6 +95,7 @@ import Icon from '../../../design/components/atoms/Icon'
 import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationPage from '../ApplicationPage'
 import ApplicationContent from '../ApplicationContent'
+import { mockBackend } from '../../lib/consts'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -739,6 +740,10 @@ const Editor = ({
   }, [doc.id])
 
   useEffect(() => {
+    if (mockBackend) {
+      setInitialLoadDone(true)
+      return
+    }
     if (
       mountedRef.current &&
       (connState === 'synced' || connState === 'loaded')
