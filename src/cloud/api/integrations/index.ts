@@ -29,6 +29,7 @@ export interface IntegrationActionTypes {
       login: string
     }
   }[]
+  ['repo:pulls']: any[]
   ['repo:issues']: any[]
   ['repo:labels']: {
     id: number
