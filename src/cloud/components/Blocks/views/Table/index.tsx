@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { ViewProps } from '../'
-import { mdiCog, mdiDownloadOutline, mdiTrashCanOutline } from '@mdi/js'
+import {
+  mdiCog,
+  mdiDownloadOutline,
+  mdiTrashCan,
+  mdiTrashCanOutline,
+} from '@mdi/js'
 import GithubIssueForm from '../../forms/GithubIssueForm'
 import {
   Column,
@@ -30,7 +35,9 @@ import Flexbox from '../../../../../design/components/atoms/Flexbox'
 import BlockLayout from '../../BlockLayout'
 import FormInput from '../../../../../design/components/molecules/Form/atoms/FormInput'
 import { useDebounce } from 'react-use'
-import BlockTree from '../../BlockTree'
+import { blockTitle } from '../../../../lib/utils/blocks'
+import BlockIcon from '../../BlockIcon'
+import NavigationItem from '../../../../../design/components/molecules/Navigation/NavigationItem'
 
 type GithubCellProps = BlockDataProps<TableBlock['children'][number]>
 interface TableViewProps extends ViewProps<TableBlock> {
@@ -230,10 +237,20 @@ const TableView = ({
                           alignItems='baseline'
                           justifyContent='center'
                         >
-                          <BlockTree
-                            root={child}
-                            onSelect={setCurrentBlock}
-                            onDelete={actions.remove}
+                          <NavigationItem
+                            id={`table-block-${block.id}-${child.id}`}
+                            label={blockTitle(child)}
+                            icon={{
+                              type: 'node',
+                              icon: <BlockIcon block={child} size={16} />,
+                            }}
+                            labelClick={() => setCurrentBlock(child)}
+                            controls={[
+                              {
+                                icon: mdiTrashCan,
+                                onClick: () => actions.remove(child),
+                              },
+                            ]}
                             className='table__title__tree'
                           />
                         </Flexbox>

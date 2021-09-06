@@ -252,7 +252,12 @@ const BlockContent = ({ doc }: BlockContentProps) => {
         >
           <BlockView
             isRootBlock={true}
-            block={currentBlock || state.block}
+            block={
+              currentBlock ||
+              (state.block.children.length > 0
+                ? state.block.children[0]
+                : state.block)
+            }
             actions={actions}
             canvas={doc}
             realtime={provider}
