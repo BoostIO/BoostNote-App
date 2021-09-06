@@ -10,6 +10,7 @@ import Table from './Table'
 import GithubIssueView from './GithubIssue'
 
 export interface ViewProps<T extends Block> {
+  isRootBlock?: boolean
   block: T
   actions: BlockActions
   canvas: Canvas
@@ -20,6 +21,7 @@ export interface ViewProps<T extends Block> {
   currentUserIsCoreMember: boolean
 }
 export const BlockView = ({
+  isRootBlock,
   block,
   actions,
   canvas,
@@ -29,14 +31,11 @@ export const BlockView = ({
   scrollToElement,
   setCurrentBlock,
 }: ViewProps<Block>) => {
-  if (block == null) {
-    return null
-  }
-
   switch (block.type) {
     case 'container':
       return (
         <Container
+          isRootBlock={isRootBlock}
           block={block}
           actions={actions}
           isChild={isChild}
