@@ -2,12 +2,12 @@ import React from 'react'
 import { mdiTrashCan } from '@mdi/js'
 import { Block } from '../../api/blocks'
 import styled from '../../../design/lib/styled'
-import { capitalize } from '../../lib/utils/string'
 import BlockIcon from './BlockIcon'
 import NavigationItem from '../../../design/components/molecules/Navigation/NavigationItem'
 import { min } from 'ramda'
 import cc from 'classcat'
 import { FoldingProps } from '../../../design/components/atoms/FoldingWrapper'
+import { blockTitle } from '../../lib/utils/blocks'
 
 interface BlockTreeProps {
   idPrefix?: string
@@ -42,7 +42,6 @@ const BlockTree = ({
       depth={parentDepth}
     >
       <NavigationItem
-        className='block__editor__nav--item'
         folded={showFoldEvents ? root.folded : undefined}
         folding={showFoldEvents ? root.folding : undefined}
         id={`${idPrefix}-block-${root.id}`}
@@ -73,19 +72,6 @@ const BlockTree = ({
         ))}
     </StyledBlockTree>
   )
-}
-
-function blockTitle(block: Block) {
-  switch (block.type) {
-    case 'github.issue':
-      return block.data?.title || 'Github Issue'
-    case 'embed':
-    case 'table':
-    case 'container':
-      return block.name.trim() === '' ? capitalize(block.type) : block.name
-    default:
-      return capitalize(block.type)
-  }
 }
 
 const StyledBlockTree = styled.div<{ depth: number }>`
