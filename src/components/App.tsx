@@ -11,7 +11,11 @@ import { values, keys } from '../lib/db/utils'
 import { addIpcListener, removeIpcListener } from '../lib/electronOnly'
 import { useGeneralStatus } from '../lib/generalStatus'
 import { useBoostNoteProtocol } from '../lib/protocol'
-import { useBoostHub, getBoostHubTeamIconUrl } from '../lib/boosthub'
+import {
+  useBoostHub,
+  getBoostHubTeamIconUrl,
+  DesktopGlobalDataResponseBody,
+} from '../lib/boosthub'
 import {
   boostHubTeamCreateEventEmitter,
   BoostHubTeamCreateEvent,
@@ -40,6 +44,7 @@ import CloudIntroModal from './organisms/CloudIntroModal'
 import AppNavigator from './organisms/AppNavigator'
 import Toast from '../design/components/organisms/Toast'
 import styled from '../design/lib/styled'
+import { mockBackend } from '../cloud/lib/consts'
 
 const LoadingText = styled.div`
   margin: 30px;
@@ -74,7 +79,25 @@ const App = () => {
 
       const accessToken = cloudUserInfo.accessToken
 
-      const desktopGlobalData = await fetchDesktopGlobalData(accessToken)
+      const desktopGlobalData = mockBackend
+        ? ({
+            user: {
+              id: 'dev',
+              uniqueName: 'dev-user',
+              displayName: 'dev-user',
+            },
+            teams: [
+              {
+                id: 'dev',
+                name: 'dev',
+                domain: 'dev',
+                createdAt: '',
+              },
+            ],
+          } as DesktopGlobalDataResponseBody)
+        : await fetchDesktopGlobalData(accessToken)
+      console.log(desktopGlobalData)
+
       if (desktopGlobalData.user == null) {
         messageBox({
           title: 'Sign In',
