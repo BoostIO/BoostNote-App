@@ -85,7 +85,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
       icon={mdiPencilBoxOutline}
       id='sidebar-newdoc-btn'
       label={translate(lngKeys.CreateNewDoc)}
-      labelClick={openDocTypeSelect}
+      labelClick={team.state.blocksBeta ? openDocTypeSelect : openNewDocModal}
       contextControls={[
         {
           icon: mdiPencilBoxMultipleOutline,
