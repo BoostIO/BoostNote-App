@@ -16,7 +16,6 @@
     "start": "electron electron/index.js",
     "lint": "eslint src/* --ext .ts,.tsx",
     "format": "prettier --write \"src/**/*\"",
-    "build": "rimraf compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production",
     "build:electron": "npm run build:electron-renderer && npm run build:electron-main",
     "build:electron-renderer": "rimraf electron/compiled && env-cmd cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" TARGET=electron webpack --mode production",
     "build:electron-main": "rimraf electron/index.js && env-cmd ts-node -P tsconfig-webpack.json scripts/build-electron-main",
