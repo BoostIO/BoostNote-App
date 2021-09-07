@@ -13,8 +13,11 @@ import { useModal } from '../../../../design/lib/stores/modal'
 import BlockCreationModal from '../BlockCreationModal'
 import BlockToolbar from '../BlockToolbar'
 import BlockLayout from '../BlockLayout'
-import { getTableBlockInputId } from './Table'
-import { markdownBlockEventEmitter } from '../../../lib/utils/events'
+import {
+  markdownBlockEventEmitter,
+  tableBlockEventEmitter,
+} from '../../../lib/utils/events'
+import { sleep } from '../../../../lib/sleep'
 
 interface ContainerViewProps extends ViewProps<ContainerBlock> {
   setCurrentBlock: React.Dispatch<React.SetStateAction<Block | null>>
@@ -28,42 +31,51 @@ const ContainerView = ({
   isChild,
   realtime,
   currentUserIsCoreMember,
+  sendingMap,
   scrollToElement,
   setCurrentBlock,
 }: ContainerViewProps) => {
   const { openModal, closeAllModals } = useModal()
 
-  const createBlock = useCallback(
-    async (newBlock: BlockCreateRequestBody) => {
-      const createdBlock = await actions.create(newBlock, block)
-      closeAllModals()
-
-      if (canvas.rootBlock.id === block.id) {
-        setCurrentBlock(createdBlock)
-        return
-      }
+  const domBlockCreationHandler = useCallback(
+    async (createdBlock: Block) => {
+      await sleep(100) //rendering delay
       const blockElem = document.getElementById(getBlockDomId(createdBlock))
       scrollToElement(blockElem)
-
       if (createdBlock.type === 'table') {
-        const titleElement = document.getElementById(
-          getTableBlockInputId(createdBlock)
-        )
-        if (titleElement != null) titleElement.focus()
-      } else if (newBlock.type === 'markdown') {
+        tableBlockEventEmitter.dispatch({
+          type: 'focus-title',
+          id: createdBlock.id,
+        })
+      } else if (createdBlock.type === 'markdown') {
         markdownBlockEventEmitter.dispatch({
           type: 'edit',
           id: createdBlock.id,
         })
       }
     },
+    [scrollToElement]
+  )
+
+  const createBlock = useCallback(
+    async (newBlock: BlockCreateRequestBody) => {
+      await actions.create(newBlock, block, {
+        afterSuccess: (createdBlock) => {
+          if (canvas.rootBlock.id === block.id) {
+            setCurrentBlock(createdBlock)
+          }
+          domBlockCreationHandler(createdBlock)
+        },
+      })
+      closeAllModals()
+    },
     [
       block,
       actions,
       closeAllModals,
-      scrollToElement,
       canvas.rootBlock.id,
       setCurrentBlock,
+      domBlockCreationHandler,
     ]
   )
 
@@ -135,6 +147,7 @@ const ContainerView = ({
                 scrollToElement={scrollToElement}
                 setCurrentBlock={setCurrentBlock}
                 currentUserIsCoreMember={currentUserIsCoreMember}
+                sendingMap={sendingMap}
               />
             )
           })}

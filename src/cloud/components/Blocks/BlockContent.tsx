@@ -28,6 +28,11 @@ import {
   useSidebarCollapse,
 } from '../../lib/stores/sidebarCollapse'
 import { FoldingProps } from '../../../design/components/atoms/FoldingWrapper'
+import {
+  markdownBlockEventEmitter,
+  tableBlockEventEmitter,
+} from '../../lib/utils/events'
+import { sleep } from '../../../lib/sleep'
 
 export interface Canvas extends SerializedDocWithBookmark {
   rootBlock: ContainerBlock
@@ -43,7 +48,7 @@ interface BlockContentProps {
 
 const BlockContent = ({ doc }: BlockContentProps) => {
   const { currentUserIsCoreMember } = usePage()
-  const { state, actions } = useDocBlocks(doc.rootBlock.id)
+  const { state, actions, sendingMap } = useDocBlocks(doc.rootBlock.id)
   const { openModal, closeAllModals } = useModal()
   const [currentBlock, setCurrentBlock] = useState<Block | null>(null)
   const [provider] = useRealtime({
@@ -65,9 +70,28 @@ const BlockContent = ({ doc }: BlockContentProps) => {
   const createBlock = useCallback(
     async (block: BlockCreateRequestBody) => {
       try {
-        const newBlock = await actions.create(block, doc.rootBlock)
+        const res = await actions.create(block, doc.rootBlock, {
+          afterSuccess: (block) => {
+            setCurrentBlock(block)
+          },
+        })
+        if (!res.err) {
+          const block = res.data
+          if (block.type === 'markdown') {
+            await sleep(100) //rendering delay
+            markdownBlockEventEmitter.dispatch({
+              type: 'edit',
+              id: block.id,
+            })
+          } else if (block.type === 'table') {
+            await sleep(100) //rendering delay
+            tableBlockEventEmitter.dispatch({
+              type: 'focus-title',
+              id: block.id,
+            })
+          }
+        }
         closeAllModals()
-        setCurrentBlock(newBlock)
       } catch (error) {
         pushApiErrorMessage(error)
       }
@@ -171,6 +195,7 @@ const BlockContent = ({ doc }: BlockContentProps) => {
               onDelete={actions.remove}
               idPrefix='nav'
               showFoldEvents={true}
+              sendingMap={sendingMap}
             />
           ))}
         </Scroller>
@@ -264,6 +289,7 @@ const BlockContent = ({ doc }: BlockContentProps) => {
             setCurrentBlock={setCurrentBlock}
             scrollToElement={scrollToElement}
             currentUserIsCoreMember={currentUserIsCoreMember}
+            sendingMap={sendingMap}
           />
         </Scroller>
         <div id='block__editor__view__toolbar-portal' />
