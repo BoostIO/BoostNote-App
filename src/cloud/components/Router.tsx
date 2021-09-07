@@ -92,6 +92,7 @@ const V2CombinedProvider = combineProviders(
 interface PageInfo {
   Component: React.ComponentType<any>
   pageProps: any
+  isError?: boolean
 }
 
 interface PageSpec {
@@ -205,6 +206,7 @@ const Router = () => {
             }
 
             setPageInfo({
+              isError: true,
               Component: ErrorPage,
               pageProps: {
                 error,
@@ -258,7 +260,7 @@ const Router = () => {
         <CombinedProvider>
           <NavProvider pageProps={pageInfo.pageProps as any}>
             <V2ThemeProvider>
-              {isApplicationPagePathname(pathname) ? (
+              {isApplicationPagePathname(pathname) && !pageInfo.isError ? (
                 <Application>
                   <pageInfo.Component {...pageInfo.pageProps} />
                 </Application>

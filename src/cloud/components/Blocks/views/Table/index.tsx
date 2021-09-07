@@ -498,7 +498,7 @@ const StyledTableView = styled.div`
   & td {
     min-width: 130px;
     min-height: 20px;
-    height: 1px;
+    height: auto;
   }
 
   td,
