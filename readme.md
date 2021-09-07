@@ -65,9 +65,68 @@ Also, you can help other users by answering their questions in [here](https://gi
 
 ### Resolving existing issues
 
-> Currently, our dev environment is not available. It will be ready in the first week of September 2021.
-
 We have left the "help wanted" label to [some issues](https://github.com/BoostIO/BoostNote-App/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted+%3Asos%3A%22) which external contributors could try to resolve. Some of them might have a small bounty so you can get a cup of coffee from it after hacking. If you find any interesting issues but their specs are not clear or you don't know how to fix them, please leave a comment on the issues. Then, we will give you more instructions.
+
+## Development
+
+Currently, we provide the frontend source code only so you cannot host our backend server by yourself.
+But you can participate in development via mock backend mode. Although it still doesn't cover every API yet, you can access the basic folder and document management.
+
+### How to run the app
+
+Create .env file.
+
+```sh
+MOCK_BACKEND=true
+BOOST_HUB_BASE_URL=http://localhost:3004
+```
+
+Run webpack processors. You have to run them in separate terminals.
+
+```sh
+npm run dev:cloud
+# You can skip next two scripts if you don't need to run electron app.
+npm run dev:electron
+npm run dev:webpack
+```
+
+### How to extend mock backend
+
+When the mode is enabled, all API calls will be passed to `src/cloud/api/mock/mockHandler.ts`.
+
+The source code is quite similar to a router interface. All you need to is `method`, `pathname` and a handler function. So, when you confront `Not Found` error while calling `GET /api/something`, you can simply add a mock route like below.
+
+```ts
+{
+  method: 'get',
+  pathname: 'api/something',
+  handler: ({ search }): GetSomethingResponse => {
+    return {
+      ...something
+    }
+  },
+}
+```
+
+### Scripts
+
+- Development scipts
+  - `npm run dev:cloud` : Run webpack for the cloud space
+  - `npm run dev:webpack` : Run webpack for the desktop app main window renderer
+  - `npm run dev:electron` : Run webpack for the desktop app main processor
+  - `npm run dev:mobile` : Run webpack for the mobile app
+  - `npm run lint` : Check lint errors
+  - `npm run format` : Try to fix lint errors automatically
+  - `npm test` : Run test script
+  - `npm run tsc` : Check type errors
+- Build scripts
+  - `npm run build:electron` : Build assets for the desktop app
+  - `npm run build:cloud` : Build asssets for the cloud space
+  - `npm run build:mobile` : Build assets for the mobile app
+  - `npm start` : Run the desktop app with prebuilt assets
+  - `npm run meta` : Prepare meta data for the desktop app building(Generate package.json for electron-build module)
+  - `npm run prepack` : Create desktop app installers without signing
+  - `npm run release` : Create desktop app installers for production and upload them to GitHub
 
 ## 🔗 Links
 
