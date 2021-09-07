@@ -40,6 +40,7 @@ const GithubIssueView = ({
   actions: blockActions,
   canvas,
   currentUserIsCoreMember,
+  sendingMap,
   scrollToElement,
   setCurrentBlock,
 }: ViewProps<GithubIssueBlock>) => {
@@ -114,22 +115,25 @@ const GithubIssueView = ({
 
   const createBlock = useCallback(
     async (newBlock: BlockCreateRequestBody) => {
-      const createdBlock = await blockActions.create(newBlock, block)
-      closeAllModals()
-      const blockElem = document.getElementById(getBlockDomId(createdBlock))
-      scrollToElement(blockElem)
+      await blockActions.create(newBlock, block, {
+        afterSuccess: (createdBlock) => {
+          const blockElem = document.getElementById(getBlockDomId(createdBlock))
+          scrollToElement(blockElem)
 
-      if (createdBlock.type === 'table') {
-        const titleElement = document.getElementById(
-          getTableBlockInputId(createdBlock)
-        )
-        if (titleElement != null) titleElement.focus()
-      } else if (newBlock.type === 'markdown') {
-        markdownBlockEventEmitter.dispatch({
-          type: 'edit',
-          id: createdBlock.id,
-        })
-      }
+          if (createdBlock.type === 'table') {
+            const titleElement = document.getElementById(
+              getTableBlockInputId(createdBlock)
+            )
+            if (titleElement != null) titleElement.focus()
+          } else if (newBlock.type === 'markdown') {
+            markdownBlockEventEmitter.dispatch({
+              type: 'edit',
+              id: createdBlock.id,
+            })
+          }
+        },
+      })
+      closeAllModals()
     },
     [blockActions, block, closeAllModals, scrollToElement]
   )
@@ -233,6 +237,7 @@ const GithubIssueView = ({
               setCurrentBlock={setCurrentBlock}
               scrollToElement={scrollToElement}
               currentUserIsCoreMember={currentUserIsCoreMember}
+              sendingMap={sendingMap}
             />
           )
         })}

@@ -76,6 +76,7 @@ function hexToRgb(hex: string) {
 const BlockLayoutContainer = styled.div`
   width: 100%;
   position: relative;
+  z-index: 0;
   transition: all 0.3s ease-in-out;
   background: ${({ theme }) => theme.colors.background.primary};
   padding: ${({ theme }) => theme.sizes.spaces.md}px

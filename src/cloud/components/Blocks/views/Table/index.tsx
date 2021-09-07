@@ -38,6 +38,10 @@ import { useDebounce } from 'react-use'
 import { blockTitle } from '../../../../lib/utils/blocks'
 import BlockIcon from '../../BlockIcon'
 import NavigationItem from '../../../../../design/components/molecules/Navigation/NavigationItem'
+import {
+  TableBlockEventDetails,
+  tableBlockEventEmitter,
+} from '../../../../lib/utils/events'
 
 type GithubCellProps = BlockDataProps<TableBlock['children'][number]>
 interface TableViewProps extends ViewProps<TableBlock> {
@@ -49,12 +53,14 @@ const TableView = ({
   actions,
   realtime,
   currentUserIsCoreMember,
+  sendingMap,
   setCurrentBlock,
 }: TableViewProps) => {
   const { openModal, openContextModal, closeAllModals } = useModal()
   const { state, actions: tableActions } = useBlockTable(block, realtime.doc)
   const [tableTitle, setTableTitle] = useState(block.name || '')
   const tableRef = useRef<string>(block.id)
+  const titleInputRef = useRef<HTMLInputElement>(null)
 
   const subscriptionsRef = useRef<Set<(col: Column[]) => void>>(new Set())
   useEffect(() => {
@@ -177,6 +183,24 @@ const TableView = ({
     }
   }, [block])
 
+  useEffect(() => {
+    const handler = ({ detail }: CustomEvent<TableBlockEventDetails>) => {
+      if (detail.id !== block.id) {
+        return
+      }
+
+      switch (detail.type) {
+        case 'focus-title':
+          titleInputRef.current?.focus()
+          return
+        default:
+          return
+      }
+    }
+    tableBlockEventEmitter.listen(handler)
+    return () => tableBlockEventEmitter.unlisten(handler)
+  }, [block])
+
   const anchorId = `block__${block.id}__table`
   return (
     <BlockLayout
@@ -203,6 +227,7 @@ const TableView = ({
           className='block__table__title'
           id={getTableBlockInputId(block)}
           disabled={!currentUserIsCoreMember}
+          ref={titleInputRef}
         />
         <div id={anchorId} />
         <div className='block__table__view__wrapper'>
@@ -249,6 +274,9 @@ const TableView = ({
                               {
                                 icon: mdiTrashCan,
                                 onClick: () => actions.remove(child),
+                                disabled: sendingMap.has(child.id),
+                                spinning:
+                                  sendingMap.get(child.id) === 'delete-block',
                               },
                             ]}
                             className='table__title__tree'

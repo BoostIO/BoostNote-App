@@ -3,7 +3,7 @@ import styled from '../../../lib/styled'
 import { AppComponent, ControlButtonProps } from '../../../lib/types'
 import cc from 'classcat'
 import FoldingWrapper, { FoldingProps } from '../../atoms/FoldingWrapper'
-import Button from '../../atoms/Button'
+import Button, { LoadingButton } from '../../atoms/Button'
 import { mdiChevronDown, mdiChevronRight } from '@mdi/js'
 import { Emoji } from 'emoji-mart'
 import Icon from '../../atoms/Icon'
@@ -135,7 +135,8 @@ const NavItem: AppComponent<
         {controls != null && controls.length > 0 && (
           <div className='navigation__item__controls'>
             {(controls || []).map((control, i) => (
-              <Button
+              <LoadingButton
+                spinning={control.spinning}
                 key={i}
                 variant='icon'
                 iconSize={16}
