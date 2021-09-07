@@ -2,6 +2,7 @@ import { createStoreContext } from '../utils/context'
 import { useRef, useState, useCallback } from 'react'
 import { makeConstructor, MultiplexConnection } from '../realtime/client'
 import { useEffectOnce } from 'react-use'
+import { mockBackend } from '../consts'
 
 function useRealtimeConnStore() {
   const multiplexerRef = useRef<[(token: string) => WebSocket, () => void]>()
@@ -17,6 +18,9 @@ function useRealtimeConnStore() {
   })
 
   const connect = useCallback((url: string, auth: string) => {
+    if (mockBackend) {
+      return
+    }
     if (currentUrl.current === url) {
       return
     }
