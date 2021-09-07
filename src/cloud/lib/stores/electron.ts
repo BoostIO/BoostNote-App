@@ -20,11 +20,15 @@ import { IpcRendererEvent } from 'electron'
 import { useEffectOnce } from 'react-use'
 import ltSemver from 'semver/functions/lt'
 
-export function addFoundInPageListener(callback: any) {
+export function addFoundInPageListener(
+  callback: (matches: number | null) => void
+) {
   ;(window as any).__ELECTRON_ONLY__.addFoundInPageListener(callback)
 }
 
-export function removeFoundInPageListener(callback: any) {
+export function removeFoundInPageListener(
+  callback: (matches: number | null) => void
+) {
   ;(window as any).__ELECTRON_ONLY__.removeFoundInPageListener(callback)
 }
 
