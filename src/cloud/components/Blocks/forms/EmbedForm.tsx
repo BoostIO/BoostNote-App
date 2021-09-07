@@ -82,7 +82,14 @@ function getEmbedURL(url: string) {
       url
     )}`
   }
-  return getEmbedURL
+  const isYoutubeVideoURL = new RegExp(
+    /^(?:https:\/\/)?(?:m.)?(?:www\.)?(?:(?:youtube\.com\/watch\?v=)|(?:youtu.be)\/)([A-z0-9_-]*)/,
+    'gim'
+  ).exec(url)
+  if (isYoutubeVideoURL != null) {
+    return `https://www.youtube.com/embed/${isYoutubeVideoURL[1]}`
+  }
+  return url
 }
 
 export default EmbedForm

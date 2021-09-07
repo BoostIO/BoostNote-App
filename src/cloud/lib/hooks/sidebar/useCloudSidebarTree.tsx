@@ -12,6 +12,7 @@ import {
   mdiStarOutline,
   mdiTag,
   mdiTrashCanOutline,
+  mdiPaletteOutline,
 } from '@mdi/js'
 import { FoldingProps } from '../../../../design/components/atoms/FoldingWrapper'
 import { SidebarDragState } from '../../../../design/lib/dnd'
@@ -484,7 +485,8 @@ export function useCloudSidebarTree() {
         label: getDocTitle(doc, 'Untitled'),
         bookmarked: doc.bookmarked,
         emoji: doc.emoji,
-        defaultIcon: mdiFileDocumentOutline,
+        defaultIcon:
+          doc.rootBlock != null ? mdiPaletteOutline : mdiFileDocumentOutline,
         status: doc.status,
         hidden:
           doc.archivedAt != null ||
