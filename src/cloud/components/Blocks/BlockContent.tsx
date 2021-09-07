@@ -77,14 +77,13 @@ const BlockContent = ({ doc }: BlockContentProps) => {
         })
         if (!res.err) {
           const block = res.data
+          await sleep(100) //rendering delay
           if (block.type === 'markdown') {
-            await sleep(100) //rendering delay
             markdownBlockEventEmitter.dispatch({
               type: 'edit',
               id: block.id,
             })
           } else if (block.type === 'table') {
-            await sleep(100) //rendering delay
             tableBlockEventEmitter.dispatch({
               type: 'focus-title',
               id: block.id,
