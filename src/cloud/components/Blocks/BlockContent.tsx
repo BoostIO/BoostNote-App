@@ -4,6 +4,7 @@ import {
   mdiPackageVariantClosed,
   mdiCodeTags,
   mdiFileDocumentOutline,
+  mdiTable,
 } from '@mdi/js'
 import EmbedForm from './forms/EmbedForm'
 import { Block, BlockCreateRequestBody, ContainerBlock } from '../../api/blocks'
@@ -33,6 +34,7 @@ import {
   tableBlockEventEmitter,
 } from '../../lib/utils/events'
 import { sleep } from '../../../lib/sleep'
+import cc from 'classcat'
 
 export interface Canvas extends SerializedDocWithBookmark {
   rootBlock: ContainerBlock
@@ -249,7 +251,7 @@ const BlockContent = ({ doc }: BlockContentProps) => {
                     <Icon path={mdiPlus} size={16} />
                   </Flexbox>
                 }
-                icon={{ type: 'icon', path: mdiPackageVariantClosed }}
+                icon={{ type: 'icon', path: mdiTable }}
               />
               <NavigationItem
                 labelClick={createEmbed}
@@ -270,7 +272,12 @@ const BlockContent = ({ doc }: BlockContentProps) => {
       </UpDownList>
       <div className='block__editor__view'>
         <Scroller
-          className='block__editor__view__wrapper'
+          className={cc([
+            'block__editor__view__wrapper',
+            currentBlock != null &&
+              currentBlock.type === 'embed' &&
+              'block__editor__view__wrapper--padding-less',
+          ])}
           id='block__editor__view__wrapper'
           ref={contentScrollerRef}
         >
@@ -301,6 +308,10 @@ const StyledBlockContent = styled.div`
   display: flex;
   flex: 1 1 auto;
   overflow: hidden;
+
+  .block__editor__view__wrapper--padding-less {
+    padding: 0 !important;
+  }
 
   & > .block__editor__nav {
     padding-top: ${({ theme }) => theme.sizes.spaces.df}px;
