@@ -8,16 +8,11 @@ import {
 } from '../../../api/blocks'
 import styled from '../../../../design/lib/styled'
 import { BlockView, ViewProps } from '.'
-import { getBlockDomId } from '../../../lib/blocks/dom'
+import { domBlockCreationHandler, getBlockDomId } from '../../../lib/blocks/dom'
 import { useModal } from '../../../../design/lib/stores/modal'
 import BlockCreationModal from '../BlockCreationModal'
 import BlockToolbar from '../BlockToolbar'
 import BlockLayout from '../BlockLayout'
-import {
-  markdownBlockEventEmitter,
-  tableBlockEventEmitter,
-} from '../../../lib/utils/events'
-import { sleep } from '../../../../lib/sleep'
 
 interface ContainerViewProps extends ViewProps<ContainerBlock> {
   setCurrentBlock: React.Dispatch<React.SetStateAction<Block | null>>
@@ -37,26 +32,6 @@ const ContainerView = ({
 }: ContainerViewProps) => {
   const { openModal, closeAllModals } = useModal()
 
-  const domBlockCreationHandler = useCallback(
-    async (createdBlock: Block) => {
-      await sleep(100) //rendering delay
-      const blockElem = document.getElementById(getBlockDomId(createdBlock))
-      scrollToElement(blockElem)
-      if (createdBlock.type === 'table') {
-        tableBlockEventEmitter.dispatch({
-          type: 'focus-title',
-          id: createdBlock.id,
-        })
-      } else if (createdBlock.type === 'markdown') {
-        markdownBlockEventEmitter.dispatch({
-          type: 'edit',
-          id: createdBlock.id,
-        })
-      }
-    },
-    [scrollToElement]
-  )
-
   const createBlock = useCallback(
     async (newBlock: BlockCreateRequestBody) => {
       await actions.create(newBlock, block, {
@@ -64,7 +39,7 @@ const ContainerView = ({
           if (canvas.rootBlock.id === block.id) {
             setCurrentBlock(createdBlock)
           }
-          domBlockCreationHandler(createdBlock)
+          domBlockCreationHandler(scrollToElement, createdBlock)
         },
       })
       closeAllModals()
@@ -75,7 +50,7 @@ const ContainerView = ({
       closeAllModals,
       canvas.rootBlock.id,
       setCurrentBlock,
-      domBlockCreationHandler,
+      scrollToElement,
     ]
   )
 
