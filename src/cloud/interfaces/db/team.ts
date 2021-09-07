@@ -27,4 +27,5 @@ export type SerializedTeam = SerializedUnserializableTeamProps &
 export interface TeamOnboardingState {
   import?: boolean
   settings?: boolean
+  blocksBeta?: boolean
 }
