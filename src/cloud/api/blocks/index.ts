@@ -69,6 +69,6 @@ export async function updateBlock(
   return block
 }
 
-export async function deleteBlock(id: string) {
-  await callApi(`api/blocks/${id}`, { method: 'delete' })
+export async function deleteBlock(id: string, force?: boolean) {
+  await callApi(`api/blocks/${id}`, { method: 'delete', json: { force } })
 }
