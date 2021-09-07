@@ -19,7 +19,7 @@ import GithubLabelsData from '../data/GithubLabelsData'
 import { useModal } from '../../../../design/lib/stores/modal'
 import DataTypeMenu from '../props/DataTypeMenu'
 import { capitalize } from '../../../lib/utils/string'
-import { getBlockDomId } from '../../../lib/blocks/dom'
+import { domBlockCreationHandler, getBlockDomId } from '../../../lib/blocks/dom'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import { ExternalLink } from '../../../../design/components/atoms/Link'
 import BlockCreationModal from '../BlockCreationModal'
@@ -29,9 +29,7 @@ import InfoBlock, {
   InfoBlockRow,
 } from '../../../../design/components/organisms/InfoBlock'
 import BlockLayout from '../BlockLayout'
-import { getTableBlockInputId } from './Table'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
-import { markdownBlockEventEmitter } from '../../../lib/utils/events'
 import Button from '../../../../design/components/atoms/Button'
 
 const GithubIssueView = ({
@@ -117,20 +115,7 @@ const GithubIssueView = ({
     async (newBlock: BlockCreateRequestBody) => {
       await blockActions.create(newBlock, block, {
         afterSuccess: (createdBlock) => {
-          const blockElem = document.getElementById(getBlockDomId(createdBlock))
-          scrollToElement(blockElem)
-
-          if (createdBlock.type === 'table') {
-            const titleElement = document.getElementById(
-              getTableBlockInputId(createdBlock)
-            )
-            if (titleElement != null) titleElement.focus()
-          } else if (newBlock.type === 'markdown') {
-            markdownBlockEventEmitter.dispatch({
-              type: 'edit',
-              id: createdBlock.id,
-            })
-          }
+          domBlockCreationHandler(scrollToElement, createdBlock)
         },
       })
       closeAllModals()
