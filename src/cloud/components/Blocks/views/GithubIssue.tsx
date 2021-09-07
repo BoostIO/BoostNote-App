@@ -31,6 +31,7 @@ import InfoBlock, {
 import BlockLayout from '../BlockLayout'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import Button from '../../../../design/components/atoms/Button'
+import { StyledUserIcon } from '../../UserIcon'
 
 const GithubIssueView = ({
   block,
@@ -155,6 +156,17 @@ const GithubIssueView = ({
           <h1>{block.data.title}</h1>
         </Flexbox>
         <InfoBlock className='github-issue__view__info'>
+          {block.data.repository != null &&
+            block.data.repository.organization != null && (
+              <InfoBlockRow label='Organization'>
+                <ExternalLink
+                  showIcon={true}
+                  href={block.data.repository.organization.html_url}
+                >
+                  {block.data.repository.organization.login}
+                </ExternalLink>
+              </InfoBlockRow>
+            )}
           {htmlURLRegexes.repoUrl != null && (
             <InfoBlockRow label='Repository'>
               <ExternalLink href={htmlURLRegexes.repoUrl[1]} showIcon={true}>
@@ -176,6 +188,16 @@ const GithubIssueView = ({
               </ExternalLink>
             </InfoBlockRow>
           )}
+          {block.data.creator != null && (
+            <InfoBlockRow label='Creator'>
+              <StyledUserIcon className='subtle'>
+                <img
+                  src={block.data.user.avatar_url}
+                  alt={block.data.user.login[0]}
+                />
+              </StyledUserIcon>
+            </InfoBlockRow>
+          )}
           <InfoBlockRow label='Assignees'>
             <GitHubAssigneesData data={block.data} onUpdate={updateBlock} />
           </InfoBlockRow>
@@ -185,6 +207,11 @@ const GithubIssueView = ({
           <InfoBlockRow label='Labels'>
             <GithubLabelsData data={block.data} onUpdate={updateBlock} />
           </InfoBlockRow>
+          {block.data.body != null && block.data.body.trim() !== '' && (
+            <InfoBlockRow label='Body'>
+              <div className='github-issue__body'>{block.data.body}</div>{' '}
+            </InfoBlockRow>
+          )}
           {props.map(([key, value]) => {
             return (
               <InfoBlockRow label={getPropName(key)} key={`custom-${key}`}>
@@ -254,6 +281,14 @@ const GithubIssueView = ({
 const StyledGithubIssueView = styled.div`
   h1 {
     margin: 0;
+  }
+
+  .github-issue__body {
+    padding: ${({ theme }) => theme.sizes.spaces.xsm}px
+      ${({ theme }) => theme.sizes.spaces.sm}px;
+    background: ${({ theme }) => theme.colors.background.secondary};
+    white-space: break-spaces;
+    display: block;
   }
 
   .github-issue__view__title .icon {
