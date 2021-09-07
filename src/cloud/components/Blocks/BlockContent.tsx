@@ -330,6 +330,8 @@ const StyledBlockContent = styled.div`
     flex: 1 1 auto;
     height: 100%;
     position: relative;
+    width: 100%;
+    overflow: hidden;
   }
 
   & .block__editor__view__wrapper {
