@@ -88,3 +88,11 @@ export type MarkdownBlockEventDetails = {
 export const markdownBlockEventEmitter = createCustomEventEmitter<
   MarkdownBlockEventDetails
 >('blocks-markdown')
+
+export type TableBlockEventDetails = {
+  type: string
+  id: string
+}
+export const tableBlockEventEmitter = createCustomEventEmitter<
+  TableBlockEventDetails
+>('blocks-table')

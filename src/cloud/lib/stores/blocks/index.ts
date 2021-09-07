@@ -1,14 +1,6 @@
 import { createStoreContext } from '../../utils/context'
 import { useRef, useCallback } from 'react'
-import {
-  Block,
-  getBlockTree,
-  deleteBlock,
-  updateBlock,
-  createBlock,
-  BlockUpdateRequestBody,
-  BlockCreateRequestBody,
-} from '../../../api/blocks'
+import { Block, getBlockTree } from '../../../api/blocks'
 import { useToast } from '../../../../design/lib/stores/toast'
 
 type BlocksObserver = (blocks: Block) => void
@@ -54,37 +46,9 @@ function useBlocksStore() {
     [getBlocks]
   )
 
-  const create = useCallback(
-    async (body: BlockCreateRequestBody, parent: Block, root: string) => {
-      const block = await createBlock(body, parent.id)
-      await getBlocks(root)
-      return block
-    },
-    [getBlocks]
-  )
-
-  const remove = useCallback(
-    async (block: Block, root: string) => {
-      await deleteBlock(block.id)
-      await getBlocks(root)
-    },
-    [getBlocks]
-  )
-
-  const update = useCallback(
-    async (block: BlockUpdateRequestBody, root: string) => {
-      const updated = await updateBlock(block)
-      await getBlocks(root)
-      return updated
-    },
-    [getBlocks]
-  )
-
   return {
     observeDocBlocks,
-    create,
-    remove,
-    update,
+    getBlocks,
   }
 }
 

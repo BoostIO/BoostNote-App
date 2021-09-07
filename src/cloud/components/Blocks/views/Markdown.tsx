@@ -96,6 +96,7 @@ const MarkdownView = ({
       if (detail.id !== block.id) {
         return
       }
+      console.log('got event')
 
       switch (detail.type) {
         case 'edit':
@@ -135,7 +136,6 @@ const MarkdownView = ({
             : `block__markdown--mode-${mode}`,
         ])}
         id={getBlockDomId(block)}
-        onEv
         onFocus={() => setMode('editor')}
       >
         {!synced ? (
