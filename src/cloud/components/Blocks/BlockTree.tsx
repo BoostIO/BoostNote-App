@@ -8,16 +8,18 @@ import { min } from 'ramda'
 import cc from 'classcat'
 import { FoldingProps } from '../../../design/components/atoms/FoldingWrapper'
 import { blockTitle } from '../../lib/utils/blocks'
+import { BlockActionRemove } from '../../lib/hooks/useDocBlocks'
 
 interface BlockTreeProps {
   idPrefix?: string
   root: Block & { folding?: FoldingProps; folded?: boolean }
   onSelect: (block: Block) => void
-  onDelete?: (block: Block) => void
+  onDelete?: BlockActionRemove
   active?: Block
   depth?: number
   className?: string
   showFoldEvents?: boolean
+  sendingMap: Map<string, string>
 }
 
 const BlockTree = ({
@@ -29,6 +31,7 @@ const BlockTree = ({
   active,
   className,
   showFoldEvents,
+  sendingMap,
 }: BlockTreeProps) => {
   const parentDepth = min(depth || 1, 6)
   return (
@@ -53,7 +56,14 @@ const BlockTree = ({
         controls={
           onDelete == null || depth === 0
             ? []
-            : [{ icon: mdiTrashCan, onClick: () => onDelete(root) }]
+            : [
+                {
+                  icon: mdiTrashCan,
+                  onClick: () => onDelete(root),
+                  disabled: sendingMap.has(root.id),
+                  spinning: sendingMap.get(root.id) === 'delete-block',
+                },
+              ]
         }
       />
       {(!showFoldEvents || !root.folded) &&
@@ -68,6 +78,7 @@ const BlockTree = ({
             active={active}
             depth={parentDepth + 1}
             showFoldEvents={showFoldEvents}
+            sendingMap={sendingMap}
           />
         ))}
     </StyledBlockTree>

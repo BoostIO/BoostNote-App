@@ -19,6 +19,7 @@ export interface ViewProps<T extends Block> {
   setCurrentBlock: React.Dispatch<React.SetStateAction<Block | null>>
   scrollToElement: (elem: HTMLElement | null) => void
   currentUserIsCoreMember: boolean
+  sendingMap: Map<string, string>
 }
 export const BlockView = ({
   isRootBlock,
@@ -28,6 +29,7 @@ export const BlockView = ({
   realtime,
   isChild,
   currentUserIsCoreMember,
+  sendingMap,
   scrollToElement,
   setCurrentBlock,
 }: ViewProps<Block>) => {
@@ -44,6 +46,7 @@ export const BlockView = ({
           setCurrentBlock={setCurrentBlock}
           scrollToElement={scrollToElement}
           currentUserIsCoreMember={currentUserIsCoreMember}
+          sendingMap={sendingMap}
         />
       )
     case 'embed':
@@ -57,6 +60,7 @@ export const BlockView = ({
           setCurrentBlock={setCurrentBlock}
           scrollToElement={scrollToElement}
           currentUserIsCoreMember={currentUserIsCoreMember}
+          sendingMap={sendingMap}
         />
       )
     case 'markdown':
@@ -70,6 +74,7 @@ export const BlockView = ({
           setCurrentBlock={setCurrentBlock}
           scrollToElement={scrollToElement}
           currentUserIsCoreMember={currentUserIsCoreMember}
+          sendingMap={sendingMap}
         />
       )
     case 'table':
@@ -83,6 +88,7 @@ export const BlockView = ({
           setCurrentBlock={setCurrentBlock}
           scrollToElement={scrollToElement}
           currentUserIsCoreMember={currentUserIsCoreMember}
+          sendingMap={sendingMap}
         />
       )
     case 'github.issue':
@@ -96,6 +102,7 @@ export const BlockView = ({
           setCurrentBlock={setCurrentBlock}
           scrollToElement={scrollToElement}
           currentUserIsCoreMember={currentUserIsCoreMember}
+          sendingMap={sendingMap}
         />
       )
     default:
