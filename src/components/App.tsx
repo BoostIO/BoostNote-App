@@ -7,15 +7,11 @@ import { usePreferences } from '../lib/preferences'
 import '../lib/i18n'
 import { useEffectOnce } from 'react-use'
 import { useRouter } from '../lib/router'
-import { values, keys } from '../lib/db/utils'
+import { keys } from '../lib/db/utils'
 import { addIpcListener, removeIpcListener } from '../lib/electronOnly'
 import { useGeneralStatus } from '../lib/generalStatus'
 import { useBoostNoteProtocol } from '../lib/protocol'
-import {
-  useBoostHub,
-  getBoostHubTeamIconUrl,
-  DesktopGlobalDataResponseBody,
-} from '../lib/boosthub'
+import { useBoostHub, getBoostHubTeamIconUrl } from '../lib/boosthub'
 import {
   boostHubTeamCreateEventEmitter,
   BoostHubTeamCreateEvent,
@@ -72,31 +68,54 @@ const App = () => {
 
   useEffectOnce(() => {
     const fetchDesktopGlobalDataOfCloud = async () => {
+      if (mockBackend) {
+        const desktopGlobalData = {
+          user: {
+            id: 'dev',
+            uniqueName: 'dev-user',
+            displayName: 'dev-user',
+            accessToken: 'dev-user-access-token',
+          },
+          teams: [
+            {
+              id: 'dev',
+              name: 'dev',
+              domain: 'dev',
+              createdAt: '',
+              permissions: [],
+              trial: false,
+            },
+          ],
+        }
+
+        setPreferences({
+          'cloud.user': {
+            ...desktopGlobalData.user,
+          },
+        })
+        setGeneralStatus({
+          boostHubTeams: desktopGlobalData.teams.map((team) => {
+            return {
+              id: team.id,
+              name: team.name,
+              domain: team.domain,
+              createdAt: team.createdAt,
+              permissions: team.permissions,
+              trial: team.trial,
+            }
+          }),
+        })
+        return desktopGlobalData
+      }
       const cloudUserInfo = preferences['cloud.user']
       if (cloudUserInfo == null) {
         return
       }
 
       const accessToken = cloudUserInfo.accessToken
-
-      const desktopGlobalData = mockBackend
-        ? ({
-            user: {
-              id: 'dev',
-              uniqueName: 'dev-user',
-              displayName: 'dev-user',
-            },
-            teams: [
-              {
-                id: 'dev',
-                name: 'dev',
-                domain: 'dev',
-                createdAt: '',
-              },
-            ],
-          } as DesktopGlobalDataResponseBody)
-        : await fetchDesktopGlobalData(accessToken)
-      console.log(desktopGlobalData)
+      const desktopGlobalData = await fetchDesktopGlobalData(
+        cloudUserInfo.accessToken
+      )
 
       if (desktopGlobalData.user == null) {
         messageBox({
@@ -160,9 +179,7 @@ const App = () => {
     }
 
     initialize()
-      .then(async (storageMap) => {
-        const localSpaces = values(storageMap)
-
+      .then(async () => {
         const globalData = await fetchDesktopGlobalDataOfCloud().catch(
           (error) => {
             console.warn('There was an issue while fetching cloud space data')
@@ -178,9 +195,7 @@ const App = () => {
           pathname === '/app' ||
           pathname === '/app/storages'
         ) {
-          if (localSpaces.length > 0) {
-            push(`/app/storages/${localSpaces[0].id}`)
-          } else if (cloudSpaces.length > 0) {
+          if (cloudSpaces.length > 0) {
             push(`/app/boosthub/teams/${cloudSpaces[0].domain}`)
           } else {
             if (globalData == null || globalData.user == null) {
