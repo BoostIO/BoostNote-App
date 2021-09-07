@@ -55,7 +55,7 @@ export function useBlocksApi() {
       root: string
     ) => {
       return send(block.id, 'delete-block', {
-        api: () => deleteBlock(block.id, true),
+        api: () => deleteBlock(block.id),
         cb: async () => {
           await getBlocks(root)
           if (options.afterSuccess != null) {
