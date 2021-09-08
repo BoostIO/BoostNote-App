@@ -2,32 +2,53 @@ import { Doc as YDoc } from 'yjs'
 import { useEffect, useMemo, useState } from 'react'
 import { TableBlock } from '../../api/blocks'
 import { AbstractType, YMap } from 'yjs/dist/src/internals'
-import { isPropKey, PropKey, PropType } from '../blocks/props'
+import {
+  getPropName,
+  getPropType,
+  isPropKey,
+  PropKey,
+  PropType,
+} from '../blocks/props'
 import {
   addColumn,
   Column,
   deleteColumn,
-  getActiveColumns,
   getYTable,
-  isColumn,
+  isPropCol,
+  makePropCol,
   moveColumn,
+  PropCol,
   renameColumn,
   setColumnType,
+  toArray,
+  toPropKey,
   YTable,
 } from '../blocks/table'
+import { uniq } from 'ramda'
 
-export interface Actions {
-  addColumn: (key: Column) => void
-  deleteColumn: (key: Column) => void
-  renameColumn: (key: Column, name: string) => void
-  moveColumn: (key: Column, direction: 'left' | 'right') => void
-  setColumnType: (key: PropKey, type: PropType) => void
-  setCell: (row: string, col: Column, data: string) => void
+interface PlaceholderPropCol extends PropCol {
+  isPlaceholder: true
 }
 
-interface BlockState {
-  columns: Column[]
-  rowData: Map<string, Record<Column, string>>
+export interface Actions {
+  addColumn: (key: Column | PlaceholderPropCol) => void
+  deleteColumn: (key: Column | PlaceholderPropCol) => void
+  renameColumn: (key: Column | PlaceholderPropCol, name: string) => void
+  moveColumn: (
+    key: Column | PlaceholderPropCol,
+    direction: 'left' | 'right'
+  ) => void
+  setColumnType: (key: PropCol | PlaceholderPropCol, type: PropType) => void
+  setCell: (
+    row: string,
+    col: PropCol | PlaceholderPropCol,
+    data: string
+  ) => void
+}
+
+export interface BlockState {
+  columns: (Column | PlaceholderPropCol)[]
+  rowData: Map<string, Record<PropKey, string>>
 }
 
 export function useBlockTable(block: TableBlock, ydoc: YDoc) {
@@ -41,15 +62,15 @@ export function useBlockTable(block: TableBlock, ydoc: YDoc) {
     return buildActions(ytable, yrows)
   }, [ytable, yrows])
   const [state, setState] = useState<BlockState>(() => {
-    const rowData = Array.from(yrows).map<[string, Record<string, string>]>(
-      ([id, map]) => [id, ymapToPropMap(map)]
+    const rowData = new Map(
+      Array.from(yrows).map<[string, Record<string, string>]>(([id, map]) => [
+        id,
+        ymapToPropMap(map),
+      ])
     )
     return {
-      columns: getActiveColumns(
-        ytable,
-        getAvailableKeys(rowData.map(([, map]) => map))
-      ),
-      rowData: new Map(rowData),
+      columns: mergeAdditional(toArray(ytable), Array.from(rowData.values())),
+      rowData,
     }
   })
 
@@ -58,9 +79,9 @@ export function useBlockTable(block: TableBlock, ydoc: YDoc) {
       setState((prev) => {
         return {
           ...prev,
-          columns: getActiveColumns(
-            ytable,
-            getAvailableKeys(Array.from(prev.rowData.values()))
+          columns: mergeAdditional(
+            toArray(ytable),
+            Array.from(prev.rowData.values())
           ),
         }
       })
@@ -71,16 +92,14 @@ export function useBlockTable(block: TableBlock, ydoc: YDoc) {
     const unsubscribes = Array.from(yrows).map(([id, map]) =>
       subscribe(map, () => {
         setState((prev) => {
-          const newProps = Array.from(map.keys())
-            .filter(notIn(new Set<string>(prev.columns)))
-            .filter(isColumn)
           const newMap = new Map(prev.rowData)
-          newMap.set(id, ymapToPropMap(map))
+          const newProps = ymapToPropMap(map)
+          newMap.set(id, newProps)
           return {
-            columns:
-              newProps.length > 0
-                ? prev.columns.concat(newProps)
-                : prev.columns,
+            columns: mergeAdditional(
+              prev.columns.filter(not(isPlaceholder)),
+              Array.from(newMap.values())
+            ),
             rowData: newMap,
           }
         })
@@ -100,27 +119,73 @@ export function useBlockTable(block: TableBlock, ydoc: YDoc) {
   }
 }
 
+function mergeAdditional(
+  cols: Column[],
+  rowData: Record<string, string>[]
+): Column[] {
+  const tableColsSet = new Set(cols.filter(isPropCol).map(toPropKey))
+
+  const additional = rowData
+    .flatMap(keys)
+    .filter(isPropKey)
+    .filter((key) => !tableColsSet.has(key))
+    .map(propToPlaceholder)
+
+  return cols.concat(additional)
+}
+
+function keys<T extends Record<string, any>>(record: T): (keyof T)[] {
+  return Object.keys(record)
+}
+
+function propToPlaceholder(prop: PropKey): PlaceholderPropCol {
+  return {
+    ...makePropCol(getPropName(prop), getPropType(prop)),
+    isPlaceholder: true,
+  }
+}
+
 function buildActions(
   ytable: YTable,
   rows: Map<string, YMap<string>>
 ): Actions {
   return {
     addColumn: (key) => addColumn(key, ytable),
-    deleteColumn: (key) => deleteColumn(key, ytable),
+    deleteColumn: (key) => {
+      deleteColumn(key, ytable, Array.from(rows.values()))
+    },
     renameColumn: (key, name) => {
+      if (isPlaceholder(key)) {
+        addColumn(key, ytable)
+      }
       renameColumn(key, name, ytable, Array.from(rows.values()))
     },
-    moveColumn: (key, direction) => moveColumn(direction, key, ytable),
+    moveColumn: (key, direction) => {
+      if (isPlaceholder(key)) {
+        addColumn(key, ytable)
+      }
+      moveColumn(direction, key, ytable)
+    },
     setColumnType: (key, type) => {
+      if (isPlaceholder(key)) {
+        addColumn(key, ytable)
+      }
       setColumnType(key, type, ytable, Array.from(rows.values()))
     },
     setCell: (row, key, value) => {
-      console.log(row, key, value)
       if (rows.has(row)) {
-        rows.get(row)!.set(key, value)
+        rows.get(row)!.set(toPropKey(key), value)
       }
     },
   }
+}
+
+function isPlaceholder(col: any): col is PlaceholderPropCol {
+  return col.isPlaceholder != null && col.isPlaceholder === true
+}
+
+function not<T>(fn: (...args: T[]) => boolean) {
+  return (...args: T[]) => !fn(...args)
 }
 
 function subscribe<T extends AbstractType<any>>(
@@ -139,20 +204,8 @@ function subscribeDeep<T extends AbstractType<any>>(
   return () => map.unobserveDeep(fn)
 }
 
-function getAvailableKeys(maps: Record<string, string>[]): PropKey[] {
-  return Array.from(
-    new Set(
-      maps.flatMap((map) => Array.from(Object.keys(map)).filter(isPropKey))
-    )
-  )
-}
-
 function ymapToPropMap(map: YMap<string>): Record<PropKey, string> {
   return Object.fromEntries(
     Array.from(map.entries()).filter(([key]) => isPropKey(key))
   )
-}
-
-function notIn<T>(set: Set<T>) {
-  return (item: T) => !set.has(item)
 }
