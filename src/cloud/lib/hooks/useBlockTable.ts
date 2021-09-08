@@ -24,7 +24,6 @@ import {
   toPropKey,
   YTable,
 } from '../blocks/table'
-import { uniq } from 'ramda'
 
 interface PlaceholderPropCol extends PropCol {
   isPlaceholder: true
