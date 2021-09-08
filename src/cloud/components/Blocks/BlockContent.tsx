@@ -5,7 +5,6 @@ import { useDocBlocks } from '../../lib/hooks/useDocBlocks'
 import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
 import { useModal } from '../../../design/lib/stores/modal'
 import BlockTree from './BlockTree'
-import Icon from '../../../design/components/atoms/Icon'
 import styled from '../../../design/lib/styled'
 import { find } from '../../../design/lib/utils/tree'
 import useRealtime from '../../lib/editor/hooks/useRealtime'
@@ -13,7 +12,6 @@ import { BlockView } from './views'
 import Scroller from '../../../design/components/atoms/Scroller'
 import UpDownList from '../../../design/components/atoms/UpDownList'
 import NavigationItem from '../../../design/components/molecules/Navigation/NavigationItem'
-import Flexbox from '../../../design/components/atoms/Flexbox'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import { useToast } from '../../../design/lib/stores/toast'
 import { usePage } from '../../lib/stores/pageStore'
@@ -176,13 +174,9 @@ const BlockContent = ({ doc }: BlockContentProps) => {
               labelClick={createContainer}
               className='block__editor__nav--item'
               id='block__editor__nav--container'
+              defaultIcon={mdiPlus}
               depth={1}
-              label={
-                <Flexbox alignItems='center' justifyContent='space-between'>
-                  <span>New Page</span>
-                  <Icon path={mdiPlus} size={16} />
-                </Flexbox>
-              }
+              label={'New Page'}
               icon={{ type: 'icon', path: mdiPackageVariantClosed }}
             />
           </>
