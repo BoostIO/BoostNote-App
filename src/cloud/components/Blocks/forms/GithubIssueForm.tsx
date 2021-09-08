@@ -353,12 +353,13 @@ const GithubIssueSelector = ({
   const toggleIssue = useCallback((issue: Issue) => {
     return () => {
       setSelectedIssues((old) => {
-        if (!old.has(issue)) {
-          old.add(issue)
+        const newSet = new Set(old)
+        if (!newSet.has(issue)) {
+          newSet.add(issue)
         } else {
-          old.delete(issue)
+          newSet.delete(issue)
         }
-        return new Set(old)
+        return newSet
       })
     }
   }, [])
