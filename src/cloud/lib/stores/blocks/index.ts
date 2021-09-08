@@ -1,7 +1,8 @@
 import { createStoreContext } from '../../utils/context'
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useEffect } from 'react'
 import { Block, getBlockTree } from '../../../api/blocks'
 import { useToast } from '../../../../design/lib/stores/toast'
+import { SerializedAppEvent } from '../../../interfaces/db/appEvents'
 
 type BlocksObserver = (blocks: Block) => void
 
@@ -11,7 +12,7 @@ function useBlocksStore() {
   const treeObservers = useRef<Map<string, Set<BlocksObserver>>>(new Map())
 
   const getBlocks = useCallback(
-    async (rootBlock: string) => {
+    async (rootBlock: string, suppressError = false) => {
       try {
         const blocks = await getBlockTree(rootBlock)
         treeCache.current.set(rootBlock, blocks)
@@ -21,7 +22,9 @@ function useBlocksStore() {
         }
         return true
       } catch (err) {
-        pushApiErrorMessage(err)
+        if (!suppressError) {
+          pushApiErrorMessage(err)
+        }
         return false
       }
     },
@@ -46,9 +49,26 @@ function useBlocksStore() {
     [getBlocks]
   )
 
+  const getBlocksRef = useRef(getBlocks)
+  useEffect(() => {
+    getBlocksRef.current = getBlocks
+  }, [getBlocks])
+  const blockEventListener = useCallback(async (event: SerializedAppEvent) => {
+    switch (event.type) {
+      case 'blockCreated':
+      case 'blockUpdated':
+      case 'blockDeleted': {
+        if (typeof event.data.rootBlockId === 'string') {
+          getBlocksRef.current(event.data.rootBlockId, true)
+        }
+      }
+    }
+  }, [])
+
   return {
     observeDocBlocks,
     getBlocks,
+    blockEventListener,
   }
 }
 
