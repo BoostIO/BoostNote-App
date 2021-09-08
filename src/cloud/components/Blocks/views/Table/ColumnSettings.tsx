@@ -10,19 +10,12 @@ import MetadataContainerBreak from '../../../../../design/components/organisms/M
 import MetadataContainerRow from '../../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import styled from '../../../../../design/lib/styled'
-import {
-  getPropType,
-  isPropKey,
-  makePropKey,
-  PropKey,
-  PropType,
-} from '../../../../lib/blocks/props'
+import { PropType } from '../../../../lib/blocks/props'
 import {
   Column,
-  getColumnName,
-  getDataPropColProp,
-  isDataPropCol,
-  makeDataPropCol,
+  getColType,
+  isPropCol,
+  PropCol,
 } from '../../../../lib/blocks/table'
 import { capitalize } from '../../../../lib/utils/string'
 import DataTypeMenu, {
@@ -32,7 +25,7 @@ import DataTypeMenu, {
 interface ColumnSettingsProps {
   col: Column
   setColName: (col: Column, name: string) => void
-  setColDataType: (col: PropKey, type: PropType) => void
+  setColDataType: (col: PropCol, type: PropType) => void
   deleteCol: (col: Column) => void
   moveColumn: (col: Column, direction: 'left' | 'right') => void
 }
@@ -44,37 +37,34 @@ const ColumnSettings = ({
   deleteCol,
   moveColumn,
 }: ColumnSettingsProps) => {
-  const [colKey, setColKey] = useState(col)
-  const [name, setName] = useState(getColumnName(col))
+  const [colInternal, setColInternal] = useState(col)
   const { openContextModal, closeAllModals } = useModal()
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (ev) => {
-      setName(ev.target.value)
-      setColName(colKey, ev.target.value)
-      setColKey(
-        isDataPropCol(colKey)
-          ? makeDataPropCol(ev.target.value, getDataPropColProp(colKey))
-          : makePropKey(ev.target.value, getPropType(colKey))
-      )
+      const newName = ev.target.value
+      setColName(colInternal, newName)
+      setColInternal((col) => {
+        return { ...col, name: newName }
+      })
     },
-    [colKey, setColName]
+    [colInternal, setColName]
   )
 
   useEffect(() => {
-    setColKey(col)
+    setColInternal(col)
   }, [col])
 
   const openTypeSelector: React.MouseEventHandler = useCallback(
     (ev) => {
-      if (isPropKey(colKey)) {
+      if (isPropCol(colInternal)) {
         openContextModal(
           ev,
           <MetadataContainer>
             <DataTypeMenu
               onSelect={(type) => {
-                setColDataType(colKey, type)
-                setColKey(makePropKey(name, type))
+                setColDataType(colInternal, type)
+                setColInternal({ ...colInternal, type })
                 closeAllModals()
               }}
             />
@@ -83,19 +73,19 @@ const ColumnSettings = ({
         )
       }
     },
-    [name, colKey, closeAllModals, openContextModal, setColDataType]
+    [colInternal, closeAllModals, openContextModal, setColDataType]
   )
 
   const dataType = useMemo(() => {
-    return isDataPropCol(colKey) ? 'prop' : getPropType(colKey)
-  }, [colKey])
+    return getColType(colInternal)
+  }, [colInternal])
 
   return (
     <MetadataContainer>
       <Container>
         <MetadataContainerRow row={{ type: 'header', content: 'NAME' }} />
         <FormInput
-          value={name}
+          value={colInternal.name}
           onChange={onChange}
           id='column-input-setting'
           onKeyDown={(ev) => {
