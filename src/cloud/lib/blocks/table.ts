@@ -1,5 +1,5 @@
 import { Array as YArray, Map as YMap, Doc as YDoc } from 'yjs'
-import { isPropKey, makePropKey, PropType } from './props'
+import { makePropKey, PropType } from './props'
 import {
   mdiAccountCircleOutline,
   mdiCalendarOutline,
