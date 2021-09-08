@@ -34,7 +34,6 @@ export interface FormProps {
 
 interface BlockContentProps {
   doc: Canvas
-  isNew?: boolean
 }
 
 const BlockContent = ({ doc }: BlockContentProps) => {
@@ -168,8 +167,6 @@ const BlockContent = ({ doc }: BlockContentProps) => {
               blockId: id,
             })
           })
-
-          console.log('sent event')
         }
         focusBlock(state.block.children[0])
       }
