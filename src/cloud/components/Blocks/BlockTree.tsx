@@ -47,6 +47,7 @@ const BlockTree = ({
       <NavigationItem
         folded={showFoldEvents ? root.folded : undefined}
         folding={showFoldEvents ? root.folding : undefined}
+        className='block__editor__nav--item'
         id={`${idPrefix}-block-${root.id}`}
         label={blockTitle(root)}
         active={active && root.id === active.id}
@@ -89,6 +90,18 @@ const StyledBlockTree = styled.div<{ depth: number }>`
   position: relative;
   width: 100%;
 
+  &.block__editor__nav--tree-root {
+    &:hover {
+      &::before,
+      .block__tree::before {
+        opacity: 1 !important;
+      }
+      .block__editor__nav--item::before {
+        opacity: 1 !important;
+      }
+    }
+  }
+
   &.block__editor__nav--tree {
     &::before {
       content: '';
@@ -101,6 +114,7 @@ const StyledBlockTree = styled.div<{ depth: number }>`
       z-index: 1;
       pointer-events: none;
       filter: brightness(120%);
+      opacity: 0;
     }
   }
 
@@ -116,6 +130,7 @@ const StyledBlockTree = styled.div<{ depth: number }>`
       z-index: 1;
       pointer-events: none;
       filter: brightness(120%);
+      opacity: 0;
     }
   }
 `
