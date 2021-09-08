@@ -10,6 +10,7 @@ import {
   getDataPropColProp,
   isDataPropCol,
   makeDataPropCol,
+  makePropCol,
 } from '../../../../lib/blocks/table'
 import { capitalize } from '../../../../lib/utils/string'
 import DataTypeMenu from '../../props/DataTypeMenu'
@@ -68,7 +69,7 @@ const TableSettings = ({
 
   const insertColumn = useCallback(
     (type: PropType) => {
-      addColumn(makePropKey(capitalize(type), type), true)
+      addColumn(makePropCol(capitalize(type), type), true)
     },
     [addColumn]
   )

@@ -13,6 +13,9 @@ import {
   getDataPropColProp,
   isDataPropCol,
   getDataColumnIcon,
+  uniqueIdentifier,
+  toPropKey,
+  getColType,
 } from '../../../../lib/blocks/table'
 import GitHubAssigneesData from '../../data/GithubAssigneesData'
 import GithubStatusData from '../../data/GithubStatusData'
@@ -26,7 +29,6 @@ import Icon from '../../../../../design/components/atoms/Icon'
 import styled from '../../../../../design/lib/styled'
 import { StyledUserIcon } from '../../../UserIcon'
 import { BlockDataProps } from '../../data/types'
-import { getPropType } from '../../../../lib/blocks/props'
 import { useBlockTable } from '../../../../lib/hooks/useBlockTable'
 import BlockProp from '../../props'
 import Scroller from '../../../../../design/components/atoms/Scroller'
@@ -237,7 +239,10 @@ const TableView = ({
                 <tr>
                   <th>Title</th>
                   {state.columns.map((col) => (
-                    <th key={col} className='block__table__view--interactable'>
+                    <th
+                      key={uniqueIdentifier(col)}
+                      className='block__table__view--interactable'
+                    >
                       <button onClick={(ev) => openColumnSettings(ev, col)}>
                         <Flexbox alignItems='center'>
                           <Icon
@@ -284,7 +289,7 @@ const TableView = ({
                         </Flexbox>
                       </td>
                       {state.columns.map((col) => (
-                        <td key={col}>
+                        <td key={uniqueIdentifier(col)}>
                           {isDataPropCol(col) ? (
                             <GithubCell
                               prop={getDataPropColProp(col)}
@@ -296,9 +301,11 @@ const TableView = ({
                           ) : (
                             <BlockProp
                               currentUserIsCoreMember={currentUserIsCoreMember}
-                              type={getPropType(col)}
+                              type={getColType(col)}
                               value={
-                                (state.rowData.get(child.id) || {})[col] || ''
+                                (state.rowData.get(child.id) || {})[
+                                  toPropKey(col)
+                                ] || ''
                               }
                               onChange={(val) =>
                                 tableActions.setCell(child.id, col, val)
