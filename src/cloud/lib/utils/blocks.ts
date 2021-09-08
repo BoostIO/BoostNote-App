@@ -20,9 +20,10 @@ export function blockTitle(block: Block) {
   switch (block.type) {
     case 'github.issue':
       return block.data?.title || 'Github Issue'
+    case 'container':
+      return block.name.trim() === '' ? 'Page' : block.name
     case 'embed':
     case 'table':
-    case 'container':
       return block.name.trim() === '' ? capitalize(block.type) : block.name
     default:
       return capitalize(block.type)
