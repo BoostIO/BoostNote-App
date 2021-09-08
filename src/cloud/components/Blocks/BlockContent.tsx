@@ -87,7 +87,7 @@ const BlockContent = ({ doc }: BlockContentProps) => {
 
   const createContainer = useCallback(() => {
     return createBlock({
-      name: 'Page',
+      name: '',
       type: 'container',
       children: [],
       data: null,
