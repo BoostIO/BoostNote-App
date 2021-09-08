@@ -101,7 +101,7 @@ const GithubIssueForm = ({ onSubmit }: FormProps) => {
                   </div>
                 </div>
                 <div className='github-issue__form__integrate__splash'>
-                  <img />
+                  <img src='/static/images/ghintegration.png' />
                 </div>
               </StyledIntegrationManager>
             )
@@ -151,9 +151,8 @@ const StyledIntegrationManager = styled.div`
   }
 
   & .github-issue__form__integrate__splash {
-    background-color: #c4c4c4;
-    height: 300px;
-    width: 400px;
+    max-width: 96%;
+    height: auto;
     & > img {
       width: 100%;
       height: 100%;
