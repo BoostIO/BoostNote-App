@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react'
-import { mdiPlus, mdiPackageVariantClosed } from '@mdi/js'
+import { mdiPlus } from '@mdi/js'
 import { Block, BlockCreateRequestBody, ContainerBlock } from '../../api/blocks'
 import { useDocBlocks } from '../../lib/hooks/useDocBlocks'
 import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
@@ -13,17 +13,13 @@ import Scroller from '../../../design/components/atoms/Scroller'
 import UpDownList from '../../../design/components/atoms/UpDownList'
 import NavigationItem from '../../../design/components/molecules/Navigation/NavigationItem'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
-import { useToast } from '../../../design/lib/stores/toast'
 import { usePage } from '../../lib/stores/pageStore'
 import {
   CollapsableType,
   useSidebarCollapse,
 } from '../../lib/stores/sidebarCollapse'
 import { FoldingProps } from '../../../design/components/atoms/FoldingWrapper'
-import {
-  markdownBlockEventEmitter,
-  tableBlockEventEmitter,
-} from '../../lib/utils/events'
+import { blockEventEmitter } from '../../lib/utils/events'
 import { sleep } from '../../../lib/sleep'
 import cc from 'classcat'
 
@@ -44,12 +40,11 @@ const BlockContent = ({ doc }: BlockContentProps) => {
   const { state, actions, sendingMap } = useDocBlocks(doc.rootBlock.id)
   const { closeAllModals } = useModal()
   const [currentBlock, setCurrentBlock] = useState<Block | null>(null)
+  const contentScrollerRef = useRef<OverlayScrollbarsComponent>(null)
   const [provider] = useRealtime({
     token: doc.collaborationToken || '',
     id: doc.id,
   })
-  const { pushApiErrorMessage } = useToast()
-  const contentScrollerRef = useRef<OverlayScrollbarsComponent>(null)
 
   const scrollToElement = useCallback((elem: HTMLElement | null) => {
     if (elem != null && contentScrollerRef.current != null) {
@@ -62,33 +57,22 @@ const BlockContent = ({ doc }: BlockContentProps) => {
 
   const createBlock = useCallback(
     async (block: BlockCreateRequestBody) => {
-      try {
-        const res = await actions.create(block, doc.rootBlock, {
-          afterSuccess: (block) => {
-            setCurrentBlock(block)
-          },
+      const res = await actions.create(block, doc.rootBlock)
+
+      if (!res.err) {
+        const block = res.data
+        setCurrentBlock(block)
+        await sleep(100) //rendering delay
+        blockEventEmitter.dispatch({
+          event: 'creation',
+          blockType: block.type,
+          blockId: block.id,
         })
-        if (!res.err) {
-          const block = res.data
-          await sleep(100) //rendering delay
-          if (block.type === 'markdown') {
-            markdownBlockEventEmitter.dispatch({
-              type: 'edit',
-              id: block.id,
-            })
-          } else if (block.type === 'table') {
-            tableBlockEventEmitter.dispatch({
-              type: 'focus-title',
-              id: block.id,
-            })
-          }
-        }
+
         closeAllModals()
-      } catch (error) {
-        pushApiErrorMessage(error)
       }
     },
-    [doc, actions, closeAllModals, pushApiErrorMessage]
+    [doc, actions, closeAllModals]
   )
 
   useEffect(() => {
@@ -174,10 +158,9 @@ const BlockContent = ({ doc }: BlockContentProps) => {
               labelClick={createContainer}
               className='block__editor__nav--item'
               id='block__editor__nav--container'
-              defaultIcon={mdiPlus}
               depth={1}
               label={'New Page'}
-              icon={{ type: 'icon', path: mdiPackageVariantClosed }}
+              icon={{ type: 'icon', path: mdiPlus }}
             />
           </>
         </div>

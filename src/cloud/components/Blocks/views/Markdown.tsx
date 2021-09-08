@@ -11,10 +11,7 @@ import { mdiEyeOutline, mdiPencil, mdiTrashCanOutline } from '@mdi/js'
 import { getBlockDomId } from '../../../lib/blocks/dom'
 import cc from 'classcat'
 import BlockLayout from '../BlockLayout'
-import {
-  MarkdownBlockEventDetails,
-  markdownBlockEventEmitter,
-} from '../../../lib/utils/events'
+import { blockEventEmitter, BlockEventDetails } from '../../../lib/utils/events'
 
 const MarkdownView = ({
   block,
@@ -92,23 +89,21 @@ const MarkdownView = ({
   }, [mode])
 
   useEffect(() => {
-    const handler = ({ detail }: CustomEvent<MarkdownBlockEventDetails>) => {
-      if (detail.id !== block.id) {
+    const handler = ({ detail }: CustomEvent<BlockEventDetails>) => {
+      if (detail.blockId !== block.id || detail.blockType !== block.type) {
         return
       }
 
-      switch (detail.type) {
-        case 'edit':
+      switch (detail.event) {
+        case 'creation':
           setMode('editor')
           return
-        case 'view':
-          setMode('view')
         default:
           return
       }
     }
-    markdownBlockEventEmitter.listen(handler)
-    return () => markdownBlockEventEmitter.unlisten(handler)
+    blockEventEmitter.listen(handler)
+    return () => blockEventEmitter.unlisten(handler)
   }, [block])
 
   return (

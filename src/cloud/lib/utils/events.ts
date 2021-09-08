@@ -81,18 +81,12 @@ export const toggleSettingsMembersEventEmitter = createCustomEventEmitter(
   'toggle-settings-members'
 )
 
-export type MarkdownBlockEventDetails = {
-  type: string
-  id: string
+export type BlockEventDetails = {
+  blockId: string
+  blockType: 'markdown' | 'embed' | 'table' | 'container' | 'github.issue'
+  event: 'creation'
 }
-export const markdownBlockEventEmitter = createCustomEventEmitter<
-  MarkdownBlockEventDetails
->('blocks-markdown')
 
-export type TableBlockEventDetails = {
-  type: string
-  id: string
-}
-export const tableBlockEventEmitter = createCustomEventEmitter<
-  TableBlockEventDetails
->('blocks-table')
+export const blockEventEmitter = createCustomEventEmitter<BlockEventDetails>(
+  'blocks-events'
+)
