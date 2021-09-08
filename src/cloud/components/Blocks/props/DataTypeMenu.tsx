@@ -3,6 +3,7 @@ import {
   mdiCalendarOutline,
   mdiCheckboxMarkedOutline,
   mdiLink,
+  mdiNumeric,
   mdiText,
 } from '@mdi/js'
 import React from 'react'
@@ -34,7 +35,7 @@ const DataTypeMenu = ({ onSelect }: DataTypeMenuProps) => {
             id: 'add-data-number',
             label: 'Number',
             onClick: () => onSelect('number'),
-            iconPath: mdiText,
+            iconPath: mdiNumeric,
           },
         }}
       />
@@ -91,7 +92,7 @@ export default DataTypeMenu
 export function getBlockPropertyIconByType(type: string) {
   switch (type) {
     case 'number':
-      return mdiText
+      return mdiNumeric
     case 'date':
       return mdiCalendarOutline
     case 'user':
