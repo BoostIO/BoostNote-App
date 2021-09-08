@@ -160,7 +160,6 @@ const BlockContent = ({ doc }: BlockContentProps) => {
           id: string
         }) {
           await sleep(300).finally(() => {
-            console.log('slept')
             blockEventEmitter.dispatch({
               event: 'creation',
               blockType: type,
