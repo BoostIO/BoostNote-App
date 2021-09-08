@@ -20,6 +20,7 @@ interface BlockEditorProps {
 const BlockEditor = ({ doc, team }: BlockEditorProps) => {
   const { openContextModal } = useModal()
   const { currentUserIsCoreMember, permissions = [] } = usePage()
+
   return (
     <ApplicationPage>
       <ApplicationTopbar
