@@ -6,6 +6,7 @@ import {
   mdiCheckboxMarkedOutline,
   mdiGithub,
   mdiLink,
+  mdiNumeric,
   mdiText,
 } from '@mdi/js'
 import { v4 as uuid } from 'uuid'
@@ -252,8 +253,9 @@ export function getDataColumnIcon(col: Column) {
       return mdiLink
     case 'checkbox':
       return mdiCheckboxMarkedOutline
-    case 'text':
     case 'number':
+      return mdiNumeric
+    case 'text':
     default:
       return mdiText
   }

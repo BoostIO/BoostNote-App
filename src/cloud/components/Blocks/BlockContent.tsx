@@ -22,6 +22,7 @@ import { FoldingProps } from '../../../design/components/atoms/FoldingWrapper'
 import { blockEventEmitter } from '../../lib/utils/events'
 import { sleep } from '../../../lib/sleep'
 import cc from 'classcat'
+import { useRouter } from '../../lib/router'
 
 export interface Canvas extends SerializedDocWithBookmark {
   rootBlock: ContainerBlock
@@ -33,6 +34,7 @@ export interface FormProps {
 
 interface BlockContentProps {
   doc: Canvas
+  isNew?: boolean
 }
 
 const BlockContent = ({ doc }: BlockContentProps) => {
@@ -130,6 +132,50 @@ const BlockContent = ({ doc }: BlockContentProps) => {
     )
   }, [getFoldEvents, state, sideBarOpenedBlocksIdsSet])
 
+  const { state: routerState } = useRouter()
+  const docIsNew = !!routerState?.new
+  const previousDocRef = useRef<{
+    blockType: 'container' | 'markdown' | 'embed' | 'table' | 'github.issue'
+    blockId: string
+  }>()
+  useEffect(() => {
+    if (state.type === 'loading') {
+      return
+    }
+
+    if (docIsNew && previousDocRef.current?.blockId !== state.block.id) {
+      previousDocRef.current = {
+        blockType: state.block.type,
+        blockId: state.block.id,
+      }
+      if (
+        state.block.children != null &&
+        state.block.children.length > 0 &&
+        state.block.children[0] != null
+      ) {
+        async function focusBlock({
+          type,
+          id,
+        }: {
+          type: 'container' | 'markdown' | 'embed' | 'table' | 'github.issue'
+          id: string
+        }) {
+          await sleep(300).finally(() => {
+            console.log('slept')
+            blockEventEmitter.dispatch({
+              event: 'creation',
+              blockType: type,
+              blockId: id,
+            })
+          })
+
+          console.log('sent event')
+        }
+        focusBlock(state.block.children[0])
+      }
+    }
+  }, [state, docIsNew])
+
   if (state.type === 'loading') {
     return <div>loading</div>
   }
@@ -151,19 +197,15 @@ const BlockContent = ({ doc }: BlockContentProps) => {
               sendingMap={sendingMap}
             />
           ))}
+          <NavigationItem
+            labelClick={createContainer}
+            className='block__editor__nav--item'
+            id='block__editor__nav--container'
+            depth={1}
+            label={'New Page'}
+            icon={{ type: 'icon', path: mdiPlus }}
+          />
         </Scroller>
-        <div className='block__editor__nav--actions'>
-          <>
-            <NavigationItem
-              labelClick={createContainer}
-              className='block__editor__nav--item'
-              id='block__editor__nav--container'
-              depth={1}
-              label={'New Page'}
-              icon={{ type: 'icon', path: mdiPlus }}
-            />
-          </>
-        </div>
       </UpDownList>
       <div className='block__editor__view'>
         <Scroller
