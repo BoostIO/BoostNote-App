@@ -36,6 +36,7 @@ const ContainerView = ({
   const { openModal, closeAllModals } = useModal()
   const [containerTitle, setContainerTitle] = useState(block.name || '')
   const titleInputRef = useRef<HTMLInputElement>(null)
+  const containerRef = useRef<string>(block.id)
 
   const createBlock = useCallback(
     async (newBlock: BlockCreateRequestBody) => {
@@ -92,6 +93,12 @@ const ContainerView = ({
     })
   }, [createBlock, openModal])
 
+  useEffect(() => {
+    if (containerRef.current !== block.id) {
+      containerRef.current = block.id
+      setContainerTitle(block.name)
+    }
+  }, [block])
   const readyToBeSentRef = useRef<boolean>(false)
   const onNameChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
     (e) => {
@@ -226,6 +233,9 @@ const StyledContainerView = styled.div`
     border: 0;
     font-size: ${({ theme }) => theme.sizes.fonts.l}px;
     font-weight: 600;
+    padding: ${({ theme }) => theme.sizes.spaces.df}px
+      ${({ theme }) => theme.sizes.spaces.md}px;
+    height: auto;
 
     &:hover {
       background: ${({ theme }) => theme.colors.background.secondary};
