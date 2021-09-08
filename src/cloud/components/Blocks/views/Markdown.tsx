@@ -96,7 +96,6 @@ const MarkdownView = ({
       if (detail.id !== block.id) {
         return
       }
-      console.log('got event')
 
       switch (detail.type) {
         case 'edit':

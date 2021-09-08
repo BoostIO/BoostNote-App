@@ -1,12 +1,5 @@
 import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react'
-import {
-  mdiPlus,
-  mdiPackageVariantClosed,
-  mdiCodeTags,
-  mdiFileDocumentOutline,
-  mdiTable,
-} from '@mdi/js'
-import EmbedForm from './forms/EmbedForm'
+import { mdiPlus, mdiPackageVariantClosed } from '@mdi/js'
 import { Block, BlockCreateRequestBody, ContainerBlock } from '../../api/blocks'
 import { useDocBlocks } from '../../lib/hooks/useDocBlocks'
 import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
@@ -51,7 +44,7 @@ interface BlockContentProps {
 const BlockContent = ({ doc }: BlockContentProps) => {
   const { currentUserIsCoreMember } = usePage()
   const { state, actions, sendingMap } = useDocBlocks(doc.rootBlock.id)
-  const { openModal, closeAllModals } = useModal()
+  const { closeAllModals } = useModal()
   const [currentBlock, setCurrentBlock] = useState<Block | null>(null)
   const [provider] = useRealtime({
     token: doc.collaborationToken || '',
@@ -110,15 +103,6 @@ const BlockContent = ({ doc }: BlockContentProps) => {
     }
   }, [state])
 
-  const createMarkdown = useCallback(() => {
-    return createBlock({
-      name: 'Markdown',
-      type: 'markdown',
-      children: [],
-      data: null,
-    })
-  }, [createBlock])
-
   const createContainer = useCallback(() => {
     return createBlock({
       name: 'Page',
@@ -128,22 +112,8 @@ const BlockContent = ({ doc }: BlockContentProps) => {
     })
   }, [createBlock])
 
-  const createTable = useCallback(() => {
-    return createBlock({
-      name: '',
-      type: 'table',
-      children: [],
-      data: { columns: {} },
-    })
-  }, [createBlock])
-
-  const createEmbed = useCallback(() => {
-    openModal(<EmbedForm onSubmit={createBlock} />)
-  }, [createBlock, openModal])
-
   const {
     sideBarOpenedBlocksIdsSet,
-    sideBarOpenedLinksIdsSet,
     toggleItem,
     unfoldItem,
     foldItem,
@@ -201,73 +171,21 @@ const BlockContent = ({ doc }: BlockContentProps) => {
           ))}
         </Scroller>
         <div className='block__editor__nav--actions'>
-          <NavigationItem
-            labelClick={
-              getFoldEvents('links', 'block__editor-actions', true).toggle
-            }
-            className='block__editor__nav--item'
-            id='block__editor__nav--new-items'
-            folded={!sideBarOpenedLinksIdsSet.has('block__editor-actions')}
-            folding={getFoldEvents('links', 'block__editor-actions', true)}
-            depth={0}
-            label='New Blocks'
-          />
-          {sideBarOpenedLinksIdsSet.has('block__editor-actions') && (
-            <>
-              <NavigationItem
-                labelClick={createContainer}
-                className='block__editor__nav--item'
-                id='block__editor__nav--container'
-                depth={1}
-                label={
-                  <Flexbox alignItems='center' justifyContent='space-between'>
-                    <span>Page</span>
-                    <Icon path={mdiPlus} size={16} />
-                  </Flexbox>
-                }
-                icon={{ type: 'icon', path: mdiPackageVariantClosed }}
-              />
-              <NavigationItem
-                labelClick={createMarkdown}
-                className='block__editor__nav--item'
-                id='block__editor__nav--markdown'
-                depth={1}
-                label={
-                  <Flexbox alignItems='center' justifyContent='space-between'>
-                    <span>Markdown</span>
-                    <Icon path={mdiPlus} size={16} />
-                  </Flexbox>
-                }
-                icon={{ type: 'icon', path: mdiFileDocumentOutline }}
-              />
-              <NavigationItem
-                labelClick={createTable}
-                className='block__editor__nav--item'
-                id='block__editor__nav--table'
-                depth={1}
-                label={
-                  <Flexbox alignItems='center' justifyContent='space-between'>
-                    <span>Table</span>
-                    <Icon path={mdiPlus} size={16} />
-                  </Flexbox>
-                }
-                icon={{ type: 'icon', path: mdiTable }}
-              />
-              <NavigationItem
-                labelClick={createEmbed}
-                className='block__editor__nav--item'
-                id='block__editor__nav--embed'
-                depth={1}
-                label={
-                  <Flexbox alignItems='center' justifyContent='space-between'>
-                    <span>Embed</span>
-                    <Icon path={mdiPlus} size={16} />
-                  </Flexbox>
-                }
-                icon={{ type: 'icon', path: mdiCodeTags }}
-              />
-            </>
-          )}
+          <>
+            <NavigationItem
+              labelClick={createContainer}
+              className='block__editor__nav--item'
+              id='block__editor__nav--container'
+              depth={1}
+              label={
+                <Flexbox alignItems='center' justifyContent='space-between'>
+                  <span>New Page</span>
+                  <Icon path={mdiPlus} size={16} />
+                </Flexbox>
+              }
+              icon={{ type: 'icon', path: mdiPackageVariantClosed }}
+            />
+          </>
         </div>
       </UpDownList>
       <div className='block__editor__view'>
