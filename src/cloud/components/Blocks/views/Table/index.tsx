@@ -39,8 +39,8 @@ import { blockTitle } from '../../../../lib/utils/blocks'
 import BlockIcon from '../../BlockIcon'
 import NavigationItem from '../../../../../design/components/molecules/Navigation/NavigationItem'
 import {
-  TableBlockEventDetails,
-  tableBlockEventEmitter,
+  BlockEventDetails,
+  blockEventEmitter,
 } from '../../../../lib/utils/events'
 
 type GithubCellProps = BlockDataProps<TableBlock['children'][number]>
@@ -184,21 +184,21 @@ const TableView = ({
   }, [block])
 
   useEffect(() => {
-    const handler = ({ detail }: CustomEvent<TableBlockEventDetails>) => {
-      if (detail.id !== block.id) {
+    const handler = ({ detail }: CustomEvent<BlockEventDetails>) => {
+      if (detail.blockId !== block.id || detail.blockType !== block.type) {
         return
       }
 
-      switch (detail.type) {
-        case 'focus-title':
+      switch (detail.event) {
+        case 'creation':
           titleInputRef.current?.focus()
           return
         default:
           return
       }
     }
-    tableBlockEventEmitter.listen(handler)
-    return () => tableBlockEventEmitter.unlisten(handler)
+    blockEventEmitter.listen(handler)
+    return () => blockEventEmitter.unlisten(handler)
   }, [block])
 
   const anchorId = `block__${block.id}__table`
