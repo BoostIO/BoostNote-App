@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { mdiPlusBoxOutline, mdiTrashCanOutline } from '@mdi/js'
 import EmbedForm from '../forms/EmbedForm'
 import {
@@ -13,6 +13,9 @@ import { useModal } from '../../../../design/lib/stores/modal'
 import BlockCreationModal from '../BlockCreationModal'
 import BlockToolbar from '../BlockToolbar'
 import BlockLayout from '../BlockLayout'
+import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
+import { useDebounce } from 'react-use'
+import { BlockEventDetails, blockEventEmitter } from '../../../lib/utils/events'
 
 interface ContainerViewProps extends ViewProps<ContainerBlock> {
   setCurrentBlock: React.Dispatch<React.SetStateAction<Block | null>>
@@ -31,6 +34,8 @@ const ContainerView = ({
   setCurrentBlock,
 }: ContainerViewProps) => {
   const { openModal, closeAllModals } = useModal()
+  const [containerTitle, setContainerTitle] = useState(block.name || '')
+  const titleInputRef = useRef<HTMLInputElement>(null)
 
   const createBlock = useCallback(
     async (newBlock: BlockCreateRequestBody) => {
@@ -87,6 +92,56 @@ const ContainerView = ({
     })
   }, [createBlock, openModal])
 
+  const readyToBeSentRef = useRef<boolean>(false)
+  const onNameChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      readyToBeSentRef.current = true
+      setContainerTitle(e.target.value)
+    },
+    []
+  )
+  const [, cancel] = useDebounce(
+    async () => {
+      if (readyToBeSentRef.current) {
+        await actions.update({
+          id: block.id,
+          type: block.type,
+          name: containerTitle,
+        })
+        readyToBeSentRef.current = false
+      } else {
+        cancel()
+      }
+    },
+    1000,
+    [containerTitle]
+  )
+
+  useEffect(() => {
+    const handler = ({ detail }: CustomEvent<BlockEventDetails>) => {
+      if (detail.blockId !== block.id || detail.blockType !== block.type) {
+        return
+      }
+
+      switch (detail.event) {
+        case 'creation':
+          if (titleInputRef.current != null) {
+            titleInputRef.current.focus()
+            titleInputRef.current.setSelectionRange(
+              0,
+              titleInputRef.current.value.length
+            )
+          }
+
+          return
+        default:
+          return
+      }
+    }
+    blockEventEmitter.listen(handler)
+    return () => blockEventEmitter.unlisten(handler)
+  }, [block])
+
   const isRootBlock = canvas.rootBlock.id === block.id
 
   return (
@@ -106,7 +161,16 @@ const ContainerView = ({
             : []
         }
       >
-        {!isRootBlock && <h1>{block.name}</h1>}
+        {!isRootBlock && (
+          <FormInput
+            placeholder='Untitled...'
+            value={containerTitle}
+            onChange={onNameChange}
+            className='block__container__title'
+            disabled={!currentUserIsCoreMember}
+            ref={titleInputRef}
+          />
+        )}
       </BlockLayout>
       <div className='block__view__container__content'>
         {!isRootBlock &&
@@ -156,6 +220,17 @@ const ContainerView = ({
 
 const StyledContainerView = styled.div`
   width: 100%;
+
+  .block__container__title {
+    width: 100%;
+    border: 0;
+    font-size: ${({ theme }) => theme.sizes.fonts.l}px;
+    font-weight: 600;
+
+    &:hover {
+      background: ${({ theme }) => theme.colors.background.secondary};
+    }
+  }
 
   & > & h1 {
     font-size: 5px;
