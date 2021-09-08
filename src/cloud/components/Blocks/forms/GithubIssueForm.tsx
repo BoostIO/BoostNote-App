@@ -153,6 +153,8 @@ const StyledIntegrationManager = styled.div`
   & .github-issue__form__integrate__splash {
     max-width: 96%;
     height: auto;
+    max-height: max-content;
+
     & > img {
       width: 100%;
       height: 100%;
