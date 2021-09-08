@@ -1,8 +1,5 @@
 import { Block } from '../../api/blocks'
-import {
-  markdownBlockEventEmitter,
-  tableBlockEventEmitter,
-} from '../utils/events'
+import { blockEventEmitter } from '../utils/events'
 import { sleep } from '../utils/sleep'
 
 export function getBlockDomId(block: Block) {
@@ -16,15 +13,9 @@ export async function domBlockCreationHandler(
   await sleep(100) //rendering delay
   const blockElem = document.getElementById(getBlockDomId(createdBlock))
   scrollToElement(blockElem)
-  if (createdBlock.type === 'table') {
-    tableBlockEventEmitter.dispatch({
-      type: 'focus-title',
-      id: createdBlock.id,
-    })
-  } else if (createdBlock.type === 'markdown') {
-    markdownBlockEventEmitter.dispatch({
-      type: 'edit',
-      id: createdBlock.id,
-    })
-  }
+  blockEventEmitter.dispatch({
+    blockId: createdBlock.id,
+    blockType: createdBlock.type,
+    event: 'creation',
+  })
 }

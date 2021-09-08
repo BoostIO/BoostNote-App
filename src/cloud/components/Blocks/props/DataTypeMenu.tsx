@@ -87,3 +87,20 @@ const DataTypeMenu = ({ onSelect }: DataTypeMenuProps) => {
 }
 
 export default DataTypeMenu
+
+export function getBlockPropertyIconByType(type: string) {
+  switch (type) {
+    case 'number':
+      return mdiText
+    case 'date':
+      return mdiCalendarOutline
+    case 'user':
+      return mdiAccountCircleOutline
+    case 'url':
+      return mdiLink
+    case 'checkbox':
+      return mdiCheckboxMarkedOutline
+    default:
+      return mdiText
+  }
+}

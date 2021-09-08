@@ -1,5 +1,4 @@
 import {
-  mdiAccountCircleOutline,
   mdiArrowLeftBold,
   mdiArrowRightBold,
   mdiTrashCanOutline,
@@ -26,7 +25,9 @@ import {
   makeDataPropCol,
 } from '../../../../lib/blocks/table'
 import { capitalize } from '../../../../lib/utils/string'
-import DataTypeMenu from '../../props/DataTypeMenu'
+import DataTypeMenu, {
+  getBlockPropertyIconByType,
+} from '../../props/DataTypeMenu'
 
 interface ColumnSettingsProps {
   col: Column
@@ -118,7 +119,7 @@ const ColumnSettings = ({
                 type: 'button',
                 props: {
                   label: capitalize(dataType),
-                  iconPath: mdiAccountCircleOutline,
+                  iconPath: getBlockPropertyIconByType(dataType),
                   onClick: openTypeSelector,
                   id: 'column-setting-type',
                 },
