@@ -20,6 +20,7 @@ import { getUniqueFolderAndDocIdsFromResourcesIds } from '../lib/utils/patterns'
 import { getAccessToken, useElectron } from '../lib/stores/electron'
 import { useNotifications } from '../../design/lib/stores/notifications'
 import { useComments } from '../lib/stores/comments'
+import { useBlocks } from '../lib/stores/blocks'
 
 interface EventSourceProps {
   teamId: string
@@ -67,6 +68,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
   } = useGlobalData()
   const { commentsEventListener } = useComments()
   const { notificationsEventListener } = useNotifications()
+  const { blockEventListener } = useBlocks()
 
   const setupEventSource = useCallback(
     (url: string) => {
@@ -452,6 +454,11 @@ const EventSource = ({ teamId }: EventSourceProps) => {
           case 'notificationViewed':
             notificationsEventListener(event)
             break
+          case 'blockCreated':
+          case 'blockDeleted':
+          case 'blockUpdated':
+            blockEventListener(event)
+            break
         }
         updateAppEventsMap([event.id, event])
       }
@@ -474,6 +481,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     smartFolderDeleteHandler,
     updateAppEventsMap,
     notificationsEventListener,
+    blockEventListener,
   ])
 
   return null
