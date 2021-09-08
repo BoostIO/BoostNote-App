@@ -4,7 +4,7 @@ import MetadataContainer from '../../../../../design/components/organisms/Metada
 import MetadataContainerBreak from '../../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import MetadataContainerRow from '../../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import styled from '../../../../../design/lib/styled'
-import { makePropKey, PropType } from '../../../../lib/blocks/props'
+import { PropType } from '../../../../lib/blocks/props'
 import {
   Column,
   getDataPropColProp,
