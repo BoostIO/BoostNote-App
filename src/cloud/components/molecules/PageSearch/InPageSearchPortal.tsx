@@ -6,11 +6,7 @@ import React, {
   useRef,
   useEffect,
 } from 'react'
-import {
-  mdiChevronLeftBoxOutline,
-  mdiChevronRightBoxOutline,
-  mdiMagnify,
-} from '@mdi/js'
+import { mdiChevronLeft, mdiChevronRight, mdiMagnify } from '@mdi/js'
 import { findInPage, stopFindInPage } from '../../../../lib/electronOnly'
 import { useDebounce, useEffectOnce } from 'react-use'
 import cc from 'classcat'
@@ -206,14 +202,14 @@ export const InPageSearch = ({
           <Button
             className={'search__navigation__button__style'}
             iconSize={20}
-            iconPath={mdiChevronLeftBoxOutline}
+            iconPath={mdiChevronLeft}
             variant={'transparent'}
             onClick={() => navigateResults('previous')}
           />
           <Button
             className={'search__navigation__button__style'}
             iconSize={20}
-            iconPath={mdiChevronRightBoxOutline}
+            iconPath={mdiChevronRight}
             variant={'icon'}
             onClick={() => navigateResults('next')}
           />
