@@ -12,7 +12,7 @@ import { UpgradePlans } from '../../lib/stripe'
 import SettingTabContent from '../../../design/components/organisms/Settings/atoms/SettingTabContent'
 import { ExternalLink } from '../../../design/components/atoms/Link'
 import {
-  isEligibleForDiscount,
+  isTimeEligibleForDiscount,
   newTeamDiscountDays,
 } from '../../lib/subscription'
 import Banner from '../../../design/components/atoms/Banner'
@@ -46,7 +46,6 @@ const UpgradeTab = ({
     subscription,
     updateTeamSubscription,
     currentUserPermissions,
-    permissions = [],
   } = usePage<PageStoreWithTeam>()
   const { usingElectron, sendToElectron } = useElectron()
   const [tabState, setTabState] = useState<UpgradeTabs>(defaultTabState)
@@ -96,7 +95,7 @@ const UpgradeTab = ({
 
   const eligibilityEnd = new Date(team.createdAt)
   eligibilityEnd.setDate(eligibilityEnd.getDate() + newTeamDiscountDays)
-  const teamIsEligibleForDiscount = isEligibleForDiscount(team, permissions)
+  const teamIsEligibleForDiscount = isTimeEligibleForDiscount(team)
   if (tabState === 'plans') {
     return (
       <SettingTabContent

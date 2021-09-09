@@ -1,4 +1,3 @@
-import { membersForDiscount } from '../subscription'
 import { lngKeys, TranslationSource } from './types'
 
 const zhTranslation: TranslationSource = {
@@ -439,11 +438,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.ViewerDisclaimerIntro]: 'You are a',
   [lngKeys.ViewerDisclaimerDescription]:
     'Please ask your admin to give you a member role so that you can participate as well.',
-  [lngKeys.DiscountModalTitle]:
-    'Invitez {{membersNb}} personnes pour recevoir une promotion!',
-  [lngKeys.DiscountModalSubtitle]: `You can receive a one-month free reduction if ${
-    membersForDiscount - 1
-  } people join this space before the timer's end.`,
+  [lngKeys.DiscountModalTitle]: '立即订阅即可享受折扣！',
   [lngKeys.DiscountModalAlreadySubscribed]: '您已订阅',
   [lngKeys.DiscountModalTimeRemaining]: '剩余时间',
   [lngKeys.DiscountModalExpired]: '您享受折扣的资格已过期',

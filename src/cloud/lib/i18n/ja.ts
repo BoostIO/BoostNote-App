@@ -1,4 +1,3 @@
-import { membersForDiscount } from '../subscription'
 import { lngKeys, TranslationSource } from './types'
 
 const jpTranslation: TranslationSource = {
@@ -462,11 +461,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.ViewerDisclaimerDescription]:
     'Admin権限の方があなたの権限をMemberに変更すると、ドキュメント編集等を行うことができるようになります。',
 
-  [lngKeys.DiscountModalTitle]:
-    '残り{{membersNb}}人を招待して、割引を受け取りましょう！',
-  [lngKeys.DiscountModalSubtitle]: `タイマーが切れるまでに${
-    membersForDiscount - 1
-  }人がこのSpaceに登録すると、割引を受け取ることができます。`,
+  [lngKeys.DiscountModalTitle]: '有料プランを購読し、割引を受け取りましょう！',
   [lngKeys.DiscountModalAlreadySubscribed]:
     'あなたは既に有料プランに加入しています。',
   [lngKeys.DiscountModalTimeRemaining]: 'タイムリミット',
