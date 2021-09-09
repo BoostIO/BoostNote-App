@@ -423,14 +423,15 @@ export enum lngKeys {
   PlanViewersMembersLink = 'plan.viewersmembers.link',
   SeeRoleDetails = 'settings.roles.see.details',
   ViewerDisclaimerIntro = 'viewer.disclaimer.intro',
-  ViewerDisclaimerDescription = 'viewer.disclaimer.description',
+  ViewerDisclaimerOutro = 'viewer.disclaimer.outro',
+  MemberRole = 'member.role',
 
   GeneralInvite = 'general.invite',
   SettingsRolesRestrictedTitle = 'settings.roles.restricted.title',
   SettingsRolesRestrictedDescription = 'settings.roles.restricted.description',
 
   GeneralDocuments = 'general.documents',
-  RequestAsk = 'request.ask',
+  RequestAskMemberRole = 'request.ask.member.role',
   RequestSent = 'request.requested',
 
   UploadLimit = 'upload.limit',

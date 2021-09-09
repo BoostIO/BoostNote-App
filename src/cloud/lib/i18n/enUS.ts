@@ -458,9 +458,10 @@ const enTranslation: TranslationSource = {
   [lngKeys.PlanViewersMembersLink]: 'this article',
   [lngKeys.SeeRoleDetails]: 'See role details',
 
-  [lngKeys.ViewerDisclaimerIntro]: 'You are a',
-  [lngKeys.ViewerDisclaimerDescription]:
-    'Please ask your admin to give you a member role so that you can participate as well.',
+  [lngKeys.ViewerDisclaimerIntro]: 'Please ask your admin to give you a ',
+  [lngKeys.ViewerDisclaimerOutro]: 'so that you can edit this document',
+  [lngKeys.MemberRole]: 'Member role',
+
   [lngKeys.DiscountModalTitle]: 'Subscribe now to receive a discount',
   [lngKeys.DiscountModalAlreadySubscribed]: 'You are already subscribed',
   [lngKeys.DiscountModalTimeRemaining]: 'Time remaining',
@@ -472,7 +473,7 @@ const enTranslation: TranslationSource = {
 
   [lngKeys.GeneralDocuments]: 'Documents',
   [lngKeys.RequestSent]: 'Request sent',
-  [lngKeys.RequestAsk]: 'Ask to edit',
+  [lngKeys.RequestAskMemberRole]: 'Ask Member role',
   [lngKeys.UploadLimit]:
     'The maximum allowed size for uploads is {{sizeInMb}}Mb',
 

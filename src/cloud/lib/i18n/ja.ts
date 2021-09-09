@@ -457,9 +457,10 @@ const jpTranslation: TranslationSource = {
     'Viewer権限とMember権限の違いにつきましては、',
   [lngKeys.PlanViewersMembersLink]: 'こちらの記事をご覧ください。',
   [lngKeys.SeeRoleDetails]: '各権限を確認する。',
-  [lngKeys.ViewerDisclaimerIntro]: 'あなたは',
-  [lngKeys.ViewerDisclaimerDescription]:
+  [lngKeys.ViewerDisclaimerIntro]: 'このドキュメントを編集できるように',
+  [lngKeys.ViewerDisclaimerOutro]:
     'Admin権限の方があなたの権限をMemberに変更すると、ドキュメント編集等を行うことができるようになります。',
+  [lngKeys.MemberRole]: 'メンバーの役割',
 
   [lngKeys.DiscountModalTitle]: '有料プランを購読し、割引を受け取りましょう！',
   [lngKeys.DiscountModalAlreadySubscribed]:
@@ -473,7 +474,7 @@ const jpTranslation: TranslationSource = {
 
   [lngKeys.GeneralDocuments]: 'Documents',
   [lngKeys.RequestSent]: 'Request sent',
-  [lngKeys.RequestAsk]: 'Ask to edit',
+  [lngKeys.RequestAskMemberRole]: 'メンバーの役割を尋ねる',
   [lngKeys.UploadLimit]:
     'The maximum allowed size for uploads is {{sizeInMb}}Mb',
 
