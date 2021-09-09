@@ -74,7 +74,6 @@ import {
   InPageSearch,
   InPageSearchContainer,
 } from './molecules/PageSearch/InPageSearchPortal'
-import isElectron from 'is-electron'
 
 interface ApplicationProps {
   className?: string
@@ -222,7 +221,7 @@ const Application = ({
         ;(document.activeElement as InputableDomElement).blur()
       }
 
-      if (isElectron() && isPageSearchShortcut(event)) {
+      if (usingElectron && isPageSearchShortcut(event)) {
         preventKeyboardEventPropagation(event)
         if (showInPageSearch) {
           setShowInPageSearch(false)
@@ -434,7 +433,7 @@ const Application = ({
         }
       />
       <AnnouncementAlert />
-      {isElectron() && <InPageSearchContainer id={'inPageSearchContainer'} />}
+      {usingElectron && <InPageSearchContainer id={'inPageSearchContainer'} />}
       {showInPageSearch && (
         <InPageSearch
           searchQuery={inPageSearchQuery}
