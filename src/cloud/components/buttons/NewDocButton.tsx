@@ -31,13 +31,13 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
   const { popup } = useContextMenu()
 
   const openNewDocModal = useCallback(
-    (isCanvas: boolean) => {
+    (isCanvas?: boolean) => {
       openNewDocForm(
         {
           team,
           parentFolderId: currentParentFolderId,
           workspaceId: currentWorkspaceId,
-          blocks: isCanvas,
+          blocks: isCanvas ? true : undefined,
         },
         {
           precedingRows: [
@@ -86,7 +86,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
       id='sidebar-newdoc-btn'
       label={translate(lngKeys.CreateNewDoc)}
       labelClick={
-        team.state.blocksBeta ? openDocTypeSelect : () => openNewDocModal(false)
+        team.state.blocksBeta ? openDocTypeSelect : () => openNewDocModal()
       }
       contextControls={[
         {
