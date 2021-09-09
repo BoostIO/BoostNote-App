@@ -331,8 +331,8 @@ const NumberOfMatchesContainer = styled.div`
 
 export const InPageSearchContainer = styled.div`
   position: fixed;
-  right: 377px;
-  top: 56px;
+  right: 3.5em;
+  top: 3.5em;
   flex-grow: 1;
   z-index: 7999;
 
