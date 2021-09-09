@@ -21,11 +21,21 @@ const EmbedForm = ({ onSubmit }: EmbedFormProps) => {
       event.preventDefault()
       try {
         const nameRegex = new RegExp(
-          /^(?:https?:\/\/)?(?:www\.)?([^\/]*)/,
+          /^(?:https?:\/\/)?(?:www\.)?([^\/?#]+)(?:[\/?#]|$)/,
           'gi'
         )
         const regexResult = nameRegex.exec(url)
-        const name = regexResult != null ? capitalize(regexResult[1]) : 'Embed'
+
+        let name = 'Embed'
+        if (regexResult != null) {
+          let splits = regexResult[1].split('.')
+
+          if (splits.length > 0) {
+            splits = splits.slice(0, -1)
+          }
+
+          name = capitalize(splits.join(''))
+        }
 
         await onSubmit({
           name,
