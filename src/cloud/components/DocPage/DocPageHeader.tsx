@@ -23,6 +23,7 @@ import DocDueDateSelect from '../DocProperties/DocDueDateSelect'
 import { usePreferences } from '../../lib/stores/preferences'
 import { overflowEllipsis } from '../../../design/lib/styled/styleFunctions'
 import { getDocTitle } from '../../lib/utils/patterns'
+import ViewerDisclaimer from '../ViewerDisclaimer'
 
 interface DocPageHeaderProps {
   docIsEditable?: boolean
@@ -121,6 +122,7 @@ const DocPageHeader = ({
   return (
     <Container className={cc(['doc__page__header', className])}>
       <div className='doc__page__padding'>
+        <ViewerDisclaimer />
         {docIsEditable ? (
           <Button
             variant='transparent'

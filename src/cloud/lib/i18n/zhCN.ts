@@ -435,9 +435,10 @@ const zhTranslation: TranslationSource = {
     "What's the difference between viewers and members? Please take a look at",
   [lngKeys.PlanViewersMembersLink]: 'this article',
   [lngKeys.SeeRoleDetails]: 'See role details',
-  [lngKeys.ViewerDisclaimerIntro]: 'You are a',
-  [lngKeys.ViewerDisclaimerDescription]:
-    'Please ask your admin to give you a member role so that you can participate as well.',
+  [lngKeys.ViewerDisclaimerIntro]: '请让您的管理员给您一个',
+  [lngKeys.ViewerDisclaimerOutro]: '以便您可以编辑此文档',
+  [lngKeys.MemberRole]: '成员角色',
+
   [lngKeys.DiscountModalTitle]: '立即订阅即可享受折扣！',
   [lngKeys.DiscountModalAlreadySubscribed]: '您已订阅',
   [lngKeys.DiscountModalTimeRemaining]: '剩余时间',
@@ -449,7 +450,7 @@ const zhTranslation: TranslationSource = {
 
   [lngKeys.GeneralDocuments]: 'Documents',
   [lngKeys.RequestSent]: 'Request sent',
-  [lngKeys.RequestAsk]: 'Ask to edit',
+  [lngKeys.RequestAskMemberRole]: '询问会员角色',
   [lngKeys.UploadLimit]:
     'The maximum allowed size for uploads is {{sizeInMb}}Mb',
 

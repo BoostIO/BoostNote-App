@@ -463,9 +463,11 @@ const frTranslation: TranslationSource = {
     'Quelle est la différence entre un membre et un observateur? Veuillez lire',
   [lngKeys.PlanViewersMembersLink]: 'cet article',
   [lngKeys.SeeRoleDetails]: 'Voir les détails concernant les rôles',
-  [lngKeys.ViewerDisclaimerIntro]: 'Vous êtes un',
-  [lngKeys.ViewerDisclaimerDescription]:
-    'Veuillez demander à vos admins de vous promouvoir au rôle de membre afin de participer.',
+  [lngKeys.ViewerDisclaimerIntro]:
+    'Veuillez demander à votre administrateur de vous donner un',
+  [lngKeys.ViewerDisclaimerOutro]: 'afin que vous puissiez éditer ce document',
+  [lngKeys.MemberRole]: 'Rôle de membre',
+
   [lngKeys.DiscountModalTitle]:
     'Invitez {{membersNb}} personnes pour recevoir une promotion!',
   [lngKeys.DiscountModalAlreadySubscribed]: 'Vous êtes déjà abonné',
@@ -478,7 +480,7 @@ const frTranslation: TranslationSource = {
     "Afin de promouvoir l'utilisateur à ce rôle, votre espace doit posséder un abonnement actif. Veuillez considérer upgrader votre plan.",
   [lngKeys.GeneralDocuments]: 'Documents',
   [lngKeys.RequestSent]: 'Demande envoyée',
-  [lngKeys.RequestAsk]: 'Demander à éditer',
+  [lngKeys.RequestAskMemberRole]: 'Demander le rôle du membre',
   [lngKeys.UploadLimit]: 'La taille limite des fichiers est {{sizeInMb}}Mo',
 
   [lngKeys.OnboardingFolderSectionTitle]: 'Bienvenue sur Boost Note!',

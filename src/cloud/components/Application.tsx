@@ -66,7 +66,6 @@ import NotifyIcon from '../../design/components/atoms/NotifyIcon'
 import { getTeamLinkHref } from './Link/TeamLink'
 import SidebarButton from '../../design/components/organisms/Sidebar/atoms/SidebarButton'
 import CloudGlobalSearch from './CloudGlobalSearch'
-import ViewerDisclaimer from './ViewerDisclaimer'
 import { useCloudSidebarSpaces } from '../lib/hooks/sidebar/useCloudSidebarSpaces'
 import { trackEvent } from '../api/track'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
@@ -381,7 +380,6 @@ const Application = ({
             />
           ) : null}
         </SidebarButtonList>
-        <ViewerDisclaimer />
       </>
     )
   }, [openModal, team, pathname, push, translate, subscription])
