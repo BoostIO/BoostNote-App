@@ -165,9 +165,7 @@ export function useCloudResourceModals() {
     ) => {
       openModal(
         <EmojiInputForm
-          defaultIcon={
-            body.blocks === true ? mdiPaletteOutline : mdiFileDocumentOutline
-          }
+          defaultIcon={body.blocks ? mdiPaletteOutline : mdiFileDocumentOutline}
           placeholder={translate(lngKeys.DocTitlePlaceholder)}
           submitButtonProps={{
             label: translate(lngKeys.GeneralCreate),
@@ -202,10 +200,9 @@ export function useCloudResourceModals() {
         />,
         {
           showCloseIcon: true,
-          title:
-            body.blocks === true
-              ? translate(lngKeys.CreateNewCanvas)
-              : translate(lngKeys.ModalsCreateNewDocument),
+          title: body.blocks
+            ? translate(lngKeys.CreateNewCanvas)
+            : translate(lngKeys.ModalsCreateNewDocument),
         }
       )
     },
