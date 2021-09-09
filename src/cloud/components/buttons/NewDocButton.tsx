@@ -31,7 +31,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
   const { popup } = useContextMenu()
 
   const openNewDocModal = useCallback(
-    (isCanvas = false) => {
+    (isCanvas: boolean) => {
       openNewDocForm(
         {
           team,
@@ -67,7 +67,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
           icon: mdiTextBoxPlusOutline,
           type: MenuTypes.Normal,
           label: translate(lngKeys.CreateNewDoc),
-          onClick: () => openNewDocModal(),
+          onClick: () => openNewDocModal(false),
         },
         {
           icon: mdiPaletteOutline,
@@ -85,7 +85,9 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
       icon={mdiPencilBoxOutline}
       id='sidebar-newdoc-btn'
       label={translate(lngKeys.CreateNewDoc)}
-      labelClick={team.state.blocksBeta ? openDocTypeSelect : openNewDocModal}
+      labelClick={
+        team.state.blocksBeta ? openDocTypeSelect : () => openNewDocModal(false)
+      }
       contextControls={[
         {
           icon: mdiPencilBoxMultipleOutline,
