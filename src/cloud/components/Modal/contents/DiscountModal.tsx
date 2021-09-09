@@ -2,9 +2,7 @@ import React, { useMemo } from 'react'
 import styled from '../../../../design/lib/styled'
 import Countdown from 'react-countdown'
 import {
-  isEligibleForDiscount,
   newTeamDiscountDays,
-  membersForDiscount,
   isTimeEligibleForDiscount,
 } from '../../../lib/subscription'
 import PlanTables from '../../Subscription/PlanTables'
@@ -16,20 +14,12 @@ import { mdiExclamation } from '@mdi/js'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
 import { Translation } from 'react-i18next'
-import Button from '../../../../design/components/atoms/Button'
 
 const DiscountModal = () => {
   const { openSettingsTab } = useSettings()
   const { closeAllModals } = useModal()
-  const { team, subscription, permissions = [] } = usePage()
+  const { team, subscription } = usePage()
   const { translate } = useI18n()
-
-  const eligible = useMemo(() => {
-    if (team == null) {
-      return false
-    }
-    return isEligibleForDiscount(team, permissions)
-  }, [team, permissions])
 
   const isTimeEligible = useMemo(() => {
     if (team == null) {
@@ -59,25 +49,8 @@ const DiscountModal = () => {
     <Container className='discount__modal'>
       <header className='discount__modal__header'>
         <div className='discount__modal__title'>
-          {translate(lngKeys.DiscountModalTitle, {
-            membersNb: membersForDiscount - 1,
-          })}
+          {translate(lngKeys.DiscountModalTitle)}
         </div>
-        {!eligible && (
-          <h5 className='discount__modal__subtitle'>
-            <span>{translate(lngKeys.DiscountModalSubtitle)}</span>
-            <Button
-              variant='link'
-              type='button'
-              onClick={() => {
-                openSettingsTab('teamMembers')
-                closeAllModals()
-              }}
-            >
-              {translate(lngKeys.GeneralInvite)}
-            </Button>
-          </h5>
-        )}
         {isTimeEligible ? (
           <>
             <div className='discount__modal__description'>
@@ -98,7 +71,7 @@ const DiscountModal = () => {
           selectedPlan={'free'}
           discounted={isTimeEligible}
           onStandardCallback={
-            eligible
+            isTimeEligible
               ? () => {
                   openSettingsTab('teamUpgrade', {
                     initialPlan: 'standard',
@@ -109,7 +82,7 @@ const DiscountModal = () => {
               : undefined
           }
           onProCallback={
-            eligible
+            isTimeEligible
               ? () => {
                   openSettingsTab('teamUpgrade', {
                     initialPlan: 'pro',

@@ -1,4 +1,3 @@
-import { membersForDiscount } from '../subscription'
 import { TranslationSource, lngKeys } from './types'
 
 const frTranslation: TranslationSource = {
@@ -469,9 +468,6 @@ const frTranslation: TranslationSource = {
     'Veuillez demander à vos admins de vous promouvoir au rôle de membre afin de participer.',
   [lngKeys.DiscountModalTitle]:
     'Invitez {{membersNb}} personnes pour recevoir une promotion!',
-  [lngKeys.DiscountModalSubtitle]: `Vous pouvez recevoir un mois d'abonnement gratuit si ${
-    membersForDiscount - 1
-  } personnes vous rejoignent dans cet espace avant la date butôire.`,
   [lngKeys.DiscountModalAlreadySubscribed]: 'Vous êtes déjà abonné',
   [lngKeys.DiscountModalTimeRemaining]: 'Temps restant',
   [lngKeys.DiscountModalExpired]:

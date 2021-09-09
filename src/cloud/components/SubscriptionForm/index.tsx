@@ -12,7 +12,7 @@ import { useToast } from '../../../design/lib/stores/toast'
 import Button, { LoadingButton } from '../../../design/components/atoms/Button'
 import ButtonGroup from '../../../design/components/atoms/ButtonGroup'
 import SubscriptionCostSummary from '../Subscription/SubscriptionCostSummary'
-import { isEligibleForDiscount } from '../../lib/subscription'
+import { isTimeEligibleForDiscount } from '../../lib/subscription'
 import FormRow from '../../../design/components/molecules/Form/templates/FormRow'
 import Form from '../../../design/components/molecules/Form'
 import styled from '../../../design/lib/styled'
@@ -138,7 +138,7 @@ const SubscriptionForm = ({
   }, [permissions])
 
   const eligibleDiscount = useMemo(() => {
-    if (!isEligibleForDiscount(team, permissions)) {
+    if (!isTimeEligibleForDiscount(team)) {
       return
     }
 
@@ -146,7 +146,7 @@ const SubscriptionForm = ({
       default:
         return discountPlans.newSpace
     }
-  }, [currentPlan, team, permissions])
+  }, [currentPlan, team])
 
   return (
     <Container>
@@ -208,7 +208,7 @@ const SubscriptionForm = ({
 
         {showPromoCode && (
           <>
-            {isEligibleForDiscount(team, permissions) && (
+            {isTimeEligibleForDiscount(team) && (
               <Banner variant='warning'>
                 {translate(lngKeys.PlanDiscountCouponWarning)}
               </Banner>
