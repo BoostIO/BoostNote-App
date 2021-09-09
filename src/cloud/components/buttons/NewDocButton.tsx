@@ -6,9 +6,9 @@ import {
 import { useModal } from '../../../design/lib/stores/modal'
 import {
   mdiPencilBoxMultipleOutline,
-  mdiPackageVariantClosed,
   mdiTextBoxPlusOutline,
   mdiPencilBoxOutline,
+  mdiPaletteOutline,
 } from '@mdi/js'
 import React, { useCallback } from 'react'
 import { SerializedTeam } from '../../interfaces/db/team'
@@ -70,7 +70,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
           onClick: () => openNewDocModal(),
         },
         {
-          icon: mdiPackageVariantClosed,
+          icon: mdiPaletteOutline,
           type: MenuTypes.Normal,
           label: translate(lngKeys.CreateNewCanvas),
           onClick: () => openNewDocModal(true),

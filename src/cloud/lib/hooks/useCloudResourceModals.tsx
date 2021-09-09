@@ -1,4 +1,8 @@
-import { mdiFileDocumentOutline, mdiFolderOutline } from '@mdi/js'
+import {
+  mdiFileDocumentOutline,
+  mdiFolderOutline,
+  mdiPaletteOutline,
+} from '@mdi/js'
 import React, { useCallback } from 'react'
 import { FormRowProps } from '../../../design/components/molecules/Form/templates/FormRow'
 import EmojiInputForm from '../../../design/components/organisms/EmojiInputForm'
@@ -161,7 +165,7 @@ export function useCloudResourceModals() {
     ) => {
       openModal(
         <EmojiInputForm
-          defaultIcon={mdiFileDocumentOutline}
+          defaultIcon={body.blocks ? mdiPaletteOutline : mdiFileDocumentOutline}
           placeholder={translate(lngKeys.DocTitlePlaceholder)}
           submitButtonProps={{
             label: translate(lngKeys.GeneralCreate),
@@ -196,7 +200,9 @@ export function useCloudResourceModals() {
         />,
         {
           showCloseIcon: true,
-          title: translate(lngKeys.ModalsCreateNewDocument),
+          title: body.blocks
+            ? translate(lngKeys.CreateNewCanvas)
+            : translate(lngKeys.ModalsCreateNewDocument),
         }
       )
     },
