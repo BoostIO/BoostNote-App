@@ -10,10 +10,14 @@ import MetadataContainerBreak from '../../../../../design/components/organisms/M
 import MetadataContainerRow from '../../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import styled from '../../../../../design/lib/styled'
+import { trackEvent } from '../../../../api/track'
+import { MixpanelActionTrackTypes } from '../../../../interfaces/analytics/mixpanel'
 import { PropType } from '../../../../lib/blocks/props'
 import {
   Column,
   getColType,
+  getDataPropColProp,
+  isDataPropCol,
   isPropCol,
   PropCol,
 } from '../../../../lib/blocks/table'
@@ -55,6 +59,25 @@ const ColumnSettings = ({
     setColInternal(col)
   }, [col])
 
+  const dataType = useMemo(() => {
+    return getColType(colInternal)
+  }, [colInternal])
+
+  const sendColEvent = useCallback(
+    (col: Column, event: 'edit' | 'delete') => {
+      const eventName =
+        event === 'edit'
+          ? MixpanelActionTrackTypes.BlockPropEdit
+          : MixpanelActionTrackTypes.BlockPropDelete
+      trackEvent(eventName, {
+        trueEventName: `${eventName}.${
+          dataType === 'prop' ? 'github' : 'manual'
+        }.${isDataPropCol(col) ? getDataPropColProp(col) : col.type}`,
+      })
+    },
+    [dataType]
+  )
+
   const openTypeSelector: React.MouseEventHandler = useCallback(
     (ev) => {
       if (isPropCol(colInternal)) {
@@ -63,6 +86,7 @@ const ColumnSettings = ({
           <MetadataContainer>
             <DataTypeMenu
               onSelect={(type) => {
+                sendColEvent(colInternal, 'edit')
                 setColDataType(colInternal, type)
                 setColInternal({ ...colInternal, type })
                 closeAllModals()
@@ -73,12 +97,14 @@ const ColumnSettings = ({
         )
       }
     },
-    [colInternal, closeAllModals, openContextModal, setColDataType]
+    [
+      colInternal,
+      closeAllModals,
+      openContextModal,
+      setColDataType,
+      sendColEvent,
+    ]
   )
-
-  const dataType = useMemo(() => {
-    return getColType(colInternal)
-  }, [colInternal])
 
   return (
     <MetadataContainer>
@@ -124,7 +150,10 @@ const ColumnSettings = ({
             props: {
               label: 'Move left',
               iconPath: mdiArrowLeftBold,
-              onClick: () => moveColumn(col, 'left'),
+              onClick: () => {
+                sendColEvent(col, 'edit')
+                moveColumn(col, 'left')
+              },
               id: 'column-setting-moveleft',
             },
           }}
@@ -135,7 +164,10 @@ const ColumnSettings = ({
             props: {
               label: 'Move right',
               iconPath: mdiArrowRightBold,
-              onClick: () => moveColumn(col, 'right'),
+              onClick: () => {
+                sendColEvent(col, 'edit')
+                moveColumn(col, 'right')
+              },
               id: 'column-setting-moveright',
             },
           }}
@@ -146,7 +178,10 @@ const ColumnSettings = ({
             props: {
               label: 'Delete',
               iconPath: mdiTrashCanOutline,
-              onClick: () => deleteCol(col),
+              onClick: () => {
+                sendColEvent(col, 'delete')
+                deleteCol(col)
+              },
               id: 'column-setting-delete',
             },
           }}

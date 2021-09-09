@@ -4,6 +4,8 @@ import MetadataContainer from '../../../../../design/components/organisms/Metada
 import MetadataContainerBreak from '../../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import MetadataContainerRow from '../../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import styled from '../../../../../design/lib/styled'
+import { trackEvent } from '../../../../api/track'
+import { MixpanelActionTrackTypes } from '../../../../interfaces/analytics/mixpanel'
 import { PropType } from '../../../../lib/blocks/props'
 import {
   Column,
@@ -60,8 +62,14 @@ const TableSettings = ({
       const propKey = activeProps.get(prop)
       if (propKey != null) {
         deleteColumn(propKey)
+        trackEvent(MixpanelActionTrackTypes.BlockPropDelete, {
+          trueEventName: `${MixpanelActionTrackTypes.BlockPropDelete}.github.${prop}`,
+        })
       } else {
         addColumn(makeDataPropCol(capitalize(prop), prop))
+        trackEvent(MixpanelActionTrackTypes.BlockPropCreate, {
+          trueEventName: `${MixpanelActionTrackTypes.BlockPropCreate}.github.${prop}`,
+        })
       }
     },
     [addColumn, deleteColumn, activeProps]
@@ -70,6 +78,9 @@ const TableSettings = ({
   const insertColumn = useCallback(
     (type: PropType) => {
       addColumn(makePropCol(capitalize(type), type), true)
+      trackEvent(MixpanelActionTrackTypes.BlockPropCreate, {
+        trueEventName: `${MixpanelActionTrackTypes.BlockPropCreate}.manual.${type}`,
+      })
     },
     [addColumn]
   )

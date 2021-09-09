@@ -1,6 +1,12 @@
 export enum MixpanelActionTrackTypes {
   AccountCreate = 'account.create',
   AccountDelete = 'account.delete',
+  BlockCreate = 'block.create',
+  BlockEdit = 'block.edit',
+  BlockDelete = 'block.delete',
+  BlockPropCreate = 'block.prop.add',
+  BlockPropEdit = 'block.prop.edit',
+  BlockPropDelete = 'block.prop.delete',
   DiscountSidebar = 'discount.sidebar',
   DocArchive = 'doc.archive',
   DocBookmarkCreate = 'doc.bookmark.create',
@@ -132,6 +138,9 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.InviteFromSidenav
   | MixpanelActionTrackTypes.DiscountSidebar
   | MixpanelActionTrackTypes.SendEditRequest
+  | MixpanelActionTrackTypes.BlockPropCreate
+  | MixpanelActionTrackTypes.BlockPropEdit
+  | MixpanelActionTrackTypes.BlockPropDelete
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 
@@ -216,3 +225,8 @@ export type MixpanelUserProfile = {
 export type MixpanelSmartFolderEvent =
   | MixpanelActionTrackTypes.SmartFolderCreate
   | MixpanelActionTrackTypes.SmartFolderDestroy
+
+export type MixpanelBlockEvent =
+  | MixpanelActionTrackTypes.BlockCreate
+  | MixpanelActionTrackTypes.BlockEdit
+  | MixpanelActionTrackTypes.BlockDelete

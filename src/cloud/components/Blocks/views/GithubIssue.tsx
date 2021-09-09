@@ -32,6 +32,8 @@ import BlockLayout from '../BlockLayout'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import Button from '../../../../design/components/atoms/Button'
 import { StyledUserIcon } from '../../UserIcon'
+import { trackEvent } from '../../../api/track'
+import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 
 const GithubIssueView = ({
   block,
@@ -94,6 +96,9 @@ const GithubIssueView = ({
           <DataTypeMenu
             onSelect={(type) => {
               createPropRef.current(type)
+              trackEvent(MixpanelActionTrackTypes.BlockPropCreate, {
+                trueEventName: `${MixpanelActionTrackTypes.BlockPropCreate}.manual.${type}`,
+              })
               closeAllModals()
             }}
           />
