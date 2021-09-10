@@ -23,6 +23,7 @@ import { blockEventEmitter } from '../../lib/utils/events'
 import { sleep } from '../../../lib/sleep'
 import cc from 'classcat'
 import { useRouter } from '../../lib/router'
+import { getDocLinkHref } from '../Link/DocLink'
 
 export interface Canvas extends SerializedDocWithBookmark {
   rootBlock: ContainerBlock
@@ -37,7 +38,7 @@ interface BlockContentProps {
 }
 
 const BlockContent = ({ doc }: BlockContentProps) => {
-  const { currentUserIsCoreMember } = usePage()
+  const { currentUserIsCoreMember, team } = usePage()
   const { state, actions, sendingMap } = useDocBlocks(doc.rootBlock.id)
   const { closeAllModals } = useModal()
   const [currentBlock, setCurrentBlock] = useState<Block | null>(null)
@@ -131,7 +132,7 @@ const BlockContent = ({ doc }: BlockContentProps) => {
     )
   }, [getFoldEvents, state, sideBarOpenedBlocksIdsSet])
 
-  const { state: routerState } = useRouter()
+  const { state: routerState, hash } = useRouter()
   const docIsNew = !!routerState?.new
   const previousDocRef = useRef<{
     blockType: 'container' | 'markdown' | 'embed' | 'table' | 'github.issue'
@@ -171,6 +172,23 @@ const BlockContent = ({ doc }: BlockContentProps) => {
       }
     }
   }, [state, docIsNew])
+
+  const navDone = useRef(false)
+  useEffect(() => {
+    if (state.type === 'loaded' && !navDone.current) {
+      const blockId = hash.slice(1)
+      if (blockId !== '') {
+        setCurrentBlock(find(state.block, (block) => block.id === blockId))
+        navDone.current = true
+      }
+    }
+  }, [state, hash])
+
+  useEffect(() => {
+    if (currentBlock != null) {
+      window.location.hash = currentBlock.id
+    }
+  }, [currentBlock])
 
   if (state.type === 'loading') {
     return <div>loading</div>
