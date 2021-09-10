@@ -99,8 +99,8 @@ const Container = styled.div`
   color: ${({ theme }) => theme.colors.variants.warning.text};
   border-radius: ${({ theme }) => theme.borders.radius}px;
 
-  height: 32px;
-  margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
+  height: 36px;
+  margin: ${({ theme }) => theme.sizes.spaces.md}px 0;
 
   .viewer__disclaimer__text--padding {
     padding: ${({ theme }) => theme.sizes.spaces.sm}px;
@@ -114,7 +114,7 @@ const Container = styled.div`
   }
 
   .edit__request__button--padding {
-    margin: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    margin: 6px;
   }
 `
 
