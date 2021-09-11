@@ -32,7 +32,6 @@ export const baseUserSettings: UserSettings = {
 
 export type SettingsTab =
   | 'personalInfo'
-  | 'markdownPreview'
   | 'preferences'
   | 'teamInfo'
   | 'teamMembers'

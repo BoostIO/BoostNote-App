@@ -16,7 +16,6 @@ import CodeMirrorEditor from '../../lib/editor/components/CodeMirrorEditor'
 import { SimpleFormSelect } from '../../../design/components/molecules/Form/atoms/FormSelect'
 import CodeMirror from 'codemirror'
 import { lngKeys } from '../../lib/i18n/types'
-import SettingTabContent from '../../../design/components/organisms/Settings/atoms/SettingTabContent'
 import { osName } from '../../../design/lib/platform'
 import CustomizedMarkdownPreviewer from '../MarkdownView/CustomizedMarkdownPreviewer'
 import { trackEvent } from '../../api/track'
@@ -49,17 +48,6 @@ const PreviewContainer = styled.div`
     z-index: 0;
   }
 `
-
-const MarkdownTab = () => {
-  const { t } = useTranslation()
-  return (
-    <SettingTabContent
-      title={t(lngKeys.SettingsMarkdownPreview)}
-      description={t(lngKeys.ManagePreferencesMarkdownPreview)}
-      body={<MarkdownTabForm />}
-    />
-  )
-}
 
 const MarkdownTabForm = () => {
   const { settings, setSettings } = useSettings()
@@ -264,4 +252,4 @@ const MarkdownTabForm = () => {
   )
 }
 
-export default MarkdownTab
+export default MarkdownTabForm

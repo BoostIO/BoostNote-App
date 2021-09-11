@@ -20,6 +20,7 @@ import FormSelect, {
 import FormRow from '../../../design/components/molecules/Form/templates/FormRow'
 import { lngKeys } from '../../lib/i18n/types'
 import { useDebounce } from 'react-use'
+import MarkdownTabForm from './MarkdownTabForm'
 
 const UserPreferencesForm = () => {
   const { settings, setSettings } = useSettings()
@@ -159,6 +160,7 @@ const UserPreferencesForm = () => {
 
   return (
     <Form
+      fullWidth={true}
       rows={[
         {
           title: t(lngKeys.SettingsUILanguage),
@@ -390,6 +392,18 @@ const UserPreferencesForm = () => {
                 value: settings['general.editorIndentSize'].toString(),
                 onChange: selectIndentSize,
               },
+            },
+          ],
+        }}
+      />
+      <FormRow
+        fullWidth={true}
+        row={{
+          title: t(lngKeys.SettingsMarkdownPreview),
+          items: [
+            {
+              type: 'node',
+              element: <MarkdownTabForm />,
             },
           ],
         }}
