@@ -23,7 +23,6 @@ import { blockEventEmitter } from '../../lib/utils/events'
 import { sleep } from '../../../lib/sleep'
 import cc from 'classcat'
 import { useRouter } from '../../lib/router'
-import { getDocLinkHref } from '../Link/DocLink'
 
 export interface Canvas extends SerializedDocWithBookmark {
   rootBlock: ContainerBlock
@@ -38,7 +37,7 @@ interface BlockContentProps {
 }
 
 const BlockContent = ({ doc }: BlockContentProps) => {
-  const { currentUserIsCoreMember, team } = usePage()
+  const { currentUserIsCoreMember } = usePage()
   const { state, actions, sendingMap } = useDocBlocks(doc.rootBlock.id)
   const { closeAllModals } = useModal()
   const [currentBlock, setCurrentBlock] = useState<Block | null>(null)
