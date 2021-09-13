@@ -239,10 +239,11 @@ const Editor = ({
     const keyMap = resolveKeyMap(settings['general.editorKeyMap'])
     const editorIndentType = settings['general.editorIndentType']
     const editorIndentSize = settings['general.editorIndentSize']
+    const showEditorLineNumbers = settings['general.editorShowLineNumbers']
 
     return {
       mode: 'markdown',
-      lineNumbers: true,
+      lineNumbers: showEditorLineNumbers,
       lineWrapping: true,
       theme,
       indentWithTabs: editorIndentType === 'tab',

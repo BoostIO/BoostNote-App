@@ -338,10 +338,11 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
         : editorTheme
     const editorIndentType = settings['general.editorIndentType']
     const editorIndentSize = settings['general.editorIndentSize']
+    const editorLineNumbers = settings['general.editorShowLineNumbers']
 
     return {
       mode: 'markdown',
-      lineNumbers: true,
+      lineNumbers: editorLineNumbers,
       lineWrapping: true,
       theme,
       indentWithTabs: editorIndentType === 'tab',

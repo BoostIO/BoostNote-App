@@ -15,6 +15,7 @@ export interface UserSettings {
   'general.editorIndentSize': GeneralEditorIndentSize
   'general.editorFontSize': number
   'general.editorFontFamily': string
+  'general.editorShowLineNumbers': boolean
   'general.showEditorToolbar': boolean
 }
 

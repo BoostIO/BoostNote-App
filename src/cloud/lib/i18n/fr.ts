@@ -57,6 +57,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsNotifFrequencies]: 'Fréquence de mises à jour par mail',
   [lngKeys.SettingsIndentType]: "Type d'indentation pour l'éditeur",
   [lngKeys.SettingsShowEditorToolbar]: "Barre d'outils de l'éditeur",
+  [lngKeys.SettingsShowEditorLineNumbers]: "Numéros de ligne de l'éditeur",
   [lngKeys.SettingsIndentSize]: "Taille de l'indentation pour l'éditeur",
   [lngKeys.SettingsUserForum]: "Forum d'utilisateurs (nouveau!)",
   [lngKeys.ManagePreferences]: 'Gérez vos préférences.',

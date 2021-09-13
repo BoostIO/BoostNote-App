@@ -127,6 +127,7 @@ export enum lngKeys {
   SettingsNotifFrequencies = 'settings.notificationsFrequency',
   SettingsIndentType = 'settings.indentType',
   SettingsShowEditorToolbar = 'settings.showEditorToolbar',
+  SettingsShowEditorLineNumbers = 'settings.showEditorLineNumbers',
   SettingsIndentSize = 'settings.indentSize',
   SettingsSpace = 'settings.space',
   SettingsSpaceDelete = 'settings.space.delete',
