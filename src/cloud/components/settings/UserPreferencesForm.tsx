@@ -62,6 +62,15 @@ const UserPreferencesForm = () => {
     [setSettings]
   )
 
+  const selectShowEditorLineNumbers = useCallback(
+    (formOption: FormSelectOption) => {
+      setSettings({
+        'general.editorShowLineNumbers': formOption.value === 'Show',
+      })
+    },
+    [setSettings]
+  )
+
   const selectEditorTheme = useCallback(
     (value: string) => {
       setSettings({
@@ -209,6 +218,34 @@ const UserPreferencesForm = () => {
                     value: settings['general.theme'],
                   }}
                   onChange={selectTheme}
+                />
+              ),
+            },
+          ],
+        },
+        {
+          title: t(lngKeys.SettingsShowEditorLineNumbers),
+          items: [
+            {
+              type: 'node',
+              element: (
+                <FormSelect
+                  options={[
+                    {
+                      label: t(lngKeys.GeneralShowVerb),
+                      value: 'Show',
+                    },
+                    { label: t(lngKeys.GeneralHideVerb), value: 'Hide' },
+                  ]}
+                  value={{
+                    label: settings['general.editorShowLineNumbers']
+                      ? t(lngKeys.GeneralShowVerb)
+                      : t(lngKeys.GeneralHideVerb),
+                    value: settings['general.editorShowLineNumbers']
+                      ? 'Show'
+                      : 'Hide',
+                  }}
+                  onChange={selectShowEditorLineNumbers}
                 />
               ),
             },
