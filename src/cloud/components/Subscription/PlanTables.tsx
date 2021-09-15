@@ -11,6 +11,9 @@ import {
 } from '../../lib/stripe'
 import {
   freePlanStorageMb,
+  freePlanUploadSizeMb,
+  freeTrialPeriodDays,
+  paidPlanUploadSizeMb,
   proPlanStorageMb,
   revisionHistoryStandardDays,
   standardPlanStorageMb,
@@ -79,7 +82,7 @@ const PlanTables = ({
           onTrialCallback()
         }}
       >
-        {translate(lngKeys.PlanTrial, { days: 7 })}
+        {translate(lngKeys.PlanTrial, { days: freeTrialPeriodDays })}
       </Button>
     )
   }, [subscription, team, onTrialCallback, translate])
@@ -110,6 +113,13 @@ const PlanTables = ({
           </div>
           <div className='plan__item__perk'>
             <span>{freePlanStorageMb}MB</span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>
+              {translate(lngKeys.PlanSizePerUpload, {
+                size: freePlanUploadSizeMb,
+              })}
+            </span>
           </div>
         </div>
         <div className='plan__item__footer'>
@@ -186,6 +196,13 @@ const PlanTables = ({
             <span>
               {translate(lngKeys.PlanStoragePerk, {
                 storageSize: `${standardPlanStorageMb / 1000}GB`,
+              })}
+            </span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>
+              {translate(lngKeys.PlanSizePerUpload, {
+                size: paidPlanUploadSizeMb,
               })}
             </span>
           </div>

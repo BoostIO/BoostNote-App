@@ -165,6 +165,7 @@ const frTranslation: TranslationSource = {
     "Accès complet à l'historique des revisions de vos documents",
   [lngKeys.PlanTrial]: 'Essai gratuit de {{days}} jours',
   [lngKeys.PlanInTrial]: 'En essai gratuit ({{remaining}} left)',
+  [lngKeys.PlanSizePerUpload]: '{{size}}Mb par upload',
   [lngKeys.UpgradeSubtitle]: 'Entrez et confirmez vos informations de paiement',
   [lngKeys.Viewers]: 'observateurs',
   [lngKeys.Month]: 'mois',

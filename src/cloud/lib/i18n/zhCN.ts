@@ -435,6 +435,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.PlanViewersMembersIntro]:
     "What's the difference between viewers and members? Please take a look at",
   [lngKeys.PlanViewersMembersLink]: 'this article',
+  [lngKeys.PlanSizePerUpload]: '{{size}}Mb per upload',
   [lngKeys.SeeRoleDetails]: 'See role details',
   [lngKeys.ViewerDisclaimerIntro]: '请让您的管理员给您一个',
   [lngKeys.ViewerDisclaimerOutro]: '以便您可以编辑此文档',
