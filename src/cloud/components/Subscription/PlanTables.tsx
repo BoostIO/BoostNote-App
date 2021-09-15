@@ -109,11 +109,7 @@ const PlanTables = ({
             <span>{translate(lngKeys.PlanFreePerk3)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>
-              {translate(lngKeys.PlanStoragePerk, {
-                storageSize: `${freePlanStorageMb}MB`,
-              })}
-            </span>
+            <span>{freePlanStorageMb}MB</span>
           </div>
         </div>
         <div className='plan__item__footer'>
