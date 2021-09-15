@@ -181,10 +181,6 @@ const TeamInvitesSection = ({
   const selectRoleOptions = useMemo(() => {
     let roles: FormSelectOption[] = []
 
-    if (subscription == null) {
-      return [{ label: translate(lngKeys.GeneralViewer), value: 'viewer' }]
-    }
-
     switch (userPermissions.role) {
       case 'admin':
         roles = [
@@ -202,7 +198,7 @@ const TeamInvitesSection = ({
 
     roles.push({ label: translate(lngKeys.GeneralViewer), value: 'viewer' })
     return roles
-  }, [userPermissions.role, subscription, translate])
+  }, [userPermissions.role, translate])
 
   return (
     <Container>
