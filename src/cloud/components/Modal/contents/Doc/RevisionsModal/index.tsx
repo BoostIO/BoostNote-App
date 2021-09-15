@@ -13,8 +13,6 @@ import { focusFirstChildFromElement } from '../../../../../lib/dom'
 import { SerializedRevision } from '../../../../../interfaces/db/revision'
 import { getAllRevisionsFromDoc } from '../../../../../api/teams/docs/revisions'
 import { usePage } from '../../../../../lib/stores/pageStore'
-import { mdiBackupRestore } from '@mdi/js'
-import { useSettings } from '../../../../../lib/stores/settings'
 import {
   useDialog,
   DialogIconTypes,
@@ -25,9 +23,7 @@ import { compareDateString } from '../../../../../lib/date'
 import { trackEvent } from '../../../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../../../interfaces/analytics/mixpanel'
 import { useModal } from '../../../../../../design/lib/stores/modal'
-import Button from '../../../../../../design/components/atoms/Button'
 import useApi from '../../../../../../design/lib/hooks/useApi'
-import Icon from '../../../../../../design/components/atoms/Icon'
 import styled from '../../../../../../design/lib/styled'
 import DoublePane from '../../../../../../design/components/atoms/DoublePane'
 
@@ -47,7 +43,6 @@ const RevisionsModal = ({
   >(new Map())
   const { subscription, currentUserPermissions } = usePage()
   const { closeLastModal: closeModal } = useModal()
-  const { openSettingsTab } = useSettings()
   const [revisionIndex, setRevisionIndex] = useState<number>()
   const { messageBox } = useDialog()
   const [currentPage, setCurrentPage] = useState<number>(1)
@@ -161,38 +156,6 @@ const RevisionsModal = ({
     }
   }, [revisionsMap, revisionIndex, onRestoreClick, restoreRevision])
 
-  const rightSideContent = useMemo(() => {
-    if (subscription == null && currentUserPermissions != null) {
-      return (
-        <div className='content--unsubscribed'>
-          <Icon path={mdiBackupRestore} size={50} />
-          <p>
-            Let&apos;s upgrade to the Pro plan now and protect your shared
-            documents with a password.
-            <br /> You can try a two-week trial for free!
-          </p>
-          <Button
-            variant='primary'
-            onClick={() => {
-              openSettingsTab('teamUpgrade')
-              closeModal()
-            }}
-          >
-            Start Free Trial
-          </Button>
-        </div>
-      )
-    }
-
-    return preview
-  }, [
-    currentUserPermissions,
-    subscription,
-    closeModal,
-    openSettingsTab,
-    preview,
-  ])
-
   const orderedRevisions = useMemo(() => {
     return [...revisionsMap.values()].sort((a, b) => {
       return compareDateString(b.created, a.created)
@@ -217,7 +180,7 @@ const RevisionsModal = ({
         rightFlex='1 1 auto'
         right={
           <div className='right' ref={contentSideRef}>
-            {rightSideContent}
+            {preview}
           </div>
         }
       >
