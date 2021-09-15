@@ -171,6 +171,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.PlanProPerk2]: "Full access to your docs' revision history",
   [lngKeys.PlanTrial]: '{{days}} days free trial',
   [lngKeys.PlanInTrial]: 'In free trial ({{remaining}} left)',
+  [lngKeys.PlanSizePerUpload]: '{{size}}Mb per upload',
   [lngKeys.UpgradeSubtitle]: 'Confirm and enter your payment information',
   [lngKeys.Viewers]: 'viewers',
   [lngKeys.Month]: 'month',

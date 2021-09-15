@@ -11,6 +11,8 @@ export const newTeamDiscountDays = 7
 
 export const freePlanMembersLimit = 3
 
+export const freePlanUploadSizeMb = 10
+export const paidPlanUploadSizeMb = 200
 export function isTimeEligibleForDiscount(team: { createdAt: string }) {
   if (
     differenceInDays(Date.now(), new Date(team.createdAt)) <=

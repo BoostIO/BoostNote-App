@@ -458,6 +458,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.PlanViewersMembersIntro]:
     'Viewer権限とMember権限の違いにつきましては、',
   [lngKeys.PlanViewersMembersLink]: 'こちらの記事をご覧ください。',
+  [lngKeys.PlanSizePerUpload]: '{{size}}Mb per upload',
   [lngKeys.SeeRoleDetails]: '各権限を確認する。',
   [lngKeys.ViewerDisclaimerIntro]: 'このドキュメントを編集できるように',
   [lngKeys.ViewerDisclaimerOutro]:

@@ -222,6 +222,7 @@ export enum lngKeys {
   PlanProPerk3 = 'plan.pro.perk.3',
   PlanTrial = 'plan.trial',
   PlanInTrial = 'plan.in.trial',
+  PlanSizePerUpload = 'plan.upload.size',
   UpgradeSubtitle = 'plan.upgrade.subtitle',
   Viewers = 'viewers',
   Month = 'month',
