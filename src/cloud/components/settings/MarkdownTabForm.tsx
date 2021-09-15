@@ -182,7 +182,7 @@ const MarkdownTabForm = () => {
               type: 'button',
               props: {
                 variant: 'secondary',
-                label: t(lngKeys.GeneralDefault),
+                label: t(lngKeys.SettingsMarkdownPreviewStyleResetLabel),
                 onClick: () => resetNewPreviewStyle(),
               },
             },

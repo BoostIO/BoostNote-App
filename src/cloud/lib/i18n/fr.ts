@@ -35,6 +35,8 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsMarkdownPreviewShowcase]: 'Aperçu du style Markdown',
   [lngKeys.SettingsMarkdownPreviewCodeBlockTheme]: 'Thème du bloc de code',
   [lngKeys.SettingsMarkdownPreviewStyleTitle]: 'Aperçu du style',
+  [lngKeys.SettingsMarkdownPreviewStyleResetLabel]:
+    'Utiliser le style par défaut',
   [lngKeys.SettingsPreferences]: 'Préférences',
   [lngKeys.SettingsTeamUpgrade]: 'Mise à niveau',
   [lngKeys.SettingsTeamSubscription]: 'Facturation',
