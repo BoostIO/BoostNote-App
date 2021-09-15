@@ -9,7 +9,7 @@ export const proPlanStorageMb = 10000
 export const revisionHistoryStandardDays = 3
 export const newTeamDiscountDays = 7
 
-export const freePlanMembersLimit = 1
+export const freePlanMembersLimit = 3
 
 export function isTimeEligibleForDiscount(team: { createdAt: string }) {
   if (
