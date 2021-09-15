@@ -35,6 +35,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsMarkdownPreviewShowcase]: 'Markdown Style Preview',
   [lngKeys.SettingsMarkdownPreviewCodeBlockTheme]: 'Code Block Theme',
   [lngKeys.SettingsMarkdownPreviewStyleTitle]: 'Preview Style',
+  [lngKeys.SettingsMarkdownPreviewStyleResetLabel]: 'Use Default Style',
   [lngKeys.SettingsPreferences]: 'Preferences',
   [lngKeys.SettingsTeamUpgrade]: 'Upgrade',
   [lngKeys.SettingsTeamSubscription]: 'Billing',

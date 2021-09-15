@@ -35,6 +35,8 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SettingsMarkdownPreviewShowcase]: 'マークダウンスタイルのプレビュー',
   [lngKeys.SettingsMarkdownPreviewCodeBlockTheme]: 'コードブロックのテーマ',
   [lngKeys.SettingsMarkdownPreviewStyleTitle]: 'Pプレビュースタイル',
+  [lngKeys.SettingsMarkdownPreviewStyleResetLabel]:
+    'デフォルトのスタイルを使用',
   [lngKeys.SettingsPreferences]: 'カスタマイズ',
   [lngKeys.SettingsTeamUpgrade]: 'アップグレード',
   [lngKeys.SettingsTeamSubscription]: '請求',

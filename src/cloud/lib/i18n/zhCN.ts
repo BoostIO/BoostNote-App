@@ -36,6 +36,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SettingsMarkdownPreviewShowcase]: 'Markdown 样式预览',
   [lngKeys.SettingsMarkdownPreviewCodeBlockTheme]: '代码块主题',
   [lngKeys.SettingsMarkdownPreviewStyleTitle]: '预览样式',
+  [lngKeys.SettingsMarkdownPreviewStyleResetLabel]: '使用默认样式',
   [lngKeys.SettingsTeamUpgrade]: '更新',
   [lngKeys.SettingsTeamSubscription]: '付费',
   [lngKeys.SettingsIntegrations]: '集成',
