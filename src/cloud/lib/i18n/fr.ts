@@ -152,7 +152,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.PlanPerMember]: 'par membre',
   [lngKeys.PlanPerMonth]: 'par mois',
   [lngKeys.PlanFreePerk1]: 'Observateurs illimités',
-  [lngKeys.PlanFreePerk2]: '1 Membre',
+  [lngKeys.PlanFreePerk2]: '3 Membres',
   [lngKeys.PlanFreePerk3]: 'Documents illimités',
   [lngKeys.PlanStoragePerk]: '{{storageSize}} par membre',
   [lngKeys.PlanStandardPerk1]: 'Membres illimités',

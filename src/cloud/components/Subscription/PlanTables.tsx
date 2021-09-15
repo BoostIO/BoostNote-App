@@ -15,6 +15,7 @@ import {
   freeTrialPeriodDays,
   paidPlanUploadSizeMb,
   proPlanStorageMb,
+  revisionHistoryFreeDays,
   revisionHistoryStandardDays,
   standardPlanStorageMb,
 } from '../../lib/subscription'
@@ -107,12 +108,18 @@ const PlanTables = ({
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanFreePerk2)}</span>
           </div>
-
+          <div className='plan__item__perk'>
+            <span>
+              {translate(lngKeys.PlanStandardPerk3, {
+                days: revisionHistoryFreeDays,
+              })}
+            </span>
+          </div>
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanFreePerk3)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>{freePlanStorageMb}MB</span>
+            <span>{freePlanStorageMb}MB storage</span>
           </div>
           <div className='plan__item__perk'>
             <span>

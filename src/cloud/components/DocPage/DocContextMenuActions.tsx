@@ -53,8 +53,10 @@ import RevisionsModal from '../Modal/contents/Doc/RevisionsModal'
 import { SerializedRevision } from '../../interfaces/db/revision'
 import MetadataContainerBreak from '../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import { usePage } from '../../lib/stores/pageStore'
-import { revisionHistoryStandardDays } from '../../lib/subscription'
-import UpgradeIntroButton from '../UpgradeIntroButton'
+import {
+  revisionHistoryFreeDays,
+  revisionHistoryStandardDays,
+} from '../../lib/subscription'
 
 export interface DocContextMenuActionsProps {
   team: SerializedTeam
@@ -244,7 +246,6 @@ export function DocContextMenuActions({
               id: 'metadata-history',
               onClick: revisionNavigateCallback,
               iconPath: mdiHistory,
-              disabled: subscription == null,
               label:
                 subscription != null
                   ? subscription.plan === 'standard'
@@ -252,20 +253,12 @@ export function DocContextMenuActions({
                         days: revisionHistoryStandardDays,
                       })
                     : translate(lngKeys.SeeFullHistory)
-                  : translate(lngKeys.History),
+                  : translate(lngKeys.SeeLimitedHistory, {
+                      days: revisionHistoryFreeDays,
+                    }),
             },
           }}
-        >
-          {subscription == null ? (
-            <UpgradeIntroButton
-              className='context__badge'
-              origin='revision'
-              variant='secondary'
-              popupVariant='version-history'
-              query={{ teamId: team.id, docId: doc.id }}
-            />
-          ) : null}
-        </MetadataContainerRow>
+        />
       )}
       <MetadataContainerRow
         row={{

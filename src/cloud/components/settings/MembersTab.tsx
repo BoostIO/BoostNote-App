@@ -199,7 +199,12 @@ const MembersTab = () => {
         return
       }
 
-      if (subscription == null && targetedRole !== 'viewer') {
+      if (
+        subscription == null &&
+        targetedRole !== 'viewer' &&
+        (team.permissions || []).filter((p) => p.role !== 'viewer').length >
+          freePlanMembersLimit
+      ) {
         messageBox({
           title: translate(lngKeys.SettingsRolesRestrictedTitle),
           message: translate(lngKeys.SettingsRolesRestrictedDescription),

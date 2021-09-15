@@ -6,7 +6,8 @@ export const freePlanStorageMb = 100
 export const standardPlanStorageMb = 1000
 export const proPlanStorageMb = 10000
 
-export const revisionHistoryStandardDays = 3
+export const revisionHistoryFreeDays = 3
+export const revisionHistoryStandardDays = 7
 export const newTeamDiscountDays = 7
 
 export const freePlanMembersLimit = 3

@@ -158,7 +158,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.PlanPerMonth]: 'per month',
 
   [lngKeys.PlanFreePerk1]: 'Unlimited Viewers',
-  [lngKeys.PlanFreePerk2]: '1 Member',
+  [lngKeys.PlanFreePerk2]: '3 Members',
   [lngKeys.PlanFreePerk3]: 'Unlimited documents',
   [lngKeys.PlanStoragePerk]: '{{storageSize}} per member',
   [lngKeys.PlanStandardPerk1]: 'Unlimited members',

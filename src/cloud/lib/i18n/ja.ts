@@ -445,7 +445,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SpaceIntentPersonal]: '個人利用',
   [lngKeys.SpaceIntentTeam]: 'チームとのコラボレーション',
   [lngKeys.PlanFreePerk1]: '無制限のViewers権限',
-  [lngKeys.PlanFreePerk2]: '1 Member権限',
+  [lngKeys.PlanFreePerk2]: '3 Members権限',
   [lngKeys.PlanFreePerk3]: '無制限ドキュメント',
   [lngKeys.PlanStoragePerk]: 'ひとりあたり{{storageSize}}の容量',
   [lngKeys.PlanStandardPerk1]: '無制限Member権限',
