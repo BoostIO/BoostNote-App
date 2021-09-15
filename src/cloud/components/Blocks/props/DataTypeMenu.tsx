@@ -55,7 +55,7 @@ const DataTypeMenu = ({ onSelect }: DataTypeMenuProps) => {
           type: 'button',
           props: {
             id: 'add-data-person]',
-            label: 'Person (Assignee)',
+            label: 'Person',
             onClick: () => onSelect('user'),
             iconPath: mdiAccountCircleOutline,
           },
