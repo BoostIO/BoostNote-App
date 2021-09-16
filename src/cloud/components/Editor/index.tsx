@@ -255,6 +255,8 @@ const Editor = ({
         Tab: 'indentMore',
       },
       scrollPastEnd: true,
+      // fixes IME being on top of current line, Codemirror issue: https://github.com/codemirror/CodeMirror/issues/3137
+      inputStyle: 'contenteditable',
     }
   }, [settings])
 
