@@ -21,7 +21,10 @@ import { useSettings } from '../lib/stores/settings'
 import { useModal } from '../../design/lib/stores/modal'
 import ButtonGroup from '../../design/components/atoms/ButtonGroup'
 import { useTeamStorage } from '../lib/stores/teamStorage'
-import { freePlanMembersLimit } from '../lib/subscription'
+import {
+  didTeamReachPlanLimit,
+  freePlanMembersLimit,
+} from '../lib/subscription'
 import Icon from '../../design/components/atoms/Icon'
 
 const AnnouncementAlert = () => {
@@ -120,6 +123,76 @@ const AnnouncementAlert = () => {
 
   if (currentUserPermissions == null) {
     return null
+  }
+
+  if (
+    didTeamReachPlanLimit(permissions, undefined) &&
+    !teamPreferences.hideFreePlanLimitReachedAlert
+  ) {
+    return (
+      <Container>
+        <div className='alert alert--info'>
+          <span className='alert__icon'>
+            <Icon path={mdiInformationOutline} size={20} />
+          </span>
+          <div className='alert__text'>
+            <p>
+              Looks like your team is full.{' '}
+              {currentUserPermissions.role === 'admin' && (
+                <>
+                  Upgrade your plan to invite unlimited
+                  <ExternalLink
+                    href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
+                    className='alert__link'
+                  >
+                    <span>Members</span> <Icon path={mdiOpenInNew} />
+                  </ExternalLink>
+                  .
+                </>
+              )}
+            </p>
+
+            <p>
+              You can however invite unlimited{' '}
+              <ExternalLink
+                href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
+                className='alert__link'
+              >
+                <span>Viewers</span> <Icon path={mdiOpenInNew} />
+              </ExternalLink>
+              in the Free plan.
+            </p>
+            <ButtonGroup className='alert__footer' layout='spread'>
+              {currentUserPermissions.role === 'admin' && (
+                <Button
+                  variant='bordered'
+                  onClick={() => {
+                    closeAllModals()
+                    openSettingsTab('teamUpgrade')
+                  }}
+                >
+                  Upgrade now
+                </Button>
+              )}
+              <Button
+                variant='secondary'
+                onClick={() => {
+                  const newPreferences = Object.assign({}, teamPreferences, {
+                    hideFreePlanLimitReachedAlert: true,
+                  })
+                  setToLocalStorage(
+                    currentUserPermissions.teamId,
+                    newPreferences
+                  )
+                }}
+              >
+                Continue with the free plan
+              </Button>
+            </ButtonGroup>
+          </div>
+        </div>
+      </Container>
+    )
   }
 
   if (

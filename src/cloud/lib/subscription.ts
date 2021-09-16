@@ -1,4 +1,6 @@
 import { differenceInDays } from 'date-fns'
+import { SerializedSubscription } from '../interfaces/db/subscription'
+import { SerializedUserTeamPermissions } from '../interfaces/db/userTeamPermissions'
 
 export const freeTrialPeriodDays = 7
 
@@ -18,6 +20,24 @@ export function isTimeEligibleForDiscount(team: { createdAt: string }) {
   if (
     differenceInDays(Date.now(), new Date(team.createdAt)) <=
     newTeamDiscountDays
+  ) {
+    return true
+  }
+
+  return false
+}
+
+export function didTeamReachPlanLimit(
+  permissions: SerializedUserTeamPermissions[],
+  subscription?: SerializedSubscription
+): boolean {
+  if (subscription != null && subscription.status !== 'inactive') {
+    return false
+  }
+
+  if (
+    ((permissions || []) as any[]).filter((p) => p.role !== 'viewer').length >=
+    freePlanMembersLimit
   ) {
     return true
   }
