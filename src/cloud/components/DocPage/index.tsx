@@ -22,6 +22,7 @@ import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Editor from '../Editor'
 import ApplicationPage from '../ApplicationPage'
 import BlockEditor from '../Blocks/BlockEditor'
+import { freePlanMembersLimit } from '../../lib/subscription'
 
 interface DocPageProps {
   doc: SerializedDocWithBookmark
@@ -87,7 +88,8 @@ const DocPage = ({
 
     if (
       subscription == null &&
-      permissions.filter((p) => p.role === 'member').length <= 1
+      permissions.filter((p) => p.role !== 'viewer').length <=
+        freePlanMembersLimit
     ) {
       return true
     }

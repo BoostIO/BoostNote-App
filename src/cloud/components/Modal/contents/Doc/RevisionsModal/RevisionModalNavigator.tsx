@@ -18,6 +18,13 @@ import Flexbox from '../../../../../../design/components/atoms/Flexbox'
 import { format } from 'date-fns'
 import UserIcon from '../../../../UserIcon'
 import Button from '../../../../../../design/components/atoms/Button'
+import ColoredBlock from '../../../../../../design/components/atoms/ColoredBlock'
+import {
+  revisionHistoryFreeDays,
+  revisionHistoryStandardDays,
+} from '../../../../../lib/subscription'
+import { useSettings } from '../../../../../lib/stores/settings'
+import { useModal } from '../../../../../../design/lib/stores/modal'
 
 interface RevisionModalNavigatorProps {
   revisions: SerializedRevision[]
@@ -37,6 +44,7 @@ const RevisionModalNavigator = React.forwardRef<
   RevisionModalNavigatorProps
 >(
   ({
+    currentUserPermissions,
     menuRef,
     fetching,
     revisions,
@@ -45,7 +53,10 @@ const RevisionModalNavigator = React.forwardRef<
     setRevisionIndex,
     revisionIndex,
     fetchRevisions,
+    subscription,
   }) => {
+    const { openSettingsTab } = useSettings()
+    const { closeAllModals } = useModal()
     const keydownHandler = useMemo(() => {
       return (event: KeyboardEvent) => {
         if (isFocusLeftSideShortcut(event)) {
@@ -112,6 +123,40 @@ const RevisionModalNavigator = React.forwardRef<
             Load more
           </Button>
         )}
+        {(subscription == null || subscription.plan !== 'pro') && (
+          <footer>
+            <ColoredBlock variant='secondary'>
+              <p>
+                Under the {subscription == null ? 'free' : 'standard'} plan, you
+                can only access the revisions made in the last{' '}
+                {subscription == null
+                  ? revisionHistoryFreeDays
+                  : revisionHistoryStandardDays}{' '}
+                days.
+              </p>
+              <p>
+                In order to access all versions of this doc, upgrading to the
+                pro plan is necessary.
+              </p>
+              {currentUserPermissions != null &&
+                currentUserPermissions.role === 'admin' && (
+                  <Button
+                    variant='primary'
+                    onClick={() => {
+                      openSettingsTab(
+                        subscription == null
+                          ? 'teamUpgrade'
+                          : 'teamSubscription'
+                      )
+                      return closeAllModals()
+                    }}
+                  >
+                    Upgrade for full history
+                  </Button>
+                )}
+            </ColoredBlock>
+          </footer>
+        )}
       </Container>
     )
   }
@@ -125,7 +170,21 @@ const Container = styled.div`
   flex-direction: column;
   overflow: hidden;
 
+  footer {
+    display: block;
+    flex: 0 0 auto;
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    p + p {
+      margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
+    }
+    button {
+      margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
+      width: 100%;
+    }
+  }
+
   header,
+  footer,
   .revisions__scroller {
     padding-right: ${({ theme }) => theme.sizes.spaces.df}px;
   }
