@@ -20,6 +20,7 @@ import { osName } from '../../../design/lib/platform'
 import CustomizedMarkdownPreviewer from '../MarkdownView/CustomizedMarkdownPreviewer'
 import { trackEvent } from '../../api/track'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
+import { useDebounce } from 'react-use'
 
 const EditorContainer = styled.div`
   ${border}
@@ -39,7 +40,6 @@ const PreviewContainer = styled.div`
   ${border}
   .panel {
     width: 50%;
-    padding: 15px;
 
     &:first-child {
       ${borderRight}
@@ -47,25 +47,40 @@ const PreviewContainer = styled.div`
 
     z-index: 0;
   }
+
+  .CodeMirrorWrapper,
+  .CodeMirror-wrap {
+    height: 100%;
+    min-height: 360px;
+    max-height: 360px;
+  }
 `
+
+const PREVIEW_STYLE_INPUT_DEBOUNCE_MS = 1000
 
 const MarkdownTabForm = () => {
   const { settings, setSettings } = useSettings()
   const { previewStyle, setPreviewStyle } = usePreviewStyle()
-  const [newPreviewStyle] = useState(previewStyle)
+  const [newPreviewStyle, setNewPreviewStyle] = useState(previewStyle)
   const [previewContent, setPreviewContent] = useState(defaultPreviewContent)
+  const initialPreviewStyle = useRef<string>(previewStyle)
   const editorRef = useRef<CodeMirror.Editor | null>(null)
   const { t } = useTranslation()
 
-  const savePreviewStyle = useCallback(() => {
-    if (editorRef.current == null) {
-      return
-    }
-    const newPreviewStyleFromEditor = editorRef.current.getValue()
-    if (previewStyle !== newPreviewStyleFromEditor) {
-      setPreviewStyle(newPreviewStyleFromEditor)
-    }
-  }, [setPreviewStyle, previewStyle])
+  useDebounce(
+    () => {
+      if (editorRef.current == null) {
+        return
+      }
+
+      const newPreviewStyleFromEditor = editorRef.current.getValue()
+      if (previewStyle !== newPreviewStyleFromEditor) {
+        setPreviewStyle(newPreviewStyleFromEditor)
+      }
+    },
+    PREVIEW_STYLE_INPUT_DEBOUNCE_MS,
+    [editorRef, newPreviewStyle]
+  )
 
   const resetNewPreviewStyle = useCallback(() => {
     if (editorRef.current != null) {
@@ -98,6 +113,10 @@ const MarkdownTabForm = () => {
   const bindCodeMirrorEditorPreviewStyle = useCallback(
     (editor: CodeMirror.Editor) => {
       editorRef.current = editor
+      editor.setValue(initialPreviewStyle.current)
+      editor.on('change', (instance) => {
+        setNewPreviewStyle(instance.getValue())
+      })
     },
     []
   )
@@ -116,7 +135,6 @@ const MarkdownTabForm = () => {
     const editorIndentSize = settings['general.editorIndentSize']
 
     return {
-      value: newPreviewStyle,
       mode: 'css',
       lineNumbers: true,
       lineWrapping: true,
@@ -131,7 +149,7 @@ const MarkdownTabForm = () => {
       },
       scrollPastEnd: true,
     }
-  }, [newPreviewStyle, settings])
+  }, [settings])
 
   const editorConfigMarkdownPreview: CodeMirror.EditorConfiguration = useMemo(() => {
     const editorTheme = settings['general.editorTheme']
@@ -148,7 +166,7 @@ const MarkdownTabForm = () => {
 
     return {
       value: defaultPreviewContent,
-      mode: 'css',
+      mode: 'markdown',
       lineNumbers: true,
       lineWrapping: true,
       theme,
@@ -169,15 +187,7 @@ const MarkdownTabForm = () => {
       fullWidth={true}
       rows={[
         {
-          title: t(lngKeys.SettingsMarkdownPreviewStyleTitle),
           items: [
-            {
-              type: 'button',
-              props: {
-                label: t(lngKeys.GeneralSave),
-                onClick: () => savePreviewStyle(),
-              },
-            },
             {
               type: 'button',
               props: {
@@ -233,7 +243,7 @@ const MarkdownTabForm = () => {
                       bind={bindCodeMirrorEditorPreviewContent}
                     />
                   </div>
-                  <div className='panel'>
+                  <MarkdownPreviewerPanel className={'panel'}>
                     <div className='preview'>
                       <CustomizedMarkdownPreviewer
                         content={previewContent}
@@ -241,7 +251,7 @@ const MarkdownTabForm = () => {
                         codeFence={false}
                       />
                     </div>
-                  </div>
+                  </MarkdownPreviewerPanel>
                 </PreviewContainer>
               ),
             },
@@ -251,5 +261,16 @@ const MarkdownTabForm = () => {
     />
   )
 }
+
+const MarkdownPreviewerPanel = styled.div`
+  overflow: auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  max-width: 360px;
+  max-height: 360px;
+  min-height: 360px;
+  height: 100%;
+`
 
 export default MarkdownTabForm

@@ -382,6 +382,7 @@ const UserPreferencesForm = () => {
       ]}
     >
       <FormRow
+        fullWidth={true}
         row={{
           title: t(lngKeys.SettingsIndentSize),
           items: [
@@ -399,7 +400,10 @@ const UserPreferencesForm = () => {
       <FormRow
         fullWidth={true}
         row={{
-          title: t(lngKeys.SettingsMarkdownPreview),
+          title:
+            t(lngKeys.SettingsMarkdownPreview) +
+            ' ' +
+            t(lngKeys.SettingsMarkdownPreviewStyleTitle),
           items: [
             {
               type: 'node',
