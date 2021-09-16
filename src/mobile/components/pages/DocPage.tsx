@@ -14,6 +14,7 @@ import { SerializedUser } from '../../../cloud/interfaces/db/user'
 import { SerializedRevision } from '../../../cloud/interfaces/db/revision'
 import AppLayout from '../layouts/AppLayout'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
+import { freePlanMembersLimit } from '../../../cloud/lib/subscription'
 
 interface DocPageProps {
   doc: SerializedDocWithBookmark
@@ -73,13 +74,18 @@ const DocPage = ({ doc, contributors, backLinks }: DocPageProps) => {
       return false
     }
 
-    if (subscription == null) {
+    if (
+      subscription == null &&
+      permissions.filter((p) => p.role !== 'viewer').length <=
+        freePlanMembersLimit
+    ) {
       return true
     }
 
     if (
+      subscription != null &&
       subscription.seats >=
-      permissions.filter((p) => p.role !== 'viewer').length
+        permissions.filter((p) => p.role !== 'viewer').length
     ) {
       return true
     }
