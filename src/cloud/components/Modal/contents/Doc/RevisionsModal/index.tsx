@@ -26,6 +26,7 @@ import { useModal } from '../../../../../../design/lib/stores/modal'
 import useApi from '../../../../../../design/lib/hooks/useApi'
 import styled from '../../../../../../design/lib/styled'
 import DoublePane from '../../../../../../design/components/atoms/DoublePane'
+import { createPatch } from 'diff'
 
 interface RevisionsModalProps {
   currentDoc: SerializedDocWithBookmark
@@ -139,14 +140,54 @@ const RevisionsModal = ({
   })
 
   const preview = useMemo(() => {
-    if (revisionIndex == null || !revisionsMap.has(revisionIndex)) {
+    if (revisionIndex == null) {
+      return null
+    }
+    const revisions: SerializedRevision[] = [...revisionsMap.values()]
+    const revisionIds: number[] = [...revisionsMap.values()].map(
+      (rev) => rev.id
+    )
+    const currentRevisionIndex = revisionIds.indexOf(revisionIndex)
+    const previousRevisionIndex = currentRevisionIndex + 1
+    if (previousRevisionIndex > revisions.length || previousRevisionIndex < 0) {
       return null
     }
 
     try {
+      const currentRevision = revisions[currentRevisionIndex]!
+      const previousRevision = revisions[previousRevisionIndex]!
+      if (previousRevision == null) {
+        return (
+          <RevisionModalDetail
+            revisionDiff={currentRevision.content}
+            revision={currentRevision}
+            onRestoreClick={onRestoreClick}
+            restoreRevision={restoreRevision}
+          />
+        )
+      }
+
+      const numberOfRevisionLines = previousRevision.content.split('\n').length
+      const revisionDiff = createPatch(
+        currentRevision.doc != null
+          ? currentRevision.doc.title
+          : 'Revision Diff',
+        previousRevision.content,
+        currentRevision.content,
+        undefined,
+        undefined,
+        {
+          context: numberOfRevisionLines,
+        }
+      )
+        .split('\n')
+        .filter((line) => !line.startsWith('\\ No newline at end of file'))
+        .slice(5) // removes headers from diff (revision title, number of deletions and additions)
+        .join('\n')
       return (
         <RevisionModalDetail
-          rev={revisionsMap.get(revisionIndex)!}
+          revision={currentRevision}
+          revisionDiff={revisionDiff}
           onRestoreClick={onRestoreClick}
           restoreRevision={restoreRevision}
         />
