@@ -52,11 +52,6 @@ import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import RevisionsModal from '../Modal/contents/Doc/RevisionsModal'
 import { SerializedRevision } from '../../interfaces/db/revision'
 import MetadataContainerBreak from '../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
-import { usePage } from '../../lib/stores/pageStore'
-import {
-  revisionHistoryFreeDays,
-  revisionHistoryStandardDays,
-} from '../../lib/subscription'
 
 export interface DocContextMenuActionsProps {
   team: SerializedTeam
@@ -83,7 +78,6 @@ export function DocContextMenuActions({
   const { pushMessage } = useToast()
   const { convertHtmlStringToPdfBlob } = useElectron()
   const { updateTemplatesMap } = useNav()
-  const { subscription } = usePage()
   const [copied, setCopied] = useState(false)
 
   const docUrl = useMemo(() => {
@@ -246,16 +240,7 @@ export function DocContextMenuActions({
               id: 'metadata-history',
               onClick: revisionNavigateCallback,
               iconPath: mdiHistory,
-              label:
-                subscription != null
-                  ? subscription.plan === 'standard'
-                    ? translate(lngKeys.SeeLimitedHistory, {
-                        days: revisionHistoryStandardDays,
-                      })
-                    : translate(lngKeys.SeeFullHistory)
-                  : translate(lngKeys.SeeLimitedHistory, {
-                      days: revisionHistoryFreeDays,
-                    }),
+              label: translate(lngKeys.History),
             },
           }}
         />
