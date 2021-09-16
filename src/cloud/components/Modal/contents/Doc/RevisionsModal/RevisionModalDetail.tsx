@@ -8,16 +8,19 @@ import Flexbox from '../../../../../../design/components/atoms/Flexbox'
 import CodeMirrorEditor from '../../../../../lib/editor/components/CodeMirrorEditor'
 import Scroller from '../../../../../../design/components/atoms/Scroller'
 import cc from 'classcat'
+import CodeMirror from 'codemirror'
 
 interface RevisionModalDetailProps {
-  rev: SerializedRevision
+  revision: SerializedRevision
+  revisionDiff: string
   onRestoreClick: (rev: SerializedRevision) => void
   restoreRevision?: (rev: SerializedRevision) => void
   scrollbarStyle?: 'native' | 'transparent'
 }
 
 const RevisionModalDetail = ({
-  rev,
+  revision,
+  revisionDiff,
   onRestoreClick,
   restoreRevision,
   scrollbarStyle = 'native',
@@ -33,7 +36,7 @@ const RevisionModalDetail = ({
         : editorTheme
 
     return {
-      mode: 'markdown',
+      mode: 'diff',
       lineNumbers: true,
       lineWrapping: true,
       theme,
@@ -64,13 +67,15 @@ const RevisionModalDetail = ({
           alignItems='baseline'
         >
           <h3>
-            Updated at {format(new Date(rev.created), 'HH:mm, dd MMMM u')}
+            Updated at {format(new Date(revision.created), 'HH:mm, dd MMMM u')}
           </h3>
           <span>
-            {rev.creators.length === 0 ? (
+            {revision.creators.length === 0 ? (
               <i>unknown</i>
             ) : (
-              <>by {rev.creators.map((user) => user.displayName).join(',')}</>
+              <>
+                by {revision.creators.map((user) => user.displayName).join(',')}
+              </>
             )}
           </span>
         </Flexbox>
@@ -78,7 +83,7 @@ const RevisionModalDetail = ({
           <Button
             variant='primary'
             className='restore__btn'
-            onClick={() => onRestoreClick(rev)}
+            onClick={() => onRestoreClick(revision)}
           >
             Restore
           </Button>
@@ -88,7 +93,7 @@ const RevisionModalDetail = ({
         <CodeMirrorEditor
           config={{
             ...editorConfig,
-            value: rev.content,
+            value: revisionDiff,
           }}
         />
       ) : (
@@ -96,7 +101,7 @@ const RevisionModalDetail = ({
           <CodeMirrorEditor
             config={{
               ...editorConfig,
-              value: rev.content,
+              value: revisionDiff,
             }}
           />
         </Scroller>
