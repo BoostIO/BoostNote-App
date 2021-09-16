@@ -386,7 +386,7 @@ const SubscriptionManagement = ({
                 type='button'
                 spinning={sending}
               >
-                subscriptionPlanChange
+                {subscriptionPlanChange}
               </LoadingButton>
               <Button
                 variant='bordered'

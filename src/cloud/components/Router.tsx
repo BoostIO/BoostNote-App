@@ -372,12 +372,14 @@ function isApplicationPagePathname(pathname: string) {
 
   const [, ...splittedPathnames] = pathname.split('/')
 
+  console.log(splittedPathnames)
   if (
     (splittedPathnames.length >= 2 &&
       splittedPathnames[0] === 'account' &&
       splittedPathnames[1] === 'delete') ||
+    (splittedPathnames.length >= 2 && splittedPathnames[1] === 'invite') ||
     (splittedPathnames.length >= 1 &&
-      ['account', 'cooperate', 'settings', 'shared'].includes(
+      ['account', 'cooperate', 'settings', 'shared', 'invite'].includes(
         splittedPathnames[0]
       ))
   ) {

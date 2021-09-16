@@ -28,8 +28,10 @@ import FormSelect, {
 } from '../../../design/components/molecules/Form/atoms/FormSelect'
 import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
-import { freePlanMembersLimit } from '../../lib/subscription'
-import Alert from '../../../components/atoms/Alert'
+import {
+  didTeamReachPlanLimit,
+  freePlanMembersLimit,
+} from '../../lib/subscription'
 import { LoadingButton } from '../../../design/components/atoms/Button'
 import Spinner from '../../../design/components/atoms/Spinner'
 import styled from '../../../design/lib/styled'
@@ -351,6 +353,21 @@ const MembersTab = () => {
             userPermissions={currentUserPermissions}
             subscription={subscription}
           />
+          {subscription == null &&
+          permissions.filter((p) => p.role !== 'viewer').length >
+            freePlanMembersLimit ? (
+            <ColoredBlock variant='danger'>
+              Your current team exceeds the limits of the free plan. Please
+              demote your other members to the viewer role or consider
+              updgrading.
+            </ColoredBlock>
+          ) : didTeamReachPlanLimit(permissions, undefined) ? (
+            <ColoredBlock variant='warning'>
+              You reached the maximum amount of members the free plan offers.
+              Every new joining user will be added as a viewer, please consider
+              upgrading to remove this limitation.
+            </ColoredBlock>
+          ) : null}
           <section>
             <Flexbox>
               <h2>{translate(lngKeys.GeneralMembers)}</h2>
@@ -358,15 +375,6 @@ const MembersTab = () => {
                 <Spinner className='relative' style={{ top: 2 }} />
               )}
             </Flexbox>
-            {subscription == null &&
-              permissions.filter((p) => p.role !== 'viewer').length >
-                freePlanMembersLimit && (
-                <Alert variant='danger'>
-                  Your current team exceeds the limits of the free plan. Please
-                  demote your other members to the viewer role or consider
-                  updgrading.
-                </Alert>
-              )}
             <StyledMembersTable>
               <thead className='table-header'>
                 <tr>
