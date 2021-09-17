@@ -372,7 +372,6 @@ function isApplicationPagePathname(pathname: string) {
 
   const [, ...splittedPathnames] = pathname.split('/')
 
-  console.log(splittedPathnames)
   if (
     (splittedPathnames.length >= 2 &&
       splittedPathnames[0] === 'account' &&
