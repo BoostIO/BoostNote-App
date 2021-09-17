@@ -17,6 +17,7 @@ export interface UserSettings {
   'general.editorFontFamily': string
   'general.editorShowLineNumbers': boolean
   'general.showEditorToolbar': boolean
+  'general.enableSpellcheck': boolean
 }
 
 export const codeMirrorEditorThemes = [

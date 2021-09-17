@@ -57,6 +57,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsIndentType]: 'Editor Indent Type',
   [lngKeys.SettingsShowEditorToolbar]: 'Editor Toolbar',
   [lngKeys.SettingsShowEditorLineNumbers]: 'Editor Line Numbers',
+  [lngKeys.SettingsEnableEditorSpellcheck]: 'Editor Spellcheck',
   [lngKeys.SettingsIndentSize]: 'Editor Indent Size',
   [lngKeys.SettingsUserForum]: 'User Forum (New!)',
   [lngKeys.ManagePreferences]: 'Manage your preferences.',

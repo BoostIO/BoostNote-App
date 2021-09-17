@@ -128,6 +128,7 @@ export enum lngKeys {
   SettingsIndentType = 'settings.indentType',
   SettingsShowEditorToolbar = 'settings.showEditorToolbar',
   SettingsShowEditorLineNumbers = 'settings.showEditorLineNumbers',
+  SettingsEnableEditorSpellcheck = 'settings.enableSpellcheck',
   SettingsIndentSize = 'settings.indentSize',
   SettingsSpace = 'settings.space',
   SettingsSpaceDelete = 'settings.space.delete',
