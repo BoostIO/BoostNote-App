@@ -411,10 +411,6 @@ export function useNavigatorTree() {
 
       const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
         ? {
-            navigateTo: () => {
-              setShowingNavigator(false)
-              push(href)
-            },
             contextControls: [
               {
                 type: MenuTypes.Normal,
@@ -459,6 +455,10 @@ export function useNavigatorTree() {
         bookmarked: doc.bookmarked,
         emoji: doc.emoji,
         defaultIcon: mdiFileDocumentOutline,
+        navigateTo: () => {
+          setShowingNavigator(false)
+          push(href)
+        },
         hidden:
           doc.archivedAt != null ||
           doc.status === 'archived' ||
