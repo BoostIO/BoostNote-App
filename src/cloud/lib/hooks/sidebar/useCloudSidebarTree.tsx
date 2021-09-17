@@ -429,7 +429,6 @@ export function useCloudSidebarTree() {
       const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
         ? {
             dropAround: sortingOrder === 'drag' ? true : false,
-            navigateTo: () => push(href),
             onDrop: (event: any, position: SidebarDragState) =>
               dropInDocOrFolder(
                 event,
@@ -483,6 +482,7 @@ export function useCloudSidebarTree() {
         id: docId,
         lastUpdated: doc.head != null ? doc.head.created : doc.updatedAt,
         label: getDocTitle(doc, 'Untitled'),
+        navigateTo: () => push(href),
         bookmarked: doc.bookmarked,
         emoji: doc.emoji,
         defaultIcon:
