@@ -57,6 +57,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SettingsIndentType]: 'エディタインデントの種類',
   [lngKeys.SettingsShowEditorToolbar]: 'エディターツールバー',
   [lngKeys.SettingsShowEditorLineNumbers]: 'エディタの行番号',
+  [lngKeys.SettingsEnableEditorSpellcheck]: 'スペルチェックエディタ',
   [lngKeys.SettingsIndentSize]: 'エディタインデントのサイズ',
   [lngKeys.SettingsUserForum]: 'ユーザーフォーラム（New!!）',
   [lngKeys.ManagePreferences]: 'あなた好みにカスタマイズしましょう。',

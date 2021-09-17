@@ -247,6 +247,7 @@ const Editor = ({
     const editorIndentType = settings['general.editorIndentType']
     const editorIndentSize = settings['general.editorIndentSize']
     const showEditorLineNumbers = settings['general.editorShowLineNumbers']
+    const enableSpellCheck = settings['general.enableSpellcheck']
 
     return {
       mode: 'markdown',
@@ -263,6 +264,7 @@ const Editor = ({
       },
       scrollPastEnd: true,
       // fixes IME being on top of current line, Codemirror issue: https://github.com/codemirror/CodeMirror/issues/3137
+      spellcheck: enableSpellCheck,
       inputStyle: 'contenteditable',
     }
   }, [settings])

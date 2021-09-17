@@ -71,6 +71,15 @@ const UserPreferencesForm = () => {
     [setSettings]
   )
 
+  const selectEnableSpellcheck = useCallback(
+    (formOption: FormSelectOption) => {
+      setSettings({
+        'general.enableSpellcheck': formOption.value === 'Enabled',
+      })
+    },
+    [setSettings]
+  )
+
   const selectEditorTheme = useCallback(
     (value: string) => {
       setSettings({
@@ -218,6 +227,34 @@ const UserPreferencesForm = () => {
                     value: settings['general.theme'],
                   }}
                   onChange={selectTheme}
+                />
+              ),
+            },
+          ],
+        },
+        {
+          title: t(lngKeys.SettingsEnableEditorSpellcheck),
+          items: [
+            {
+              type: 'node',
+              element: (
+                <FormSelect
+                  options={[
+                    {
+                      label: t(lngKeys.GeneralEnableVerb),
+                      value: 'Enabled',
+                    },
+                    { label: t(lngKeys.GeneralDisableVerb), value: 'Disabled' },
+                  ]}
+                  value={{
+                    label: settings['general.enableSpellcheck']
+                      ? t(lngKeys.GeneralEnableVerb)
+                      : t(lngKeys.GeneralDisableVerb),
+                    value: settings['general.enableSpellcheck']
+                      ? 'Enabled'
+                      : 'Disabled',
+                  }}
+                  onChange={selectEnableSpellcheck}
                 />
               ),
             },

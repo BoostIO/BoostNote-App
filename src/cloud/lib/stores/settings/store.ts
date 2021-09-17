@@ -27,6 +27,7 @@ export const baseUserSettings: UserSettings = {
     'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
   'general.editorShowLineNumbers': true,
   'general.showEditorToolbar': true,
+  'general.enableSpellcheck': true,
 }
 
 export type SettingsTab =
