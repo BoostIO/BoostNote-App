@@ -34,10 +34,7 @@ interface TeamInvitesSectionProps {
   subscription?: SerializedSubscription
 }
 
-const TeamInvitesSection = ({
-  userPermissions,
-  subscription,
-}: TeamInvitesSectionProps) => {
+const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
   const { team } = usePage()
   const [sending, setSending] = useState<boolean>(true)
   const [pendingInvites, setPendingInvites] = useState<SerializedTeamInvite[]>(
@@ -47,11 +44,7 @@ const TeamInvitesSection = ({
   const [error, setError] = useState<unknown>()
   const { messageBox } = useDialog()
   const [role, setRole] = useState<TeamPermissionType>(
-    userPermissions.role === 'viewer'
-      ? 'viewer'
-      : subscription != null
-      ? 'member'
-      : 'viewer'
+    userPermissions.role === 'viewer' ? 'viewer' : 'member'
   )
   const mountedRef = useRef(false)
   const { translate, getRoleLabel } = useI18n()
@@ -321,6 +314,7 @@ const TeamInvitesSection = ({
 const Container = styled.section`
   small {
     margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     display: block;
   }
 
