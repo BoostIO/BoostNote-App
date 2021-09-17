@@ -96,6 +96,12 @@ import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationPage from '../ApplicationPage'
 import ApplicationContent from '../ApplicationContent'
 import { mockBackend } from '../../lib/consts'
+import { bytesToMegaBytes } from '../../lib/utils/bytes'
+import {
+  freePlanUploadSizeMb,
+  paidPlanUploadSizeMb,
+} from '../../lib/subscription'
+import { nginxSizeLimitInMb } from '../../lib/upload'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -135,6 +141,7 @@ const Editor = ({
     currentUserPermissions,
     permissions,
     currentUserIsCoreMember,
+    subscription,
   } = usePage()
   const showViewPageRef = useRef<boolean>(
     !docIsEditable || !currentUserIsCoreMember
@@ -715,6 +722,15 @@ const Editor = ({
   useEffect(() => {
     if (team != null) {
       fileUploadHandlerRef.current = async (file) => {
+        if (bytesToMegaBytes(file.size) > nginxSizeLimitInMb) {
+          pushMessage({
+            title: '',
+            description: `File size exceeding limit. ${
+              subscription == null ? freePlanUploadSizeMb : paidPlanUploadSizeMb
+            }Mb limit per upload allowed.`,
+          })
+          return null
+        }
         try {
           const { file: fileInfo } = await uploadFile(team, file, doc)
           const url = buildTeamFileUrl(team, fileInfo.name)
@@ -731,7 +747,7 @@ const Editor = ({
     } else {
       fileUploadHandlerRef.current = undefined
     }
-  }, [team, pushMessage, pushApiErrorMessage, doc])
+  }, [team, pushMessage, pushApiErrorMessage, subscription, doc])
 
   useEffect(() => {
     return () => {
