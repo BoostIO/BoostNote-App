@@ -2,7 +2,6 @@ import { callApi } from '../../../lib/client'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
-import { checkUploadSize } from '../../../lib/vercel'
 
 export type AllowedDocTypeImports = 'md' | 'html' | 'doc' | 'md|html'
 
@@ -28,7 +27,6 @@ export async function importDocs(teamId: string, body: ImportDocsRequestBody) {
     formData.set('parentFolderId', body.parentFolderId)
   }
   Array.from(body.files).forEach((file) => {
-    checkUploadSize(file.size)
     formData.append('imports[]', file)
   })
   const data = await callApi<ImportDocsResponseBody>(

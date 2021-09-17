@@ -740,6 +740,7 @@ const Editor = ({
             return { type: 'file', url, title: file.name }
           }
         } catch (err) {
+          console.log(err)
           pushApiErrorMessage(err)
           return null
         }

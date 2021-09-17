@@ -2,7 +2,6 @@ import { callApi } from '../../../lib/client'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedFileInfo } from '../../../interfaces/db/storage'
 import { SerializedDoc } from '../../../interfaces/db/doc'
-import { checkUploadSize } from '../../../lib/vercel'
 
 interface UploadFileResponseBody {
   file: SerializedFileInfo
@@ -14,8 +13,6 @@ export async function uploadFile(
   doc?: SerializedDoc
 ) {
   const formData = new FormData()
-
-  checkUploadSize(file.size)
 
   formData.append('file', file)
   if (doc != null) {
