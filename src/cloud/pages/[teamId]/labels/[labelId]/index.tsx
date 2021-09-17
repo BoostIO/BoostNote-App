@@ -29,7 +29,7 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
     }
 
     return [...docsMap.values()].filter((doc) => {
-      return doc.tags.map((tag) => tag.id).includes(pageTag.id)
+      return (doc.tags || []).map((tag) => tag.id).includes(pageTag.id)
     })
   }, [docsMap, pageTag])
 
