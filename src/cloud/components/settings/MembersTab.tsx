@@ -367,18 +367,14 @@ const MembersTab = () => {
                   href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
                   className='alert__link'
                 >
-                  <Flexbox inline={true}>
-                    <span>Members</span> <Icon path={mdiOpenInNew} />
-                  </Flexbox>
+                  <span>Members</span> <Icon path={mdiOpenInNew} />
                 </ExternalLink>{' '}
                 to the{' '}
                 <ExternalLink
                   href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
                   className='alert__link'
                 >
-                  <Flexbox inline={true}>
-                    <span>Viewer</span> <Icon path={mdiOpenInNew} />
-                  </Flexbox>
+                  <span>Viewer</span> <Icon path={mdiOpenInNew} />
                 </ExternalLink>{' '}
                 role or consider updgrading.
               </ColoredBlock>
@@ -389,18 +385,14 @@ const MembersTab = () => {
                   href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
                   className='alert__link'
                 >
-                  <Flexbox inline={true}>
-                    <span>Members</span> <Icon path={mdiOpenInNew} />
-                  </Flexbox>
+                  <span>Members</span> <Icon path={mdiOpenInNew} />
                 </ExternalLink>{' '}
                 the free plan offers. Every new joining user will be added as a
                 <ExternalLink
                   href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
                   className='alert__link'
                 >
-                  <Flexbox inline={true}>
-                    <span>Viewer</span> <Icon path={mdiOpenInNew} />
-                  </Flexbox>
+                  <span>Viewer</span> <Icon path={mdiOpenInNew} />
                 </ExternalLink>{' '}
                 , please consider upgrading to remove this limitation.
               </ColoredBlock>
@@ -516,9 +508,10 @@ const MembersTab = () => {
 
 const Container = styled.div`
   .alert__link {
-    color: #e8dfdf;
-    text-shadow: 0 0 ${({ theme }) => theme.colors.variants.warning.base};
-    font-weight: 600;
+    font-weight: bold;
+    color: inherit;
+    align-items: center;
+    display: inline-flex;
   }
 `
 
