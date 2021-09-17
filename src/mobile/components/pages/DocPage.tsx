@@ -138,6 +138,7 @@ const DocPage = ({ doc, contributors, backLinks }: DocPageProps) => {
       user={currentUser}
       contributors={contributors}
       backLinks={backLinks}
+      subscription={subscription}
     />
   ) : (
     <DocViewPage

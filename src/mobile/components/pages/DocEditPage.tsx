@@ -47,6 +47,13 @@ import { BaseTheme } from '../../../design/lib/styled/types'
 import Spinner from '../../../design/components/atoms/Spinner'
 import { rightSidePageLayout } from '../../../design/lib/styled/styleFunctions'
 import Icon from '../../../design/components/atoms/Icon'
+import { bytesToMegaBytes } from '../../../cloud/lib/utils/bytes'
+import { nginxSizeLimitInMb } from '../../../cloud/lib/upload'
+import { SerializedSubscription } from '../../../cloud/interfaces/db/subscription'
+import {
+  freePlanUploadSizeMb,
+  paidPlanUploadSizeMb,
+} from '../../../cloud/lib/subscription'
 
 interface EditorProps {
   doc: SerializedDocWithBookmark
@@ -54,6 +61,7 @@ interface EditorProps {
   user: SerializedUser
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
+  subscription?: SerializedSubscription
 }
 
 interface EditorPosition {
@@ -69,7 +77,14 @@ interface SelectionState {
   }[]
 }
 
-const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
+const Editor = ({
+  doc,
+  team,
+  user,
+  contributors,
+  backLinks,
+  subscription,
+}: EditorProps) => {
   const { pushMessage, pushApiErrorMessage } = useToast()
   const { preferences, setPreferences } = usePreferences()
   const { state } = useRouter()
@@ -168,6 +183,15 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
   useEffect(() => {
     if (team != null) {
       fileUploadHandlerRef.current = async (file) => {
+        if (bytesToMegaBytes(file.size) > nginxSizeLimitInMb) {
+          pushMessage({
+            title: '',
+            description: `File size exceeding limit. ${
+              subscription == null ? freePlanUploadSizeMb : paidPlanUploadSizeMb
+            }Mb limit per upload allowed.`,
+          })
+          return null
+        }
         try {
           const { file: fileInfo } = await uploadFile(team, file, doc)
           const url = buildTeamFileUrl(team, fileInfo.name)
@@ -177,6 +201,7 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
             return { type: 'file', url, title: file.name }
           }
         } catch (err) {
+          console.log(err)
           pushApiErrorMessage(err)
           return null
         }
@@ -184,7 +209,7 @@ const Editor = ({ doc, team, user, contributors, backLinks }: EditorProps) => {
     } else {
       fileUploadHandlerRef.current = undefined
     }
-  }, [team, pushMessage, pushApiErrorMessage, doc])
+  }, [team, pushMessage, pushApiErrorMessage, subscription, doc])
 
   useEffect(() => {
     return () => {
