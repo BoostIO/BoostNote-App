@@ -4,6 +4,7 @@ import { AppComponent } from '../../lib/types'
 import styled from '../../lib/styled'
 
 interface FlexboxProps {
+  inline?: boolean
   flex?: string
   wrap?: 'nowrap' | 'wrap' | 'wrap-reverse' | 'inherit' | 'initial'
   justifyContent?:
@@ -38,6 +39,7 @@ interface FlexboxProps {
 
 const Flexbox: AppComponent<FlexboxProps> = ({
   children,
+  inline,
   justifyContent = 'flex-start',
   alignItems = 'center',
   direction = 'row',
@@ -58,6 +60,7 @@ const Flexbox: AppComponent<FlexboxProps> = ({
       `flexbox__align--${alignItems}`,
       `flexbox__direction--${direction}`,
       `flexbox__wrap--${wrap}`,
+      inline && `flexbox--inline`,
     ])}
   >
     {children}
@@ -67,6 +70,10 @@ const Flexbox: AppComponent<FlexboxProps> = ({
 const Container = styled.div<{ flex?: string }>`
   min-width: 0;
   display: flex;
+
+  &.flexbox--inline {
+    display: inline-flex;
+  }
 
   ${({ flex }) => (flex != null ? `flex: ${flex};` : '')}
 
