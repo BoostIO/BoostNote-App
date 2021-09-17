@@ -483,6 +483,7 @@ export function useCloudSidebarTree() {
         id: docId,
         lastUpdated: doc.head != null ? doc.head.created : doc.updatedAt,
         label: getDocTitle(doc, 'Untitled'),
+        navigateTo: () => push(href),
         bookmarked: doc.bookmarked,
         emoji: doc.emoji,
         defaultIcon:
