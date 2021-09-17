@@ -356,54 +356,56 @@ const MembersTab = () => {
             userPermissions={currentUserPermissions}
             subscription={subscription}
           />
-          {subscription == null &&
-          permissions.filter((p) => p.role !== 'viewer').length >
-            freePlanMembersLimit ? (
-            <ColoredBlock variant='danger'>
-              Your current team exceeds the limits of the free plan. Please
-              demote your other{' '}
-              <ExternalLink
-                href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
-                className='alert__link'
-              >
-                <Flexbox inline={true}>
-                  <span>Members</span> <Icon path={mdiOpenInNew} />
-                </Flexbox>
-              </ExternalLink>{' '}
-              to the{' '}
-              <ExternalLink
-                href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
-                className='alert__link'
-              >
-                <Flexbox inline={true}>
-                  <span>Viewer</span> <Icon path={mdiOpenInNew} />
-                </Flexbox>
-              </ExternalLink>{' '}
-              role or consider updgrading.
-            </ColoredBlock>
-          ) : didTeamReachPlanLimit(permissions, subscription) ? (
-            <ColoredBlock variant='warning'>
-              You reached the maximum amount of
-              <ExternalLink
-                href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
-                className='alert__link'
-              >
-                <Flexbox inline={true}>
-                  <span>Members</span> <Icon path={mdiOpenInNew} />
-                </Flexbox>
-              </ExternalLink>{' '}
-              the free plan offers. Every new joining user will be added as a
-              <ExternalLink
-                href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
-                className='alert__link'
-              >
-                <Flexbox inline={true}>
-                  <span>Viewer</span> <Icon path={mdiOpenInNew} />
-                </Flexbox>
-              </ExternalLink>{' '}
-              , please consider upgrading to remove this limitation.
-            </ColoredBlock>
-          ) : null}
+          <Container>
+            {subscription == null &&
+            permissions.filter((p) => p.role !== 'viewer').length >
+              freePlanMembersLimit ? (
+              <ColoredBlock variant='danger'>
+                Your current team exceeds the limits of the free plan. Please
+                demote your other{' '}
+                <ExternalLink
+                  href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
+                  className='alert__link'
+                >
+                  <Flexbox inline={true}>
+                    <span>Members</span> <Icon path={mdiOpenInNew} />
+                  </Flexbox>
+                </ExternalLink>{' '}
+                to the{' '}
+                <ExternalLink
+                  href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
+                  className='alert__link'
+                >
+                  <Flexbox inline={true}>
+                    <span>Viewer</span> <Icon path={mdiOpenInNew} />
+                  </Flexbox>
+                </ExternalLink>{' '}
+                role or consider updgrading.
+              </ColoredBlock>
+            ) : didTeamReachPlanLimit(permissions, subscription) ? (
+              <ColoredBlock variant='warning'>
+                You reached the maximum amount of
+                <ExternalLink
+                  href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
+                  className='alert__link'
+                >
+                  <Flexbox inline={true}>
+                    <span>Members</span> <Icon path={mdiOpenInNew} />
+                  </Flexbox>
+                </ExternalLink>{' '}
+                the free plan offers. Every new joining user will be added as a
+                <ExternalLink
+                  href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
+                  className='alert__link'
+                >
+                  <Flexbox inline={true}>
+                    <span>Viewer</span> <Icon path={mdiOpenInNew} />
+                  </Flexbox>
+                </ExternalLink>{' '}
+                , please consider upgrading to remove this limitation.
+              </ColoredBlock>
+            ) : null}
+          </Container>
           <section>
             <Flexbox>
               <h2>{translate(lngKeys.GeneralMembers)}</h2>
@@ -511,6 +513,14 @@ const MembersTab = () => {
     />
   )
 }
+
+const Container = styled.div`
+  .alert__link {
+    color: #e8dfdf;
+    text-shadow: 0 0 ${({ theme }) => theme.colors.variants.warning.base};
+    font-weight: 600;
+  }
+`
 
 const StyledMembersTable = styled.table`
   width: 100%;

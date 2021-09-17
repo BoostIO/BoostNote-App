@@ -173,7 +173,7 @@ const Container = styled.div`
   footer {
     display: block;
     flex: 0 0 auto;
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     p + p {
       margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
     }
