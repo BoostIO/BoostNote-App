@@ -361,7 +361,7 @@ const MembersTab = () => {
               demote your other members to the viewer role or consider
               updgrading.
             </ColoredBlock>
-          ) : didTeamReachPlanLimit(permissions, undefined) ? (
+          ) : didTeamReachPlanLimit(permissions, subscription) ? (
             <ColoredBlock variant='warning'>
               You reached the maximum amount of members the free plan offers.
               Every new joining user will be added as a viewer, please consider
