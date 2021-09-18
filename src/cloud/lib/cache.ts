@@ -4,9 +4,10 @@ type Storable = string | number | Date | ArrayBufferView | ArrayBuffer
 
 export interface Cache<T extends Storable> {
   name: string
-  get(key: string): Promise<T>
+  get(key: string): Promise<T | undefined>
   put(key: string, value: T): Promise<void>
   close(): void
+  flush(): Promise<void>
 }
 
 export interface CacheConfig {
@@ -54,5 +55,6 @@ export async function createCache<T extends Storable>(
       await transaction.done
     },
     close: () => db.close(),
+    flush: () => db.clear(store_name),
   }
 }
