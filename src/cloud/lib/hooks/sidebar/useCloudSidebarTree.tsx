@@ -13,6 +13,7 @@ import {
   mdiTag,
   mdiTrashCanOutline,
   mdiPaletteOutline,
+  mdiCog,
 } from '@mdi/js'
 import { FoldingProps } from '../../../../design/components/atoms/FoldingWrapper'
 import { SidebarDragState } from '../../../../design/lib/dnd'
@@ -69,6 +70,7 @@ import {
   SidebarTreeChildRow,
 } from '../../../../design/components/organisms/Sidebar/molecules/SidebarTree'
 import { CATEGORY_DRAG_TRANSFER_DATA_JSON } from '../../../interfaces/resources'
+import LabelsManagementModal from '../../../components/Modal/contents/LabelsManagementModal'
 
 export function useCloudSidebarTree() {
   const { team, currentUserIsCoreMember } = usePage()
@@ -782,6 +784,17 @@ export function useCloudSidebarTree() {
         label: 'Labels',
         title: translate(lngKeys.GeneralLabels),
         rows: labels,
+        controls: currentUserIsCoreMember
+          ? [
+              {
+                icon: mdiCog,
+                onClick: () => {
+                  openModal(<LabelsManagementModal />)
+                },
+                tooltip: 'Manage your labels',
+              },
+            ]
+          : undefined,
       })
     }
 

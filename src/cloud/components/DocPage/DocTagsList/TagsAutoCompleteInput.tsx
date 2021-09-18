@@ -152,7 +152,7 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
     [setTagText]
   )
 
-  useUpDownNavigationListener(autocompleteRef, {
+  useUpDownNavigationListener(containerRef, {
     overrideInput: true,
   })
 
