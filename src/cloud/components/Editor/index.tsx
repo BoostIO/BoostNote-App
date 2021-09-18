@@ -114,6 +114,7 @@ interface EditorProps {
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
   docIsEditable?: boolean
+  loading?: boolean
 }
 
 interface EditorPosition {
@@ -136,6 +137,7 @@ const Editor = ({
   contributors,
   backLinks,
   docIsEditable,
+  loading = false,
 }: EditorProps) => {
   const { translate } = useI18n()
   const {
@@ -234,7 +236,7 @@ const Editor = ({
   const fontSize = settings['general.editorFontSize']
   const fontFamily = settings['general.editorFontFamily']
 
-  const editorConfig: CodeMirror.EditorConfiguration = useMemo(() => {
+  const editorConfig = useMemo<CodeMirror.EditorConfiguration>(() => {
     const editorTheme = settings['general.editorTheme']
     const theme =
       editorTheme == null || editorTheme === 'default'
@@ -267,8 +269,9 @@ const Editor = ({
       // fixes IME being on top of current line, Codemirror issue: https://github.com/codemirror/CodeMirror/issues/3137
       spellcheck: enableSpellCheck,
       inputStyle: 'contenteditable',
+      readOnly: loading,
     }
-  }, [settings])
+  }, [settings, loading])
 
   const shortcodeConvertMenuStyle: React.CSSProperties = useMemo(() => {
     if (shortcodeConvertMenu == null || editorRef.current == null) {
@@ -913,7 +916,7 @@ const Editor = ({
             {
               type: 'separator',
             },
-            ...(connState === 'reconnecting'
+            ...(loading || connState === 'reconnecting'
               ? [
                   {
                     type: 'button',
@@ -1046,6 +1049,13 @@ const Editor = ({
         )}
       </ApplicationTopbar>
       <ApplicationContent>
+        {loading && (
+          <ReloadingAlert>
+            <div className='container'>
+              <Spinner variant='subtle' /> Loading Doc Data
+            </div>
+          </ReloadingAlert>
+        )}
         <EditorLayout
           doc={doc}
           docIsEditable={true}
@@ -1154,6 +1164,22 @@ const Editor = ({
     </ApplicationPage>
   )
 }
+
+const ReloadingAlert = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .container {
+    background-color: ${({ theme }) => theme.colors.background.tertiary};
+    padding: 10px;
+  }
+`
 
 const Container = styled.div`
   display: flex;

@@ -83,6 +83,7 @@ const ResourceIndex = () => {
             backLinks={props.backLinks || []}
             revisionHistory={props.revisionHistory || []}
             thread={props.thread}
+            loading={props.needsReload != null}
           />
         )
         break
