@@ -73,6 +73,7 @@ import {
   InPageSearch,
   InPageSearchContainer,
 } from './molecules/PageSearch/InPageSearchPortal'
+import SidebarToggleButton from './SidebarToggleButton'
 
 interface ApplicationProps {
   className?: string
@@ -424,12 +425,18 @@ const Application = ({
             notificationState={notificationState}
             getMoreNotifications={getMoreNotifications}
             notificationClick={notificationClick}
+            hidden={preferences.sidebarIsHidden}
+            hide={() => setPreferences({ sidebarIsHidden: true })}
           />
         }
         pageBody={
-          showSearchScreen ? <CloudGlobalSearch team={team} /> : children
+          <>
+            {showSearchScreen ? <CloudGlobalSearch team={team} /> : children}
+            {preferences.sidebarIsHidden && <SidebarToggleButton />}
+          </>
         }
       />
+
       <AnnouncementAlert />
       {usingElectron && <InPageSearchContainer id={'inPageSearchContainer'} />}
       {showInPageSearch && (

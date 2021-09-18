@@ -18,10 +18,15 @@ import SidebarPopOver from './atoms/SidebarPopOver'
 import SidebarSpaces, { SidebarSpaceProps } from './molecules/SidebarSpaces'
 import SidebarContextList from './atoms/SidebarContextList'
 import Scroller from '../../atoms/Scroller'
+import Button from '../../atoms/Button'
+import { mdiArrowLeft } from '@mdi/js'
+import { rightSideTopBarHeight } from '../Topbar'
 
 export type PopOverState = null | 'spaces' | 'notifications'
 
 type SidebarProps = {
+  hidden?: boolean
+  hide?: () => void
   popOver: PopOverState
   sidebarExpandedWidth?: number
   sidebarResize?: (width: number) => void
@@ -36,6 +41,8 @@ type SidebarProps = {
 } & SidebarSpaceProps
 
 const Sidebar = ({
+  hidden,
+  hide,
   popOver,
   onSpacesBlur: onPopOverBlur,
   spaces,
@@ -75,8 +82,19 @@ const Sidebar = ({
         maxWidth={maxSidebarExpandedWidth}
         defaultWidth={sidebarExpandedWidth}
         onResizeEnd={sidebarResize}
-        className={cc(['sidebar--expanded'])}
+        className={cc(['sidebar--expanded', hidden && 'sidebar--hidden'])}
       >
+        {hide != null && (
+          <Button
+            variant='secondary'
+            className='sidebar--hide'
+            iconPath={mdiArrowLeft}
+            iconSize={20}
+            id='sidebar-collapse'
+            size='sm'
+            onClick={hide}
+          />
+        )}
         <SidebarContextList className='sidebar--expanded__wrapper'>
           <div className='sidebar--expanded__wrapper__header'>{header}</div>
           <Scroller className='sidebar--expanded__wrapper__content'>
@@ -102,6 +120,28 @@ const SidebarContainer = styled.div`
   align-items: top;
   flex: 0 0 auto;
   height: 100vh;
+
+  .sidebar--hide {
+    position: absolute;
+    width: fit-content;
+    border-radius: 100%;
+    z-index: 101;
+    height: 30px;
+    width: 30px;
+    right: -15px;
+    top: calc(${rightSideTopBarHeight}px + 30px);
+    opacity: 0;
+    transition: opacity 0.3s;
+    -webkit-transition: opacity 0.3s;
+  }
+
+  .sidebar--expanded:hover .sidebar--hide {
+    opacity: 1;
+  }
+
+  .sidebar--hidden {
+    display: none;
+  }
 
   .sidebar--expanded,
   .width__enlarger__content,
