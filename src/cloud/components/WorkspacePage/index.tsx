@@ -25,11 +25,8 @@ import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationContent from '../ApplicationContent'
 
-interface WorkspacePage {
-  workspace: SerializedWorkspace
-}
-
-const WorkspacePage = ({ workspace }: WorkspacePage) => {
+const WorkspacePage = () => {
+  const { pageWorkspace: workspace } = usePage()
   const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, foldersMap } = useNav()
   const { openNewFolderForm, openNewDocForm } = useCloudResourceModals()
@@ -55,12 +52,14 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
 
   const workspaceMap = useMemo(() => {
     const map = new Map<string, SerializedWorkspace>()
-    map.set(workspace.id, workspace)
+    if (workspace != null) {
+      map.set(workspace.id, workspace)
+    }
     return map
   }, [workspace])
 
   const topbarControls = useMemo(() => {
-    if (team == null) {
+    if (team == null || workspace == null) {
       return undefined
     }
 
@@ -159,6 +158,16 @@ const WorkspacePage = ({ workspace }: WorkspacePage) => {
       <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>
           <ColoredBlock variant='danger'>{'Team is missing'}</ColoredBlock>
+        </ApplicationContent>
+      </ApplicationPage>
+    )
+  }
+
+  if (workspace == null) {
+    return (
+      <ApplicationPage showingTopbarPlaceholder={true}>
+        <ApplicationContent reduced={true}>
+          <ColoredBlock variant='danger'>{'Workspace is missing'}</ColoredBlock>
         </ApplicationContent>
       </ApplicationPage>
     )

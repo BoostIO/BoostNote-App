@@ -62,7 +62,7 @@ import { useToast } from '../../../../design/lib/stores/toast'
 import { SerializedSmartFolder } from '../../../interfaces/db/smartFolder'
 export * from './types'
 
-function useNavStore(pageProps: any): NavContext {
+function useNavStore(): NavContext {
   // currently provided
   const {
     team,
@@ -210,14 +210,6 @@ function useNavStore(pageProps: any): NavContext {
   )
 
   const prevTeamId = useRef<string>()
-
-  useEffect(() => {
-    const maps = getTagsFoldersDocsMapsFromProps(pageProps)
-    setFoldersMap((prev) => new Map([...prev, ...maps.foldersData]))
-    setDocsMap((prev) => new Map([...prev, ...maps.docsData]))
-    setTagsMap((prev) => new Map([...prev, ...maps.tagsData]))
-    setTemplatesMap((prev) => new Map([...prev, ...maps.templatesData]))
-  }, [pageProps])
 
   const getAllResourcesAbortController = useRef<AbortController | null>(null)
 
@@ -819,7 +811,10 @@ function useNavStore(pageProps: any): NavContext {
   useEffect(() => {
     if (workspaces != null) {
       setWorkspacesMap((prevMap) => {
-        return new Map([...prevMap, ...getMapFromEntityArray(workspaces)])
+        return new Map([
+          ...prevMap,
+          ...getMapFromEntityArray(workspaces as SerializedWorkspace[]),
+        ])
       })
     }
   }, [workspaces])
@@ -907,19 +902,18 @@ function useNavStore(pageProps: any): NavContext {
 }
 
 function createNavStoreContext(
-  storeCreator: (pageProps: any) => NavContext,
+  storeCreator: () => NavContext,
   storeName?: string
 ) {
   const navContext = createContext<null | any>(null)
 
-  const StoreProvider = ({
-    children,
-    pageProps,
-  }: PropsWithChildren<{ pageProps: any }>) => (
-    <navContext.Provider value={storeCreator(pageProps)}>
-      {children}
-    </navContext.Provider>
-  )
+  const StoreProvider = ({ children }: PropsWithChildren<{}>) => {
+    return (
+      <navContext.Provider value={storeCreator()}>
+        {children}
+      </navContext.Provider>
+    )
+  }
 
   function useStore() {
     const store = useContext(navContext)
