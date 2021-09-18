@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { SerializedRevision } from '../../../../../interfaces/db/revision'
 import { format } from 'date-fns'
 import Button from '../../../../../../design/components/atoms/Button'
@@ -26,6 +26,8 @@ const RevisionModalDetail = ({
   scrollbarStyle = 'native',
 }: RevisionModalDetailProps) => {
   const { settings } = useSettings()
+  const revisionEditorRef = useRef<CodeMirror.Editor | null>(null)
+
   const editorConfig: CodeMirror.EditorConfiguration = useMemo(() => {
     const editorTheme = settings['general.editorTheme']
     const theme =
@@ -46,6 +48,34 @@ const RevisionModalDetail = ({
       readOnly: true,
     }
   }, [settings])
+
+  useEffect(() => {
+    const editor = revisionEditorRef.current
+    if (editor == null) {
+      return
+    }
+
+    const numberOfLines = editor.lineCount()
+    for (let lineIndex = 0; lineIndex < numberOfLines; lineIndex++) {
+      const line = editor.getLine(lineIndex)
+      if (line == null || !(line.startsWith('+') || line.startsWith('-'))) {
+        continue
+      }
+
+      const revisionLineClassName = line.startsWith('+')
+        ? 'revision__line__background-addition'
+        : 'revision__line__background-deletion'
+      editor.addLineClass(lineIndex, 'background', revisionLineClassName)
+      editor.addLineClass(lineIndex, 'gutter', revisionLineClassName)
+    }
+  }, [revisionDiff])
+
+  const bindRevisionCodeMirrorRef = useCallback((editor) => {
+    if (editor == null) {
+      return
+    }
+    revisionEditorRef.current = editor
+  }, [])
 
   return (
     <Container
@@ -95,6 +125,7 @@ const RevisionModalDetail = ({
             ...editorConfig,
             value: revisionDiff,
           }}
+          bind={bindRevisionCodeMirrorRef}
         />
       ) : (
         <Scroller className='codemirror__scroller'>
@@ -103,6 +134,7 @@ const RevisionModalDetail = ({
               ...editorConfig,
               value: revisionDiff,
             }}
+            bind={bindRevisionCodeMirrorRef}
           />
         </Scroller>
       )}
@@ -128,6 +160,7 @@ const Container = styled.div`
       margin: 0;
       font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     }
+
     span {
       font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
       color: ${({ theme }) => theme.colors.text.subtle};
@@ -158,6 +191,27 @@ const Container = styled.div`
     .CodeMirror {
       flex: 1 1 auto;
     }
+  }
+
+  .cm-error {
+    background-color: unset !important;
+  }
+
+  .CodeMirror-linenumber {
+    color: ${({ theme }) => theme.colors.text.primary} !important;
+  }
+
+  .cm-positive,
+  .cm-negative {
+    color: ${({ theme }) => theme.colors.text.primary};
+  }
+
+  .revision__line__background-addition {
+    background-color: rgba(0, 200, 81, 0.2); // success with 0.2 alpha
+  }
+
+  .revision__line__background-deletion {
+    background-color: rgba(139, 38, 53, 0.2); // danger with 0.2 alpha
   }
 `
 

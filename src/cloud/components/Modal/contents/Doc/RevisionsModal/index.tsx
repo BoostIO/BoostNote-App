@@ -157,9 +157,13 @@ const RevisionsModal = ({
       const currentRevision = revisions[currentRevisionIndex]!
       const previousRevision = revisions[previousRevisionIndex]!
       if (previousRevision == null) {
+        const currentDocumentRevisionDiff = currentRevision.content
+          .split('\n')
+          .map((line) => ` ${line}`)
+          .join('\n')
         return (
           <RevisionModalDetail
-            revisionDiff={currentRevision.content}
+            revisionDiff={currentDocumentRevisionDiff}
             revision={currentRevision}
             onRestoreClick={onRestoreClick}
             restoreRevision={restoreRevision}
