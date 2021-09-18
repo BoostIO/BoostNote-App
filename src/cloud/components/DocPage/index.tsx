@@ -30,6 +30,7 @@ interface DocPageProps {
   backLinks: SerializedDoc[]
   revisionHistory: SerializedRevision[]
   thread?: string
+  loading?: boolean
 }
 
 const DocPage = ({
@@ -37,6 +38,7 @@ const DocPage = ({
   contributors,
   backLinks,
   revisionHistory,
+  loading = false,
 }: DocPageProps) => {
   const {
     team,
@@ -182,6 +184,7 @@ const DocPage = ({
       backLinks={backLinks}
       revisionHistory={revisionHistory}
       docIsEditable={docIsEditable}
+      loading={loading}
     />
   ) : (
     <BlockEditor doc={currentDoc as any} team={team} />
