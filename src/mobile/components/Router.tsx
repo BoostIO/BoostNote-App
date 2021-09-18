@@ -241,7 +241,7 @@ const Router = () => {
     <PageDataProvider pageProps={pageInfo.pageProps as any}>
       <V2CombinedProvider>
         <CombinedProvider>
-          <NavProvider pageProps={pageInfo.pageProps as any}>
+          <NavProvider>
             <V2ThemeProvider>
               {<pageInfo.Component {...pageInfo.pageProps} />}
 

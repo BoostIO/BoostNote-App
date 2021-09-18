@@ -1,37 +1,10 @@
-import React, { useMemo } from 'react'
-import {
-  getWorkspaceShowPageData,
-  WorkspacesShowPageResponseBody,
-} from '../../../api/pages/teams/workspaces'
-import { useNav } from '../../../lib/stores/nav'
+import React from 'react'
+import { getWorkspaceShowPageData } from '../../../api/pages/teams/workspaces'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
-import ColoredBlock from '../../../../design/components/atoms/ColoredBlock'
-import ApplicationPage from '../../../components/ApplicationPage'
 import WorkspacePage from '../../../components/WorkspacePage'
-import ApplicationContent from '../../../components/ApplicationContent'
 
-const WorkspaceShowPage = ({
-  pageWorkspace,
-}: WorkspacesShowPageResponseBody) => {
-  const { workspacesMap } = useNav()
-
-  const workspace = useMemo(() => {
-    return workspacesMap.get(pageWorkspace.id)
-  }, [workspacesMap, pageWorkspace.id])
-
-  if (workspace == null) {
-    return (
-      <ApplicationPage showingTopbarPlaceholder={true}>
-        <ApplicationContent reduced={true}>
-          <ColoredBlock variant='danger'>
-            {'The folder has been deleted'}
-          </ColoredBlock>
-        </ApplicationContent>
-      </ApplicationPage>
-    )
-  }
-
-  return <WorkspacePage workspace={workspace} />
+const WorkspaceShowPage = () => {
+  return <WorkspacePage />
 }
 
 WorkspaceShowPage.getInitialProps = async (

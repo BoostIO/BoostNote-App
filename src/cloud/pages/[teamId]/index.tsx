@@ -1,13 +1,10 @@
 import React from 'react'
-import {
-  getTeamIndexPageData,
-  TeamShowPageResponseBody,
-} from '../../api/pages/teams'
+import { getTeamIndexPageData } from '../../api/pages/teams'
 import WorkspacePage from '../../components/WorkspacePage'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 
-const TeamIndex = ({ pageWorkspace }: TeamShowPageResponseBody) => {
-  return <WorkspacePage workspace={pageWorkspace} />
+const TeamIndex = () => {
+  return <WorkspacePage />
 }
 
 TeamIndex.getInitialProps = async (params: GetInitialPropsParameters) => {
