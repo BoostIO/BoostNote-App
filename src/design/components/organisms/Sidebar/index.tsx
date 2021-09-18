@@ -139,8 +139,16 @@ const SidebarContainer = styled.div`
     opacity: 1;
   }
 
-  .sidebar--hidden {
-    display: none;
+  .sidebar--expanded {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s, opacity 0.3s linear, width 0.5s linear;
+
+    &.sidebar--hidden {
+      visibility: hidden;
+      width: 0;
+      opacity: 0;
+    }
   }
 
   .sidebar--expanded,
