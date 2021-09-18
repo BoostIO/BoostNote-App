@@ -132,25 +132,6 @@ const LabelsManagementModalContainer = styled.div`
   .right {
     height: 100%;
   }
-
-  .content--unsubscribed {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    width: 80%;
-    margin: auto;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-
-    p {
-      text-align: center;
-    }
-
-    svg {
-      color: ${({ theme }) => theme.colors.icon.default};
-    }
-  }
 `
 
 export default LabelsManagementModal
