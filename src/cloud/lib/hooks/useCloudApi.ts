@@ -72,6 +72,8 @@ import {
   DocDataTransferItem,
   FolderDataTransferItem,
 } from '../../interfaces/resources'
+import { SerializedTag } from '../../interfaces/db/tag'
+import { deleteTag } from '../../api/teams/tags'
 
 export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
@@ -88,6 +90,7 @@ export function useCloudApi() {
     removeFromFoldersMap,
     setCurrentPath,
     removeFromSmartFoldersMap,
+    removeFromTagsMap,
   } = useNav()
   const { push } = useRouter()
 
@@ -384,6 +387,47 @@ export function useCloudApi() {
     [pageDoc, updateDocsMap, setPartialPageData, send, updateTagsMap]
   )
 
+  const deleteTagApi = useCallback(
+    async (target: SerializedTag) => {
+      await send(target.id, 'delete', {
+        api: () => deleteTag(target.teamId, target.id),
+        cb: () => {
+          removeFromTagsMap(target.id)
+          if (
+            pageDoc != null &&
+            (pageDoc.tags || []).find((tag) => tag.id === target.id)
+          ) {
+            const doc = Object.assign({}, pageDoc, {
+              tags: pageDoc.tags.filter((tag) => tag !== target.id),
+            })
+            setPartialPageData({ pageDoc: doc })
+          }
+
+          const impactedDocs = [...docsMap.values()]
+            .filter((doc) =>
+              (doc.tags || []).find((tag) => tag.id === target.id)
+            )
+            .map((doc) => {
+              return {
+                ...doc,
+                tags: doc.tags.filter((tag) => tag.id !== target.id),
+              }
+            })
+
+          updateDocsMap(...getMapFromEntityArray(impactedDocs))
+        },
+      })
+    },
+    [
+      pageDoc,
+      updateDocsMap,
+      setPartialPageData,
+      send,
+      removeFromTagsMap,
+      docsMap,
+    ]
+  )
+
   const updateDocStatusApi = useCallback(
     async (target: SerializedDoc, newStatus: DocStatus | null) => {
       await send(target.id, 'status', {
@@ -612,5 +656,6 @@ export function useCloudApi() {
     updateDocStatusApi,
     updateDocDueDateApi,
     updateDocTagsBulkApi,
+    deleteTagApi,
   }
 }
