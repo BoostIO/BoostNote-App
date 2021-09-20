@@ -4,8 +4,8 @@ import { AppComponent } from '../../lib/types'
 import cc from 'classcat'
 
 interface PastilleProps {
-  variant: 'danger'
-  size: number
+  variant: 'danger' | 'secondary'
+  size?: number
 }
 
 const Pastille: AppComponent<PastilleProps> = ({
@@ -22,7 +22,7 @@ const Pastille: AppComponent<PastilleProps> = ({
   </Container>
 )
 
-const Container = styled.div<{ size: number }>`
+const Container = styled.div<{ size?: number }>`
   position: relative;
   display: flex;
   justify-content: center;
@@ -36,6 +36,11 @@ const Container = styled.div<{ size: number }>`
   &.pastille--danger {
     color: #fff;
     background-color: #cd4400;
+  }
+
+  &.pastille--secondary {
+    color: ${({ theme }) => theme.colors.variants.secondary.text};
+    background-color: ${({ theme }) => theme.colors.variants.secondary.base};
   }
 `
 

@@ -15,7 +15,9 @@ import { SerializedTag } from '../../../../interfaces/db/tag'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
 import { mdiTag } from '@mdi/js'
-import plur from 'plur'
+import Flexbox from '../../../../../design/components/atoms/Flexbox'
+import Pastille from '../../../../../design/components/atoms/Pastille'
+import { overflowEllipsis } from '../../../../../design/lib/styled/styleFunctions'
 
 interface LabelsManagementModalNavigatorProps {
   tags: (SerializedTag & { docsIds: string[] })[]
@@ -60,10 +62,22 @@ const LabelsManagementModalNavigator = ({
             id={`tag-${tag.id}`}
             active={selectedTagId === tag.id}
             labelClick={() => selectTag(tag.id)}
-            label={`${tag.text} - ${tag.docsIds.length} ${plur(
-              'doc',
-              tag.docsIds.length
-            )}`}
+            label={
+              <Flexbox
+                flex='1 1 auto'
+                justifyContent='space-between'
+                className='label__label'
+              >
+                <span className='label__label__text'>{tag.text} </span>
+                <Pastille
+                  size={20}
+                  variant='secondary'
+                  className='label__label__pastille'
+                >
+                  {tag.docsIds.length}
+                </Pastille>
+              </Flexbox>
+            }
             borderRadius={true}
             icon={{
               type: 'icon',
@@ -83,6 +97,14 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  .label__label__text {
+    ${overflowEllipsis}
+  }
+
+  .label__label__pastille {
+    flex: 0 0 auto;
+  }
 
   header,
   .labels__scroller {
