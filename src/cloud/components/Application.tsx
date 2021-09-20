@@ -10,7 +10,11 @@ import {
 import { isActiveElementAnInput, InputableDomElement } from '../lib/dom'
 import { useEffectOnce } from 'react-use'
 import { useSettings } from '../lib/stores/settings'
-import { isPageSearchShortcut, shortcuts } from '../lib/shortcuts'
+import {
+  isPageSearchShortcut,
+  isSidebarToggleShortcut,
+  shortcuts,
+} from '../lib/shortcuts'
 import { useSearch } from '../lib/stores/search'
 import AnnouncementAlert from './AnnouncementAlert'
 import {
@@ -208,6 +212,13 @@ const Application = ({
         return
       }
 
+      if (isSidebarToggleShortcut(event)) {
+        preventKeyboardEventPropagation(event)
+        setPreferences((prev) => {
+          return { sidebarIsHidden: !prev.sidebarIsHidden }
+        })
+      }
+
       if (isSingleKeyEventOutsideOfInput(event, shortcuts.teamMembers)) {
         preventKeyboardEventPropagation(event)
         openSettingsTab('teamMembers')
@@ -231,7 +242,7 @@ const Application = ({
         }
       }
     },
-    [openSettingsTab, showInPageSearch, team]
+    [openSettingsTab, showInPageSearch, team, setPreferences]
   )
   useGlobalKeyDownHandler(overrideBrowserCtrlsHandler)
 
