@@ -110,3 +110,7 @@ export function isFolderDeleteShortcut(event: KeyboardEvent) {
 export function isFolderBookmarkShortcut(event: KeyboardEvent) {
   return isSingleKeyEventOutsideOfInput(event, shortcuts.bookmarkFolder)
 }
+
+export function isSidebarToggleShortcut(event: KeyboardEvent) {
+  return event.key === '0' && event.shiftKey && isWithGeneralCtrlKey(event)
+}
