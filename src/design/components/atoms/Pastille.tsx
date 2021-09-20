@@ -10,7 +10,7 @@ interface PastilleProps {
 
 const Pastille: AppComponent<PastilleProps> = ({
   variant,
-  size,
+  size = 16,
   className,
   children,
 }) => (
@@ -22,7 +22,7 @@ const Pastille: AppComponent<PastilleProps> = ({
   </Container>
 )
 
-const Container = styled.div<{ size?: number }>`
+const Container = styled.div<{ size: number }>`
   position: relative;
   display: flex;
   justify-content: center;
