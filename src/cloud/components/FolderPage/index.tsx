@@ -41,7 +41,7 @@ import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationContent from '../ApplicationContent'
 
 const FolderPage = () => {
-  const { pageFolder, team, currentUserIsCoreMember } = usePage()
+  const { pageFolder, team, currentUserIsCoreMember, pageData } = usePage()
   const {
     docsMap,
     foldersMap,
@@ -266,6 +266,13 @@ const FolderPage = () => {
   }
 
   if (currentFolder == null) {
+    if ((pageData as any).needsReload != null) {
+      return (
+        <ApplicationPage showingTopbarPlaceholder={true}>
+          Reloading page data...
+        </ApplicationPage>
+      )
+    }
     return (
       <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>
