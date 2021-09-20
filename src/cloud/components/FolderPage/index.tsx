@@ -39,6 +39,7 @@ import ApplicationPage from '../ApplicationPage'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationContent from '../ApplicationContent'
+import Spinner from '../../../design/components/atoms/Spinner'
 
 const FolderPage = () => {
   const { pageFolder, team, currentUserIsCoreMember, pageData } = usePage()
@@ -269,7 +270,7 @@ const FolderPage = () => {
     if ((pageData as any).needsReload != null) {
       return (
         <ApplicationPage showingTopbarPlaceholder={true}>
-          Reloading page data...
+          <Spinner variant='subtle' style={{ marginLeft: 15, marginTop: 15 }} />
         </ApplicationPage>
       )
     }

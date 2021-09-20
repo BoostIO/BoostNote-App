@@ -23,6 +23,7 @@ import Editor from '../Editor'
 import ApplicationPage from '../ApplicationPage'
 import BlockEditor from '../Blocks/BlockEditor'
 import { freePlanMembersLimit } from '../../lib/subscription'
+import Spinner from '../../../design/components/atoms/Spinner'
 
 interface DocPageProps {
   doc: SerializedDocWithBookmark
@@ -142,7 +143,7 @@ const DocPage = ({
     if ((pageData as any).needsReload != null) {
       return (
         <ApplicationPage showingTopbarPlaceholder={true}>
-          Reloading page data...
+          <Spinner variant='subtle' style={{ marginLeft: 15, marginTop: 15 }} />
         </ApplicationPage>
       )
     }
