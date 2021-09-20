@@ -60,19 +60,20 @@ const LabelsManagementModalNavigator = ({
           <NavigationItem
             key={tag.id}
             id={`tag-${tag.id}`}
+            className='tag__item'
             active={selectedTagId === tag.id}
             labelClick={() => selectTag(tag.id)}
             label={
               <Flexbox
                 flex='1 1 auto'
                 justifyContent='space-between'
-                className='label__label'
+                className='tag__item__label'
               >
-                <span className='label__label__text'>{tag.text} </span>
+                <span className='tag__item__label__text'>{tag.text} </span>
                 <Pastille
                   size={20}
                   variant='secondary'
-                  className='label__label__pastille'
+                  className='tag__item__label__pastille'
                 >
                   {tag.docsIds.length}
                 </Pastille>
@@ -98,11 +99,11 @@ const Container = styled.div`
   flex-direction: column;
   overflow: hidden;
 
-  .label__label__text {
+  .tag__item__label__text {
     ${overflowEllipsis}
   }
 
-  .label__label__pastille {
+  .tag__item__label__pastille {
     flex: 0 0 auto;
   }
 
