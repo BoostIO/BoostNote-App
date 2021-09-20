@@ -46,6 +46,7 @@ const DocPage = ({
     permissions = [],
     currentUserPermissions,
     currentUserIsCoreMember,
+    pageData,
   } = usePage()
   const { docsMap, setCurrentPath, deleteDocHandler } = useNav()
   const {
@@ -138,6 +139,13 @@ const DocPage = ({
   useGlobalKeyDownHandler(docPageControlsKeyDownHandler)
 
   if (currentDoc == null || team == null) {
+    if ((pageData as any).needsReload != null) {
+      return (
+        <ApplicationPage showingTopbarPlaceholder={true}>
+          Reloading page data...
+        </ApplicationPage>
+      )
+    }
     return (
       <ApplicationPage showingTopbarPlaceholder={true}>
         <ColoredBlock
