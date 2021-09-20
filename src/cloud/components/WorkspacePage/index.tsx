@@ -25,8 +25,7 @@ import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationContent from '../ApplicationContent'
 
-const WorkspacePage = () => {
-  const { pageWorkspace: workspace } = usePage()
+const WorkspacePage = ({ workspace }: { workspace: SerializedWorkspace }) => {
   const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, foldersMap } = useNav()
   const { openNewFolderForm, openNewDocForm } = useCloudResourceModals()

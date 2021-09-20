@@ -3,8 +3,8 @@ import { getWorkspaceShowPageData } from '../../../api/pages/teams/workspaces'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
 import WorkspacePage from '../../../components/WorkspacePage'
 
-const WorkspaceShowPage = () => {
-  return <WorkspacePage />
+const WorkspaceShowPage = ({ pageWorkspace }: any) => {
+  return <WorkspacePage workspace={pageWorkspace} />
 }
 
 WorkspaceShowPage.getInitialProps = async (
