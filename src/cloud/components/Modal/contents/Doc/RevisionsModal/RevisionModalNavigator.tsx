@@ -223,7 +223,7 @@ const Container = styled.div`
   }
 
   .revisions__scroller {
-    flex: 0 1 auto;
+    flex: 1 1 auto;
   }
 `
 
