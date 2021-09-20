@@ -3,8 +3,8 @@ import { getTeamIndexPageData } from '../../api/pages/teams'
 import WorkspacePage from '../../components/WorkspacePage'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 
-const TeamIndex = () => {
-  return <WorkspacePage />
+const TeamIndex = ({ pageWorkspace }: any) => {
+  return <WorkspacePage workspace={pageWorkspace} />
 }
 
 TeamIndex.getInitialProps = async (params: GetInitialPropsParameters) => {
