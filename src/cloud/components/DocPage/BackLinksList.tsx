@@ -1,4 +1,4 @@
-import { mdiArrowBottomLeftBoldOutline, mdiTextBox } from '@mdi/js'
+import { mdiArrowBottomLeftBoldOutline, mdiFileDocumentOutline } from '@mdi/js'
 import plur from 'plur'
 import React from 'react'
 import Icon from '../../../design/components/atoms/Icon'
@@ -31,11 +31,13 @@ const BackLinksList = ({ docs, team }: BackLinksListProps) => {
               <li key={doc.id} className='backlink'>
                 <DocLink doc={doc} team={team} id={`backlink__${doc.id}`}>
                   <Icon
-                    path={mdiTextBox}
+                    path={mdiFileDocumentOutline}
                     size={16}
                     className='backlink__icon'
                   />
-                  <span className='backlink__title'>{getDocTitle(doc)}</span>
+                  <span className='backlink__title'>
+                    {getDocTitle(doc, 'Untitled')}
+                  </span>
                 </DocLink>
               </li>
             ))}
@@ -52,6 +54,8 @@ const Container = styled.ul`
   margin: 0;
   list-style: none;
   padding: 0;
+  align-items: baseline;
+  justify-content: flex-start;
 
   li {
     margin: 0;
