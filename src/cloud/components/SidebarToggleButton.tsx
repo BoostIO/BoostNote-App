@@ -43,7 +43,7 @@ const Container = styled.div`
 
   &:hover {
     transition: all ease-in-out 0.3s;
-    left: 10px;
+    padding-left: 24px;
     opacity: 1;
   }
 `
