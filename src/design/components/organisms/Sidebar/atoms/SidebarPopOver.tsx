@@ -44,7 +44,7 @@ const SidebarPopOverContainer = styled.div`
   left: 55px;
   top: 15px;
   background: ${({ theme }) => theme.colors.background.primary};
-  z-index: 101;
+  z-index: 102;
   box-shadow: ${({ theme }) => theme.colors.shadow};
   border: 1px solid ${({ theme }) => theme.colors.border.main};
   overflow: auto;
