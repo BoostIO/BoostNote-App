@@ -60,6 +60,10 @@ const DocPage = ({
     if (mapDoc != null && doc.collaborationToken != null) {
       mapDoc.collaborationToken = doc.collaborationToken
     }
+    // FIXME: docsMap should be updated before rendering DocPage
+    if (mapDoc == null) {
+      return doc
+    }
     return mapDoc
   }, [docsMap, doc])
 
