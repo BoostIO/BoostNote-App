@@ -18,32 +18,21 @@ import copy from 'copy-to-clipboard'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { getDocLinkHref } from '../Link/DocLink'
 import { boostHubBaseUrl } from '../../lib/consts'
-import {
-  usingElectron,
-  sendToHost,
-  useElectron,
-} from '../../lib/stores/electron'
+import { usingElectron, sendToHost } from '../../lib/stores/electron'
 import { useToast } from '../../../design/lib/stores/toast'
 import { useSettings } from '../../lib/stores/settings'
 import { trackEvent } from '../../api/track'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
-import { defaultPreviewStyle } from '../MarkdownView/styles'
 import {
   CreateDocTemplateResponseBody,
   saveDocAsTemplate,
 } from '../../api/teams/docs/templates'
 
-import {
-  exportAsMarkdownFile,
-  exportAsHtmlFile,
-  convertMarkdownToPdfExportableHtml,
-  filenamifyTitle,
-} from '../../lib/export'
-import { downloadBlob, printIframe } from '../../lib/download'
+import { exportAsMarkdownFile, filenamifyTitle } from '../../lib/export'
+import { downloadBlob, downloadString, printIframe } from '../../lib/download'
 import { useNav } from '../../lib/stores/nav'
 import MoveItemModal from '../Modal/contents/Forms/MoveItemModal'
 import { useModal } from '../../../design/lib/stores/modal'
-import { selectV2Theme } from '../../../design/lib/styled/styleFunctions'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
@@ -52,6 +41,12 @@ import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import RevisionsModal from '../Modal/contents/Doc/RevisionsModal'
 import { SerializedRevision } from '../../interfaces/db/revision'
 import MetadataContainerBreak from '../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
+import { usePage } from '../../lib/stores/pageStore'
+import Button from '../../../design/components/atoms/Button'
+import {
+  getDocExportForHTML,
+  getDocExportForPDF,
+} from '../../api/teams/docs/exports'
 
 export interface DocContextMenuActionsProps {
   team: SerializedTeam
@@ -74,11 +69,11 @@ export function DocContextMenuActions({
   const { sendingMap, toggleDocBookmark, send, updateDoc } = useCloudApi()
   const { deleteDoc } = useCloudResourceModals()
   const { openModal, closeAllModals } = useModal()
-  const { settings } = useSettings()
   const { pushMessage } = useToast()
-  const { convertHtmlStringToPdfBlob } = useElectron()
   const { updateTemplatesMap } = useNav()
   const [copied, setCopied] = useState(false)
+  const { subscription } = usePage()
+  const { openSettingsTab } = useSettings()
 
   const docUrl = useMemo(() => {
     return boostHubBaseUrl + getDocLinkHref(doc, team, 'index')
@@ -112,13 +107,23 @@ export function DocContextMenuActions({
     return exportAsMarkdownFile(getUpdatedDoc(), { includeFrontMatter: true })
   }, [getUpdatedDoc])
 
-  const exportAsHtml = useCallback(() => {
-    const previewStyle = defaultPreviewStyle({
-      theme: selectV2Theme(settings['general.theme']),
-    })
+  const exportAsHtml = useCallback(async () => {
+    if (subscription == null) {
+      return
+    }
     try {
       trackEvent(MixpanelActionTrackTypes.ExportHtml)
-      exportAsHtmlFile(getUpdatedDoc(), settings, previewStyle)
+      const updatedDoc = getUpdatedDoc()
+      const htmlFile = await getDocExportForHTML(
+        updatedDoc.teamId,
+        updatedDoc.id
+      )
+      console.log('Html', htmlFile)
+      downloadString(
+        htmlFile.html,
+        `${filenamifyTitle(doc.title)}.html`,
+        'text/html'
+      )
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
@@ -127,32 +132,36 @@ export function DocContextMenuActions({
         description: error.message,
       })
     }
-  }, [getUpdatedDoc, settings, pushMessage])
+  }, [subscription, getUpdatedDoc, doc.title, pushMessage])
 
   const exportAsPdf = useCallback(async () => {
+    if (subscription == null) {
+      return
+    }
     const updatedDoc = getUpdatedDoc()
     if (updatedDoc.head == null) {
       return
     }
     try {
-      const previewStyle = defaultPreviewStyle({
-        theme: selectV2Theme(settings['general.theme']),
-      })
       const pdfName = `${filenamifyTitle(updatedDoc.title)}.pdf`
-      const htmlString = await convertMarkdownToPdfExportableHtml(
-        updatedDoc.head.content,
-        settings,
-        previewStyle
-      )
       if (usingElectron) {
-        const printOpts = {
-          printBackground: true,
-          pageSize: 'A4',
-        }
-        const blob = await convertHtmlStringToPdfBlob(htmlString, printOpts)
+        // const printOpts = {
+        //   printBackground: true,
+        //   pageSize: 'A4',
+        // }
+        const pdfFile = await getDocExportForPDF(
+          updatedDoc.teamId,
+          updatedDoc.id
+        )
+        const buffer = new Uint8Array(pdfFile.buffer.data)
+        const blob = new Blob([buffer], { type: 'application/pdf' })
         downloadBlob(blob, pdfName)
       } else {
-        printIframe(htmlString, pdfName)
+        const htmlFile = await getDocExportForHTML(
+          updatedDoc.teamId,
+          updatedDoc.id
+        )
+        printIframe(htmlFile.html, pdfName)
       }
       trackEvent(MixpanelActionTrackTypes.ExportPdf)
     } catch (error) {
@@ -163,7 +172,7 @@ export function DocContextMenuActions({
         description: error.message,
       })
     }
-  }, [getUpdatedDoc, settings, pushMessage, convertHtmlStringToPdfBlob])
+  }, [subscription, getUpdatedDoc, pushMessage])
 
   const createTemplate = useCallback(async () => {
     return send(`${doc.id}-template`, 'create', {
@@ -295,9 +304,22 @@ export function DocContextMenuActions({
                 label: translate(lngKeys.DocExportHtml),
                 iconPath: mdiFileCodeOutline,
                 onClick: exportAsHtml,
+                disabled: subscription == null,
               },
             }}
-          />
+          >
+            {subscription == null && (
+              <Button
+                variant='secondary'
+                onClick={() => {
+                  closeAllModals()
+                  openSettingsTab('teamUpgrade')
+                }}
+              >
+                Upgrade
+              </Button>
+            )}
+          </MetadataContainerRow>
           <MetadataContainerRow
             row={{
               type: 'button',
@@ -306,9 +328,22 @@ export function DocContextMenuActions({
                 label: translate(lngKeys.DocExportPdf),
                 iconPath: mdiFilePdfOutline,
                 onClick: exportAsPdf,
+                disabled: subscription == null,
               },
             }}
-          />
+          >
+            {subscription == null && (
+              <Button
+                variant='secondary'
+                onClick={() => {
+                  closeAllModals()
+                  openSettingsTab('teamUpgrade')
+                }}
+              >
+                Upgrade
+              </Button>
+            )}
+          </MetadataContainerRow>
         </>
       )}
       {currentUserIsCoreMember && (
