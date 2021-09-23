@@ -1,7 +1,7 @@
 import { callApi } from '../../../lib/client'
 
 export interface GetDocPDFResponseBody {
-  buffer: Buffer
+  buffer: Buffer & { data: any }
 }
 
 export interface GetDocHTMLResponseBody {

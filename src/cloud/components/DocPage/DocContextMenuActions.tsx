@@ -118,7 +118,6 @@ export function DocContextMenuActions({
         updatedDoc.teamId,
         updatedDoc.id
       )
-      console.log('Html', htmlFile)
       downloadString(
         htmlFile.html,
         `${filenamifyTitle(doc.title)}.html`,
