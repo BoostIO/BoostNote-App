@@ -29,7 +29,7 @@ import {
 } from '../../api/teams/docs/templates'
 
 import { exportAsMarkdownFile, filenamifyTitle } from '../../lib/export'
-import { downloadBlob, downloadString, printIframe } from '../../lib/download'
+import { downloadBlob, downloadString } from '../../lib/download'
 import { useNav } from '../../lib/stores/nav'
 import MoveItemModal from '../Modal/contents/Forms/MoveItemModal'
 import { useModal } from '../../../design/lib/stores/modal'
@@ -46,7 +46,11 @@ import Button from '../../../design/components/atoms/Button'
 import {
   getDocExportForHTML,
   getDocExportForPDF,
+  GetDocHTMLResponseBody,
+  GetDocPDFResponseBody,
 } from '../../api/teams/docs/exports'
+import useApi from '../../../design/lib/hooks/useApi'
+import Spinner from '../../../design/components/atoms/Spinner'
 
 export interface DocContextMenuActionsProps {
   team: SerializedTeam
@@ -107,22 +111,46 @@ export function DocContextMenuActions({
     return exportAsMarkdownFile(getUpdatedDoc(), { includeFrontMatter: true })
   }, [getUpdatedDoc])
 
+  const { submit: fetchDocPdf, sending: fetchingPdf } = useApi({
+    api: ({ updatedDoc }: { updatedDoc: SerializedDocWithBookmark }) =>
+      getDocExportForPDF(updatedDoc.teamId, updatedDoc.id),
+    cb: ({ buffer }: GetDocPDFResponseBody) => {
+      const updatedDoc = getUpdatedDoc()
+      const pdfName = `${filenamifyTitle(updatedDoc.title)}.pdf`
+      const arrayBuffer = new Uint8Array(buffer.data)
+      const blob = new Blob([arrayBuffer], { type: 'application/pdf' })
+
+      downloadBlob(blob, pdfName)
+      trackEvent(MixpanelActionTrackTypes.ExportPdf)
+    },
+  })
+
+  const { submit: fetchDocHtml, sending: fetchingHtml } = useApi({
+    api: ({ updatedDoc }: { updatedDoc: SerializedDocWithBookmark }) =>
+      getDocExportForHTML(updatedDoc.teamId, updatedDoc.id),
+    cb: ({ html }: GetDocHTMLResponseBody) => {
+      trackEvent(MixpanelActionTrackTypes.ExportHtml)
+      const updatedDoc = getUpdatedDoc()
+      downloadString(
+        html,
+        `${filenamifyTitle(updatedDoc.title)}.html`,
+        'text/html'
+      )
+    },
+  })
+
   const exportAsHtml = useCallback(async () => {
     if (subscription == null) {
       return
     }
+
+    const updatedDoc = getUpdatedDoc()
+    if (updatedDoc.head == null) {
+      return
+    }
+
     try {
-      trackEvent(MixpanelActionTrackTypes.ExportHtml)
-      const updatedDoc = getUpdatedDoc()
-      const htmlFile = await getDocExportForHTML(
-        updatedDoc.teamId,
-        updatedDoc.id
-      )
-      downloadString(
-        htmlFile.html,
-        `${filenamifyTitle(doc.title)}.html`,
-        'text/html'
-      )
+      await fetchDocHtml({ updatedDoc })
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
@@ -131,7 +159,7 @@ export function DocContextMenuActions({
         description: error.message,
       })
     }
-  }, [subscription, getUpdatedDoc, doc.title, pushMessage])
+  }, [subscription, getUpdatedDoc, fetchDocHtml, pushMessage])
 
   const exportAsPdf = useCallback(async () => {
     if (subscription == null) {
@@ -141,28 +169,13 @@ export function DocContextMenuActions({
     if (updatedDoc.head == null) {
       return
     }
+
     try {
-      const pdfName = `${filenamifyTitle(updatedDoc.title)}.pdf`
-      if (usingElectron) {
-        // const printOpts = {
-        //   printBackground: true,
-        //   pageSize: 'A4',
-        // }
-        const pdfFile = await getDocExportForPDF(
-          updatedDoc.teamId,
-          updatedDoc.id
-        )
-        const buffer = new Uint8Array(pdfFile.buffer.data)
-        const blob = new Blob([buffer], { type: 'application/pdf' })
-        downloadBlob(blob, pdfName)
-      } else {
-        const htmlFile = await getDocExportForHTML(
-          updatedDoc.teamId,
-          updatedDoc.id
-        )
-        printIframe(htmlFile.html, pdfName)
-      }
-      trackEvent(MixpanelActionTrackTypes.ExportPdf)
+      // const printOpts = {
+      //   printBackground: true,
+      //   pageSize: 'A4',
+      // }
+      await fetchDocPdf({ updatedDoc })
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
@@ -171,7 +184,7 @@ export function DocContextMenuActions({
         description: error.message,
       })
     }
-  }, [subscription, getUpdatedDoc, pushMessage])
+  }, [subscription, getUpdatedDoc, fetchDocPdf, pushMessage])
 
   const createTemplate = useCallback(async () => {
     return send(`${doc.id}-template`, 'create', {
@@ -318,6 +331,16 @@ export function DocContextMenuActions({
                 Upgrade
               </Button>
             )}
+            {fetchingHtml && (
+              <Spinner
+                variant={'subtle'}
+                style={{
+                  position: 'absolute',
+                  left: '90%',
+                  marginTop: 8,
+                }}
+              />
+            )}
           </MetadataContainerRow>
           <MetadataContainerRow
             row={{
@@ -341,6 +364,16 @@ export function DocContextMenuActions({
               >
                 Upgrade
               </Button>
+            )}
+            {fetchingPdf && (
+              <Spinner
+                variant={'subtle'}
+                style={{
+                  position: 'absolute',
+                  left: '90%',
+                  marginTop: 8,
+                }}
+              />
             )}
           </MetadataContainerRow>
         </>
