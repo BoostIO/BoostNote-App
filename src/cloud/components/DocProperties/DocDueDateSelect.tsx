@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import DatePicker from 'react-datepicker'
 import DocPropertyValueButton from './DocPropertyValueButton'
 import { format as formatDate } from 'date-fns'
 import styled from '../../../design/lib/styled'
 import Button from '../../../design/components/atoms/Button'
-import { mdiCalendarMonthOutline, mdiCalendarRemoveOutline, mdiClose } from '@mdi/js'
+import {
+  mdiCalendarMonthOutline,
+  mdiCalendarRemoveOutline,
+  mdiClose,
+} from '@mdi/js'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 
@@ -31,6 +35,11 @@ const DocDueDateSelect = ({
   const [dueDate, setDueDate] = useState(() => {
     return dueDateString != null ? new Date(dueDateString) : null
   })
+  const isDue = useMemo(() => {
+    const today = new Date()
+    today.setHours(0, 0, 0)
+    return dueDate != null && dueDate < today
+  }, [dueDate])
 
   useEffect(() => {
     setDueDate(dueDateString != null ? new Date(dueDateString) : null)
@@ -46,15 +55,13 @@ const DocDueDateSelect = ({
         popperPlacement='top-end'
         customInput={
           <DocPropertyValueButton
-            className={ !(dueDate == null || dueDate >= new Date()) 
-              ? 'due__date__expired' 
-              : ''}
+            className={isDue ? 'due__date__expired' : ''}
             sending={sending}
             empty={dueDate == null}
             isReadOnly={isReadOnly}
-            iconPath={dueDate == null || dueDate >= new Date() 
-              ? mdiCalendarMonthOutline 
-              : mdiCalendarRemoveOutline}
+            iconPath={
+              !isDue ? mdiCalendarMonthOutline : mdiCalendarRemoveOutline
+            }
           >
             {dueDate != null
               ? formatDate(dueDate, 'MMM dd, yyyy')
