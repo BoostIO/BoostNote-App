@@ -28,6 +28,7 @@ export const baseUserSettings: UserSettings = {
   'general.editorShowLineNumbers': true,
   'general.showEditorToolbar': true,
   'general.enableSpellcheck': true,
+  'general.pdf.printBackground': false,
 }
 
 export type SettingsTab =

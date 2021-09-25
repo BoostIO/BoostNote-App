@@ -133,6 +133,7 @@ export enum lngKeys {
   SettingsIndentType = 'settings.indentType',
   SettingsShowEditorToolbar = 'settings.showEditorToolbar',
   SettingsShowEditorLineNumbers = 'settings.showEditorLineNumbers',
+  SettingsPrintPdfBackground = 'settings.printPdfBackground',
   SettingsEnableEditorSpellcheck = 'settings.enableSpellcheck',
   SettingsIndentSize = 'settings.indentSize',
   SettingsSpace = 'settings.space',
@@ -449,6 +450,9 @@ export enum lngKeys {
   OnboardingFolderSectionDisclaimer = 'onboarding.folder.section.disclaimer',
 
   GeneralContent = 'general.content',
+
+  GeneralYes = 'general.yes',
+  GeneralNo = 'general.no',
 }
 
 export type TranslationSource = {

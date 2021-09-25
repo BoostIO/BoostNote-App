@@ -63,6 +63,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SettingsIndentType]: 'エディタインデントの種類',
   [lngKeys.SettingsShowEditorToolbar]: 'エディターツールバー',
   [lngKeys.SettingsShowEditorLineNumbers]: 'エディタの行番号',
+  [lngKeys.SettingsPrintPdfBackground]: 'PDFの背景を印刷する',
   [lngKeys.SettingsEnableEditorSpellcheck]: 'スペルチェックエディタ',
   [lngKeys.SettingsIndentSize]: 'エディタインデントのサイズ',
   [lngKeys.SettingsUserForum]: 'ユーザーフォーラム（New!!）',
@@ -495,6 +496,9 @@ const jpTranslation: TranslationSource = {
     'Invite your teammates to this space',
   [lngKeys.GeneralContent]: 'Content',
   [lngKeys.CreateNewCanvas]: 'Create new canvas (beta)',
+
+  [lngKeys.GeneralYes]: 'はい',
+  [lngKeys.GeneralNo]: '番号',
 }
 
 export default {

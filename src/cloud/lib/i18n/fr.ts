@@ -64,6 +64,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsIndentType]: "Type d'indentation pour l'éditeur",
   [lngKeys.SettingsShowEditorToolbar]: "Barre d'outils de l'éditeur",
   [lngKeys.SettingsShowEditorLineNumbers]: "Numéros de ligne de l'éditeur",
+  [lngKeys.SettingsPrintPdfBackground]: "Imprimer l'arrière-plan du PDF",
   [lngKeys.SettingsEnableEditorSpellcheck]:
     'Éditeur de vérification orthographique',
   [lngKeys.SettingsIndentSize]: "Taille de l'indentation pour l'éditeur",
@@ -501,6 +502,9 @@ const frTranslation: TranslationSource = {
     'Invitez vos coéquipiers dans cet espace',
   [lngKeys.GeneralContent]: 'Contenu',
   [lngKeys.CreateNewCanvas]: 'Créer un nouveau Canvas (beta)',
+
+  [lngKeys.GeneralYes]: 'Oui',
+  [lngKeys.GeneralNo]: 'Non',
 }
 
 export default {

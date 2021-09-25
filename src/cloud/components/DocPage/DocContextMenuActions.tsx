@@ -44,6 +44,7 @@ import MetadataContainerBreak from '../../../design/components/organisms/Metadat
 import { usePage } from '../../lib/stores/pageStore'
 import Button from '../../../design/components/atoms/Button'
 import {
+  ExportOptions,
   getDocExportForHTML,
   getDocExportForPDF,
   GetDocHTMLResponseBody,
@@ -77,7 +78,7 @@ export function DocContextMenuActions({
   const { updateTemplatesMap } = useNav()
   const [copied, setCopied] = useState(false)
   const { subscription } = usePage()
-  const { openSettingsTab } = useSettings()
+  const { settings, openSettingsTab } = useSettings()
 
   const docUrl = useMemo(() => {
     return boostHubBaseUrl + getDocLinkHref(doc, team, 'index')
@@ -112,8 +113,13 @@ export function DocContextMenuActions({
   }, [getUpdatedDoc])
 
   const { submit: fetchDocPdf, sending: fetchingPdf } = useApi({
-    api: ({ updatedDoc }: { updatedDoc: SerializedDocWithBookmark }) =>
-      getDocExportForPDF(updatedDoc.teamId, updatedDoc.id),
+    api: ({
+      updatedDoc,
+      exportOptions,
+    }: {
+      updatedDoc: SerializedDocWithBookmark
+      exportOptions: ExportOptions
+    }) => getDocExportForPDF(updatedDoc.teamId, updatedDoc.id, exportOptions),
     cb: ({ buffer }: GetDocPDFResponseBody) => {
       const updatedDoc = getUpdatedDoc()
       const pdfName = `${filenamifyTitle(updatedDoc.title)}.pdf`
@@ -126,8 +132,13 @@ export function DocContextMenuActions({
   })
 
   const { submit: fetchDocHtml, sending: fetchingHtml } = useApi({
-    api: ({ updatedDoc }: { updatedDoc: SerializedDocWithBookmark }) =>
-      getDocExportForHTML(updatedDoc.teamId, updatedDoc.id),
+    api: ({
+      updatedDoc,
+      exportOptions,
+    }: {
+      updatedDoc: SerializedDocWithBookmark
+      exportOptions: ExportOptions
+    }) => getDocExportForHTML(updatedDoc.teamId, updatedDoc.id, exportOptions),
     cb: ({ html }: GetDocHTMLResponseBody) => {
       trackEvent(MixpanelActionTrackTypes.ExportHtml)
       const updatedDoc = getUpdatedDoc()
@@ -150,7 +161,14 @@ export function DocContextMenuActions({
     }
 
     try {
-      await fetchDocHtml({ updatedDoc })
+      await fetchDocHtml({
+        updatedDoc,
+        exportOptions: {
+          appTheme: settings['general.theme'],
+          codeBlockTheme: settings['general.codeBlockTheme'],
+          printBackground: settings['general.pdf.printBackground'],
+        } as ExportOptions,
+      })
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
@@ -159,7 +177,7 @@ export function DocContextMenuActions({
         description: error.message,
       })
     }
-  }, [subscription, getUpdatedDoc, fetchDocHtml, pushMessage])
+  }, [subscription, getUpdatedDoc, fetchDocHtml, settings, pushMessage])
 
   const exportAsPdf = useCallback(async () => {
     if (subscription == null) {
@@ -171,11 +189,14 @@ export function DocContextMenuActions({
     }
 
     try {
-      // const printOpts = {
-      //   printBackground: true,
-      //   pageSize: 'A4',
-      // }
-      await fetchDocPdf({ updatedDoc })
+      await fetchDocPdf({
+        updatedDoc,
+        exportOptions: {
+          appTheme: settings['general.theme'],
+          codeBlockTheme: settings['general.codeBlockTheme'],
+          printBackground: settings['general.pdf.printBackground'],
+        },
+      })
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
@@ -184,7 +205,7 @@ export function DocContextMenuActions({
         description: error.message,
       })
     }
-  }, [subscription, getUpdatedDoc, fetchDocPdf, pushMessage])
+  }, [subscription, getUpdatedDoc, fetchDocPdf, settings, pushMessage])
 
   const createTemplate = useCallback(async () => {
     return send(`${doc.id}-template`, 'create', {

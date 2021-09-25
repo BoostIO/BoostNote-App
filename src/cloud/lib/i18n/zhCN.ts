@@ -62,6 +62,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SettingsIndentType]: '编辑器缩进类型',
   [lngKeys.SettingsShowEditorToolbar]: '编辑器工具栏',
   [lngKeys.SettingsShowEditorLineNumbers]: '编辑器行号',
+  [lngKeys.SettingsPrintPdfBackground]: '打印 PDF 背景',
   [lngKeys.SettingsEnableEditorSpellcheck]: '拼写检查编辑器',
   [lngKeys.SettingsIndentSize]: '编辑器缩进大小',
   [lngKeys.SettingsUserForum]: '用户论坛（新！）',
@@ -469,6 +470,9 @@ const zhTranslation: TranslationSource = {
     'Invite your teammates to this space',
   [lngKeys.GeneralContent]: 'Content',
   [lngKeys.CreateNewCanvas]: 'Create new canvas (beta)',
+
+  [lngKeys.GeneralYes]: '是的',
+  [lngKeys.GeneralNo]: '不',
 }
 
 export default {

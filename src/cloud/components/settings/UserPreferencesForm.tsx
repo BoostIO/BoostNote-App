@@ -72,6 +72,15 @@ const UserPreferencesForm = () => {
     [setSettings]
   )
 
+  const selectPdfPrintBackground = useCallback(
+    (formOption: FormSelectOption) => {
+      setSettings({
+        'general.pdf.printBackground': formOption.value === 'Yes',
+      })
+    },
+    [setSettings]
+  )
+
   const selectEnableSpellcheck = useCallback(
     (formOption: FormSelectOption) => {
       setSettings({
@@ -376,6 +385,34 @@ const UserPreferencesForm = () => {
                   { label: t(lngKeys.GeneralTabs), value: 'tab' },
                 ],
               },
+            },
+          ],
+        },
+        {
+          title: t(lngKeys.SettingsPrintPdfBackground),
+          items: [
+            {
+              type: 'node',
+              element: (
+                <FormSelect
+                  options={[
+                    {
+                      label: t(lngKeys.GeneralYes),
+                      value: 'Yes',
+                    },
+                    { label: t(lngKeys.GeneralNo), value: 'No' },
+                  ]}
+                  value={{
+                    label: settings['general.pdf.printBackground']
+                      ? t(lngKeys.GeneralYes)
+                      : t(lngKeys.GeneralNo),
+                    value: settings['general.pdf.printBackground']
+                      ? 'Yes'
+                      : 'No',
+                  }}
+                  onChange={selectPdfPrintBackground}
+                />
+              ),
             },
           ],
         },

@@ -18,6 +18,7 @@ export interface UserSettings {
   'general.editorShowLineNumbers': boolean
   'general.showEditorToolbar': boolean
   'general.enableSpellcheck': boolean
+  'general.pdf.printBackground': boolean
 }
 
 export const codeMirrorEditorThemes = [

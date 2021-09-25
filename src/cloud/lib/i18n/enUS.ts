@@ -62,6 +62,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsIndentType]: 'Editor Indent Type',
   [lngKeys.SettingsShowEditorToolbar]: 'Editor Toolbar',
   [lngKeys.SettingsShowEditorLineNumbers]: 'Editor Line Numbers',
+  [lngKeys.SettingsPrintPdfBackground]: 'Print PDF Background',
   [lngKeys.SettingsEnableEditorSpellcheck]: 'Editor Spellcheck',
   [lngKeys.SettingsIndentSize]: 'Editor Indent Size',
   [lngKeys.SettingsUserForum]: 'User Forum (New!)',
@@ -493,6 +494,9 @@ const enTranslation: TranslationSource = {
     'Invite your teammates to this space',
 
   [lngKeys.GeneralContent]: 'Content',
+
+  [lngKeys.GeneralYes]: 'Yes',
+  [lngKeys.GeneralNo]: 'No',
 }
 
 export default {
