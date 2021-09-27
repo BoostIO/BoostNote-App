@@ -18,28 +18,47 @@ export interface ExportOptions {
 export async function getDocExportForPDF(
   teamId: string,
   docId: string,
+  title: string,
+  content: string,
   options?: ExportOptions
 ) {
   const queryParams = {
-    ...(options || {}),
     json: 1,
+    ...(options || {}),
+  }
+  const jsonData = {
+    title: title,
+    content: content,
+    docId: docId,
   }
   const queryStringifiedParams = queryString.stringify(queryParams)
-  const href = `api/teams/${teamId}/docs/${docId}/exports/pdf?${queryStringifiedParams}`
-  console.log('Calling api', href)
-  return callApi<GetDocPDFResponseBody>(href)
+  const href = `/api/teams/${teamId}/doc-exports/pdf?${queryStringifiedParams}`
+  return callApi<GetDocPDFResponseBody>(href, {
+    method: 'post',
+    json: jsonData,
+  })
 }
 
 export async function getDocExportForHTML(
   teamId: string,
   docId: string,
+  title: string,
+  content: string,
   options?: ExportOptions
 ) {
   const queryParams = {
-    ...(options || {}),
     json: 1,
+    ...(options || {}),
+  }
+  const jsonData = {
+    title: title,
+    content: content,
+    docId: docId,
   }
   const queryStringifiedParams = queryString.stringify(queryParams)
-  const href = `api/teams/${teamId}/docs/${docId}/exports/html?${queryStringifiedParams}`
-  return callApi<GetDocHTMLResponseBody>(href)
+  const href = `/api/teams/${teamId}/doc-exports/html?${queryStringifiedParams}`
+  return callApi<GetDocHTMLResponseBody>(href, {
+    method: 'post',
+    json: jsonData,
+  })
 }

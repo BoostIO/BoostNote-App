@@ -119,7 +119,14 @@ export function DocContextMenuActions({
     }: {
       updatedDoc: SerializedDocWithBookmark
       exportOptions: ExportOptions
-    }) => getDocExportForPDF(updatedDoc.teamId, updatedDoc.id, exportOptions),
+    }) =>
+      getDocExportForPDF(
+        updatedDoc.teamId,
+        updatedDoc.id,
+        updatedDoc.title,
+        updatedDoc.head != null ? updatedDoc.head.content : '',
+        exportOptions
+      ),
     cb: ({ buffer }: GetDocPDFResponseBody) => {
       const updatedDoc = getUpdatedDoc()
       const pdfName = `${filenamifyTitle(updatedDoc.title)}.pdf`
@@ -138,7 +145,14 @@ export function DocContextMenuActions({
     }: {
       updatedDoc: SerializedDocWithBookmark
       exportOptions: ExportOptions
-    }) => getDocExportForHTML(updatedDoc.teamId, updatedDoc.id, exportOptions),
+    }) =>
+      getDocExportForHTML(
+        updatedDoc.teamId,
+        updatedDoc.id,
+        updatedDoc.title,
+        updatedDoc.head != null ? updatedDoc.head.content : '',
+        exportOptions
+      ),
     cb: ({ html }: GetDocHTMLResponseBody) => {
       trackEvent(MixpanelActionTrackTypes.ExportHtml)
       const updatedDoc = getUpdatedDoc()
