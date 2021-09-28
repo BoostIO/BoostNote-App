@@ -23,7 +23,6 @@ const useToastStore = (): ToastStore => {
 
   const pushMessage = useCallback(
     ({ title, description, type = 'error', onClick }) => {
-      console.log(`setting new message: ${description}`)
       setMessages((prev) => {
         return [
           {
@@ -34,7 +33,7 @@ const useToastStore = (): ToastStore => {
             description,
             onClick,
           },
-          ...prev,
+          ...prev.slice(),
         ]
       })
     },
@@ -64,7 +63,7 @@ const useToastStore = (): ToastStore => {
           type: 'error',
           description,
         },
-        ...prev,
+        ...prev.slice(),
       ])
     },
     [setMessages]

@@ -80,7 +80,6 @@ const CombinedProvider = combineProviders(
 )
 
 const V2CombinedProvider = combineProviders(
-  V2ToastProvider,
   V2EmojiProvider,
   V2WindowProvider,
   V2ContextMenuProvider,
@@ -260,30 +259,32 @@ const Router = () => {
 
   return (
     <PageDataProvider pageProps={pageInfo.pageProps as any}>
-      <V2CombinedProvider>
-        <CombinedProvider>
-          <NavProvider>
-            <V2ThemeProvider>
-              {isApplicationPagePathname(pathname) && !pageInfo.isError ? (
-                <Application>
+      <V2ToastProvider>
+        <V2CombinedProvider>
+          <CombinedProvider>
+            <NavProvider>
+              <V2ThemeProvider>
+                {isApplicationPagePathname(pathname) && !pageInfo.isError ? (
+                  <Application>
+                    <pageInfo.Component {...pageInfo.pageProps} />
+                  </Application>
+                ) : (
                   <pageInfo.Component {...pageInfo.pageProps} />
-                </Application>
-              ) : (
-                <pageInfo.Component {...pageInfo.pageProps} />
-              )}
+                )}
 
-              <GlobalStyleV2 />
-              <CodeMirrorStyle />
-              <CloudModal />
-              <Toast />
-              <SettingsComponent />
-              <ContextMenu />
-              <EmojiPicker />
-              <Dialog />
-            </V2ThemeProvider>
-          </NavProvider>
-        </CombinedProvider>
-      </V2CombinedProvider>
+                <GlobalStyleV2 />
+                <CodeMirrorStyle />
+                <CloudModal />
+                <Toast />
+                <SettingsComponent />
+                <ContextMenu />
+                <EmojiPicker />
+                <Dialog />
+              </V2ThemeProvider>
+            </NavProvider>
+          </CombinedProvider>
+        </V2CombinedProvider>
+      </V2ToastProvider>
     </PageDataProvider>
   )
 }

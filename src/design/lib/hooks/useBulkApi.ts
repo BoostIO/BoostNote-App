@@ -55,12 +55,9 @@ const useBulkApi = () => {
             const splits = res.error.body.split('\n')[0].split(': ')
             splits.shift()
             res.error.description = splits
-          } catch (error) {
-            console.error(error)
-          }
+          } catch (error) {}
         }
 
-        console.log(error)
         pushMessage({
           title: res.error.status || 'Error',
           description: res.error.description || 'Something wrong happened',

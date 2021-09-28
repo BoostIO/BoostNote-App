@@ -15,7 +15,6 @@ import { lngKeys } from '../../../../lib/i18n/types'
 import FormSelect from '../../../../../design/components/molecules/Form/atoms/FormSelect'
 import { InputStreamsActions } from '../../../../../design/lib/stores/inputStreams'
 import GithubSourcePickerForm from './GithubSourcePickerForm'
-import { useToast } from '../../../../../design/lib/stores/toast'
 
 interface InputStreamSourcePickerModalProps {
   service: string
@@ -37,7 +36,6 @@ const InputStreamSourcePickerModal = ({
     SerializedTeamIntegration
   >()
   const [selectedSource, setSelectedSource] = useState<string>()
-  const { pushMessage } = useToast()
 
   const content = useMemo(() => {
     switch (service) {
@@ -75,12 +73,6 @@ const InputStreamSourcePickerModal = ({
     if (!res.err) {
       closeLastModal()
       return
-    } else {
-      const { status, description } = res.error as any
-      pushMessage({
-        title: status || 'Error',
-        description: description || 'Something wrong happened',
-      })
     }
 
     setSending(false)
@@ -93,7 +85,6 @@ const InputStreamSourcePickerModal = ({
     streams,
     actions,
     service,
-    pushMessage,
   ])
 
   return (
