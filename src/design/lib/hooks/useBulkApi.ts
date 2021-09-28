@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { useToast } from '../stores/toast'
 
 export type BulkApiActionRes =
-  | { err: true; error: unknown }
+  | { err: true; error: any }
   | { err: false; data: any }
 
 export type BulkApiAction = (
@@ -18,11 +18,11 @@ interface UseBulkApiRes {
 
 const useBulkApi = () => {
   const [sendingMap, setSendingMap] = useState<Map<string, string>>(new Map())
-  const { pushApiErrorMessage } = useToast()
+  const { pushMessage } = useToast()
 
   const send = useCallback(
     async (id: string, act: string, { api, cb }) => {
-      const res = { err: false, error: undefined, data: undefined }
+      let res: BulkApiActionRes = { err: false, data: {} }
       if (sendingMap.get(id)) {
         return
       }
@@ -40,10 +40,31 @@ const useBulkApi = () => {
           cb(data)
         }
       } catch (error) {
-        res.err = true
-        res.error = error
-        console.error(error)
-        pushApiErrorMessage(error)
+        res = {
+          err: true,
+          error: {},
+        }
+
+        if (
+          error.response != null &&
+          typeof error.response.text === 'function'
+        ) {
+          try {
+            res.error.status = error.response.status.toString()
+            res.error.body = await error.response.text()
+            const splits = res.error.body.split('\n')[0].split(': ')
+            splits.shift()
+            res.error.description = splits
+          } catch (error) {
+            console.error(error)
+          }
+        }
+
+        console.log(error)
+        pushMessage({
+          title: res.error.status || 'Error',
+          description: res.error.description || 'Something wrong happened',
+        })
       }
 
       setSendingMap((prev) => {
@@ -54,7 +75,7 @@ const useBulkApi = () => {
 
       return res
     },
-    [sendingMap, pushApiErrorMessage]
+    [sendingMap, pushMessage]
   )
 
   return {

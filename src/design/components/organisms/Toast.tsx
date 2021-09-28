@@ -10,6 +10,7 @@ import {
   mdiInformationOutline,
 } from '@mdi/js'
 import Icon from '../atoms/Icon'
+import Scroller from '../atoms/Scroller'
 
 interface ToastItemProps {
   item: ToastMessage
@@ -106,7 +107,7 @@ const Container = styled.div`
 
 class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
   state = {
-    remaining: 3000,
+    remaining: 300000000,
     timer: 0,
   }
 
@@ -163,14 +164,14 @@ class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
             }
           />
         </div>
-        <div className='toast__item__content'>
+        <Scroller className='toast__item__content'>
           <strong className='toast__item__title'>
             {this.props.item.title}
           </strong>
           <p className='toast__item__description'>
             {this.props.item.description}
           </p>
-        </div>
+        </Scroller>
         <Button
           className='toast__item__close'
           variant='icon'

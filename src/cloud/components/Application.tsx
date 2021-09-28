@@ -333,7 +333,7 @@ const Application = ({
                 icon: mdiCog,
                 variant: 'transparent',
                 labelClick: () => {
-                  openSettingsTab('teamMembers')
+                  openSettingsTab('integrations.github')
                   trackEvent(MixpanelActionTrackTypes.InviteFromSidenav)
                 },
                 id: 'sidebar__button__members',

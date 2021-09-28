@@ -23,6 +23,7 @@ const useToastStore = (): ToastStore => {
 
   const pushMessage = useCallback(
     ({ title, description, type = 'error', onClick }) => {
+      console.log(`setting new message: ${description}`)
       setMessages((prev) => {
         return [
           {
@@ -49,7 +50,9 @@ const useToastStore = (): ToastStore => {
         try {
           title = error.response.status.toString()
           const errorMessage = await error.response.text()
-          description = errorMessage.split('\n')[0].split(': ')[1]
+          const splits = errorMessage.split('\n')[0].split(': ')
+          splits.shift()
+          description = splits
         } catch (error) {}
       }
 

@@ -18,6 +18,13 @@ export async function deleteTeamIntegration(
 }
 
 export interface IntegrationActionTypes {
+  ['user:repos']: {
+    id: string
+    name: string
+    owner: {
+      login: string
+    }
+  }[]
   ['orgs:list']: {
     id: string
     login: string
