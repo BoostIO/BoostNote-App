@@ -19,7 +19,7 @@ type Repo = IntegrationActionTypes['user:repos'][number] & {
   private?: boolean
   full_name?: string
 }
-const perPagePerQuery = 10
+const perPagePerQuery = 100
 
 const GithubSourcePickerForm = ({
   integration,
