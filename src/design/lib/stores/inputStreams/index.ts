@@ -1,6 +1,6 @@
 import { createStoreContext } from '../../utils/context'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
-import { useState, useRef, useCallback, useEffect } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { useToast } from '../toast'
 import {
   SerializedInputStream,
@@ -43,12 +43,14 @@ export type TeamInputStreamsState =
       streams: SerializedInputStream[]
       actions: InputStreamsActions
       sendingMap: Map<string, string>
+      setStreams: React.Dispatch<React.SetStateAction<SerializedInputStream[]>>
     }
   | {
       initialized: true
       streams: SerializedInputStream[]
       actions: InputStreamsActions
       sendingMap: Map<string, string>
+      setStreams: React.Dispatch<React.SetStateAction<SerializedInputStream[]>>
     }
 
 function useTeamInputStreamsStore(): TeamInputStreamsState {
@@ -199,6 +201,7 @@ function useTeamInputStreamsStore(): TeamInputStreamsState {
   return {
     initialized: true,
     streams: inputStreams,
+    setStreams: setInputStreams,
     sendingMap,
     actions: {
       removeInputStream,

@@ -9,6 +9,7 @@ import { useTeamInputStreams } from '../../../design/lib/stores/inputStreams'
 import { useTeamIntegrations } from '../../../design/lib/stores/integrations'
 import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
+import { SerializedTeamIntegration } from '../../interfaces/db/connections'
 import { SerializedSource } from '../../interfaces/db/inputStream'
 import { boostHubBaseUrl } from '../../lib/consts'
 import { useI18n } from '../../lib/hooks/useI18n'
@@ -39,6 +40,22 @@ const IntegrationManager = ({
   const { team } = usePage()
   const { translate } = useI18n()
   const { openModal } = useModal()
+
+  const removeIntegration = useCallback(
+    async (integration: SerializedTeamIntegration) => {
+      if (integrationState.type === 'initialising') {
+        return
+      }
+      integrationState.actions.removeIntegration(integration).then(() => {
+        if (streamsState.initialized) {
+          streamsState.setStreams((prev) =>
+            prev.filter((stream) => stream.integrationId !== integration.id)
+          )
+        }
+      })
+    },
+    [integrationState, streamsState]
+  )
 
   const addIntegration = useCallback(
     (integration: Integration) => {
@@ -120,7 +137,7 @@ const IntegrationManager = ({
                 <Button
                   variant='danger'
                   onClick={() => {
-                    integrationState.actions.removeIntegration(integration)
+                    removeIntegration(integration)
                   }}
                 >
                   {translate(lngKeys.GeneralRemoveVerb)}
