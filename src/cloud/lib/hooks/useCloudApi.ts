@@ -181,8 +181,12 @@ export function useCloudApi() {
               childFoldersIds: [],
             },
           ])
+
           if (res.folder.parentFolderId != null) {
-            const parentFolder = foldersMap.get(res.folder.parentFolderId)
+            const parentFolder =
+              res.parentFolder == null
+                ? foldersMap.get(res.folder.parentFolderId)
+                : res.parentFolder
             if (parentFolder != null) {
               updateFoldersMap([
                 parentFolder.id,
