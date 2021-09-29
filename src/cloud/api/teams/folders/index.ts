@@ -18,6 +18,7 @@ export interface CreateFolderRequestBody {
 
 export interface CreateFolderResponseBody {
   folder: SerializedFolderWithBookmark
+  parentFolder: SerializedFolderWithBookmark
 }
 
 export async function createFolder(
