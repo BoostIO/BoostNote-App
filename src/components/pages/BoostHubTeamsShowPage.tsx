@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
-import { getBoostHubTeamPageUrl } from '../../lib/boosthub'
+import { getBoostHubHomepageUrl } from '../../lib/boosthub'
 import { DidNavigateInPageEvent, DidNavigateEvent } from 'electron'
 import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
@@ -22,18 +22,10 @@ import {
 import { uiTextColor } from '../../lib/styled/styleFunctionsLocal'
 import Button from '../../design/components/atoms/Button'
 
-interface BoostHubTeamsShowPageProps {
-  active: boolean
-  domain: string
-}
-
-const BoostHubTeamsShowPage = ({
-  active,
-  domain,
-}: BoostHubTeamsShowPageProps) => {
+const BoostHubTeamsShowPage = () => {
   const webviewControlRef = useRef<WebviewControl>()
-  const teamPageUrl = getBoostHubTeamPageUrl(domain)
-  const [url, setUrl] = useState(teamPageUrl)
+  const homepageUrl = getBoostHubHomepageUrl()
+  const [url, setUrl] = useState(homepageUrl)
 
   const updateUrl = useCallback(
     (event: DidNavigateInPageEvent | DidNavigateEvent) => {
@@ -43,10 +35,6 @@ const BoostHubTeamsShowPage = ({
   )
 
   useEffect(() => {
-    if (!active) {
-      return
-    }
-
     const toggleOpenDiscountModalHandler = () => {
       webviewControlRef.current!.sendMessage('modal-discount')
     }
@@ -171,17 +159,15 @@ const BoostHubTeamsShowPage = ({
       removeIpcListener('apply-italic-style', applyItalicStyle)
       removeIpcListener('toggle-settings', toggleSettings)
     }
-  }, [active])
+  }, [])
 
   // Release focus before hiding webview
   useEffect(() => {
-    if (active) {
-      webviewControlRef.current!.focus()
-    }
+    webviewControlRef.current!.focus()
     return () => {
       window.focus()
     }
-  }, [active])
+  }, [])
 
   const [refusedConnection, setRefusedConnection] = useState(false)
 
@@ -206,7 +192,7 @@ const BoostHubTeamsShowPage = ({
   )
 
   return (
-    <Container key={domain} className={active ? 'active' : ''}>
+    <Container className={'active'}>
       <div className='webview'>
         <BoostHubWebview
           src={url}

@@ -25,6 +25,7 @@ import { lngKeys } from '../lib/i18n/types'
 import { SpaceUsageIntent } from '../components/Onboarding/UsageFormRow'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 import { trackEvent } from '../api/track'
+import { useRouter } from '../lib/router'
 
 const CooperatePage = () => {
   const [intent, setIntent] = useState<SpaceUsageIntent>()
@@ -45,6 +46,7 @@ const CooperatePage = () => {
     doc: SerializedDoc
     openInvite: SerializedOpenInvite
   }>()
+  const { push } = useRouter()
 
   const changeHandler = useCallback((file: File) => {
     setIconFile(file)
@@ -175,7 +177,7 @@ const CooperatePage = () => {
             iconSize={34}
             iconPath={mdiClose}
             onClick={() => {
-              sendToElectron('router', 'back')
+              push('/desktop')
             }}
             className='electron__goback'
           />

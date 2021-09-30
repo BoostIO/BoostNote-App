@@ -125,7 +125,7 @@
   }
 
   function openNewWindow(options) {
-    return new electron.remote.BrowserWindow(options)
+    electron.remote.ipcMain.emit('new-window-event', options)
   }
 
   function openContextMenu(options) {

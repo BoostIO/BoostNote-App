@@ -15,16 +15,13 @@ import {
 } from '../lib/events'
 import { parse as parseUrl } from 'url'
 import { openNew } from '../lib/platform'
-import BoostHubLoginPage from './pages/BoostHubLoginPage'
 import { ObjectMap, NoteStorage, FSNoteStorage } from '../lib/db/types'
-import { useGeneralStatus } from '../lib/generalStatus'
 import NotFoundErrorPage from './pages/NotFoundErrorPage'
 
 const Router = () => {
   const routeParams = useRouteParams()
   const { storageMap } = useDb()
   const { push, goBack, goForward } = useRouter()
-  const { generalStatus } = useGeneralStatus()
 
   useEffect(() => {
     const boostHubAppRouterEventHandler = (event: BoostHubAppRouterEvent) => {
@@ -57,6 +54,7 @@ const Router = () => {
       }
       const pathnameElements = pathname!.slice(1).split('/')
       const firstPathnameElement = pathnameElements[0]
+      console.log('Element is', firstPathnameElement)
       switch (firstPathnameElement) {
         case 'account':
           if (pathnameElements[1] === 'delete') {
@@ -99,24 +97,7 @@ const Router = () => {
   }, [push])
 
   useRedirect()
-
-  return (
-    <>
-      {useContent(routeParams, storageMap)}
-      {generalStatus.boostHubTeams.map((team) => {
-        const active =
-          routeParams.name === 'boosthub.teams.show' &&
-          routeParams.domain === team.domain
-        return (
-          <BoostHubTeamsShowPage
-            active={active}
-            key={team.domain}
-            domain={team.domain}
-          />
-        )
-      })}
-    </>
-  )
+  return <>{useContent(routeParams, storageMap)}</>
 }
 
 export default Router
@@ -127,13 +108,13 @@ function useContent(
 ) {
   switch (routeParams.name) {
     case 'boosthub.login':
-      return <BoostHubLoginPage />
+    case 'boosthub.teams.show':
+      return <BoostHubTeamsShowPage />
     case 'boosthub.teams.create':
       return <BoostHubTeamsCreatePage />
     case 'boosthub.account.delete':
       return <BoostHubAccountDeletePage />
-    case 'boosthub.teams.show':
-      return null
+
     case 'local': {
       const { workspaceId } = routeParams
       const storage = storageMap[workspaceId]
