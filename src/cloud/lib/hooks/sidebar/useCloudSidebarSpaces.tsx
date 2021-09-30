@@ -11,7 +11,7 @@ import { stringify } from 'yaml'
 import { useI18n } from '../useI18n'
 import { lngKeys } from '../../i18n/types'
 import { capitalize } from 'lodash'
-import { sendToHost, usingElectron } from '../../stores/electron'
+import { usingElectron } from '../../stores/electron'
 
 export function useCloudSidebarSpaces() {
   const {
@@ -67,7 +67,9 @@ export function useCloudSidebarSpaces() {
           onClick: (event: React.MouseEvent) => {
             event.preventDefault()
             if (usingElectron) {
-              sendToHost('request-app-navigate', `/${globalTeam.domain}`)
+              // todo: [komediruzecki-2021-10-12] Fix teams navigation in electron - this should be fine fix for now
+              // sendToHost('request-app-navigate', `/${globalTeam.domain}`)
+              push(href)
             } else {
               push(href)
             }

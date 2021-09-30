@@ -31,6 +31,10 @@ export function openLoginPage(state: string) {
   openNew(loginPageUrl)
 }
 
+export function getBoostHubHomepageUrl() {
+  return `${process.env.BOOST_HUB_BASE_URL}/desktop`
+}
+
 export function getBoostHubTeamPageUrl(teamName: string) {
   return `${process.env.BOOST_HUB_BASE_URL}/${teamName}`
   // if (process.env.NODE_ENV !== 'production') {

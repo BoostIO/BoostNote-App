@@ -33,6 +33,66 @@ function applyMenuTemplate(template: MenuItemConstructorOptions[]) {
   Menu.setApplicationMenu(menu)
 }
 
+function createAWindow(options: BrowserWindowConstructorOptions) {
+  const windowOptions: BrowserWindowConstructorOptions = {
+    webPreferences: {
+      nodeIntegration: true,
+      webSecurity: !dev,
+      webviewTag: true,
+      enableRemoteModule: true,
+      contextIsolation: false,
+      preload: dev
+        ? path.join(app.getAppPath(), '../static/main-preload.js')
+        : path.join(app.getAppPath(), './compiled/app/static/main-preload.js'),
+    },
+    width: 1200,
+    height: 800,
+    minWidth: 960,
+    minHeight: 630,
+    ...options,
+  }
+
+  const window = new BrowserWindow(windowOptions)
+
+  if (dev) {
+    window.loadURL(`http://localhost:3000/app`, {
+      userAgent: session.defaultSession.getUserAgent() + ` BoostNote`,
+    })
+  } else {
+    window.loadURL(
+      url.format({
+        pathname: path.join(app.getAppPath(), './compiled/index.html'),
+        protocol: 'file',
+        slashes: true,
+      })
+    )
+  }
+
+  applyMenuTemplate(getTemplateFromKeymap(keymap))
+
+  if (MAC) {
+    window.on('close', (event) => {
+      event.preventDefault()
+      window.hide()
+    })
+
+    app.on('before-quit', () => {
+      window.removeAllListeners()
+    })
+
+    autoUpdater.on('before-quit-for-update', () => {
+      window.removeAllListeners()
+    })
+  }
+
+  // handle window close - check if all closed and remove 'main'
+  // window.on('closed', () => {
+  //   mainWindow = null
+  // })
+
+  return window
+}
+
 function createMainWindow() {
   const windowOptions: BrowserWindowConstructorOptions = {
     webPreferences: {
@@ -155,6 +215,11 @@ app.on('ready', () => {
 
     keymap.set(menuItemId, newAcceleratorShortcut)
     applyMenuTemplate(getTemplateFromKeymap(keymap))
+  })
+
+  // multiple windows support
+  ipcMain.on('new-window-event', (windowOptions) => {
+    return createAWindow(windowOptions)
   })
 
   app.on('open-url', (_event, url) => {

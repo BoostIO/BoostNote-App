@@ -35,7 +35,11 @@ import {
   boostHubCreateCloudSpaceEventEmitter,
 } from '../../lib/events'
 import { usePreferences } from '../../lib/preferences'
-import { openContextMenu, openExternal } from '../../lib/electronOnly'
+import {
+  openContextMenu,
+  openExternal,
+  openNewWindow,
+} from '../../lib/electronOnly'
 import { DidFailLoadEvent } from 'electron/main'
 import styled from '../../design/lib/styled'
 
@@ -144,6 +148,9 @@ const BoostHubWebview = ({
 
     const ipcMessageEventHandler = (event: IpcMessageEvent) => {
       switch (event.channel) {
+        case 'new-window':
+          openNewWindow()
+          break
         case 'new-space':
           boostHubCreateCloudSpaceEventEmitter.dispatch()
           break

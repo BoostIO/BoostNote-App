@@ -71,6 +71,7 @@ import {
 } from '../../../../design/components/organisms/Sidebar/molecules/SidebarTree'
 import { CATEGORY_DRAG_TRANSFER_DATA_JSON } from '../../../interfaces/resources'
 import LabelsManagementModal from '../../../components/Modal/contents/LabelsManagementModal'
+import { useElectron } from '../../stores/electron'
 
 export function useCloudSidebarTree() {
   const { team, currentUserIsCoreMember } = usePage()
@@ -80,6 +81,7 @@ export function useCloudSidebarTree() {
   const { messageBox } = useDialog()
   const { translate } = useI18n()
   const { showSearchScreen } = useSearch()
+  const { sendToElectron, usingElectron } = useElectron()
 
   const {
     initialLoadDone,
@@ -589,7 +591,12 @@ export function useCloudSidebarTree() {
           defaultIcon: mdiTag,
           href,
           active: !showSearchScreen && href === currentPathWithDomain,
-          navigateTo: () => push(href),
+          navigateTo: () => {
+            if (usingElectron) {
+              sendToElectron('new-window', 'labels')
+            }
+            push(href)
+          },
         })
         return acc
       }, [] as SidebarTreeChildRow[])

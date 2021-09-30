@@ -34,7 +34,7 @@ const __ELECTRON_ONLY__: {
   ): Promise<Electron.SaveDialogReturnValue>
   openExternal(url: string): void
   openPath(fullPath: string, folderOnly?: boolean): void
-  openNewWindow(options: BrowserWindowConstructorOptions): BrowserWindow
+  openNewWindow(options?: BrowserWindowConstructorOptions): BrowserWindow
   openContextMenu(options: { menuItems: MenuItemConstructorOptions[] }): void
   getPathByName(name: string): string
   addIpcListener(
