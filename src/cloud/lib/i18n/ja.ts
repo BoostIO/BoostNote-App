@@ -498,7 +498,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.CreateNewCanvas]: 'Create new canvas (beta)',
 
   [lngKeys.GeneralYes]: 'はい',
-  [lngKeys.GeneralNo]: '番号',
+  [lngKeys.GeneralNo]: 'いいえ',
 }
 
 export default {
