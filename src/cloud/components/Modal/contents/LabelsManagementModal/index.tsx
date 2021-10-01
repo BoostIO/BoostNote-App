@@ -85,7 +85,7 @@ const LabelsManagementModal = () => {
     }, [] as SerializedDoc[])
   }, [selectedTagId, docsPerTagIdMap, docsMap])
 
-  const { sendingMap, deleteTagApi } = useCloudApi()
+  const { sendingMap, deleteTagApi, updateTagApi } = useCloudApi()
 
   return (
     <LabelsManagementModalContainer>
@@ -102,10 +102,11 @@ const LabelsManagementModal = () => {
               }
               docs={selectedTagDocs}
               deleteTag={deleteTagApi}
+              updateTag={updateTagApi}
               sending={
                 selectedTagId == null
-                  ? false
-                  : sendingMap.get(selectedTagId) != null
+                  ? undefined
+                  : sendingMap.get(selectedTagId)
               }
               team={team}
             />

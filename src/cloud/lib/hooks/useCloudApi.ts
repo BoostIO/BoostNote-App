@@ -73,7 +73,12 @@ import {
   FolderDataTransferItem,
 } from '../../interfaces/resources'
 import { SerializedTag } from '../../interfaces/db/tag'
-import { deleteTag } from '../../api/teams/tags'
+import {
+  deleteTag,
+  updateTag,
+  UpdateTagRequestBody,
+  UpdateTagResponseBody,
+} from '../../api/teams/tags'
 
 export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
@@ -432,6 +437,54 @@ export function useCloudApi() {
     ]
   )
 
+  const updateTagApi = useCallback(
+    async (target: SerializedTag, body: UpdateTagRequestBody) => {
+      await send(target.id, 'update', {
+        api: () => updateTag(target.teamId, target.id, body),
+        cb: ({ tag: updatedTag }: UpdateTagResponseBody) => {
+          updateTagsMap([updatedTag.id, updatedTag])
+          if (
+            pageDoc != null &&
+            (pageDoc.tags || []).find((tag) => tag.id === target.id)
+          ) {
+            const doc = Object.assign({}, pageDoc)
+            doc.tags = (pageDoc.tags || []).reduce((acc, tag) => {
+              if (tag.id === target.id) {
+                acc.push(updatedTag)
+              } else {
+                acc.push(tag)
+              }
+              return acc
+            }, [] as SerializedTag[])
+
+            setPartialPageData({ pageDoc: doc })
+          }
+
+          const impactedDocs = [...docsMap.values()]
+            .filter((doc) =>
+              (doc.tags || []).find((tag) => tag.id === target.id)
+            )
+            .map((doc) => {
+              return {
+                ...doc,
+                tags: (doc.tags || []).reduce((acc, tag) => {
+                  if (tag.id === target.id) {
+                    acc.push(updatedTag)
+                  } else {
+                    acc.push(tag)
+                  }
+                  return acc
+                }, [] as SerializedTag[]),
+              }
+            })
+
+          updateDocsMap(...getMapFromEntityArray(impactedDocs))
+        },
+      })
+    },
+    [send, updateTagsMap, pageDoc, docsMap, updateDocsMap, setPartialPageData]
+  )
+
   const updateDocStatusApi = useCallback(
     async (target: SerializedDoc, newStatus: DocStatus | null) => {
       await send(target.id, 'status', {
@@ -661,5 +714,6 @@ export function useCloudApi() {
     updateDocDueDateApi,
     updateDocTagsBulkApi,
     deleteTagApi,
+    updateTagApi,
   }
 }

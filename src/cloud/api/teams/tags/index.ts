@@ -27,6 +27,26 @@ export async function createTag(
   return data
 }
 
+export interface UpdateTagResponseBody {
+  tag: SerializedTag
+}
+
+export interface UpdateTagRequestBody {
+  text: string
+}
+
+export async function updateTag(
+  teamId: string,
+  tagId: string,
+  body: UpdateTagRequestBody
+) {
+  const data = await callApi<{}>(`api/teams/${teamId}/tags/${tagId}`, {
+    method: 'put',
+    json: body,
+  })
+  return data
+}
+
 export async function deleteTag(teamId: string, tagId: string) {
   const data = await callApi<{}>(`api/teams/${teamId}/tags/${tagId}`, {
     method: 'delete',
