@@ -16,11 +16,15 @@ import { useModal } from '../../../../../design/lib/stores/modal'
 import { getDocLinkHref } from '../../../Link/DocLink'
 import { SerializedTeam } from '../../../../interfaces/db/team'
 import UpDownList from '../../../../../design/components/atoms/UpDownList'
+import EditableInput from '../../../../../design/components/atoms/EditableInput'
+import { UpdateTagRequestBody } from '../../../../api/teams/tags'
+import Spinner from '../../../../../design/components/atoms/Spinner'
 
 interface LabelsManagementModalDetailProps {
   tag?: SerializedTag
-  sending?: boolean
+  sending?: string
   deleteTag: (tag: SerializedTag) => void
+  updateTag: (tag: SerializedTag, body: UpdateTagRequestBody) => void
   team: SerializedTeam
   docs: SerializedDoc[]
 }
@@ -28,7 +32,7 @@ interface LabelsManagementModalDetailProps {
 const LabelsManagementModalDetail = forwardRef<
   HTMLDivElement,
   LabelsManagementModalDetailProps
->(({ tag, deleteTag, docs, team, sending }, ref) => {
+>(({ tag, deleteTag, updateTag, docs, team, sending }, ref) => {
   const { push } = useRouter()
   const { closeAllModals } = useModal()
   return (
@@ -51,17 +55,25 @@ const LabelsManagementModalDetail = forwardRef<
                 alignItems='center'
               >
                 <Icon path={mdiTag} />
-                <span>{tag.text}</span>
+                <EditableInput
+                  disabled={sending != null}
+                  placeholder={'Label...'}
+                  text={tag.text}
+                  onTextChange={(newText) => updateTag(tag, { text: newText })}
+                />
               </Flexbox>
-              <LoadingButton
-                size='sm'
-                variant='icon'
-                iconPath={mdiTrashCanOutline}
-                disabled={sending}
-                spinning={sending}
-                onClick={() => deleteTag(tag)}
-                id='delete__tag__btn'
-              />
+              <Flexbox flex='0 0 auto'>
+                {sending === 'update' && <Spinner />}
+                <LoadingButton
+                  size='sm'
+                  variant='icon'
+                  iconPath={mdiTrashCanOutline}
+                  disabled={sending != null}
+                  spinning={sending === 'delete'}
+                  onClick={() => deleteTag(tag)}
+                  id='delete__tag__btn'
+                />
+              </Flexbox>
             </>
           )}
         </Flexbox>

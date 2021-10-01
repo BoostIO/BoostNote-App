@@ -20,6 +20,7 @@ interface EditableInputProps {
   placeholder?: string
   text: string
   onTextChange: (newText: string) => void
+  disabled?: boolean
   onKeydownConfirm?: () => void
 }
 
@@ -31,6 +32,7 @@ type EditableInput = {
 const EditableInput = ({
   editOnStart = false,
   placeholder,
+  disabled,
   text,
   onTextChange,
   onKeydownConfirm,
@@ -125,6 +127,7 @@ const EditableInput = ({
             onChange={updateNewText}
             value={newText}
             onKeyDown={handleTextInputKeyDown}
+            disabled={disabled}
           />
           <Button
             variant='icon'
@@ -132,6 +135,7 @@ const EditableInput = ({
             iconSize={16}
             type='submit'
             size='sm'
+            disabled={disabled}
           />
         </form>
       ) : (
@@ -140,6 +144,7 @@ const EditableInput = ({
           className='editable__input__btn'
           onClick={startEditingText}
           size='sm'
+          disabled={disabled}
         >
           <span className='editable__input__btn__label'>
             {text.trim().length === 0 ? 'Untitled' : text}
