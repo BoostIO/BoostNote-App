@@ -38,6 +38,8 @@ const EditableInput = ({
   onKeydownConfirm,
 }: EditableInputProps) => {
   const titleInputRef = useRef<HTMLInputElement>(null)
+  const textRef = useRef(text)
+
   const [editingText, setEditingText] = useState(editOnStart)
   const [newText, setNewText] = useState(() => {
     return text || ''
@@ -56,6 +58,15 @@ const EditableInput = ({
       titleInputRef.current.focus()
     }
   }, [editingText])
+
+  useEffect(() => {
+    if (textRef.current === text) {
+      return
+    }
+
+    textRef.current = text
+    setEditingText(false)
+  }, [text])
 
   const updateNewText: ChangeEventHandler<HTMLInputElement> = useCallback(
     (event) => {
