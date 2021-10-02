@@ -103,6 +103,7 @@ import {
 } from '../../lib/subscription'
 import { nginxSizeLimitInMb } from '../../lib/upload'
 import CustomizedMarkdownPreviewer from '../MarkdownView/CustomizedMarkdownPreviewer'
+import BottomBarButton from '../BottomBarButton'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -1067,20 +1068,6 @@ const Editor = ({
               settings['general.showEditorToolbar'] && (
                 <StyledLayoutDimensions className={editorLayout}>
                   <ToolbarRow>
-                    <EditorToolButton
-                      tooltip={
-                        scrollSync
-                          ? translate(
-                              lngKeys.EditorToolbarTooltipScrollSyncDisable
-                            )
-                          : translate(
-                              lngKeys.EditorToolbarTooltipScrollSyncEnable
-                            )
-                      }
-                      path={scrollSync ? mdiRepeatOff : mdiRepeat}
-                      onClick={toggleScrollSync}
-                      className='scroll-sync'
-                    />
                     <EditorToolbar editorRef={editorRef} />
                     <EditorToolbarUpload
                       editorRef={editorRef}
@@ -1153,6 +1140,12 @@ const Editor = ({
                   cursor={selection.currentCursor}
                   selections={selection.currentSelections}
                 />
+                <BottomBarButton
+                  className='scroll-sync'
+                  onClick={toggleScrollSync}
+                >
+                  <Icon path={scrollSync ? mdiRepeat : mdiRepeatOff} />
+                </BottomBarButton>
                 <EditorKeyMapSelect />
                 <EditorThemeSelect />
                 <EditorIndentationStatus />
