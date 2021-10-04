@@ -49,7 +49,7 @@ import EditorToolButton from './EditorToolButton'
 import { not } from 'ramda'
 import EditorToolbarUpload from './EditorToolbarUpload'
 import { useNav } from '../../lib/stores/nav'
-import { Hint } from 'codemirror'
+import { Hint, ModeInfo, modeInfo } from 'codemirror'
 import { SerializedTemplate } from '../../interfaces/db/template'
 import TemplatesModal from '../Modal/contents/TemplatesModal'
 import EditorSelectionStatus from './EditorSelectionStatus'
@@ -173,6 +173,7 @@ const Editor = ({
   const initialRenderDone = useRef(false)
   const { docsMap, workspacesMap, loadDoc } = useNav()
   const suggestionsRef = useRef<Hint[]>([])
+  const cmModeInfoRef = useRef<ModeInfo[]>([])
   const { sendingMap, toggleDocBookmark } = useCloudApi()
   const mountedRef = useRef(false)
 
@@ -451,6 +452,51 @@ const Editor = ({
     })
     editor.on('inputRead', (_, change) => {
       if (change.origin !== '+input') return
+
+      const lineContent = editor.getLine(change.to.line)
+      if (lineContent === '~~~' || lineContent === '```') {
+        editor.showHint({
+          container: editor.getWrapperElement(),
+          closeOnUnfocus: false,
+          alignWithWord: true,
+          closeCharacters: /[\n]/,
+          hint: () => {
+            const line = editor.getLine(editor.getCursor().line)
+            const filter = line.slice(3).toLowerCase()
+
+            const list = cmModeInfoRef.current
+              .filter((mode) => {
+                return (
+                  (mode.name != null &&
+                    mode.name.toLowerCase().includes(filter)) ||
+                  mode.mode.includes(filter) ||
+                  (mode.alias != null &&
+                    mode.alias.findIndex((alias) =>
+                      alias.toLowerCase().includes(filter)
+                    ) >= 0)
+                )
+              })
+              .map((mode) => {
+                return {
+                  text: `${lineContent}${mode.mode}\n\n${lineContent}`,
+                  displayText: mode.name,
+                  hint: (_cm: any, data: any, cur: Hint) => {
+                    editor.replaceRange(cur.text, data.from, data.to)
+                    editor.setCursor({
+                      line: change.to.line + 1,
+                      ch: 0,
+                    })
+                  },
+                }
+              })
+            return {
+              from: { ch: 0, line: change.to.line },
+              to: { ch: line.length, line: change.to.line },
+              list,
+            }
+          },
+        })
+      }
 
       if (editor.getLine(change.to.line) === '[[') {
         editor.showHint({
@@ -790,6 +836,10 @@ const Editor = ({
       }
     })
   }, [docsMap, workspacesMap])
+
+  useEffect(() => {
+    cmModeInfoRef.current = modeInfo.filter((mode) => mode.mode != null)
+  }, [])
 
   useEffect(() => {
     if (syncScroll.current != null) {
