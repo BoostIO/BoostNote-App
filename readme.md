@@ -51,6 +51,8 @@ If you're interested in our project, you can participate in many different ways.
 - Helping community
 - Resolving existing issues
 
+Read our [contributing guide](CONTRIBUTING.md), to learn about our development process, how to propose bugfixes and improvements.
+
 ### Sharing your idea
 
 To improve the app, we need your idea! It could be a new feature or an improvement for existing features. If you have any, please create a discussion in [Feature Requests category](https://github.com/BoostIO/BoostNote-App/discussions/categories/feature-requests).
