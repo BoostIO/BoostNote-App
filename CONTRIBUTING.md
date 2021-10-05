@@ -21,3 +21,7 @@ propose changes to this document in a pull request.
   - Error output that appears in your terminal, dev tools or as an alert
   - Perform a [cursory search](https://github.com/BoostIO/BoostNote-App/issues?utf8=✓&q=is%3Aissue+)
     to see if a similar issue has already been submitted
+
+## Development workflow
+
+To setup and run BoostNote locally, checkout our [development doc](docs/development.md) to help you get started.
