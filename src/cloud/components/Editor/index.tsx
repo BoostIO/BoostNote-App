@@ -1442,17 +1442,7 @@ const StyledEditor = styled.div`
       font-size: ${({ theme }) => theme.sizes.fonts.xsm}px;
     }
     li.CodeMirror-hint-active {
-      color: ${({ theme }) => theme.colors.variants.primary.base};
-      &:before {
-        content: '';
-        display: block;
-        position: absolute;
-        top: 3px;
-        left: ${({ theme }) => theme.sizes.spaces.xsm}px;
-        width: 3px;
-        height: 22px;
-        background-color: ${({ theme }) => theme.colors.variants.primary.base};
-      }
+      background-color: ${({ theme }) => theme.colors.background.tertiary};
     }
     & .remote-caret {
       position: relative;
