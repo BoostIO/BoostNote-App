@@ -435,15 +435,30 @@ const Editor = ({
       closeMenu: () => {
         setShortcodeConvertMenu(null)
       },
-      formatter: (pasted) => {
-        const githubRegex = /https:\/\/github.com\/([^\/\s]+)\/([^\/\s]+)\/(pull|issues)\/(\d+)/
-        const githubMatch = githubRegex.exec(pasted)
-        if (githubMatch == null) {
-          return null
+      formatter: (lines) => {
+        if (lines.length === 1) {
+          const githubRegex = /https:\/\/github.com\/([^\/\s]+)\/([^\/\s]+)\/(pull|issues)\/(\d+)/
+          const githubMatch = githubRegex.exec(lines[0])
+          if (githubMatch != null) {
+            const [, org, repo, type, num] = githubMatch
+            const entityType = type === 'pull' ? 'github.pr' : 'github.issue'
+            return `[[ ${entityType} id="${org}/${repo}#${num}" ]]`
+          }
+        } else {
+          const tableRegex = /\t/
+          const tableMatch = tableRegex.test(lines[0])
+          if (tableMatch) {
+            const linesInCols = lines.map((line) => line.split('\t'))
+            const cols = Math.max(...linesInCols.map((line) => line.length))
+
+            linesInCols.splice(1, 0, new Array(cols).fill('-'))
+            return linesInCols
+              .map((cols) => '| ' + cols.join(' | ') + ' |')
+              .join('\n')
+          }
         }
-        const [, org, repo, type, num] = githubMatch
-        const entityType = type === 'pull' ? 'github.pr' : 'github.issue'
-        return `[[ ${entityType} id="${org}/${repo}#${num}" ]]`
+
+        return null
       },
     })
     editor.on('change', (instance) => {
