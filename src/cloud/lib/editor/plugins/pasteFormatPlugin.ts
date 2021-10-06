@@ -14,7 +14,7 @@ export type Callback = (convert: boolean) => void
 interface Config {
   openMenu: (position: PositionRange, callback: Callback) => void
   closeMenu: () => void
-  formatter: (pasted: string) => string | null
+  formatter: (pasted: string[]) => string | null
 }
 
 export const pasteFormatPlugin = (
@@ -48,11 +48,7 @@ export const pasteFormatPlugin = (
       return
     }
 
-    if (change.text.length !== 1) {
-      return
-    }
-
-    const replacement = formatter(change.text[0])
+    const replacement = formatter(change.text.filter((line) => line != ''))
     if (replacement === null) {
       return
     }
