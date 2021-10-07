@@ -11,6 +11,11 @@ async function getCache() {
   return _cache
 }
 
+export async function cleanPageProps(pathname: string): Promise<void> {
+  const cache = await getCache()
+  await cache.delete(pathname)
+}
+
 export async function setCachedPageProps<T>(
   pathname: string,
   pageProps: T

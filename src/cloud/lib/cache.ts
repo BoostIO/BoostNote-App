@@ -5,6 +5,7 @@ type Storable = string | number | Date | ArrayBufferView | ArrayBuffer
 export interface Cache<T extends Storable> {
   name: string
   get(key: string): Promise<T | undefined>
+  delete(key: string): Promise<void>
   put(key: string, value: T): Promise<void>
   close(): void
   flush(): Promise<void>
@@ -31,6 +32,22 @@ export async function createCache<T extends Storable>(
     get: async (key) => {
       const object = await db.get(store_name, key)
       return object != null ? object.data : undefined
+    },
+    delete: async (key) => {
+      const transaction = db.transaction(store_name, 'readwrite')
+      const count = await transaction.store.count()
+      if (count > max_object_count) {
+        const cursor = await transaction.store.index('timestamp').openCursor()
+        if (cursor != null) {
+          for (let i = 0; i < count - max_object_count; i++) {
+            await cursor.delete()
+            await cursor.continue()
+          }
+        }
+      }
+
+      await transaction.store.delete(key)
+      await transaction.done
     },
     put: async (key, val) => {
       const transaction = db.transaction(store_name, 'readwrite')
