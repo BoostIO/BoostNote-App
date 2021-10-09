@@ -23,7 +23,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.GeneralChangeIcon]: 'アイコン変更',
   [lngKeys.GeneralFolders]: 'フォルダー',
   [lngKeys.GeneralShowMore]: 'もっと見る',
-
+  [lngKeys.GeneralDashboard]: 'Dashboard',
   // settings
   [lngKeys.SettingsInfo]: 'プロフィール',
   [lngKeys.SettingsGeneral]: '設定',
