@@ -38,6 +38,7 @@ import {
   mdiLogoutVariant,
   mdiMagnify,
   mdiPlusCircleOutline,
+  mdiViewDashboardOutline,
   mdiWeb,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
@@ -78,6 +79,7 @@ import {
   InPageSearchContainer,
 } from './molecules/PageSearch/InPageSearchPortal'
 import SidebarToggleButton from './SidebarToggleButton'
+import { getTeamURL } from '../lib/utils/patterns'
 
 interface ApplicationProps {
   className?: string
@@ -296,6 +298,7 @@ const Application = ({
   }, [])
 
   const sidebarHeader = useMemo(() => {
+    const teamUrl = team != null ? getTeamURL(team) : ''
     return (
       <>
         <SidebarHeader
@@ -318,6 +321,17 @@ const Application = ({
                 labelClick: () => setShowSearchScreen((prev) => !prev),
                 id: 'sidebar__button__search',
                 active: showSearchScreen,
+              },
+              {
+                label: translate(lngKeys.GeneralDashboard),
+                icon: mdiViewDashboardOutline,
+                variant: 'transparent',
+                labelHref: teamUrl,
+                labelClick: () => push(teamUrl),
+                id: 'sidebar__button__inbox',
+                active: pathname === teamUrl,
+                pastille:
+                  team != null && counts[team.id] ? counts[team.id] : undefined,
               },
               {
                 label: translate(lngKeys.GeneralInbox),
@@ -355,6 +369,8 @@ const Application = ({
     team,
     translate,
     showSearchScreen,
+    push,
+    pathname,
   ])
 
   const sidebarFooter = useMemo(() => {

@@ -3,7 +3,6 @@ import querystring from 'querystring'
 import { getWorkspaceURL, getTeamURL } from '../../lib/utils/patterns'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { SerializedTeam } from '../../interfaces/db/team'
-import { useNavigateToTeam } from './TeamLink'
 import { useRouter } from '../../lib/router'
 
 export type WorkspaceLinkIntent = 'index'
@@ -70,10 +69,6 @@ export function getWorkspaceHref(
   intent: WorkspaceLinkIntent,
   query?: any
 ) {
-  if (workspace.default) {
-    return getTeamURL(team)
-  }
-
   const basePathname = `${getTeamURL(team)}${getWorkspaceURL(workspace)}`
   const queryPathName = query != null ? `?${querystring.stringify(query)}` : ''
   if (intent === 'index') {
@@ -84,7 +79,6 @@ export function getWorkspaceHref(
 
 export function useNavigateToWorkspace() {
   const { push } = useRouter()
-  const navigateToTeam = useNavigateToTeam()
   return useCallback(
     (
       workspace: SerializedWorkspace,
@@ -92,13 +86,8 @@ export function useNavigateToWorkspace() {
       intent: WorkspaceLinkIntent,
       query?: any
     ) => {
-      if (workspace.default) {
-        navigateToTeam(team, 'index', query)
-        return
-      }
-
       push(getWorkspaceHref(workspace, team, intent, query))
     },
-    [navigateToTeam, push]
+    [push]
   )
 }
