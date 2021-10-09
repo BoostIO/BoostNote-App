@@ -23,7 +23,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.GeneralChangeIcon]: '更改图标',
   [lngKeys.GeneralFolders]: '文件夹',
   [lngKeys.GeneralShowMore]: '现实更多',
-
+  [lngKeys.GeneralDashboard]: 'Dashboard',
   // settings
   [lngKeys.SettingsInfo]: '我的信息',
   [lngKeys.SettingsGeneral]: '我的首选项',

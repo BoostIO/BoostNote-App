@@ -100,6 +100,7 @@ export enum lngKeys {
   GeneralSeconds = 'general.Seconds',
   GeneralFolders = 'general.Folders',
   GeneralShowMore = 'general.Show.more',
+  GeneralDashboard = 'general.dashboard',
 
   //settings
   SettingsInfo = 'settings.info',
