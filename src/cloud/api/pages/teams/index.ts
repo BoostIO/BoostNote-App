@@ -21,10 +21,13 @@ export async function getTeamIndexPageData({
   signal,
 }: GetInitialPropsParameters) {
   const [, teamId] = pathname.split('/')
-  const data = await callApi<TeamShowPageResponseBody>('api/pages/teams/show', {
-    search: search + `&teamId=${teamId}`,
-    signal,
-  })
+  const data = await callApi<TeamShowPageResponseBody>(
+    'api/pages/teams/dashboard/show',
+    {
+      search: search + `&teamId=${teamId}`,
+      signal,
+    }
+  )
 
   return data
 }
