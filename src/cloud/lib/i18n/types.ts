@@ -47,7 +47,7 @@ export enum lngKeys {
   GeneralNext = 'general.Next',
   GeneralContinueVerb = 'general.Continueverb',
   GeneralShared = 'general.Shared',
-  GeneralSmartFolders = 'general.Smart.Folders',
+  GeneralDashboardFolders = 'general.Smart.Folders',
   GeneralBookmarks = 'general.Bookmarks',
   GeneralUnbookmarkVerb = 'general.Unbookmarkverb',
   GeneralBookmarkVerb = 'general.Bookmarkverb',
@@ -335,10 +335,10 @@ export enum lngKeys {
   ModalsImportDestinationDisclaimer = 'modals.import.destination.disclaimer',
   ModalsImportDisclaimer = 'modals.import.disclaimer',
 
-  ModalsSmartFolderCreateTitle = 'modals.sf.create.title',
-  ModalsSmartFolderEditTitle = 'modals.sf.edit.title',
-  ModalsSmartFolderPrivateDisclaimer = 'modals.sf.private.disclaimer',
-  ModalsSmartFolderPublicDisclaimer = 'modals.sf.public.disclaimer',
+  ModalsDashboardFolderCreateTitle = 'modals.sf.create.title',
+  ModalsDashboardFolderEditTitle = 'modals.sf.edit.title',
+  ModalsDashboardFolderPrivateDisclaimer = 'modals.sf.private.disclaimer',
+  ModalsDashboardFolderPublicDisclaimer = 'modals.sf.public.disclaimer',
 
   EditorToolbarTooltipHeader = 'editor.toolbar.tooltips.header',
   EditorToolbarTooltipAdmonition = 'editor.toolbar.tooltips.admonition',

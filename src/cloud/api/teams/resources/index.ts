@@ -4,7 +4,7 @@ import querystring from 'querystring'
 import { SerializedTag } from '../../../interfaces/db/tag'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { callApi } from '../../../lib/client'
-import { SerializedSmartFolder } from '../../../interfaces/db/smartFolder'
+import { SerializedDashboardFolder } from '../../../interfaces/db/dashboardFolder'
 import { SerializedAppEvent } from '../../../interfaces/db/appEvents'
 
 export interface MoveResourceRequestBody {
@@ -41,7 +41,7 @@ export interface GetResourcesResponseBody {
   docs: SerializedDocWithBookmark[]
   workspaces: SerializedWorkspace[]
   tags?: SerializedTag[]
-  smartFolders?: SerializedSmartFolder[]
+  dashboardFolders?: SerializedDashboardFolder[]
   appEvents?: SerializedAppEvent[]
 }
 
