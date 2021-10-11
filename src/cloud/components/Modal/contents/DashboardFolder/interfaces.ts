@@ -5,7 +5,7 @@ import {
   TodayDateConditionValue,
   InWeekDateConditionValue,
   InMonthDateConditionValue,
-} from '../../../../interfaces/db/smartFolder'
+} from '../../../../interfaces/db/dashboardFolder'
 
 export type EditibleBetweenDateConditionValue = {
   type: 'between'

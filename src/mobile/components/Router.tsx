@@ -43,7 +43,6 @@ import TeamIndex from './pages/TeamIndex'
 import { SidebarCollapseProvider } from '../../cloud/lib/stores/sidebarCollapse'
 import DocStatusShowPage from './pages/DocStatusShowPage'
 import TagsShowPage from './pages/TagsShowPage'
-import SmartFolderPage from './pages/SmartFolderPage'
 import OpenInvitePage from './pages/OpenInvitePage'
 import SharedDocsListPage from './pages/SharedDocsListPage'
 import DeleteTeamPage from './pages/TeamDeletePage'
@@ -407,11 +406,6 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: TagsShowPage,
           getInitialProps: TagsShowPage.getInitialProps,
-        }
-      case 'smart-folders':
-        return {
-          Component: SmartFolderPage,
-          getInitialProps: SmartFolderPage.getInitialProps,
         }
       case 'status':
         return {
