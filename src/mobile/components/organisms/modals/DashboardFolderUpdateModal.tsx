@@ -1,48 +1,46 @@
 import React, { useState, useCallback } from 'react'
 import { useModal } from '../../../../design/lib/stores/modal'
 import {
-  updateSmartFolder,
-  UpdateSmartFolderRequestBody,
-} from '../../../../cloud/api/teams/smart-folder'
+  updateDashboardFolder,
+  UpdateDashboardFolderRequestBody,
+} from '../../../../cloud/api/teams/dashboard/folders'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { useToast } from '../../../../design/lib/stores/toast'
-import { getSmartFolderHref } from '../../../../cloud/lib/href'
+import { getDashboardFolderHref } from '../../../../cloud/lib/href'
 import { useRouter } from '../../../../cloud/lib/router'
-import { SerializedSmartFolder } from '../../../../cloud/interfaces/db/smartFolder'
-import SmartFolderForm from './organisms/SmartFolderForm'
+import { SerializedDashboardFolder } from '../../../../cloud/interfaces/db/dashboardFolder'
+import DashboardFolderForm from './organisms/DashboardFolderForm'
 import ModalContainer from './atoms/ModalContainer'
 
-interface SmartFolderUpdateModalProps {
-  smartFolder: SerializedSmartFolder
+interface DashboardFolderUpdateModalProps {
+  dashboardFolder: SerializedDashboardFolder
 }
 
-const SmartFolderUpdateModal = ({
-  smartFolder,
-}: SmartFolderUpdateModalProps) => {
+const DashboardFolderUpdateModal = ({
+  dashboardFolder,
+}: DashboardFolderUpdateModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
 
-  const { updateSmartFoldersMap } = useNav()
+  const { updateDashboardFoldersMap } = useNav()
   const [sending, setSending] = useState(false)
   const { push } = useRouter()
 
   const { pushApiErrorMessage } = useToast()
   const submit = useCallback(
-    async (body: UpdateSmartFolderRequestBody) => {
+    async (body: UpdateDashboardFolderRequestBody) => {
       if (team == null) {
         return
       }
       setSending(true)
       try {
-        const { smartFolder: updatedSmartFolder } = await updateSmartFolder(
-          team,
-          smartFolder,
-          body
-        )
-        updateSmartFoldersMap([smartFolder.id, updatedSmartFolder])
+        const {
+          dashboardFolder: updatedDashboardFolder,
+        } = await updateDashboardFolder(dashboardFolder, body)
+        updateDashboardFoldersMap([dashboardFolder.id, updatedDashboardFolder])
         closeModal()
-        push(getSmartFolderHref(smartFolder, team, 'index'))
+        push(getDashboardFolderHref(dashboardFolder, team, 'index'))
       } catch (error) {
         console.error(error)
         pushApiErrorMessage(error)
@@ -51,8 +49,8 @@ const SmartFolderUpdateModal = ({
     },
     [
       team,
-      smartFolder,
-      updateSmartFoldersMap,
+      dashboardFolder,
+      updateDashboardFoldersMap,
       closeModal,
       push,
       pushApiErrorMessage,
@@ -65,14 +63,14 @@ const SmartFolderUpdateModal = ({
 
   return (
     <ModalContainer title='Edit a smart folder'>
-      <SmartFolderForm
+      <DashboardFolderForm
         action='Update'
         onSubmit={submit}
         buttonsAreDisabled={sending}
-        defaultName={smartFolder.name}
-        defaultPrivate={smartFolder.private}
-        defaultConditionType={smartFolder.condition.type}
-        defaultSecondaryConditions={smartFolder.condition.conditions.map(
+        defaultName={dashboardFolder.name}
+        defaultPrivate={dashboardFolder.private}
+        defaultConditionType={dashboardFolder.condition.type}
+        defaultSecondaryConditions={dashboardFolder.condition.conditions.map(
           (secondaryCondition) => {
             switch (secondaryCondition.type) {
               case 'due_date':
@@ -117,4 +115,4 @@ const SmartFolderUpdateModal = ({
   )
 }
 
-export default SmartFolderUpdateModal
+export default DashboardFolderUpdateModal

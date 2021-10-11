@@ -298,11 +298,11 @@ const enTranslation: TranslationSource = {
   [lngKeys.ModalsImportDisclaimer]:
     'Select how you want to import files ( 5Mb max per file )',
 
-  [lngKeys.ModalsSmartFolderCreateTitle]: 'Create a smart folder',
-  [lngKeys.ModalsSmartFolderEditTitle]: 'Edit a smart folder',
-  [lngKeys.ModalsSmartFolderPrivateDisclaimer]:
+  [lngKeys.ModalsDashboardFolderCreateTitle]: 'Create a smart folder',
+  [lngKeys.ModalsDashboardFolderEditTitle]: 'Edit a smart folder',
+  [lngKeys.ModalsDashboardFolderPrivateDisclaimer]:
     'This smart folder will become private. Only you can see it.',
-  [lngKeys.ModalsSmartFolderPublicDisclaimer]:
+  [lngKeys.ModalsDashboardFolderPublicDisclaimer]:
     'The smart folder will become public. Every member can see it.',
 
   [lngKeys.EditorToolbarTooltipHeader]: 'Add header text',
@@ -403,7 +403,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.GeneralBookmarks]: 'Bookmarks',
   [lngKeys.GeneralUnbookmarkVerb]: 'Remove from Bookmarks',
   [lngKeys.GeneralBookmarkVerb]: 'Add to bookmarks',
-  [lngKeys.GeneralSmartFolders]: 'Smart Folders',
+  [lngKeys.GeneralDashboardFolders]: 'Smart Folders',
   [lngKeys.GeneralWorkspaces]: 'Workspaces',
   [lngKeys.GeneralPrivate]: 'Private',
   [lngKeys.GeneralLabels]: 'Labels',

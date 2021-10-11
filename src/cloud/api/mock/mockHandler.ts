@@ -124,7 +124,7 @@ const routes: MockRoute[] = [
         folders: folders.map(populateFolder),
         docs: docs,
         tags: [],
-        smartFolders: [],
+        dashboardFolders: [],
         appEvents: [],
       }
     },

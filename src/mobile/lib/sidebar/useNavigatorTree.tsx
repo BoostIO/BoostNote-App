@@ -3,7 +3,6 @@ import {
   mdiApplicationCog,
   mdiFileDocumentOutline,
   mdiFilePlusOutline,
-  mdiFolderCogOutline,
   mdiFolderPlusOutline,
   mdiLock,
   mdiPencil,
@@ -54,11 +53,7 @@ import {
   getFolderId,
 } from '../../../cloud/lib/utils/patterns'
 import { useCloudApi } from '../../../cloud/lib/hooks/useCloudApi'
-import { getSmartFolderHref } from '../href'
-import { useDialog } from '../../../design/lib/stores/dialog'
 import { useAppStatus } from '../appStatus'
-import SmartFolderCreateModal from '../../components/organisms/modals/SmartFolderCreateModal'
-import SmartFolderUpdateModal from '../../components/organisms/modals/SmartFolderUpdateModal'
 import WorkspaceCreateModal from '../../components/organisms/modals/WorkspaceCreateModal'
 import { useMobileResourceModals } from '../useMobileResourceModals'
 
@@ -67,7 +62,6 @@ export function useNavigatorTree() {
   const { push, pathname } = useRouter()
   const { openModal } = useModal()
   const { preferences } = usePreferences()
-  const { messageBox } = useDialog()
   const { setShowingNavigator } = useAppStatus()
 
   const {
@@ -76,7 +70,6 @@ export function useNavigatorTree() {
     foldersMap,
     workspacesMap,
     tagsMap,
-    smartFoldersMap,
   } = useNav()
 
   const {
@@ -95,7 +88,6 @@ export function useNavigatorTree() {
     createFolder,
     toggleDocBookmark,
     toggleFolderBookmark,
-    deleteSmartFolder,
   } = useCloudApi()
 
   const {
@@ -136,11 +128,10 @@ export function useNavigatorTree() {
     const items = new Map<string, CloudTreeItem>()
     const sortingOrder = preferences.navigatorTreeSortingOrder
 
-    const [docs, folders, workspaces, smartFolders] = [
+    const [docs, folders, workspaces] = [
       getMapValues(docsMap),
       getMapValues(foldersMap),
       getMapValues(workspacesMap),
-      getMapValues(smartFoldersMap),
     ]
 
     let personalWorkspace: SerializedWorkspace | undefined
@@ -571,78 +562,6 @@ export function useNavigatorTree() {
     }
 
     tree.push({
-      label: 'Smart Folders',
-      rows: smartFolders.map((smartFolder) => {
-        const href = `${process.env.BOOST_HUB_BASE_URL}${getSmartFolderHref(
-          smartFolder,
-          team,
-          'index'
-        )}`
-        return {
-          id: smartFolder.id,
-          label: smartFolder.name,
-          defaultIcon: mdiFolderCogOutline,
-          depth: 0,
-          active: href === currentPathWithDomain,
-          navigateTo: () => {
-            setShowingNavigator(false)
-            push(href)
-          },
-          contextControls: !currentUserIsCoreMember
-            ? undefined
-            : [
-                {
-                  type: MenuTypes.Normal,
-                  icon: mdiPencil,
-                  label: 'Edit',
-                  onClick: () => {
-                    openModal(
-                      <SmartFolderUpdateModal smartFolder={smartFolder} />
-                    )
-                  },
-                },
-                {
-                  type: MenuTypes.Normal,
-                  icon: mdiTrashCanOutline,
-                  label: 'Delete',
-                  onClick: () => {
-                    messageBox({
-                      title: `Delete ${smartFolder.name}?`,
-                      message: `Are you sure to delete this smart folder?`,
-                      buttons: [
-                        {
-                          variant: 'secondary',
-                          label: 'Cancel',
-                          cancelButton: true,
-                          defaultButton: true,
-                        },
-                        {
-                          variant: 'danger',
-                          label: 'Delete',
-                          onClick: async () => {
-                            await deleteSmartFolder(smartFolder)
-                          },
-                        },
-                      ],
-                    })
-                  },
-                },
-              ],
-        }
-      }),
-      controls: currentUserIsCoreMember
-        ? [
-            {
-              icon: mdiPlus,
-              onClick: () => {
-                openModal(<SmartFolderCreateModal />)
-              },
-            },
-          ]
-        : undefined,
-    })
-
-    tree.push({
       label: 'Folders',
       rows: navTree,
       controls: currentUserIsCoreMember
@@ -808,7 +727,6 @@ export function useNavigatorTree() {
     docsMap,
     foldersMap,
     workspacesMap,
-    smartFoldersMap,
     tagsMap,
     currentUserIsCoreMember,
     sideBarOpenedWorkspaceIdsSet,
@@ -829,8 +747,6 @@ export function useNavigatorTree() {
     openRenameDocForm,
     deleteDoc,
     openModal,
-    messageBox,
-    deleteSmartFolder,
     createWorkspace,
     sideBarOpenedLinksIdsSet,
     toggleItem,

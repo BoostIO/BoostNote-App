@@ -12,21 +12,21 @@ import {
   CreationDateCondition,
   SerializeDateProps,
   UpdateDateCondition,
-} from '../../../interfaces/db/smartFolder'
+} from '../../../interfaces/db/dashboardFolder'
 import { addDays, subDays } from 'date-fns'
 import ContentManager from '../../../components/ContentManager'
 import { getTeamIndexPageData } from '../../../api/pages/teams'
 import styled from '../../../../design/lib/styled'
-import { localizeDate } from '../../../components/Modal/contents/SmartFolder/DocDateSelect'
 import InviteCTAButton from '../../../components/buttons/InviteCTAButton'
 import { mdiDotsHorizontal } from '@mdi/js'
 import { useModal } from '../../../../design/lib/stores/modal'
-import SmartFolderContextMenu from '../../../components/SmartFolderContextMenu'
+import DashboardFolderContextMenu from '../../../components/DashboardFolderContextMenu'
 import FolderPageInviteSection from '../../../components/Onboarding/FolderPageInviteSection'
 import ApplicationPage from '../../../components/ApplicationPage'
 import ColoredBlock from '../../../../design/components/atoms/ColoredBlock'
 import ApplicationTopbar from '../../../components/ApplicationTopbar'
 import ApplicationContent from '../../../components/ApplicationContent'
+import { localizeDate } from '../../../components/Modal/contents/DashboardFolder/DocDateSelect'
 
 function validateAssignees(
   doc: SerializedDocWithBookmark,
@@ -126,23 +126,31 @@ function validateDateValue(
   return false
 }
 
-const SmartFolderPage = (params: any) => {
+const DashboardFolderPage = (params: any) => {
   const { team, currentUserIsCoreMember } = usePage()
-  const { docsMap, initialLoadDone, workspacesMap, smartFoldersMap } = useNav()
+  const {
+    docsMap,
+    initialLoadDone,
+    workspacesMap,
+    dashboardFoldersMap,
+  } = useNav()
   const { openContextModal } = useModal()
 
-  const { smartFolderId } = params
+  const { dashboardFolderId } = params
 
-  const smartFolder = smartFoldersMap.get(smartFolderId)
+  const dashboardFolder = dashboardFoldersMap.get(dashboardFolderId)
   const documents = useMemo(() => {
-    if (smartFolder == null || smartFolder.condition.conditions.length === 0) {
+    if (
+      dashboardFolder == null ||
+      dashboardFolder.condition.conditions.length === 0
+    ) {
       return []
     }
     const docs = [...docsMap].map(([_docId, doc]) => doc)
 
-    const primaryConditionType = smartFolder.condition.type
+    const primaryConditionType = dashboardFolder.condition.type
     return docs.filter((doc) => {
-      for (const secondaryCondition of smartFolder.condition.conditions) {
+      for (const secondaryCondition of dashboardFolder.condition.conditions) {
         switch (secondaryCondition.type) {
           case 'status':
             if (doc.status === secondaryCondition.value) {
@@ -232,15 +240,15 @@ const SmartFolderPage = (params: any) => {
       }
       return primaryConditionType === 'and'
     })
-  }, [docsMap, smartFolder])
+  }, [docsMap, dashboardFolder])
 
   const pageTitle = useMemo(() => {
-    if (team == null || smartFolder == null) {
+    if (team == null || dashboardFolder == null) {
       return 'BoostHub'
     }
 
-    return `Smart Folder : ${smartFolder.name} - ${team.name}`
-  }, [smartFolder, team])
+    return `Smart Folder : ${dashboardFolder.name} - ${team.name}`
+  }, [dashboardFolder, team])
 
   useTitle(pageTitle)
 
@@ -262,7 +270,7 @@ const SmartFolderPage = (params: any) => {
     )
   }
 
-  if (smartFolder == null) {
+  if (dashboardFolder == null) {
     return (
       <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>
@@ -289,8 +297,8 @@ const SmartFolderPage = (params: any) => {
             onClick: (event) => {
               openContextModal(
                 event,
-                <SmartFolderContextMenu
-                  smartFolder={smartFolder}
+                <DashboardFolderContextMenu
+                  dashboardFolder={dashboardFolder}
                   team={team}
                 />,
                 {
@@ -303,7 +311,7 @@ const SmartFolderPage = (params: any) => {
           },
         ]}
       >
-        <SmartFolderLabel>{smartFolder.name}</SmartFolderLabel>
+        <DashboardFolderLabel>{dashboardFolder.name}</DashboardFolderLabel>
       </ApplicationTopbar>
       <ApplicationContent>
         <FolderPageInviteSection />
@@ -319,18 +327,20 @@ const SmartFolderPage = (params: any) => {
   )
 }
 
-SmartFolderPage.getInitialProps = async (params: GetInitialPropsParameters) => {
+DashboardFolderPage.getInitialProps = async (
+  params: GetInitialPropsParameters
+) => {
   const result = await getTeamIndexPageData(params)
 
-  const [, , , smartFolderId] = params.pathname.split('/')
+  const [, , , dashboardFolderId] = params.pathname.split('/')
   return {
     ...result,
-    smartFolderId,
+    dashboardFolderId,
   }
 }
 
-export default SmartFolderPage
+export default DashboardFolderPage
 
-const SmartFolderLabel = styled.div`
+const DashboardFolderLabel = styled.div`
   color: ${({ theme }) => theme.colors.text.primary};
 `
