@@ -1,5 +1,5 @@
 import React, { forwardRef, useMemo } from 'react'
-import { DateConditionValue } from '../../../../interfaces/db/smartFolder'
+import { DateConditionValue } from '../../../../interfaces/db/dashboardFolder'
 import DateConditionValueTypeSelect from './DateConditionValueTypeSelect'
 import DatePicker from 'react-datepicker'
 import { format as formatDate } from 'date-fns'

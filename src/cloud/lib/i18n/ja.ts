@@ -281,11 +281,11 @@ const jpTranslation: TranslationSource = {
   [lngKeys.ModalsImportDisclaimer]:
     'インポートするファイルを選びましょう（ファイル毎に５MBが最大です）',
 
-  [lngKeys.ModalsSmartFolderCreateTitle]: 'スマートフォルダー作成',
-  [lngKeys.ModalsSmartFolderEditTitle]: 'スマートフォルダー編集',
-  [lngKeys.ModalsSmartFolderPrivateDisclaimer]:
+  [lngKeys.ModalsDashboardFolderCreateTitle]: 'スマートフォルダー作成',
+  [lngKeys.ModalsDashboardFolderEditTitle]: 'スマートフォルダー編集',
+  [lngKeys.ModalsDashboardFolderPrivateDisclaimer]:
     'スマートフォルダーをプライベートにします。あなただけがアクセスできます。',
-  [lngKeys.ModalsSmartFolderPublicDisclaimer]:
+  [lngKeys.ModalsDashboardFolderPublicDisclaimer]:
     'スマートフォルダーをパブリックにします。チームの誰でもアクセスできます。',
 
   [lngKeys.EditorToolbarTooltipHeader]: 'ヘッダー',
@@ -389,7 +389,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.GeneralBookmarks]: 'ブックマーク',
   [lngKeys.GeneralUnbookmarkVerb]: 'ブックマーク削除',
   [lngKeys.GeneralBookmarkVerb]: 'ブックマークする',
-  [lngKeys.GeneralSmartFolders]: 'スマートフォルダー',
+  [lngKeys.GeneralDashboardFolders]: 'スマートフォルダー',
   [lngKeys.GeneralWorkspaces]: 'フォルダー',
   [lngKeys.GeneralPrivate]: 'プライベート',
   [lngKeys.GeneralLabels]: 'ラベル',

@@ -3,7 +3,6 @@ import {
   mdiApplicationCog,
   mdiFileDocumentOutline,
   mdiTextBoxPlus,
-  mdiFolderCogOutline,
   mdiFolderPlusOutline,
   mdiLock,
   mdiPencil,
@@ -55,10 +54,6 @@ import {
 import { useCloudApi } from '../useCloudApi'
 import { useCloudResourceModals } from '../useCloudResourceModals'
 import { useCloudDnd } from './useCloudDnd'
-import { getSmartFolderHref } from '../../href'
-import CreateSmartFolderModal from '../../../components/Modal/contents/SmartFolder/CreateSmartFolderModal'
-import UpdateSmartFolderModal from '../../../components/Modal/contents/SmartFolder/UpdateSmartFolderModal'
-import { useDialog } from '../../../../design/lib/stores/dialog'
 import { DocStatus } from '../../../interfaces/db/doc'
 import { useI18n } from '../useI18n'
 import { lngKeys } from '../../i18n/types'
@@ -77,7 +72,6 @@ export function useCloudSidebarTree() {
   const { push, pathname } = useRouter()
   const { openModal } = useModal()
   const { preferences, setPreferences } = usePreferences()
-  const { messageBox } = useDialog()
   const { translate } = useI18n()
   const { showSearchScreen } = useSearch()
 
@@ -87,7 +81,6 @@ export function useCloudSidebarTree() {
     foldersMap,
     workspacesMap,
     tagsMap,
-    smartFoldersMap,
   } = useNav()
 
   const {
@@ -116,7 +109,6 @@ export function useCloudSidebarTree() {
     toggleFolderBookmark,
     updateDoc,
     updateFolder,
-    deleteSmartFolder,
   } = useCloudApi()
 
   const {
@@ -175,12 +167,6 @@ export function useCloudSidebarTree() {
           checked: !sideBarOpenedLinksIdsSet.has('hide-private'),
           onClick: () => toggleItem('links', 'hide-private'),
         },
-        {
-          type: 'check',
-          label: translate(lngKeys.GeneralSmartFolders),
-          checked: !sideBarOpenedLinksIdsSet.has('hide-smart folders'),
-          onClick: () => toggleItem('links', 'hide-smart folders'),
-        },
       ],
       [translate(lngKeys.GeneralOrdering)]: Object.values(
         SidebarTreeSortingOrders
@@ -213,11 +199,10 @@ export function useCloudSidebarTree() {
     const items = new Map<string, CloudTreeItem>()
     const sortingOrder = preferences.sidebarTreeSortingOrder
 
-    const [docs, folders, workspaces, smartFolders] = [
+    const [docs, folders, workspaces] = [
       getMapValues(docsMap),
       getMapValues(foldersMap),
       getMapValues(workspacesMap),
-      getMapValues(smartFoldersMap),
     ]
 
     let personalWorkspace: SerializedWorkspace | undefined
@@ -603,78 +588,6 @@ export function useCloudSidebarTree() {
     }
 
     tree.push({
-      label: 'Smart Folders',
-      title: translate(lngKeys.GeneralSmartFolders),
-      rows: smartFolders.map((smartFolder) => {
-        const href = `${process.env.BOOST_HUB_BASE_URL}${getSmartFolderHref(
-          smartFolder,
-          team,
-          'index'
-        )}`
-        return {
-          id: smartFolder.id,
-          label: smartFolder.name,
-          defaultIcon: mdiFolderCogOutline,
-          depth: 0,
-          href,
-          active: !showSearchScreen && href === currentPathWithDomain,
-          navigateTo: () => push(href),
-          contextControls: !currentUserIsCoreMember
-            ? undefined
-            : [
-                {
-                  type: MenuTypes.Normal,
-                  icon: mdiPencil,
-                  label: translate(lngKeys.GeneralEditVerb),
-                  onClick: () => {
-                    openModal(
-                      <UpdateSmartFolderModal smartFolder={smartFolder} />
-                    )
-                  },
-                },
-                {
-                  type: MenuTypes.Normal,
-                  icon: mdiTrashCanOutline,
-                  label: translate(lngKeys.GeneralDelete),
-                  onClick: () => {
-                    messageBox({
-                      title: `Delete ${smartFolder.name}?`,
-                      message: `Are you sure to delete this smart folder?`,
-                      buttons: [
-                        {
-                          variant: 'secondary',
-                          label: translate(lngKeys.GeneralCancel),
-                          cancelButton: true,
-                          defaultButton: true,
-                        },
-                        {
-                          variant: 'danger',
-                          label: translate(lngKeys.GeneralDelete),
-                          onClick: async () => {
-                            await deleteSmartFolder(smartFolder)
-                          },
-                        },
-                      ],
-                    })
-                  },
-                },
-              ],
-        }
-      }),
-      controls: currentUserIsCoreMember
-        ? [
-            {
-              icon: mdiPlus,
-              onClick: () => {
-                openModal(<CreateSmartFolderModal />)
-              },
-              tooltip: 'Add smart folder',
-            },
-          ]
-        : undefined,
-    })
-
-    tree.push({
       label: 'Folders',
       title: translate(lngKeys.GeneralFolders),
       rows: navTree,
@@ -817,7 +730,6 @@ export function useCloudSidebarTree() {
     docsMap,
     foldersMap,
     workspacesMap,
-    smartFoldersMap,
     tagsMap,
     translate,
     currentUserIsCoreMember,
@@ -845,8 +757,6 @@ export function useCloudSidebarTree() {
     openRenameDocForm,
     deleteDoc,
     openModal,
-    messageBox,
-    deleteSmartFolder,
     createWorkspace,
     sideBarOpenedLinksIdsSet,
     toggleItem,

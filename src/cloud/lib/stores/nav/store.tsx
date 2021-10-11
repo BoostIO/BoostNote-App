@@ -59,7 +59,7 @@ import { getMapFromEntityArray } from '../../utils/array'
 import { SerializedTemplate } from '../../../interfaces/db/template'
 import { getAllTemplates } from '../../../api/teams/docs/templates'
 import { useToast } from '../../../../design/lib/stores/toast'
-import { SerializedSmartFolder } from '../../../interfaces/db/smartFolder'
+import { SerializedDashboardFolder } from '../../../interfaces/db/dashboardFolder'
 export * from './types'
 
 function useNavStore(): NavContext {
@@ -105,8 +105,8 @@ function useNavStore(): NavContext {
   const [docsMap, setDocsMap] = useState<
     Map<string, SerializedDocWithBookmark>
   >(new Map())
-  const [smartFoldersMap, setSmartFoldersMap] = useState<
-    Map<string, SerializedSmartFolder>
+  const [dashboardFoldersMap, setDashboardFoldersMap] = useState<
+    Map<string, SerializedDashboardFolder>
   >(new Map())
 
   const [appEventsMap, setAppEventsMap] = useState<
@@ -122,17 +122,17 @@ function useNavStore(): NavContext {
     []
   )
 
-  const updateSmartFoldersMap = useCallback(
-    (...mappedTags: [string, SerializedSmartFolder][]) =>
-      setSmartFoldersMap((prevMap) => {
+  const updateDashboardFoldersMap = useCallback(
+    (...mappedTags: [string, SerializedDashboardFolder][]) =>
+      setDashboardFoldersMap((prevMap) => {
         return new Map([...prevMap, ...mappedTags])
       }),
     []
   )
 
-  const removeFromSmartFoldersMap = useCallback(
+  const removeFromDashboardFoldersMap = useCallback(
     (...ids: string[]) =>
-      setSmartFoldersMap((prevMap) => {
+      setDashboardFoldersMap((prevMap) => {
         const newMap = new Map(prevMap)
         ids.forEach((workspaceId) => {
           newMap.delete(workspaceId)
@@ -246,7 +246,7 @@ function useNavStore(): NavContext {
             docs,
             tags = [],
             workspaces = [],
-            smartFolders = [],
+            dashboardFolders = [],
             appEvents = [],
           },
           { templates = [] },
@@ -267,7 +267,7 @@ function useNavStore(): NavContext {
           tags,
           workspaces,
           templates,
-          smartFolders,
+          dashboardFolders,
           appEvents,
         })
         setFoldersMap(maps.foldersData)
@@ -275,7 +275,7 @@ function useNavStore(): NavContext {
         setTagsMap(maps.tagsData)
         setWorkspacesMap(maps.workspacesData)
         setTemplatesMap(maps.templatesData)
-        setSmartFoldersMap(maps.smartFoldersData)
+        setDashboardFoldersMap(maps.dashboardFoldersData)
         setAppEventsMap(maps.appEventsData)
         setInitialLoadDone(true)
       }
@@ -875,11 +875,11 @@ function useNavStore(): NavContext {
     docsMap,
     updateDocsMap,
     removeFromDocsMap,
-    smartFoldersMap,
+    dashboardFoldersMap,
     appEventsMap,
     updateAppEventsMap,
-    updateSmartFoldersMap,
-    removeFromSmartFoldersMap,
+    updateDashboardFoldersMap,
+    removeFromDashboardFoldersMap,
     createFolderHandler,
     updateFolderHandler,
     createDocHandler,
@@ -940,7 +940,7 @@ interface CreateMapsFromPagePropsProps {
   tagsData: Map<string, SerializedTag>
   workspacesData: Map<string, SerializedWorkspace>
   templatesData: Map<string, SerializedTemplate>
-  smartFoldersData: Map<string, SerializedSmartFolder>
+  dashboardFoldersData: Map<string, SerializedDashboardFolder>
   appEventsData: Map<string, SerializedAppEvent>
 }
 
@@ -954,7 +954,7 @@ function getTagsFoldersDocsMapsFromProps(
       tagsData: new Map(),
       workspacesData: new Map(),
       templatesData: new Map(),
-      smartFoldersData: new Map(),
+      dashboardFoldersData: new Map(),
       appEventsData: new Map(),
     }
   }
@@ -965,7 +965,7 @@ function getTagsFoldersDocsMapsFromProps(
     tags = [],
     workspaces = [],
     templates = [],
-    smartFolders = [],
+    dashboardFolders = [],
     appEvents = [],
   } = pageProps
 
@@ -978,8 +978,8 @@ function getTagsFoldersDocsMapsFromProps(
     workspaces as SerializedWorkspace[]
   )
   const templatesData = getMapFromEntityArray(templates as SerializedTemplate[])
-  const smartFoldersData = getMapFromEntityArray(
-    smartFolders as SerializedSmartFolder[]
+  const dashboardFoldersData = getMapFromEntityArray(
+    dashboardFolders as SerializedDashboardFolder[]
   )
   const appEventsData = getMapFromEntityArray(appEvents as SerializedAppEvent[])
 
@@ -989,7 +989,7 @@ function getTagsFoldersDocsMapsFromProps(
     tagsData,
     workspacesData,
     templatesData,
-    smartFoldersData,
+    dashboardFoldersData,
     appEventsData,
   }
 }

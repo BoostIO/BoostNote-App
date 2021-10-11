@@ -56,8 +56,8 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     updateFoldersMap,
     updateTemplatesMap,
     removeFromTemplatesMap,
-    updateSmartFoldersMap,
-    removeFromSmartFoldersMap,
+    updateDashboardFoldersMap,
+    removeFromDashboardFoldersMap,
     updateAppEventsMap,
   } = useNav()
   const {
@@ -375,17 +375,20 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     ]
   )
 
-  const smartFolderUpdateHandler = useCallback(
+  const dashboardFolderUpdateHandler = useCallback(
     (event: SerializedAppEvent) => {
-      updateSmartFoldersMap([event.data.smartFolder.id, event.data.smartFolder])
+      updateDashboardFoldersMap([
+        event.data.dashboardFolder.id,
+        event.data.dashboardFolder,
+      ])
     },
-    [updateSmartFoldersMap]
+    [updateDashboardFoldersMap]
   )
-  const smartFolderDeleteHandler = useCallback(
+  const dashboardFolderDeleteHandler = useCallback(
     (event: SerializedAppEvent) => {
-      removeFromSmartFoldersMap(event.data.smartFolderId)
+      removeFromDashboardFoldersMap(event.data.dashboardFolderId)
     },
-    [removeFromSmartFoldersMap]
+    [removeFromDashboardFoldersMap]
   )
 
   /// re-assign handler on change
@@ -444,13 +447,13 @@ const EventSource = ({ teamId }: EventSourceProps) => {
           case 'commentDeleted':
             commentsEventListener(event)
             break
-          case 'smartFolderCreate':
-          case 'smartFolderUpdate':
-            smartFolderUpdateHandler(event)
+          case 'dashboardFolderCreate':
+          case 'dashboardFolderUpdate':
+            dashboardFolderUpdateHandler(event)
             break
 
-          case 'smartFolderDelete':
-            smartFolderDeleteHandler(event)
+          case 'dashboardFolderDelete':
+            dashboardFolderDeleteHandler(event)
             break
           case 'notificationCreated':
           case 'notificationViewed':
@@ -479,8 +482,8 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     teamUpdateHandler,
     templateChangeEventHandler,
     commentsEventListener,
-    smartFolderUpdateHandler,
-    smartFolderDeleteHandler,
+    dashboardFolderUpdateHandler,
+    dashboardFolderDeleteHandler,
     updateAppEventsMap,
     notificationsEventListener,
     blockEventListener,

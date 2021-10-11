@@ -1,3 +1,5 @@
+/* 
+
 import React, { useMemo } from 'react'
 import { usePage } from '../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../cloud/lib/stores/nav'
@@ -13,11 +15,11 @@ import {
   CreationDateCondition,
   SerializeDateProps,
   UpdateDateCondition,
-} from '../../../cloud/interfaces/db/smartFolder'
+} from '../../../cloud/interfaces/db/dashboardFolder'
 import { addDays, subDays } from 'date-fns'
 import DocOnlyContentManager from '../organisms/DocOnlyContentManager'
 import { getTeamIndexPageData } from '../../../cloud/api/pages/teams'
-import { localizeDate } from '../../../cloud/components/Modal/contents/SmartFolder/DocDateSelect'
+import { localizeDate } from '../../../cloud/components/Modal/contents/DashboardFolder/DocDateSelect'
 import AppLayout from '../layouts/AppLayout'
 import { mdiFolderCogOutline } from '@mdi/js'
 import Icon from '../../../design/components/atoms/Icon'
@@ -120,22 +122,30 @@ function validateDateValue(
   return false
 }
 
-const SmartFolderPage = (params: any) => {
+const DashboardFolderPage = (params: any) => {
   const { team, currentUserIsCoreMember } = usePage()
-  const { docsMap, initialLoadDone, workspacesMap, smartFoldersMap } = useNav()
+  const {
+    docsMap,
+    initialLoadDone,
+    workspacesMap,
+    dashboardFoldersMap,
+  } = useNav()
 
-  const { smartFolderId } = params
+  const { dashboardFolderId } = params
 
-  const smartFolder = smartFoldersMap.get(smartFolderId)
+  const dashboardFolder = dashboardFoldersMap.get(dashboardFolderId)
   const documents = useMemo(() => {
-    if (smartFolder == null || smartFolder.condition.conditions.length === 0) {
+    if (
+      dashboardFolder == null ||
+      dashboardFolder.condition.conditions.length === 0
+    ) {
       return []
     }
     const docs = [...docsMap].map(([_docId, doc]) => doc)
 
-    const primaryConditionType = smartFolder.condition.type
+    const primaryConditionType = dashboardFolder.condition.type
     return docs.filter((doc) => {
-      for (const secondaryCondition of smartFolder.condition.conditions) {
+      for (const secondaryCondition of dashboardFolder.condition.conditions) {
         switch (secondaryCondition.type) {
           case 'status':
             if (doc.status === secondaryCondition.value) {
@@ -225,15 +235,15 @@ const SmartFolderPage = (params: any) => {
       }
       return primaryConditionType === 'and'
     })
-  }, [docsMap, smartFolder])
+  }, [docsMap, dashboardFolder])
 
   const pageTitle = useMemo(() => {
-    if (team == null || smartFolder == null) {
+    if (team == null || dashboardFolder == null) {
       return 'BoostHub'
     }
 
-    return `Smart Folder : ${smartFolder.name} - ${team.name}`
-  }, [smartFolder, team])
+    return `Smart Folder : ${dashboardFolder.name} - ${team.name}`
+  }, [dashboardFolder, team])
 
   useTitle(pageTitle)
 
@@ -249,7 +259,7 @@ const SmartFolderPage = (params: any) => {
     )
   }
 
-  if (smartFolder == null) {
+  if (dashboardFolder == null) {
     return (
       <AppLayout>
         <ErrorLayout message={'The smart folder has been deleted'} />
@@ -262,7 +272,7 @@ const SmartFolderPage = (params: any) => {
       title={
         <>
           <Icon size={20} path={mdiFolderCogOutline} />
-          {smartFolder.name}
+          {dashboardFolder.name}
         </>
       }
     >
@@ -277,14 +287,18 @@ const SmartFolderPage = (params: any) => {
   )
 }
 
-SmartFolderPage.getInitialProps = async (params: GetInitialPropsParameters) => {
+DashboardFolderPage.getInitialProps = async (
+  params: GetInitialPropsParameters
+) => {
   const result = await getTeamIndexPageData(params)
 
-  const [, , , smartFolderId] = params.pathname.split('/')
+  const [, , , dashboardFolderId] = params.pathname.split('/')
   return {
     ...result,
-    smartFolderId,
+    dashboardFolderId,
   }
 }
 
-export default SmartFolderPage
+export default DashboardFolderPage
+
+*/
