@@ -78,6 +78,7 @@ module.exports = (env, argv) => {
         'COUPONS_NEW_USER_PRO',
         'COUPONS_NEW_SPACE',
         'MOCK_BACKEND',
+        'BOOST_PDF_EXPORT_BASE_URL',
       ]),
       new CopyPlugin({
         patterns: [
