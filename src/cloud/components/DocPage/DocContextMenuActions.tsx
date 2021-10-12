@@ -18,11 +18,7 @@ import copy from 'copy-to-clipboard'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { getDocLinkHref } from '../Link/DocLink'
 import { boostHubBaseUrl } from '../../lib/consts'
-import {
-  usingElectron,
-  sendToHost,
-  useElectron,
-} from '../../lib/stores/electron'
+import { usingElectron, sendToHost } from '../../lib/stores/electron'
 import { useToast } from '../../../design/lib/stores/toast'
 import { useSettings } from '../../lib/stores/settings'
 import { trackEvent } from '../../api/track'
@@ -36,10 +32,9 @@ import {
 import {
   exportAsMarkdownFile,
   exportAsHtmlFile,
-  convertMarkdownToPdfExportableHtml,
   filenamifyTitle,
 } from '../../lib/export'
-import { downloadBlob, printIframe } from '../../lib/download'
+import { downloadBlob } from '../../lib/download'
 import { useNav } from '../../lib/stores/nav'
 import MoveItemModal from '../Modal/contents/Forms/MoveItemModal'
 import { useModal } from '../../../design/lib/stores/modal'
@@ -52,6 +47,16 @@ import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import RevisionsModal from '../Modal/contents/Doc/RevisionsModal'
 import { SerializedRevision } from '../../interfaces/db/revision'
 import MetadataContainerBreak from '../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
+import { usePage } from '../../lib/stores/pageStore'
+import Button from '../../../design/components/atoms/Button'
+import {
+  ExportOptions,
+  getDocExportForPDF,
+  GetDocPDFResponseBody,
+  getExportsToken,
+} from '../../api/teams/docs/exports'
+import Spinner from '../../../design/components/atoms/Spinner'
+import useApi from '../../../design/lib/hooks/useApi'
 
 export interface DocContextMenuActionsProps {
   team: SerializedTeam
@@ -74,9 +79,9 @@ export function DocContextMenuActions({
   const { sendingMap, toggleDocBookmark, send, updateDoc } = useCloudApi()
   const { deleteDoc } = useCloudResourceModals()
   const { openModal, closeAllModals } = useModal()
-  const { settings } = useSettings()
+  const { settings, openSettingsTab } = useSettings()
   const { pushMessage } = useToast()
-  const { convertHtmlStringToPdfBlob } = useElectron()
+  const { subscription } = usePage()
   const { updateTemplatesMap } = useNav()
   const [copied, setCopied] = useState(false)
 
@@ -129,32 +134,58 @@ export function DocContextMenuActions({
     }
   }, [getUpdatedDoc, settings, pushMessage])
 
+  const { submit: fetchDocPdf, sending: fetchingPdf } = useApi({
+    api: ({
+      updatedDoc,
+      exportOptions,
+      token,
+    }: {
+      updatedDoc: SerializedDocWithBookmark
+      exportOptions: ExportOptions
+      token: string
+    }) =>
+      getDocExportForPDF(
+        updatedDoc.title,
+        updatedDoc.head != null ? updatedDoc.head.content : '',
+        token,
+        exportOptions
+      ),
+    cb: ({ buffer }: GetDocPDFResponseBody) => {
+      const updatedDoc = getUpdatedDoc()
+      const pdfName = `${filenamifyTitle(updatedDoc.title)}.pdf`
+      const arrayBuffer = new Uint8Array(buffer.data)
+      const blob = new Blob([arrayBuffer], { type: 'application/pdf' })
+
+      downloadBlob(blob, pdfName)
+      trackEvent(MixpanelActionTrackTypes.ExportPdf)
+    },
+  })
   const exportAsPdf = useCallback(async () => {
+    if (subscription == null) {
+      return
+    }
     const updatedDoc = getUpdatedDoc()
     if (updatedDoc.head == null) {
       return
     }
+
     try {
-      const previewStyle = defaultPreviewStyle({
-        theme: selectV2Theme(settings['general.theme']),
-      })
-      const pdfName = `${filenamifyTitle(updatedDoc.title)}.pdf`
-      const htmlString = await convertMarkdownToPdfExportableHtml(
-        updatedDoc.head.content,
-        settings,
-        previewStyle
-      )
-      if (usingElectron) {
-        const printOpts = {
-          printBackground: true,
-          pageSize: 'A4',
-        }
-        const blob = await convertHtmlStringToPdfBlob(htmlString, printOpts)
-        downloadBlob(blob, pdfName)
-      } else {
-        printIframe(htmlString, pdfName)
+      const { token } = await getExportsToken(updatedDoc.teamId)
+      if (token == null) {
+        pushMessage({
+          title: 'Error during exporting',
+          description: "You probably don't have permissions to export",
+        })
+        return
       }
-      trackEvent(MixpanelActionTrackTypes.ExportPdf)
+      await fetchDocPdf({
+        updatedDoc,
+        exportOptions: {
+          appTheme: settings['general.theme'],
+          codeBlockTheme: settings['general.codeBlockTheme'],
+        },
+        token,
+      })
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
@@ -163,7 +194,7 @@ export function DocContextMenuActions({
         description: error.message,
       })
     }
-  }, [getUpdatedDoc, settings, pushMessage, convertHtmlStringToPdfBlob])
+  }, [subscription, getUpdatedDoc, fetchDocPdf, settings, pushMessage])
 
   const createTemplate = useCallback(async () => {
     return send(`${doc.id}-template`, 'create', {
@@ -306,9 +337,32 @@ export function DocContextMenuActions({
                 label: translate(lngKeys.DocExportPdf),
                 iconPath: mdiFilePdfOutline,
                 onClick: exportAsPdf,
+                disabled: subscription == null || fetchingPdf,
               },
             }}
-          />
+          >
+            {subscription == null && (
+              <Button
+                variant='secondary'
+                onClick={() => {
+                  closeAllModals()
+                  openSettingsTab('teamUpgrade')
+                }}
+              >
+                Upgrade
+              </Button>
+            )}
+            {fetchingPdf && (
+              <Spinner
+                variant={'subtle'}
+                style={{
+                  position: 'absolute',
+                  left: '90%',
+                  marginTop: 8,
+                }}
+              />
+            )}
+          </MetadataContainerRow>
         </>
       )}
       {currentUserIsCoreMember && (
