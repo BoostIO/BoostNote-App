@@ -121,7 +121,6 @@ interface PrintToPDFOptions {
   scaleFactor?: number
   pageRanges?: Record<string, number>
   pageSize?: string | { height: number; width: number }
-  printBackground?: boolean
   printSelectionOnly?: boolean
 }
 

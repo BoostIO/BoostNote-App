@@ -151,7 +151,6 @@ const basePreferences: Preferences = {
 
   // Export
   'export.printOptions': {
-    printBackground: false,
     landscape: false,
     marginsType: MarginType.NoMargins,
     pageSize: PageSize.A4,

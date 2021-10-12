@@ -182,7 +182,6 @@ export default {
 
     // Preferences ExportTab
     'preferences.exportTab': 'Export Settings',
-    'preferences.printBackground': 'Print Background',
     'preferences.landscape': 'Landscape',
     'preferences.marginType': 'Margins',
     'preferences.pageSize': 'Page Size',
