@@ -3,6 +3,8 @@ export const nodeEnv = process.env.NODE_ENV || 'development'
 export const intercomAppId = process.env.INTERCOM_APP_ID || 'elidid'
 export const boostHubBaseUrl =
   process.env.BOOST_HUB_BASE_URL || 'http://localhost:3001'
+export const boostPdfExportBaseUrl =
+  process.env.BOOST_PDF_EXPORT_BASE_URL || 'http://localhost:3006'
 export const realtimeUrl = process.env.REALTIME_URL || 'http://localhost:3003'
 export const sseUrl = process.env.SSE_URL || 'http://localhost:3002'
 export const stripePublishableKey =
