@@ -449,6 +449,9 @@ export enum lngKeys {
   OnboardingFolderSectionDisclaimer = 'onboarding.folder.section.disclaimer',
 
   GeneralContent = 'general.content',
+
+  GeneralYes = 'general.yes',
+  GeneralNo = 'general.no',
 }
 
 export type TranslationSource = {

@@ -501,6 +501,9 @@ const frTranslation: TranslationSource = {
     'Invitez vos coéquipiers dans cet espace',
   [lngKeys.GeneralContent]: 'Contenu',
   [lngKeys.CreateNewCanvas]: 'Créer un nouveau Canvas (beta)',
+
+  [lngKeys.GeneralYes]: 'Oui',
+  [lngKeys.GeneralNo]: 'Non',
 }
 
 export default {
