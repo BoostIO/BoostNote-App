@@ -469,6 +469,9 @@ const zhTranslation: TranslationSource = {
     'Invite your teammates to this space',
   [lngKeys.GeneralContent]: 'Content',
   [lngKeys.CreateNewCanvas]: 'Create new canvas (beta)',
+
+  [lngKeys.GeneralYes]: '是的',
+  [lngKeys.GeneralNo]: '不',
 }
 
 export default {

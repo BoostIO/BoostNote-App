@@ -495,6 +495,9 @@ const jpTranslation: TranslationSource = {
     'Invite your teammates to this space',
   [lngKeys.GeneralContent]: 'Content',
   [lngKeys.CreateNewCanvas]: 'Create new canvas (beta)',
+
+  [lngKeys.GeneralYes]: 'はい',
+  [lngKeys.GeneralNo]: 'いいえ',
 }
 
 export default {

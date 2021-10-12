@@ -493,6 +493,9 @@ const enTranslation: TranslationSource = {
     'Invite your teammates to this space',
 
   [lngKeys.GeneralContent]: 'Content',
+
+  [lngKeys.GeneralYes]: 'Yes',
+  [lngKeys.GeneralNo]: 'No',
 }
 
 export default {
