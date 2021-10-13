@@ -57,6 +57,7 @@ import {
 } from '../../api/teams/docs/exports'
 import Spinner from '../../../design/components/atoms/Spinner'
 import useApi from '../../../design/lib/hooks/useApi'
+import { usePreviewStyle } from '../../../lib/preview'
 
 export interface DocContextMenuActionsProps {
   team: SerializedTeam
@@ -84,6 +85,7 @@ export function DocContextMenuActions({
   const { subscription } = usePage()
   const { updateTemplatesMap } = useNav()
   const [copied, setCopied] = useState(false)
+  const { previewStyle } = usePreviewStyle()
 
   const docUrl = useMemo(() => {
     return boostHubBaseUrl + getDocLinkHref(doc, team, 'index')
@@ -118,12 +120,12 @@ export function DocContextMenuActions({
   }, [getUpdatedDoc])
 
   const exportAsHtml = useCallback(() => {
-    const previewStyle = defaultPreviewStyle({
+    const customizedPreviewStyle = defaultPreviewStyle({
       theme: selectV2Theme(settings['general.theme']),
-    })
+    }).concat(previewStyle)
     try {
       trackEvent(MixpanelActionTrackTypes.ExportHtml)
-      exportAsHtmlFile(getUpdatedDoc(), settings, previewStyle)
+      exportAsHtmlFile(getUpdatedDoc(), settings, customizedPreviewStyle)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
@@ -132,7 +134,7 @@ export function DocContextMenuActions({
         description: error.message,
       })
     }
-  }, [getUpdatedDoc, settings, pushMessage])
+  }, [previewStyle, getUpdatedDoc, settings, pushMessage])
 
   const { submit: fetchDocPdf, sending: fetchingPdf } = useApi({
     api: ({
