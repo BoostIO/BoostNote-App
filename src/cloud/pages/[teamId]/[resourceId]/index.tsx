@@ -20,7 +20,6 @@ import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { useToast } from '../../../../design/lib/stores/toast'
 import { getTeamURL } from '../../../lib/utils/patterns'
 import { useRouter } from '../../../lib/router'
-
 import {
   ResourceDeleteEventDetails,
   resourceDeleteEventEmitter,
@@ -73,10 +72,17 @@ const ResourceIndex = () => {
           )
         }
       } catch (error) {
+        if (error.name === 'AbortError') {
+          console.warn(`The request for ${pathname} has been aborted`)
+          return
+        }
+
         pushApiErrorMessage(error)
-        const [resourceId] = pathname.split('/')[2].split('-').reverse()
-        removeCachedPageProps(resourceId)
-        push(getTeamURL(props.team))
+        if (error.response != null && error.response.statusCode === 404) {
+          const [resourceId] = pathname.split('/')[2].split('-').reverse()
+          removeCachedPageProps(resourceId)
+          push(getTeamURL(props.team))
+        }
       }
       reloadingRef.current = false
     }
