@@ -8,8 +8,7 @@ import rehypeStringify from 'rehype-stringify'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeKatex from 'rehype-katex'
-import { mergeDeepRight, prop } from 'ramda'
-import gh from 'hast-util-sanitize/lib/github.json'
+import { prop } from 'ramda'
 import { downloadString } from './download'
 import rehypeCodeMirror from '../../design/lib/codemirror/rehypeCodeMirror'
 import { SerializedDoc } from '../interfaces/db/doc'
@@ -18,6 +17,15 @@ import { UserSettings } from './stores/settings'
 import { boostHubBaseUrl } from './consts'
 import { selectV2Theme } from '../../design/lib/styled/styleFunctions'
 import { getGlobalCss } from '../../design/components/atoms/GlobalStyle'
+import {
+  appendElementToBody,
+  rehypeChart,
+  rehypeFlowChart,
+  rehypeMermaid,
+  remarkCharts,
+  remarkPlantUML,
+} from './charts'
+import { schema } from '../components/MarkdownView'
 
 export function filenamifyTitle(title: string): string {
   return filenamify(title.toLowerCase().replace(/\s+/g, '-'))
@@ -28,10 +36,6 @@ const remarkAdmonitionOptions = {
   icons: 'emoji',
   infima: false,
 }
-
-const sanitizeSchema = mergeDeepRight(gh, {
-  attributes: { '*': ['className'] },
-})
 
 export const exportAsHtmlFile = async (
   doc: SerializedDoc,
@@ -46,21 +50,31 @@ export const exportAsHtmlFile = async (
     .use(remarkParse)
     .use(remarkMath)
     .use(remarkAdmonitions, remarkAdmonitionOptions)
+    .use(remarkPlantUML, { server: 'https://www.plantuml.com/plantuml' })
+    .use(remarkCharts)
     .use([remarkRehype, { allowDangerousHTML: false }])
     .use(rehypeCodeMirror, {
       ignoreMissing: true,
       theme: preferences['general.codeBlockTheme'],
     })
     .use(rehypeRaw)
-    .use(rehypeSanitize, sanitizeSchema)
+    .use(rehypeSanitize, schema)
     .use(rehypeDocument, {
       title: doc.title,
       style: previewStyle,
       css: getCssLinks(preferences),
       meta: { keywords: (doc.tags || []).map(prop('text')).join() },
+      script: `${appendElementToBody.toString()}
+        appendElementToBody('chart-export-container', 'canvas')
+        appendElementToBody('flowchart-export-container', 'div')
+      `,
     })
+    .use(rehypeMermaid)
+    .use(rehypeFlowChart)
+    .use(rehypeChart, { tagName: 'chart' })
+    .use(rehypeChart, { tagName: 'chart(yaml)', isYml: true })
+    .use(rehypeKatex, { output: 'htmlAndMathml' })
     .use(rehypeStringify)
-    .use(rehypeKatex)
     .process(doc.head.content)
 
   downloadString(
@@ -182,14 +196,6 @@ const generatePrintToPdfHTML = (
     </html>
   `
 }
-
-const schema = mergeDeepRight(gh, {
-  attributes: {
-    '*': [...gh.attributes['*'], 'className', 'align'],
-    input: [...gh.attributes.input, 'checked'],
-    pre: ['dataRaw'],
-  },
-})
 
 export async function convertMarkdownToPdfExportableHtml(
   content: string,
