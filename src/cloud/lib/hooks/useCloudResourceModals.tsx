@@ -9,12 +9,23 @@ import EmojiInputForm from '../../../design/components/organisms/EmojiInputForm'
 import { DialogIconTypes, useDialog } from '../../../design/lib/stores/dialog'
 import { useModal } from '../../../design/lib/stores/modal'
 import { SubmissionWrappers } from '../../../design/lib/types'
+import { removeCachedPageProps } from '../../../lib/routing/pagePropCache'
 import WorkspaceModalForm from '../../components/Modal/contents/Workspace/WorkspaceModalForm'
 import { SerializedDoc } from '../../interfaces/db/doc'
 import { SerializedFolder } from '../../interfaces/db/folder'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { lngKeys } from '../i18n/types'
+import { useNav } from '../stores/nav'
+import { usePage } from '../stores/pageStore'
+import { resourceDeleteEventEmitter } from '../utils/events'
+import {
+  getDocId,
+  getFolderId,
+  getFolderURL,
+  getTeamURL,
+  getWorkspaceURL,
+} from '../utils/patterns'
 import { useCloudApi } from './useCloudApi'
 import { useI18n } from './useI18n'
 
@@ -31,6 +42,8 @@ export function useCloudResourceModals() {
     deleteDocApi,
   } = useCloudApi()
   const { translate } = useI18n()
+  const { team } = usePage()
+  const { foldersMap, workspacesMap } = useNav()
 
   const openWorkspaceCreateForm = useCallback(() => {
     openModal(<WorkspaceModalForm />, {
@@ -227,16 +240,34 @@ export function useCloudResourceModals() {
           {
             variant: 'danger',
             label: translate(lngKeys.GeneralDelete),
-            onClick: async () => await deleteWorkspaceApi(workspace),
+            onClick: async () => {
+              await deleteWorkspaceApi(workspace)
+
+              if (team == null) {
+                return
+              }
+
+              resourceDeleteEventEmitter.dispatch({
+                resourceType: 'workspace',
+                resourceId: workspace.id,
+                parentURL: getTeamURL(team),
+              })
+            },
           },
         ],
       })
     },
-    [messageBox, deleteWorkspaceApi, translate]
+    [messageBox, deleteWorkspaceApi, translate, team]
   )
 
   const deleteFolder = useCallback(
-    async (target: { id: string; pathname: string; teamId: string }) => {
+    async (target: {
+      id: string
+      pathname: string
+      teamId: string
+      parentFolderId?: string
+      workspaceId: string
+    }) => {
       messageBox({
         title: translate(lngKeys.ModalsDeleteDocFolderTitle, {
           label: target.pathname,
@@ -255,21 +286,50 @@ export function useCloudResourceModals() {
             label: translate(lngKeys.GeneralDelete),
             onClick: async () => {
               await deleteFolderApi(target)
+              await removeCachedPageProps(getFolderId(target))
+              if (team == null) {
+                return
+              }
+
+              const parentFolder =
+                target.parentFolderId != null
+                  ? foldersMap.get(target.parentFolderId)
+                  : null
+              let parentURL = getTeamURL(team)
+              if (parentFolder != null) {
+                parentURL += getFolderURL(parentFolder)
+              } else {
+                const parentWorkspace = workspacesMap.get(target.workspaceId)
+                if (parentWorkspace != null && !parentWorkspace.default) {
+                  parentURL += getWorkspaceURL(parentWorkspace)
+                }
+              }
+
+              resourceDeleteEventEmitter.dispatch({
+                resourceType: 'folder',
+                resourceId: target.id,
+                parentURL,
+              })
             },
           },
         ],
       })
     },
-    [messageBox, deleteFolderApi, translate]
+    [messageBox, deleteFolderApi, translate, team, workspacesMap, foldersMap]
   )
 
   const deleteDoc = useCallback(
-    async (
-      target: { id: string; archivedAt?: string; teamId: string },
-      title = ''
-    ) => {
+    async (target: {
+      id: string
+      teamId: string
+      title: string
+      parentFolderId?: string
+      workspaceId: string
+    }) => {
       messageBox({
-        title: translate(lngKeys.ModalsDeleteDocFolderTitle, { label: title }),
+        title: translate(lngKeys.ModalsDeleteDocFolderTitle, {
+          label: target.title,
+        }),
         message: translate(lngKeys.ModalsDeleteDocDisclaimer),
         iconType: DialogIconTypes.Warning,
         buttons: [
@@ -284,12 +344,37 @@ export function useCloudResourceModals() {
             label: translate(lngKeys.GeneralDelete),
             onClick: async () => {
               await deleteDocApi(target)
+              await removeCachedPageProps(getDocId(target))
+
+              if (team == null) {
+                return
+              }
+
+              const parentFolder =
+                target.parentFolderId != null
+                  ? foldersMap.get(target.parentFolderId)
+                  : null
+              let parentURL = getTeamURL(team)
+              if (parentFolder != null) {
+                parentURL += getFolderURL(parentFolder)
+              } else {
+                const parentWorkspace = workspacesMap.get(target.workspaceId)
+                if (parentWorkspace != null && !parentWorkspace.default) {
+                  parentURL += getWorkspaceURL(parentWorkspace)
+                }
+              }
+
+              resourceDeleteEventEmitter.dispatch({
+                resourceType: 'doc',
+                resourceId: target.id,
+                parentURL,
+              })
             },
           },
         ],
       })
     },
-    [messageBox, deleteDocApi, translate]
+    [messageBox, deleteDocApi, translate, team, workspacesMap, foldersMap]
   )
 
   return {

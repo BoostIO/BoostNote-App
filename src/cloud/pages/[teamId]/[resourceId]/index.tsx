@@ -10,21 +10,33 @@ import { GetInitialPropsParameters } from '../../../interfaces/pages'
 import { parse as parseQuery } from 'querystring'
 import {
   getCachedPageProps,
+  removeCachedPageProps,
   setCachedPageProps,
 } from '../../../../lib/routing/pagePropCache'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useNav } from '../../../lib/stores/nav'
 import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
+import { useToast } from '../../../../design/lib/stores/toast'
+import { getTeamURL } from '../../../lib/utils/patterns'
+import { useRouter } from '../../../lib/router'
+
+import {
+  ResourceDeleteEventDetails,
+  resourceDeleteEventEmitter,
+} from '../../../lib/utils/events'
 
 const ResourceIndex = () => {
   const { setPageData, pageData } = usePage()
   const props = pageData as ResourceShowPageResponseBody & {
     needsReload?: { pathname: string; search: string }
   }
-  const { updateDocsMap, updateFoldersMap } = useNav()
+  const { updateDocsMap, updateFoldersMap, foldersMap } = useNav()
   const reloadingRef = useRef(false)
   const abortControllerRef = useRef<AbortController | null>(null)
+  const { pushApiErrorMessage } = useToast()
+  const { push } = useRouter()
+
   useEffect(() => {
     reload()
 
@@ -39,25 +51,32 @@ const ResourceIndex = () => {
       const abortController = new AbortController()
       abortControllerRef.current = abortController
       const { pathname, search } = props.needsReload
-      const pageData = await ResourceIndex.getInitialProps({
-        pathname,
-        search,
-        signal: abortController.signal,
-        forceReload: true,
-      })
-      if (!abortController.signal.aborted) {
-        setPageData(pageData)
-        updateDocsMap(
-          ...pageData.docs.map(
-            (doc) => [doc.id, doc] as [string, SerializedDocWithBookmark]
+      try {
+        const pageData = await ResourceIndex.getInitialProps({
+          pathname,
+          search,
+          signal: abortController.signal,
+          forceReload: true,
+        })
+        if (!abortController.signal.aborted) {
+          setPageData(pageData)
+          updateDocsMap(
+            ...pageData.docs.map(
+              (doc) => [doc.id, doc] as [string, SerializedDocWithBookmark]
+            )
           )
-        )
-        updateFoldersMap(
-          ...pageData.folders.map(
-            (folder) =>
-              [folder.id, folder] as [string, SerializedFolderWithBookmark]
+          updateFoldersMap(
+            ...pageData.folders.map(
+              (folder) =>
+                [folder.id, folder] as [string, SerializedFolderWithBookmark]
+            )
           )
-        )
+        }
+      } catch (error) {
+        pushApiErrorMessage(error)
+        const [resourceId] = pathname.split('/')[2].split('-').reverse()
+        removeCachedPageProps(resourceId)
+        push(getTeamURL(props.team))
       }
       reloadingRef.current = false
     }
@@ -69,7 +88,82 @@ const ResourceIndex = () => {
       }
       reloadingRef.current = false
     }
-  }, [props.needsReload, setPageData, updateDocsMap, updateFoldersMap])
+  }, [
+    push,
+    props.team,
+    props.needsReload,
+    setPageData,
+    updateDocsMap,
+    updateFoldersMap,
+    pushApiErrorMessage,
+  ])
+
+  useMemo(() => {
+    const handler = (event: CustomEvent<ResourceDeleteEventDetails>) => {
+      const deletedResourceType = event.detail.resourceType
+      const deletedResourceId = event.detail.resourceId
+
+      if (props.type === 'doc') {
+        if (
+          deletedResourceType === 'workspace' &&
+          deletedResourceId === props.pageDoc.workspaceId
+        ) {
+          push(event.detail.parentURL)
+          return
+        }
+
+        if (deletedResourceType === 'folder') {
+          let parentFolderId = props.pageDoc.parentFolderId
+          while (parentFolderId != null) {
+            const parentFolder = foldersMap.get(parentFolderId)
+            if (parentFolder == null) {
+              break
+            }
+            if (deletedResourceId === parentFolderId) {
+              push(event.detail.parentURL)
+              return
+            }
+            parentFolderId = parentFolder.parentFolderId
+          }
+        }
+
+        if (
+          deletedResourceType === 'doc' &&
+          deletedResourceId === props.pageDoc.id
+        ) {
+          push(event.detail.parentURL)
+          return
+        }
+      } else if (props.type === 'folder') {
+        if (
+          deletedResourceType === 'workspace' &&
+          deletedResourceId === props.pageFolder.workspaceId
+        ) {
+          push(event.detail.parentURL)
+          return
+        }
+
+        if (deletedResourceType === 'folder') {
+          let parentFolderId = props.pageFolder.parentFolderId
+          while (parentFolderId != null) {
+            const parentFolder = foldersMap.get(parentFolderId)
+            if (parentFolder == null) {
+              break
+            }
+            if (deletedResourceId === parentFolderId) {
+              push(event.detail.parentURL)
+              return
+            }
+            parentFolderId = parentFolder.parentFolderId
+          }
+        }
+      }
+    }
+    resourceDeleteEventEmitter.listen(handler)
+    return () => {
+      resourceDeleteEventEmitter.unlisten(handler)
+    }
+  }, [push, props, foldersMap])
 
   const content = useMemo(() => {
     let innerPage
@@ -102,10 +196,12 @@ const ResourceIndex = () => {
 ResourceIndex.getInitialProps = async (
   params: GetInitialPropsParameters & { forceReload?: boolean }
 ) => {
+  const [resourceId] = params.pathname.split('/')[2].split('-').reverse()
+
   if (!params.forceReload) {
     const existingPageProps = await getCachedPageProps<
       ResourceShowPageResponseBody
-    >(params.pathname)
+    >(resourceId)
     if (existingPageProps != null) {
       return {
         ...existingPageProps,
@@ -119,7 +215,7 @@ ResourceIndex.getInitialProps = async (
 
   const result = await getResourceShowPageData(params)
 
-  await setCachedPageProps<ResourceShowPageResponseBody>(params.pathname, {
+  await setCachedPageProps<ResourceShowPageResponseBody>(resourceId, {
     ...result,
     folders: [],
     docs: [],

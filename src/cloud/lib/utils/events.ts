@@ -90,3 +90,13 @@ export type BlockEventDetails = {
 export const blockEventEmitter = createCustomEventEmitter<BlockEventDetails>(
   'blocks-events'
 )
+
+export type ResourceDeleteEventDetails = {
+  resourceType: 'doc' | 'workspace' | 'folder'
+  resourceId: string
+  parentURL: string
+}
+
+export const resourceDeleteEventEmitter = createCustomEventEmitter<
+  ResourceDeleteEventDetails
+>('delete-resource')

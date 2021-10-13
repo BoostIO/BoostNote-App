@@ -74,11 +74,13 @@ export function getOriginalDocId(id: string) {
   )
 }
 
-export function getFolderId(folder: SerializedFolder) {
+export function getFolderId(
+  folder: { id: string } & Partial<SerializedFolder>
+) {
   return [prefixFolders, getHexFromUUID(folder.id)].join('')
 }
 
-export function getDocId(doc: SerializedDoc) {
+export function getDocId(doc: { id: string } & Partial<SerializedDoc>) {
   return [prefixDocs, getHexFromUUID(doc.id)].join('')
 }
 
