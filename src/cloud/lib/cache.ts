@@ -6,6 +6,7 @@ export interface Cache<T extends Storable> {
   name: string
   get(key: string): Promise<T | undefined>
   put(key: string, value: T): Promise<void>
+  remove(key: string): Promise<void>
   close(): void
   flush(): Promise<void>
 }
@@ -52,6 +53,12 @@ export async function createCache<T extends Storable>(
         },
         key
       )
+      await transaction.done
+    },
+    remove: async (key) => {
+      const transaction = db.transaction(store_name, 'readwrite')
+
+      await transaction.store.delete(key)
       await transaction.done
     },
     close: () => db.close(),
