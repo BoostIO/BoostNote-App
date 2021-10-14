@@ -1,23 +1,23 @@
 import { callApi } from '../../../lib/client'
 import {
-  SerializedDashboardFolder,
+  SerializedDashboard,
   SerializedPrimaryCondition,
-} from '../../../interfaces/db/dashboardFolder'
+} from '../../../interfaces/db/dashboard'
 
-export interface CreateDashboardFolderRequestBody {
+export interface CreateDashboardRequestBody {
   name: string
   condition: SerializedPrimaryCondition
   private: boolean
 }
 
-export interface CreateDashboardFolderResponseBody {
-  dashboardFolder: SerializedDashboardFolder
+export interface CreateDashboardResponseBody {
+  data: SerializedDashboard
 }
 
-export async function createDashboardFolder(
-  body: CreateDashboardFolderRequestBody & { teamId: string }
+export async function createDashboard(
+  body: CreateDashboardRequestBody & { teamId: string }
 ) {
-  const data = await callApi<CreateDashboardFolderResponseBody>(
+  const data = await callApi<CreateDashboardResponseBody>(
     `/api/dashboard/folders`,
     {
       json: body,
@@ -28,22 +28,22 @@ export async function createDashboardFolder(
   return data
 }
 
-export interface UpdateDashboardFolderRequestBody {
+export interface UpdateDashboardRequestBody {
   name: string
   condition: SerializedPrimaryCondition
   private: boolean
 }
 
-export interface UpdateDashboardFolderResponseBody {
-  dashboardFolder: SerializedDashboardFolder
+export interface UpdateDashboardResponseBody {
+  data: SerializedDashboard
 }
 
-export async function updateDashboardFolder(
-  dashboardFolder: SerializedDashboardFolder,
-  body: CreateDashboardFolderRequestBody
+export async function updateDashboard(
+  dashboard: SerializedDashboard,
+  body: CreateDashboardRequestBody
 ) {
-  const data = await callApi<CreateDashboardFolderResponseBody>(
-    `/api/dashboard/folders/${dashboardFolder.id}`,
+  const data = await callApi<CreateDashboardResponseBody>(
+    `/api/dashboard/folders/${dashboard.id}`,
     {
       json: body,
       method: 'put',
@@ -53,19 +53,13 @@ export async function updateDashboardFolder(
   return data
 }
 
-export interface UpdateDashboardFolderRequestBody {
-  name: string
-  condition: SerializedPrimaryCondition
-  private: boolean
+export interface DeleteDashboardResponseBody {
+  data: SerializedDashboard
 }
 
-export interface UpdateDashboardFolderResponseBody {
-  dashboardFolder: SerializedDashboardFolder
-}
-
-export async function deleteDashboardFolder(dashboardFolder: { id: string }) {
-  const data = await callApi<CreateDashboardFolderResponseBody>(
-    `/api/dashboard/folders/${dashboardFolder.id}`,
+export async function deleteDashboard(dashboard: { id: string }) {
+  const data = await callApi<DeleteDashboardResponseBody>(
+    `/api/dashboard/folders/${dashboard.id}`,
     {
       method: 'delete',
     }

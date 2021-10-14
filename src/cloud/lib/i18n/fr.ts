@@ -283,11 +283,11 @@ const frTranslation: TranslationSource = {
   [lngKeys.ModalsImportDisclaimer]:
     'Choissisez la méthode par laquelle vous souhaitez importer vos documents ( 5Mb max par fichier )',
 
-  [lngKeys.ModalsDashboardFolderCreateTitle]: 'Créer un dossier intelligent',
-  [lngKeys.ModalsDashboardFolderEditTitle]: 'Editer un dossier intelligent',
-  [lngKeys.ModalsDashboardFolderPrivateDisclaimer]:
+  [lngKeys.ModalsDashboardCreateTitle]: 'Créer un dossier intelligent',
+  [lngKeys.ModalsDashboardEditTitle]: 'Editer un dossier intelligent',
+  [lngKeys.ModalsDashboardPrivateDisclaimer]:
     'Ce dossier intelligent va devenir privé. Seulement vous pourrez le voir.',
-  [lngKeys.ModalsDashboardFolderPublicDisclaimer]:
+  [lngKeys.ModalsDashboardPublicDisclaimer]:
     'Ce dossier intelligent va devenir publique. Tous les membres pourront le voir.',
 
   [lngKeys.AttachmentsDeleteDisclaimer]:
@@ -407,7 +407,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.GeneralShared]: 'Partagé',
   [lngKeys.GeneralRenameVerb]: 'Renommer',
   [lngKeys.GeneralEditVerb]: 'Editer',
-  [lngKeys.GeneralDashboardFolders]: 'Dossiers intelligents',
+  [lngKeys.GeneralDashboards]: 'Dossiers intelligents',
   [lngKeys.GeneralBookmarks]: 'Favoris',
   [lngKeys.GeneralUnbookmarkVerb]: 'Retirer des favoris',
   [lngKeys.GeneralBookmarkVerb]: 'Ajouter aux favoris',

@@ -18,19 +18,19 @@ import MetadataContainer from '../../design/components/organisms/MetadataContain
 import MetadataContainerBreak from '../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import MetadataContainerRow from '../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { getMapValues } from '../../design/lib/utils/array'
-import { SerializedDashboardFolder } from '../interfaces/db/dashboardFolder'
+import { SerializedDashboard } from '../interfaces/db/dashboard'
 import { SerializedTeam } from '../interfaces/db/team'
 import { SerializedUser } from '../interfaces/db/user'
 import { boostHubBaseUrl } from '../lib/consts'
 import { getFormattedDateTime } from '../lib/date'
 import { useI18n } from '../lib/hooks/useI18n'
-import { getDashboardFolderHref } from '../lib/href'
+import { getDashboardHref } from '../lib/href'
 import { lngKeys } from '../lib/i18n/types'
 import { usePage } from '../lib/stores/pageStore'
 import UserIcon from './UserIcon'
 import copy from 'copy-to-clipboard'
 import { usingElectron, sendToHost } from '../lib/stores/electron'
-import UpdateDashboardFolderModal from './Modal/contents/DashboardFolder/UpdateDashboardFolderModal'
+import UpdateDashboardModal from './Modal/contents/Dashboard/UpdateDashboardModal'
 import { useModal } from '../../design/lib/stores/modal'
 import { useCloudApi } from '../lib/hooks/useCloudApi'
 import { useDialog } from '../../design/lib/stores/dialog'
@@ -43,28 +43,26 @@ import DocTagsListItem from './DocTagsListItem'
 import { useNav } from '../lib/stores/nav'
 import { SerializedTag } from '../interfaces/db/tag'
 
-interface DashboardFolderContextMenuProps {
-  dashboardFolder: SerializedDashboardFolder
+interface DashboardContextMenuProps {
+  dashboard: SerializedDashboard
   team: SerializedTeam
 }
 
-const DashboardFolderContextMenu = ({
+const DashboardContextMenu = ({
   team,
-  dashboardFolder,
-}: DashboardFolderContextMenuProps) => {
+  dashboard: dashboard,
+}: DashboardContextMenuProps) => {
   const { translate } = useI18n()
   const { permissions = [], currentUserIsCoreMember } = usePage()
   const [copied, setCopied] = useState(false)
   const { openModal } = useModal()
-  const { sendingMap, deleteDashboardFolder } = useCloudApi()
+  const { sendingMap, deleteDashboard } = useCloudApi()
   const { messageBox } = useDialog()
   const { tagsMap } = useNav()
 
   const docUrl = useMemo(() => {
-    return (
-      boostHubBaseUrl + getDashboardFolderHref(dashboardFolder, team, 'index')
-    )
-  }, [team, dashboardFolder])
+    return boostHubBaseUrl + getDashboardHref(dashboard, team, 'index')
+  }, [team, dashboard])
 
   const copyButtonHandler = useCallback(() => {
     copy(docUrl)
@@ -84,22 +82,20 @@ const DashboardFolderContextMenu = ({
   }, [permissions])
 
   const creator =
-    dashboardFolder.userId != null
-      ? usersMap.get(dashboardFolder.userId)
-      : undefined
+    dashboard.userId != null ? usersMap.get(dashboard.userId) : undefined
 
   return (
     <MetadataContainer rows={[{ type: 'header', content: 'Filter options' }]}>
       <MetadataContainerRow
         row={{
           content:
-            dashboardFolder.condition.type === 'and'
+            dashboard.condition.type === 'and'
               ? translate(lngKeys.GeneralAll)
               : translate(lngKeys.GeneralAny),
           type: 'header',
         }}
       />
-      {dashboardFolder.condition.conditions.map((condition, i) => {
+      {dashboard.condition.conditions.map((condition, i) => {
         switch (condition.type) {
           case 'creation_date':
           case 'update_date':
@@ -239,7 +235,7 @@ const DashboardFolderContextMenu = ({
           type: 'content',
           icon: mdiClockOutline,
           content: getFormattedDateTime(
-            dashboardFolder.createdAt,
+            dashboard.createdAt,
             undefined,
             'MMM dd, yyyy, HH:mm'
           ),
@@ -265,7 +261,7 @@ const DashboardFolderContextMenu = ({
           type: 'content',
           icon: mdiContentSaveOutline,
           content: getFormattedDateTime(
-            dashboardFolder.updatedAt,
+            dashboard.updatedAt,
             undefined,
             'MMM dd, yyyy, HH:mm'
           ),
@@ -276,7 +272,7 @@ const DashboardFolderContextMenu = ({
           label: translate(lngKeys.ModalsWorkspaceAccess),
           type: 'content',
           icon: mdiAccountMultiple,
-          content: dashboardFolder.private ? (
+          content: dashboard.private ? (
             translate(lngKeys.GeneralPrivate)
           ) : (
             <Flexbox wrap='wrap'>
@@ -323,16 +319,12 @@ const DashboardFolderContextMenu = ({
             row={{
               type: 'button',
               props: {
-                disabled: sendingMap.has(dashboardFolder.id),
+                disabled: sendingMap.has(dashboard.id),
                 id: 'metadata-move',
                 label: translate(lngKeys.GeneralEditVerb),
                 iconPath: mdiPencil,
                 onClick: () =>
-                  openModal(
-                    <UpdateDashboardFolderModal
-                      dashboardFolder={dashboardFolder}
-                    />
-                  ),
+                  openModal(<UpdateDashboardModal dashboard={dashboard} />),
               },
             }}
           />
@@ -340,14 +332,14 @@ const DashboardFolderContextMenu = ({
             row={{
               type: 'button',
               props: {
-                disabled: sendingMap.has(dashboardFolder.id),
-                spinning: sendingMap.get(dashboardFolder.id) === 'delete',
+                disabled: sendingMap.has(dashboard.id),
+                spinning: sendingMap.get(dashboard.id) === 'delete',
                 id: 'metadata-delete',
                 label: translate(lngKeys.GeneralDelete),
                 iconPath: mdiTrashCanOutline,
                 onClick: () => {
                   messageBox({
-                    title: `Delete ${dashboardFolder.name}?`,
+                    title: `Delete ${dashboard.name}?`,
                     message: `Are you sure to delete this smart folder?`,
                     buttons: [
                       {
@@ -360,7 +352,7 @@ const DashboardFolderContextMenu = ({
                         variant: 'danger',
                         label: translate(lngKeys.GeneralDelete),
                         onClick: async () => {
-                          await deleteDashboardFolder(dashboardFolder)
+                          await deleteDashboard(dashboard)
                         },
                       },
                     ],
@@ -386,4 +378,4 @@ const TagList = styled.div`
   }
 `
 
-export default React.memo(DashboardFolderContextMenu)
+export default React.memo(DashboardContextMenu)

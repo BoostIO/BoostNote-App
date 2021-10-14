@@ -15,6 +15,7 @@ export type TeamLinkIntent =
   | 'delete'
   | 'shared'
   | 'requests/deny'
+  | 'dashboard'
 
 export interface TeamIdProps {
   id: string

@@ -1,46 +1,47 @@
 import React, { useState, useCallback } from 'react'
 import { useModal } from '../../../../design/lib/stores/modal'
 import {
-  updateDashboardFolder,
-  UpdateDashboardFolderRequestBody,
+  updateDashboard,
+  UpdateDashboardRequestBody,
 } from '../../../../cloud/api/teams/dashboard/folders'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { useToast } from '../../../../design/lib/stores/toast'
-import { getDashboardFolderHref } from '../../../../cloud/lib/href'
+import { getDashboardHref } from '../../../../cloud/lib/href'
 import { useRouter } from '../../../../cloud/lib/router'
-import { SerializedDashboardFolder } from '../../../../cloud/interfaces/db/dashboardFolder'
-import DashboardFolderForm from './organisms/DashboardFolderForm'
+import { SerializedDashboard } from '../../../../cloud/interfaces/db/dashboard'
+import DashboardForm from './organisms/DashboardForm'
 import ModalContainer from './atoms/ModalContainer'
 
-interface DashboardFolderUpdateModalProps {
-  dashboardFolder: SerializedDashboardFolder
+interface DashboardUpdateModalProps {
+  dashboardFolder: SerializedDashboard
 }
 
-const DashboardFolderUpdateModal = ({
+const DashboardUpdateModal = ({
   dashboardFolder,
-}: DashboardFolderUpdateModalProps) => {
+}: DashboardUpdateModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
 
-  const { updateDashboardFoldersMap } = useNav()
+  const { updateDashboardsMap: updateDashboardsMap } = useNav()
   const [sending, setSending] = useState(false)
   const { push } = useRouter()
 
   const { pushApiErrorMessage } = useToast()
   const submit = useCallback(
-    async (body: UpdateDashboardFolderRequestBody) => {
+    async (body: UpdateDashboardRequestBody) => {
       if (team == null) {
         return
       }
       setSending(true)
       try {
-        const {
-          dashboardFolder: updatedDashboardFolder,
-        } = await updateDashboardFolder(dashboardFolder, body)
-        updateDashboardFoldersMap([dashboardFolder.id, updatedDashboardFolder])
+        const { data: updatedDashboard } = await updateDashboard(
+          dashboardFolder,
+          body
+        )
+        updateDashboardsMap([dashboardFolder.id, updatedDashboard])
         closeModal()
-        push(getDashboardFolderHref(dashboardFolder, team, 'index'))
+        push(getDashboardHref(dashboardFolder, team, 'index'))
       } catch (error) {
         console.error(error)
         pushApiErrorMessage(error)
@@ -50,7 +51,7 @@ const DashboardFolderUpdateModal = ({
     [
       team,
       dashboardFolder,
-      updateDashboardFoldersMap,
+      updateDashboardsMap,
       closeModal,
       push,
       pushApiErrorMessage,
@@ -63,7 +64,7 @@ const DashboardFolderUpdateModal = ({
 
   return (
     <ModalContainer title='Edit a smart folder'>
-      <DashboardFolderForm
+      <DashboardForm
         action='Update'
         onSubmit={submit}
         buttonsAreDisabled={sending}
@@ -115,4 +116,4 @@ const DashboardFolderUpdateModal = ({
   )
 }
 
-export default DashboardFolderUpdateModal
+export default DashboardUpdateModal

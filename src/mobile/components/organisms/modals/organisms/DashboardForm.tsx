@@ -1,11 +1,7 @@
 import { mdiPlus } from '@mdi/js'
 import { TFunction } from 'i18next'
 import React, { useCallback, useState } from 'react'
-import BorderSeparator from '../../../../../design/components/atoms/BorderSeparator'
-import Button, {
-  LoadingButton,
-} from '../../../../../design/components/atoms/Button'
-import ButtonGroup from '../../../../../design/components/atoms/ButtonGroup'
+import { LoadingButton } from '../../../../../design/components/atoms/Button'
 import Switch from '../../../../../design/components/atoms/Switch'
 import Form from '../../../../../design/components/molecules/Form'
 import { FormSelectOption } from '../../../../../design/components/molecules/Form/atoms/FormSelect'
@@ -13,37 +9,37 @@ import FormRow from '../../../../../design/components/molecules/Form/templates/F
 import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
 import styled from '../../../../../design/lib/styled'
 import {
-  UpdateDashboardFolderRequestBody,
-  CreateDashboardFolderRequestBody,
-} from '../../../../api/teams/dashboard/folders'
-import { useI18n } from '../../../../lib/hooks/useI18n'
-import { lngKeys } from '../../../../lib/i18n/types'
-import { EditibleSecondaryCondition } from './interfaces'
-import SecondaryConditionItem from './SecondaryConditionItem'
+  UpdateDashboardRequestBody,
+  CreateDashboardRequestBody,
+} from '../../../../../cloud/api/teams/dashboard/folders'
+import { useI18n } from '../../../../../cloud/lib/hooks/useI18n'
+import { lngKeys } from '../../../../../cloud/lib/i18n/types'
+import MobileFormControl from '../../../atoms/MobileFormControl'
+import BorderSeparator from '../../../../../design/components/atoms/BorderSeparator'
+import { EditibleSecondaryCondition } from '../../../../../cloud/components/Modal/contents/Dashboard/interfaces'
+import SecondaryConditionItem from '../../../../../cloud/components/Modal/contents/Dashboard/SecondaryConditionItem'
 
-interface DashboardFolderFormProps {
+interface DashboardFormProps {
   action: 'Create' | 'Update'
   defaultName?: string
   defaultPrivate?: boolean
   defaultConditionType: 'and' | 'or'
   defaultSecondaryConditions: EditibleSecondaryCondition[]
   onSubmit: (
-    body: CreateDashboardFolderRequestBody | UpdateDashboardFolderRequestBody
+    body: CreateDashboardRequestBody | UpdateDashboardRequestBody
   ) => void
-  onCancel?: () => void
   buttonsAreDisabled?: boolean
 }
 
-const DashboardFolderForm = ({
+const DashboardForm = ({
   action,
   defaultName = '',
   defaultPrivate = true,
   defaultConditionType,
   defaultSecondaryConditions,
   buttonsAreDisabled,
-  onCancel,
   onSubmit,
-}: DashboardFolderFormProps) => {
+}: DashboardFormProps) => {
   const [name, setName] = useState(defaultName)
   const [makingPrivate, setMakingPrivate] = useState(defaultPrivate)
   const [primaryConditionType, setPrimaryConditionType] = useState<
@@ -104,8 +100,8 @@ const DashboardFolderForm = ({
     <Container>
       <h2 className='modal__heading'>
         {action === 'Create'
-          ? translate(lngKeys.ModalsDashboardFolderCreateTitle)
-          : translate(lngKeys.ModalsDashboardFolderEditTitle)}
+          ? translate(lngKeys.ModalsDashboardCreateTitle)
+          : translate(lngKeys.ModalsDashboardEditTitle)}
       </h2>
       <Form className='smart__folder__form' onSubmit={submitForm}>
         <FormRow
@@ -123,68 +119,75 @@ const DashboardFolderForm = ({
             items: [{ type: 'node', element: <BorderSeparator /> }],
           }}
         />
-        <FormRow fullWidth={true}>
-          <FormRowItem
-            className='form__row__item--shrink'
-            item={{
-              type: 'select',
-              props: {
-                options: [
-                  { label: translate(lngKeys.GeneralAll), value: 'and' },
-                  { label: translate(lngKeys.GeneralAny), value: 'or' },
-                ],
-                value: getPrimaryConditionOptionByType(
-                  translate,
-                  primaryConditionType
-                ),
-                onChange: updatePrimaryConditionType,
-              },
-            }}
-          />
-          <FormRowItem
-            className='form__row__item--shrink'
-            item={{
-              type: 'button',
-              props: {
-                iconPath: mdiPlus,
-                variant: 'secondary',
-                label: '',
-                onClick: () =>
-                  insertSecondaryConditionByIndex({ type: 'null' }, 0),
-              },
-            }}
-          />
-        </FormRow>
 
-        {secondaryConditions.map((condition, index) => {
-          const updateSecondaryCondition = (
-            updatedSecondaryCondition: EditibleSecondaryCondition
-          ) => {
-            setSecondaryConditions((previousConditions) => {
-              const newSecondaryConditions = [...previousConditions]
-              newSecondaryConditions.splice(index, 1, updatedSecondaryCondition)
-              return newSecondaryConditions
-            })
-          }
-
-          const insertConditionNext = () => {
-            insertSecondaryConditionByIndex({ type: 'null' }, index)
-          }
-
-          const removeCondition = () => {
-            removeSecondaryConditionByIndex(index)
-          }
-
-          return (
-            <SecondaryConditionItem
-              key={index}
-              condition={condition}
-              update={updateSecondaryCondition}
-              addNext={insertConditionNext}
-              remove={removeCondition}
+        <div className='smart__folder__form__scrollable'>
+          <FormRow fullWidth={true}>
+            <FormRowItem
+              className='form__row__item--shrink'
+              item={{
+                type: 'select',
+                props: {
+                  options: [
+                    { label: translate(lngKeys.GeneralAll), value: 'and' },
+                    { label: translate(lngKeys.GeneralAny), value: 'or' },
+                  ],
+                  value: getPrimaryConditionOptionByType(
+                    translate,
+                    primaryConditionType
+                  ),
+                  onChange: updatePrimaryConditionType,
+                },
+              }}
             />
-          )
-        })}
+            <FormRowItem
+              className='form__row__item--shrink'
+              item={{
+                type: 'button',
+                props: {
+                  iconPath: mdiPlus,
+                  variant: 'secondary',
+                  label: '',
+                  onClick: () =>
+                    insertSecondaryConditionByIndex({ type: 'null' }, 0),
+                },
+              }}
+            />
+          </FormRow>
+
+          {secondaryConditions.map((condition, index) => {
+            const updateSecondaryCondition = (
+              updatedSecondaryCondition: EditibleSecondaryCondition
+            ) => {
+              setSecondaryConditions((previousConditions) => {
+                const newSecondaryConditions = [...previousConditions]
+                newSecondaryConditions.splice(
+                  index,
+                  1,
+                  updatedSecondaryCondition
+                )
+                return newSecondaryConditions
+              })
+            }
+
+            const insertConditionNext = () => {
+              insertSecondaryConditionByIndex({ type: 'null' }, index)
+            }
+
+            const removeCondition = () => {
+              removeSecondaryConditionByIndex(index)
+            }
+
+            return (
+              <SecondaryConditionItem
+                key={index}
+                condition={condition}
+                update={updateSecondaryCondition}
+                addNext={insertConditionNext}
+                remove={removeCondition}
+              />
+            )
+          })}
+        </div>
 
         <FormRow
           fullWidth={true}
@@ -201,13 +204,9 @@ const DashboardFolderForm = ({
               </h3>
               <p>
                 {makingPrivate ? (
-                  <>
-                    {translate(lngKeys.ModalsDashboardFolderPrivateDisclaimer)}
-                  </>
+                  <>{translate(lngKeys.ModalsDashboardPrivateDisclaimer)}</>
                 ) : (
-                  <>
-                    {translate(lngKeys.ModalsDashboardFolderPublicDisclaimer)}
-                  </>
+                  <>{translate(lngKeys.ModalsDashboardPublicDisclaimer)}</>
                 )}
               </p>
             </div>
@@ -225,39 +224,37 @@ const DashboardFolderForm = ({
             />
           </FormRowItem>
         </FormRow>
-        <FormRow>
-          <ButtonGroup layout='spread'>
-            {onCancel != null && (
-              <Button
-                variant='secondary'
-                onClick={onCancel}
-                disabled={buttonsAreDisabled}
-              >
-                {translate(lngKeys.GeneralCancel)}
-              </Button>
-            )}
-            <LoadingButton
-              spinning={buttonsAreDisabled}
-              type='submit'
-              variant='primary'
-              disabled={buttonsAreDisabled}
-            >
-              {action === 'Create'
-                ? translate(lngKeys.GeneralCreate)
-                : translate(lngKeys.GeneralUpdateVerb)}
-            </LoadingButton>
-          </ButtonGroup>
-        </FormRow>
+        <MobileFormControl>
+          <LoadingButton
+            spinning={buttonsAreDisabled}
+            type='submit'
+            variant='primary'
+            disabled={buttonsAreDisabled}
+          >
+            {action === 'Create'
+              ? translate(lngKeys.GeneralCreate)
+              : translate(lngKeys.GeneralUpdateVerb)}
+          </LoadingButton>
+        </MobileFormControl>
       </Form>
     </Container>
   )
 }
 
 const Container = styled.div`
+  margin: ${({ theme }) => theme.sizes.spaces.df}px;
   color: ${({ theme }) => theme.colors.text.primary};
+  overflow-x: hidden;
+  overflow-y: auto;
   .modal__heading,
   .form__row__item {
     color: ${({ theme }) => theme.colors.text.primary};
+  }
+
+  .smart__folder__form__scrollable {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 12px;
   }
 
   .form__row__item.form__row__item--shrink {
@@ -292,4 +289,4 @@ function getPrimaryConditionOptionByType(t: TFunction, value: 'and' | 'or') {
   }
 }
 
-export default DashboardFolderForm
+export default DashboardForm

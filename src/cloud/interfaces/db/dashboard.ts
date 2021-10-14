@@ -2,7 +2,7 @@ import { DocStatus } from './doc'
 import { SerializedTeam } from './team'
 import { SerializedUser } from './user'
 
-export interface SerializableDashboardFolderProps {
+export interface SerializableDashboardProps {
   id: string
   name: string
   private: boolean
@@ -10,7 +10,7 @@ export interface SerializableDashboardFolderProps {
   userId: string
 }
 
-export interface SerializedUnserializableDashboardFolderProps {
+export interface SerializedUnserializableDashboardProps {
   condition: SerializedPrimaryCondition
   team?: SerializedTeam
   user?: SerializedUser
@@ -18,8 +18,8 @@ export interface SerializedUnserializableDashboardFolderProps {
   updatedAt: string
 }
 
-export type SerializedDashboardFolder = SerializableDashboardFolderProps &
-  SerializedUnserializableDashboardFolderProps
+export type SerializedDashboard = SerializableDashboardProps &
+  SerializedUnserializableDashboardProps
 
 export type AndCondition = {
   type: 'and'
