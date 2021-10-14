@@ -104,7 +104,7 @@ const ResourceIndex = () => {
     pushApiErrorMessage,
   ])
 
-  useMemo(() => {
+  useEffect(() => {
     const handler = (event: CustomEvent<ResourceDeleteEventDetails>) => {
       const deletedResourceType = event.detail.resourceType
       const deletedResourceId = event.detail.resourceId
