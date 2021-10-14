@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '../../../design/lib/styled'
-import { getTeamIndexPageData } from '../../api/pages/teams'
+import { getDashboardListPageData } from '../../api/pages/teams/dashboard/list'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 import ApplicationContent from '../ApplicationContent'
 import ApplicationPage from '../ApplicationPage'
@@ -24,7 +24,7 @@ const Container = styled.div`
 `
 
 DashboardPage.getInitialProps = async (params: GetInitialPropsParameters) => {
-  const result = await getTeamIndexPageData(params)
+  const result = await getDashboardListPageData(params)
   return result
 }
 

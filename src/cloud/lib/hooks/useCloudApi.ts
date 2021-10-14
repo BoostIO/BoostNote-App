@@ -65,7 +65,7 @@ import {
 import useBulkApi from '../../../design/lib/hooks/useBulkApi'
 import { getMapFromEntityArray } from '../../../design/lib/utils/array'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
-import { deleteDashboardFolder } from '../../api/teams/dashboard/folders'
+import { deleteDashboard } from '../../api/teams/dashboard/folders'
 
 import { format as formatDate } from 'date-fns'
 import {
@@ -94,7 +94,7 @@ export function useCloudApi() {
     removeFromDocsMap,
     removeFromFoldersMap,
     setCurrentPath,
-    removeFromDashboardFoldersMap,
+    removeFromDashboardsMap: removeFromDashboardsMap,
     removeFromTagsMap,
   } = useNav()
   const { push } = useRouter()
@@ -680,16 +680,16 @@ export function useCloudApi() {
     ]
   )
 
-  const deleteDashboardFolderApi = useCallback(
+  const deleteDashboardApi = useCallback(
     async (target: { id: string; teamId: string }) => {
       return send(target.id, 'delete', {
-        api: () => deleteDashboardFolder({ id: target.id }),
+        api: () => deleteDashboard({ id: target.id }),
         cb: () => {
-          removeFromDashboardFoldersMap(target.id)
+          removeFromDashboardsMap(target.id)
         },
       })
     },
-    [removeFromDashboardFoldersMap, send]
+    [removeFromDashboardsMap, send]
   )
 
   return {
@@ -708,7 +708,7 @@ export function useCloudApi() {
     deleteWorkspaceApi,
     deleteFolderApi,
     deleteDocApi,
-    deleteDashboardFolder: deleteDashboardFolderApi,
+    deleteDashboard: deleteDashboardApi,
     updateDocAssigneeApi,
     updateDocStatusApi,
     updateDocDueDateApi,

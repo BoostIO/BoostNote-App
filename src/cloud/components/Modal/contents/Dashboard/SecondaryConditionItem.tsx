@@ -4,7 +4,7 @@ import {
   StatusCondition,
   LabelsCondition,
   AssigneesCondition,
-} from '../../../../interfaces/db/dashboardFolder'
+} from '../../../../interfaces/db/dashboard'
 import {
   EditibleSecondaryCondition,
   EditibleDueDateCondition,

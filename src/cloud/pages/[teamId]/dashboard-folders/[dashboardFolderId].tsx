@@ -12,7 +12,7 @@ import {
   CreationDateCondition,
   SerializeDateProps,
   UpdateDateCondition,
-} from '../../../interfaces/db/dashboardFolder'
+} from '../../../interfaces/db/dashboard'
 import { addDays, subDays } from 'date-fns'
 import ContentManager from '../../../components/ContentManager'
 import { getTeamIndexPageData } from '../../../api/pages/teams'
@@ -26,7 +26,7 @@ import ApplicationPage from '../../../components/ApplicationPage'
 import ColoredBlock from '../../../../design/components/atoms/ColoredBlock'
 import ApplicationTopbar from '../../../components/ApplicationTopbar'
 import ApplicationContent from '../../../components/ApplicationContent'
-import { localizeDate } from '../../../components/Modal/contents/DashboardFolder/DocDateSelect'
+import { localizeDate } from '../../../components/Modal/contents/Dashboard/DocDateSelect'
 
 function validateAssignees(
   doc: SerializedDocWithBookmark,
@@ -132,7 +132,7 @@ const DashboardFolderPage = (params: any) => {
     docsMap,
     initialLoadDone,
     workspacesMap,
-    dashboardFoldersMap,
+    dashboardsMap: dashboardFoldersMap,
   } = useNav()
   const { openContextModal } = useModal()
 
@@ -298,7 +298,7 @@ const DashboardFolderPage = (params: any) => {
               openContextModal(
                 event,
                 <DashboardFolderContextMenu
-                  dashboardFolder={dashboardFolder}
+                  dashboard={dashboardFolder}
                   team={team}
                 />,
                 {

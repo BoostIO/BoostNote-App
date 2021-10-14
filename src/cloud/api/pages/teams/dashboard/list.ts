@@ -2,21 +2,21 @@ import { GeneralAppProps } from '../../../../interfaces/api'
 import { callApi } from '../../../../lib/client'
 import { GetInitialPropsParameters } from '../../../../interfaces/pages'
 import querystring from 'querystring'
-import { SerializedDashboardFolder } from '../../../../interfaces/db/dashboardFolder'
+import { SerializedDashboard } from '../../../../interfaces/db/dashboard'
 
-export type DashboardFolderShowPageResponseBody = GeneralAppProps & {
-  dashboardFolders: SerializedDashboardFolder[]
+export type DashboardListPageResponseBody = GeneralAppProps & {
+  data: SerializedDashboard[]
 }
 
-export async function getDashboardFolderShowPageData({
+export async function getDashboardListPageData({
   pathname,
   search,
   signal,
 }: GetInitialPropsParameters) {
   const [, teamId] = pathname.split('/')
 
-  const data = await callApi<DashboardFolderShowPageResponseBody>(
-    'api/pages/teams/dashboard/folders/list',
+  const data = await callApi<DashboardListPageResponseBody>(
+    'api/pages/teams/dashboard/list',
     {
       search: {
         ...querystring.parse(search),

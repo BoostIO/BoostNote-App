@@ -1,45 +1,44 @@
 import React, { useState, useCallback } from 'react'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import {
-  updateDashboardFolder,
-  UpdateDashboardFolderRequestBody,
+  updateDashboard,
+  UpdateDashboardRequestBody,
 } from '../../../../api/teams/dashboard/folders'
 import { usePage } from '../../../../lib/stores/pageStore'
 import { useNav } from '../../../../lib/stores/nav'
 import { useToast } from '../../../../../design/lib/stores/toast'
-import { getDashboardFolderHref } from '../../../../lib/href'
+import { getDashboardHref } from '../../../../lib/href'
 import { useRouter } from '../../../../lib/router'
-import { SerializedDashboardFolder } from '../../../../interfaces/db/dashboardFolder'
-import DashboardFolderForm from './DashboardFolderForm'
+import { SerializedDashboard } from '../../../../interfaces/db/dashboard'
+import DashboardForm from './DashboardForm'
 
-interface UpdateDashboardFolderModalProps {
-  dashboardFolder: SerializedDashboardFolder
+interface UpdateDashboardModalProps {
+  dashboard: SerializedDashboard
 }
 
-const UpdateDashboardFolderModal = ({
-  dashboardFolder,
-}: UpdateDashboardFolderModalProps) => {
+const UpdateDashboardModal = ({ dashboard }: UpdateDashboardModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
 
-  const { updateDashboardFoldersMap } = useNav()
+  const { updateDashboardsMap: updateDashboardsMap } = useNav()
   const [sending, setSending] = useState(false)
   const { push } = useRouter()
 
   const { pushApiErrorMessage } = useToast()
   const submit = useCallback(
-    async (body: UpdateDashboardFolderRequestBody) => {
+    async (body: UpdateDashboardRequestBody) => {
       if (team == null) {
         return
       }
       setSending(true)
       try {
-        const {
-          dashboardFolder: updatedDashboardFolder,
-        } = await updateDashboardFolder(dashboardFolder, body)
-        updateDashboardFoldersMap([dashboardFolder.id, updatedDashboardFolder])
+        const { data: updatedDashboard } = await updateDashboard(
+          dashboard,
+          body
+        )
+        updateDashboardsMap([dashboard.id, updatedDashboard])
         closeModal()
-        push(getDashboardFolderHref(dashboardFolder, team, 'index'))
+        push(getDashboardHref(dashboard, team, 'index'))
       } catch (error) {
         console.error(error)
         pushApiErrorMessage(error)
@@ -48,8 +47,8 @@ const UpdateDashboardFolderModal = ({
     },
     [
       team,
-      dashboardFolder,
-      updateDashboardFoldersMap,
+      dashboard,
+      updateDashboardsMap,
       closeModal,
       push,
       pushApiErrorMessage,
@@ -61,15 +60,15 @@ const UpdateDashboardFolderModal = ({
   }
 
   return (
-    <DashboardFolderForm
+    <DashboardForm
       action='Update'
       onCancel={closeModal}
       onSubmit={submit}
       buttonsAreDisabled={sending}
-      defaultName={dashboardFolder.name}
-      defaultPrivate={dashboardFolder.private}
-      defaultConditionType={dashboardFolder.condition.type}
-      defaultSecondaryConditions={dashboardFolder.condition.conditions.map(
+      defaultName={dashboard.name}
+      defaultPrivate={dashboard.private}
+      defaultConditionType={dashboard.condition.type}
+      defaultSecondaryConditions={dashboard.condition.conditions.map(
         (secondaryCondition) => {
           switch (secondaryCondition.type) {
             case 'due_date':
@@ -113,4 +112,4 @@ const UpdateDashboardFolderModal = ({
   )
 }
 
-export default UpdateDashboardFolderModal
+export default UpdateDashboardModal
