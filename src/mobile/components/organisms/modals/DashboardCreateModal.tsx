@@ -1,42 +1,42 @@
 import React, { useState, useCallback } from 'react'
 import { useModal } from '../../../../design/lib/stores/modal'
 import {
-  createDashboardFolder,
-  CreateDashboardFolderRequestBody,
+  createDashboard,
+  CreateDashboardRequestBody,
 } from '../../../../cloud/api/teams/dashboard/folders'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { useToast } from '../../../../design/lib/stores/toast'
-import { getDashboardFolderHref } from '../../../../cloud/lib/href'
+import { getDashboardHref } from '../../../../cloud/lib/href'
 import { useRouter } from '../../../../cloud/lib/router'
 import ModalContainer from './atoms/ModalContainer'
-import DashboardFolderForm from './organisms/DashboardFolderForm'
+import DashboardForm from './organisms/DashboardForm'
 import { useAppStatus } from '../../../lib/appStatus'
 
-const DashboardFolderCreateModal = () => {
+const DashboardCreateModal = () => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
-  const { updateDashboardFoldersMap } = useNav()
+  const { updateDashboardsMap: updateDashboardsMap } = useNav()
   const [sending, setSending] = useState(false)
   const { push } = useRouter()
   const { setShowingNavigator } = useAppStatus()
 
   const { pushApiErrorMessage } = useToast()
   const submit = useCallback(
-    async (body: CreateDashboardFolderRequestBody) => {
+    async (body: CreateDashboardRequestBody) => {
       if (team == null) {
         return
       }
       setSending(true)
       try {
-        const { dashboardFolder } = await createDashboardFolder({
+        const { data: dashboardFolder } = await createDashboard({
           ...body,
           teamId: team.id,
         })
-        updateDashboardFoldersMap([dashboardFolder.id, dashboardFolder])
+        updateDashboardsMap([dashboardFolder.id, dashboardFolder])
         closeModal()
         setShowingNavigator(false)
-        push(getDashboardFolderHref(dashboardFolder, team, 'index'))
+        push(getDashboardHref(dashboardFolder, team, 'index'))
       } catch (error) {
         console.error(error)
         pushApiErrorMessage(error)
@@ -46,7 +46,7 @@ const DashboardFolderCreateModal = () => {
     [
       team,
       push,
-      updateDashboardFoldersMap,
+      updateDashboardsMap,
       closeModal,
       pushApiErrorMessage,
       setShowingNavigator,
@@ -59,7 +59,7 @@ const DashboardFolderCreateModal = () => {
 
   return (
     <ModalContainer title='Create a smart folder'>
-      <DashboardFolderForm
+      <DashboardForm
         action='Create'
         onSubmit={submit}
         defaultConditionType='and'
@@ -75,4 +75,4 @@ const DashboardFolderCreateModal = () => {
   )
 }
 
-export default DashboardFolderCreateModal
+export default DashboardCreateModal

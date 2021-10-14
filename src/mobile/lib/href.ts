@@ -12,7 +12,7 @@ import {
   TeamIdProps,
   TeamLinkIntent,
 } from '../../cloud/components/Link/TeamLink'
-import { SerializedDashboardFolder } from '../../cloud/interfaces/db/dashboardFolder'
+import { SerializedDashboard } from '../../cloud/interfaces/db/dashboard'
 import { SerializedFolder } from '../../cloud/interfaces/db/folder'
 import { SerializedTag } from '../../cloud/interfaces/db/tag'
 import { SerializedWorkspace } from '../../cloud/interfaces/db/workspace'
@@ -60,12 +60,12 @@ export function getFolderHref(
   return `${basePathname}/${intent}${queryPathName}`
 }
 
-export type DashboardFolderRouteIntent = 'index'
+export type DashboardRouteIntent = 'index'
 
-export function getDashboardFolderHref(
-  dashboardFolder: SerializedDashboardFolder,
+export function getDashboardHref(
+  dashboardFolder: SerializedDashboard,
   team: SerializedTeam,
-  intent: DashboardFolderRouteIntent,
+  intent: DashboardRouteIntent,
   query?: any
 ) {
   const basePathname = `${getTeamURL(team)}/smart-folders/${encodeURIComponent(

@@ -20,7 +20,7 @@ import {
 import { SerializedTag } from '../../../interfaces/db/tag'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedTemplate } from '../../../interfaces/db/template'
-import { SerializedDashboardFolder } from '../../../interfaces/db/dashboardFolder'
+import { SerializedDashboard } from '../../../interfaces/db/dashboard'
 
 export interface NavContext {
   initialLoadDone: boolean
@@ -58,13 +58,13 @@ export interface NavContext {
   updateDocsMap: (...mappedDoc: [string, SerializedDocWithBookmark][]) => void
   updateParentFolderOfDoc: (doc: SerializedDocWithBookmark) => void
   removeFromDocsMap: (...ids: string[]) => void
-  dashboardFoldersMap: Map<string, SerializedDashboardFolder>
+  dashboardsMap: Map<string, SerializedDashboard>
   appEventsMap: Map<string, SerializedAppEvent>
   updateAppEventsMap: (...mappedEvents: [string, SerializedAppEvent][]) => void
-  updateDashboardFoldersMap: (
-    ...dashboardFolders: [string, SerializedDashboardFolder][]
+  updateDashboardsMap: (
+    ...dashboardFolders: [string, SerializedDashboard][]
   ) => void
-  removeFromDashboardFoldersMap: (...ids: string[]) => void
+  removeFromDashboardsMap: (...ids: string[]) => void
   createFolderHandler: (body: CreateFolderRequestBody) => void
   updateFolderHandler: (
     folder: SerializedFolderWithBookmark | SerializedFolder,

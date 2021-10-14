@@ -1,14 +1,14 @@
 import { SerializedTeam } from '../interfaces/db/team'
-import { SerializedDashboardFolder } from '../interfaces/db/dashboardFolder'
+import { SerializedDashboard } from '../interfaces/db/dashboard'
 import { getTeamURL } from './utils/patterns'
 import querystring from 'querystring'
 
-export type DashboardFolderRouteIntent = 'index'
+export type DashboardRouteIntent = 'index'
 
-export function getDashboardFolderHref(
-  dashboardFolder: SerializedDashboardFolder,
+export function getDashboardHref(
+  dashboardFolder: SerializedDashboard,
   team: SerializedTeam,
-  intent: DashboardFolderRouteIntent,
+  intent: DashboardRouteIntent,
   query?: any
 ) {
   const basePathname = `${getTeamURL(team)}/smart-folders/${encodeURIComponent(

@@ -1,5 +1,5 @@
 import React from 'react'
-import { DateConditionValueType } from '../../../../interfaces/db/dashboardFolder'
+import { DateConditionValueType } from '../../../../interfaces/db/dashboard'
 import FormSelect from '../../../../../design/components/molecules/Form/atoms/FormSelect'
 import { EditibleDateConditionValue } from './interfaces'
 

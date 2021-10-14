@@ -56,8 +56,8 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     updateFoldersMap,
     updateTemplatesMap,
     removeFromTemplatesMap,
-    updateDashboardFoldersMap,
-    removeFromDashboardFoldersMap,
+    updateDashboardsMap: updateDashboardFoldersMap,
+    removeFromDashboardsMap: removeFromDashboardFoldersMap,
     updateAppEventsMap,
   } = useNav()
   const {
