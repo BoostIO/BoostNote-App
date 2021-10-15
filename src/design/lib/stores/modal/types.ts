@@ -17,7 +17,11 @@ export interface ModalElement {
   onClose?: () => void
 }
 
-export type ContextModalAlignment = 'bottom-left' | 'bottom-right' | 'top-left'
+export type ContextModalAlignment =
+  | 'bottom-left'
+  | 'bottom-right'
+  | 'top-left'
+  | 'right'
 export type ModalOpeningOptions = {
   showCloseIcon?: boolean
   keepAll?: boolean
