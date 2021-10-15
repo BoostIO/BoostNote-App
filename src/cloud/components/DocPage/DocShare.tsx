@@ -460,10 +460,13 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
 }
 
 const CalendarContainer = ({ children }: { children: any }) => {
-  const portalContainer = document.getElementsByClassName(
-    'modal__window__anchor'
-  )[0]!
-  return <Portal target={portalContainer}>{children}</Portal>
+  return (
+    <Portal
+      domTarget={document.getElementsByClassName('modal__window__anchor')[0]!}
+    >
+      {children}
+    </Portal>
+  )
 }
 
 const Container = styled.div`

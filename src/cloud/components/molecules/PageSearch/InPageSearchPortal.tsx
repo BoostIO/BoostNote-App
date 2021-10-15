@@ -28,8 +28,11 @@ export interface InPageSearchEventProps {
 }
 
 const InPageSearchPortal = ({ children }: { children: any }) => {
-  const portalContainer = document.getElementById('inPageSearchContainer')!
-  return <Portal target={portalContainer}>{children}</Portal>
+  return (
+    <Portal domTarget={document.getElementById('inPageSearchContainer')}>
+      {children}
+    </Portal>
+  )
 }
 
 export interface InPageSearchProps {
