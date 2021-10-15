@@ -10,16 +10,10 @@ const BlockToolbar = ({
 }: PropsWithChildren<{
   controls?: ToolbarControlProps[]
 }>) => {
-  const portalContainer = document.getElementById(
-    'block__editor__view__toolbar-portal'
-  )
-
-  if (portalContainer == null) {
-    return null
-  }
-
   return (
-    <Portal target={portalContainer}>
+    <Portal
+      domTarget={document.getElementById('block__editor__view__toolbar-portal')}
+    >
       <Toolbar className='block__view__container__add' controls={controls}>
         {children}
       </Toolbar>

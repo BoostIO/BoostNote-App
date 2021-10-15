@@ -70,13 +70,11 @@ const DateProp = ({
 }
 
 const CalendarContainer = ({ children }: { children: any }) => {
-  const portalContainer = document.getElementById('block__editor__anchor')
-
-  if (portalContainer == null) {
-    return null
-  }
-
-  return <Portal target={portalContainer}>{children}</Portal>
+  return (
+    <Portal domTarget={document.getElementById('block__editor__anchor')}>
+      {children}
+    </Portal>
+  )
 }
 
 export default DateProp

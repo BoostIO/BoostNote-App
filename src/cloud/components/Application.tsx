@@ -465,6 +465,7 @@ const Application = ({
       />
 
       <AnnouncementAlert />
+      <div id='application__anchor' />
       {usingElectron && <InPageSearchContainer id={'inPageSearchContainer'} />}
       {showInPageSearch && (
         <InPageSearch

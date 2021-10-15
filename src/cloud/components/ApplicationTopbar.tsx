@@ -1,4 +1,4 @@
-import { mdiTag, mdiWeb } from '@mdi/js'
+import { mdiTag, mdiViewDashboardOutline, mdiWeb } from '@mdi/js'
 import { capitalize } from 'lodash'
 import React, { PropsWithChildren, useMemo } from 'react'
 import Topbar, {
@@ -102,11 +102,19 @@ const ApplicationTopbar = ({
     }
 
     const [, ...splittedPathnames] = pathname.split('/')
-    if (
-      splittedPathnames.length > 2 &&
-      splittedPathnames[1] === 'smart-folders'
-    ) {
-      return []
+    if (splittedPathnames.length === 1) {
+      return [
+        {
+          label: capitalize(translate(lngKeys.GeneralDashboard)),
+          active: true,
+          parentId: topParentId,
+          icon: mdiViewDashboardOutline,
+          link: {
+            href: getTeamLinkHref(team, 'index'),
+            navigateTo: () => push(getTeamLinkHref(team, 'index')),
+          },
+        },
+      ]
     }
 
     if (splittedPathnames.length >= 2 && splittedPathnames[1] === 'shared') {

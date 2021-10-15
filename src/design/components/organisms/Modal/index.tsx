@@ -74,7 +74,8 @@ const ContextModalItem = ({
       height: modal.height,
       maxHeight:
         modal.position?.alignment === 'bottom-left' ||
-        modal.position?.alignment === 'bottom-right'
+        modal.position?.alignment === 'bottom-right' ||
+        modal.position?.alignment === 'right'
           ? windowHeight - (modal.position?.bottom || 0) - 10
           : modal.maxHeight != null
           ? modal.maxHeight
@@ -105,6 +106,13 @@ const ContextModalItem = ({
               ? modal.position.left
               : windowWidth - modalWidth - 10
           properties.bottom = windowHeight - modal.position.top + 10
+        case 'right':
+          properties.left =
+            modal.position.right + modalWidth < windowWidth - 10
+              ? modal.position.right + 10
+              : windowWidth - modalWidth - 10
+          properties.top = modal.position.top
+
         default:
           break
       }
