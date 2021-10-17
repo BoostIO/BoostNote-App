@@ -19,7 +19,7 @@ import { useNav } from '../../lib/stores/nav'
 import ApplicationContent from '../ApplicationContent'
 import ApplicationPage from '../ApplicationPage'
 import ApplicationTopbar from '../ApplicationTopbar'
-import CreateDashboardModal from '../Modal/contents/Dashboard/CreateDashboardFolderModal'
+import CreateDashboardModal from '../Modal/contents/Dashboard/CreateDashboardModal'
 
 const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
   const [selectedDashboardId, setSelectedDashboardId] = useState<

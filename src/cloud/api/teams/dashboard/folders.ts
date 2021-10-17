@@ -17,13 +17,10 @@ export interface CreateDashboardResponseBody {
 export async function createDashboard(
   body: CreateDashboardRequestBody & { teamId: string }
 ) {
-  const data = await callApi<CreateDashboardResponseBody>(
-    `/api/dashboard/folders`,
-    {
-      json: body,
-      method: 'post',
-    }
-  )
+  const data = await callApi<CreateDashboardResponseBody>(`/api/dashboards`, {
+    json: body,
+    method: 'post',
+  })
 
   return data
 }
@@ -43,7 +40,7 @@ export async function updateDashboard(
   body: CreateDashboardRequestBody
 ) {
   const data = await callApi<CreateDashboardResponseBody>(
-    `/api/dashboard/folders/${dashboard.id}`,
+    `/api/dashboards/${dashboard.id}`,
     {
       json: body,
       method: 'put',
@@ -59,7 +56,7 @@ export interface DeleteDashboardResponseBody {
 
 export async function deleteDashboard(dashboard: { id: string }) {
   const data = await callApi<DeleteDashboardResponseBody>(
-    `/api/dashboard/folders/${dashboard.id}`,
+    `/api/dashboards/${dashboard.id}`,
     {
       method: 'delete',
     }

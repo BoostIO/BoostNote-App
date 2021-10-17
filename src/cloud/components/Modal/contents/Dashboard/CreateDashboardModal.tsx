@@ -7,11 +7,16 @@ import {
 import { usePage } from '../../../../lib/stores/pageStore'
 import { useNav } from '../../../../lib/stores/nav'
 import { useToast } from '../../../../../design/lib/stores/toast'
-import { getDashboardHref } from '../../../../lib/href'
 import { useRouter } from '../../../../lib/router'
 import DashboardForm from './DashboardForm'
+import { getTeamLinkHref } from '../../../Link/TeamLink'
+import { SerializedDashboard } from '../../../../interfaces/db/dashboard'
 
-const CreateDashboardModal = () => {
+interface CreateDashboardModalProps {
+  onCreate?: (dashboard: SerializedDashboard) => void
+}
+
+const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
   const { updateDashboardsMap: updateDashboardsMap } = useNav()
@@ -32,14 +37,20 @@ const CreateDashboardModal = () => {
         })
         updateDashboardsMap([dashboardFolder.id, dashboardFolder])
         closeModal()
-        push(getDashboardHref(dashboardFolder, team, 'index'))
+        if (onCreate != null) {
+          return onCreate(dashboardFolder)
+        } else {
+          push(
+            getTeamLinkHref(team, 'index', { dashboard: dashboardFolder.id })
+          )
+        }
       } catch (error) {
         console.error(error)
         pushApiErrorMessage(error)
         setSending(false)
       }
     },
-    [team, push, updateDashboardsMap, closeModal, pushApiErrorMessage]
+    [team, onCreate, push, updateDashboardsMap, closeModal, pushApiErrorMessage]
   )
 
   if (team == null) {
