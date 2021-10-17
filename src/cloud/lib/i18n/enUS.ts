@@ -298,12 +298,12 @@ const enTranslation: TranslationSource = {
   [lngKeys.ModalsImportDisclaimer]:
     'Select how you want to import files ( 5Mb max per file )',
 
-  [lngKeys.ModalsDashboardCreateTitle]: 'Create a smart folder',
-  [lngKeys.ModalsDashboardEditTitle]: 'Edit a smart folder',
+  [lngKeys.ModalsDashboardCreateTitle]: 'Create a dashboard',
+  [lngKeys.ModalsDashboardEditTitle]: 'Edit a dashboard',
   [lngKeys.ModalsDashboardPrivateDisclaimer]:
-    'This smart folder will become private. Only you can see it.',
+    'This dashboard will become private. Only you can see it.',
   [lngKeys.ModalsDashboardPublicDisclaimer]:
-    'The smart folder will become public. Every member can see it.',
+    'The dashboard will become public. Every member can see it.',
 
   [lngKeys.EditorToolbarTooltipHeader]: 'Add header text',
   [lngKeys.EditorToolbarTooltipAdmonition]: 'Add admonition',

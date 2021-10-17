@@ -7,16 +7,20 @@ import {
 import { usePage } from '../../../../lib/stores/pageStore'
 import { useNav } from '../../../../lib/stores/nav'
 import { useToast } from '../../../../../design/lib/stores/toast'
-import { getDashboardHref } from '../../../../lib/href'
 import { useRouter } from '../../../../lib/router'
 import { SerializedDashboard } from '../../../../interfaces/db/dashboard'
 import DashboardForm from './DashboardForm'
+import { getTeamLinkHref } from '../../../Link/TeamLink'
 
 interface UpdateDashboardModalProps {
   dashboard: SerializedDashboard
+  onUpdate?: (dashboard: SerializedDashboard) => void
 }
 
-const UpdateDashboardModal = ({ dashboard }: UpdateDashboardModalProps) => {
+const UpdateDashboardModal = ({
+  dashboard,
+  onUpdate,
+}: UpdateDashboardModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
 
@@ -38,7 +42,13 @@ const UpdateDashboardModal = ({ dashboard }: UpdateDashboardModalProps) => {
         )
         updateDashboardsMap([dashboard.id, updatedDashboard])
         closeModal()
-        push(getDashboardHref(dashboard, team, 'index'))
+        if (onUpdate != null) {
+          return onUpdate(updatedDashboard)
+        } else {
+          push(
+            getTeamLinkHref(team, 'index', { dashboard: updatedDashboard.id })
+          )
+        }
       } catch (error) {
         console.error(error)
         pushApiErrorMessage(error)
@@ -52,6 +62,7 @@ const UpdateDashboardModal = ({ dashboard }: UpdateDashboardModalProps) => {
       closeModal,
       push,
       pushApiErrorMessage,
+      onUpdate,
     ]
   )
 

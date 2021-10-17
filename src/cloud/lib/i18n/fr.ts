@@ -283,12 +283,12 @@ const frTranslation: TranslationSource = {
   [lngKeys.ModalsImportDisclaimer]:
     'Choissisez la méthode par laquelle vous souhaitez importer vos documents ( 5Mb max par fichier )',
 
-  [lngKeys.ModalsDashboardCreateTitle]: 'Créer un dossier intelligent',
-  [lngKeys.ModalsDashboardEditTitle]: 'Editer un dossier intelligent',
+  [lngKeys.ModalsDashboardCreateTitle]: 'Créer un dashboard',
+  [lngKeys.ModalsDashboardEditTitle]: 'Editer un dashboard',
   [lngKeys.ModalsDashboardPrivateDisclaimer]:
-    'Ce dossier intelligent va devenir privé. Seulement vous pourrez le voir.',
+    'Ce dashboard va devenir privé. Seulement vous pourrez le voir.',
   [lngKeys.ModalsDashboardPublicDisclaimer]:
-    'Ce dossier intelligent va devenir publique. Tous les membres pourront le voir.',
+    'Ce dashboard va devenir publique. Tous les membres pourront le voir.',
 
   [lngKeys.AttachmentsDeleteDisclaimer]:
     'Êtes vous certain de vouloir supprimer ce fichier? Il ne sera plus visible dans les documents où il a été inclus.',
