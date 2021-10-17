@@ -24,7 +24,6 @@ import { SerializedUser } from '../interfaces/db/user'
 import { boostHubBaseUrl } from '../lib/consts'
 import { getFormattedDateTime } from '../lib/date'
 import { useI18n } from '../lib/hooks/useI18n'
-import { getDashboardHref } from '../lib/href'
 import { lngKeys } from '../lib/i18n/types'
 import { usePage } from '../lib/stores/pageStore'
 import UserIcon from './UserIcon'
@@ -42,6 +41,7 @@ import styled from '../../design/lib/styled'
 import DocTagsListItem from './DocTagsListItem'
 import { useNav } from '../lib/stores/nav'
 import { SerializedTag } from '../interfaces/db/tag'
+import { getTeamLinkHref } from './Link/TeamLink'
 
 interface DashboardContextMenuProps {
   dashboard: SerializedDashboard
@@ -61,7 +61,10 @@ const DashboardContextMenu = ({
   const { tagsMap } = useNav()
 
   const docUrl = useMemo(() => {
-    return boostHubBaseUrl + getDashboardHref(dashboard, team, 'index')
+    return (
+      boostHubBaseUrl +
+      getTeamLinkHref(team, 'index', { dashboard: dashboard.id })
+    )
   }, [team, dashboard])
 
   const copyButtonHandler = useCallback(() => {

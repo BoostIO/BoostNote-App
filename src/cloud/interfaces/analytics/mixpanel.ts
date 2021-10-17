@@ -55,9 +55,9 @@ export enum MixpanelActionTrackTypes {
   PersonalCreate = 'personal.create',
   RevisionHistoryOpen = 'revision.history.open',
   SearchOpen = 'search.open',
-  DashboardFolderCreate = 'smartfolder.create',
-  DashboardFolderUpdate = 'smartfolder.update',
-  DashboardFolderDestroy = 'smartfolder.destroy',
+  DashboardCreate = 'dashboard.create',
+  DashboardUpdate = 'dashboard.update',
+  DashboardDestroy = 'dashboard.destroy',
   SubscriptionStart = 'subscription.start',
   SubscriptionCancel = 'subscription.cancel',
   SubscriptionTrialStart = 'subscription.trial.sart',
@@ -222,9 +222,9 @@ export type MixpanelUserProfile = {
   $created?: string
   $email?: string
 }
-export type MixpanelDashboardFolderEvent =
-  | MixpanelActionTrackTypes.DashboardFolderCreate
-  | MixpanelActionTrackTypes.DashboardFolderDestroy
+export type MixpanelDashboardEvent =
+  | MixpanelActionTrackTypes.DashboardCreate
+  | MixpanelActionTrackTypes.DashboardDestroy
 
 export type MixpanelBlockEvent =
   | MixpanelActionTrackTypes.BlockCreate

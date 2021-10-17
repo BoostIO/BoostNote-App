@@ -7,13 +7,18 @@ import {
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { useToast } from '../../../../design/lib/stores/toast'
-import { getDashboardHref } from '../../../../cloud/lib/href'
 import { useRouter } from '../../../../cloud/lib/router'
 import ModalContainer from './atoms/ModalContainer'
 import DashboardForm from './organisms/DashboardForm'
 import { useAppStatus } from '../../../lib/appStatus'
+import { getTeamLinkHref } from '../../../../cloud/components/Link/TeamLink'
+import { SerializedDashboard } from '../../../../cloud/interfaces/db/dashboard'
 
-const DashboardCreateModal = () => {
+interface CreateDashboardModalProps {
+  onCreate?: (dashboard: SerializedDashboard) => void
+}
+
+const DashboardCreateModal = ({ onCreate }: CreateDashboardModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
   const { updateDashboardsMap: updateDashboardsMap } = useNav()
@@ -36,7 +41,13 @@ const DashboardCreateModal = () => {
         updateDashboardsMap([dashboardFolder.id, dashboardFolder])
         closeModal()
         setShowingNavigator(false)
-        push(getDashboardHref(dashboardFolder, team, 'index'))
+        if (onCreate != null) {
+          return onCreate(dashboardFolder)
+        } else {
+          push(
+            getTeamLinkHref(team, 'index', { dashboard: dashboardFolder.id })
+          )
+        }
       } catch (error) {
         console.error(error)
         pushApiErrorMessage(error)
@@ -50,6 +61,7 @@ const DashboardCreateModal = () => {
       closeModal,
       pushApiErrorMessage,
       setShowingNavigator,
+      onCreate,
     ]
   )
 

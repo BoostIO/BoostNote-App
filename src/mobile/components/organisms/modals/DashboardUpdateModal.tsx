@@ -7,18 +7,20 @@ import {
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { useToast } from '../../../../design/lib/stores/toast'
-import { getDashboardHref } from '../../../../cloud/lib/href'
 import { useRouter } from '../../../../cloud/lib/router'
 import { SerializedDashboard } from '../../../../cloud/interfaces/db/dashboard'
 import DashboardForm from './organisms/DashboardForm'
 import ModalContainer from './atoms/ModalContainer'
+import { getTeamLinkHref } from '../../../../cloud/components/Link/TeamLink'
 
 interface DashboardUpdateModalProps {
-  dashboardFolder: SerializedDashboard
+  dashboard: SerializedDashboard
+  onUpdate?: (dashboard: SerializedDashboard) => void
 }
 
 const DashboardUpdateModal = ({
-  dashboardFolder,
+  dashboard,
+  onUpdate,
 }: DashboardUpdateModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
@@ -36,12 +38,18 @@ const DashboardUpdateModal = ({
       setSending(true)
       try {
         const { data: updatedDashboard } = await updateDashboard(
-          dashboardFolder,
+          dashboard,
           body
         )
-        updateDashboardsMap([dashboardFolder.id, updatedDashboard])
+        updateDashboardsMap([dashboard.id, updatedDashboard])
         closeModal()
-        push(getDashboardHref(dashboardFolder, team, 'index'))
+        if (onUpdate != null) {
+          return onUpdate(updatedDashboard)
+        } else {
+          push(
+            getTeamLinkHref(team, 'index', { dashboard: updatedDashboard.id })
+          )
+        }
       } catch (error) {
         console.error(error)
         pushApiErrorMessage(error)
@@ -50,11 +58,12 @@ const DashboardUpdateModal = ({
     },
     [
       team,
-      dashboardFolder,
+      dashboard,
       updateDashboardsMap,
       closeModal,
       push,
       pushApiErrorMessage,
+      onUpdate,
     ]
   )
 
@@ -68,10 +77,10 @@ const DashboardUpdateModal = ({
         action='Update'
         onSubmit={submit}
         buttonsAreDisabled={sending}
-        defaultName={dashboardFolder.name}
-        defaultPrivate={dashboardFolder.private}
-        defaultConditionType={dashboardFolder.condition.type}
-        defaultSecondaryConditions={dashboardFolder.condition.conditions.map(
+        defaultName={dashboard.name}
+        defaultPrivate={dashboard.private}
+        defaultConditionType={dashboard.condition.type}
+        defaultSecondaryConditions={dashboard.condition.conditions.map(
           (secondaryCondition) => {
             switch (secondaryCondition.type) {
               case 'due_date':
