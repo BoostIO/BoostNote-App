@@ -5,7 +5,6 @@ import express from 'express'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import packageJson from './package.json'
-import CompressionPlugin from 'compression-webpack-plugin'
 
 module.exports = (env, argv) => {
   const config: webpack.Configuration = {
@@ -62,10 +61,6 @@ module.exports = (env, argv) => {
       }),
       new webpack.EnvironmentPlugin([
         'NODE_ENV',
-        'AMPLIFY_AUTH_IDENTITY_POOL_ID',
-        'AMPLIFY_AUTH_REGION',
-        'AMPLIFY_PINPOINT_APPID',
-        'AMPLIFY_PINPOINT_REGION',
         'BOOST_HUB_BASE_URL',
         'SSE_URL',
         'REALTIME_URL',
@@ -200,7 +195,6 @@ module.exports = (env, argv) => {
     config.optimization = {
       minimize: true,
     }
-    config.plugins.push(new CompressionPlugin())
     config.output.publicPath = '/'
   }
 
