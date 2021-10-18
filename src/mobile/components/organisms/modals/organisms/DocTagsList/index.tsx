@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import { SerializedDocWithBookmark } from '../../../../../../cloud/interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../../../../cloud/interfaces/db/doc'
 import { SerializedTeam } from '../../../../../../cloud/interfaces/db/team'
 import {
   StyledDocTagsList,
@@ -17,7 +17,7 @@ import cc from 'classcat'
 import Icon from '../../../../../../design/components/atoms/Icon'
 
 interface DocTagsListProps {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   team: SerializedTeam
   readOnly: boolean
 }

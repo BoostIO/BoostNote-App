@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
-import { SerializedDocWithBookmark } from '../../../cloud/interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../cloud/interfaces/db/doc'
 import { useSet } from 'react-use'
 import {
   sortByAttributeAsc,
@@ -28,7 +28,7 @@ import Checkbox from '../../../design/components/molecules/Form/atoms/FormCheckb
 
 interface DocOnlyContentManagerProps {
   team: SerializedTeam
-  documents: SerializedDocWithBookmark[]
+  documents: SerializedDocWithSupplemental[]
   workspacesMap: Map<string, SerializedWorkspace>
   currentUserIsCoreMember: boolean
   page?: 'archive' | 'tag' | 'shared' | 'smart-folder'
@@ -58,7 +58,7 @@ const DocOnlyContentManager = ({
     },
   ] = useSet<string>(new Set())
   const currentDocumentsRef = useRef(
-    new Map<string, SerializedDocWithBookmark>(
+    new Map<string, SerializedDocWithSupplemental>(
       documents.map((doc) => [doc.id, doc])
     )
   )

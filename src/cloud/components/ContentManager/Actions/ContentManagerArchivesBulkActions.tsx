@@ -10,12 +10,12 @@ import { destroyDoc, updateDocStatus } from '../../../api/teams/docs'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { difference } from 'ramda'
 import { getDocIdFromString } from '../../../lib/utils/patterns'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 
 interface ContentManagerArchivesBulkActionsProps {
   team: SerializedTeam
-  documentsMap: Map<string, SerializedDocWithBookmark>
+  documentsMap: Map<string, SerializedDocWithSupplemental>
   selectedDocs: Set<string>
   updating: string[]
   setUpdating: React.Dispatch<React.SetStateAction<string[]>>
@@ -61,7 +61,7 @@ const ContentManagerArchivesBulkActions = ({
   }, [team, selectedDocs, setUpdating, disabled, updateDocsMap])
 
   const deleteSingleDoc = useCallback(
-    async (team: SerializedTeam, target?: SerializedDocWithBookmark) => {
+    async (team: SerializedTeam, target?: SerializedDocWithSupplemental) => {
       if (target == null) {
         return
       }

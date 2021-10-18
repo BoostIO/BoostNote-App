@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
   SerializedDoc,
 } from '../../../cloud/interfaces/db/doc'
 import { usePreferences } from '../../lib/preferences'
@@ -28,7 +28,7 @@ interface ViewPageProps {
   team: SerializedTeam
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   user: SerializedUser
 }
 

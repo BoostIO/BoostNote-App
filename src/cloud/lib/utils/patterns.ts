@@ -8,7 +8,7 @@ import { getHexFromUUID, getUUIDFromHex } from './string'
 import slugify from 'slugify'
 import {
   SerializedDoc,
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
 } from '../../interfaces/db/doc'
 import {
   DOC_DRAG_TRANSFER_DATA_JSON,
@@ -146,7 +146,7 @@ export function folderToDataTransferItem(
 }
 
 export function docToDataTransferItem(
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
 ): DocDataTransferItem {
   return {
     workspaceId: doc.workspaceId,

@@ -11,17 +11,12 @@ import {
   mdiContentSaveOutline,
 } from '@mdi/js'
 import {
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
   SerializedDoc,
   DocStatus,
 } from '../../../../cloud/interfaces/db/doc'
 import { getFormattedDateTime } from '../../../../cloud/lib/date'
 import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
-import {
-  updateDocStatus,
-  updateDocDueDate,
-  updateDocAssignees,
-} from '../../../../cloud/api/teams/docs'
 import { SerializedRevision } from '../../../../cloud/interfaces/db/revision'
 import { SerializedUser } from '../../../../cloud/interfaces/db/user'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
@@ -33,7 +28,6 @@ import { usePreferences } from '../../../lib/preferences'
 import cc from 'classcat'
 import Icon from '../../../../design/components/atoms/Icon'
 import plur from 'plur'
-import { useToast } from '../../../../design/lib/stores/toast'
 import styled from '../../../../design/lib/styled'
 import { format as formatDate } from 'date-fns'
 import { useI18n } from '../../../../cloud/lib/hooks/useI18n'
@@ -44,9 +38,10 @@ import ModalContainer from './atoms/ModalContainer'
 import DocInfoModalShareSection from './organisms/DocInfoModalShareSection'
 import DocStatusSelect from './organisms/DocContextMenu/DocStatusSelect'
 import Button from '../../../../design/components/atoms/Button'
+import { useCloudApi } from '../../../../cloud/lib/hooks/useCloudApi'
 
 interface DocInfoModalProps {
-  currentDoc: SerializedDocWithBookmark
+  currentDoc: SerializedDocWithSupplemental
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
   revisionHistory?: SerializedRevision[]
@@ -61,17 +56,19 @@ const DocInfoModal = ({
   backLinks,
 }: // restoreRevision,
 DocInfoModalProps) => {
-  const [sendingUpdateStatus, setSendingUpdateStatus] = useState(false)
-  const [sendingDueDate, setSendingDueDate] = useState(false)
-  const { updateDocsMap, docsMap } = useNav()
   const {
-    setPartialPageData,
+    updateDocStatusApi,
+    updateDocDueDateApi,
+    updateDocAssigneeApi,
+    sendingMap,
+  } = useCloudApi()
+  const { docsMap } = useNav()
+  const {
     // subscription,
     permissions = [],
     currentUserPermissions,
     currentUserIsCoreMember,
   } = usePage()
-  const { pushMessage } = useToast()
   // const { openModal } = useModal()
   const [sliceContributors, setSliceContributors] = useState(true)
   const { preferences } = usePreferences()
@@ -121,102 +118,29 @@ DocInfoModalProps) => {
       if (currentDoc.status === newStatus) {
         return
       }
-      if (sendingUpdateStatus || currentDoc == null) {
-        return
-      }
 
-      setSendingUpdateStatus(true)
-      try {
-        const data = await updateDocStatus(
-          currentDoc.teamId,
-          currentDoc.id,
-          newStatus
-        )
-        updateDocsMap([data.doc.id, data.doc])
-        setPartialPageData({ pageDoc: data.doc })
-      } catch (error) {
-        pushMessage({
-          title: 'Error',
-          description: 'Could not change status',
-        })
-      }
-      setSendingUpdateStatus(false)
+      await updateDocStatusApi(currentDoc, newStatus)
     },
-    [
-      currentDoc,
-      pushMessage,
-      sendingUpdateStatus,
-      setPartialPageData,
-      updateDocsMap,
-    ]
+    [currentDoc, updateDocStatusApi]
   )
 
   const sendUpdateDocDueDate = useCallback(
     async (newDate: Date | null) => {
-      if (sendingUpdateStatus || currentDoc == null) {
-        return
-      }
-
-      setSendingDueDate(true)
-      try {
-        const data = await updateDocDueDate(
-          currentDoc.teamId,
-          currentDoc.id,
-          newDate != null
-            ? new Date(formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z')
-            : null
-        )
-        updateDocsMap([data.doc.id, data.doc])
-        setPartialPageData({ pageDoc: data.doc })
-      } catch (error) {
-        pushMessage({
-          title: 'Error',
-          description: 'Could not update due date',
-        })
-      }
-      setSendingDueDate(false)
+      await updateDocDueDateApi(
+        currentDoc,
+        newDate != null
+          ? new Date(formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z')
+          : null
+      )
     },
-    [
-      currentDoc,
-      pushMessage,
-      sendingUpdateStatus,
-      setPartialPageData,
-      updateDocsMap,
-    ]
+    [currentDoc, updateDocDueDateApi]
   )
-
-  const [sendingAssignees, setSendingAssignees] = useState(false)
 
   const sendUpdateDocAssignees = useCallback(
     async (newAssignees: string[]) => {
-      if (sendingUpdateStatus || currentDoc == null) {
-        return
-      }
-
-      setSendingAssignees(true)
-      try {
-        const data = await updateDocAssignees(
-          currentDoc.teamId,
-          currentDoc.id,
-          newAssignees
-        )
-        updateDocsMap([data.doc.id, data.doc])
-        setPartialPageData({ pageDoc: data.doc })
-      } catch (error) {
-        pushMessage({
-          title: 'Error',
-          description: 'Could not update assignees',
-        })
-      }
-      setSendingAssignees(false)
+      await updateDocAssigneeApi(currentDoc, newAssignees)
     },
-    [
-      currentDoc,
-      pushMessage,
-      sendingUpdateStatus,
-      setPartialPageData,
-      updateDocsMap,
-    ]
+    [currentDoc, updateDocAssigneeApi]
   )
 
   const creator =
@@ -249,8 +173,13 @@ DocInfoModalProps) => {
                   <div className='context__content'>
                     <span>
                       <DocAssigneeSelect
-                        isLoading={sendingAssignees}
-                        disabled={sendingAssignees || !currentUserIsCoreMember}
+                        isLoading={
+                          sendingMap.get(currentDoc.id) === 'assignees'
+                        }
+                        disabled={
+                          sendingMap.get(currentDoc.id) === 'assignees' ||
+                          !currentUserIsCoreMember
+                        }
                         defaultValue={
                           currentDoc.assignees != null
                             ? currentDoc.assignees.map(
@@ -277,7 +206,7 @@ DocInfoModalProps) => {
                   <div className='context__content'>
                     <DocStatusSelect
                       status={currentDoc.status}
-                      sending={sendingUpdateStatus}
+                      sending={sendingMap.get(currentDoc.id) === 'status'}
                       onStatusChange={sendUpdateStatus}
                       disabled={!currentUserIsCoreMember}
                       isReadOnly={!currentUserIsCoreMember}
@@ -297,7 +226,7 @@ DocInfoModalProps) => {
                   <div className='context__content'>
                     <DocDueDateSelect
                       className='context__content__date_select'
-                      sending={sendingDueDate}
+                      sending={sendingMap.get(currentDoc.id) === 'duedate'}
                       dueDate={currentDoc.dueDate}
                       onDueDateChange={sendUpdateDocDueDate}
                       disabled={!currentUserIsCoreMember}

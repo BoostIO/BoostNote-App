@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react'
-import { SerializedDocWithBookmark } from '../../../cloud/interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../cloud/interfaces/db/doc'
 import { SerializedTeam } from '../../../cloud/interfaces/db/team'
 import ContentManagerRow from './ContentManagerRow'
 import { getDocTitle, getDocId } from '../../../cloud/lib/utils/patterns'
@@ -32,7 +32,7 @@ import { ContentManagerRowAction } from '../../../cloud/interfaces/components/Co
 
 interface ContentManagerDocRowProps {
   team: SerializedTeam
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   workspace?: SerializedWorkspace
   updating: boolean
   showPath?: boolean
@@ -79,7 +79,7 @@ const ContentManagerDocRow = ({
   }, [showPath, doc, workspace])
 
   const toggleDocBookmark = useCallback(
-    async (doc: SerializedDocWithBookmark) => {
+    async (doc: SerializedDocWithSupplemental) => {
       if (updating) {
         return
       }
@@ -107,7 +107,7 @@ const ContentManagerDocRow = ({
   )
 
   const deleteDoc = useCallback(
-    async (doc: SerializedDocWithBookmark) => {
+    async (doc: SerializedDocWithSupplemental) => {
       if (updating) {
         return
       }
@@ -123,7 +123,7 @@ const ContentManagerDocRow = ({
 
   const moveDoc = useCallback(
     async (
-      doc: SerializedDocWithBookmark,
+      doc: SerializedDocWithSupplemental,
       workspaceId: string,
       parentFolderId?: string
     ) => {
@@ -145,7 +145,7 @@ const ContentManagerDocRow = ({
   )
 
   const openMoveForm = useCallback(
-    (doc: SerializedDocWithBookmark) => {
+    (doc: SerializedDocWithSupplemental) => {
       openModal(
         <MobileResourceMoveModal
           onSubmit={(workspaceId, parentFolderId) =>
@@ -158,7 +158,7 @@ const ContentManagerDocRow = ({
   )
 
   const actions = useMemo(() => {
-    const actions: ContentManagerRowAction<SerializedDocWithBookmark>[] = []
+    const actions: ContentManagerRowAction<SerializedDocWithSupplemental>[] = []
 
     actions.push(
       doc.bookmarked

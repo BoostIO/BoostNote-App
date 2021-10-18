@@ -7,7 +7,7 @@ import React, {
   FocusEvent,
 } from 'react'
 import {
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
   DocStatus,
 } from '../../../cloud/interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../cloud/interfaces/db/folder'
@@ -55,7 +55,7 @@ export type ContentManagerParent =
 
 interface ContentManagerProps {
   team: SerializedTeam
-  documents: SerializedDocWithBookmark[]
+  documents: SerializedDocWithSupplemental[]
   folders: SerializedFolderWithBookmark[]
   workspacesMap: Map<string, SerializedWorkspace>
   currentUserIsCoreMember: boolean
@@ -107,7 +107,7 @@ const ContentManager = ({
   ] = useSet<string>(new Set())
 
   const currentDocumentsRef = useRef(
-    new Map<string, SerializedDocWithBookmark>(
+    new Map<string, SerializedDocWithSupplemental>(
       documents.map((doc) => [doc.id, doc])
     )
   )

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useEffectOnce } from 'react-use'
-import { SerializedDocWithBookmark } from '../../../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../../../interfaces/db/doc'
 import {
   isFocusLeftSideShortcut,
   isFocusRightSideShortcut,
@@ -29,7 +29,7 @@ import DoublePane from '../../../../../../design/components/atoms/DoublePane'
 import { createPatch } from 'diff'
 
 interface RevisionsModalProps {
-  currentDoc: SerializedDocWithBookmark
+  currentDoc: SerializedDocWithSupplemental
   restoreRevision?: (revision: SerializedRevision) => void
 }
 
@@ -116,7 +116,7 @@ const RevisionsModal = ({
       currentDoc,
     }: {
       nextPage: number
-      currentDoc: SerializedDocWithBookmark
+      currentDoc: SerializedDocWithSupplemental
     }) => getAllRevisionsFromDoc(currentDoc.teamId, currentDoc.id, nextPage),
     cb: ({ revisions, page, totalPages }) => {
       const mappedRevisions = revisions.reduce((acc, val) => {

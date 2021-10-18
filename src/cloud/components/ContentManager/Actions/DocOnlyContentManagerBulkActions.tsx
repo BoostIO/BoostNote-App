@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import HeaderActionButton from './HeaderActionButton'
 import { mdiFolderMoveOutline, mdiTrashCanOutline } from '@mdi/js'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { useNav } from '../../../lib/stores/nav'
 import { difference } from 'ramda'
@@ -19,7 +19,7 @@ import Flexbox from '../../../../design/components/atoms/Flexbox'
 interface DocOnlyContentManagerBulkActionsProps {
   team: SerializedTeam
   selectedDocs: Set<string>
-  documentsMap: Map<string, SerializedDocWithBookmark>
+  documentsMap: Map<string, SerializedDocWithSupplemental>
   workspacesMap: Map<string, SerializedWorkspace>
   updating: string[]
   setUpdating: React.Dispatch<React.SetStateAction<string[]>>
@@ -60,7 +60,7 @@ const DocOnlyContentManagerBulkActions = ({
   const moveSingleDoc = useCallback(
     async (docId: string, workspaceId: string, parentFolderId?: string) => {
       try {
-        await updateDocHandler({ id: docId } as SerializedDocWithBookmark, {
+        await updateDocHandler({ id: docId } as SerializedDocWithSupplemental, {
           workspaceId,
           parentFolderId,
         })
@@ -93,7 +93,7 @@ const DocOnlyContentManagerBulkActions = ({
   )
 
   const deleteSingleDoc = useCallback(
-    async (team: SerializedTeam, target?: SerializedDocWithBookmark) => {
+    async (team: SerializedTeam, target?: SerializedDocWithSupplemental) => {
       if (target == null || target.archivedAt == null) {
         return
       }

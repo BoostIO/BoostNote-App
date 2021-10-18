@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useEffectOnce } from 'react-use'
-import { SerializedDocWithBookmark } from '../../../../cloud/interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../../cloud/interfaces/db/doc'
 import { SerializedRevision } from '../../../../cloud/interfaces/db/revision'
 import { getAllRevisionsFromDoc } from '../../../../cloud/api/teams/docs/revisions'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
@@ -26,7 +26,7 @@ import Icon from '../../../../design/components/atoms/Icon'
 import { createPatch } from 'diff'
 
 interface MobileDocRevisionsModalProps {
-  currentDoc: SerializedDocWithBookmark
+  currentDoc: SerializedDocWithSupplemental
   restoreRevision?: (revision: SerializedRevision) => void
 }
 

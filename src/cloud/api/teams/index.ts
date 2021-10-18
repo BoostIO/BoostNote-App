@@ -3,7 +3,7 @@ import {
   SerializedTeamWithPermissions,
 } from '../../interfaces/db/team'
 import { SerializedIcon } from '../../interfaces/db/icon'
-import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { callApi } from '../../lib/client'
 import { SerializedOpenInvite } from '../../interfaces/db/openInvite'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
@@ -25,7 +25,7 @@ export interface CreateTeamRequestBody {
 
 export interface CreateTeamResponseBody {
   team: SerializedTeamWithPermissions
-  doc?: SerializedDocWithBookmark
+  doc?: SerializedDocWithSupplemental
   openInvite?: SerializedOpenInvite
   initialFolders: SerializedFolderWithBookmark[]
 }

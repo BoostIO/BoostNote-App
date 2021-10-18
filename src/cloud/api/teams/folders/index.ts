@@ -5,7 +5,7 @@ import {
   SerializedFolder,
 } from '../../../interfaces/db/folder'
 import { stringify } from 'querystring'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 
 export interface CreateFolderRequestBody {
@@ -50,7 +50,7 @@ export interface UpdateFolderEmojiResponseBody {
 
 export interface UpdateFolderResponseBody {
   folders: SerializedFolderWithBookmark[]
-  docs: SerializedDocWithBookmark[]
+  docs: SerializedDocWithSupplemental[]
   workspaces?: SerializedWorkspace[]
 }
 
@@ -73,7 +73,7 @@ export interface DestroyFolderResponseBody {
   parentFolder?: SerializedFolderWithBookmark
   docsIds: string[]
   foldersIds: string[]
-  docs?: SerializedDocWithBookmark[]
+  docs?: SerializedDocWithSupplemental[]
   workspace?: SerializedWorkspace
 }
 

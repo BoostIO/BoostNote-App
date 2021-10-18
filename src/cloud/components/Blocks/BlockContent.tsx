@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react'
 import { mdiPlus } from '@mdi/js'
 import { Block, BlockCreateRequestBody, ContainerBlock } from '../../api/blocks'
 import { useDocBlocks } from '../../lib/hooks/useDocBlocks'
-import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { useModal } from '../../../design/lib/stores/modal'
 import BlockTree from './BlockTree'
 import styled from '../../../design/lib/styled'
@@ -24,7 +24,7 @@ import { sleep } from '../../../lib/sleep'
 import cc from 'classcat'
 import { useRouter } from '../../lib/router'
 
-export interface Canvas extends SerializedDocWithBookmark {
+export interface Canvas extends SerializedDocWithSupplemental {
   rootBlock: ContainerBlock
 }
 

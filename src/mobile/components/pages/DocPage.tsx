@@ -7,7 +7,7 @@ import DocViewPage from './DocViewPage'
 import { useTitle } from 'react-use'
 import { useGlobalData } from '../../../cloud/lib/stores/globalData'
 import {
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
   SerializedDoc,
 } from '../../../cloud/interfaces/db/doc'
 import { SerializedUser } from '../../../cloud/interfaces/db/user'
@@ -17,7 +17,7 @@ import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import { freePlanMembersLimit } from '../../../cloud/lib/subscription'
 
 interface DocPageProps {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
   revisionHistory: SerializedRevision[]

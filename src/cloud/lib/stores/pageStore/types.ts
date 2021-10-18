@@ -1,6 +1,6 @@
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
 import { SerializedUser } from '../../../interfaces/db/user'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
@@ -25,7 +25,7 @@ export interface PageDataContext<D> {
   ) => void
   removeSinglePermission: (permissionId: string) => void
   pageFolder?: SerializedFolderWithBookmark
-  pageDoc?: SerializedDocWithBookmark
+  pageDoc?: SerializedDocWithSupplemental
   pageTag?: SerializedTag
   pageWorkspace?: SerializedWorkspace
   revisions?: SerializedRevision[]

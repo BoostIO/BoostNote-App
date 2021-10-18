@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 import styled from '../../../design/lib/styled'
-import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import DocPageHeader from './DocPageHeader'
 import cc from 'classcat'
 import { SerializedTeam } from '../../interfaces/db/team'
@@ -8,7 +8,7 @@ import Scroller from '../../../design/components/atoms/Scroller'
 
 interface EditorLayoutProps {
   docIsEditable: boolean
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   fullWidth: boolean
   team: SerializedTeam
 }

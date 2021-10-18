@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
-import { SerializedDocWithBookmark } from '../../../../../cloud/interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../../../cloud/interfaces/db/doc'
 import { useNav } from '../../../../../cloud/lib/stores/nav'
 import { usePage } from '../../../../../cloud/lib/stores/pageStore'
 import {
@@ -41,7 +41,7 @@ import { agentType, sendPostMessage } from '../../../../lib/nativeMobile'
 import { getDocLinkHref } from '../../../../lib/href'
 
 interface DocInfoModalShareSectionProps {
-  currentDoc: SerializedDocWithBookmark
+  currentDoc: SerializedDocWithSupplemental
   team: SerializedTeam
 }
 

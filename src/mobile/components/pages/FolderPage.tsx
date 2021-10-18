@@ -2,7 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react'
 import { usePage } from '../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../cloud/lib/stores/nav'
 import { useTitle } from 'react-use'
-import { SerializedDocWithBookmark } from '../../../cloud/interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../cloud/interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../cloud/interfaces/db/folder'
 import ContentManager from '../organisms/ContentManager'
 import { SerializedWorkspace } from '../../../cloud/interfaces/db/workspace'
@@ -37,7 +37,7 @@ const FolderPage = () => {
     }
     return currentFolder.childDocsIds
       .filter((docId) => docsMap.has(docId))
-      .map((docId) => docsMap.get(docId) as SerializedDocWithBookmark)
+      .map((docId) => docsMap.get(docId) as SerializedDocWithSupplemental)
   }, [docsMap, currentFolder])
 
   const childFolders = useMemo(() => {

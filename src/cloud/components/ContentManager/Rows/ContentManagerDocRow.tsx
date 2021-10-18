@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from 'react'
 import {
   DocStatus,
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
 } from '../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import ContentManagerRow from './ContentManagerRow'
@@ -25,7 +25,7 @@ import DocDueDateSelect from '../../DocProperties/DocDueDateSelect'
 
 interface ContentManagerDocRowProps {
   team: SerializedTeam
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   workspace?: SerializedWorkspace
   updating: boolean
   showPath?: boolean
@@ -33,9 +33,9 @@ interface ContentManagerDocRowProps {
   currentUserIsCoreMember: boolean
   onSelect: (val: boolean) => void
   setUpdating: React.Dispatch<React.SetStateAction<string[]>>
-  onDragStart: (event: any, doc: SerializedDocWithBookmark) => void
+  onDragStart: (event: any, doc: SerializedDocWithSupplemental) => void
   onDragEnd: (event: any) => void
-  onDrop: (event: any, doc: SerializedDocWithBookmark) => void
+  onDrop: (event: any, doc: SerializedDocWithSupplemental) => void
 }
 
 const ContentManagerDocRow = ({
@@ -135,6 +135,9 @@ const ContentManagerDocRow = ({
   )
 
   const href = getDocLinkHref(doc, team, 'index')
+
+  if (getDocTitle(doc, '').includes('Your Workflow')) console.log(doc.props)
+
   return (
     <ContentManagerRow
       checked={checked}
@@ -180,8 +183,10 @@ const ContentManagerDocRow = ({
           isLoading={sendingMap.get(doc.id) === 'assignees'}
           disabled={sendingMap.has(doc.id) || !currentUserIsCoreMember}
           defaultValue={
-            doc.assignees != null
-              ? doc.assignees.map((assignee) => assignee.userId)
+            doc.props.assignees != null
+              ? Array.isArray(doc.props.assignees.data)
+                ? doc.props.assignees.data.map((data) => data.userId)
+                : [doc.props.assignees.data.userId]
               : []
           }
           readOnly={!currentUserIsCoreMember}

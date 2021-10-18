@@ -1,6 +1,6 @@
 import { GeneralAppProps } from '../../../interfaces/api'
 import {
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
   SerializedDoc,
 } from '../../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
@@ -34,7 +34,7 @@ export async function getTeamIndexPageData({
 
 export type DocPageResourceProps = {
   type: 'doc'
-  pageDoc: SerializedDocWithBookmark
+  pageDoc: SerializedDocWithSupplemental
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
   revisionHistory: SerializedRevision[]
