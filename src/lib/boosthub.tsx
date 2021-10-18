@@ -117,6 +117,8 @@ function useBoostHubStore() {
   const { setGeneralStatus } = useGeneralStatus()
   const routeParams = useRouteParams()
 
+  // todo: [komediruzecki-2021-10-18] Probably we would delete this old sign out with desktop access token
+  // todo: [komediruzecki-2021-10-18] We should probably remove fetch desktop data as well?
   const signOut = useCallback(async () => {
     if (
       routeParams.name === 'boosthub.teams.show' ||
@@ -134,9 +136,15 @@ function useBoostHubStore() {
     removeCookie(boostHubBaseUrl, 'desktop_access_token')
   }, [routeParams.name, setPreferences, setGeneralStatus, push])
 
+  const signOutCloud = useCallback(async () => {
+    removeCookie(boostHubBaseUrl, 'session')
+    removeCookie(boostHubBaseUrl, 'intercom-session-cvsnhh77')
+  }, [])
+
   return {
     fetchDesktopGlobalData,
     signOut,
+    signOutCloud,
   }
 }
 

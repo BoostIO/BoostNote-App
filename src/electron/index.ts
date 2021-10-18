@@ -8,6 +8,7 @@ import {
   protocol,
   session,
   autoUpdater,
+  webContents,
 } from 'electron'
 import path from 'path'
 import url from 'url'
@@ -85,7 +86,7 @@ function createAWindow(options: BrowserWindowConstructorOptions) {
     })
   }
 
-  // handle window close - check if all closed and remove 'main'
+  // todo: [komediruzecki-2021-10-18] handle window close - check if all closed and remove 'main'
   // window.on('closed', () => {
   //   mainWindow = null
   // })
@@ -218,8 +219,17 @@ app.on('ready', () => {
   })
 
   // multiple windows support
-  ipcMain.on('new-window-event', (windowOptions) => {
+  ipcMain.on('new-window-event', (windowOptions?: any) => {
     return createAWindow(windowOptions)
+  })
+
+  ipcMain.on('sign-in-event', (windowId?: any) => {
+    for (const webContent of webContents.getAllWebContents()) {
+      if (webContent.id == windowId) {
+        continue
+      }
+      webContent.reload()
+    }
   })
 
   app.on('open-url', (_event, url) => {

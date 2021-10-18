@@ -4,6 +4,7 @@ import {
   MenuItem,
   MenuItemConstructorOptions,
   shell,
+  ipcMain,
 } from 'electron'
 import { checkForUpdates } from './updater'
 import { createEmitIpcMenuItemHandler } from './ipc'
@@ -300,7 +301,14 @@ export function getTemplateFromKeymap(
               { type: 'separator' },
               { role: 'window' },
             ]
-          : [{ role: 'close' }]),
+          : [
+              { role: 'close' },
+              {
+                type: 'normal',
+                label: 'New window',
+                click: () => ipcMain.emit('new-window-event'),
+              },
+            ]),
       ] as MenuItemConstructorOptions[],
     },
     {

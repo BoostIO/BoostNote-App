@@ -14,7 +14,7 @@ import { getTeamLinkHref } from '../../components/Link/TeamLink'
 import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
 import Button from '../../../design/components/atoms/Button'
-import { useElectron, usingElectron } from '../../lib/stores/electron'
+import { useElectron } from '../../lib/stores/electron'
 import { useGlobalData } from '../../lib/stores/globalData'
 
 interface HomePageTeamSelectForm {
@@ -27,7 +27,7 @@ interface HomePageTeamSelectForm {
 const HomeForm = ({ user, teams }: HomePageTeamSelectForm) => {
   const { push } = useRouter()
   const { translate } = useI18n()
-  const { sendToElectron } = useElectron()
+  const { sendToElectron, usingElectron } = useElectron()
   const { setPartialGlobalData } = useGlobalData()
   const navigateToTeam = useCallback(
     (selectedTeamId) => {
@@ -55,7 +55,7 @@ const HomeForm = ({ user, teams }: HomePageTeamSelectForm) => {
       sendToElectron('sign-out')
     }
     // push('/desktop')
-  }, [sendToElectron, setPartialGlobalData])
+  }, [sendToElectron, setPartialGlobalData, usingElectron])
 
   return (
     <Container>

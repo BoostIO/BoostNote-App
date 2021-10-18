@@ -39,6 +39,7 @@ import {
   openContextMenu,
   openExternal,
   openNewWindow,
+  signInBroadcast,
 } from '../../lib/electronOnly'
 import { DidFailLoadEvent } from 'electron/main'
 import styled from '../../design/lib/styled'
@@ -72,7 +73,7 @@ const BoostHubWebview = ({
 }: BoostHubWebviewProps) => {
   const webviewRef = useRef<WebviewTag>(null)
   const { preferences } = usePreferences()
-  const { signOut } = useBoostHub()
+  const { signOutCloud } = useBoostHub()
   const domReadyRef = useRef<boolean>(false)
   const cloudUser = preferences['cloud.user']
 
@@ -149,7 +150,16 @@ const BoostHubWebview = ({
     const ipcMessageEventHandler = (event: IpcMessageEvent) => {
       switch (event.channel) {
         case 'new-window':
-          openNewWindow()
+          const urlToOpen = event.args[0]
+          if (urlToOpen && urlToOpen.startsWith('https://boostnote.io')) {
+            // open in new browser window
+            openExternal(urlToOpen)
+          } else {
+            // open inside new window (desktop app webview)
+            openNewWindow()
+            // todo: [komediruzecki-2021-10-18] once window is opened, send some request to load particular link there
+            // this could be done by the above function or separately
+          }
           break
         case 'new-space':
           boostHubCreateCloudSpaceEventEmitter.dispatch()
@@ -237,7 +247,7 @@ const BoostHubWebview = ({
                   },
                   {
                     type: 'normal',
-                    label: 'Hard Reload(Ignore Cache)',
+                    label: 'Hard Reload (Ignore Cache)',
                     click: () => {
                       webview.reloadIgnoringCache()
                     },
@@ -250,13 +260,17 @@ const BoostHubWebview = ({
               {
                 type: 'normal',
                 label: 'Sign Out',
-                click: signOut,
+                click: () => signOutCloud(),
               },
             ],
           })
           break
         case 'sign-out':
-          signOut()
+          signOutCloud()
+          break
+        case 'sign-in-event':
+          // broadcast to other windows that sign in event happened
+          signInBroadcast()
           break
         default:
           console.log('Unhandled ipc message event', event.channel, event.args)
