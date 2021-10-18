@@ -35,7 +35,7 @@ import {
   mdiLogoutVariant,
   mdiMagnify,
   mdiPlusCircleOutline,
-  mdiViewDashboardOutline,
+  mdiHome,
   mdiWeb,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
@@ -381,7 +381,7 @@ const Application = ({
               },
               {
                 label: translate(lngKeys.GeneralDashboard),
-                icon: mdiViewDashboardOutline,
+                icon: mdiHome,
                 variant: 'transparent',
                 labelHref: teamUrl,
                 labelClick: () => push(teamUrl),
