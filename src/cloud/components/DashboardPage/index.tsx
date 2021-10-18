@@ -59,7 +59,13 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
                     selectDashboard={setSelectedDashboardId}
                     selectedDashboardId={selectedDashboardId}
                     createNewDashboard={() =>
-                      openModal(<CreateDashboardModal />)
+                      openModal(
+                        <CreateDashboardModal
+                          onCreate={(dashboard) =>
+                            setSelectedDashboardId(dashboard.id)
+                          }
+                        />
+                      )
                     }
                   />,
                   {
@@ -132,10 +138,11 @@ const Container = styled.div`
   .dashboard__control {
     margin: ${({ theme }) => theme.sizes.spaces.df}px
       ${({ theme }) => theme.sizes.spaces.sm}px;
-    font-size: ${({ theme }) => theme.sizes.fonts.l}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.xl}px;
 
     span {
       padding-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+      color: ${({ theme }) => theme.colors.text.primary};
     }
   }
 `
