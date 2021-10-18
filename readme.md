@@ -75,8 +75,8 @@ But you can participate in development via mock backend mode. Although it still 
 Create .env file.
 
 ```sh
+NODE_ENV=development
 MOCK_BACKEND=true
-BOOST_HUB_BASE_URL=http://localhost:3004
 ```
 
 Run webpack processors. You have to run them in separate terminals.
@@ -118,9 +118,9 @@ The source code is quite similar to a router interface. All you need to is `meth
   - `npm test` : Run test script
   - `npm run tsc` : Check type errors
 - Build scripts
-  - `npm run build:electron` : Build assets for the desktop app
-  - `npm run build:cloud` : Build asssets for the cloud space
-  - `npm run build:mobile` : Build assets for the mobile app
+  - `npm run build:electron-production` : Build assets for the desktop app
+  - `npm run build:cloud-production` : Build asssets for the cloud space
+  - `npm run build:mobile-production` : Build assets for the mobile app
   - `npm start` : Run the desktop app with prebuilt assets
   - `npm run meta` : Prepare meta data for the desktop app building(Generate package.json for electron-build module)
   - `npm run prepack` : Create desktop app installers without signing

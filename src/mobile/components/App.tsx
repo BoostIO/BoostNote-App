@@ -9,6 +9,7 @@ import { useEffectOnce } from 'react-use'
 import { initAccessToken } from '../../cloud/lib/stores/electron'
 import '../../cloud/lib/i18n'
 import '../lib/nativeMobile'
+import { PreviewStyleProvider } from '../../lib/preview'
 
 const App = () => {
   const [accessTokenInitialized, setAccessTokenInitialized] = useState(false)
@@ -30,11 +31,13 @@ const App = () => {
 
       <V2ToastProvider>
         <GlobalDataProvider>
-          <RealtimeConnProvider>
-            <RouterProvider>
-              <Router />
-            </RouterProvider>
-          </RealtimeConnProvider>
+          <PreviewStyleProvider>
+            <RealtimeConnProvider>
+              <RouterProvider>
+                <Router />
+              </RouterProvider>
+            </RealtimeConnProvider>
+          </PreviewStyleProvider>
         </GlobalDataProvider>
       </V2ToastProvider>
 
