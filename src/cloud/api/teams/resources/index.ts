@@ -1,5 +1,5 @@
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import querystring from 'querystring'
 import { SerializedTag } from '../../../interfaces/db/tag'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
@@ -13,7 +13,7 @@ export interface MoveResourceRequestBody {
 }
 
 export interface MoveResourceResponseBody {
-  docs: SerializedDocWithBookmark[]
+  docs: SerializedDocWithSupplemental[]
   folders: SerializedFolderWithBookmark[]
   workspaces?: SerializedWorkspace[]
 }
@@ -38,7 +38,7 @@ export interface GetResourcesRequestQuery {
 
 export interface GetResourcesResponseBody {
   folders: SerializedFolderWithBookmark[]
-  docs: SerializedDocWithBookmark[]
+  docs: SerializedDocWithSupplemental[]
   workspaces: SerializedWorkspace[]
   tags?: SerializedTag[]
   dashboards?: SerializedDashboard[]

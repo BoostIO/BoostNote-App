@@ -15,7 +15,7 @@ import {
 } from '../../../../lib/routing/pagePropCache'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useNav } from '../../../lib/stores/nav'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { useToast } from '../../../../design/lib/stores/toast'
 import { getTeamURL } from '../../../lib/utils/patterns'
@@ -61,7 +61,7 @@ const ResourceIndex = () => {
           setPageData(pageData)
           updateDocsMap(
             ...pageData.docs.map(
-              (doc) => [doc.id, doc] as [string, SerializedDocWithBookmark]
+              (doc) => [doc.id, doc] as [string, SerializedDocWithSupplemental]
             )
           )
           updateFoldersMap(

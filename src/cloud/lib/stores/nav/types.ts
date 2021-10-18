@@ -4,7 +4,7 @@ import {
 } from '../../../interfaces/db/folder'
 import {
   SerializedDoc,
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
 } from '../../../interfaces/db/doc'
 import { NavResource } from '../../../interfaces/resources'
 import { SidebarDragState } from '../../dnd'
@@ -53,10 +53,12 @@ export interface NavContext {
   loadDoc: (
     id: string,
     team: string
-  ) => Promise<SerializedDocWithBookmark | undefined>
-  docsMap: Map<string, SerializedDocWithBookmark>
-  updateDocsMap: (...mappedDoc: [string, SerializedDocWithBookmark][]) => void
-  updateParentFolderOfDoc: (doc: SerializedDocWithBookmark) => void
+  ) => Promise<SerializedDocWithSupplemental | undefined>
+  docsMap: Map<string, SerializedDocWithSupplemental>
+  updateDocsMap: (
+    ...mappedDoc: [string, SerializedDocWithSupplemental][]
+  ) => void
+  updateParentFolderOfDoc: (doc: SerializedDocWithSupplemental) => void
   removeFromDocsMap: (...ids: string[]) => void
   dashboardsMap: Map<string, SerializedDashboard>
   appEventsMap: Map<string, SerializedAppEvent>
@@ -75,10 +77,10 @@ export interface NavContext {
   ) => void
   createDocHandler: (body: CreateDocRequestBody) => void
   updateDocHandler: (
-    doc: SerializedDoc | SerializedDocWithBookmark,
+    doc: SerializedDoc | SerializedDocWithSupplemental,
     body: UpdateDocRequestBody
   ) => void
-  deleteDocHandler: (doc: SerializedDocWithBookmark | SerializedDoc) => void
+  deleteDocHandler: (doc: SerializedDocWithSupplemental | SerializedDoc) => void
   moveResourceHandler: (
     draggedResource: NavResource,
     targetedResource: NavResource,

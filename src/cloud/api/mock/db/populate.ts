@@ -1,4 +1,4 @@
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
@@ -37,7 +37,7 @@ export function populatePermissions(
   }
 }
 
-export function populateDoc(mockDoc: MockDoc): SerializedDocWithBookmark {
+export function populateDoc(mockDoc: MockDoc): SerializedDocWithSupplemental {
   const team = getMockTeamById(mockDoc.teamId)!
   return {
     ...mockDoc,
@@ -45,6 +45,7 @@ export function populateDoc(mockDoc: MockDoc): SerializedDocWithBookmark {
     tags: [],
     bookmarked: false,
     team,
+    props: {},
   }
 }
 

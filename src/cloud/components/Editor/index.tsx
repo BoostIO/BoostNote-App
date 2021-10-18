@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { getColorFromString } from '../../lib/utils/string'
 import {
   SerializedDoc,
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
 } from '../../interfaces/db/doc'
 import { useSettings, CodeMirrorKeyMap } from '../../lib/stores/settings'
 import useRealtime from '../../lib/editor/hooks/useRealtime'
@@ -108,7 +108,7 @@ import BottomBarButton from '../BottomBarButton'
 type LayoutMode = 'split' | 'preview' | 'editor'
 
 interface EditorProps {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   team: SerializedTeam
   user: SerializedUser
   revisionHistory: SerializedRevision[]

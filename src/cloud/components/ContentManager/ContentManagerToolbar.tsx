@@ -7,7 +7,7 @@ import {
 import {
   DocStatus,
   SerializedDoc,
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
 } from '../../interfaces/db/doc'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { difference } from 'ramda'
@@ -37,7 +37,7 @@ import BulkActionProgress, {
 interface ContentManagerToolbarProps {
   team: SerializedTeam
   selectedDocs: Set<string>
-  documentsMap: Map<string, SerializedDocWithBookmark>
+  documentsMap: Map<string, SerializedDocWithSupplemental>
   foldersMap: Map<string, SerializedFolderWithBookmark>
   workspacesMap: Map<string, SerializedWorkspace>
   selectedFolders: Set<string>
@@ -101,7 +101,7 @@ const ContentManagerToolbar = ({
   const moveSingleDoc = useCallback(
     async (docId: string, workspaceId: string, parentFolderId?: string) => {
       await updateDoc(
-        { id: docId, teamId: team.id } as SerializedDocWithBookmark,
+        { id: docId, teamId: team.id } as SerializedDocWithSupplemental,
         {
           workspaceId,
           parentFolderId,
@@ -269,7 +269,7 @@ const ContentManagerToolbar = ({
         acc.push(doc)
       }
       return acc
-    }, [] as SerializedDocWithBookmark[])
+    }, [] as SerializedDocWithSupplemental[])
 
     if (docs.length === 0) {
       return values

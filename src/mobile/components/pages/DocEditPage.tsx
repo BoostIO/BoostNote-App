@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { getColorFromString } from '../../../cloud/lib/utils/string'
 import styled from '../../../design/lib/styled'
 import {
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
   SerializedDoc,
 } from '../../../cloud/interfaces/db/doc'
 import { useSettings } from '../../../cloud/lib/stores/settings'
@@ -56,7 +56,7 @@ import {
 import CustomizedMarkdownPreviewer from '../../../cloud/components/MarkdownView/CustomizedMarkdownPreviewer'
 
 interface EditorProps {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   team: SerializedTeam
   user: SerializedUser
   contributors: SerializedUser[]

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import TagsAutoCompleteInput from './TagsAutoCompleteInput'
 import { deleteTagFromDoc } from '../../../api/teams/docs/tags'
@@ -13,7 +13,7 @@ import styled from '../../../../design/lib/styled'
 import Icon from '../../../../design/components/atoms/Icon'
 
 interface DocTagsListProps {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   team: SerializedTeam
   readOnly: boolean
 }

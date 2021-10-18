@@ -2,7 +2,7 @@ import { mdiFileDocumentOutline, mdiLock } from '@mdi/js'
 import { getDocLinkHref } from '../../components/Link/DocLink'
 import { getFolderHref } from '../../components/Link/FolderLink'
 import { getWorkspaceHref } from '../../components/Link/WorkspaceLink'
-import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
@@ -15,7 +15,7 @@ export const topParentId = 'root'
 export function mapTopbarTree(
   team: SerializedTeam,
   initialLoadDone: boolean,
-  docsMap: Map<string, SerializedDocWithBookmark>,
+  docsMap: Map<string, SerializedDocWithSupplemental>,
   foldersMap: Map<string, SerializedFolderWithBookmark>,
   workspacesMap: Map<string, SerializedWorkspace>,
   push: (url: string) => void

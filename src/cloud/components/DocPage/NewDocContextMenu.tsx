@@ -12,7 +12,7 @@ import MetadataContainerBreak from '../../../design/components/organisms/Metadat
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import {
   SerializedDoc,
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
 } from '../../interfaces/db/doc'
 import { SerializedRevision } from '../../interfaces/db/revision'
 import { SerializedTeam } from '../../interfaces/db/team'
@@ -27,7 +27,7 @@ import BackLinksList from './BackLinksList'
 import DocContextMenuActions from './DocContextMenuActions'
 
 interface DocContextMenuProps {
-  currentDoc: SerializedDocWithBookmark
+  currentDoc: SerializedDocWithSupplemental
   contributors?: SerializedUser[]
   backLinks?: SerializedDoc[]
   team: SerializedTeam

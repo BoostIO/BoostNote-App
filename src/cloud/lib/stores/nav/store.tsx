@@ -15,7 +15,7 @@ import {
 } from '../../../interfaces/db/folder'
 import {
   SerializedDoc,
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
 } from '../../../interfaces/db/doc'
 import { usePage } from '../pageStore'
 import {
@@ -103,7 +103,7 @@ function useNavStore(): NavContext {
     Map<string, SerializedFolderWithBookmark>
   >(new Map())
   const [docsMap, setDocsMap] = useState<
-    Map<string, SerializedDocWithBookmark>
+    Map<string, SerializedDocWithSupplemental>
   >(new Map())
   const [dashboardsMap, setDashboardsMap] = useState<
     Map<string, SerializedDashboard>
@@ -313,7 +313,7 @@ function useNavStore(): NavContext {
   )
 
   const updateParentFolderOfDoc = useCallback(
-    (doc: SerializedDocWithBookmark) =>
+    (doc: SerializedDocWithSupplemental) =>
       setFoldersMap((prevMap) => {
         const parentFolder = doc.parentFolder!
         const existingParentFolder = prevMap.get(parentFolder.id)
@@ -346,7 +346,7 @@ function useNavStore(): NavContext {
   )
 
   const updateDocsMap = useCallback(
-    (...mappedDocs: [string, SerializedDocWithBookmark][]) =>
+    (...mappedDocs: [string, SerializedDocWithSupplemental][]) =>
       setDocsMap((prevMap) => {
         const newMap = new Map([...prevMap])
 
@@ -432,9 +432,9 @@ function useNavStore(): NavContext {
     ]
   )
 
-  const pendingLoads = useRef<Map<string, Promise<SerializedDocWithBookmark>>>(
-    new Map()
-  )
+  const pendingLoads = useRef<
+    Map<string, Promise<SerializedDocWithSupplemental>>
+  >(new Map())
   const loadedDocs = useRef<Set<string>>(new Set())
   const loadDoc = useCallback(
     async (id: string, team: string, reload = false) => {
@@ -467,7 +467,7 @@ function useNavStore(): NavContext {
 
   const updateDocHandler = useCallback(
     async (
-      target: SerializedDoc | SerializedDocWithBookmark,
+      target: SerializedDoc | SerializedDocWithSupplemental,
       body: UpdateDocRequestBody
     ) => {
       if (team == null) {
@@ -936,7 +936,7 @@ export const {
 
 interface CreateMapsFromPagePropsProps {
   foldersData: Map<string, SerializedFolderWithBookmark>
-  docsData: Map<string, SerializedDocWithBookmark>
+  docsData: Map<string, SerializedDocWithSupplemental>
   tagsData: Map<string, SerializedTag>
   workspacesData: Map<string, SerializedWorkspace>
   templatesData: Map<string, SerializedTemplate>
@@ -972,7 +972,9 @@ function getTagsFoldersDocsMapsFromProps(
   const foldersData = getMapFromEntityArray(
     folders as SerializedFolderWithBookmark[]
   )
-  const docsData = getMapFromEntityArray(docs as SerializedDocWithBookmark[])
+  const docsData = getMapFromEntityArray(
+    docs as SerializedDocWithSupplemental[]
+  )
   const tagsData = getMapFromEntityArray(tags as SerializedTag[])
   const workspacesData = getMapFromEntityArray(
     workspaces as SerializedWorkspace[]

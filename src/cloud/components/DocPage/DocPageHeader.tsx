@@ -1,20 +1,16 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import styled from '../../../design/lib/styled'
-import { DocStatus, SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import {
+  DocStatus,
+  SerializedDocWithSupplemental,
+} from '../../interfaces/db/doc'
 import cc from 'classcat'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import Button from '../../../design/components/atoms/Button'
 import Icon from '../../../design/components/atoms/Icon'
 import { mdiCommentTextOutline, mdiPencil } from '@mdi/js'
 import { usePage } from '../../lib/stores/pageStore'
-import { useNav } from '../../lib/stores/nav'
-import {
-  updateDocAssignees,
-  updateDocDueDate,
-  updateDocStatus,
-} from '../../api/teams/docs'
 import { format as formatDate } from 'date-fns'
-import { useToast } from '../../../design/lib/stores/toast'
 import DocAssigneeSelect from '../DocProperties/DocAssigneeSelect'
 import DocTagsList from './DocTagsList'
 import { SerializedTeam } from '../../interfaces/db/team'
@@ -24,10 +20,11 @@ import { usePreferences } from '../../lib/stores/preferences'
 import { overflowEllipsis } from '../../../design/lib/styled/styleFunctions'
 import { getDocTitle } from '../../lib/utils/patterns'
 import ViewerDisclaimer from '../ViewerDisclaimer'
+import { useCloudApi } from '../../lib/hooks/useCloudApi'
 
 interface DocPageHeaderProps {
   docIsEditable?: boolean
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   className?: string
   team: SerializedTeam
 }
@@ -38,85 +35,44 @@ const DocPageHeader = ({
   className,
   team,
 }: DocPageHeaderProps) => {
+  const {
+    updateDocStatusApi,
+    updateDocDueDateApi,
+    updateDocAssigneeApi,
+    sendingMap,
+  } = useCloudApi()
   const { openRenameDocForm } = useCloudResourceModals()
-  const { currentUserIsCoreMember, setPartialPageData } = usePage()
-  const [sendingUpdateStatus, setSendingUpdateStatus] = useState(false)
-  const [sendingDueDate, setSendingDueDate] = useState(false)
-  const [sendingAssignees, setSendingAssignees] = useState(false)
-  const { updateDocsMap } = useNav()
-  const { pushMessage } = useToast()
+  const { currentUserIsCoreMember } = usePage()
   const { preferences, setPreferences } = usePreferences()
 
   const sendUpdateStatus = useCallback(
     async (newStatus: DocStatus | null) => {
-      if (doc.status === newStatus || sendingUpdateStatus) {
+      if (doc.status === newStatus) {
         return
       }
 
-      setSendingUpdateStatus(true)
-      try {
-        const data = await updateDocStatus(doc.teamId, doc.id, newStatus)
-        updateDocsMap([data.doc.id, data.doc])
-        setPartialPageData({ pageDoc: data.doc })
-      } catch (error) {
-        pushMessage({
-          title: 'Error',
-          description: 'Could not change status',
-        })
-      }
-      setSendingUpdateStatus(false)
+      await updateDocStatusApi(doc, newStatus)
     },
-    [doc, pushMessage, sendingUpdateStatus, setPartialPageData, updateDocsMap]
+    [doc, updateDocStatusApi]
   )
 
   const sendUpdateDocDueDate = useCallback(
     async (newDate: Date | null) => {
-      if (sendingDueDate) {
-        return
-      }
-
-      setSendingDueDate(true)
-      try {
-        const data = await updateDocDueDate(
-          doc.teamId,
-          doc.id,
-          newDate != null
-            ? new Date(formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z')
-            : null
-        )
-        updateDocsMap([data.doc.id, data.doc])
-        setPartialPageData({ pageDoc: data.doc })
-      } catch (error) {
-        pushMessage({
-          title: 'Error',
-          description: 'Could not update due date',
-        })
-      }
-      setSendingDueDate(false)
+      await updateDocDueDateApi(
+        doc,
+        newDate != null
+          ? new Date(formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z')
+          : null
+      )
     },
-    [doc, pushMessage, sendingDueDate, setPartialPageData, updateDocsMap]
+    [doc, updateDocDueDateApi]
   )
 
   const sendUpdateDocAssignees = useCallback(
     async (newAssignees: string[]) => {
-      if (sendingAssignees) {
-        return
-      }
-
-      setSendingAssignees(true)
-      try {
-        const data = await updateDocAssignees(doc.teamId, doc.id, newAssignees)
-        updateDocsMap([data.doc.id, data.doc])
-        setPartialPageData({ pageDoc: data.doc })
-      } catch (error) {
-        pushMessage({
-          title: 'Error',
-          description: 'Could not update assignees',
-        })
-      }
-      setSendingAssignees(false)
+      await updateDocAssigneeApi(doc, newAssignees)
     },
-    [doc, pushMessage, sendingAssignees, setPartialPageData, updateDocsMap]
+    [doc, updateDocAssigneeApi]
   )
 
   return (
@@ -148,8 +104,11 @@ const DocPageHeader = ({
           <div className='doc__page__header__props'>
             <div className='doc__page__header__property'>
               <DocAssigneeSelect
-                isLoading={sendingAssignees}
-                disabled={sendingAssignees || !currentUserIsCoreMember}
+                isLoading={sendingMap.get(doc.id) === 'assignees'}
+                disabled={
+                  sendingMap.get(doc.id) === 'assignees' ||
+                  !currentUserIsCoreMember
+                }
                 defaultValue={
                   doc.assignees != null
                     ? doc.assignees.map((assignee) => assignee.userId)
@@ -162,7 +121,7 @@ const DocPageHeader = ({
             <div className='doc__page__header__property'>
               <DocStatusSelect
                 status={doc.status}
-                sending={sendingUpdateStatus}
+                sending={sendingMap.get(doc.id) === 'status'}
                 onStatusChange={sendUpdateStatus}
                 disabled={!currentUserIsCoreMember}
                 isReadOnly={!currentUserIsCoreMember}
@@ -171,7 +130,7 @@ const DocPageHeader = ({
             <div className='doc__page__header__property'>
               <DocDueDateSelect
                 className='context__content__date_select'
-                sending={sendingDueDate}
+                sending={sendingMap.get(doc.id) === 'duedate'}
                 dueDate={doc.dueDate}
                 onDueDateChange={sendUpdateDocDueDate}
                 disabled={!currentUserIsCoreMember}

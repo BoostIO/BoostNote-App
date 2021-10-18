@@ -11,7 +11,7 @@ import {
   isFolderDeleteShortcut,
   isFolderEditShortcut,
 } from '../../lib/shortcuts'
-import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import {
   mdiStarOutline,
   mdiStar,
@@ -74,7 +74,7 @@ const FolderPage = () => {
     }
     return currentFolder.childDocsIds
       .filter((docId) => docsMap.has(docId))
-      .map((docId) => docsMap.get(docId) as SerializedDocWithBookmark)
+      .map((docId) => docsMap.get(docId) as SerializedDocWithSupplemental)
   }, [docsMap, currentFolder])
 
   const childFolders = useMemo(() => {

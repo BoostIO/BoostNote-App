@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react'
-import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { useNav } from '../../lib/stores/nav'
 import { usePage } from '../../lib/stores/pageStore'
 import {
@@ -42,7 +42,7 @@ type SendingState =
   | 'expireDate'
 
 interface DocShareProps {
-  currentDoc: SerializedDocWithBookmark
+  currentDoc: SerializedDocWithSupplemental
   team: SerializedTeam
 }
 

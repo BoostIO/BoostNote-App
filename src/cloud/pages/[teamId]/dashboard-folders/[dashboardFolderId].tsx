@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { usePage } from '../../../lib/stores/pageStore'
 import { useNav } from '../../../lib/stores/nav'
 import { useTitle } from 'react-use'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
 import {
   AssigneesCondition,
@@ -29,7 +29,7 @@ import ApplicationContent from '../../../components/ApplicationContent'
 import { localizeDate } from '../../../components/Modal/contents/Dashboard/DocDateSelect'
 
 function validateAssignees(
-  doc: SerializedDocWithBookmark,
+  doc: SerializedDocWithSupplemental,
   condition: AssigneesCondition
 ) {
   if (doc.assignees == null || doc.assignees.length === 0) {
@@ -45,7 +45,7 @@ function validateAssignees(
 }
 
 function validateLabels(
-  doc: SerializedDocWithBookmark,
+  doc: SerializedDocWithSupplemental,
   condition: LabelsCondition
 ) {
   if (doc.tags.length === 0) {
@@ -61,7 +61,7 @@ function validateLabels(
 }
 
 function validateDueDate(
-  doc: SerializedDocWithBookmark,
+  doc: SerializedDocWithSupplemental,
   condition: SerializeDateProps<DueDateCondition>
 ) {
   if (doc.dueDate == null) {
@@ -72,14 +72,14 @@ function validateDueDate(
 }
 
 function validateCreationDate(
-  doc: SerializedDocWithBookmark,
+  doc: SerializedDocWithSupplemental,
   condition: SerializeDateProps<CreationDateCondition>
 ) {
   return validateDateValue(new Date(doc.createdAt), condition.value)
 }
 
 function validateUpdateDate(
-  doc: SerializedDocWithBookmark,
+  doc: SerializedDocWithSupplemental,
   condition: SerializeDateProps<UpdateDateCondition>
 ) {
   if (doc.updatedAt == null) {

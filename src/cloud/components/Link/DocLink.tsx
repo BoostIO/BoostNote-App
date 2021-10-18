@@ -3,7 +3,7 @@ import querystring from 'querystring'
 import { getDocURL, getTeamURL } from '../../lib/utils/patterns'
 import {
   SerializedDoc,
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
 } from '../../interfaces/db/doc'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { useRouter } from '../../lib/router'
@@ -11,7 +11,7 @@ import { useRouter } from '../../lib/router'
 export type DocLinkIntent = 'index'
 
 interface DocLinkProps {
-  doc: SerializedDoc | SerializedDocWithBookmark
+  doc: SerializedDoc | SerializedDocWithSupplemental
   team: SerializedTeam
   draggable?: boolean
   intent?: DocLinkIntent

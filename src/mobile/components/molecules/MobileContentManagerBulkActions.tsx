@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import { mdiFolderMoveOutline, mdiTrashCanOutline } from '@mdi/js'
-import { SerializedDocWithBookmark } from '../../../cloud/interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../cloud/interfaces/db/doc'
 import { SerializedTeam } from '../../../cloud/interfaces/db/team'
 import { useNav } from '../../../cloud/lib/stores/nav'
 import { difference } from 'ramda'
@@ -22,7 +22,7 @@ import MobileResourceMoveModal from '../organisms/modals/MobileResourceMoveModal
 interface ContentManagerBulkActionsProps {
   team: SerializedTeam
   selectedDocs: Set<string>
-  documentsMap: Map<string, SerializedDocWithBookmark>
+  documentsMap: Map<string, SerializedDocWithSupplemental>
   foldersMap?: Map<string, SerializedFolderWithBookmark>
   workspacesMap: Map<string, SerializedWorkspace>
   selectedFolders?: Set<string>
@@ -76,7 +76,7 @@ const MobileContentManagerBulkActions = ({
   const moveSingleDoc = useCallback(
     async (docId: string, workspaceId: string, parentFolderId?: string) => {
       try {
-        await updateDocHandler({ id: docId } as SerializedDocWithBookmark, {
+        await updateDocHandler({ id: docId } as SerializedDocWithSupplemental, {
           workspaceId,
           parentFolderId,
         })
@@ -195,7 +195,7 @@ const MobileContentManagerBulkActions = ({
   )
 
   const deleteSingleDoc = useCallback(
-    async (team: SerializedTeam, target?: SerializedDocWithBookmark) => {
+    async (team: SerializedTeam, target?: SerializedDocWithSupplemental) => {
       if (target == null) {
         return
       }

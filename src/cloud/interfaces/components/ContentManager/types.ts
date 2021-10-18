@@ -1,8 +1,8 @@
-import { SerializedDocWithBookmark } from '../../db/doc'
+import { SerializedDocWithSupplemental } from '../../db/doc'
 import { SerializedFolderWithBookmark } from '../../db/folder'
 
 export type UnsignedItem =
-  | SerializedDocWithBookmark
+  | SerializedDocWithSupplemental
   | SerializedFolderWithBookmark
 
 export type ContentManagerRowAction<T extends UnsignedItem> = {

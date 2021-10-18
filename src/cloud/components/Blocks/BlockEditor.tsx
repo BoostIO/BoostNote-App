@@ -3,7 +3,7 @@ import React from 'react'
 import { TopbarControlProps } from '../../../design/components/organisms/Topbar'
 import { useModal } from '../../../design/lib/stores/modal'
 import { ContainerBlock } from '../../api/blocks'
-import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { usePage } from '../../lib/stores/pageStore'
 import ApplicationPage from '../ApplicationPage'
@@ -13,7 +13,7 @@ import NewDocContextMenu from '../DocPage/NewDocContextMenu'
 import BlockContent from './BlockContent'
 
 interface BlockEditorProps {
-  doc: SerializedDocWithBookmark & { rootBlock: ContainerBlock }
+  doc: SerializedDocWithSupplemental & { rootBlock: ContainerBlock }
   team: SerializedTeam
 }
 

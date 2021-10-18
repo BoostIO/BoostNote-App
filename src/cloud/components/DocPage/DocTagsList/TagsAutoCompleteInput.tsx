@@ -3,7 +3,7 @@ import { mdiLabelOutline, mdiPlus } from '@mdi/js'
 import { useNav } from '../../../lib/stores/nav'
 import { createTag } from '../../../api/teams/tags'
 import { SerializedTeam } from '../../../interfaces/db/team'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
 import { isChildNode } from '../../../lib/dom'
 import { useToast } from '../../../../design/lib/stores/toast'
@@ -19,7 +19,7 @@ import Icon from '../../../../design/components/atoms/Icon'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface TagsAutoCompleteInputProps {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   team: SerializedTeam
 }
 

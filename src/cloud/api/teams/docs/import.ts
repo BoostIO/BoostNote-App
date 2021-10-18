@@ -1,14 +1,14 @@
 import { callApi } from '../../../lib/client'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 
 export type AllowedDocTypeImports = 'md' | 'html' | 'doc' | 'md|html'
 
 export interface ImportDocsResponseBody {
   workspace: SerializedWorkspace
   parentFolder?: SerializedFolderWithBookmark
-  docs: SerializedDocWithBookmark[]
+  docs: SerializedDocWithSupplemental[]
   errors: string[]
 }
 

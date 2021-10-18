@@ -1,6 +1,6 @@
 import { SerializedTag } from '../../../interfaces/db/tag'
 import { SerializedTeam } from '../../../interfaces/db/team'
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { callApi } from '../../../lib/client'
 
 export interface CreateTagRequestBody {
@@ -10,7 +10,7 @@ export interface CreateTagRequestBody {
 
 export interface CreateTagResponseBody {
   tag: SerializedTag
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
 }
 
 export async function createTag(

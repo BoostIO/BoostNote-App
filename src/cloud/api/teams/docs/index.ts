@@ -1,15 +1,16 @@
 import { callApi } from '../../../lib/client'
 import {
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
   SerializedDoc,
   DocStatus,
 } from '../../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedTag } from '../../../interfaces/db/tag'
+import { Props } from '../../../interfaces/db/props'
 
 interface GetDocResponseBody {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
 }
 
 export function getDoc(id: string, team: string) {
@@ -26,7 +27,7 @@ export interface CreateDocRequestBody {
 }
 
 export interface CreateDocResponseBody {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
 }
 
 export async function createDoc(
@@ -53,7 +54,7 @@ export interface UpdateDocRequestBody {
 export interface UpdateDocResponseBody {
   workspaces: SerializedWorkspace[]
   folders: SerializedFolderWithBookmark[]
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
 }
 
 export async function updateDoc(
@@ -74,7 +75,7 @@ export async function updateDoc(
 export interface DestroyDocResponseBody {
   parentFolder?: SerializedFolderWithBookmark
   workspace?: SerializedWorkspace
-  doc?: SerializedDocWithBookmark
+  doc?: SerializedDocWithSupplemental
 }
 
 export async function destroyDoc(team: { id: string }, doc: { id: string }) {
@@ -99,7 +100,7 @@ export async function updateDocEmoji(doc: SerializedDoc, emoji?: string) {
   return data
 }
 export interface UpdateDocStatusResponseBody {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
 }
 
 export async function updateDocStatus(
@@ -121,7 +122,7 @@ export async function updateDocStatus(
 }
 
 export interface UpdateDocDueDateResponseBody {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
 }
 
 export async function updateDocDueDate(
@@ -143,29 +144,31 @@ export async function updateDocDueDate(
 }
 
 export interface UpdateDocAssigneesResponseBody {
-  doc: SerializedDocWithBookmark
+  data: Props
 }
 
-export async function updateDocAssignees(
-  teamId: string,
-  docId: string,
-  assignees: string[]
-) {
-  const data = await callApi<UpdateDocAssigneesResponseBody>(
-    `api/teams/${teamId}/docs/${docId}/assignees`,
-    {
-      method: 'put',
-      json: {
-        assignees,
+export async function updateDocAssignees(docId: string, assignees: string[]) {
+  let body
+
+  if (assignees.length === 0) {
+    body = { assignees: null }
+  } else {
+    body = {
+      assignees: {
+        type: 'user',
+        data: assignees,
       },
     }
-  )
+  }
 
-  return data
+  return callApi<UpdateDocAssigneesResponseBody>(`api/docs/${docId}/props`, {
+    method: 'patch',
+    json: body,
+  })
 }
 
 export interface UpdateDocTagsResponseBody {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   tags: SerializedTag[]
 }
 export async function updateDocTagsInBulk(
