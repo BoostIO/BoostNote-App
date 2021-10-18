@@ -930,7 +930,7 @@ interface CloudTreeItem {
   href?: string
   active?: boolean
   lastUpdated: string
-  navigateTo?: () => void
+  navigateTo?: (event?: any) => void
   tooltip?: string
   controls?: {
     icon: string

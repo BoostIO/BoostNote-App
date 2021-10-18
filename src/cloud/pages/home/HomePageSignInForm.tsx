@@ -82,16 +82,19 @@ const HomePageSignInForm = () => {
       setErrorMessage(null)
       loginWithStateAndCode(authStateRef.current, code)
         .then((loginData) => {
-          // todo: [komediruzecki-2021-10-14] After logout it is still logged in (need to invalidate token probably)
           setPartialGlobalData({
             currentUser: loginData.user || undefined,
             teams: loginData.teams || [],
           })
           push('/desktop')
+
+          if (usingElectron) {
+            sendToElectron('sign-in-event')
+          }
         })
         .catch((err) => console.log('Error logging in', err))
     },
-    [push, setPartialGlobalData]
+    [push, sendToElectron, setPartialGlobalData, usingElectron]
   )
 
   return (

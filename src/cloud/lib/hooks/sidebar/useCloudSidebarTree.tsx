@@ -591,9 +591,10 @@ export function useCloudSidebarTree() {
           defaultIcon: mdiTag,
           href,
           active: !showSearchScreen && href === currentPathWithDomain,
-          navigateTo: () => {
-            if (usingElectron) {
-              sendToElectron('new-window', 'labels')
+          navigateTo: (event?: any) => {
+            if (event && event.shiftKey && usingElectron) {
+              sendToElectron('new-window', href)
+              return
             }
             push(href)
           },
@@ -829,9 +830,9 @@ export function useCloudSidebarTree() {
     translate,
     currentUserIsCoreMember,
     openWorkspaceCreateForm,
-    showSearchScreen,
     sideBarOpenedWorkspaceIdsSet,
     getFoldEvents,
+    showSearchScreen,
     dropInWorkspace,
     updateFolder,
     updateDoc,
@@ -844,6 +845,7 @@ export function useCloudSidebarTree() {
     sideBarOpenedFolderIdsSet,
     dropInDocOrFolder,
     saveFolderTransferData,
+    clearDragTransferData,
     toggleFolderBookmark,
     openRenameFolderForm,
     deleteFolder,
@@ -851,13 +853,14 @@ export function useCloudSidebarTree() {
     toggleDocBookmark,
     openRenameDocForm,
     deleteDoc,
+    usingElectron,
+    sendToElectron,
     openModal,
     messageBox,
     deleteSmartFolder,
     createWorkspace,
     sideBarOpenedLinksIdsSet,
     toggleItem,
-    clearDragTransferData,
   ])
 
   const treeWithOrderedCategories = useMemo(() => {

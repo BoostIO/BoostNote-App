@@ -128,6 +128,13 @@
     electron.remote.ipcMain.emit('new-window-event', options)
   }
 
+  function signInBroadcast() {
+    electron.remote.ipcMain.emit(
+      'sign-in-event',
+      electron.remote.getCurrentWindow().id
+    )
+  }
+
   function openContextMenu(options) {
     const { Menu } = electron.remote
     const menu = Menu.buildFromTemplate(options.menuItems)
@@ -260,4 +267,5 @@
   window.__ELECTRON_ONLY__.removeCookie = removeCookie
   window.__ELECTRON_ONLY__.setBadgeCount = setBadgeCount
   window.__ELECTRON_ONLY__.got = got
+  window.__ELECTRON_ONLY__.signInBroadcast = signInBroadcast
 })()
