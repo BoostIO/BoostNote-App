@@ -1,8 +1,8 @@
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { callApi } from '../../../lib/client'
 
 export interface DeleteTagFromDocResponseBody {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
 }
 
 export async function deleteTagFromDoc(

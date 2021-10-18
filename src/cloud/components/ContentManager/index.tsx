@@ -1,5 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { DocStatus, SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import {
+  DocStatus,
+  SerializedDocWithSupplemental,
+} from '../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
 import { useSet } from 'react-use'
 import { sortByAttributeAsc, sortByAttributeDesc } from '../../lib/utils/array'
@@ -43,7 +46,7 @@ type ContentTab = 'all' | 'folders' | 'docs'
 
 interface ContentManagerProps {
   team: SerializedTeam
-  documents: SerializedDocWithBookmark[]
+  documents: SerializedDocWithSupplemental[]
   folders?: SerializedFolderWithBookmark[]
   workspacesMap: Map<string, SerializedWorkspace>
   currentUserIsCoreMember: boolean
@@ -89,7 +92,7 @@ const ContentManager = ({
   ] = useSet<string>(new Set())
 
   const currentDocumentsRef = useRef(
-    new Map<string, SerializedDocWithBookmark>(
+    new Map<string, SerializedDocWithSupplemental>(
       documents.map((doc) => [doc.id, doc])
     )
   )
@@ -236,14 +239,14 @@ const ContentManager = ({
   )
 
   const onDragStartDoc = useCallback(
-    (event: any, doc: SerializedDocWithBookmark) => {
+    (event: any, doc: SerializedDocWithSupplemental) => {
       saveDocTransferData(event, doc)
     },
     [saveDocTransferData]
   )
 
   const onDropDoc = useCallback(
-    (event: any, doc: SerializedDocWithBookmark) =>
+    (event: any, doc: SerializedDocWithSupplemental) =>
       dropInDocOrFolder(
         event,
         { type: 'doc', resource: docToDataTransferItem(doc) },

@@ -106,13 +106,14 @@ const ContextModalItem = ({
               ? modal.position.left
               : windowWidth - modalWidth - 10
           properties.bottom = windowHeight - modal.position.top + 10
+          break
         case 'right':
           properties.left =
             modal.position.right + modalWidth < windowWidth - 10
               ? modal.position.right + 10
               : windowWidth - modalWidth - 10
           properties.top = modal.position.top
-
+          break
         default:
           break
       }

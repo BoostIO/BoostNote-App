@@ -12,7 +12,7 @@ import { getDocLinkHref } from '../Link/DocLink'
 import { shortcuts, isDocDeleteShortcut } from '../../lib/shortcuts'
 import { useGlobalData } from '../../lib/stores/globalData'
 import {
-  SerializedDocWithBookmark,
+  SerializedDocWithSupplemental,
   SerializedDoc,
 } from '../../interfaces/db/doc'
 import { SerializedUser } from '../../interfaces/db/user'
@@ -26,7 +26,7 @@ import { freePlanMembersLimit } from '../../lib/subscription'
 import Spinner from '../../../design/components/atoms/Spinner'
 
 interface DocPageProps {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
   revisionHistory: SerializedRevision[]

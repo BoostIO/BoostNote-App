@@ -1,6 +1,6 @@
 import { getDocLinkHref } from '../../components/Link/DocLink'
 import { getFolderHref } from '../../components/Link/FolderLink'
-import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { getDocTitle } from '../utils/patterns'
@@ -12,7 +12,7 @@ type CloudCategories = 'folders' | 'documents' | 'archived'
 export function mapManagerRows(
   team: SerializedTeam,
   parent: { workspaceId: string; parentFolderId?: string },
-  docsMap: Map<string, SerializedDocWithBookmark>,
+  docsMap: Map<string, SerializedDocWithSupplemental>,
   foldersMap: Map<string, SerializedFolderWithBookmark>
 ) {
   const items = [] as ContentManagerItemProps<CloudCategories>[]

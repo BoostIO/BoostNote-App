@@ -12,7 +12,7 @@ import {
   mdiStar,
   mdiHistory,
 } from '@mdi/js'
-import { SerializedDocWithBookmark } from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 
 import copy from 'copy-to-clipboard'
 import { SerializedTeam } from '../../interfaces/db/team'
@@ -61,7 +61,7 @@ import { usePreviewStyle } from '../../../lib/preview'
 
 export interface DocContextMenuActionsProps {
   team: SerializedTeam
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   currentUserIsCoreMember: boolean
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
   restoreRevision?: (revision: SerializedRevision) => void
@@ -105,7 +105,7 @@ export function DocContextMenuActions({
       head: {
         ...(doc.head || { title: '', content: '' }),
       },
-    } as SerializedDocWithBookmark
+    } as SerializedDocWithSupplemental
 
     if (editorRef != null && editorRef.current != null) {
       updatedDoc.head!.content = editorRef.current.getValue()
@@ -142,7 +142,7 @@ export function DocContextMenuActions({
       exportOptions,
       token,
     }: {
-      updatedDoc: SerializedDocWithBookmark
+      updatedDoc: SerializedDocWithSupplemental
       exportOptions: ExportOptions
       token: string
     }) =>

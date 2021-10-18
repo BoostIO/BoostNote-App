@@ -50,7 +50,11 @@ import {
   destroyWorkspace,
   DestroyWorkspaceResponseBody,
 } from '../../api/teams/workspaces'
-import { DocStatus, SerializedDoc } from '../../interfaces/db/doc'
+import {
+  DocStatus,
+  SerializedDoc,
+  SerializedDocWithSupplemental,
+} from '../../interfaces/db/doc'
 import { SerializedFolder } from '../../interfaces/db/folder'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { useRouter } from '../router'
@@ -367,12 +371,17 @@ export function useCloudApi() {
   const updateDocAssigneeApi = useCallback(
     async (target: SerializedDoc, newAssignees: string[]) => {
       await send(target.id, 'assignees', {
-        api: () => updateDocAssignees(target.teamId, target.id, newAssignees),
-        cb: ({ doc }: UpdateDocAssigneesResponseBody) => {
-          updateDocsMap([doc.id, doc])
+        api: () => updateDocAssignees(target.id, newAssignees),
+        cb: ({ data }: UpdateDocAssigneesResponseBody) => {
+          const assignees = data.assignees
+          const newDoc = {
+            ...target,
+            assignees: assignees == null ? undefined : assignees.data,
+          } as SerializedDocWithSupplemental
+          updateDocsMap([newDoc.id, newDoc])
 
-          if (pageDoc != null && doc.id === pageDoc.id) {
-            setPartialPageData({ pageDoc: doc })
+          if (pageDoc != null && newDoc.id === pageDoc.id) {
+            setPartialPageData({ pageDoc: newDoc })
           }
         },
       })

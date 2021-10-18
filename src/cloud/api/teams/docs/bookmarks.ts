@@ -1,8 +1,8 @@
-import { SerializedDocWithBookmark } from '../../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { callApi } from '../../../lib/client'
 
 export interface CreateDocBookmarkResponseBody {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
 }
 
 export async function createDocBookmark(teamId: string, docId: string) {
@@ -15,7 +15,7 @@ export async function createDocBookmark(teamId: string, docId: string) {
 }
 
 export interface DestroyDocBookmarkResponseBody {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
 }
 
 export async function destroyDocBookmark(teamId: string, docId: string) {

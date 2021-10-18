@@ -3,7 +3,7 @@ import { mdiPlus } from '@mdi/js'
 import { useNav } from '../../../../../../cloud/lib/stores/nav'
 import { createTag } from '../../../../../../cloud/api/teams/tags'
 import { SerializedTeam } from '../../../../../../cloud/interfaces/db/team'
-import { SerializedDocWithBookmark } from '../../../../../../cloud/interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../../../../../cloud/interfaces/db/doc'
 import { isChildNode } from '../../../../../../cloud/lib/dom'
 import { useToast } from '../../../../../../design/lib/stores/toast'
 import { contextMenuFormItem } from '../../../../../../design/lib/styled/styleFunctions'
@@ -17,7 +17,7 @@ import Icon from '../../../../../../design/components/atoms/Icon'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface TagsAutoCompleteInputProps {
-  doc: SerializedDocWithBookmark
+  doc: SerializedDocWithSupplemental
   team: SerializedTeam
 }
 
