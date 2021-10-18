@@ -1,4 +1,4 @@
-import { mdiTag, mdiViewDashboardOutline, mdiWeb } from '@mdi/js'
+import { mdiTag, mdiHome, mdiWeb } from '@mdi/js'
 import { capitalize } from 'lodash'
 import React, { PropsWithChildren, useMemo } from 'react'
 import Topbar, {
@@ -108,7 +108,7 @@ const ApplicationTopbar = ({
           label: capitalize(translate(lngKeys.GeneralDashboard)),
           active: true,
           parentId: topParentId,
-          icon: mdiViewDashboardOutline,
+          icon: mdiHome,
           link: {
             href: getTeamLinkHref(team, 'index'),
             navigateTo: () => push(getTeamLinkHref(team, 'index')),
