@@ -100,9 +100,6 @@ export function useCloudResourceModals() {
           defaultInputValue={doc.title}
           defaultEmoji={doc.emoji}
           placeholder={translate(lngKeys.DocTitlePlaceholder)}
-          submitButtonProps={{
-            label: translate(lngKeys.GeneralUpdateVerb),
-          }}
           onSubmit={async (inputValue: string, emoji?: string) => {
             await updateDoc(doc, {
               workspaceId: doc.workspaceId,
@@ -112,14 +109,23 @@ export function useCloudResourceModals() {
             })
             closeLastModal()
           }}
+          onBlur={async (inputValue: string, emoji?: string) => {
+            await updateDoc(doc, {
+              workspaceId: doc.workspaceId,
+              parentFolderId: doc.parentFolderId,
+              title: inputValue,
+              emoji: emoji == null ? null : emoji,
+            })
+          }}
         />,
         {
-          showCloseIcon: true,
-          title: translate(lngKeys.RenameDoc),
+          showCloseIcon: false,
+          width: 'small',
+          hideBackground: true,
         }
       )
     },
-    [openModal, closeLastModal, updateDoc, translate]
+    [closeLastModal, openModal, translate, updateDoc]
   )
 
   const openNewFolderForm = useCallback(
