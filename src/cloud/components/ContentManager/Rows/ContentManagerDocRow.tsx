@@ -136,8 +136,6 @@ const ContentManagerDocRow = ({
 
   const href = getDocLinkHref(doc, team, 'index')
 
-  if (getDocTitle(doc, '').includes('Your Workflow')) console.log(doc.props)
-
   return (
     <ContentManagerRow
       checked={checked}
