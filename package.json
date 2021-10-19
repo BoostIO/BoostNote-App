@@ -38,7 +38,7 @@
     "build:mobile-staging": "rimraf compiled-mobile && env-cmd --file .env.staging cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production --config webpack.mobile.config.ts",
     "build:mobile-prod": "rimraf compiled-mobile && env-cmd --file .env.production cross-envnpm TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production --config webpack.mobile.config.ts",
     "deploy:cloud-staging": "npm run build:cloud-staging && npm run deploy-upload:cloud-staging && npm run deploy-refresh:cloud-staging",
-    "deploy:cloud-prod": "npm run build:cloud-prod && npm run deploy-upload:cloud-prod && deploy-refresh:cloud-prod",
+    "deploy:cloud-prod": "npm run build:cloud-prod && npm run deploy-upload:cloud-prod && npm run deploy-refresh:cloud-prod",
     "deploy:mobile-staging": "npm run build:mobile-staging && npm run deploy-upload:mobile-staging && npm run deploy-refresh:mobile-staging",
     "deploy:mobile-prod": "npm run build:mobile-prod && npm run deploy-upload:mobile-prod && npm run deploy-refresh:mobile-prod",
     "deploy-upload:cloud-staging": "env-cmd --file .env.staging -x aws s3 sync ./compiled-cloud s3://\\$CLOUD_S3_BUCKET --acl public-read",
