@@ -275,12 +275,26 @@ const ContentManagerToolbar = ({
       return values
     }
 
-    values.assignees = (docs[0].assignees || []).map(
-      (assignee) => assignee.userId
-    )
-    values.status = docs[0].status
+    values.assignees =
+      docs[0].props.assignees == null
+        ? []
+        : Array.isArray(docs[0].props.assignees.data)
+        ? docs[0].props.assignees.data.map((assignee) => assignee.userId)
+        : [docs[0].props.assignees.data.userId]
+
+    values.status =
+      docs[0].props.status != null &&
+      docs[0].props.status.type === 'string' &&
+      !Array.isArray(docs[0].props.status.data)
+        ? (docs[0].props.status.data as DocStatus)
+        : undefined
     values.tags = (docs[0].tags || []).map((tag) => tag.text)
-    values.dueDate = docs[0].dueDate
+    values.dueDate =
+      docs[0].props.dueDate != null &&
+      docs[0].props.dueDate.type === 'date' &&
+      !Array.isArray(docs[0].props.dueDate.data)
+        ? docs[0].props.dueDate.data.toString()
+        : undefined
 
     docs.forEach((doc) => {
       /** iterative */
@@ -288,9 +302,13 @@ const ContentManagerToolbar = ({
       let newTagsArray = values.tags.slice()
       /****/
 
-      const docAssignees = (doc.assignees || []).map(
-        (assignee) => assignee.userId
-      )
+      const docAssignees =
+        doc.props.assignees == null
+          ? []
+          : Array.isArray(doc.props.assignees.data)
+          ? doc.props.assignees.data.map((assignee) => assignee.userId)
+          : [doc.props.assignees.data.userId]
+
       const docTags = (doc.tags || []).map((tag) => tag.text)
 
       values.assignees.forEach((assignee) => {
@@ -305,11 +323,14 @@ const ContentManagerToolbar = ({
         }
       })
 
-      if (values.dueDate != null && values.dueDate !== doc.dueDate) {
+      if (
+        values.dueDate != null &&
+        values.dueDate !== doc.props.dueDate?.data
+      ) {
         values.dueDate = undefined
       }
 
-      if (values.status != null && values.status !== doc.status) {
+      if (values.status != null && values.status !== doc.props.status?.data) {
         values.status = undefined
       }
 
@@ -330,10 +351,11 @@ const ContentManagerToolbar = ({
       setUpdating((prev) => [...prev, ...patternedIds])
       setSending(BulkActions.duedate)
       for (const docId of selectedDocs.values()) {
-        await updateDocDueDateApi(
-          { id: docId, teamId: team.id } as SerializedDoc,
-          newDate
-        )
+        const doc = documentsMap.get(docId)
+        if (doc == null) {
+          continue
+        }
+        await updateDocDueDateApi(doc, newDate)
       }
       setSending(undefined)
       setUpdating((prev) => difference(prev, patternedIds))
@@ -341,7 +363,7 @@ const ContentManagerToolbar = ({
     [
       selectedDocs,
       selectedDocsAreUpdating,
-      team.id,
+      documentsMap,
       updateDocDueDateApi,
       setUpdating,
     ]
@@ -357,10 +379,11 @@ const ContentManagerToolbar = ({
       setUpdating((prev) => [...prev, ...patternedIds])
       setSending(BulkActions.status)
       for (const docId of selectedDocs.values()) {
-        await updateDocStatusApi(
-          { id: docId, teamId: team.id } as SerializedDoc,
-          status
-        )
+        const doc = documentsMap.get(docId)
+        if (doc == null) {
+          continue
+        }
+        await updateDocStatusApi(doc, status)
       }
       setSending(undefined)
       setUpdating((prev) => difference(prev, patternedIds))
@@ -368,7 +391,7 @@ const ContentManagerToolbar = ({
     [
       selectedDocs,
       selectedDocsAreUpdating,
-      team.id,
+      documentsMap,
       updateDocStatusApi,
       setUpdating,
       closeAllModals,
@@ -384,10 +407,11 @@ const ContentManagerToolbar = ({
       setUpdating((prev) => [...prev, ...patternedIds])
       setSending(BulkActions.assignees)
       for (const docId of selectedDocs.values()) {
-        await updateDocAssigneeApi(
-          { id: docId, teamId: team.id } as SerializedDoc,
-          newAssignees
-        )
+        const doc = documentsMap.get(docId)
+        if (doc == null) {
+          continue
+        }
+        await updateDocAssigneeApi(doc, newAssignees)
       }
       setSending(undefined)
       setUpdating((prev) => difference(prev, patternedIds))
@@ -395,9 +419,9 @@ const ContentManagerToolbar = ({
     [
       selectedDocs,
       selectedDocsAreUpdating,
-      team.id,
       updateDocAssigneeApi,
       setUpdating,
+      documentsMap,
     ]
   )
 

@@ -8,16 +8,14 @@ import {
   DestroyDocResponseBody,
   updateDoc,
   updateDocAssignees,
-  UpdateDocAssigneesResponseBody,
   updateDocEmoji,
   UpdateDocRequestBody,
   UpdateDocResponseBody,
   updateDocStatus,
-  UpdateDocStatusResponseBody,
   updateDocDueDate,
-  UpdateDocDueDateResponseBody,
   updateDocTagsInBulk,
   UpdateDocTagsResponseBody,
+  UpdateDocPropsResponseBody,
 } from '../../api/teams/docs'
 import {
   createDocBookmark,
@@ -221,27 +219,6 @@ export function useCloudApi() {
     [push, send, updateFoldersMap, foldersMap]
   )
 
-  const toggleDocArchive = useCallback(
-    async (teamId: string, docId: string, archivedAt?: string) => {
-      await send(docId, 'archive', {
-        api: () => {
-          if (archivedAt == null) {
-            return updateDocStatus(teamId, docId, 'archived')
-          } else {
-            return updateDocStatus(teamId, docId, null)
-          }
-        },
-        cb: (res: UpdateDocStatusResponseBody) => {
-          updateDocsMap([res.doc.id, res.doc])
-          if (pageDoc != null && res.doc.id === pageDoc.id) {
-            setPartialPageData({ pageDoc: res.doc })
-          }
-        },
-      })
-    },
-    [pageDoc, send, setPartialPageData, updateDocsMap]
-  )
-
   const toggleDocBookmark = useCallback(
     async (teamId: string, docId: string, bookmarked: boolean) => {
       await send(docId, 'bookmark', {
@@ -369,14 +346,70 @@ export function useCloudApi() {
   )
 
   const updateDocAssigneeApi = useCallback(
-    async (target: SerializedDoc, newAssignees: string[]) => {
+    async (target: SerializedDocWithSupplemental, newAssignees: string[]) => {
       await send(target.id, 'assignees', {
         api: () => updateDocAssignees(target.id, newAssignees),
-        cb: ({ data }: UpdateDocAssigneesResponseBody) => {
+        cb: ({ data }: UpdateDocPropsResponseBody) => {
           const assignees = data.assignees
+          const props = Object.assign({}, target.props || {}, { assignees })
           const newDoc = {
             ...target,
-            assignees: assignees == null ? undefined : assignees.data,
+            props,
+          } as SerializedDocWithSupplemental
+          updateDocsMap([newDoc.id, newDoc])
+
+          if (pageDoc != null && newDoc.id === pageDoc.id) {
+            setPartialPageData({ pageDoc: newDoc })
+          }
+        },
+      })
+    },
+    [pageDoc, updateDocsMap, setPartialPageData, send]
+  )
+
+  const updateDocStatusApi = useCallback(
+    async (
+      target: SerializedDocWithSupplemental,
+      newStatus: DocStatus | null
+    ) => {
+      await send(target.id, 'status', {
+        api: () => updateDocStatus(target.id, newStatus),
+        cb: ({ data }: UpdateDocPropsResponseBody) => {
+          const props = Object.assign({}, target.props || {}, {
+            status: data.status,
+          })
+          const newDoc = {
+            ...target,
+            props,
+          } as SerializedDocWithSupplemental
+          updateDocsMap([newDoc.id, newDoc])
+
+          if (pageDoc != null && newDoc.id === pageDoc.id) {
+            setPartialPageData({ pageDoc: newDoc })
+          }
+        },
+      })
+    },
+    [pageDoc, updateDocsMap, setPartialPageData, send]
+  )
+
+  const updateDocDueDateApi = useCallback(
+    async (target: SerializedDocWithSupplemental, newDate: Date | null) => {
+      await send(target.id, 'duedate', {
+        api: () =>
+          updateDocDueDate(
+            target.id,
+            newDate != null
+              ? new Date(formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z')
+              : null
+          ),
+        cb: ({ data }: UpdateDocPropsResponseBody) => {
+          const props = Object.assign({}, target.props || {}, {
+            dueDate: data.dueDate,
+          })
+          const newDoc = {
+            ...target,
+            props,
           } as SerializedDocWithSupplemental
           updateDocsMap([newDoc.id, newDoc])
 
@@ -492,45 +525,6 @@ export function useCloudApi() {
       })
     },
     [send, updateTagsMap, pageDoc, docsMap, updateDocsMap, setPartialPageData]
-  )
-
-  const updateDocStatusApi = useCallback(
-    async (target: SerializedDoc, newStatus: DocStatus | null) => {
-      await send(target.id, 'status', {
-        api: () => updateDocStatus(target.teamId, target.id, newStatus),
-        cb: ({ doc }: UpdateDocStatusResponseBody) => {
-          updateDocsMap([doc.id, doc])
-
-          if (pageDoc != null && doc.id === pageDoc.id) {
-            setPartialPageData({ pageDoc: doc })
-          }
-        },
-      })
-    },
-    [pageDoc, updateDocsMap, setPartialPageData, send]
-  )
-
-  const updateDocDueDateApi = useCallback(
-    async (target: SerializedDoc, newDate: Date | null) => {
-      await send(target.id, 'duedate', {
-        api: () =>
-          updateDocDueDate(
-            target.teamId,
-            target.id,
-            newDate != null
-              ? new Date(formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z')
-              : null
-          ),
-        cb: ({ doc }: UpdateDocDueDateResponseBody) => {
-          updateDocsMap([doc.id, doc])
-
-          if (pageDoc != null && doc.id === pageDoc.id) {
-            setPartialPageData({ pageDoc: doc })
-          }
-        },
-      })
-    },
-    [pageDoc, updateDocsMap, setPartialPageData, send]
   )
 
   const updateDocEmojiApi = useCallback(
@@ -707,7 +701,6 @@ export function useCloudApi() {
     createWorkspace: createWorkspaceApi,
     createDoc: createDocApi,
     createFolder: createFolderApi,
-    toggleDocArchive,
     toggleDocBookmark,
     toggleFolderBookmark,
     updateFolder: updateFolderApi,

@@ -195,7 +195,11 @@ const ContentManagerDocRow = ({
       </ContentManagerCell>
       <ContentManagerCell fullWidth={true}>
         <DocStatusSelect
-          status={doc.status}
+          status={
+            typeof doc.props.status?.data === 'string'
+              ? (doc.props.status.data as DocStatus)
+              : null
+          }
           sending={sendingMap.get(doc.id) === 'status'}
           onStatusChange={sendUpdateStatus}
           disabled={!currentUserIsCoreMember}
@@ -206,7 +210,7 @@ const ContentManagerDocRow = ({
         <DocDueDateSelect
           className='context__content__date_select'
           sending={sendingMap.get(doc.id) === 'duedate'}
-          dueDate={doc.dueDate}
+          dueDate={doc.props.dueDate?.data}
           onDueDateChange={sendUpdateDocDueDate}
           disabled={!currentUserIsCoreMember}
           isReadOnly={!currentUserIsCoreMember}
