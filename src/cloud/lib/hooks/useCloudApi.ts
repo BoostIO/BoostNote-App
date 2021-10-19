@@ -98,6 +98,9 @@ import {
   CreateViewRequestBody,
   CreateViewResponseBody,
   deleteView,
+  listViews,
+  ListViewsRequestBody,
+  ListViewsResponseBody,
   updateView,
   UpdateViewRequestBody,
   UpdateViewResponseBody,
@@ -869,6 +872,51 @@ export function useCloudApi() {
     [dashboardsMap, updateDashboardsMap, foldersMap, updateFoldersMap, send]
   )
 
+  const listViewsApi = useCallback(
+    async (target: ListViewsRequestBody) => {
+      return send(
+        'dashboard' in target ? target.dashboard : target.folder,
+        'list-views',
+        {
+          api: () => listViews(target),
+          cb: ({ data }: ListViewsResponseBody) => {
+            if ('folder' in target) {
+              const folder = foldersMap.get(target.folder)
+              if (folder != null) {
+                const viewMap = getMapFromEntityArray(folder.views || [])
+                for (const view of data) {
+                  viewMap.set(view.id.toString(), view)
+                }
+                updateFoldersMap([
+                  folder.id,
+                  { ...folder, views: getMapValues(viewMap) },
+                ])
+              }
+            } else if ('dashboard' in target) {
+              const dashboardFolder = dashboardsMap.get(target.dashboard)
+              if (dashboardFolder != null) {
+                const viewMap = getMapFromEntityArray(
+                  dashboardFolder.views || []
+                )
+                for (const view of data) {
+                  viewMap.set(view.id.toString(), view)
+                }
+                updateDashboardsMap([
+                  dashboardFolder.id,
+                  {
+                    ...dashboardFolder,
+                    views: getMapValues(viewMap),
+                  },
+                ])
+              }
+            }
+          },
+        }
+      )
+    },
+    [dashboardsMap, updateDashboardsMap, foldersMap, updateFoldersMap, send]
+  )
+
   return {
     send,
     sendingMap,
@@ -896,5 +944,6 @@ export function useCloudApi() {
     updateViewApi,
     deleteViewApi,
     updateDashboardApi,
+    listViewsApi,
   }
 }

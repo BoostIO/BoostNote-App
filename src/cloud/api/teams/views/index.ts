@@ -1,9 +1,27 @@
 import { callApi } from '../../../lib/client'
 import { SerializedView, SupportedViewTypes } from '../../../interfaces/db/view'
 
+export type ListViewsRequestBody =
+  | {
+      dashboard: string
+      type?: SupportedViewTypes
+    }
+  | { folder: string; type?: SupportedViewTypes }
+
+export interface ListViewsResponseBody {
+  data: SerializedView[]
+}
+
+export async function listViews(body: ListViewsRequestBody) {
+  return callApi<ListViewsResponseBody>(`/api/views`, {
+    search: body,
+    method: 'get',
+  })
+}
+
 export type CreateViewRequestBody =
   | {
-      view: string
+      dashboard: string
       type: SupportedViewTypes
     }
   | { folder: string; type: SupportedViewTypes }
