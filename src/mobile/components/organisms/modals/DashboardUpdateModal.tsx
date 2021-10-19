@@ -3,7 +3,7 @@ import { useModal } from '../../../../design/lib/stores/modal'
 import {
   updateDashboard,
   UpdateDashboardRequestBody,
-} from '../../../../cloud/api/teams/dashboard/folders'
+} from '../../../../cloud/api/teams/dashboard'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { useToast } from '../../../../design/lib/stores/toast'

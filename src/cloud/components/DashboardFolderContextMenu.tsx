@@ -56,7 +56,7 @@ const DashboardContextMenu = ({
   const { permissions = [], currentUserIsCoreMember } = usePage()
   const [copied, setCopied] = useState(false)
   const { openModal } = useModal()
-  const { sendingMap, deleteDashboard } = useCloudApi()
+  const { sendingMap, deleteDashboardApi } = useCloudApi()
   const { messageBox } = useDialog()
   const { tagsMap } = useNav()
 
@@ -355,7 +355,7 @@ const DashboardContextMenu = ({
                         variant: 'danger',
                         label: translate(lngKeys.GeneralDelete),
                         onClick: async () => {
-                          await deleteDashboard(dashboard)
+                          await deleteDashboardApi(dashboard)
                         },
                       },
                     ],

@@ -65,9 +65,20 @@ import {
   getWorkspaceURL,
 } from '../utils/patterns'
 import useBulkApi from '../../../design/lib/hooks/useBulkApi'
-import { getMapFromEntityArray } from '../../../design/lib/utils/array'
+import {
+  getMapFromEntityArray,
+  getMapValues,
+} from '../../../design/lib/utils/array'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
-import { deleteDashboard } from '../../api/teams/dashboard/folders'
+import {
+  createDashboard,
+  CreateDashboardRequestBody,
+  CreateDashboardResponseBody,
+  deleteDashboard,
+  updateDashboard,
+  UpdateDashboardRequestBody,
+  UpdateDashboardResponseBody,
+} from '../../api/teams/dashboard'
 
 import { format as formatDate } from 'date-fns'
 import {
@@ -81,14 +92,27 @@ import {
   UpdateTagRequestBody,
   UpdateTagResponseBody,
 } from '../../api/teams/tags'
+import { SerializedDashboard } from '../../interfaces/db/dashboard'
+import {
+  createView,
+  CreateViewRequestBody,
+  CreateViewResponseBody,
+  deleteView,
+  updateView,
+  UpdateViewRequestBody,
+  UpdateViewResponseBody,
+} from '../../api/teams/views'
+import { SerializedView } from '../../interfaces/db/view'
 
 export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
   const {
+    dashboardsMap,
     updateWorkspacesMap,
     updateFoldersMap,
     updateDocsMap,
     updateParentFolderOfDoc,
+    updateDashboardsMap,
     removeFromWorkspacesMap,
     foldersMap,
     docsMap,
@@ -683,6 +707,54 @@ export function useCloudApi() {
     ]
   )
 
+  const createDashboardApi = useCallback(
+    async (
+      teamId: string,
+      body: CreateDashboardRequestBody,
+      options?: {
+        afterSuccess?: (dashboard: SerializedDashboard) => void
+      }
+    ) => {
+      return send(shortid.generate(), 'create', {
+        api: () =>
+          createDashboard({
+            ...body,
+            teamId: teamId,
+          }),
+        cb: ({ data: dashboardFolder }: CreateDashboardResponseBody) => {
+          updateDashboardsMap([dashboardFolder.id, dashboardFolder])
+
+          if (options?.afterSuccess != null) {
+            options.afterSuccess(dashboardFolder)
+          }
+        },
+      })
+    },
+    [updateDashboardsMap, send]
+  )
+
+  const updateDashboardApi = useCallback(
+    async (
+      target: SerializedDashboard,
+      body: UpdateDashboardRequestBody,
+      options?: {
+        afterSuccess?: (dashboard: SerializedDashboard) => void
+      }
+    ) => {
+      return send(shortid.generate(), 'update', {
+        api: () => updateDashboard(target, body),
+        cb: ({ data: dashboardFolder }: UpdateDashboardResponseBody) => {
+          updateDashboardsMap([dashboardFolder.id, dashboardFolder])
+
+          if (options?.afterSuccess != null) {
+            options.afterSuccess(dashboardFolder)
+          }
+        },
+      })
+    },
+    [updateDashboardsMap, send]
+  )
+
   const deleteDashboardApi = useCallback(
     async (target: { id: string; teamId: string }) => {
       return send(target.id, 'delete', {
@@ -693,6 +765,108 @@ export function useCloudApi() {
       })
     },
     [removeFromDashboardsMap, send]
+  )
+
+  const createViewApi = useCallback(
+    async (target: CreateViewRequestBody) => {
+      return send(shortid.generate(), 'create', {
+        api: () => createView(target),
+        cb: ({ data }: CreateViewResponseBody) => {
+          if (data.folderId != null) {
+            const folder = foldersMap.get(data.folderId)
+            if (folder != null) {
+              updateFoldersMap([
+                folder.id,
+                { ...folder, views: [...(folder.views || []), data] },
+              ])
+            }
+          } else if (data.dashboardId != null) {
+            const dashboardFolder = dashboardsMap.get(data.dashboardId)
+            if (dashboardFolder != null) {
+              updateDashboardsMap([
+                dashboardFolder.id,
+                {
+                  ...dashboardFolder,
+                  views: [...(dashboardFolder.views || []), data],
+                },
+              ])
+            }
+          }
+        },
+      })
+    },
+    [dashboardsMap, updateDashboardsMap, foldersMap, updateFoldersMap, send]
+  )
+
+  const updateViewApi = useCallback(
+    async (target: SerializedView, body: UpdateViewRequestBody) => {
+      return send(target.id.toString(), 'update', {
+        api: () => updateView(target, body),
+        cb: ({ data }: UpdateViewResponseBody) => {
+          if (data.folderId != null) {
+            const folder = foldersMap.get(data.folderId)
+            if (folder != null) {
+              const viewMap = getMapFromEntityArray(folder.views || [])
+              viewMap.set(data.id.toString(), data)
+              updateFoldersMap([
+                folder.id,
+                { ...folder, views: getMapValues(viewMap) },
+              ])
+            }
+          } else if (data.dashboardId != null) {
+            const dashboardFolder = dashboardsMap.get(data.dashboardId)
+            if (dashboardFolder != null) {
+              const viewMap = getMapFromEntityArray(dashboardFolder.views || [])
+              viewMap.set(data.id.toString(), data)
+              updateDashboardsMap([
+                dashboardFolder.id,
+                {
+                  ...dashboardFolder,
+                  views: getMapValues(viewMap),
+                },
+              ])
+            }
+          }
+        },
+      })
+    },
+    [dashboardsMap, updateDashboardsMap, foldersMap, updateFoldersMap, send]
+  )
+
+  const deleteViewApi = useCallback(
+    async (target: SerializedView) => {
+      return send(target.id.toString(), 'delete', {
+        api: () => deleteView(target.id),
+        cb: () => {
+          if (target.folderId != null) {
+            const folder = foldersMap.get(target.folderId)
+            if (folder != null) {
+              updateFoldersMap([
+                folder.id,
+                {
+                  ...folder,
+                  views: (folder.views || []).filter((v) => v.id !== target.id),
+                },
+              ])
+            }
+          } else if (target.dashboardId != null) {
+            const dashboardFolder = dashboardsMap.get(target.dashboardId)
+            if (dashboardFolder != null) {
+              updateDashboardsMap([
+                dashboardFolder.id,
+                {
+                  ...dashboardFolder,
+                  views: (dashboardFolder.views || []).filter(
+                    (v) => v.id !== target.id
+                  ),
+                },
+              ])
+            }
+          }
+        },
+      })
+    },
+    [dashboardsMap, updateDashboardsMap, foldersMap, updateFoldersMap, send]
   )
 
   return {
@@ -710,12 +884,17 @@ export function useCloudApi() {
     deleteWorkspaceApi,
     deleteFolderApi,
     deleteDocApi,
-    deleteDashboard: deleteDashboardApi,
+    createDashboardApi,
+    deleteDashboardApi,
     updateDocAssigneeApi,
     updateDocStatusApi,
     updateDocDueDateApi,
     updateDocTagsBulkApi,
     deleteTagApi,
     updateTagApi,
+    createViewApi,
+    updateViewApi,
+    deleteViewApi,
+    updateDashboardApi,
   }
 }

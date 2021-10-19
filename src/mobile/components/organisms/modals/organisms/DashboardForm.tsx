@@ -11,7 +11,7 @@ import styled from '../../../../../design/lib/styled'
 import {
   UpdateDashboardRequestBody,
   CreateDashboardRequestBody,
-} from '../../../../../cloud/api/teams/dashboard/folders'
+} from '../../../../../cloud/api/teams/dashboard'
 import { useI18n } from '../../../../../cloud/lib/hooks/useI18n'
 import { lngKeys } from '../../../../../cloud/lib/i18n/types'
 import MobileFormControl from '../../../atoms/MobileFormControl'

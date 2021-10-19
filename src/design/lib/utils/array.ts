@@ -60,11 +60,11 @@ export function arraysAreIdentical<T>(source: T[], compare: T[]) {
   return true
 }
 
-type WithId<T> = T & { id: string }
+type WithId<T> = T & { id: string | number }
 
 export function getMapFromEntityArray<T>(arr: WithId<T>[]): Map<string, T> {
   return arr.reduce((acc, val) => {
-    acc.set(val.id, val)
+    acc.set(val.id.toString(), val)
     return acc
   }, new Map<string, T>())
 }
