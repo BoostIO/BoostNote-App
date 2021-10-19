@@ -11,11 +11,12 @@ interface EmojiInputFormProps {
   defaultEmoji?: string
   defaultIcon: string
   inputIsDisabled?: boolean
-  submitButtonProps: ButtonProps & {
+  submitButtonProps?: ButtonProps & {
     label: React.ReactNode
     spinning?: boolean
   }
   onSubmit: (input: string, emoji?: string) => void
+  onBlur?: (input: string, emoji?: string) => void
 }
 
 const EmojiInputForm = ({
@@ -27,6 +28,7 @@ const EmojiInputForm = ({
   submitButtonProps,
   inputIsDisabled,
   onSubmit,
+  onBlur,
 }: EmojiInputFormProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [value, setValue] = useState(defaultInputValue)
@@ -60,6 +62,11 @@ const EmojiInputForm = ({
                 placeholder,
                 value: value,
                 onChange: (event) => setValue(event.target.value),
+                onBlur: () => {
+                  if (onBlur != null) {
+                    onBlur(value, emoji)
+                  }
+                },
               },
             },
           ],
