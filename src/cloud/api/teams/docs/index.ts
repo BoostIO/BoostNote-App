@@ -99,52 +99,30 @@ export async function updateDocEmoji(doc: SerializedDoc, emoji?: string) {
   )
   return data
 }
-export interface UpdateDocStatusResponseBody {
-  doc: SerializedDocWithSupplemental
-}
 
-export async function updateDocStatus(
-  teamId: string,
-  docId: string,
-  status: DocStatus | null
-) {
-  const data = await callApi<UpdateDocStatusResponseBody>(
-    `api/teams/${teamId}/docs/${docId}/status`,
-    {
-      method: 'put',
-      json: {
-        status,
-      },
-    }
-  )
-
-  return data
-}
-
-export interface UpdateDocDueDateResponseBody {
-  doc: SerializedDocWithSupplemental
-}
-
-export async function updateDocDueDate(
-  teamId: string,
-  docId: string,
-  dueDate: Date | null
-) {
-  const data = await callApi<UpdateDocStatusResponseBody>(
-    `api/teams/${teamId}/docs/${docId}/due-date`,
-    {
-      method: 'put',
-      json: {
-        dueDate,
-      },
-    }
-  )
-
-  return data
-}
-
-export interface UpdateDocAssigneesResponseBody {
+export interface UpdateDocPropsResponseBody {
   data: Props
+}
+
+export async function updateDocStatus(docId: string, status: DocStatus | null) {
+  return callApi<UpdateDocPropsResponseBody>(`api/docs/${docId}/props`, {
+    method: 'patch',
+    json: {
+      status: { type: 'string', data: status },
+    },
+  })
+}
+
+export async function updateDocDueDate(docId: string, dueDate: Date | null) {
+  return callApi<UpdateDocPropsResponseBody>(`api/docs/${docId}/props`, {
+    method: 'patch',
+    json: {
+      dueDate: {
+        type: 'date',
+        data: dueDate,
+      },
+    },
+  })
 }
 
 export async function updateDocAssignees(docId: string, assignees: string[]) {
@@ -161,7 +139,7 @@ export async function updateDocAssignees(docId: string, assignees: string[]) {
     }
   }
 
-  return callApi<UpdateDocAssigneesResponseBody>(`api/docs/${docId}/props`, {
+  return callApi<UpdateDocPropsResponseBody>(`api/docs/${docId}/props`, {
     method: 'patch',
     json: body,
   })
