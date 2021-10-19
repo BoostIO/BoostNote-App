@@ -1,17 +1,16 @@
 import React, { useState, useCallback } from 'react'
 import { useModal } from '../../../../design/lib/stores/modal'
 import {
-  updateDashboard,
   UpdateDashboardRequestBody,
+  UpdateDashboardResponseBody,
 } from '../../../../cloud/api/teams/dashboard'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
-import { useNav } from '../../../../cloud/lib/stores/nav'
-import { useToast } from '../../../../design/lib/stores/toast'
 import { useRouter } from '../../../../cloud/lib/router'
 import { SerializedDashboard } from '../../../../cloud/interfaces/db/dashboard'
 import DashboardForm from './organisms/DashboardForm'
 import ModalContainer from './atoms/ModalContainer'
 import { getTeamLinkHref } from '../../../../cloud/components/Link/TeamLink'
+import { useCloudApi } from '../../../../cloud/lib/hooks/useCloudApi'
 
 interface DashboardUpdateModalProps {
   dashboard: SerializedDashboard
@@ -25,46 +24,34 @@ const DashboardUpdateModal = ({
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
 
-  const { updateDashboardsMap: updateDashboardsMap } = useNav()
+  const { updateDashboardApi } = useCloudApi()
   const [sending, setSending] = useState(false)
   const { push } = useRouter()
 
-  const { pushApiErrorMessage } = useToast()
   const submit = useCallback(
     async (body: UpdateDashboardRequestBody) => {
       if (team == null) {
         return
       }
       setSending(true)
-      try {
-        const { data: updatedDashboard } = await updateDashboard(
-          dashboard,
-          body
-        )
-        updateDashboardsMap([dashboard.id, updatedDashboard])
+
+      const res = await updateDashboardApi(dashboard, body)
+
+      if (!res.err) {
         closeModal()
         if (onUpdate != null) {
-          return onUpdate(updatedDashboard)
+          return onUpdate((res.data as UpdateDashboardResponseBody).data)
         } else {
           push(
-            getTeamLinkHref(team, 'index', { dashboard: updatedDashboard.id })
+            getTeamLinkHref(team, 'index', {
+              dashboard: (res.data as UpdateDashboardResponseBody).data.id,
+            })
           )
         }
-      } catch (error) {
-        console.error(error)
-        pushApiErrorMessage(error)
-        setSending(false)
       }
+      setSending(false)
     },
-    [
-      team,
-      dashboard,
-      updateDashboardsMap,
-      closeModal,
-      push,
-      pushApiErrorMessage,
-      onUpdate,
-    ]
+    [team, dashboard, updateDashboardApi, closeModal, push, onUpdate]
   )
 
   if (team == null) {
