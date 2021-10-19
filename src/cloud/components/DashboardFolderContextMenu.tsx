@@ -343,7 +343,7 @@ const DashboardContextMenu = ({
                 onClick: () => {
                   messageBox({
                     title: `Delete ${dashboard.name}?`,
-                    message: `Are you sure to delete this smart folder?`,
+                    message: `Are you sure to delete this dashboard?`,
                     buttons: [
                       {
                         variant: 'secondary',
