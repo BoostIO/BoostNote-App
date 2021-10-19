@@ -2,6 +2,7 @@ import { SerializedTeam } from './team'
 import { SerializedDoc } from './doc'
 import { SerializedFolderPositions } from './folderPositions'
 import { SerializedWorkspace } from './workspace'
+import { SerializedView } from './view'
 
 export interface SerializableFolderProps {
   id: string
@@ -27,6 +28,7 @@ export interface SerializedUnserializableFolderProps {
   team?: SerializedTeam | string
   createdAt: string
   updatedAt: string
+  views?: SerializedView[]
 }
 
 export type SerializedFolder = SerializedUnserializableFolderProps &

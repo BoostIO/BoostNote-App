@@ -1,16 +1,12 @@
 import React, { useState, useCallback } from 'react'
 import { useModal } from '../../../../../design/lib/stores/modal'
-import {
-  createDashboard,
-  CreateDashboardRequestBody,
-} from '../../../../api/teams/dashboard/folders'
+import { CreateDashboardRequestBody } from '../../../../api/teams/dashboard'
 import { usePage } from '../../../../lib/stores/pageStore'
-import { useNav } from '../../../../lib/stores/nav'
-import { useToast } from '../../../../../design/lib/stores/toast'
 import { useRouter } from '../../../../lib/router'
 import DashboardForm from './DashboardForm'
 import { getTeamLinkHref } from '../../../Link/TeamLink'
 import { SerializedDashboard } from '../../../../interfaces/db/dashboard'
+import { useCloudApi } from '../../../../lib/hooks/useCloudApi'
 
 interface CreateDashboardModalProps {
   onCreate?: (dashboard: SerializedDashboard) => void
@@ -19,38 +15,30 @@ interface CreateDashboardModalProps {
 const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
-  const { updateDashboardsMap: updateDashboardsMap } = useNav()
+  const { createDashboardApi } = useCloudApi()
   const [sending, setSending] = useState(false)
   const { push } = useRouter()
 
-  const { pushApiErrorMessage } = useToast()
   const submit = useCallback(
     async (body: CreateDashboardRequestBody) => {
       if (team == null) {
         return
       }
       setSending(true)
-      try {
-        const { data: dashboardFolder } = await createDashboard({
-          ...body,
-          teamId: team.id,
-        })
-        updateDashboardsMap([dashboardFolder.id, dashboardFolder])
-        closeModal()
-        if (onCreate != null) {
-          return onCreate(dashboardFolder)
-        } else {
-          push(
-            getTeamLinkHref(team, 'index', { dashboard: dashboardFolder.id })
-          )
-        }
-      } catch (error) {
-        console.error(error)
-        pushApiErrorMessage(error)
-        setSending(false)
-      }
+
+      await createDashboardApi(team.id, body, {
+        afterSuccess: (dashboard) => {
+          closeModal()
+          if (onCreate != null) {
+            return onCreate(dashboard)
+          } else {
+            push(getTeamLinkHref(team, 'index', { dashboard: dashboard.id }))
+          }
+        },
+      })
+      setSending(false)
     },
-    [team, onCreate, push, updateDashboardsMap, closeModal, pushApiErrorMessage]
+    [team, onCreate, push, closeModal, createDashboardApi]
   )
 
   if (team == null) {
