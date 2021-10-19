@@ -1,10 +1,11 @@
-import { mdiChevronDown, mdiPlus } from '@mdi/js'
+import { mdiChevronDown, mdiDotsHorizontal, mdiPlus } from '@mdi/js'
 import React, { useMemo, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 import BorderSeparator from '../../../design/components/atoms/BorderSeparator'
 import Button from '../../../design/components/atoms/Button'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import Icon from '../../../design/components/atoms/Icon'
+import Spinner from '../../../design/components/atoms/Spinner'
 import UpDownList from '../../../design/components/atoms/UpDownList'
 import NavigationItem from '../../../design/components/molecules/Navigation/NavigationItem'
 import { useModal } from '../../../design/lib/stores/modal'
@@ -15,23 +16,30 @@ import {
   getDashboardListPageData,
 } from '../../api/pages/teams/dashboard/list'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
+import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import { useNav } from '../../lib/stores/nav'
+import { usePage } from '../../lib/stores/pageStore'
 import ApplicationContent from '../ApplicationContent'
 import ApplicationPage from '../ApplicationPage'
 import ApplicationTopbar from '../ApplicationTopbar'
+import DashboardFolderContextMenu from '../DashboardFolderContextMenu'
 import CreateDashboardModal from '../Modal/contents/Dashboard/CreateDashboardModal'
+import ViewsList from '../ViewsList'
 
 const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
   const [selectedDashboardId, setSelectedDashboardId] = useState<
     string | undefined
   >(data.length > 0 ? data[0].id : undefined)
   const { initialLoadDone, dashboardsMap } = useNav()
-  const { openModal, openContextModal } = useModal()
+  const { openModal, openContextModal, closeAllModals } = useModal()
+  const { team } = usePage()
+  const { listViewsApi, sendingMap } = useCloudApi()
 
   useEffectOnce(() => {
     if (initialLoadDone && dashboardsMap.size > 0) {
       const dashboards = getMapValues(dashboardsMap)
       setSelectedDashboardId(dashboards[0].id)
+      listViewsApi({ dashboard: dashboards[0].id })
     }
   })
 
@@ -45,7 +53,32 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
 
   return (
     <ApplicationPage>
-      <ApplicationTopbar controls={[]} />
+      <ApplicationTopbar
+        controls={
+          selectedDashboard == null || team == null
+            ? []
+            : [
+                {
+                  type: 'button',
+                  variant: 'icon',
+                  iconPath: mdiDotsHorizontal,
+                  onClick: (event) =>
+                    openContextModal(
+                      event,
+                      <DashboardFolderContextMenu
+                        dashboard={selectedDashboard}
+                        team={team}
+                      />,
+                      {
+                        alignment: 'bottom-right',
+                        removePadding: true,
+                        hideBackground: true,
+                      }
+                    ),
+                },
+              ]
+        }
+      />
       <ApplicationContent>
         <Container>
           <Flexbox>
@@ -56,7 +89,11 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
                 openContextModal(
                   event,
                   <DashboardSelector
-                    selectDashboard={setSelectedDashboardId}
+                    selectDashboard={(id) => {
+                      setSelectedDashboardId(id)
+                      listViewsApi({ dashboard: id })
+                      closeAllModals()
+                    }}
                     selectedDashboardId={selectedDashboardId}
                     createNewDashboard={() =>
                       openModal(
@@ -83,6 +120,18 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
               <Icon path={mdiChevronDown} />
             </Button>
           </Flexbox>
+          {selectedDashboard != null ? (
+            <>
+              {sendingMap.get(selectedDashboard.id) === 'list-views' ? (
+                <Spinner />
+              ) : (
+                <ViewsList
+                  views={selectedDashboard.views || []}
+                  parent={{ dashboard: selectedDashboard.id }}
+                />
+              )}
+            </>
+          ) : null}
         </Container>
       </ApplicationContent>
     </ApplicationPage>
@@ -90,13 +139,12 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
 }
 
 const DashboardSelector = ({
-  selectedDashboardId,
   selectDashboard,
   createNewDashboard,
 }: {
   selectedDashboardId?: string
   createNewDashboard: () => void
-  selectDashboard: React.Dispatch<React.SetStateAction<string | undefined>>
+  selectDashboard: (id: string) => void
 }) => {
   const { dashboardsMap } = useNav()
 
@@ -114,7 +162,6 @@ const DashboardSelector = ({
             key={dashboard.id}
             label={dashboard.name}
             labelClick={() => selectDashboard(dashboard.id)}
-            active={dashboard.id === selectedDashboardId}
           />
         ))}
 
