@@ -1,6 +1,7 @@
 import { DocStatus } from './doc'
 import { SerializedTeam } from './team'
 import { SerializedUser } from './user'
+import { SerializedView } from './view'
 
 export interface SerializableDashboardProps {
   id: string
@@ -16,6 +17,7 @@ export interface SerializedUnserializableDashboardProps {
   user?: SerializedUser
   createdAt: string
   updatedAt: string
+  views?: SerializedView[]
 }
 
 export type SerializedDashboard = SerializableDashboardProps &

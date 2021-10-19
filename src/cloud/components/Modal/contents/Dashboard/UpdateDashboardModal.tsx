@@ -1,16 +1,15 @@
 import React, { useState, useCallback } from 'react'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import {
-  updateDashboard,
   UpdateDashboardRequestBody,
-} from '../../../../api/teams/dashboard/folders'
+  UpdateDashboardResponseBody,
+} from '../../../../api/teams/dashboard'
 import { usePage } from '../../../../lib/stores/pageStore'
-import { useNav } from '../../../../lib/stores/nav'
-import { useToast } from '../../../../../design/lib/stores/toast'
 import { useRouter } from '../../../../lib/router'
 import { SerializedDashboard } from '../../../../interfaces/db/dashboard'
 import DashboardForm from './DashboardForm'
 import { getTeamLinkHref } from '../../../Link/TeamLink'
+import { useCloudApi } from '../../../../lib/hooks/useCloudApi'
 
 interface UpdateDashboardModalProps {
   dashboard: SerializedDashboard
@@ -24,46 +23,34 @@ const UpdateDashboardModal = ({
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
 
-  const { updateDashboardsMap: updateDashboardsMap } = useNav()
+  const { updateDashboardApi } = useCloudApi()
   const [sending, setSending] = useState(false)
   const { push } = useRouter()
 
-  const { pushApiErrorMessage } = useToast()
   const submit = useCallback(
     async (body: UpdateDashboardRequestBody) => {
       if (team == null) {
         return
       }
       setSending(true)
-      try {
-        const { data: updatedDashboard } = await updateDashboard(
-          dashboard,
-          body
-        )
-        updateDashboardsMap([dashboard.id, updatedDashboard])
+
+      const res = await updateDashboardApi(dashboard, body)
+
+      if (!res.err) {
         closeModal()
         if (onUpdate != null) {
-          return onUpdate(updatedDashboard)
+          return onUpdate((res.data as UpdateDashboardResponseBody).data)
         } else {
           push(
-            getTeamLinkHref(team, 'index', { dashboard: updatedDashboard.id })
+            getTeamLinkHref(team, 'index', {
+              dashboard: (res.data as UpdateDashboardResponseBody).data.id,
+            })
           )
         }
-      } catch (error) {
-        console.error(error)
-        pushApiErrorMessage(error)
-        setSending(false)
       }
+      setSending(false)
     },
-    [
-      team,
-      dashboard,
-      updateDashboardsMap,
-      closeModal,
-      push,
-      pushApiErrorMessage,
-      onUpdate,
-    ]
+    [team, dashboard, updateDashboardApi, closeModal, push, onUpdate]
   )
 
   if (team == null) {

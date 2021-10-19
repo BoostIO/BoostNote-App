@@ -15,7 +15,7 @@ import styled from '../../../../../design/lib/styled'
 import {
   UpdateDashboardRequestBody,
   CreateDashboardRequestBody,
-} from '../../../../api/teams/dashboard/folders'
+} from '../../../../api/teams/dashboard'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
 import { EditibleSecondaryCondition } from './interfaces'
