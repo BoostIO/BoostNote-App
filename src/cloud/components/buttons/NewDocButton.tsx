@@ -1,15 +1,7 @@
 import SidebarButton from '../../../design/components/organisms/Sidebar/atoms/SidebarButton'
-import {
-  MenuTypes,
-  useContextMenu,
-} from '../../../design/lib/stores/contextMenu'
+import { MenuTypes } from '../../../design/lib/stores/contextMenu'
 import { useModal } from '../../../design/lib/stores/modal'
-import {
-  mdiPencilBoxMultipleOutline,
-  mdiTextBoxPlusOutline,
-  mdiPlus,
-  mdiPaletteOutline,
-} from '@mdi/js'
+import { mdiPencilBoxMultipleOutline, mdiPencilBoxOutline } from '@mdi/js'
 import React, { useCallback } from 'react'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
@@ -28,7 +20,6 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
   const { openNewDocForm } = useCloudResourceModals()
   const { openModal } = useModal()
   const { translate } = useI18n()
-  const { popup } = useContextMenu()
 
   const openNewDocModal = useCallback(
     (isCanvas?: boolean) => {
@@ -60,34 +51,13 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
     ]
   )
 
-  const openDocTypeSelect: React.MouseEventHandler = useCallback(
-    (ev) => {
-      popup(ev, [
-        {
-          icon: mdiTextBoxPlusOutline,
-          type: MenuTypes.Normal,
-          label: translate(lngKeys.CreateNewDoc),
-          onClick: () => openNewDocModal(false),
-        },
-        {
-          icon: mdiPaletteOutline,
-          type: MenuTypes.Normal,
-          label: translate(lngKeys.CreateNewCanvas),
-          onClick: () => openNewDocModal(true),
-        },
-      ])
-    },
-    [openNewDocModal, popup, translate]
-  )
   return (
     <SidebarButton
       variant='primary'
       icon={mdiPlus}
       id='sidebar-newdoc-btn'
       label={translate(lngKeys.CreateNewDoc)}
-      labelClick={
-        team.state.blocksBeta ? openDocTypeSelect : () => openNewDocModal()
-      }
+      labelClick={() => openNewDocModal()}
       contextControls={[
         {
           icon: mdiPencilBoxMultipleOutline,
