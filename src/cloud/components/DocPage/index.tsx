@@ -21,7 +21,6 @@ import { useRouter } from '../../lib/router'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Editor from '../Editor'
 import ApplicationPage from '../ApplicationPage'
-import BlockEditor from '../Blocks/BlockEditor'
 import { freePlanMembersLimit } from '../../lib/subscription'
 import Spinner from '../../../design/components/atoms/Spinner'
 
@@ -188,7 +187,7 @@ const DocPage = ({
     )
   }
 
-  return currentDoc.rootBlock == null ? (
+  return (
     <Editor
       team={team}
       doc={currentDoc}
@@ -199,8 +198,6 @@ const DocPage = ({
       docIsEditable={docIsEditable}
       loading={loading}
     />
-  ) : (
-    <BlockEditor doc={currentDoc as any} team={team} />
   )
 }
 
