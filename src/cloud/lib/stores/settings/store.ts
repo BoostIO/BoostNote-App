@@ -44,7 +44,6 @@ export type SettingsTab =
   | 'feedback'
   | 'import'
   | 'attachments'
-  | 'blockeditor'
 
 export type SettingsTabOpeningOptions = UpgradeTabOpeningOptions
 

@@ -42,7 +42,6 @@ import IntegrationsTab from './IntegrationsTab'
 import GithubIntegration from './GithubIntegration'
 import SlackIntegration from './SlackIntegration'
 import ApiTab from './ApiTab'
-import BlockEditorTab from './BlockEditorTab'
 import AttachmentsTab from './AttachmentsTab'
 import ImportTab from './ImportTab'
 import TeamSubLimit from './TeamSubLimit'
@@ -125,8 +124,6 @@ const SettingsComponent = () => {
         return <SlackIntegration />
       case 'api':
         return <ApiTab />
-      case 'blockeditor':
-        return <BlockEditorTab />
       case 'feedback':
         return (
           <SettingTabContent
@@ -333,12 +330,6 @@ const SettingsComponent = () => {
             path={mdiTimelineAlert}
             text={'Beta Program'}
             size={16}
-          />
-          <SettingNavButtonItem
-            label={'Block Editor'}
-            active={settingsTab === 'blockeditor'}
-            id='settings-blockeditor-btn'
-            onClick={() => openSettingsTab('blockeditor')}
           />
         </SettingSidenav>
       }
