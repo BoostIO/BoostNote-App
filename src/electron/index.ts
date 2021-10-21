@@ -15,8 +15,7 @@ import url from 'url'
 import { getTemplateFromKeymap } from './menu'
 import { dev } from './consts'
 
-// global reference to mainWindow (necessary to prevent window from being garbage collected)
-let mainWindow: BrowserWindow | null = null
+const windows = new Set<BrowserWindow>()
 const MAC = process.platform === 'darwin'
 
 // single instance lock
@@ -34,7 +33,7 @@ function applyMenuTemplate(template: MenuItemConstructorOptions[]) {
   Menu.setApplicationMenu(menu)
 }
 
-function createAWindow(options: BrowserWindowConstructorOptions) {
+function createAWindow(options?: BrowserWindowConstructorOptions) {
   const windowOptions: BrowserWindowConstructorOptions = {
     webPreferences: {
       nodeIntegration: true,
@@ -86,67 +85,8 @@ function createAWindow(options: BrowserWindowConstructorOptions) {
     })
   }
 
-  // todo: [komediruzecki-2021-10-18] handle window close - check if all closed and remove 'main'
-  // window.on('closed', () => {
-  //   mainWindow = null
-  // })
-
-  return window
-}
-
-function createMainWindow() {
-  const windowOptions: BrowserWindowConstructorOptions = {
-    webPreferences: {
-      nodeIntegration: true,
-      webSecurity: !dev,
-      webviewTag: true,
-      enableRemoteModule: true,
-      contextIsolation: false,
-      preload: dev
-        ? path.join(app.getAppPath(), '../static/main-preload.js')
-        : path.join(app.getAppPath(), './compiled/app/static/main-preload.js'),
-    },
-    width: 1200,
-    height: 800,
-    minWidth: 960,
-    minHeight: 630,
-  }
-
-  const window = new BrowserWindow(windowOptions)
-
-  if (dev) {
-    window.loadURL(`http://localhost:3000/app`, {
-      userAgent: session.defaultSession.getUserAgent() + ` BoostNote`,
-    })
-  } else {
-    window.loadURL(
-      url.format({
-        pathname: path.join(app.getAppPath(), './compiled/index.html'),
-        protocol: 'file',
-        slashes: true,
-      })
-    )
-  }
-
-  applyMenuTemplate(getTemplateFromKeymap(keymap))
-
-  if (MAC) {
-    window.on('close', (event) => {
-      event.preventDefault()
-      window.hide()
-    })
-
-    app.on('before-quit', () => {
-      window.removeAllListeners()
-    })
-
-    autoUpdater.on('before-quit-for-update', () => {
-      window.removeAllListeners()
-    })
-  }
-
   window.on('closed', () => {
-    mainWindow = null
+    windows.delete(window)
   })
 
   return window
@@ -157,11 +97,19 @@ if (!singleInstance) {
   app.quit()
 } else {
   app.on('second-instance', (_event, argv) => {
-    if (mainWindow) {
-      if (!mainWindow.isVisible()) mainWindow.show()
-      mainWindow.focus()
+    const allWindows = [...windows.values()]
+    const mainWindow = allWindows[0]
+    if (allWindows.length >= 1) {
+      if (mainWindow != null) {
+        if (!mainWindow.isVisible()) {
+          mainWindow.show()
+        } else {
+          mainWindow.focus()
+        }
+      }
     }
 
+    // todo: [komediruzecki-2021-10-21] Can/do we want to handle this, what if multiple windows
     if (!MAC) {
       let urlWithBoostNoteProtocol
       for (const arg of argv) {
@@ -190,11 +138,16 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   // on macOS it is common to re-create a window even after all windows have been closed
-  if (mainWindow === null) {
-    mainWindow = createMainWindow()
+  if (windows.size === 0) {
+    const mainWindow = createAWindow()
+    windows.add(mainWindow)
   } else {
-    mainWindow.show()
-    mainWindow.focus()
+    const allWindows = [...windows.values()]
+    const mainWindow = allWindows[0]
+    if (mainWindow != null) {
+      mainWindow.show()
+      mainWindow.focus()
+    }
   }
 })
 
@@ -205,7 +158,8 @@ app.on('ready', () => {
     const pathname = decodeURI(request.url.replace('file:///', ''))
     callback(pathname)
   })
-  mainWindow = createMainWindow()
+  const mainWindow = createAWindow()
+  windows.add(mainWindow)
 
   ipcMain.on('menuAcceleratorChanged', (_, args) => {
     if (args.length != 2) {
@@ -220,7 +174,9 @@ app.on('ready', () => {
 
   // multiple windows support
   ipcMain.on('new-window-event', (windowOptions?: any) => {
-    return createAWindow(windowOptions)
+    const newWindow = createAWindow(windowOptions)
+    windows.add(newWindow)
+    return newWindow
   })
 
   ipcMain.on('sign-in-event', (windowId?: any) => {
@@ -230,6 +186,14 @@ app.on('ready', () => {
       }
       webContent.reload()
     }
+  })
+
+  ipcMain.on('sign-out-event', (windowId?: any) => {
+    windows.forEach((window) => {
+      if (window.id !== windowId) {
+        window.close()
+      }
+    })
   })
 
   app.on('open-url', (_event, url) => {

@@ -40,6 +40,7 @@ import {
   openExternal,
   openNewWindow,
   signInBroadcast,
+  signOutBroadcast,
 } from '../../lib/electronOnly'
 import { DidFailLoadEvent } from 'electron/main'
 import styled from '../../design/lib/styled'
@@ -121,6 +122,11 @@ const BoostHubWebview = ({
       sendMessage,
     }
   }, [controlRef, reload, goBack, goForward, openDevTools, sendMessage, focus])
+
+  const cloudSignOutHandler = useCallback(() => {
+    signOutCloud()
+    signOutBroadcast()
+  }, [signOutCloud])
 
   useEffect(() => {
     const webview = webviewRef.current!
@@ -260,13 +266,13 @@ const BoostHubWebview = ({
               {
                 type: 'normal',
                 label: 'Sign Out',
-                click: () => signOutCloud(),
+                click: () => cloudSignOutHandler(),
               },
             ],
           })
           break
         case 'sign-out':
-          signOutCloud()
+          cloudSignOutHandler()
           break
         case 'sign-in-event':
           // broadcast to other windows that sign in event happened
