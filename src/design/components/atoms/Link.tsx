@@ -2,11 +2,13 @@ import React, {
   DragEventHandler,
   FocusEventHandler,
   MouseEventHandler,
+  useCallback,
 } from 'react'
 import styled from '../../lib/styled'
 import cc from 'classcat'
 import Icon from './Icon'
 import { mdiOpenInNew } from '@mdi/js'
+import { useElectron } from '../../../cloud/lib/stores/electron'
 
 export interface HyperLinkProps {
   id?: string
@@ -41,8 +43,30 @@ const Link: React.FC<HyperLinkProps & { onClick: MouseEventHandler }> = ({
   children,
   ...props
 }) => {
+  const { sendToElectron, usingElectron } = useElectron()
+  const onClickHandler = useCallback(
+    (event) => {
+      if (event.shiftKey && props.onClick == null) {
+        // call new window webview event
+        if (usingElectron) {
+          sendToElectron('new-window', props.href)
+          return
+        }
+      }
+
+      if (props.onClick != null) {
+        props.onClick(event)
+      }
+    },
+    [props, sendToElectron, usingElectron]
+  )
+
   return (
-    <Container className={cc(['link', className])} {...props}>
+    <Container
+      className={cc(['link', className])}
+      {...props}
+      onClick={onClickHandler}
+    >
       {children}
     </Container>
   )

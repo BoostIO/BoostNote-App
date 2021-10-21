@@ -68,6 +68,7 @@ const __ELECTRON_ONLY__: {
     action: 'clearSelection' | 'keepSelection' | 'activateSelection'
   ): void
   signInBroadcast(): void
+  signOutBroadcast(): void
   got: Got
 } = (window as any).__ELECTRON_ONLY__
 
@@ -104,6 +105,7 @@ const {
   findInPage,
   stopFindInPage,
   signInBroadcast,
+  signOutBroadcast,
   got,
 } = __ELECTRON_ONLY__ || {}
 
@@ -165,5 +167,6 @@ export {
   findInPage,
   stopFindInPage,
   signInBroadcast,
+  signOutBroadcast,
   got,
 }
