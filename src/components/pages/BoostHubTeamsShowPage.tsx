@@ -1,6 +1,10 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { getBoostHubHomepageUrl } from '../../lib/boosthub'
-import { DidNavigateInPageEvent, DidNavigateEvent } from 'electron'
+import {
+  DidNavigateInPageEvent,
+  DidNavigateEvent,
+  IpcRendererEvent,
+} from 'electron'
 import { addIpcListener, removeIpcListener } from '../../lib/electronOnly'
 import BoostHubWebview, { WebviewControl } from '../atoms/BoostHubWebview'
 import {
@@ -113,6 +117,9 @@ const BoostHubTeamsShowPage = () => {
     const toggleSettings = () => {
       webviewControlRef.current!.sendMessage('toggle-settings')
     }
+    const setUrlHandler = (_: IpcRendererEvent, url: string) => {
+      setUrl(url)
+    }
     addIpcListener('new-doc', newDocHandler)
     addIpcListener('new-folder', newFolderHandler)
     addIpcListener('save-as', saveAsHandler)
@@ -126,6 +133,7 @@ const BoostHubTeamsShowPage = () => {
     addIpcListener('apply-bold-style', applyBoldStyle)
     addIpcListener('apply-italic-style', applyItalicStyle)
     addIpcListener('toggle-settings', toggleSettings)
+    addIpcListener('load-specific-page', setUrlHandler)
 
     return () => {
       boostHubOpenDiscountModalEventEmitter.unlisten(

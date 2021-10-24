@@ -173,9 +173,15 @@ app.on('ready', () => {
   })
 
   // multiple windows support
-  ipcMain.on('new-window-event', (windowOptions?: any) => {
-    const newWindow = createAWindow(windowOptions)
+  ipcMain.on('new-window-event', (args: any) => {
+    const newWindow = createAWindow(args.windowOptions)
     windows.add(newWindow)
+
+    if (args.url != null) {
+      newWindow.on('ready-to-show', () => {
+        newWindow.webContents.send('load-specific-page', args.url)
+      })
+    }
     return newWindow
   })
 

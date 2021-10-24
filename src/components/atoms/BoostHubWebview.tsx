@@ -162,7 +162,7 @@ const BoostHubWebview = ({
             openExternal(urlToOpen)
           } else {
             // open inside new window (desktop app webview)
-            openNewWindow()
+            openNewWindow(urlToOpen)
             // todo: [komediruzecki-2021-10-18] once window is opened, send some request to load particular link there
             // this could be done by the above function or separately
           }
