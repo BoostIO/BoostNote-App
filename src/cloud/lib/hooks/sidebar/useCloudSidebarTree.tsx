@@ -408,7 +408,13 @@ export function useCloudSidebarTree() {
         folding: getFoldEvents('folders', folder.id),
         href,
         active: !showSearchScreen && href === currentPathWithDomain,
-        navigateTo: () => push(href),
+        navigateTo: (event?: any) => {
+          if (event && event.shiftKey && usingElectron) {
+            sendToElectron('new-window', href)
+            return
+          }
+          push(href)
+        },
         ...coreRestrictedFeatures,
         parentId:
           folder.parentFolderId == null
@@ -486,7 +492,13 @@ export function useCloudSidebarTree() {
         id: docId,
         lastUpdated: doc.head != null ? doc.head.created : doc.updatedAt,
         label: getDocTitle(doc, 'Untitled'),
-        navigateTo: () => push(href),
+        navigateTo: (event?: any) => {
+          if (event && event.shiftKey && usingElectron) {
+            sendToElectron('new-window', href)
+            return
+          }
+          push(href)
+        },
         bookmarked: doc.bookmarked,
         emoji: doc.emoji,
         defaultIcon:
@@ -626,7 +638,13 @@ export function useCloudSidebarTree() {
           depth: 0,
           href,
           active: !showSearchScreen && href === currentPathWithDomain,
-          navigateTo: () => push(href),
+          navigateTo: (event?: any) => {
+            if (event && event.shiftKey && usingElectron) {
+              sendToElectron('new-window', href)
+              return
+            }
+            push(href)
+          },
           contextControls: !currentUserIsCoreMember
             ? undefined
             : [

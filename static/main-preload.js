@@ -124,8 +124,11 @@
     }
   }
 
-  function openNewWindow(options) {
-    electron.remote.ipcMain.emit('new-window-event', options)
+  function openNewWindow(url, options) {
+    electron.remote.ipcMain.emit('new-window-event', {
+      url: url,
+      windowOptions: options,
+    })
   }
 
   function signInBroadcast() {

@@ -41,7 +41,7 @@ import {
   mdiWeb,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
-import { sendToHost, usingElectron } from '../lib/stores/electron'
+import { sendToHost, useElectron, usingElectron } from '../lib/stores/electron'
 import cc from 'classcat'
 import { useCloudResourceModals } from '../lib/hooks/useCloudResourceModals'
 import FuzzyNavigation from '../../design/components/organisms/FuzzyNavigation'
@@ -118,6 +118,7 @@ const Application = ({
   } = useCloudSidebarTree()
   const { counts } = useNotifications()
   const { translate } = useI18n()
+  const { sendToElectron } = useElectron()
 
   const { history, showSearchScreen, setShowSearchScreen } = useSearch()
   const [showInPageSearch, setShowInPageSearch] = useState(false)
@@ -243,7 +244,7 @@ const Application = ({
         }
       }
     },
-    [openSettingsTab, showInPageSearch, team, setPreferences]
+    [team, usingElectron, setPreferences, openSettingsTab, showInPageSearch]
   )
   useGlobalKeyDownHandler(overrideBrowserCtrlsHandler)
 
@@ -376,7 +377,15 @@ const Application = ({
               variant: 'subtle',
               labelHref: getTeamLinkHref(team, 'shared'),
               active: getTeamLinkHref(team, 'shared') === pathname,
-              labelClick: () => push(getTeamLinkHref(team, 'shared')),
+              labelClick: (event) => {
+                const teamHref = getTeamLinkHref(team, 'shared')
+                if (event && event.shiftKey && usingElectron) {
+                  const loadUrl = `${process.env.BOOST_HUB_BASE_URL}${teamHref}`
+                  sendToElectron('new-window', loadUrl)
+                  return
+                }
+                push(teamHref)
+              },
               id: 'sidebar__button__shared',
             },
           ]}

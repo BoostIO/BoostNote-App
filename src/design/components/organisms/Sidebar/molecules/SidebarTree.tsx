@@ -54,7 +54,7 @@ interface SidebarNavRow {
   depth: number
   href?: string
   active?: boolean
-  navigateTo?: () => void
+  navigateTo?: (event?: any) => void
   controls?: SidebarNavControls[]
   contextControls?: MenuItem[]
   dropIn?: boolean
