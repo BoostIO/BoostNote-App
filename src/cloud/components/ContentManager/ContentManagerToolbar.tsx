@@ -50,7 +50,7 @@ enum BulkActions {
   delete = 1,
   duedate = 2,
   status = 3,
-  assignees = 4,
+  assigned = 4,
   label = 5,
 }
 
@@ -253,11 +253,11 @@ const ContentManagerToolbar = ({
 
   const selectedDocumentsCommonValues = useMemo(() => {
     const values: {
-      assignees: string[]
+      assigned: string[]
       status?: DocStatus
       tags: string[]
       dueDate?: string
-    } = { tags: [], assignees: [] }
+    } = { tags: [], assigned: [] }
 
     if (selectedDocs.size === 0) {
       return values
@@ -275,12 +275,12 @@ const ContentManagerToolbar = ({
       return values
     }
 
-    values.assignees =
-      docs[0].props.assignees == null
+    values.assigned =
+      docs[0].props.assigned == null
         ? []
-        : Array.isArray(docs[0].props.assignees.data)
-        ? docs[0].props.assignees.data.map((assignee) => assignee.userId)
-        : [docs[0].props.assignees.data.userId]
+        : Array.isArray(docs[0].props.assigned.data)
+        ? docs[0].props.assigned.data.map((assignee) => assignee.userId)
+        : [docs[0].props.assigned.data.userId]
 
     values.status =
       docs[0].props.status != null &&
@@ -298,20 +298,20 @@ const ContentManagerToolbar = ({
 
     docs.forEach((doc) => {
       /** iterative */
-      let newAssigneeArray = values.assignees.slice()
+      let newAssigneeArray = values.assigned.slice()
       let newTagsArray = values.tags.slice()
       /****/
 
       const docAssignees =
-        doc.props.assignees == null
+        doc.props.assigned == null
           ? []
-          : Array.isArray(doc.props.assignees.data)
-          ? doc.props.assignees.data.map((assignee) => assignee.userId)
-          : [doc.props.assignees.data.userId]
+          : Array.isArray(doc.props.assigned.data)
+          ? doc.props.assigned.data.map((assignee) => assignee.userId)
+          : [doc.props.assigned.data.userId]
 
       const docTags = (doc.tags || []).map((tag) => tag.text)
 
-      values.assignees.forEach((assignee) => {
+      values.assigned.forEach((assignee) => {
         if (!docAssignees.includes(assignee)) {
           newAssigneeArray = newAssigneeArray.filter((val) => val !== assignee)
         }
@@ -335,7 +335,7 @@ const ContentManagerToolbar = ({
       }
 
       /** changes **/
-      values.assignees = newAssigneeArray
+      values.assigned = newAssigneeArray
       values.tags = newTagsArray
     })
 
@@ -405,7 +405,7 @@ const ContentManagerToolbar = ({
       }
       const patternedIds = [...selectedDocs.values()].map(getDocIdFromString)
       setUpdating((prev) => [...prev, ...patternedIds])
-      setSending(BulkActions.assignees)
+      setSending(BulkActions.assigned)
       for (const docId of selectedDocs.values()) {
         const doc = documentsMap.get(docId)
         if (doc == null) {
@@ -492,9 +492,9 @@ const ContentManagerToolbar = ({
                   : null}
               </LoadingButton>
               <DocAssigneeSelect
-                isLoading={sending === BulkActions.assignees}
+                isLoading={sending === BulkActions.assigned}
                 disabled={selectedDocsAreUpdating}
-                defaultValue={selectedDocumentsCommonValues.assignees}
+                defaultValue={selectedDocumentsCommonValues.assigned}
                 readOnly={selectedDocsAreUpdating}
                 update={sendUpdateAssignees}
                 popupAlignment='top-left'

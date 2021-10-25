@@ -125,16 +125,16 @@ export async function updateDocDueDate(docId: string, dueDate: Date | null) {
   })
 }
 
-export async function updateDocAssignees(docId: string, assignees: string[]) {
+export async function updateDocAssignees(docId: string, assigned: string[]) {
   let body
 
-  if (assignees.length === 0) {
-    body = { assignees: null }
+  if (assigned.length === 0) {
+    body = { assigned: null }
   } else {
     body = {
-      assignees: {
+      assigned: {
         type: 'user',
-        data: assignees,
+        data: assigned,
       },
     }
   }
