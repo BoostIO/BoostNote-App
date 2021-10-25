@@ -18,4 +18,5 @@ export interface Preferences {
   folderSortingOrder: 'Latest Updated' | 'Title A-Z' | 'Title Z-A'
   version?: number
   docStatusDisplayed: DocStatus[]
+  docPropertiesAreHidden: boolean
 }

@@ -29,6 +29,7 @@ const basePreferences: Preferences = {
     cloudSidebarOrderedCategoriesDelimiter
   ),
   version: 1,
+  docPropertiesAreHidden: false,
 }
 
 function getExistingPreferences() {
