@@ -374,11 +374,11 @@ export function useCloudApi() {
 
   const updateDocAssigneeApi = useCallback(
     async (target: SerializedDocWithSupplemental, newAssignees: string[]) => {
-      await send(target.id, 'assignees', {
+      await send(target.id, 'assigned', {
         api: () => updateDocAssignees(target.id, newAssignees),
         cb: ({ data }: UpdateDocPropsResponseBody) => {
-          const assignees = data.assignees
-          const props = Object.assign({}, target.props || {}, { assignees })
+          const assigned = data.assigned
+          const props = Object.assign({}, target.props || {}, { assigned })
           const newDoc = {
             ...target,
             props,
