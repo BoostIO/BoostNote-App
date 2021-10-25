@@ -176,6 +176,12 @@ const Editor = ({
   const suggestionsRef = useRef<Hint[]>([])
   const { sendingMap, toggleDocBookmark } = useCloudApi()
   const mountedRef = useRef(false)
+  // const toolbarWidgetRef = useRef<HTMLDivElement>(null)
+  const [showingToolbarWidget, setShowingToolbarWidget] = useState(false)
+  const [
+    toolbarWidgetLocation,
+    setToolbarWidgetLocation,
+  ] = useState<EditorPosition | null>()
 
   const [selection, setSelection] = useState<SelectionState>({
     currentCursor: {
@@ -273,6 +279,20 @@ const Editor = ({
       readOnly: loading,
     }
   }, [settings, loading])
+
+  const editorToolbarStyle: React.CSSProperties = useMemo(() => {
+    if (!showingToolbarWidget || toolbarWidgetLocation == null) {
+      return
+    }
+
+    console.log('Got pos', toolbarWidgetLocation)
+
+    return {
+      position: 'absolute',
+      top: `50px`,
+      left: `50px`,
+    }
+  }, [showingToolbarWidget, toolbarWidgetLocation])
 
   const shortcodeConvertMenuStyle: React.CSSProperties = useMemo(() => {
     if (shortcodeConvertMenu == null || editorRef.current == null) {
@@ -492,6 +512,31 @@ const Editor = ({
             },
             currentSelections: selections,
           })
+
+          const startSelection = codeMirror.getCursor('start')
+          const endSelection = codeMirror.getCursor('end')
+          if (
+            startSelection.line == endSelection.line &&
+            endSelection.ch == startSelection.ch
+          ) {
+            setShowingToolbarWidget(false)
+          } else {
+            // if (toolbarWidgetRef.current != null) {
+            //   editor.addWidget(
+            //     {
+            //       line: startSelection.line - 1,
+            //       ch: startSelection.ch,
+            //     },
+            //     toolbarWidgetRef.current,
+            //     false
+            //   )
+            // }
+            setToolbarWidgetLocation({
+              line: startSelection.line - 1,
+              ch: startSelection.ch,
+            })
+            setShowingToolbarWidget(true)
+          }
         },
         500,
         { trailing: true }
@@ -1087,6 +1132,15 @@ const Editor = ({
                 fontFamily={fontFamily}
                 fontSize={fontSize}
               >
+                {showingToolbarWidget && (
+                  // <div ref={toolbarWidgetRef}>
+                  <div style={editorToolbarStyle}>
+                    <ToolbarRow>
+                      <EditorToolbar editorRef={editorRef} />
+                    </ToolbarRow>
+                  </div>
+                  // </div>
+                )}
                 <>
                   <CodeMirrorEditor
                     bind={bindCallback}
