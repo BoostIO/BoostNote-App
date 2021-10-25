@@ -110,8 +110,10 @@ const DocPageHeader = ({
                   !currentUserIsCoreMember
                 }
                 defaultValue={
-                  doc.assignees != null
-                    ? doc.assignees.map((assignee) => assignee.userId)
+                  doc.props.assignees != null
+                    ? Array.isArray(doc.props.assignees.data)
+                      ? doc.props.assignees.data.map((data) => data.userId)
+                      : [doc.props.assignees.data.userId]
                     : []
                 }
                 readOnly={!currentUserIsCoreMember}
@@ -120,7 +122,11 @@ const DocPageHeader = ({
             </div>
             <div className='doc__page__header__property'>
               <DocStatusSelect
-                status={doc.status}
+                status={
+                  typeof doc.props.status?.data === 'string'
+                    ? (doc.props.status.data as DocStatus)
+                    : null
+                }
                 sending={sendingMap.get(doc.id) === 'status'}
                 onStatusChange={sendUpdateStatus}
                 disabled={!currentUserIsCoreMember}
@@ -131,7 +137,7 @@ const DocPageHeader = ({
               <DocDueDateSelect
                 className='context__content__date_select'
                 sending={sendingMap.get(doc.id) === 'duedate'}
-                dueDate={doc.dueDate}
+                dueDate={doc.props.dueDate?.data}
                 onDueDateChange={sendUpdateDocDueDate}
                 disabled={!currentUserIsCoreMember}
                 isReadOnly={!currentUserIsCoreMember}
