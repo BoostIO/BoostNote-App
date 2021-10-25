@@ -244,7 +244,7 @@ const Application = ({
         }
       }
     },
-    [team, usingElectron, setPreferences, openSettingsTab, showInPageSearch]
+    [team, setPreferences, openSettingsTab, showInPageSearch]
   )
   useGlobalKeyDownHandler(overrideBrowserCtrlsHandler)
 
@@ -408,7 +408,7 @@ const Application = ({
         </SidebarButtonList>
       </>
     )
-  }, [openModal, team, pathname, push, translate, subscription])
+  }, [team, translate, pathname, subscription, push, sendToElectron, openModal])
 
   return (
     <>
