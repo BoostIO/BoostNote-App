@@ -181,10 +181,10 @@ const ContentManagerDocRow = ({
           isLoading={sendingMap.get(doc.id) === 'assignees'}
           disabled={sendingMap.has(doc.id) || !currentUserIsCoreMember}
           defaultValue={
-            doc.props.assignees != null
-              ? Array.isArray(doc.props.assignees.data)
-                ? doc.props.assignees.data.map((data) => data.userId)
-                : [doc.props.assignees.data.userId]
+            doc.props.assigned != null
+              ? Array.isArray(doc.props.assigned.data)
+                ? doc.props.assigned.data.map((data) => data.userId)
+                : [doc.props.assigned.data.userId]
               : []
           }
           readOnly={!currentUserIsCoreMember}
