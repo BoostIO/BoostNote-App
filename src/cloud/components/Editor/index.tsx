@@ -281,16 +281,29 @@ const Editor = ({
   }, [settings, loading])
 
   const editorToolbarStyle: React.CSSProperties = useMemo(() => {
-    if (!showingToolbarWidget || toolbarWidgetLocation == null) {
+    if (
+      !showingToolbarWidget ||
+      toolbarWidgetLocation == null ||
+      editorRef.current == null
+    ) {
       return
     }
 
-    console.log('Got pos', toolbarWidgetLocation)
-
+    // maybe set where to be start selection (true) in case user selected from lower number line to higher, otherwise set to end (false)
+    const startSelection = editorRef.current.getCursor('start')
+    const endSelection = editorRef.current.getCursor('end')
+    // todo: [komediruzecki-2021-10-26] see if forward selection can be determined easier (without sticky), is it bullet-proof?
+    const isForwardSelection = endSelection.sticky == 'after'
+    console.log('Got sel', startSelection, endSelection, isForwardSelection)
+    const positionCursor = editorRef.current?.cursorCoords(
+      isForwardSelection,
+      'local'
+    )
     return {
       position: 'absolute',
-      top: `50px`,
-      left: `50px`,
+      top: positionCursor.top + 20,
+      left: `${toolbarWidgetLocation.ch * 5 + 30}px`,
+      // bottom: '0 !important;',
     }
   }, [showingToolbarWidget, toolbarWidgetLocation])
 
@@ -532,7 +545,7 @@ const Editor = ({
             //   )
             // }
             setToolbarWidgetLocation({
-              line: startSelection.line - 1,
+              line: startSelection.line,
               ch: startSelection.ch,
             })
             setShowingToolbarWidget(true)
@@ -1135,9 +1148,9 @@ const Editor = ({
                 {showingToolbarWidget && (
                   // <div ref={toolbarWidgetRef}>
                   <div style={editorToolbarStyle}>
-                    <ToolbarRow>
+                    <InlineToolbarWidgetContainer>
                       <EditorToolbar editorRef={editorRef} />
-                    </ToolbarRow>
+                    </InlineToolbarWidgetContainer>
                   </div>
                   // </div>
                 )}
@@ -1314,6 +1327,21 @@ const StyledLoadingView = styled.div`
     height: 38px;
     position: relative;
   }
+`
+
+const InlineToolbarWidgetContainer = styled.div`
+  display: flex;
+  //flex-wrap: nowrap;
+  position: absolute;
+  overflow: hidden;
+  //right: 0;
+  //left: 0;
+  margin: auto;
+  z-index: 1;
+  width: fit-content;
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  border: solid 1px ${({ theme }) => theme.colors.border.second};
+  border-radius: 5px;
 `
 
 const ToolbarRow = styled.div`
