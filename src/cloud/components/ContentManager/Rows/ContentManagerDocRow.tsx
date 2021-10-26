@@ -18,10 +18,10 @@ import DocTagsListItem from '../../DocTagsListItem'
 import ContentManagerCell from '../ContentManagerCell'
 import { getFormattedBoosthubDateTime } from '../../../lib/date'
 import EditorsIcons from '../../EditorsIcons'
-import DocAssigneeSelect from '../../DocProperties/DocAssigneeSelect'
+import DocAssigneeSelect from '../../Props/Pickers/AssigneeSelect'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
-import DocStatusSelect from '../../DocProperties/DocStatusSelect'
-import DocDueDateSelect from '../../DocProperties/DocDueDateSelect'
+import DocStatusSelect from '../../Props/Pickers/StatusSelect'
+import DocDueDateSelect from '../../Props/Pickers/DueDateSelect'
 
 interface ContentManagerDocRowProps {
   team: SerializedTeam
@@ -181,10 +181,10 @@ const ContentManagerDocRow = ({
           isLoading={sendingMap.get(doc.id) === 'assignees'}
           disabled={sendingMap.has(doc.id) || !currentUserIsCoreMember}
           defaultValue={
-            doc.props.assigned != null
-              ? Array.isArray(doc.props.assigned.data)
-                ? doc.props.assigned.data.map((data) => data.userId)
-                : [doc.props.assigned.data.userId]
+            doc.props.assignees != null
+              ? Array.isArray(doc.props.assignees.data)
+                ? doc.props.assignees.data.map((data) => data.userId)
+                : [doc.props.assignees.data.userId]
               : []
           }
           readOnly={!currentUserIsCoreMember}

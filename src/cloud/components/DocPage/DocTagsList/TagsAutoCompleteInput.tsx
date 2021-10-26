@@ -14,7 +14,7 @@ import { lngKeys } from '../../../lib/i18n/types'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import Spinner from '../../../../design/components/atoms/Spinner'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
-import DocPropertyValueButton from '../../DocProperties/DocPropertyValueButton'
+import DocPropertyValueButton from '../../Props/Pickers/PropertyValueButton'
 import Icon from '../../../../design/components/atoms/Icon'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

@@ -1,26 +1,31 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import styled from '../../../design/lib/styled'
-import {
-  DocStatus,
-  SerializedDocWithSupplemental,
-} from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import cc from 'classcat'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import Button from '../../../design/components/atoms/Button'
 import Icon from '../../../design/components/atoms/Icon'
-import { mdiCommentTextOutline, mdiPencil } from '@mdi/js'
+import {
+  mdiChevronDown,
+  mdiChevronRight,
+  mdiCommentTextOutline,
+  mdiPencil,
+  mdiPlus,
+  mdiTrashCanOutline,
+} from '@mdi/js'
 import { usePage } from '../../lib/stores/pageStore'
-import { format as formatDate } from 'date-fns'
-import DocAssigneeSelect from '../DocProperties/DocAssigneeSelect'
-import DocTagsList from './DocTagsList'
 import { SerializedTeam } from '../../interfaces/db/team'
-import DocStatusSelect from '../DocProperties/DocStatusSelect'
-import DocDueDateSelect from '../DocProperties/DocDueDateSelect'
 import { usePreferences } from '../../lib/stores/preferences'
 import { overflowEllipsis } from '../../../design/lib/styled/styleFunctions'
 import { getDocTitle } from '../../lib/utils/patterns'
 import ViewerDisclaimer from '../ViewerDisclaimer'
-import { useCloudApi } from '../../lib/hooks/useCloudApi'
+import Flexbox from '../../../design/components/atoms/Flexbox'
+import PropPicker from '../Props/PropPicker'
+import { useProps } from '../../lib/hooks/props'
+import { useModal } from '../../../design/lib/stores/modal'
+import PropSelectorModal from '../Props/PropSelectorModal'
+import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
 
 interface DocPageHeaderProps {
   docIsEditable?: boolean
@@ -33,47 +38,15 @@ const DocPageHeader = ({
   doc,
   docIsEditable,
   className,
-  team,
 }: DocPageHeaderProps) => {
-  const {
-    updateDocStatusApi,
-    updateDocDueDateApi,
-    updateDocAssigneeApi,
-    sendingMap,
-  } = useCloudApi()
   const { openRenameDocForm } = useCloudResourceModals()
   const { currentUserIsCoreMember } = usePage()
   const { preferences, setPreferences } = usePreferences()
-
-  const sendUpdateStatus = useCallback(
-    async (newStatus: DocStatus | null) => {
-      if (doc.status === newStatus) {
-        return
-      }
-
-      await updateDocStatusApi(doc, newStatus)
-    },
-    [doc, updateDocStatusApi]
-  )
-
-  const sendUpdateDocDueDate = useCallback(
-    async (newDate: Date | null) => {
-      await updateDocDueDateApi(
-        doc,
-        newDate != null
-          ? new Date(formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z')
-          : null
-      )
-    },
-    [doc, updateDocDueDateApi]
-  )
-
-  const sendUpdateDocAssignees = useCallback(
-    async (newAssignees: string[]) => {
-      await updateDocAssigneeApi(doc, newAssignees)
-    },
-    [doc, updateDocAssigneeApi]
-  )
+  const { openContextModal, closeAllModals } = useModal()
+  const { props: docProperties, updateProp, removeProp } = useProps(doc.props, {
+    type: 'doc',
+    target: doc,
+  })
 
   return (
     <Container className={cc(['doc__page__header', className])}>
@@ -99,57 +72,116 @@ const DocPageHeader = ({
             <span className='doc__page__header__label'>{doc.title}</span>
           </div>
         )}
-
         <div className='doc__page__header__wrapper'>
           <div className='doc__page__header__props'>
-            <div className='doc__page__header__property'>
-              <DocAssigneeSelect
-                isLoading={sendingMap.get(doc.id) === 'assignees'}
-                disabled={
-                  sendingMap.get(doc.id) === 'assignees' ||
-                  !currentUserIsCoreMember
-                }
-                defaultValue={
-                  doc.props.assignees != null
-                    ? Array.isArray(doc.props.assignees.data)
-                      ? doc.props.assignees.data.map((data) => data.userId)
-                      : [doc.props.assignees.data.userId]
-                    : []
-                }
-                readOnly={!currentUserIsCoreMember}
-                update={sendUpdateDocAssignees}
-              />
-            </div>
-            <div className='doc__page__header__property'>
-              <DocStatusSelect
-                status={
-                  typeof doc.props.status?.data === 'string'
-                    ? (doc.props.status.data as DocStatus)
-                    : null
-                }
-                sending={sendingMap.get(doc.id) === 'status'}
-                onStatusChange={sendUpdateStatus}
-                disabled={!currentUserIsCoreMember}
-                isReadOnly={!currentUserIsCoreMember}
-              />
-            </div>
-            <div className='doc__page__header__property'>
-              <DocDueDateSelect
-                className='context__content__date_select'
-                sending={sendingMap.get(doc.id) === 'duedate'}
-                dueDate={doc.props.dueDate?.data}
-                onDueDateChange={sendUpdateDocDueDate}
-                disabled={!currentUserIsCoreMember}
-                isReadOnly={!currentUserIsCoreMember}
-              />
-            </div>
-            <div className='doc__page__header__property'>
-              <DocTagsList
-                team={team}
-                doc={doc}
-                readOnly={!currentUserIsCoreMember}
-              />
-            </div>
+            <Flexbox alignItems='flex-start' flex='1 1 auto'>
+              <Flexbox flex='0 0 auto'>
+                {preferences.docPropertiesAreHidden ? (
+                  <Button
+                    id='properties-show'
+                    variant='transparent'
+                    iconPath={mdiChevronRight}
+                    onClick={() =>
+                      setPreferences({ docPropertiesAreHidden: false })
+                    }
+                  >
+                    Show Properties
+                  </Button>
+                ) : (
+                  <Button
+                    id='properties-hide'
+                    variant='icon'
+                    iconPath={mdiChevronDown}
+                    size='sm'
+                    onClick={() =>
+                      setPreferences({ docPropertiesAreHidden: true })
+                    }
+                  />
+                )}
+              </Flexbox>
+              {!preferences.docPropertiesAreHidden && (
+                <Flexbox
+                  flex='1 1 auto'
+                  direction='column'
+                  alignItems='flex-start'
+                  className='doc__page__header__properties'
+                >
+                  {docProperties.map((prop, i) => {
+                    return (
+                      <div
+                        className='doc__page__header__property'
+                        key={`prop-${i}`}
+                      >
+                        <Button
+                          className='doc__page__header__property__label'
+                          variant='transparent'
+                          size='sm'
+                          onClick={(event) => {
+                            openContextModal(
+                              event,
+                              <MetadataContainer>
+                                <MetadataContainerRow
+                                  row={{
+                                    type: 'button',
+                                    props: {
+                                      onClick: () => {
+                                        removeProp(prop[1].name)
+                                        closeAllModals()
+                                      },
+                                      label: 'Delete property',
+                                      iconPath: mdiTrashCanOutline,
+                                      id: 'delete-property',
+                                    },
+                                  }}
+                                />
+                              </MetadataContainer>,
+                              {
+                                width: 200,
+                                alignment: 'bottom-left',
+                                removePadding: true,
+                              }
+                            )
+                          }}
+                        >
+                          {prop[0]}
+                        </Button>
+                        <div className='doc__page__header__property__picker'>
+                          <PropPicker
+                            parent={{ type: 'doc', target: doc }}
+                            propName={prop[1].name}
+                            propData={prop[1].data}
+                            readOnly={!currentUserIsCoreMember}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                  <Button
+                    variant='transparent'
+                    size='sm'
+                    iconPath={mdiPlus}
+                    className='doc__page__header__property'
+                    onClick={(event) => {
+                      openContextModal(
+                        event,
+                        <PropSelectorModal
+                          addProp={(propName, propData) => {
+                            updateProp(propName, propData)
+                            closeAllModals()
+                          }}
+                          propsToIgnore={docProperties.map(
+                            (prop) => prop[1].name
+                          )}
+                        />,
+                        { width: 200, alignment: 'right', removePadding: true }
+                      )
+                    }}
+                  >
+                    Add a property
+                  </Button>
+                </Flexbox>
+              )}
+            </Flexbox>
           </div>
           <Button
             className='doc__page__header__comments'
@@ -181,17 +213,13 @@ const Container = styled.div`
     border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
   }
 
-  .prop__margin {
-    margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px !important;
-  }
-
   .doc__page__header__comments {
     flex: 0 0 auto;
   }
 
   .doc__page__header__wrapper {
     display: flex;
-    align-items: flex-start;
+    align-items: flex-end;
     justify-content: space-between;
     margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
@@ -235,14 +263,48 @@ const Container = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  .doc__page__header__properties {
+    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  #properties-hide {
+    margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 
   .doc__page__header__property {
+    &:not(button) {
+      padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    }
+    &:not(div) {
+      padding-left: 0;
+    }
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+  }
+
+  .doc__page__header__property__label {
+    width: 100px;
+    justify-content: flex-start;
+    .button__label {
+      color: ${({ theme }) => theme.colors.text.primary};
+    }
+    ${overflowEllipsis}
+  }
+
+  .doc__page__header__property__picker {
     flex: 0 0 auto;
-    width: fit-content;
+    margin-left: ${({ theme }) => theme.sizes.spaces.df}px;
     .form__select__control {
       width: 90px !important;
     }
+  }
+
+  .doc__page__header__property + .doc__page__header__property {
+    margin-top: 2px;
   }
 `
 

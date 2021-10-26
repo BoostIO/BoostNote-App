@@ -16,6 +16,7 @@ import {
   updateDocTagsInBulk,
   UpdateDocTagsResponseBody,
   UpdateDocPropsResponseBody,
+  updateUnsignedDocProps,
 } from '../../api/teams/docs'
 import {
   createDocBookmark,
@@ -106,6 +107,7 @@ import {
   UpdateViewResponseBody,
 } from '../../api/teams/views'
 import { SerializedView } from '../../interfaces/db/view'
+import { PropData } from '../../interfaces/db/props'
 
 export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
@@ -372,13 +374,37 @@ export function useCloudApi() {
     ]
   )
 
+  const updateDocPropsApi = useCallback(
+    async (
+      target: SerializedDocWithSupplemental,
+      prop: [string, PropData | null]
+    ) => {
+      return send(target.id, prop[0], {
+        api: () => updateUnsignedDocProps(target.id, prop),
+        cb: ({ data }: UpdateDocPropsResponseBody) => {
+          const props = Object.assign({}, data)
+          const newDoc = {
+            ...target,
+            props,
+          } as SerializedDocWithSupplemental
+          updateDocsMap([newDoc.id, newDoc])
+
+          if (pageDoc != null && newDoc.id === pageDoc.id) {
+            setPartialPageData({ pageDoc: newDoc })
+          }
+        },
+      })
+    },
+    [pageDoc, updateDocsMap, setPartialPageData, send]
+  )
+
   const updateDocAssigneeApi = useCallback(
     async (target: SerializedDocWithSupplemental, newAssignees: string[]) => {
-      await send(target.id, 'assigned', {
+      await send(target.id, 'assignees', {
         api: () => updateDocAssignees(target.id, newAssignees),
         cb: ({ data }: UpdateDocPropsResponseBody) => {
-          const assigned = data.assigned
-          const props = Object.assign({}, target.props || {}, { assigned })
+          const assignees = data.assignees
+          const props = Object.assign({}, target.props || {}, { assignees })
           const newDoc = {
             ...target,
             props,
@@ -945,5 +971,6 @@ export function useCloudApi() {
     deleteViewApi,
     updateDashboardApi,
     listViewsApi,
+    updateDocPropsApi,
   }
 }
