@@ -1,11 +1,11 @@
 import React, { forwardRef } from 'react'
-import styled from '../../../design/lib/styled'
-import Spinner from '../../../design/components/atoms/Spinner'
-import { contextMenuFormItem } from '../../../design/lib/styled/styleFunctions'
+import styled from '../../../../design/lib/styled'
+import Spinner from '../../../../design/components/atoms/Spinner'
+import { contextMenuFormItem } from '../../../../design/lib/styled/styleFunctions'
 import cc from 'classcat'
-import Icon from '../../../design/components/atoms/Icon'
+import Icon from '../../../../design/components/atoms/Icon'
 
-interface DocPropertyValueButtonProps {
+interface PropertyValueButtonProps {
   children: React.ReactNode
   iconPath?: string
   disabled?: boolean
@@ -17,9 +17,9 @@ interface DocPropertyValueButtonProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
-const DocPropertyValueButton = forwardRef<
+const PropertyValueButton = forwardRef<
   HTMLButtonElement,
-  DocPropertyValueButtonProps
+  PropertyValueButtonProps
 >(
   (
     {
@@ -42,9 +42,9 @@ const DocPropertyValueButton = forwardRef<
         onClick={onClick}
         id={id}
         className={cc([
-          'doc__property__button',
-          empty && 'doc__property__button--empty',
-          isReadOnly && 'doc__property__button--readOnly',
+          'item__property__button',
+          empty && 'item__property__button--empty',
+          isReadOnly && 'item__property__button--readOnly',
           className,
         ])}
       >
@@ -58,10 +58,10 @@ const DocPropertyValueButton = forwardRef<
               <Icon
                 path={iconPath}
                 size={16}
-                className='doc__property__button__icon'
+                className='item__property__button__icon'
               />
             )}
-            <span className='doc__property__button__label'>{children}</span>
+            <span className='item__property__button__label'>{children}</span>
           </>
         )}
       </ButtonContainer>
@@ -69,7 +69,7 @@ const DocPropertyValueButton = forwardRef<
   }
 )
 
-export default DocPropertyValueButton
+export default PropertyValueButton
 
 const ButtonContainer = styled.button`
   display: flex;
@@ -91,19 +91,19 @@ const ButtonContainer = styled.button`
   color: ${({ theme }) => theme.colors.text.primary};
   ${({ theme }) => contextMenuFormItem({ theme }, ':focus')}
 
-  .doc__property__button__icon {
+  .item__property__button__icon {
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
     color: ${({ theme }) => theme.colors.text.subtle};
   }
 
-  &.doc__property__button--readOnly {
+  &.item__property__button--readOnly {
     cursor: not-allowed;
     &:hover {
       background: none !important;
     }
   }
 
-  &.doc__property__button--empty {
+  &.item__property__button--empty {
     color: ${({ theme }) => theme.colors.text.subtle};
   }
 
@@ -122,7 +122,7 @@ const ButtonContainer = styled.button`
         theme.colors.background.secondary} !important;
       color: ${({ theme }) => theme.colors.text.primary};
 
-      .doc__property__button__icon {
+      .item__property__button__icon {
         color: ${({ theme }) => theme.colors.text.primary};
       }
     }

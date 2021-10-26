@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import DatePicker from 'react-datepicker'
-import DocPropertyValueButton from './DocPropertyValueButton'
+import PropertyValueButton from './PropertyValueButton'
 import { format as formatDate } from 'date-fns'
-import styled from '../../../design/lib/styled'
-import Button from '../../../design/components/atoms/Button'
+import styled from '../../../../design/lib/styled'
+import Button from '../../../../design/components/atoms/Button'
 import {
   mdiCalendarMonthOutline,
   mdiCalendarRemoveOutline,
   mdiClose,
 } from '@mdi/js'
-import { useI18n } from '../../lib/hooks/useI18n'
-import { lngKeys } from '../../lib/i18n/types'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 
-interface DocDueDateSelectProps {
+interface DueDateSelectProps {
   className?: string
   sending?: boolean
   isReadOnly: boolean
@@ -22,7 +22,7 @@ interface DocDueDateSelectProps {
   shortenedLabel?: boolean
 }
 
-const DocDueDateSelect = ({
+const DueDateSelect = ({
   className,
   sending,
   disabled,
@@ -30,7 +30,7 @@ const DocDueDateSelect = ({
   shortenedLabel,
   dueDate: dueDateString,
   onDueDateChange,
-}: DocDueDateSelectProps) => {
+}: DueDateSelectProps) => {
   const { translate } = useI18n()
   const [dueDate, setDueDate] = useState(() => {
     return dueDateString != null ? new Date(dueDateString) : null
@@ -46,7 +46,7 @@ const DocDueDateSelect = ({
   }, [dueDateString])
 
   return (
-    <Container className='doc__due-date__select prop__margin'>
+    <Container className='item__due-date__select prop__margin'>
       <DatePicker
         wrapperClassName={className}
         disabled={sending || disabled}
@@ -54,7 +54,7 @@ const DocDueDateSelect = ({
         onChange={onDueDateChange}
         popperPlacement='top-end'
         customInput={
-          <DocPropertyValueButton
+          <PropertyValueButton
             className={isDue ? 'due__date__expired' : ''}
             sending={sending}
             empty={dueDate == null}
@@ -68,7 +68,7 @@ const DocDueDateSelect = ({
               : shortenedLabel
               ? translate(lngKeys.DueDate)
               : translate(lngKeys.AddDueDate)}
-          </DocPropertyValueButton>
+          </PropertyValueButton>
         }
       />
       {dueDate != null && (
@@ -124,4 +124,4 @@ const Container = styled.div`
   }
 `
 
-export default DocDueDateSelect
+export default DueDateSelect

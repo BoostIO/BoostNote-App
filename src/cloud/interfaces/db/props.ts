@@ -15,3 +15,10 @@ export type PropData =
 export type PropType = PropData['type']
 
 export type Props = Record<string, PropData>
+
+export type NullablePropData =
+  | Prop<'string', string | null>
+  | Prop<'date', Date | null>
+  | Prop<'json', any>
+  | Prop<'number', number | null>
+  | Prop<'user', SerializedUserTeamPermissions | null>
