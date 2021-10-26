@@ -7,7 +7,7 @@ import {
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedTag } from '../../../interfaces/db/tag'
-import { Props } from '../../../interfaces/db/props'
+import { PropData, Props } from '../../../interfaces/db/props'
 
 interface GetDocResponseBody {
   doc: SerializedDocWithSupplemental
@@ -125,16 +125,28 @@ export async function updateDocDueDate(docId: string, dueDate: Date | null) {
   })
 }
 
-export async function updateDocAssignees(docId: string, assigned: string[]) {
+export async function updateUnsignedDocProps(
+  docId: string,
+  prop: [string, PropData | null]
+) {
+  return callApi<UpdateDocPropsResponseBody>(`api/docs/${docId}/props`, {
+    method: 'patch',
+    json: {
+      [prop[0]]: prop[1],
+    },
+  })
+}
+
+export async function updateDocAssignees(docId: string, assignees: string[]) {
   let body
 
-  if (assigned.length === 0) {
-    body = { assigned: null }
+  if (assignees.length === 0) {
+    body = { assignees: null }
   } else {
     body = {
-      assigned: {
+      assignees: {
         type: 'user',
-        data: assigned,
+        data: assignees,
       },
     }
   }

@@ -25,11 +25,11 @@ import { LoadingButton } from '../../../design/components/atoms/Button'
 import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
-import DocDueDateSelect from '../DocProperties/DocDueDateSelect'
-import DocStatusSelect from '../DocProperties/DocStatusSelect'
+import DocDueDateSelect from '../Props/Pickers/DueDateSelect'
+import DocStatusSelect from '../Props/Pickers/StatusSelect'
 import ContentManagerToolbarStatusPopup from './ContentManagerToolbarStatusPopup'
-import DocAssigneeSelect from '../DocProperties/DocAssigneeSelect'
-import DocLabelSelectionModal from '../DocProperties/DocLabelSelectionModal'
+import DocAssigneeSelect from '../Props/Pickers/AssigneeSelect'
+import DocLabelSelectionModal from '../Props/Pickers/DocLabelSelectionModal'
 import BulkActionProgress, {
   BulkActionState,
 } from '../../../design/components/molecules/BulkActionProgress'
@@ -50,7 +50,7 @@ enum BulkActions {
   delete = 1,
   duedate = 2,
   status = 3,
-  assigned = 4,
+  assignees = 4,
   label = 5,
 }
 
@@ -253,11 +253,11 @@ const ContentManagerToolbar = ({
 
   const selectedDocumentsCommonValues = useMemo(() => {
     const values: {
-      assigned: string[]
+      assignees: string[]
       status?: DocStatus
       tags: string[]
       dueDate?: string
-    } = { tags: [], assigned: [] }
+    } = { tags: [], assignees: [] }
 
     if (selectedDocs.size === 0) {
       return values
@@ -275,12 +275,12 @@ const ContentManagerToolbar = ({
       return values
     }
 
-    values.assigned =
-      docs[0].props.assigned == null
+    values.assignees =
+      docs[0].props.assignees == null
         ? []
-        : Array.isArray(docs[0].props.assigned.data)
-        ? docs[0].props.assigned.data.map((assignee) => assignee.userId)
-        : [docs[0].props.assigned.data.userId]
+        : Array.isArray(docs[0].props.assignees.data)
+        ? docs[0].props.assignees.data.map((assignee) => assignee.userId)
+        : [docs[0].props.assignees.data.userId]
 
     values.status =
       docs[0].props.status != null &&
@@ -298,20 +298,20 @@ const ContentManagerToolbar = ({
 
     docs.forEach((doc) => {
       /** iterative */
-      let newAssigneeArray = values.assigned.slice()
+      let newAssigneeArray = values.assignees.slice()
       let newTagsArray = values.tags.slice()
       /****/
 
       const docAssignees =
-        doc.props.assigned == null
+        doc.props.assignees == null
           ? []
-          : Array.isArray(doc.props.assigned.data)
-          ? doc.props.assigned.data.map((assignee) => assignee.userId)
-          : [doc.props.assigned.data.userId]
+          : Array.isArray(doc.props.assignees.data)
+          ? doc.props.assignees.data.map((assignee) => assignee.userId)
+          : [doc.props.assignees.data.userId]
 
       const docTags = (doc.tags || []).map((tag) => tag.text)
 
-      values.assigned.forEach((assignee) => {
+      values.assignees.forEach((assignee) => {
         if (!docAssignees.includes(assignee)) {
           newAssigneeArray = newAssigneeArray.filter((val) => val !== assignee)
         }
@@ -335,7 +335,7 @@ const ContentManagerToolbar = ({
       }
 
       /** changes **/
-      values.assigned = newAssigneeArray
+      values.assignees = newAssigneeArray
       values.tags = newTagsArray
     })
 
@@ -405,7 +405,7 @@ const ContentManagerToolbar = ({
       }
       const patternedIds = [...selectedDocs.values()].map(getDocIdFromString)
       setUpdating((prev) => [...prev, ...patternedIds])
-      setSending(BulkActions.assigned)
+      setSending(BulkActions.assignees)
       for (const docId of selectedDocs.values()) {
         const doc = documentsMap.get(docId)
         if (doc == null) {
@@ -492,9 +492,9 @@ const ContentManagerToolbar = ({
                   : null}
               </LoadingButton>
               <DocAssigneeSelect
-                isLoading={sending === BulkActions.assigned}
+                isLoading={sending === BulkActions.assignees}
                 disabled={selectedDocsAreUpdating}
-                defaultValue={selectedDocumentsCommonValues.assigned}
+                defaultValue={selectedDocumentsCommonValues.assignees}
                 readOnly={selectedDocsAreUpdating}
                 update={sendUpdateAssignees}
                 popupAlignment='top-left'
@@ -600,9 +600,9 @@ const Container = styled.div`
     margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 
-  .doc__due-date__select,
-  .doc__status__select,
-  .doc__assignee__select {
+  .item__due-date__select,
+  .item__status__select,
+  .item__assignee__select {
     margin-left: ${({ theme }) => theme.sizes.spaces.sm}px !important;
     width: fit-content !important;
     display: inline-flex;
@@ -617,11 +617,11 @@ const Container = styled.div`
     white-space: nowrap;
   }
 
-  .doc__status__select {
+  .item__status__select {
     height: 32px !important;
   }
 
-  .doc__property__button {
+  .item__property__button {
     height: 32px;
     border: 1px solid ${({ theme }) => theme.colors.border.second};
     width: fit-content;

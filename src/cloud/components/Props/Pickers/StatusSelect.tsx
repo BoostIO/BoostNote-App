@@ -3,8 +3,8 @@ import {
   useContextMenu,
   MenuTypes,
   MenuItem,
-} from '../../../design/lib/stores/contextMenu'
-import Icon from '../../../design/components/atoms/Icon'
+} from '../../../../design/lib/stores/contextMenu'
+import Icon from '../../../../design/components/atoms/Icon'
 import {
   mdiPlayCircleOutline,
   mdiPauseCircleOutline,
@@ -13,13 +13,13 @@ import {
   mdiCheckCircleOutline,
   mdiListStatus,
 } from '@mdi/js'
-import { DocStatus } from '../../interfaces/db/doc'
-import DocPropertyValueButton from './DocPropertyValueButton'
-import { useI18n } from '../../lib/hooks/useI18n'
-import { lngKeys } from '../../lib/i18n/types'
-import styled from '../../../design/lib/styled'
+import { DocStatus } from '../../../interfaces/db/doc'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
+import styled from '../../../../design/lib/styled'
+import PropertyValueButton from './PropertyValueButton'
 
-interface DocStatusSelectProps {
+interface StatusSelectProps {
   sending?: boolean
   status?: DocStatus | null
   disabled?: boolean
@@ -28,18 +28,18 @@ interface DocStatusSelectProps {
   onStatusChange: (status: DocStatus | null) => void
 }
 
-const DocStatusSelect = ({
+const StatusSelect = ({
   status,
   sending,
   disabled,
   isReadOnly,
   onStatusChange,
   onClick,
-}: DocStatusSelectProps) => {
+}: StatusSelectProps) => {
   const { popup } = useContextMenu()
   return (
-    <Container className='doc__status__select prop__margin'>
-      <DocPropertyValueButton
+    <Container className='item__status__select prop__margin'>
+      <PropertyValueButton
         sending={sending}
         isReadOnly={isReadOnly}
         empty={status == null}
@@ -126,12 +126,12 @@ const DocStatusSelect = ({
         }}
       >
         <StatusView status={status} />
-      </DocPropertyValueButton>
+      </PropertyValueButton>
     </Container>
   )
 }
 
-export default DocStatusSelect
+export default StatusSelect
 
 const Container = styled.div`
   height: 30px;
