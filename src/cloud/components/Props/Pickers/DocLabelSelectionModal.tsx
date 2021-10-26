@@ -1,13 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { SearchableListOption } from '../../../design/components/molecules/SearchableOptionList'
-import styled from '../../../design/lib/styled'
-import { overflowEllipsis } from '../../../design/lib/styled/styleFunctions'
+import { SearchableListOption } from '../../../../design/components/molecules/SearchableOptionList'
+import styled from '../../../../design/lib/styled'
+import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
 import {
   getMapValues,
   sortByAttributeAsc,
-} from '../../../design/lib/utils/array'
-import { useNav } from '../../lib/stores/nav'
-import SearchableOptionListPopup from '../SearchableOptionListPopup'
+} from '../../../../design/lib/utils/array'
+import { useNav } from '../../../lib/stores/nav'
+import SearchableOptionListPopup from '../../SearchableOptionListPopup'
 
 interface DocLabelSelectionModalProps {
   selectedTags: string[]

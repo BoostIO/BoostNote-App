@@ -1,20 +1,16 @@
 import React, { useCallback, useState, useMemo } from 'react'
-import { usePage } from '../../lib/stores/pageStore'
-import styled from '../../../design/lib/styled'
-import UserIcon from '../UserIcon'
-import { useI18n } from '../../lib/hooks/useI18n'
-import { lngKeys } from '../../lib/i18n/types'
-import DocPropertyValueButton from './DocPropertyValueButton'
+import { usePage } from '../../../lib/stores/pageStore'
+import styled from '../../../../design/lib/styled'
+import UserIcon from '../../UserIcon'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { lngKeys } from '../../../lib/i18n/types'
 import { mdiAccountCircleOutline } from '@mdi/js'
-import { useModal } from '../../../design/lib/stores/modal'
-import { SearchableListOption } from '../../../design/components/molecules/SearchableOptionList'
-import SearchableOptionListPopup from '../SearchableOptionListPopup'
-import Button from '../../../design/components/atoms/Button'
-import InviteMembersModal from '../Modal/InviteMembers/InviteMembersModal'
-import { trackEvent } from '../../api/track'
-import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
+import { useModal } from '../../../../design/lib/stores/modal'
+import { SearchableListOption } from '../../../../design/components/molecules/SearchableOptionList'
+import SearchableOptionListPopup from '../../SearchableOptionListPopup'
+import PropertyValueButton from './PropertyValueButton'
 
-interface DocAssigneeSelectProps {
+interface AssigneeSelectProps {
   disabled?: boolean
   defaultValue: string[]
   update: (value: string[]) => void
@@ -23,14 +19,14 @@ interface DocAssigneeSelectProps {
   popupAlignment?: 'bottom-left' | 'top-left'
 }
 
-const DocAssigneeSelect = ({
+const AssigneeSelect = ({
   disabled = false,
   defaultValue,
   isLoading,
   readOnly,
   update,
   popupAlignment = 'bottom-left',
-}: DocAssigneeSelectProps) => {
+}: AssigneeSelectProps) => {
   const { translate } = useI18n()
   const { openContextModal, closeAllModals } = useModal()
   const { permissions = [] } = usePage()
@@ -49,19 +45,19 @@ const DocAssigneeSelect = ({
     }
 
     return (
-      <div className='doc__assignees__wrapper'>
+      <div className='assignees__wrapper'>
         {permissions
           .filter((p) => defaultValue.includes(p.userId) && p.user != null)
           .map((p) => (
-            <UserIcon user={p.user} className='doc__assignee' key={p.id} />
+            <UserIcon user={p.user} className='assignee' key={p.id} />
           ))}
       </div>
     )
   }, [defaultValue, permissions])
 
   return (
-    <Container className='doc__assignee__select prop__margin'>
-      <DocPropertyValueButton
+    <Container className='assignee__select prop__margin'>
+      <PropertyValueButton
         disabled={disabled}
         sending={isLoading}
         empty={defaultValue.length === 0}
@@ -72,7 +68,7 @@ const DocAssigneeSelect = ({
         onClick={(e) =>
           openContextModal(
             e,
-            <DocAssigneeModal
+            <AssigneeModal
               selectedUsers={defaultValue}
               submitUpdate={updateAssignees}
               closeModal={closeAllModals}
@@ -87,19 +83,19 @@ const DocAssigneeSelect = ({
         {defaultValue.length !== 0
           ? selectedUsers
           : translate(lngKeys.Unassigned)}
-      </DocPropertyValueButton>
+      </PropertyValueButton>
     </Container>
   )
 }
 
 const Container = styled.div`
-  .doc__assignees__wrapper {
+  .assignees__wrapper {
     display: flex;
     width: auto;
     align-items: center;
   }
 
-  .doc__assignee {
+  .assignee {
     display: inline-flex;
     width: 22px;
     height: 22px;
@@ -108,7 +104,7 @@ const Container = styled.div`
   }
 `
 
-const DocAssigneeModal = ({
+const AssigneeModal = ({
   selectedUsers,
   submitUpdate,
   closeModal,
@@ -120,8 +116,6 @@ const DocAssigneeModal = ({
   const { permissions = [] } = usePage()
   const [value, setValue] = useState<string[]>(selectedUsers)
   const [query, setQuery] = useState<string>('')
-  const { translate } = useI18n()
-  const { openModal } = useModal()
 
   const toggleUser = useCallback((userId: string) => {
     setValue((prev) => {
@@ -157,22 +151,8 @@ const DocAssigneeModal = ({
     })
   }, [matchedUsers, toggleUser, value])
 
-  const onInviteMoreMembers = useCallback(() => {
-    openModal(<InviteMembersModal />, { showCloseIcon: true })
-    return trackEvent(MixpanelActionTrackTypes.InviteFromDocPage)
-  }, [openModal])
-
   return (
     <ModalContainer>
-      <InviteButtonSection>
-        <Button
-          className={'invite__members__button-width'}
-          variant={'secondary'}
-          onClick={onInviteMoreMembers}
-        >
-          {translate(lngKeys.InviteMembersDocAssignButton)}
-        </Button>
-      </InviteButtonSection>
       <SearchableOptionListPopup
         query={query}
         setQuery={setQuery}
@@ -184,20 +164,6 @@ const DocAssigneeModal = ({
   )
 }
 
-const InviteButtonSection = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-self: stretch;
-  flex-direction: row;
-
-  margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
-
-  .invite__members__button-width {
-    width: 100%;
-  }
-`
-
 const ModalContainer = styled.div`
   .assignee__item__icon {
     width: 24px;
@@ -206,4 +172,4 @@ const ModalContainer = styled.div`
   }
 `
 
-export default DocAssigneeSelect
+export default AssigneeSelect
