@@ -26,6 +26,7 @@ import { useModal } from '../../../design/lib/stores/modal'
 import PropSelectorModal from '../Props/PropSelectorModal'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
+import DocTagsList from './DocTagsList'
 
 interface DocPageHeaderProps {
   docIsEditable?: boolean
@@ -38,6 +39,7 @@ const DocPageHeader = ({
   doc,
   docIsEditable,
   className,
+  team,
 }: DocPageHeaderProps) => {
   const { openRenameDocForm } = useCloudResourceModals()
   const { currentUserIsCoreMember } = usePage()
@@ -106,6 +108,18 @@ const DocPageHeader = ({
                   alignItems='flex-start'
                   className='doc__page__header__properties'
                 >
+                  <div className='doc__page__header__property'>
+                    <span className='doc__page__header__property__label'>
+                      Labels
+                    </span>
+                    <div className='doc__page__header__property__picker'>
+                      <DocTagsList
+                        team={team}
+                        doc={doc}
+                        readOnly={!currentUserIsCoreMember}
+                      />
+                    </div>
+                  </div>
                   {docProperties.map((prop, i) => {
                     return (
                       <div
@@ -286,6 +300,10 @@ const Container = styled.div`
     align-items: center;
   }
 
+  span.doc__page__header__property__label {
+    padding: 0 8px;
+  }
+
   .doc__page__header__property__label {
     width: 100px;
     justify-content: flex-start;
@@ -301,6 +319,10 @@ const Container = styled.div`
     .form__select__control {
       width: 90px !important;
     }
+  }
+
+  .icon.doc__tags__icon {
+    display: none;
   }
 
   .doc__page__header__property + .doc__page__header__property {
