@@ -158,7 +158,6 @@ const DocPageHeader = ({
                   })}
                   <Button
                     variant='transparent'
-                    size='sm'
                     iconPath={mdiPlus}
                     className='doc__page__header__property'
                     onClick={(event) => {
@@ -215,6 +214,7 @@ const Container = styled.div`
 
   .doc__page__header__comments {
     flex: 0 0 auto;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 
   .doc__page__header__wrapper {
