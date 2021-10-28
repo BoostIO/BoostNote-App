@@ -12,15 +12,15 @@ import { isValid } from 'date-fns'
 import { DateCondition } from '../../../../interfaces/db/dashboard'
 import { PropType } from '../../../../interfaces/db/props'
 
-interface SecondaryConditionValueControlProps {
+interface ConditionValueControlProps {
   condition: EditableCondition
   update: (newCondition: EditableCondition) => void
 }
 
-const SecondaryConditionccValueControl = ({
+const ConditionValueControl = ({
   condition,
   update,
-}: SecondaryConditionValueControlProps) => {
+}: ConditionValueControlProps) => {
   const [inputType, setInputType] = useState<PropType>('string')
   switch (condition.type) {
     case 'due_date':
@@ -81,7 +81,7 @@ const SecondaryConditionccValueControl = ({
               }}
               onChange={(val) => {
                 setInputType(val.value)
-                updateValue({ value: getDefaultValue(val.value) })
+                updateValue({ value: getDefaultPropValue(val.value) })
               }}
             />
           </FormRowItem>
@@ -125,9 +125,9 @@ const SecondaryConditionccValueControl = ({
   }
 }
 
-export default SecondaryConditionccValueControl
+export default ConditionValueControl
 
-function getDefaultValue(type: PropType) {
+function getDefaultPropValue(type: PropType) {
   switch (type) {
     case 'date':
       return new Date()
