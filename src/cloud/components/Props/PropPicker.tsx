@@ -10,6 +10,8 @@ import DueDateSelect from './Pickers/DueDateSelect'
 import { format as formatDate } from 'date-fns'
 import { toLower } from 'lodash'
 import StatusSelect from './Pickers/StatusSelect'
+import TimePeriodPicker from './Pickers/TimePeriodPicker'
+import { getLabelOfProp } from '../../lib/props'
 
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
@@ -113,6 +115,29 @@ const PropPicker = ({
       } else {
         return null
       }
+    case 'json':
+      if (
+        propData.data != null &&
+        propData.data.dataType === 'timeperiod' &&
+        (propData.data.data == null || typeof propData.data.data === 'number')
+      ) {
+        return (
+          <TimePeriodPicker
+            label={getLabelOfProp(propName)}
+            isReadOnly={readOnly}
+            sending={sendingMap.get(parent.target.id) === propName}
+            disabled={sendingMap.get(parent.target.id) != null || readOnly}
+            value={propData.data.data}
+            onPeriodChange={(val) => {
+              updateProp({
+                type: 'json',
+                data: { dataType: 'timeperiod', data: val },
+              })
+            }}
+          />
+        )
+      }
+      return null
     default:
       return null
   }
