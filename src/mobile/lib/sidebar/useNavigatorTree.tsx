@@ -454,7 +454,7 @@ export function useNavigatorTree() {
           doc.archivedAt != null ||
           (doc.props.status != null &&
             (doc.props.status.data === 'archived' ||
-              doc.props.statuss.data === 'completed')),
+              doc.props.status.data === 'completed')),
         children: [],
         href,
         active: href === currentPathWithDomain,
