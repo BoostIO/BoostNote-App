@@ -14,12 +14,12 @@ import { useI18n } from '../../../../../cloud/lib/hooks/useI18n'
 import { lngKeys } from '../../../../../cloud/lib/i18n/types'
 import MobileFormControl from '../../../atoms/MobileFormControl'
 import BorderSeparator from '../../../../../design/components/atoms/BorderSeparator'
-import SecondaryConditionItem from '../../../../../cloud/components/Modal/contents/Dashboard/SecondaryConditionItem'
 import {
   EditableCondition,
   EditableQuery,
 } from '../../../../../cloud/components/Modal/contents/Dashboard/interfaces'
 import { SerializedQuery } from '../../../../../cloud/interfaces/db/dashboard'
+import ConditionItem from '../../../../../cloud/components/Modal/contents/Dashboard/ConditionItem'
 
 interface DashboardFormProps {
   action: 'Create' | 'Update'
@@ -44,8 +44,9 @@ const DashboardForm = ({
   const [makingPrivate, setMakingPrivate] = useState(defaultPrivate)
   const { translate } = useI18n()
 
-  const [secondaryConditions, setSecondaryConditions] =
-    useState<EditableQuery>(defaultConditions)
+  const [secondaryConditions, setSecondaryConditions] = useState<EditableQuery>(
+    defaultConditions
+  )
 
   const updateName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,23 +141,15 @@ const DashboardForm = ({
               })
             }
 
-            const insertConditionNext = () => {
-              insertSecondaryConditionByIndex(
-                { type: 'null', rule: 'and' },
-                index
-              )
-            }
-
             const removeCondition = () => {
               removeSecondaryConditionByIndex(index)
             }
 
             return (
-              <SecondaryConditionItem
+              <ConditionItem
                 key={index}
                 condition={condition}
                 update={updateSecondaryCondition}
-                addNext={insertConditionNext}
                 remove={removeCondition}
               />
             )
