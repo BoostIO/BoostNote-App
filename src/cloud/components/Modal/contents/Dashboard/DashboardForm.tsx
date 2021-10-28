@@ -1,5 +1,4 @@
 import { mdiPlus } from '@mdi/js'
-import { TFunction } from 'i18next'
 import React, { useCallback, useState } from 'react'
 import BorderSeparator from '../../../../../design/components/atoms/BorderSeparator'
 import Button, {
@@ -8,7 +7,6 @@ import Button, {
 import ButtonGroup from '../../../../../design/components/atoms/ButtonGroup'
 import Switch from '../../../../../design/components/atoms/Switch'
 import Form from '../../../../../design/components/molecules/Form'
-import { FormSelectOption } from '../../../../../design/components/molecules/Form/atoms/FormSelect'
 import FormRow from '../../../../../design/components/molecules/Form/templates/FormRow'
 import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
 import styled from '../../../../../design/lib/styled'
@@ -16,9 +14,10 @@ import {
   UpdateDashboardRequestBody,
   CreateDashboardRequestBody,
 } from '../../../../api/teams/dashboard'
+import { SerializedQuery } from '../../../../interfaces/db/dashboard'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
-import { EditibleSecondaryCondition } from './interfaces'
+import { EditableCondition, EditableQuery } from './interfaces'
 import SecondaryConditionItem from './SecondaryConditionItem'
 
 interface DashboardFormProps {
@@ -26,7 +25,7 @@ interface DashboardFormProps {
   defaultName?: string
   defaultPrivate?: boolean
   defaultConditionType: 'and' | 'or'
-  defaultSecondaryConditions: EditibleSecondaryCondition[]
+  defaultSecondaryConditions: EditableQuery
   onSubmit: (
     body: CreateDashboardRequestBody | UpdateDashboardRequestBody
   ) => void
@@ -38,7 +37,6 @@ const DashboardForm = ({
   action,
   defaultName = '',
   defaultPrivate = true,
-  defaultConditionType,
   defaultSecondaryConditions,
   buttonsAreDisabled,
   onCancel,
@@ -46,14 +44,11 @@ const DashboardForm = ({
 }: DashboardFormProps) => {
   const [name, setName] = useState(defaultName)
   const [makingPrivate, setMakingPrivate] = useState(defaultPrivate)
-  const [primaryConditionType, setPrimaryConditionType] = useState<
-    'and' | 'or'
-  >(defaultConditionType)
   const { translate } = useI18n()
 
-  const [secondaryConditions, setSecondaryConditions] = useState<
-    EditibleSecondaryCondition[]
-  >(defaultSecondaryConditions)
+  const [secondaryConditions, setSecondaryConditions] = useState<EditableQuery>(
+    defaultSecondaryConditions
+  )
 
   const updateName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,12 +57,8 @@ const DashboardForm = ({
     []
   )
 
-  const updatePrimaryConditionType = useCallback((option: FormSelectOption) => {
-    setPrimaryConditionType(option.value as any)
-  }, [])
-
   const insertSecondaryConditionByIndex = useCallback(
-    (condition: EditibleSecondaryCondition, index: number) => {
+    (condition: EditableCondition, index: number) => {
       setSecondaryConditions((previousConditions) => {
         const newConditions = [...previousConditions]
         newConditions.splice(index + 1, 0, condition)
@@ -90,14 +81,11 @@ const DashboardForm = ({
       event.preventDefault()
       onSubmit({
         name,
-        condition: {
-          type: primaryConditionType,
-          conditions: JSON.parse(JSON.stringify(secondaryConditions)),
-        },
+        condition: removeNullConditions(secondaryConditions),
         private: makingPrivate,
       })
     },
-    [onSubmit, makingPrivate, primaryConditionType, name, secondaryConditions]
+    [onSubmit, makingPrivate, name, secondaryConditions]
   )
 
   return (
@@ -117,48 +105,9 @@ const DashboardForm = ({
             ],
           }}
         />
-        <FormRow
-          fullWidth={true}
-          row={{
-            items: [{ type: 'node', element: <BorderSeparator /> }],
-          }}
-        />
-        <FormRow fullWidth={true}>
-          <FormRowItem
-            className='form__row__item--shrink'
-            item={{
-              type: 'select',
-              props: {
-                options: [
-                  { label: translate(lngKeys.GeneralAll), value: 'and' },
-                  { label: translate(lngKeys.GeneralAny), value: 'or' },
-                ],
-                value: getPrimaryConditionOptionByType(
-                  translate,
-                  primaryConditionType
-                ),
-                onChange: updatePrimaryConditionType,
-              },
-            }}
-          />
-          <FormRowItem
-            className='form__row__item--shrink'
-            item={{
-              type: 'button',
-              props: {
-                iconPath: mdiPlus,
-                variant: 'secondary',
-                label: '',
-                onClick: () =>
-                  insertSecondaryConditionByIndex({ type: 'null' }, 0),
-              },
-            }}
-          />
-        </FormRow>
-
         {secondaryConditions.map((condition, index) => {
           const updateSecondaryCondition = (
-            updatedSecondaryCondition: EditibleSecondaryCondition
+            updatedSecondaryCondition: EditableCondition
           ) => {
             setSecondaryConditions((previousConditions) => {
               const newSecondaryConditions = [...previousConditions]
@@ -168,7 +117,10 @@ const DashboardForm = ({
           }
 
           const insertConditionNext = () => {
-            insertSecondaryConditionByIndex({ type: 'null' }, index)
+            insertSecondaryConditionByIndex(
+              { type: 'null', rule: 'and' },
+              index
+            )
           }
 
           const removeCondition = () => {
@@ -185,6 +137,24 @@ const DashboardForm = ({
             />
           )
         })}
+
+        <FormRow>
+          <FormRowItem
+            item={{
+              type: 'button',
+              props: {
+                iconPath: mdiPlus,
+                variant: 'transparent',
+                label: 'Add a filter',
+                onClick: () =>
+                  insertSecondaryConditionByIndex(
+                    { type: 'null', rule: 'and' },
+                    0
+                  ),
+              },
+            }}
+          />
+        </FormRow>
 
         <FormRow
           fullWidth={true}
@@ -256,15 +226,7 @@ const Container = styled.div`
     color: ${({ theme }) => theme.colors.text.primary};
   }
 
-  .form__row__item.form__row__item--shrink {
-    flex: 0 1 0% !important;
-  }
-
   .modal__heading {
-  }
-
-  .form__select__control {
-    min-width: 150px !important;
   }
 
   .privacy-row {
@@ -279,13 +241,10 @@ const Container = styled.div`
   }
 `
 
-function getPrimaryConditionOptionByType(t: TFunction, value: 'and' | 'or') {
-  switch (value) {
-    case 'and':
-      return { label: t(lngKeys.GeneralAll), value: 'and' }
-    case 'or':
-      return { label: t(lngKeys.GeneralAny), value: 'or' }
-  }
-}
-
 export default DashboardForm
+
+function removeNullConditions(editable: EditableQuery): SerializedQuery {
+  return JSON.parse(
+    JSON.stringify(editable.filter((condition) => condition.type !== 'null'))
+  )
+}
