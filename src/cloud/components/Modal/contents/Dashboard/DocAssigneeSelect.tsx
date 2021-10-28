@@ -8,8 +8,8 @@ import styled from '../../../../../design/lib/styled'
 import UserIcon from '../../../UserIcon'
 
 interface DocAssigneeSelectProps {
-  value: string[]
-  update: (value: string[]) => void
+  value: string
+  update: (value: string) => void
 }
 
 const DocAssigneeSelect = ({ value, update }: DocAssigneeSelectProps) => {
@@ -38,15 +38,15 @@ const DocAssigneeSelect = ({ value, update }: DocAssigneeSelectProps) => {
   }, [permissions, value])
 
   const updateAssignees = useCallback(
-    (selectedOptions: FormSelectOption[]) => {
-      update(selectedOptions.map((option) => option.value))
+    (option: FormSelectOption) => {
+      update(option.value)
     },
     [update]
   )
 
   return (
     <FormSelect
-      isMulti
+      isMulti={false}
       options={options}
       value={selectedOptions}
       onChange={updateAssignees}
@@ -84,17 +84,13 @@ function getOptionByUser(user: SerializedUser): FormSelectOption {
 }
 
 function getSelectedOptionsByUserId(
-  value: string[],
+  value: string,
   userMap: Map<string, SerializedUser>
-): FormSelectOption[] {
-  return value.reduce<FormSelectOption[]>((options, userId) => {
-    const user = userMap.get(userId)
-    if (user == null) {
-      console.warn(`User Id ${userId} does not exist in page props`)
-      return options
-    }
-    const option = getOptionByUser(user)
-    options.push(option)
-    return options
-  }, [])
+): FormSelectOption | undefined {
+  const user = userMap.get(value)
+  if (user == null) {
+    console.warn(`User Id ${value} does not exist in page props`)
+    return undefined
+  }
+  return getOptionByUser(user)
 }
