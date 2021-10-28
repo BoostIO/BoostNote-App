@@ -103,13 +103,11 @@ const DashboardForm = ({
           }}
         />
         {conditions.map((condition, index) => {
-          const updateCondition = (
-            updatedSecondaryCondition: EditableCondition
-          ) => {
+          const updateCondition = (updatedCondition: EditableCondition) => {
             setConditions((previousConditions) => {
-              const newSecondaryConditions = [...previousConditions]
-              newSecondaryConditions.splice(index, 1, updatedSecondaryCondition)
-              return newSecondaryConditions
+              const newConditions = [...previousConditions]
+              newConditions.splice(index, 1, updatedCondition)
+              return newConditions
             })
           }
 
