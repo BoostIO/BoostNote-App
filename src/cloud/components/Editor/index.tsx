@@ -104,6 +104,7 @@ import {
 import { nginxSizeLimitInMb } from '../../lib/upload'
 import CustomizedMarkdownPreviewer from '../MarkdownView/CustomizedMarkdownPreviewer'
 import BottomBarButton from '../BottomBarButton'
+import DocSyncStatus from './DocSyncStatus'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -1139,6 +1140,10 @@ const Editor = ({
                 <EditorSelectionStatus
                   cursor={selection.currentCursor}
                   selections={selection.currentSelections}
+                />
+                <DocSyncStatus
+                  connState={connState}
+                  syncDate={new Date(doc.updatedAt)}
                 />
                 <BottomBarButton
                   className='scroll-sync'

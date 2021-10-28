@@ -12,6 +12,10 @@ export function getMonthlyDateString(date: Date) {
   return format(date, 'yyyy-MM')
 }
 
+export function getDocStatusDateString(date: Date) {
+  return format(date, 'MMM dd, yyyy hh:mm aa')
+}
+
 export function getISODateString(date: Date | string) {
   const [dateString] = new Date(date).toISOString().split('T')
 
