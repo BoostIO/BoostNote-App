@@ -1,17 +1,5 @@
 import React from 'react'
-import { mdiPlus, mdiMinus } from '@mdi/js'
-import {
-  StatusCondition,
-  LabelsCondition,
-  AssigneesCondition,
-} from '../../../../interfaces/db/dashboard'
-import {
-  EditibleSecondaryCondition,
-  EditibleDueDateCondition,
-  EditibleCreationDateCondition,
-  EditibleUpdateDateCondition,
-  EditibleSecondaryConditionType,
-} from './interfaces'
+import { mdiTrashCanOutline } from '@mdi/js'
 import SecondaryConditionValueControl from './SecondaryConditionValueControl'
 import Button from '../../../../../design/components/atoms/Button'
 import FormRow from '../../../../../design/components/molecules/Form/templates/FormRow'
@@ -19,10 +7,21 @@ import FormRowItem from '../../../../../design/components/molecules/Form/templat
 import { TFunction } from 'i18next'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
+import { EditableCondition } from './interfaces'
+
+const SUPPORTED_CONDTION_TYPES = [
+  'null',
+  'label',
+  'due_date',
+  'creation_date',
+  'update_date',
+  'prop',
+  //'query',
+] as const
 
 interface SecondaryConditionItemProps {
-  condition: EditibleSecondaryCondition
-  update: (newSecondaryCondition: EditibleSecondaryCondition) => void
+  condition: EditableCondition
+  update: (newSecondaryCondition: EditableCondition) => void
   addNext: () => void
   remove: () => void
 }
@@ -30,39 +29,42 @@ interface SecondaryConditionItemProps {
 const SecondaryConditionItem = ({
   condition,
   update,
-  addNext,
   remove,
 }: SecondaryConditionItemProps) => {
   const { translate } = useI18n()
-  const validConditions = [
-    'status',
-    'labels',
-    'due_date',
-    'assignees',
-    'creation_date',
-    'update_date',
-  ]
-
   return (
     <FormRow fullWidth={true}>
       <FormRowItem
-        className='form__row__item--shrink'
+        item={{
+          type: 'select',
+          props: {
+            minWidth: 140,
+            value: getPrimaryConditionOptionByType(translate, condition.rule),
+            options: [
+              getPrimaryConditionOptionByType(translate, 'and'),
+              getPrimaryConditionOptionByType(translate, 'or'),
+            ],
+            onChange: (selectedOption: { value: 'and' | 'or' }) => {
+              update({ ...condition, rule: selectedOption.value })
+            },
+          },
+        }}
+      />
+      <FormRowItem
         item={{
           type: 'select',
           props: {
             value: getSecondaryConditionOptionByType(translate, condition.type),
-            options: (validConditions as EditibleSecondaryConditionType[]).map(
-              (condition) =>
-                getSecondaryConditionOptionByType(translate, condition)
+            options: SUPPORTED_CONDTION_TYPES.map((condition) =>
+              getSecondaryConditionOptionByType(translate, condition)
             ),
             minWidth: 140,
             onChange: (selectedOption: {
               label: string
-              value: EditibleSecondaryConditionType
+              value: typeof SUPPORTED_CONDTION_TYPES[number]
             }) => {
-              const newSecondaryCondition = getDefaultEditibleSecondaryConditionByType(
-                selectedOption.value
-              )
+              const newSecondaryCondition =
+                getDefaultEditibleSecondaryConditionByType(selectedOption.value)
               update(newSecondaryCondition)
             },
           },
@@ -70,9 +72,12 @@ const SecondaryConditionItem = ({
       />
       <SecondaryConditionValueControl condition={condition} update={update} />
       <FormRowItem />
-      <FormRowItem className='form__row__item--shrink'>
-        <Button variant='secondary' iconPath={mdiPlus} onClick={addNext} />
-        <Button variant='secondary' iconPath={mdiMinus} onClick={remove} />
+      <FormRowItem>
+        <Button
+          variant='transparent'
+          iconPath={mdiTrashCanOutline}
+          onClick={remove}
+        />
       </FormRowItem>
     </FormRow>
   )
@@ -82,21 +87,19 @@ export default SecondaryConditionItem
 
 function getSecondaryConditionOptionByType(
   t: TFunction,
-  value: EditibleSecondaryConditionType
+  value: EditableCondition['type']
 ) {
   switch (value) {
-    case 'status':
-      return { label: t(lngKeys.GeneralStatus), value: 'status' }
-    case 'labels':
-      return { label: t(lngKeys.GeneralLabels), value: 'labels' }
+    case 'label':
+      return { label: t(lngKeys.GeneralLabels), value: 'label' }
     case 'due_date':
       return { label: t(lngKeys.DueDate), value: 'due_date' }
-    case 'assignees':
-      return { label: t(lngKeys.Assignees), value: 'assignees' }
     case 'creation_date':
       return { label: t(lngKeys.CreationDate), value: 'creation_date' }
     case 'update_date':
       return { label: t(lngKeys.UpdateDate), value: 'update_date' }
+    case 'prop':
+      return { label: 'Prop', value: 'prop' }
     case 'null':
     default:
       return { label: t(lngKeys.GeneralSelectVerb), value: 'null' }
@@ -105,48 +108,45 @@ function getSecondaryConditionOptionByType(
 
 function getDefaultEditibleSecondaryConditionByType(
   type: string
-): EditibleSecondaryCondition {
+): EditableCondition {
   switch (type) {
-    case 'status':
+    case 'prop':
       return {
-        type: 'status',
-        value: 'in_progress',
-      } as StatusCondition
-    case 'labels':
+        rule: 'and',
+        type: 'prop',
+        value: { name: '', value: '' },
+      }
+    case 'label':
       return {
-        type: 'labels',
-        value: [],
-      } as LabelsCondition
-    case 'assignees':
-      return {
-        type: 'assignees',
-        value: [],
-      } as AssigneesCondition
+        rule: 'and',
+        type: 'label',
+        value: '',
+      }
     case 'due_date':
-      return {
-        type: 'due_date',
-        value: {
-          type: 'today',
-        },
-      } as EditibleDueDateCondition
     case 'creation_date':
-      return {
-        type: 'creation_date',
-        value: {
-          type: 'today',
-        },
-      } as EditibleCreationDateCondition
     case 'update_date':
       return {
-        type: 'update_date',
+        rule: 'and',
+        type,
         value: {
-          type: 'today',
+          type: 'relative',
+          period: 0,
         },
-      } as EditibleUpdateDateCondition
+      }
     case 'null':
     default:
       return {
         type: 'null',
+        rule: 'and',
       }
+  }
+}
+
+function getPrimaryConditionOptionByType(_t: TFunction, value: 'and' | 'or') {
+  switch (value) {
+    case 'and':
+      return { label: 'AND', value: 'and' }
+    case 'or':
+      return { label: 'OR', value: 'or' }
   }
 }
