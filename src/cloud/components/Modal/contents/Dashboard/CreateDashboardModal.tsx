@@ -25,8 +25,6 @@ const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
         return
       }
       setSending(true)
-      console.log(body)
-
       await createDashboardApi(team.id, body, {
         afterSuccess: (dashboard) => {
           closeModal()
