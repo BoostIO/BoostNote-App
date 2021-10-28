@@ -18,14 +18,13 @@ import { SerializedQuery } from '../../../../interfaces/db/dashboard'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
 import { EditableCondition, EditableQuery } from './interfaces'
-import SecondaryConditionItem from './SecondaryConditionItem'
+import ConditionItem from './SecondaryConditionItem'
 
 interface DashboardFormProps {
   action: 'Create' | 'Update'
   defaultName?: string
   defaultPrivate?: boolean
-  defaultConditionType: 'and' | 'or'
-  defaultSecondaryConditions: EditableQuery
+  defaultConditions: EditableQuery
   onSubmit: (
     body: CreateDashboardRequestBody | UpdateDashboardRequestBody
   ) => void
@@ -37,7 +36,7 @@ const DashboardForm = ({
   action,
   defaultName = '',
   defaultPrivate = true,
-  defaultSecondaryConditions,
+  defaultConditions,
   buttonsAreDisabled,
   onCancel,
   onSubmit,
@@ -46,9 +45,7 @@ const DashboardForm = ({
   const [makingPrivate, setMakingPrivate] = useState(defaultPrivate)
   const { translate } = useI18n()
 
-  const [secondaryConditions, setSecondaryConditions] = useState<EditableQuery>(
-    defaultSecondaryConditions
-  )
+  const [conditions, setConditions] = useState<EditableQuery>(defaultConditions)
 
   const updateName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,9 +54,9 @@ const DashboardForm = ({
     []
   )
 
-  const insertSecondaryConditionByIndex = useCallback(
+  const insertConditionByIndex = useCallback(
     (condition: EditableCondition, index: number) => {
-      setSecondaryConditions((previousConditions) => {
+      setConditions((previousConditions) => {
         const newConditions = [...previousConditions]
         newConditions.splice(index + 1, 0, condition)
         return newConditions
@@ -68,8 +65,8 @@ const DashboardForm = ({
     []
   )
 
-  const removeSecondaryConditionByIndex = useCallback((index: number) => {
-    setSecondaryConditions((previousConditions) => {
+  const removeConditionByIndex = useCallback((index: number) => {
+    setConditions((previousConditions) => {
       const newConditions = [...previousConditions]
       newConditions.splice(index, 1)
       return newConditions
@@ -81,11 +78,11 @@ const DashboardForm = ({
       event.preventDefault()
       onSubmit({
         name,
-        condition: removeNullConditions(secondaryConditions),
+        condition: removeNullConditions(conditions),
         private: makingPrivate,
       })
     },
-    [onSubmit, makingPrivate, name, secondaryConditions]
+    [onSubmit, makingPrivate, name, conditions]
   )
 
   return (
@@ -105,11 +102,11 @@ const DashboardForm = ({
             ],
           }}
         />
-        {secondaryConditions.map((condition, index) => {
-          const updateSecondaryCondition = (
+        {conditions.map((condition, index) => {
+          const updateCondition = (
             updatedSecondaryCondition: EditableCondition
           ) => {
-            setSecondaryConditions((previousConditions) => {
+            setConditions((previousConditions) => {
               const newSecondaryConditions = [...previousConditions]
               newSecondaryConditions.splice(index, 1, updatedSecondaryCondition)
               return newSecondaryConditions
@@ -117,21 +114,18 @@ const DashboardForm = ({
           }
 
           const insertConditionNext = () => {
-            insertSecondaryConditionByIndex(
-              { type: 'null', rule: 'and' },
-              index
-            )
+            insertConditionByIndex({ type: 'null', rule: 'and' }, index)
           }
 
           const removeCondition = () => {
-            removeSecondaryConditionByIndex(index)
+            removeConditionByIndex(index)
           }
 
           return (
-            <SecondaryConditionItem
+            <ConditionItem
               key={index}
               condition={condition}
-              update={updateSecondaryCondition}
+              update={updateCondition}
               addNext={insertConditionNext}
               remove={removeCondition}
             />
@@ -147,10 +141,7 @@ const DashboardForm = ({
                 variant: 'transparent',
                 label: 'Add a filter',
                 onClick: () =>
-                  insertSecondaryConditionByIndex(
-                    { type: 'null', rule: 'and' },
-                    0
-                  ),
+                  insertConditionByIndex({ type: 'null', rule: 'and' }, 0),
               },
             }}
           />
