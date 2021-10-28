@@ -178,6 +178,7 @@ const Container = styled.div`
     border: none;
     &.form__select__control--is-focused {
       box-shadow: ${({ theme }) => theme.colors.shadow};
+      border-color: #33B5E5;
     }
   }
   .form__select {
