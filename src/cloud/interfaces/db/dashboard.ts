@@ -1,4 +1,3 @@
-import { DocStatus } from './doc'
 import { SerializedTeam } from './team'
 import { SerializedUser } from './user'
 import { SerializedView } from './view'
@@ -12,7 +11,7 @@ export interface SerializableDashboardProps {
 }
 
 export interface SerializedUnserializableDashboardProps {
-  condition: SerializedPrimaryCondition
+  condition: SerializedQuery
   team?: SerializedTeam
   user?: SerializedUser
   createdAt: string
@@ -23,47 +22,31 @@ export interface SerializedUnserializableDashboardProps {
 export type SerializedDashboard = SerializableDashboardProps &
   SerializedUnserializableDashboardProps
 
-export type AndCondition = {
-  type: 'and'
-  conditions: SecondaryCondition[]
+export type SerializedQuery = SerializeDateProps<Query>
+
+export type Query = Condition[]
+
+export interface ConditionType<T extends string, U extends any> {
+  type: T
+  value: U
+  rule: 'and' | 'or'
+  inverse?: boolean
 }
 
-export type OrCondition = {
-  type: 'or'
-  conditions: SecondaryCondition[]
-}
+export type Condition =
+  | ConditionType<'query', Query>
+  | ConditionType<'label', string>
+  | ConditionType<'due_date', DateCondition>
+  | ConditionType<'creation_date', DateCondition>
+  | ConditionType<'update_date', DateCondition>
+  | ConditionType<'prop', { name: string; value: any }>
 
-export type StatusCondition = {
-  type: 'status'
-  value: DocStatus
-}
-
-export type LabelsCondition = {
-  type: 'labels'
-  value: string[]
-}
-
-export type DueDateCondition = {
-  type: 'due_date'
-  value: DateConditionValue
-}
-
-export type CreationDateCondition = {
-  type: 'creation_date'
-  value: DateConditionValue
-}
-
-export type UpdateDateCondition = {
-  type: 'update_date'
-  value: DateConditionValue
-}
-
-export type AssigneesCondition = {
-  type: 'assignees'
-  value: string[]
-}
-
-export type PrimaryCondition = AndCondition | OrCondition
+export type DateCondition =
+  | { type: 'relative'; period: number }
+  | { type: 'specific'; date: Date }
+  | { type: 'between'; from: Date; to: Date }
+  | { type: 'after'; date: Date }
+  | { type: 'before'; date: Date }
 
 export type SerializeDate<P extends object> = P extends Date
   ? string
@@ -74,63 +57,3 @@ export type SerializeDate<P extends object> = P extends Date
 export type SerializeDateProps<C extends { [key: string]: any }> = {
   [K in keyof C]: SerializeDate<C[K]>
 }
-export type SerializedPrimaryCondition = SerializeDateProps<PrimaryCondition>
-
-export type SecondaryCondition =
-  | StatusCondition
-  | LabelsCondition
-  | DueDateCondition
-  | CreationDateCondition
-  | UpdateDateCondition
-  | AssigneesCondition
-
-export type DateConditionValueType =
-  | 'today'
-  | '7_days'
-  | '30_days'
-  | 'specific'
-  | 'between'
-  | 'after'
-  | 'before'
-
-export type TodayDateConditionValue = {
-  type: 'today'
-}
-
-export type InWeekDateConditionValue = {
-  type: '7_days'
-}
-
-export type InMonthDateConditionValue = {
-  type: '30_days'
-}
-
-export type SpecificDateConditionValue = {
-  type: 'specific'
-  date: Date
-}
-
-export type BetweenDateConditionValue = {
-  type: 'between'
-  from: Date
-  to: Date
-}
-
-export type AfterDateConditionValue = {
-  type: 'after'
-  date: Date
-}
-
-export type BeforeDateConditionValue = {
-  type: 'before'
-  date: Date
-}
-
-export type DateConditionValue =
-  | TodayDateConditionValue
-  | InWeekDateConditionValue
-  | InMonthDateConditionValue
-  | SpecificDateConditionValue
-  | BetweenDateConditionValue
-  | AfterDateConditionValue
-  | BeforeDateConditionValue
