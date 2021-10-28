@@ -10,6 +10,7 @@ import { SerializedDashboard } from '../../../../interfaces/db/dashboard'
 import DashboardForm from './DashboardForm'
 import { getTeamLinkHref } from '../../../Link/TeamLink'
 import { useCloudApi } from '../../../../lib/hooks/useCloudApi'
+import { EditableQuery } from './interfaces'
 
 interface UpdateDashboardModalProps {
   dashboard: SerializedDashboard
@@ -65,47 +66,8 @@ const UpdateDashboardModal = ({
       buttonsAreDisabled={sending}
       defaultName={dashboard.name}
       defaultPrivate={dashboard.private}
-      defaultConditionType={dashboard.condition.type}
-      defaultSecondaryConditions={dashboard.condition.conditions.map(
-        (secondaryCondition) => {
-          switch (secondaryCondition.type) {
-            case 'due_date':
-            case 'creation_date':
-            case 'update_date':
-              switch (secondaryCondition.value.type) {
-                case '30_days':
-                case '7_days':
-                case 'today':
-                  return {
-                    type: secondaryCondition.type,
-                    value: {
-                      type: secondaryCondition.value.type,
-                    },
-                  }
-                case 'before':
-                case 'after':
-                case 'specific':
-                  return {
-                    type: secondaryCondition.type,
-                    value: {
-                      type: secondaryCondition.value.type,
-                      date: new Date(secondaryCondition.value.date),
-                    },
-                  }
-                case 'between':
-                  return {
-                    type: secondaryCondition.type,
-                    value: {
-                      type: secondaryCondition.value.type,
-                      from: new Date(secondaryCondition.value.from),
-                      to: new Date(secondaryCondition.value.to),
-                    },
-                  }
-              }
-          }
-          return secondaryCondition
-        }
-      )}
+      defaultConditionType={'and'}
+      defaultSecondaryConditions={dashboard.condition as EditableQuery}
     />
   )
 }
