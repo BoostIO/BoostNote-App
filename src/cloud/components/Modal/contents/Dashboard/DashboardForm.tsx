@@ -111,10 +111,6 @@ const DashboardForm = ({
             })
           }
 
-          const insertConditionNext = () => {
-            insertConditionByIndex({ type: 'null', rule: 'and' }, index)
-          }
-
           const removeCondition = () => {
             removeConditionByIndex(index)
           }
@@ -124,7 +120,6 @@ const DashboardForm = ({
               key={index}
               condition={condition}
               update={updateCondition}
-              addNext={insertConditionNext}
               remove={removeCondition}
             />
           )
@@ -139,7 +134,10 @@ const DashboardForm = ({
                 variant: 'transparent',
                 label: 'Add a filter',
                 onClick: () =>
-                  insertConditionByIndex({ type: 'null', rule: 'and' }, 0),
+                  setConditions((prev) => [
+                    ...prev,
+                    { type: 'null', rule: 'and' },
+                  ]),
               },
             }}
           />
