@@ -1,11 +1,35 @@
 import React from 'react'
-import { DateConditionValueType } from '../../../../interfaces/db/dashboard'
 import FormSelect from '../../../../../design/components/molecules/Form/atoms/FormSelect'
-import { EditibleDateConditionValue } from './interfaces'
+import { DateCondition } from '../../../../interfaces/db/dashboard'
+
+const DAYS_7 = 60 * 60 * 24 * 7
+const DAYS_30 = 60 * 60 * 24 * 30
+
+const OPTIONS = [
+  { label: 'Today', value: 'today' },
+  { label: 'Last 7 days', value: '7_days' },
+  { label: 'Last 30 days', value: '30_days' },
+  {
+    label: 'Specific',
+    value: 'specific',
+  },
+  {
+    label: 'Between',
+    value: 'between',
+  },
+  {
+    label: 'After',
+    value: 'after',
+  },
+  {
+    label: 'Before',
+    value: 'before',
+  },
+]
 
 interface DateValueTypeSelectProps {
-  value: EditibleDateConditionValue | null
-  update: (dateConditionValue: EditibleDateConditionValue) => void
+  value: DateCondition | null
+  update: (dateConditionValue: DateCondition) => void
 }
 
 const DateConditionValueTypeSelect = ({
@@ -14,18 +38,10 @@ const DateConditionValueTypeSelect = ({
 }: DateValueTypeSelectProps) => {
   return (
     <FormSelect
-      options={([
-        'today',
-        '7_days',
-        '30_days',
-        'specific',
-        'between',
-        'after',
-        'before',
-      ] as DateConditionValueType[]).map(getOptionByValueType)}
+      options={OPTIONS}
       value={
         dateConditionValue != null
-          ? getOptionByValueType(dateConditionValue.type)
+          ? getOptionByValueType(dateConditionValue)
           : undefined
       }
       onChange={(selectedOption) => {
@@ -40,18 +56,17 @@ const DateConditionValueTypeSelect = ({
 
 export default DateConditionValueTypeSelect
 
-function getOptionByValueType(dateValueType: DateConditionValueType | null) {
-  switch (dateValueType) {
-    case '7_days':
-      return {
-        label: 'Last 7 days',
-        value: '7_days',
+function getOptionByValueType(dateValue: DateCondition) {
+  switch (dateValue.type) {
+    case 'relative': {
+      if (dateValue.period == null || dateValue.period === 0) {
+        return { label: 'Today', value: 'today' }
+      } else if (dateValue.period <= DAYS_7) {
+        return { label: 'Last 7 days', value: '7_days' }
+      } else {
+        return { label: 'Last 30 days', value: '30_days' }
       }
-    case '30_days':
-      return {
-        label: 'Last 30 days',
-        value: '30_days',
-      }
+    }
     case 'specific':
       return {
         label: 'Specific',
@@ -73,7 +88,6 @@ function getOptionByValueType(dateValueType: DateConditionValueType | null) {
         label: 'Before',
         value: 'before',
       }
-    case 'today':
     default:
       return {
         label: 'Today',
@@ -83,43 +97,46 @@ function getOptionByValueType(dateValueType: DateConditionValueType | null) {
 }
 
 function getDefaultDateConditionValueByValueType(
-  dateValueType: DateConditionValueType
-): EditibleDateConditionValue {
+  dateValueType: string
+): DateCondition {
   switch (dateValueType) {
     case '7_days':
       return {
-        type: '7_days',
+        type: 'relative',
+        period: DAYS_7,
       }
     case '30_days':
       return {
-        type: '30_days',
+        type: 'relative',
+        period: DAYS_30,
       }
     case 'specific':
       return {
         type: 'specific',
-        date: null,
+        date: new Date(),
       }
 
     case 'between':
       return {
         type: 'between',
-        from: null,
-        to: null,
+        from: new Date(),
+        to: new Date(),
       }
     case 'after':
       return {
         type: 'after',
-        date: null,
+        date: new Date(),
       }
     case 'before':
       return {
         type: 'before',
-        date: null,
+        date: new Date(),
       }
     case 'today':
     default:
       return {
-        type: 'today',
+        type: 'relative',
+        period: 0,
       }
   }
 }
