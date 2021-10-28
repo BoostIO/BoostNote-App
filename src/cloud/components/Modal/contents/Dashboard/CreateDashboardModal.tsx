@@ -25,6 +25,7 @@ const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
         return
       }
       setSending(true)
+      console.log(body)
 
       await createDashboardApi(team.id, body, {
         afterSuccess: (dashboard) => {
@@ -54,8 +55,9 @@ const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
       buttonsAreDisabled={sending}
       defaultSecondaryConditions={[
         {
-          type: 'status',
-          value: 'in_progress',
+          rule: 'and',
+          type: 'prop',
+          value: { name: 'status', value: 'in_progress' },
         },
       ]}
     />
