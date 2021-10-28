@@ -1,6 +1,5 @@
 import React from 'react'
 import { mdiTrashCanOutline } from '@mdi/js'
-import SecondaryConditionValueControl from './SecondaryConditionValueControl'
 import Button from '../../../../../design/components/atoms/Button'
 import FormRow from '../../../../../design/components/molecules/Form/templates/FormRow'
 import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
@@ -8,6 +7,7 @@ import { TFunction } from 'i18next'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
 import { EditableCondition } from './interfaces'
+import ConditionValueControl from './SecondaryConditionValueControl'
 
 const SUPPORTED_CONDTION_TYPES = [
   'null',
@@ -19,18 +19,14 @@ const SUPPORTED_CONDTION_TYPES = [
   //'query',
 ] as const
 
-interface SecondaryConditionItemProps {
+interface ConditionItemProps {
   condition: EditableCondition
-  update: (newSecondaryCondition: EditableCondition) => void
+  update: (newCondition: EditableCondition) => void
   addNext: () => void
   remove: () => void
 }
 
-const SecondaryConditionItem = ({
-  condition,
-  update,
-  remove,
-}: SecondaryConditionItemProps) => {
+const ConditionItem = ({ condition, update, remove }: ConditionItemProps) => {
   const { translate } = useI18n()
   return (
     <FormRow fullWidth={true}>
@@ -39,10 +35,10 @@ const SecondaryConditionItem = ({
           type: 'select',
           props: {
             minWidth: 140,
-            value: getPrimaryConditionOptionByType(translate, condition.rule),
+            value: getRuleOptionByType(translate, condition.rule),
             options: [
-              getPrimaryConditionOptionByType(translate, 'and'),
-              getPrimaryConditionOptionByType(translate, 'or'),
+              getRuleOptionByType(translate, 'and'),
+              getRuleOptionByType(translate, 'or'),
             ],
             onChange: (selectedOption: { value: 'and' | 'or' }) => {
               update({ ...condition, rule: selectedOption.value })
@@ -54,23 +50,21 @@ const SecondaryConditionItem = ({
         item={{
           type: 'select',
           props: {
-            value: getSecondaryConditionOptionByType(translate, condition.type),
+            value: getConditionOptionByType(translate, condition.type),
             options: SUPPORTED_CONDTION_TYPES.map((condition) =>
-              getSecondaryConditionOptionByType(translate, condition)
+              getConditionOptionByType(translate, condition)
             ),
             minWidth: 140,
             onChange: (selectedOption: {
               label: string
               value: typeof SUPPORTED_CONDTION_TYPES[number]
             }) => {
-              const newSecondaryCondition =
-                getDefaultEditibleSecondaryConditionByType(selectedOption.value)
-              update(newSecondaryCondition)
+              update(getDefaultConditionByType(selectedOption.value))
             },
           },
         }}
       />
-      <SecondaryConditionValueControl condition={condition} update={update} />
+      <ConditionValueControl condition={condition} update={update} />
       <FormRowItem />
       <FormRowItem>
         <Button
@@ -83,9 +77,9 @@ const SecondaryConditionItem = ({
   )
 }
 
-export default SecondaryConditionItem
+export default ConditionItem
 
-function getSecondaryConditionOptionByType(
+function getConditionOptionByType(
   t: TFunction,
   value: EditableCondition['type']
 ) {
@@ -106,9 +100,7 @@ function getSecondaryConditionOptionByType(
   }
 }
 
-function getDefaultEditibleSecondaryConditionByType(
-  type: string
-): EditableCondition {
+function getDefaultConditionByType(type: string): EditableCondition {
   switch (type) {
     case 'prop':
       return {
@@ -142,7 +134,7 @@ function getDefaultEditibleSecondaryConditionByType(
   }
 }
 
-function getPrimaryConditionOptionByType(_t: TFunction, value: 'and' | 'or') {
+function getRuleOptionByType(_t: TFunction, value: 'and' | 'or') {
   switch (value) {
     case 'and':
       return { label: 'AND', value: 'and' }

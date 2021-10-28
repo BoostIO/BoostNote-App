@@ -51,9 +51,8 @@ const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
       action='Create'
       onCancel={closeModal}
       onSubmit={submit}
-      defaultConditionType='and'
       buttonsAreDisabled={sending}
-      defaultSecondaryConditions={[
+      defaultConditions={[
         {
           rule: 'and',
           type: 'prop',
