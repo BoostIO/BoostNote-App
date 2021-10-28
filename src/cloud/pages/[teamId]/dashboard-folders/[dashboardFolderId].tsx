@@ -5,15 +5,12 @@ import { useTitle } from 'react-use'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
 import {
-  AssigneesCondition,
-  LabelsCondition,
-  DueDateCondition,
-  DateConditionValue,
-  CreationDateCondition,
   SerializeDateProps,
-  UpdateDateCondition,
+  Condition,
+  DateCondition,
+  SerializedQuery,
 } from '../../../interfaces/db/dashboard'
-import { addDays, subDays } from 'date-fns'
+import { addDays, addSeconds, isEqual } from 'date-fns'
 import ContentManager from '../../../components/ContentManager'
 import { getTeamIndexPageData } from '../../../api/pages/teams'
 import styled from '../../../../design/lib/styled'
@@ -27,90 +24,104 @@ import ColoredBlock from '../../../../design/components/atoms/ColoredBlock'
 import ApplicationTopbar from '../../../components/ApplicationTopbar'
 import ApplicationContent from '../../../components/ApplicationContent'
 import { localizeDate } from '../../../components/Modal/contents/Dashboard/DocDateSelect'
+import { Kind } from '../../../components/Modal/contents/Dashboard/interfaces'
 
-function validateAssignees(
-  doc: SerializedDocWithSupplemental,
-  condition: AssigneesCondition
-) {
-  if (
-    doc.props.assignees == null ||
-    doc.props.assignees.data == null ||
-    (Array.isArray(doc.props.assignees.data) &&
-      doc.props.assignees.data.length === 0)
-  ) {
-    return false
-  }
-  const targetUserIdSet = new Set(condition.value)
-  for (const assignee of doc.props.assignees.data) {
-    if (targetUserIdSet.has(assignee.userId)) {
-      return true
+type Validators = {
+  [P in Condition['type']]: (
+    doc: SerializedDocWithSupplemental,
+    condition: SerializeDateProps<Kind<Condition, P>>
+  ) => boolean
+}
+
+const validators: Validators = {
+  label: (doc, condition) => {
+    if (doc.tags.length === 0) {
+      return false
     }
-  }
-  return false
-}
-
-function validateLabels(
-  doc: SerializedDocWithSupplemental,
-  condition: LabelsCondition
-) {
-  if (doc.tags.length === 0) {
-    return false
-  }
-  const targetTagSet = new Set(condition.value)
-  for (const tag of doc.tags) {
-    if (targetTagSet.has(tag.id)) {
-      return true
+    const targetTagSet = new Set(condition.value)
+    for (const tag of doc.tags) {
+      if (targetTagSet.has(tag.id)) {
+        return true
+      }
     }
-  }
-  return false
-}
-
-function validateDueDate(
-  doc: SerializedDocWithSupplemental,
-  condition: SerializeDateProps<DueDateCondition>
-) {
-  if (doc.props.dueDate == null) {
     return false
-  }
+  },
 
-  return validateDateValue(new Date(doc.props.dueDate.data), condition.value)
-}
+  due_date: (doc, condition) => {
+    if (doc.props.dueDate == null) {
+      return false
+    }
+    return validateDateValue(new Date(doc.props.dueDate.data), condition.value)
+  },
 
-function validateCreationDate(
-  doc: SerializedDocWithSupplemental,
-  condition: SerializeDateProps<CreationDateCondition>
-) {
-  return validateDateValue(new Date(doc.createdAt), condition.value)
-}
+  creation_date: (doc, condition) => {
+    return validateDateValue(new Date(doc.createdAt), condition.value)
+  },
 
-function validateUpdateDate(
-  doc: SerializedDocWithSupplemental,
-  condition: SerializeDateProps<UpdateDateCondition>
-) {
-  if (doc.updatedAt == null) {
+  update_date: (doc, condition) => {
+    if (doc.updatedAt == null) {
+      return false
+    }
+    return validateDateValue(new Date(doc.updatedAt), condition.value)
+  },
+
+  prop: (doc, condition) => {
+    const prop = doc.props[condition.value.name]
+    switch (prop.type) {
+      case 'date':
+        return equalsOrContains(isEqual, prop.data, condition.value.value)
+      case 'json':
+        return false
+      case 'user':
+        return equalsOrContains(
+          (permission, id) => permission.user.id === id,
+          prop.data,
+          condition.value.value
+        )
+      case 'number':
+        return equalsOrContains(
+          (n, n2) => n === Number(n2),
+          prop.data,
+          condition.value.value
+        )
+      case 'string':
+        return equalsOrContains(
+          (s1, s2) => s1 === s2,
+          prop.data,
+          condition.value.value
+        )
+      default:
+        return false
+    }
+  },
+
+  query: (_doc, _condition) => {
     return false
-  }
+  },
+}
 
-  return validateDateValue(new Date(doc.updatedAt), condition.value)
+function equalsOrContains<T, U>(
+  cmp: (t1: T, t2: U) => boolean,
+  test1: T | T[],
+  test2: U
+): boolean {
+  return Array.isArray(test1)
+    ? test1.some((item) => cmp(item, test2))
+    : cmp(test1, test2)
 }
 
 function validateDateValue(
   targetDate: Date,
-  dateConditionValue: SerializeDateProps<DateConditionValue>
+  dateConditionValue: SerializeDateProps<DateCondition>
 ) {
   const todayDate = localizeDate(new Date())
-  const tomorrow = addDays(todayDate, 1)
   const localizedTargetDate = localizeDate(targetDate)
 
   switch (dateConditionValue.type) {
-    case 'today':
-      return localizedTargetDate >= todayDate && localizedTargetDate < tomorrow
-    case '7_days':
-      const weekAgo = subDays(todayDate, 7)
-      return localizedTargetDate >= weekAgo && localizedTargetDate < tomorrow
-    case '30_days':
-      const monthAgo = subDays(todayDate, 30)
-      return localizedTargetDate >= monthAgo && localizedTargetDate < tomorrow
+    case 'relative':
+      return (
+        localizedTargetDate >= addSeconds(todayDate, dateConditionValue.period)
+      )
     case 'after':
       const afterDate = new Date(dateConditionValue.date)
       return localizedTargetDate >= afterDate
@@ -127,8 +138,22 @@ function validateDateValue(
       const fromDate = new Date(dateConditionValue.from)
       const toDate = new Date(dateConditionValue.to)
       return localizedTargetDate >= fromDate && localizedTargetDate <= toDate
+    default:
+      return false
   }
-  return false
+}
+
+function checkRule(test1: boolean, test2: boolean, rule: 'and' | 'or') {
+  return rule === 'or' ? test1 || test2 : test1 && test2
+}
+
+function buildQueryCheck(query: SerializedQuery) {
+  return (doc: SerializedDocWithSupplemental) => {
+    return query.reduce((result, condition) => {
+      const validator = validators[condition.type]
+      return checkRule(result, validator(doc, condition as any), condition.rule)
+    }, true)
+  }
 }
 
 const DashboardFolderPage = (params: any) => {
@@ -145,109 +170,12 @@ const DashboardFolderPage = (params: any) => {
 
   const dashboardFolder = dashboardFoldersMap.get(dashboardFolderId)
   const documents = useMemo(() => {
-    if (
-      dashboardFolder == null ||
-      dashboardFolder.condition.conditions.length === 0
-    ) {
+    if (dashboardFolder == null || dashboardFolder.condition.length === 0) {
       return []
     }
     const docs = [...docsMap].map(([_docId, doc]) => doc)
 
-    const primaryConditionType = dashboardFolder.condition.type
-    return docs.filter((doc) => {
-      for (const secondaryCondition of dashboardFolder.condition.conditions) {
-        switch (secondaryCondition.type) {
-          case 'status':
-            if (
-              doc.props.status != null &&
-              doc.props.status.data === secondaryCondition.value
-            ) {
-              if (primaryConditionType === 'and') {
-                break
-              } else {
-                return true
-              }
-            } else {
-              if (primaryConditionType === 'and') {
-                return false
-              } else {
-                break
-              }
-            }
-          case 'assignees':
-            if (validateAssignees(doc, secondaryCondition)) {
-              if (primaryConditionType === 'and') {
-                break
-              } else {
-                return true
-              }
-            } else {
-              if (primaryConditionType === 'and') {
-                return false
-              } else {
-                break
-              }
-            }
-          case 'labels':
-            if (validateLabels(doc, secondaryCondition)) {
-              if (primaryConditionType === 'and') {
-                break
-              } else {
-                return true
-              }
-            } else {
-              if (primaryConditionType === 'and') {
-                return false
-              } else {
-                break
-              }
-            }
-          case 'due_date':
-            if (validateDueDate(doc, secondaryCondition)) {
-              if (primaryConditionType === 'and') {
-                break
-              } else {
-                return true
-              }
-            } else {
-              if (primaryConditionType === 'and') {
-                return false
-              } else {
-                break
-              }
-            }
-          case 'creation_date':
-            if (validateCreationDate(doc, secondaryCondition)) {
-              if (primaryConditionType === 'and') {
-                break
-              } else {
-                return true
-              }
-            } else {
-              if (primaryConditionType === 'and') {
-                return false
-              } else {
-                break
-              }
-            }
-          case 'update_date':
-            if (validateUpdateDate(doc, secondaryCondition)) {
-              if (primaryConditionType === 'and') {
-                break
-              } else {
-                return true
-              }
-            } else {
-              if (primaryConditionType === 'and') {
-                return false
-              } else {
-                break
-              }
-            }
-        }
-      }
-      return primaryConditionType === 'and'
-    })
+    return docs.filter(buildQueryCheck(dashboardFolder.condition))
   }, [docsMap, dashboardFolder])
 
   const pageTitle = useMemo(() => {
