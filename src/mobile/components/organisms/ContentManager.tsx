@@ -145,14 +145,14 @@ const ContentManager = ({
   const orderedDocs = useMemo(() => {
     const filteredDocs = documents
       .filter((doc) => {
-        if (doc.status == null) {
+        if (doc.props.status == null) {
           if (doc.archivedAt == null) {
             return true
           }
           return statusFilterSet.has('archived')
         }
 
-        return statusFilterSet.has(doc.status)
+        return statusFilterSet.has(doc.props.status.data)
       })
       .map((doc) => {
         return {

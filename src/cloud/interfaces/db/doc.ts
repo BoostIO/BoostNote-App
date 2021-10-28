@@ -27,9 +27,6 @@ export interface SerializableDocProps {
   version: number
   teamId: string
   workspaceId: string
-  status?: DocStatus
-  dueDate?: string
-  assignees?: SerializedDocAssignee[]
   userId?: string
 }
 
