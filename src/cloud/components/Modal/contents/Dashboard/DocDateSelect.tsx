@@ -1,22 +1,16 @@
 import React, { forwardRef, useMemo } from 'react'
-import { DateConditionValue } from '../../../../interfaces/db/dashboard'
 import DateConditionValueTypeSelect from './DateConditionValueTypeSelect'
 import DatePicker from 'react-datepicker'
 import { format as formatDate } from 'date-fns'
 import { mdiCalendar, mdiCalendarStart, mdiCalendarEnd } from '@mdi/js'
 import Icon from '../../../../../design/components/atoms/Icon'
 import styled from '../../../../../design/lib/styled'
-import {
-  EditibleDateConditionValue,
-  EditibleBetweenDateConditionValue,
-  EditibleSpecificDateConditionValue,
-  EditibleBeforeDateConditionValue,
-  EditibleAfterDateConditionValue,
-} from './interfaces'
+import { DateCondition } from '../../../../interfaces/db/dashboard'
+import { Kind } from './interfaces'
 
 interface DocDateSelectProps {
-  value: EditibleDateConditionValue | null
-  update: (value: EditibleDateConditionValue | null) => void
+  value: DateCondition | null
+  update: (value: DateCondition | null) => void
 }
 
 const DocDateSelect = ({ value, update }: DocDateSelectProps) => {
@@ -39,11 +33,8 @@ const DocDateSelect = ({ value, update }: DocDateSelectProps) => {
 export default DocDateSelect
 
 interface SpecificDatePickerProps {
-  value:
-    | EditibleSpecificDateConditionValue
-    | EditibleBeforeDateConditionValue
-    | EditibleAfterDateConditionValue
-  update: (value: DateConditionValue) => void
+  value: Kind<DateCondition, 'specific' | 'after' | 'before'>
+  update: (value: DateCondition) => void
 }
 
 const SpecificDatePicker = ({ value, update }: SpecificDatePickerProps) => {
@@ -78,8 +69,8 @@ export function localizeDate(date: Date) {
 }
 
 interface DateRangePickerProps {
-  value: EditibleBetweenDateConditionValue
-  update: (value: EditibleBetweenDateConditionValue) => void
+  value: Kind<DateCondition, 'between'>
+  update: (value: DateCondition) => void
 }
 
 const DateRangePicker = ({ value, update }: DateRangePickerProps) => {
@@ -138,7 +129,10 @@ interface DatePickerButtonProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
-const DatePickerButton = forwardRef<HTMLButtonElement, DatePickerButtonProps>(
+export const DatePickerButton = forwardRef<
+  HTMLButtonElement,
+  DatePickerButtonProps
+>(
   (
     {
       customIconPath = mdiCalendar,
