@@ -472,11 +472,12 @@ export function useCloudSidebarTree() {
         bookmarked: doc.bookmarked,
         emoji: doc.emoji,
         defaultIcon: mdiFileDocumentOutline,
-        status: doc.status,
+        status: doc.props.status != null ? doc.props.status.data : undefined,
         hidden:
           doc.archivedAt != null ||
-          doc.status === 'archived' ||
-          doc.status === 'completed',
+          (doc.props.status != null &&
+            (doc.props.status.data === 'archived' ||
+              doc.props.status.data === 'completed')),
         children: [],
         href,
         active: !showSearchScreen && href === currentPathWithDomain,
