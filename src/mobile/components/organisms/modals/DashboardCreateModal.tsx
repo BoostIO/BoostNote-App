@@ -74,12 +74,12 @@ const DashboardCreateModal = ({ onCreate }: CreateDashboardModalProps) => {
       <DashboardForm
         action='Create'
         onSubmit={submit}
-        defaultConditionType='and'
         buttonsAreDisabled={sending}
-        defaultSecondaryConditions={[
+        defaultConditions={[
           {
-            type: 'status',
-            value: 'in_progress',
+            rule: 'and',
+            type: 'prop',
+            value: { name: 'status', value: 'in_progress' },
           },
         ]}
       />
