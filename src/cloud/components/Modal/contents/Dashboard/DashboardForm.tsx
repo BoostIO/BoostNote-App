@@ -54,17 +54,6 @@ const DashboardForm = ({
     []
   )
 
-  const insertConditionByIndex = useCallback(
-    (condition: EditableCondition, index: number) => {
-      setConditions((previousConditions) => {
-        const newConditions = [...previousConditions]
-        newConditions.splice(index + 1, 0, condition)
-        return newConditions
-      })
-    },
-    []
-  )
-
   const removeConditionByIndex = useCallback((index: number) => {
     setConditions((previousConditions) => {
       const newConditions = [...previousConditions]
