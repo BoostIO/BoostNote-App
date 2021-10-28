@@ -22,7 +22,6 @@ const SUPPORTED_CONDTION_TYPES = [
 interface ConditionItemProps {
   condition: EditableCondition
   update: (newCondition: EditableCondition) => void
-  addNext: () => void
   remove: () => void
 }
 
