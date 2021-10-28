@@ -11,6 +11,7 @@ import DashboardForm from './organisms/DashboardForm'
 import ModalContainer from './atoms/ModalContainer'
 import { getTeamLinkHref } from '../../../../cloud/components/Link/TeamLink'
 import { useCloudApi } from '../../../../cloud/lib/hooks/useCloudApi'
+import { EditableQuery } from '../../../../cloud/components/Modal/contents/Dashboard/interfaces'
 
 interface DashboardUpdateModalProps {
   dashboard: SerializedDashboard
@@ -66,47 +67,7 @@ const DashboardUpdateModal = ({
         buttonsAreDisabled={sending}
         defaultName={dashboard.name}
         defaultPrivate={dashboard.private}
-        defaultConditionType={dashboard.condition.type}
-        defaultSecondaryConditions={dashboard.condition.conditions.map(
-          (secondaryCondition) => {
-            switch (secondaryCondition.type) {
-              case 'due_date':
-              case 'creation_date':
-              case 'update_date':
-                switch (secondaryCondition.value.type) {
-                  case '30_days':
-                  case '7_days':
-                  case 'today':
-                    return {
-                      type: secondaryCondition.type,
-                      value: {
-                        type: secondaryCondition.value.type,
-                      },
-                    }
-                  case 'before':
-                  case 'after':
-                  case 'specific':
-                    return {
-                      type: secondaryCondition.type,
-                      value: {
-                        type: secondaryCondition.value.type,
-                        date: new Date(secondaryCondition.value.date),
-                      },
-                    }
-                  case 'between':
-                    return {
-                      type: secondaryCondition.type,
-                      value: {
-                        type: secondaryCondition.value.type,
-                        from: new Date(secondaryCondition.value.from),
-                        to: new Date(secondaryCondition.value.to),
-                      },
-                    }
-                }
-            }
-            return secondaryCondition
-          }
-        )}
+        defaultConditions={dashboard.condition as EditableQuery}
       />
     </ModalContainer>
   )

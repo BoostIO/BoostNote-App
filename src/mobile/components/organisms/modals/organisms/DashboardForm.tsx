@@ -1,10 +1,8 @@
 import { mdiPlus } from '@mdi/js'
-import { TFunction } from 'i18next'
 import React, { useCallback, useState } from 'react'
 import { LoadingButton } from '../../../../../design/components/atoms/Button'
 import Switch from '../../../../../design/components/atoms/Switch'
 import Form from '../../../../../design/components/molecules/Form'
-import { FormSelectOption } from '../../../../../design/components/molecules/Form/atoms/FormSelect'
 import FormRow from '../../../../../design/components/molecules/Form/templates/FormRow'
 import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
 import styled from '../../../../../design/lib/styled'
@@ -16,15 +14,18 @@ import { useI18n } from '../../../../../cloud/lib/hooks/useI18n'
 import { lngKeys } from '../../../../../cloud/lib/i18n/types'
 import MobileFormControl from '../../../atoms/MobileFormControl'
 import BorderSeparator from '../../../../../design/components/atoms/BorderSeparator'
-import { EditibleSecondaryCondition } from '../../../../../cloud/components/Modal/contents/Dashboard/interfaces'
 import SecondaryConditionItem from '../../../../../cloud/components/Modal/contents/Dashboard/SecondaryConditionItem'
+import {
+  EditableCondition,
+  EditableQuery,
+} from '../../../../../cloud/components/Modal/contents/Dashboard/interfaces'
+import { SerializedQuery } from '../../../../../cloud/interfaces/db/dashboard'
 
 interface DashboardFormProps {
   action: 'Create' | 'Update'
   defaultName?: string
   defaultPrivate?: boolean
-  defaultConditionType: 'and' | 'or'
-  defaultSecondaryConditions: EditibleSecondaryCondition[]
+  defaultConditions: EditableQuery
   onSubmit: (
     body: CreateDashboardRequestBody | UpdateDashboardRequestBody
   ) => void
@@ -35,21 +36,16 @@ const DashboardForm = ({
   action,
   defaultName = '',
   defaultPrivate = true,
-  defaultConditionType,
-  defaultSecondaryConditions,
+  defaultConditions,
   buttonsAreDisabled,
   onSubmit,
 }: DashboardFormProps) => {
   const [name, setName] = useState(defaultName)
   const [makingPrivate, setMakingPrivate] = useState(defaultPrivate)
-  const [primaryConditionType, setPrimaryConditionType] = useState<
-    'and' | 'or'
-  >(defaultConditionType)
   const { translate } = useI18n()
 
-  const [secondaryConditions, setSecondaryConditions] = useState<
-    EditibleSecondaryCondition[]
-  >(defaultSecondaryConditions)
+  const [secondaryConditions, setSecondaryConditions] =
+    useState<EditableQuery>(defaultConditions)
 
   const updateName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,12 +54,8 @@ const DashboardForm = ({
     []
   )
 
-  const updatePrimaryConditionType = useCallback((option: FormSelectOption) => {
-    setPrimaryConditionType(option.value as any)
-  }, [])
-
   const insertSecondaryConditionByIndex = useCallback(
-    (condition: EditibleSecondaryCondition, index: number) => {
+    (condition: EditableCondition, index: number) => {
       setSecondaryConditions((previousConditions) => {
         const newConditions = [...previousConditions]
         newConditions.splice(index + 1, 0, condition)
@@ -86,14 +78,11 @@ const DashboardForm = ({
       event.preventDefault()
       onSubmit({
         name,
-        condition: {
-          type: primaryConditionType,
-          conditions: JSON.parse(JSON.stringify(secondaryConditions)),
-        },
+        condition: secondaryConditions as SerializedQuery,
         private: makingPrivate,
       })
     },
-    [onSubmit, makingPrivate, primaryConditionType, name, secondaryConditions]
+    [onSubmit, makingPrivate, name, secondaryConditions]
   )
 
   return (
@@ -125,30 +114,16 @@ const DashboardForm = ({
             <FormRowItem
               className='form__row__item--shrink'
               item={{
-                type: 'select',
-                props: {
-                  options: [
-                    { label: translate(lngKeys.GeneralAll), value: 'and' },
-                    { label: translate(lngKeys.GeneralAny), value: 'or' },
-                  ],
-                  value: getPrimaryConditionOptionByType(
-                    translate,
-                    primaryConditionType
-                  ),
-                  onChange: updatePrimaryConditionType,
-                },
-              }}
-            />
-            <FormRowItem
-              className='form__row__item--shrink'
-              item={{
                 type: 'button',
                 props: {
                   iconPath: mdiPlus,
                   variant: 'secondary',
                   label: '',
                   onClick: () =>
-                    insertSecondaryConditionByIndex({ type: 'null' }, 0),
+                    insertSecondaryConditionByIndex(
+                      { type: 'null', rule: 'and' },
+                      0
+                    ),
                 },
               }}
             />
@@ -156,21 +131,20 @@ const DashboardForm = ({
 
           {secondaryConditions.map((condition, index) => {
             const updateSecondaryCondition = (
-              updatedSecondaryCondition: EditibleSecondaryCondition
+              updatedCondition: EditableCondition
             ) => {
               setSecondaryConditions((previousConditions) => {
                 const newSecondaryConditions = [...previousConditions]
-                newSecondaryConditions.splice(
-                  index,
-                  1,
-                  updatedSecondaryCondition
-                )
+                newSecondaryConditions.splice(index, 1, updatedCondition)
                 return newSecondaryConditions
               })
             }
 
             const insertConditionNext = () => {
-              insertSecondaryConditionByIndex({ type: 'null' }, index)
+              insertSecondaryConditionByIndex(
+                { type: 'null', rule: 'and' },
+                index
+              )
             }
 
             const removeCondition = () => {
@@ -279,14 +253,5 @@ const Container = styled.div`
     margin-top: 0;
   }
 `
-
-function getPrimaryConditionOptionByType(t: TFunction, value: 'and' | 'or') {
-  switch (value) {
-    case 'and':
-      return { label: t(lngKeys.GeneralAll), value: 'and' }
-    case 'or':
-      return { label: t(lngKeys.GeneralAny), value: 'or' }
-  }
-}
 
 export default DashboardForm
