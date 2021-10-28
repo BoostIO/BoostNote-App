@@ -18,7 +18,7 @@ import { SerializedQuery } from '../../../../interfaces/db/dashboard'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
 import { EditableCondition, EditableQuery } from './interfaces'
-import ConditionItem from './SecondaryConditionItem'
+import ConditionItem from './ConditionItem'
 
 interface DashboardFormProps {
   action: 'Create' | 'Update'
