@@ -5,7 +5,7 @@ import DocDateSelect, { DatePickerButton } from './DocDateSelect'
 import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
 import { EditableCondition, Kind } from './interfaces'
 import FormSelect from '../../../../../design/components/molecules/Form/atoms/FormSelect'
-import { capitalize } from '../../../../lib/utils/string'
+import { capitalize, isValidUUID } from '../../../../lib/utils/string'
 import FormInput from '../../../../../design/components/molecules/Form/atoms/FormInput'
 import FormDatePicker from '../../../../../design/components/molecules/Form/atoms/FormDatePicker'
 import { isValid } from 'date-fns'
@@ -21,7 +21,11 @@ const ConditionValueControl = ({
   condition,
   update,
 }: ConditionValueControlProps) => {
-  const [inputType, setInputType] = useState<PropType>('string')
+  const [inputType, setInputType] = useState<PropType>(() => {
+    return condition.type === 'prop'
+      ? inferPropType(condition.value.value)
+      : 'string'
+  })
   switch (condition.type) {
     case 'due_date':
     case 'creation_date':
@@ -136,4 +140,20 @@ function getDefaultPropValue(type: PropType) {
     default:
       return ''
   }
+}
+
+function inferPropType(value: unknown): PropType {
+  if (typeof value === 'number') {
+    return 'number'
+  }
+
+  if (value instanceof Date) {
+    return 'date'
+  }
+
+  if (typeof value === 'string' && isValidUUID(value)) {
+    return 'user'
+  }
+
+  return 'string'
 }
