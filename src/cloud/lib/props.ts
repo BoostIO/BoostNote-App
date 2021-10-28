@@ -83,7 +83,7 @@ export function getInitialPropDataOfProp(propName: string): NullablePropData {
       return { type: 'date', data: null }
     case 'timeEstimate':
     case 'timeTracked':
-      return { type: 'number', data: null }
+      return { type: 'json', data: { dataType: 'timeperiod', data: null } }
     case 'reviewers':
     case 'assignees':
       return { type: 'user', data: null }
