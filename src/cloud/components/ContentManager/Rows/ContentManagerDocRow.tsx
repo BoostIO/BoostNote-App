@@ -115,7 +115,10 @@ const ContentManagerDocRow = ({
 
   const sendUpdateStatus = useCallback(
     async (newStatus: DocStatus | null) => {
-      if (doc.status === newStatus || sendingMap.has(doc.id)) {
+      if (
+        (doc.props.status != null && doc.props.status.data === newStatus) ||
+        sendingMap.has(doc.id)
+      ) {
         return
       }
 
