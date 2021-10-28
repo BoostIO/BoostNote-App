@@ -7,7 +7,7 @@ import { TFunction } from 'i18next'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
 import { EditableCondition } from './interfaces'
-import ConditionValueControl from './SecondaryConditionValueControl'
+import ConditionValueControl from './ConditionValueControl'
 
 const SUPPORTED_CONDTION_TYPES = [
   'null',
