@@ -12,6 +12,7 @@ import { SimpleFormSelect } from '../../../../design/components/molecules/Form/a
 import LeftRightList from '../../../../design/components/atoms/LeftRightList'
 import { useEffectOnce } from 'react-use'
 import Button from '../../../../design/components/atoms/Button'
+import plur from 'plur'
 
 interface TimePeriodPickerProps {
   label: string
@@ -90,7 +91,10 @@ const TimePeriodPicker = ({
         <span className={cc([])}>
           {parsedValue == null
             ? 'Add'
-            : `${parsedValue.value} ${parsedValue.reason}`}
+            : `${parsedValue.value} ${plur(
+                parsedValue.reason.slice(0, -1),
+                parseInt(parsedValue.value)
+              )}`}
         </span>
       </PropertyValueButton>
     </Container>
