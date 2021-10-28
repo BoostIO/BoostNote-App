@@ -1,12 +1,12 @@
 import { callApi } from '../../../lib/client'
 import {
   SerializedDashboard,
-  SerializedPrimaryCondition,
+  SerializedQuery,
 } from '../../../interfaces/db/dashboard'
 
 export interface CreateDashboardRequestBody {
   name: string
-  condition: SerializedPrimaryCondition
+  condition: SerializedQuery
   private: boolean
 }
 
@@ -27,7 +27,7 @@ export async function createDashboard(
 
 export interface UpdateDashboardRequestBody {
   name: string
-  condition: SerializedPrimaryCondition
+  condition: SerializedQuery
   private: boolean
 }
 
