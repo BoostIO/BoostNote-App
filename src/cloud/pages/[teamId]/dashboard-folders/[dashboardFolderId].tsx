@@ -32,11 +32,16 @@ function validateAssignees(
   doc: SerializedDocWithSupplemental,
   condition: AssigneesCondition
 ) {
-  if (doc.assignees == null || doc.assignees.length === 0) {
+  if (
+    doc.props.assignees == null ||
+    doc.props.assignees.data == null ||
+    (Array.isArray(doc.props.assignees.data) &&
+      doc.props.assignees.data.length === 0)
+  ) {
     return false
   }
   const targetUserIdSet = new Set(condition.value)
-  for (const assignee of doc.assignees) {
+  for (const assignee of doc.props.assignees.data) {
     if (targetUserIdSet.has(assignee.userId)) {
       return true
     }
@@ -64,11 +69,11 @@ function validateDueDate(
   doc: SerializedDocWithSupplemental,
   condition: SerializeDateProps<DueDateCondition>
 ) {
-  if (doc.dueDate == null) {
+  if (doc.props.dueDate == null) {
     return false
   }
 
-  return validateDateValue(new Date(doc.dueDate), condition.value)
+  return validateDateValue(new Date(doc.props.dueDate.data), condition.value)
 }
 
 function validateCreationDate(
@@ -153,7 +158,10 @@ const DashboardFolderPage = (params: any) => {
       for (const secondaryCondition of dashboardFolder.condition.conditions) {
         switch (secondaryCondition.type) {
           case 'status':
-            if (doc.status === secondaryCondition.value) {
+            if (
+              doc.props.status != null &&
+              doc.props.status.data === secondaryCondition.value
+            ) {
               if (primaryConditionType === 'and') {
                 break
               } else {

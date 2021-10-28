@@ -115,7 +115,10 @@ DocInfoModalProps) => {
 
   const sendUpdateStatus = useCallback(
     async (newStatus: DocStatus | null) => {
-      if (currentDoc.status === newStatus) {
+      if (
+        currentDoc.props.status != null &&
+        currentDoc.props.status.data === newStatus
+      ) {
         return
       }
 
@@ -181,11 +184,13 @@ DocInfoModalProps) => {
                           !currentUserIsCoreMember
                         }
                         defaultValue={
-                          currentDoc.assignees != null
-                            ? currentDoc.assignees.map(
+                          currentDoc.props.assignees == null
+                            ? []
+                            : Array.isArray(currentDoc.props.assignees.data)
+                            ? currentDoc.props.assignees.data.map(
                                 (assignee) => assignee.userId
                               )
-                            : []
+                            : [currentDoc.props.assignees.data.userId]
                         }
                         readOnly={!currentUserIsCoreMember}
                         update={sendUpdateDocAssignees}
@@ -205,7 +210,11 @@ DocInfoModalProps) => {
                   </label>
                   <div className='context__content'>
                     <DocStatusSelect
-                      status={currentDoc.status}
+                      status={
+                        currentDoc.props.status != null
+                          ? currentDoc.props.status.data
+                          : undefined
+                      }
                       sending={sendingMap.get(currentDoc.id) === 'status'}
                       onStatusChange={sendUpdateStatus}
                       disabled={!currentUserIsCoreMember}
@@ -227,7 +236,11 @@ DocInfoModalProps) => {
                     <DocDueDateSelect
                       className='context__content__date_select'
                       sending={sendingMap.get(currentDoc.id) === 'duedate'}
-                      dueDate={currentDoc.dueDate}
+                      dueDate={
+                        currentDoc.props.dueDate != null
+                          ? currentDoc.props.dueDate.data
+                          : undefined
+                      }
                       onDueDateChange={sendUpdateDocDueDate}
                       disabled={!currentUserIsCoreMember}
                       isReadOnly={!currentUserIsCoreMember}

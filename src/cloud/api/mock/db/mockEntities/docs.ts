@@ -35,8 +35,6 @@ export function createMockDoc({
   generated = false,
   teamId,
   workspaceId,
-  status,
-  dueDate,
   userId,
 }: CraeteMockDocParams) {
   const id = generateMockId()
@@ -50,9 +48,7 @@ export function createMockDoc({
     generated,
     teamId,
     workspaceId,
-    status,
     version: 0,
-    dueDate,
     userId,
     createdAt: now,
     updatedAt: now,

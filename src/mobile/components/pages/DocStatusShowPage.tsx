@@ -51,7 +51,9 @@ const DocStatusShowPage = () => {
   const documents = useMemo(() => {
     const docs = [...docsMap].map(([_docId, doc]) => doc)
 
-    return docs.filter((doc) => doc.status === docStatus)
+    return docs.filter(
+      (doc) => doc.props.status != null && doc.props.status.data === docStatus
+    )
   }, [docsMap, docStatus])
 
   const pageTitle = useMemo(() => {

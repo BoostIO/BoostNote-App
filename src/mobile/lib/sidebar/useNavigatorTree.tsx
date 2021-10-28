@@ -452,8 +452,9 @@ export function useNavigatorTree() {
         },
         hidden:
           doc.archivedAt != null ||
-          doc.status === 'archived' ||
-          doc.status === 'completed',
+          (doc.props.status != null &&
+            (doc.props.status.data === 'archived' ||
+              doc.props.statuss.data === 'completed')),
         children: [],
         href,
         active: href === currentPathWithDomain,
