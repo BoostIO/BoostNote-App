@@ -153,7 +153,7 @@ const DashboardContextMenu = ({
                 <MetadataContainerRow
                   key={`condition-${i}`}
                   row={{
-                    label: capitalize(condition.value.name),
+                    label: capitalize(condition.value.name) || 'Untitled',
                     type: 'content',
                     icon: mdiAccountCircleOutline,
                     content: (
