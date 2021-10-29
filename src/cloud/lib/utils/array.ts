@@ -1,4 +1,5 @@
 import { sortBy, compose, toLower, prop, reverse } from 'ramda'
+import { isValidUUID } from './string'
 
 export const uniqueByKey = <T, K extends keyof T>(key: K, arr: T[]): T[] => {
   const seen = new Set<any>()
@@ -89,4 +90,17 @@ export function sortByAttributeAsc<T>(attribute: keyof T, array: T[]) {
 
 export function sortByAttributeDesc<T>(attribute: keyof T, array: T[]) {
   return reverse(sortBy(compose(toLower, prop(attribute as string)))(array))
+}
+
+export function isUUIDArray<T>(source: T): boolean {
+  if (!Array.isArray(source)) {
+    return false
+  }
+
+  return source.reduce((acc, val) => {
+    if (typeof val !== 'string' || !isValidUUID(val)) {
+      acc = false
+    }
+    return acc
+  }, true)
 }

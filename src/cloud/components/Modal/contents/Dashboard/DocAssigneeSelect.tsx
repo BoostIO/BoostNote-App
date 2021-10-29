@@ -6,10 +6,11 @@ import FormSelect, {
 } from '../../../../../design/components/molecules/Form/atoms/FormSelect'
 import styled from '../../../../../design/lib/styled'
 import UserIcon from '../../../UserIcon'
+import { overflowEllipsis } from '../../../../../design/lib/styled/styleFunctions'
 
 interface DocAssigneeSelectProps {
-  value: string
-  update: (value: string) => void
+  value: string[]
+  update: (value: string[]) => void
 }
 
 const DocAssigneeSelect = ({ value, update }: DocAssigneeSelectProps) => {
@@ -38,15 +39,15 @@ const DocAssigneeSelect = ({ value, update }: DocAssigneeSelectProps) => {
   }, [permissions, value])
 
   const updateAssignees = useCallback(
-    (option: FormSelectOption) => {
-      update(option.value)
+    (option: FormSelectOption[]) => {
+      update(option.map((option) => option.value))
     },
     [update]
   )
 
   return (
     <FormSelect
-      isMulti={false}
+      isMulti
       options={options}
       value={selectedOptions}
       onChange={updateAssignees}
@@ -59,6 +60,15 @@ export default DocAssigneeSelect
 const ItemContainer = styled.div`
   display: flex;
   align-items: center;
+  max-width: 200px;
+
+  .option__user__icon {
+    flex: 0 0 auto;
+  }
+
+  span {
+    ${overflowEllipsis()}
+  }
 `
 
 function getOptionByUser(user: SerializedUser): FormSelectOption {
@@ -66,6 +76,7 @@ function getOptionByUser(user: SerializedUser): FormSelectOption {
     label: (
       <ItemContainer>
         <UserIcon
+          className='option__user__icon'
           user={user}
           style={{
             width: '20px',
@@ -76,7 +87,7 @@ function getOptionByUser(user: SerializedUser): FormSelectOption {
           }}
         />
 
-        {user.displayName}
+        <span>{user.displayName}</span>
       </ItemContainer>
     ),
     value: user.id,
@@ -84,13 +95,17 @@ function getOptionByUser(user: SerializedUser): FormSelectOption {
 }
 
 function getSelectedOptionsByUserId(
-  value: string,
+  value: string[],
   userMap: Map<string, SerializedUser>
-): FormSelectOption | undefined {
-  const user = userMap.get(value)
-  if (user == null) {
-    console.warn(`User Id ${value} does not exist in page props`)
-    return undefined
-  }
-  return getOptionByUser(user)
+): FormSelectOption[] {
+  return value.reduce<FormSelectOption[]>((options, userId) => {
+    const user = userMap.get(userId)
+    if (user == null) {
+      console.warn(`User Id ${userId} does not exist in page props`)
+      return options
+    }
+    const option = getOptionByUser(user)
+    options.push(option)
+    return options
+  }, [])
 }

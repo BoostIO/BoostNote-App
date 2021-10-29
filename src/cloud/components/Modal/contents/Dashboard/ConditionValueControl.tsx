@@ -5,12 +5,13 @@ import DocDateSelect, { DatePickerButton } from './DocDateSelect'
 import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
 import { EditableCondition, Kind } from './interfaces'
 import FormSelect from '../../../../../design/components/molecules/Form/atoms/FormSelect'
-import { capitalize, isValidUUID } from '../../../../lib/utils/string'
+import { capitalize } from '../../../../lib/utils/string'
 import FormInput from '../../../../../design/components/molecules/Form/atoms/FormInput'
 import FormDatePicker from '../../../../../design/components/molecules/Form/atoms/FormDatePicker'
 import { isValid } from 'date-fns'
 import { DateCondition } from '../../../../interfaces/db/dashboard'
 import { PropType } from '../../../../interfaces/db/props'
+import { isUUIDArray } from '../../../../lib/utils/array'
 
 interface ConditionValueControlProps {
   condition: EditableCondition
@@ -42,7 +43,7 @@ const ConditionValueControl = ({
         </FormRowItem>
       )
     case 'label':
-      const updateLabels = (newLabel: string) => {
+      const updateLabels = (newLabel: string[]) => {
         update({
           ...condition,
           value: newLabel,
@@ -137,6 +138,8 @@ function getDefaultPropValue(type: PropType) {
       return new Date()
     case 'number':
       return 0
+    case 'user':
+      return []
     default:
       return ''
   }
@@ -151,7 +154,7 @@ function inferPropType(value: unknown): PropType {
     return 'date'
   }
 
-  if (typeof value === 'string' && isValidUUID(value)) {
+  if (isUUIDArray(value)) {
     return 'user'
   }
 

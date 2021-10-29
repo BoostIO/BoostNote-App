@@ -39,6 +39,8 @@ import styled from '../../design/lib/styled'
 import DocTagsListItem from './DocTagsListItem'
 import { useNav } from '../lib/stores/nav'
 import { getTeamLinkHref } from './Link/TeamLink'
+import { SerializedTag } from '../interfaces/db/tag'
+import { isUUIDArray } from '../lib/utils/array'
 
 interface DashboardContextMenuProps {
   dashboard: SerializedDashboard
@@ -86,119 +88,131 @@ const DashboardContextMenu = ({
 
   return (
     <MetadataContainer rows={[{ type: 'header', content: 'Filter options' }]}>
-      {dashboard.condition.map((condition, i) => {
-        switch (condition.type) {
-          case 'creation_date':
-          case 'update_date':
-          case 'due_date':
-            let label = ''
-            switch (condition.value.type) {
-              case 'relative': {
-                if (condition.value.period === 0) {
-                  label = 'Today'
-                } else {
-                  label = `Last ${formatDuration({
-                    seconds: condition.value.period,
-                  })}`
+      {Array.isArray(dashboard.condition) &&
+        dashboard.condition.map((condition, i) => {
+          switch (condition.type) {
+            case 'creation_date':
+            case 'update_date':
+            case 'due_date':
+              let label = ''
+              switch (condition.value.type) {
+                case 'relative': {
+                  if (condition.value.period === 0) {
+                    label = 'Today'
+                  } else {
+                    label = `Last ${formatDuration({
+                      seconds: condition.value.period,
+                    })}`
+                  }
+                  break
                 }
-                break
+                case 'specific':
+                  label = format(
+                    new Date(condition.value.date),
+                    'MMMM dd, yyyy, HH:mm'
+                  )
+                  break
+                case 'after':
+                case 'before':
+                  label = `${capitalize(condition.value.type)} ${format(
+                    new Date(condition.value.date),
+                    'MMMM dd, yyyy, HH:mm'
+                  )}`
+                  break
+                case 'between':
+                  label = `Between ${format(
+                    new Date(condition.value.from),
+                    'MMMM dd'
+                  )} and ${format(new Date(condition.value.to), 'MMMM dd')}`
+                  break
+                default:
+                  break
               }
-              case 'specific':
-                label = format(
-                  new Date(condition.value.date),
-                  'MMMM dd, yyyy, HH:mm'
-                )
-                break
-              case 'after':
-              case 'before':
-                label = `${capitalize(condition.value.type)} ${format(
-                  new Date(condition.value.date),
-                  'MMMM dd, yyyy, HH:mm'
-                )}`
-                break
-              case 'between':
-                label = `Between ${format(
-                  new Date(condition.value.from),
-                  'MMMM dd'
-                )} and ${format(new Date(condition.value.to), 'MMMM dd')}`
-                break
-              default:
-                break
-            }
 
-            return (
-              <MetadataContainerRow
-                key={`condition-${i}`}
-                row={{
-                  label:
-                    condition.type === 'due_date'
-                      ? translate(lngKeys.DueDate)
-                      : condition.type === 'creation_date'
-                      ? translate(lngKeys.CreationDate)
-                      : translate(lngKeys.UpdateDate),
-                  type: 'content',
-                  icon:
-                    condition.type === 'due_date'
-                      ? mdiCalendarMonthOutline
-                      : mdiClockOutline,
-                  content: label,
-                }}
-              />
-            )
-          case 'prop':
-            const user = usersMap.get(condition.value.value)
-            return user != null ? (
-              <MetadataContainerRow
-                key={`condition-${i}`}
-                row={{
-                  label: capitalize(condition.value.name),
-                  type: 'content',
-                  icon: mdiAccountCircleOutline,
-                  content: (
-                    <DocAssigneeSelect
-                      isLoading={false}
-                      readOnly={true}
-                      disabled={true}
-                      defaultValue={[user.id]}
-                      update={() => {}}
-                    />
-                  ),
-                }}
-              />
-            ) : (
-              <MetadataContainerRow
-                key={`condition-${i}`}
-                row={{
-                  label: `Prop: ${condition.value.name}`,
-                  type: 'content',
-                  icon: mdiAccountCircleOutline,
-                  content: condition.value.value,
-                }}
-              />
-            )
-          case 'label':
-            const tag = tagsMap.get(condition.value)
-            return (
-              tag != null && (
+              return (
                 <MetadataContainerRow
                   key={`condition-${i}`}
                   row={{
-                    label: translate(lngKeys.GeneralLabels),
+                    label:
+                      condition.type === 'due_date'
+                        ? translate(lngKeys.DueDate)
+                        : condition.type === 'creation_date'
+                        ? translate(lngKeys.CreationDate)
+                        : translate(lngKeys.UpdateDate),
                     type: 'content',
-                    icon: mdiTag,
-                    content: (
-                      <TagList>
-                        <DocTagsListItem team={team} tag={tag} key={tag.id} />
-                      </TagList>
-                    ),
+                    icon:
+                      condition.type === 'due_date'
+                        ? mdiCalendarMonthOutline
+                        : mdiClockOutline,
+                    content: label,
                   }}
                 />
               )
-            )
-          default:
-            return null
-        }
-      })}
+            case 'prop':
+              return isUUIDArray(condition.value.value) ? (
+                <MetadataContainerRow
+                  key={`condition-${i}`}
+                  row={{
+                    label: capitalize(condition.value.name),
+                    type: 'content',
+                    icon: mdiAccountCircleOutline,
+                    content: (
+                      <DocAssigneeSelect
+                        isLoading={false}
+                        readOnly={true}
+                        disabled={true}
+                        defaultValue={condition.value.value}
+                        update={() => {}}
+                      />
+                    ),
+                  }}
+                />
+              ) : (
+                <MetadataContainerRow
+                  key={`condition-${i}`}
+                  row={{
+                    label: `Prop: ${condition.value.name}`,
+                    type: 'content',
+                    icon: mdiAccountCircleOutline,
+                    content: condition.value.value,
+                  }}
+                />
+              )
+            case 'label':
+              const tags = condition.value.reduce((acc, val) => {
+                const tag = tagsMap.get(val)
+                if (tag != null) {
+                  acc.push(tag)
+                }
+                return acc
+              }, [] as SerializedTag[])
+              return (
+                tags.length > 0 && (
+                  <MetadataContainerRow
+                    key={`condition-${i}`}
+                    row={{
+                      label: translate(lngKeys.GeneralLabels),
+                      type: 'content',
+                      icon: mdiTag,
+                      content: (
+                        <TagList>
+                          {tags.map((tag) => (
+                            <DocTagsListItem
+                              team={team}
+                              tag={tag}
+                              key={tag.id}
+                            />
+                          ))}
+                        </TagList>
+                      ),
+                    }}
+                  />
+                )
+              )
+            default:
+              return null
+          }
+        })}
       <MetadataContainerBreak />
       <MetadataContainerRow
         row={{

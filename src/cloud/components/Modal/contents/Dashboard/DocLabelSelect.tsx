@@ -6,8 +6,8 @@ import FormSelect, {
 } from '../../../../../design/components/molecules/Form/atoms/FormSelect'
 
 interface DocLabelSelect {
-  value: string
-  update: (newLabels: string) => void
+  value: string[]
+  update: (newLabels: string[]) => void
 }
 
 const DocLabelSelect = ({ value, update }: DocLabelSelect) => {
@@ -18,19 +18,23 @@ const DocLabelSelect = ({ value, update }: DocLabelSelect) => {
   }, [tagsMap])
 
   const updateTag = useCallback(
-    (option: FormSelectOption) => update(option.value),
+    (options: FormSelectOption[]) => {
+      update(options.map((option) => option.value))
+    },
     [update]
   )
 
-  const optionValue = useMemo(() => {
-    return getOptionByTagName(value, tagsMap)
+  const optionsValue = useMemo(() => {
+    return value
+      .map((tagId) => getOptionByTagName(tagId, tagsMap))
+      .filter((tag) => tag != null) as FormSelectOption[]
   }, [value, tagsMap])
 
   return (
     <FormSelect
-      isMulti={false}
+      isMulti
       options={options}
-      value={optionValue}
+      value={optionsValue}
       onChange={updateTag}
     />
   )
