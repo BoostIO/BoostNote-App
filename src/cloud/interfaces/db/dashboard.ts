@@ -35,7 +35,7 @@ export interface ConditionType<T extends string, U extends any> {
 
 export type Condition =
   | ConditionType<'query', Query>
-  | ConditionType<'label', string>
+  | ConditionType<'label', string[]>
   | ConditionType<'due_date', DateCondition>
   | ConditionType<'creation_date', DateCondition>
   | ConditionType<'update_date', DateCondition>
