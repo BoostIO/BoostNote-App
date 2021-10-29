@@ -24,7 +24,7 @@ import ApplicationPage from '../ApplicationPage'
 import ApplicationTopbar from '../ApplicationTopbar'
 import DashboardFolderContextMenu from '../DashboardFolderContextMenu'
 import CreateDashboardModal from '../Modal/contents/Dashboard/CreateDashboardModal'
-import ViewsList from '../ViewsList'
+import Views from '../Views'
 
 const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
   const [selectedDashboardId, setSelectedDashboardId] = useState<
@@ -125,7 +125,7 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
               {sendingMap.get(selectedDashboard.id) === 'list-views' ? (
                 <Spinner />
               ) : (
-                <ViewsList
+                <Views
                   views={selectedDashboard.views || []}
                   parent={{ dashboard: selectedDashboard.id }}
                 />
