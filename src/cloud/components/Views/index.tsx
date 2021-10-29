@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import { useEffectOnce } from 'react-use'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import styled from '../../../design/lib/styled'
 import { SerializedView } from '../../interfaces/db/view'
@@ -13,7 +12,9 @@ interface ViewsListProps {
 }
 
 const ViewsList = ({ views, parent }: ViewsListProps) => {
-  const [selectedViewId, setSelectedViewId] = useState<number>()
+  const [selectedViewId, setSelectedViewId] = useState<number | undefined>(() =>
+    views.length > 0 ? views[0].id : undefined
+  )
   const { createViewApi } = useCloudApi()
 
   const currentView = useMemo(() => {
@@ -23,12 +24,6 @@ const ViewsList = ({ views, parent }: ViewsListProps) => {
 
     return views.find((view) => view.id === selectedViewId)
   }, [selectedViewId, views])
-
-  useEffectOnce(() => {
-    if (views.length > 0) {
-      setSelectedViewId(views[0].id)
-    }
-  })
 
   return (
     <Container className='views__list'>
