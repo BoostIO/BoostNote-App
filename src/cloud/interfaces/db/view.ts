@@ -1,5 +1,5 @@
 import { SerializedDashboard } from './dashboard'
-import { SerializedFolder } from './folder'
+import { SerializedFolder, SerializedFolderWithBookmark } from './folder'
 
 export type SupportedViewTypes = 'table'
 
@@ -22,3 +22,7 @@ export interface SerializedUnserializableViewProps {
 
 export type SerializedView = SerializedUnserializableViewProps &
   SerializableViewProps
+
+export type ViewParent =
+  | { type: 'folder'; target: SerializedFolderWithBookmark }
+  | { type: 'dashboard'; target: SerializedDashboard }

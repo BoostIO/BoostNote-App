@@ -1,14 +1,16 @@
 import React, { useMemo, useState } from 'react'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import styled from '../../../design/lib/styled'
-import { SerializedView } from '../../interfaces/db/view'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
+import { SerializedView, ViewParent } from '../../interfaces/db/view'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import TableView from './Table/TableView'
 import ViewsSelector from './ViewsSelector'
 
 interface ViewsListProps {
   views: SerializedView[]
-  parent: { folder: string } | { dashboard: string }
+  parent: ViewParent
+  docs: SerializedDocWithSupplemental[]
 }
 
 const ViewsList = ({ views, parent }: ViewsListProps) => {
