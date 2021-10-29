@@ -8,13 +8,17 @@ import { BulkApiActionRes } from '../../../design/lib/hooks/useBulkApi'
 import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
 import { CreateViewRequestBody } from '../../api/teams/views'
-import { SerializedView, SupportedViewTypes } from '../../interfaces/db/view'
+import {
+  SerializedView,
+  SupportedViewTypes,
+  ViewParent,
+} from '../../interfaces/db/view'
 
 export interface ViewsSelectorProps {
   selectedViewId: number | undefined
   setSelectedViewId: React.Dispatch<React.SetStateAction<number | undefined>>
   views: SerializedView[]
-  parent: { folder: string } | { dashboard: string }
+  parent: ViewParent
   createViewApi: (target: CreateViewRequestBody) => Promise<BulkApiActionRes>
 }
 
@@ -32,7 +36,11 @@ const ViewsSelector = ({
     async (type: SupportedViewTypes) => {
       closeAllModals()
       setSending(true)
-      await createViewApi(Object.assign({}, parent, { type }))
+      await createViewApi(
+        parent.type === 'folder'
+          ? { folder: parent.target.id, type }
+          : { dashboard: parent.target.id, type }
+      )
       setSending(false)
     },
     [closeAllModals, parent, createViewApi]
