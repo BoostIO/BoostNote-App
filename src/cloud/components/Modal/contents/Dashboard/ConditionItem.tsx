@@ -111,7 +111,7 @@ function getDefaultConditionByType(type: string): EditableCondition {
       return {
         rule: 'and',
         type: 'label',
-        value: '',
+        value: [],
       }
     case 'due_date':
     case 'creation_date':
