@@ -16,6 +16,7 @@ import {
   getDashboardListPageData,
 } from '../../api/pages/teams/dashboard/list'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
+import { buildDashboardQueryCheck } from '../../lib/dashboards'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import { useNav } from '../../lib/stores/nav'
 import { usePage } from '../../lib/stores/pageStore'
@@ -30,7 +31,7 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
   const [selectedDashboardId, setSelectedDashboardId] = useState<
     string | undefined
   >(data.length > 0 ? data[0].id : undefined)
-  const { initialLoadDone, dashboardsMap } = useNav()
+  const { initialLoadDone, dashboardsMap, docsMap } = useNav()
   const { openModal, openContextModal, closeAllModals } = useModal()
   const { team } = usePage()
   const { listViewsApi, sendingMap } = useCloudApi()
@@ -50,6 +51,15 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
 
     return dashboardsMap.get(selectedDashboardId)
   }, [dashboardsMap, selectedDashboardId])
+
+  const selectedDashboardDocs = useMemo(() => {
+    if (selectedDashboard == null || selectedDashboard.condition.length === 0) {
+      return []
+    }
+    const docs = getMapValues(docsMap)
+
+    return docs.filter(buildDashboardQueryCheck(selectedDashboard.condition))
+  }, [docsMap, selectedDashboard])
 
   return (
     <ApplicationPage>
@@ -127,7 +137,8 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
               ) : (
                 <Views
                   views={selectedDashboard.views || []}
-                  parent={{ dashboard: selectedDashboard.id }}
+                  parent={{ type: 'dashboard', target: selectedDashboard }}
+                  docs={selectedDashboardDocs}
                 />
               )}
             </>
@@ -181,6 +192,9 @@ const DashboardSelector = ({
 
 const Container = styled.div`
   margin: 0 ${({ theme }) => theme.sizes.spaces.df}px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
 
   .dashboard__control {
     margin: ${({ theme }) => theme.sizes.spaces.df}px
