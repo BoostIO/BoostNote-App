@@ -50,7 +50,6 @@ import ContextMenu from '../../design/components/molecules/ContextMenu'
 import WorkspaceShowPage from '../pages/[teamId]/workspaces/[workspaceId]'
 import CloudModal from './CloudModal'
 import { CommentsProvider } from '../lib/stores/comments'
-import DashboardFolderPage from '../pages/[teamId]/dashboard-folders/[dashboardFolderId]'
 import EmojiPicker from '../../design/components/molecules/EmojiPicker'
 import { NotificationsProvider } from '../../design/lib/stores/notifications'
 import { TeamIntegrationsProvider } from '../../design/lib/stores/integrations'
@@ -458,11 +457,6 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: WorkspaceShowPage,
           getInitialProps: WorkspaceShowPage.getInitialProps,
-        }
-      case 'smart-folders':
-        return {
-          Component: DashboardFolderPage,
-          getInitialProps: DashboardFolderPage.getInitialProps,
         }
       default:
         return {
