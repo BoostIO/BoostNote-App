@@ -4,6 +4,7 @@ import { ThemeProvider } from 'styled-components'
 import { ThemeTypes } from '../../design/lib/styled/types'
 import { selectV2Theme } from '../../design/lib/styled/styleFunctions'
 import styled from '../../design/lib/styled'
+import GlobalStyle from '../../design/components/atoms/GlobalStyle'
 
 interface ThemedWrapperProps {
   theme?: ThemeTypes
@@ -15,6 +16,7 @@ export const ThemedWrapper: FC<ThemedWrapperProps> = ({
 }) => {
   return (
     <ThemeProvider theme={selectV2Theme(theme)}>
+      <GlobalStyle />
       <StyledBackground>{children}</StyledBackground>
     </ThemeProvider>
   )
