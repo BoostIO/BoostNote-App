@@ -70,7 +70,7 @@ const DashboardCreateModal = ({ onCreate }: CreateDashboardModalProps) => {
   }
 
   return (
-    <ModalContainer title='Create a smart folder'>
+    <ModalContainer title='Create a Dashboard'>
       <DashboardForm
         action='Create'
         onSubmit={submit}

@@ -60,14 +60,18 @@ const DashboardUpdateModal = ({
   }
 
   return (
-    <ModalContainer title='Edit a smart folder'>
+    <ModalContainer title='Edit a Dashboard'>
       <DashboardForm
         action='Update'
         onSubmit={submit}
         buttonsAreDisabled={sending}
         defaultName={dashboard.name}
         defaultPrivate={dashboard.private}
-        defaultConditions={dashboard.condition as EditableQuery}
+        defaultConditions={
+          Array.isArray(dashboard.condition)
+            ? (dashboard.condition as EditableQuery)
+            : []
+        }
       />
     </ModalContainer>
   )

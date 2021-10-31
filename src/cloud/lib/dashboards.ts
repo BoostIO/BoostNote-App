@@ -155,6 +155,9 @@ function checkRule(
 
 export function buildDashboardQueryCheck(query: SerializedQuery) {
   return (doc: SerializedDocWithSupplemental) => {
+    if (!Array.isArray(query)) {
+      return false
+    }
     return query.reduce((result, condition) => {
       const validator = validators[condition.type]
       return checkRule(validator(doc, condition as any), condition.rule, result)
