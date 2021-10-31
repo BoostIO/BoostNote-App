@@ -66,7 +66,11 @@ const UpdateDashboardModal = ({
       buttonsAreDisabled={sending}
       defaultName={dashboard.name}
       defaultPrivate={dashboard.private}
-      defaultConditions={dashboard.condition as EditableQuery}
+      defaultConditions={
+        Array.isArray(dashboard.condition)
+          ? (dashboard.condition as EditableQuery)
+          : []
+      }
     />
   )
 }
