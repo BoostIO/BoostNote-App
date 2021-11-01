@@ -8,10 +8,16 @@ import {
   cloudSidebaCategoryLabels,
   cloudSidebarOrderedCategoriesDelimiter,
 } from '../../sidebar'
-
-function savePreferencesToLocalStorage(preferences: Partial<Preferences>) {
-  localLiteStorage.setItem(preferencesKey, JSON.stringify(preferences))
-}
+import {
+  createCodemirrorTypeKeymap,
+  defaultKeymap,
+  findExistingShortcut,
+  getMenuAcceleratorForKeymapItem,
+  isMenuKeymap,
+  KeymapItem,
+  KeymapItemEditableProps,
+} from '../../../../lib/keymap'
+import { useElectron } from '../electron'
 
 const basePreferences: Preferences = {
   folderSortingOrder: 'Latest Updated',
@@ -30,13 +36,41 @@ const basePreferences: Preferences = {
   ),
   version: 1,
   docPropertiesAreHidden: false,
+  keymap: new Map<string, KeymapItem>(),
+}
+
+function replacer(_key: string, value: any) {
+  if (value instanceof Map && value.size > 0) {
+    return {
+      dataType: 'Map',
+      value: [...value.entries()],
+    }
+  } else {
+    return value
+  }
+}
+
+function reviver(_key: string, value: any) {
+  if (typeof value === 'object' && value !== null) {
+    if (value.dataType === 'Map') {
+      return new Map(value.value)
+    }
+  }
+  return value
+}
+
+function savePreferencesToLocalStorage(preferences: Partial<Preferences>) {
+  localLiteStorage.setItem(
+    preferencesKey,
+    JSON.stringify(preferences, replacer)
+  )
 }
 
 function getExistingPreferences() {
   try {
     const stringifiedPreferences = localLiteStorage.getItem(preferencesKey)
     if (stringifiedPreferences == null) return
-    const existingPreferences = JSON.parse(stringifiedPreferences)
+    const existingPreferences = JSON.parse(stringifiedPreferences, reviver)
     if (existingPreferences.version == null) {
       existingPreferences.version = 1
 
@@ -71,16 +105,25 @@ function usePreferencesStore() {
   const [preferences, setPreferences] = useSetState<Partial<Preferences>>(
     initialPreference
   )
+  const { sendToElectron, usingElectron } = useElectron()
   const hoverOffTimeoutRef = useRef<number>()
 
-  useEffect(() => {
-    savePreferencesToLocalStorage(preferences)
-  }, [preferences])
-
   const mergedPreferences = useMemo(() => {
+    const preferencesKeymap = preferences['keymap']
+    const keymap = basePreferences['keymap']
+    try {
+      if (preferencesKeymap != null) {
+        preferencesKeymap.forEach((value, key) => {
+          keymap.set(key, value)
+        })
+      }
+    } catch (e) {
+      console.warn('Corrupted storage, preferences keymap was null!')
+    }
     return {
       ...basePreferences,
       ...preferences,
+      keymap: keymap,
     }
   }, [preferences])
 
@@ -120,6 +163,174 @@ function usePreferencesStore() {
     setPreferences({ sidebarIsHovered: true })
   }, [setPreferences])
 
+  const keymap = mergedPreferences['keymap']
+  const getAcceleratorTypeKeymap = useCallback(
+    (key: string) => {
+      if (keymap == null) {
+        return ''
+      }
+      const keymapItem = keymap.get(key)
+      if (keymapItem == null) {
+        return ''
+      }
+      return getMenuAcceleratorForKeymapItem(keymapItem)
+    },
+    [keymap]
+  )
+
+  const getCodemirrorTypeKeymap = useCallback(
+    (key: string) => {
+      if (keymap == null) {
+        return null
+      }
+      const keymapItem = keymap.get(key)
+      if (keymapItem == null || keymapItem.shortcutMainStroke == null) {
+        return null
+      }
+      let keymapString = createCodemirrorTypeKeymap(
+        keymapItem.shortcutMainStroke
+      )
+      if (keymapItem.shortcutSecondStroke != null) {
+        keymapString +=
+          ' ' + createCodemirrorTypeKeymap(keymapItem.shortcutSecondStroke)
+      }
+      return keymapString
+    },
+    [keymap]
+  )
+
+  const updateKeymap = useCallback(
+    (
+      key: string,
+      firstShortcut: KeymapItemEditableProps,
+      secondShortcut?: KeymapItemEditableProps
+    ): Promise<void> => {
+      if (keymap == null) {
+        return Promise.reject('No keymap available')
+      }
+      if (findExistingShortcut(key, firstShortcut, keymap)) {
+        return Promise.reject('Existing keymap with the same shortcut')
+      }
+      const keymapItem = keymap.get(key)
+      if (keymapItem == null) {
+        return Promise.reject(`No such keymap to set for key: ${key}`)
+      }
+      keymap.set(key, {
+        description: keymapItem.description,
+        isMenuType: keymapItem.isMenuType,
+        shortcutMainStroke: {
+          ...keymapItem.shortcutMainStroke,
+          ...firstShortcut,
+        },
+        shortcutSecondStroke:
+          secondShortcut != null
+            ? {
+                ...keymapItem.shortcutSecondStroke,
+                ...secondShortcut,
+              }
+            : undefined,
+      })
+
+      setPreferences((preferences) => {
+        return {
+          ...preferences,
+          keymap: keymap,
+        }
+      })
+
+      if (isMenuKeymap(keymapItem)) {
+        if (usingElectron) {
+          sendToElectron('menuAcceleratorChanged', [
+            key,
+            getMenuAcceleratorForKeymapItem(keymapItem),
+          ])
+        }
+      }
+      return Promise.resolve()
+    },
+    [keymap, sendToElectron, setPreferences, usingElectron]
+  )
+
+  const removeKeymap = useCallback(
+    (key) => {
+      if (keymap == null) {
+        return false
+      }
+      const keymapItem = keymap.get(key)
+      if (keymapItem == null) {
+        return false
+      }
+      keymap.set(key, {
+        ...keymapItem,
+        shortcutMainStroke: undefined,
+        shortcutSecondStroke: undefined,
+      })
+      setPreferences((preferences) => {
+        return {
+          ...preferences,
+          keymap: keymap,
+        }
+      })
+
+      if (isMenuKeymap(keymapItem)) {
+        if (usingElectron) {
+          sendToElectron('menuAcceleratorChanged', [key, null])
+        }
+      }
+      return true
+    },
+    [keymap, sendToElectron, setPreferences, usingElectron]
+  )
+
+  const loadKeymaps = useCallback(() => {
+    const keymap = mergedPreferences['keymap']
+    for (const [key, keymapItem] of keymap) {
+      if (isMenuKeymap(keymapItem)) {
+        if (usingElectron) {
+          sendToElectron('menuAcceleratorChanged', [
+            key,
+            getMenuAcceleratorForKeymapItem(keymapItem),
+          ])
+        }
+      }
+    }
+
+    // add new keymaps to preferences if weren't available before
+    let addedKeymap = false
+    for (const [key, keymapItem] of defaultKeymap) {
+      if (!keymap.has(key)) {
+        keymap.set(key, keymapItem)
+        addedKeymap = true
+      }
+    }
+    if (addedKeymap) {
+      setPreferences((preferences) => {
+        return {
+          ...preferences,
+          keymap: keymap,
+        }
+      })
+    }
+  }, [mergedPreferences, sendToElectron, setPreferences, usingElectron])
+
+  const resetKeymap = useCallback(() => {
+    keymap.clear()
+    for (const [key, keymapItem] of defaultKeymap) {
+      keymap.set(key, keymapItem)
+    }
+    setPreferences((preferences) => {
+      return {
+        ...preferences,
+        keymap: defaultKeymap,
+      }
+    })
+  }, [keymap, setPreferences])
+
+  useEffect(() => {
+    loadKeymaps()
+    savePreferencesToLocalStorage(preferences)
+  }, [loadKeymaps, mergedPreferences, preferences, resetKeymap])
+
   return {
     preferences: mergedPreferences,
     setPreferences,
@@ -127,6 +338,11 @@ function usePreferencesStore() {
     hoverSidebarOff,
     hoverSidebarOn,
     topBarPaddingLeft,
+    updateKeymap,
+    removeKeymap,
+    resetKeymap,
+    getCodemirrorTypeKeymap,
+    getAcceleratorTypeKeymap,
   }
 }
 

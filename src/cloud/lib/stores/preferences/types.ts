@@ -1,6 +1,7 @@
 import { SidebarState } from '../../../../design/lib/sidebar'
 import { SidebarTreeSortingOrder } from '../../../../design/lib/sidebar'
 import { DocStatus } from '../../../interfaces/db/doc'
+import { KeymapItem } from '../../../../lib/keymap'
 
 export type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -19,4 +20,5 @@ export interface Preferences {
   version?: number
   docStatusDisplayed: DocStatus[]
   docPropertiesAreHidden: boolean
+  keymap: Map<string, KeymapItem>
 }

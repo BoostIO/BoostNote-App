@@ -32,6 +32,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsTeamInfo]: 'Settings',
   [lngKeys.SettingsTitle]: 'Settings',
   [lngKeys.SettingsPersonalInfo]: 'Settings',
+  [lngKeys.SettingsKeymap]: 'Keymap',
   [lngKeys.SettingsMarkdownPreview]: 'Markdown',
   [lngKeys.SettingsMarkdownPreviewShowcase]: 'Markdown Style Preview',
   [lngKeys.SettingsMarkdownPreviewCodeBlockTheme]: 'Code Block Theme',

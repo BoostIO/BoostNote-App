@@ -33,6 +33,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsTeamInfo]: 'Paramètres',
   [lngKeys.SettingsTitle]: 'Paramètres',
   [lngKeys.SettingsPersonalInfo]: 'Paramètres',
+  [lngKeys.SettingsKeymap]: 'Carte clavier',
   [lngKeys.SettingsMarkdownPreview]: 'Markdown',
   [lngKeys.SettingsMarkdownPreviewShowcase]: 'Aperçu du style Markdown',
   [lngKeys.SettingsMarkdownPreviewCodeBlockTheme]: 'Thème du bloc de code',

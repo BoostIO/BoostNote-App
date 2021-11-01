@@ -12,16 +12,18 @@ import { electronFrontendUrl } from './consts'
 
 const mac = process.platform === 'darwin'
 
-export function getTemplateFromKeymap(): MenuItemConstructorOptions[] {
+export function getTemplateFromKeymap(
+  keymap: Map<string, string>
+): MenuItemConstructorOptions[] {
   const menu: MenuItemConstructorOptions[] = []
 
   if (mac) {
     menu.push(getMacRootMenu())
   }
 
-  menu.push(getFileMenu())
+  menu.push(getFileMenu(keymap))
   menu.push(getEditMenu())
-  menu.push(getViewMenu())
+  menu.push(getViewMenu(keymap))
   menu.push(getWindowMenu())
   menu.push(getCommunityMenu())
   menu.push({
@@ -73,7 +75,7 @@ function getMacRootMenu(): MenuItemConstructorOptions {
   }
 }
 
-function getFileMenu(): MenuItemConstructorOptions {
+function getFileMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
   const submenuItems: MenuItemConstructorOptions[] = mac
     ? [
         {
@@ -89,14 +91,14 @@ function getFileMenu(): MenuItemConstructorOptions {
           type: 'normal',
           label: 'New Document',
           click: createEmitIpcMenuItemHandler('new-doc'),
-          accelerator: 'Cmd + N',
+          accelerator: keymap.get('createNewDoc'),
         },
         { type: 'separator' },
         {
           type: 'normal',
           label: 'Save As',
           click: createEmitIpcMenuItemHandler('save-as'),
-          accelerator: 'Cmd + S',
+          accelerator: keymap.get('editorSaveAs'),
         },
         { type: 'separator' },
         { role: 'close' },
@@ -115,14 +117,14 @@ function getFileMenu(): MenuItemConstructorOptions {
           type: 'normal',
           label: 'New Document',
           click: createEmitIpcMenuItemHandler('new-doc'),
-          accelerator: 'Ctrl + N',
+          accelerator: keymap.get('createNewDoc'),
         },
         { type: 'separator' },
         {
           type: 'normal',
           label: 'Save As',
           click: createEmitIpcMenuItemHandler('save-as'),
-          accelerator: 'Ctrl + S',
+          accelerator: keymap.get('editorSaveAs'),
         },
         { type: 'separator' },
         {
@@ -139,7 +141,7 @@ function getFileMenu(): MenuItemConstructorOptions {
         { type: 'separator' },
         {
           label: 'Preferences',
-          accelerator: 'Ctrl+,',
+          accelerator: keymap.get('openPreferences'),
           click: createEmitIpcMenuItemHandler('toggle-settings'),
         },
         { type: 'separator' },
@@ -188,7 +190,7 @@ function getEditMenu(): MenuItemConstructorOptions {
   }
 }
 
-function getViewMenu(): MenuItemConstructorOptions {
+function getViewMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
   const submenuItems: MenuItemConstructorOptions[] = [
     {
       type: 'submenu',
@@ -315,9 +317,9 @@ function getViewMenu(): MenuItemConstructorOptions {
     },
 
     { type: 'separator' },
-    { role: 'resetZoom' },
-    { role: 'zoomIn' },
-    { role: 'zoomOut' },
+    { role: 'resetZoom', accelerator: keymap.get('resetZoom') },
+    { role: 'zoomIn', accelerator: keymap.get('zoomIn') },
+    { role: 'zoomOut', accelerator: keymap.get('zoomOut') },
     { type: 'separator' },
     { role: 'togglefullscreen' },
   ]

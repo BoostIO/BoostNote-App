@@ -33,6 +33,7 @@ export const baseUserSettings: UserSettings = {
 export type SettingsTab =
   | 'personalInfo'
   | 'preferences'
+  | 'keymap'
   | 'teamInfo'
   | 'teamMembers'
   | 'integrations'

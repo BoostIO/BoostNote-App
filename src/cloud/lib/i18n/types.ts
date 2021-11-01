@@ -108,6 +108,7 @@ export enum lngKeys {
   SettingsNotifications = 'settings.notifications',
   SettingsTitle = 'settings.title',
   SettingsPersonalInfo = 'settings.personalInfo',
+  SettingsKeymap = 'settings.keymap',
   SettingsMarkdownPreview = 'settings.markdownPreview',
   SettingsMarkdownPreviewShowcase = 'settings.markdownPreviewShowcase',
   SettingsMarkdownPreviewCodeBlockTheme = 'settings.markdownPreviewCodeBlockTheme',

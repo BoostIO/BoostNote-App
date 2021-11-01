@@ -360,6 +360,13 @@ const BoostHubWebview = ({
         case 'register-protocol':
           sendIpcMessage('register-protocol', [])
           break
+        case 'menuAcceleratorChanged':
+          if (event.args.length == 1) {
+            sendIpcMessage('menuAcceleratorChanged', event.args[0])
+          } else {
+            console.warn('Invalid arguments sent for menu accelerator change')
+          }
+          break
         default:
           console.log('Unhandled ipc message event', event.channel, event.args)
           break
