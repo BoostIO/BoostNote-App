@@ -31,7 +31,7 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
   const [selectedDashboardId, setSelectedDashboardId] = useState<
     string | undefined
   >(data.length > 0 ? data[0].id : undefined)
-  const { initialLoadDone, dashboardsMap, docsMap } = useNav()
+  const { initialLoadDone, dashboardsMap, docsMap, viewsMap } = useNav()
   const { openModal, openContextModal, closeAllModals } = useModal()
   const { team } = usePage()
   const { listViewsApi, sendingMap } = useCloudApi()
@@ -51,6 +51,16 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
 
     return dashboardsMap.get(selectedDashboardId)
   }, [dashboardsMap, selectedDashboardId])
+
+  const selectedDashboardViews = useMemo(() => {
+    if (selectedDashboard == null) {
+      return []
+    }
+
+    const views = getMapValues(viewsMap)
+
+    return views.filter((view) => view.dashboardId === selectedDashboard.id)
+  }, [viewsMap, selectedDashboard])
 
   const selectedDashboardDocs = useMemo(() => {
     if (selectedDashboard == null || selectedDashboard.condition.length === 0) {
@@ -136,7 +146,7 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
                 <Spinner />
               ) : (
                 <Views
-                  views={selectedDashboard.views || []}
+                  views={selectedDashboardViews}
                   parent={{ type: 'dashboard', target: selectedDashboard }}
                   docs={selectedDashboardDocs}
                 />
