@@ -21,6 +21,7 @@ import { SerializedTag } from '../../../interfaces/db/tag'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedTemplate } from '../../../interfaces/db/template'
 import { SerializedDashboard } from '../../../interfaces/db/dashboard'
+import { SerializedView } from '../../../interfaces/db/view'
 
 export interface NavContext {
   initialLoadDone: boolean
@@ -33,6 +34,9 @@ export interface NavContext {
   currentParentFolder?: SerializedFolderWithBookmark
   tagsMap: Map<string, SerializedTag>
   templatesMap: Map<string, SerializedTemplate>
+  viewsMap: Map<number, SerializedView>
+  updateViewsMap: (...newViews: [number, SerializedView][]) => void
+  removeFromViewsMap: (...ids: number[]) => void
   workspacesMap: Map<string, SerializedWorkspace>
   updateWorkspacesMap: (
     ...mappedWorkspaces: [string, SerializedWorkspace][]

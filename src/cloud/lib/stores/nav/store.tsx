@@ -60,6 +60,7 @@ import { SerializedTemplate } from '../../../interfaces/db/template'
 import { getAllTemplates } from '../../../api/teams/docs/templates'
 import { useToast } from '../../../../design/lib/stores/toast'
 import { SerializedDashboard } from '../../../interfaces/db/dashboard'
+import { SerializedView } from '../../../interfaces/db/view'
 export * from './types'
 
 function useNavStore(): NavContext {
@@ -108,10 +109,33 @@ function useNavStore(): NavContext {
   const [dashboardsMap, setDashboardsMap] = useState<
     Map<string, SerializedDashboard>
   >(new Map())
-
+  const [viewsMap, setViewsMap] = useState<Map<number, SerializedView>>(
+    new Map()
+  )
   const [appEventsMap, setAppEventsMap] = useState<
     Map<string, SerializedAppEvent>
   >(new Map())
+
+  const updateViewsMap = useCallback(
+    (...mappedEvents: [number, SerializedView][]) => {
+      setViewsMap((prevMap) => {
+        return new Map([...prevMap, ...mappedEvents])
+      })
+    },
+    []
+  )
+
+  const removeFromViewsMap = useCallback(
+    (...ids: number[]) =>
+      setViewsMap((prevMap) => {
+        const newMap = new Map(prevMap)
+        ids.forEach((viewId) => {
+          newMap.delete(viewId)
+        })
+        return newMap
+      }),
+    []
+  )
 
   const updateAppEventsMap = useCallback(
     (...mappedEvents: [string, SerializedAppEvent][]) => {
@@ -229,6 +253,7 @@ function useNavStore(): NavContext {
           setTagsMap(new Map())
           setWorkspacesMap(new Map())
           setTemplatesMap(new Map())
+          setViewsMap(new Map())
         }
 
         setInitialLoadDone(false)
@@ -898,6 +923,9 @@ function useNavStore(): NavContext {
     updateTemplatesMap,
     removeFromTemplatesMap,
     updateDocHandler,
+    viewsMap,
+    updateViewsMap,
+    removeFromViewsMap,
   }
 }
 

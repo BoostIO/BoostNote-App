@@ -66,10 +66,7 @@ import {
   getWorkspaceURL,
 } from '../utils/patterns'
 import useBulkApi from '../../../design/lib/hooks/useBulkApi'
-import {
-  getMapFromEntityArray,
-  getMapValues,
-} from '../../../design/lib/utils/array'
+import { getMapFromEntityArray } from '../../../design/lib/utils/array'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import {
   createDashboard,
@@ -112,7 +109,6 @@ import { PropData } from '../../interfaces/db/props'
 export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
   const {
-    dashboardsMap,
     updateWorkspacesMap,
     updateFoldersMap,
     updateDocsMap,
@@ -127,6 +123,8 @@ export function useCloudApi() {
     setCurrentPath,
     removeFromDashboardsMap: removeFromDashboardsMap,
     removeFromTagsMap,
+    updateViewsMap,
+    removeFromViewsMap,
   } = useNav()
   const { push } = useRouter()
 
@@ -801,30 +799,11 @@ export function useCloudApi() {
       return send(shortid.generate(), 'create', {
         api: () => createView(target),
         cb: ({ data }: CreateViewResponseBody) => {
-          if (data.folderId != null) {
-            const folder = foldersMap.get(data.folderId)
-            if (folder != null) {
-              updateFoldersMap([
-                folder.id,
-                { ...folder, views: [...(folder.views || []), data] },
-              ])
-            }
-          } else if (data.dashboardId != null) {
-            const dashboardFolder = dashboardsMap.get(data.dashboardId)
-            if (dashboardFolder != null) {
-              updateDashboardsMap([
-                dashboardFolder.id,
-                {
-                  ...dashboardFolder,
-                  views: [...(dashboardFolder.views || []), data],
-                },
-              ])
-            }
-          }
+          updateViewsMap([data.id, data])
         },
       })
     },
-    [dashboardsMap, updateDashboardsMap, foldersMap, updateFoldersMap, send]
+    [updateViewsMap, send]
   )
 
   const updateViewApi = useCallback(
@@ -832,34 +811,11 @@ export function useCloudApi() {
       return send(target.id.toString(), 'update', {
         api: () => updateView(target, body),
         cb: ({ data }: UpdateViewResponseBody) => {
-          if (data.folderId != null) {
-            const folder = foldersMap.get(data.folderId)
-            if (folder != null) {
-              const viewMap = getMapFromEntityArray(folder.views || [])
-              viewMap.set(data.id.toString(), data)
-              updateFoldersMap([
-                folder.id,
-                { ...folder, views: getMapValues(viewMap) },
-              ])
-            }
-          } else if (data.dashboardId != null) {
-            const dashboardFolder = dashboardsMap.get(data.dashboardId)
-            if (dashboardFolder != null) {
-              const viewMap = getMapFromEntityArray(dashboardFolder.views || [])
-              viewMap.set(data.id.toString(), data)
-              updateDashboardsMap([
-                dashboardFolder.id,
-                {
-                  ...dashboardFolder,
-                  views: getMapValues(viewMap),
-                },
-              ])
-            }
-          }
+          updateViewsMap([data.id, data])
         },
       })
     },
-    [dashboardsMap, updateDashboardsMap, foldersMap, updateFoldersMap, send]
+    [updateViewsMap, send]
   )
 
   const deleteViewApi = useCallback(
@@ -867,35 +823,11 @@ export function useCloudApi() {
       return send(target.id.toString(), 'delete', {
         api: () => deleteView(target.id),
         cb: () => {
-          if (target.folderId != null) {
-            const folder = foldersMap.get(target.folderId)
-            if (folder != null) {
-              updateFoldersMap([
-                folder.id,
-                {
-                  ...folder,
-                  views: (folder.views || []).filter((v) => v.id !== target.id),
-                },
-              ])
-            }
-          } else if (target.dashboardId != null) {
-            const dashboardFolder = dashboardsMap.get(target.dashboardId)
-            if (dashboardFolder != null) {
-              updateDashboardsMap([
-                dashboardFolder.id,
-                {
-                  ...dashboardFolder,
-                  views: (dashboardFolder.views || []).filter(
-                    (v) => v.id !== target.id
-                  ),
-                },
-              ])
-            }
-          }
+          removeFromViewsMap(target.id)
         },
       })
     },
-    [dashboardsMap, updateDashboardsMap, foldersMap, updateFoldersMap, send]
+    [removeFromViewsMap, send]
   )
 
   const listViewsApi = useCallback(
@@ -906,41 +838,17 @@ export function useCloudApi() {
         {
           api: () => listViews(target),
           cb: ({ data }: ListViewsResponseBody) => {
-            if ('folder' in target) {
-              const folder = foldersMap.get(target.folder)
-              if (folder != null) {
-                const viewMap = getMapFromEntityArray(folder.views || [])
-                for (const view of data) {
-                  viewMap.set(view.id.toString(), view)
-                }
-                updateFoldersMap([
-                  folder.id,
-                  { ...folder, views: getMapValues(viewMap) },
-                ])
-              }
-            } else if ('dashboard' in target) {
-              const dashboardFolder = dashboardsMap.get(target.dashboard)
-              if (dashboardFolder != null) {
-                const viewMap = getMapFromEntityArray(
-                  dashboardFolder.views || []
-                )
-                for (const view of data) {
-                  viewMap.set(view.id.toString(), view)
-                }
-                updateDashboardsMap([
-                  dashboardFolder.id,
-                  {
-                    ...dashboardFolder,
-                    views: getMapValues(viewMap),
-                  },
-                ])
-              }
-            }
+            updateViewsMap(
+              ...data.reduce((acc, val) => {
+                acc.set(val.id, val)
+                return acc
+              }, new Map<number, SerializedView>())
+            )
           },
         }
       )
     },
-    [dashboardsMap, updateDashboardsMap, foldersMap, updateFoldersMap, send]
+    [updateViewsMap, send]
   )
 
   return {
