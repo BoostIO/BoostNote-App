@@ -28,19 +28,16 @@ import CreateDashboardModal from '../Modal/contents/Dashboard/CreateDashboardMod
 import Views from '../Views'
 
 const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
-  const [selectedDashboardId, setSelectedDashboardId] = useState<
-    string | undefined
-  >(data.length > 0 ? data[0].id : undefined)
-  const { initialLoadDone, dashboardsMap, docsMap, viewsMap } = useNav()
+  const [selectedDashboardId, setSelectedDashboardId] = useState<string>()
+  const { dashboardsMap, docsMap, viewsMap } = useNav()
   const { openModal, openContextModal, closeAllModals } = useModal()
   const { team } = usePage()
   const { listViewsApi, sendingMap } = useCloudApi()
 
   useEffectOnce(() => {
-    if (initialLoadDone && dashboardsMap.size > 0) {
-      const dashboards = getMapValues(dashboardsMap)
-      setSelectedDashboardId(dashboards[0].id)
-      listViewsApi({ dashboard: dashboards[0].id })
+    if (data.length > 0) {
+      setSelectedDashboardId(data[0].id)
+      listViewsApi({ dashboard: data[0].id })
     }
   })
 
