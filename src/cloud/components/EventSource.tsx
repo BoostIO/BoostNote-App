@@ -412,7 +412,6 @@ const EventSource = ({ teamId }: EventSourceProps) => {
         (reconnectionDelayRef.current = defaultReconnectionDelay)
       eventSourceRef.current.onmessage = (eventData: MessageEvent) => {
         const event = JSON.parse(eventData.data) as SerializedAppEvent
-
         switch (event.type) {
           case 'teamUpdate':
             teamUpdateHandler(event)
