@@ -19,6 +19,7 @@ import { getUniqueFolderAndDocIdsFromResourcesIds } from '../lib/utils/patterns'
 import { getAccessToken, useElectron } from '../lib/stores/electron'
 import { useNotifications } from '../../design/lib/stores/notifications'
 import { useComments } from '../lib/stores/comments'
+import { SerializedView } from '../interfaces/db/view'
 
 interface EventSourceProps {
   teamId: string
@@ -58,6 +59,8 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     updateDashboardsMap: updateDashboardFoldersMap,
     removeFromDashboardsMap: removeFromDashboardFoldersMap,
     updateAppEventsMap,
+    removeFromViewsMap,
+    updateViewsMap,
   } = useNav()
   const {
     setPartialGlobalData,
@@ -389,6 +392,19 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     [removeFromDashboardFoldersMap]
   )
 
+  const viewChangeEventHandler = useCallback(
+    (event: SerializedAppEvent) => {
+      const view = event.data.view as SerializedView
+      if (event.type === 'viewDeleted') {
+        removeFromViewsMap(view.id)
+        return
+      }
+
+      updateViewsMap([view.id, view])
+    },
+    [removeFromViewsMap, updateViewsMap]
+  )
+
   /// re-assign handler on change
   useEffect(() => {
     if (eventSourceRef.current != null && eventSourceSetupCounter > 0) {
@@ -449,13 +465,17 @@ const EventSource = ({ teamId }: EventSourceProps) => {
           case 'dashboardFolderUpdate':
             dashboardFolderUpdateHandler(event)
             break
-
           case 'dashboardFolderDelete':
             dashboardFolderDeleteHandler(event)
             break
           case 'notificationCreated':
           case 'notificationViewed':
             notificationsEventListener(event)
+            break
+          case 'viewCreated':
+          case 'viewUpdated':
+          case 'viewDeleted':
+            viewChangeEventHandler(event)
             break
         }
         updateAppEventsMap([event.id, event])
@@ -479,6 +499,7 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     dashboardFolderDeleteHandler,
     updateAppEventsMap,
     notificationsEventListener,
+    viewChangeEventHandler,
   ])
 
   return null

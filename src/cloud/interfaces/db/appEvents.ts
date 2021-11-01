@@ -38,6 +38,9 @@ export type SseEventType =
   | 'blockCreated'
   | 'blockUpdated'
   | 'blockDeleted'
+  | 'viewCreated'
+  | 'viewUpdated'
+  | 'viewDeleted'
 
 export interface SerializableAppEventProps {
   id: string
