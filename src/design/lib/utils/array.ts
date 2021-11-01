@@ -91,7 +91,7 @@ export function sortByAttributeDesc<T>(attribute: keyof T, array: T[]) {
   return reverse(sortBy(compose(toLower, prop(attribute as string)))(array))
 }
 
-export function getMapValues<T>(map: Map<string, T>): T[] {
+export function getMapValues<T>(map: Map<string | number, T>): T[] {
   return [...map.values()]
 }
 
