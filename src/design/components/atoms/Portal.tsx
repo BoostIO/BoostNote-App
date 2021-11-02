@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 
 export interface PortalProps {
   domTarget: Element | null
-  children: React.ReactNode
 }
 
 const Portal: React.FC<PortalProps> = ({ domTarget, children }) => {

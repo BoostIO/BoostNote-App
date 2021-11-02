@@ -11,9 +11,15 @@ interface ViewsListProps {
   views: SerializedView[]
   parent: ViewParent
   docs: SerializedDocWithSupplemental[]
+  currentUserIsCoreMember: boolean
 }
 
-const ViewsList = ({ views, parent }: ViewsListProps) => {
+const ViewsList = ({
+  views,
+  parent,
+  docs,
+  currentUserIsCoreMember,
+}: ViewsListProps) => {
   const [selectedViewId, setSelectedViewId] = useState<number | undefined>(() =>
     views.length > 0 ? views[0].id : undefined
   )
@@ -47,6 +53,8 @@ const ViewsList = ({ views, parent }: ViewsListProps) => {
           parent={parent}
           views={views}
           view={currentView}
+          docs={docs}
+          currentUserIsCoreMember={currentUserIsCoreMember}
         />
       ) : null}
     </Container>
