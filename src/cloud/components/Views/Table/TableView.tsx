@@ -5,31 +5,34 @@ import Button, {
 } from '../../../../design/components/atoms/Button'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import Table from '../../../../design/components/organisms/Table'
-import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import { useModal } from '../../../../design/lib/stores/modal'
 import styled from '../../../../design/lib/styled'
+import { TableViewEvent, TableViewEventEmitter } from '../../../../lib/events'
+import { SerializedQuery } from '../../../interfaces/db/dashboard'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedView } from '../../../interfaces/db/view'
+import { buildDashboardQueryCheck } from '../../../lib/dashboards'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { getInitialPropDataOfProp } from '../../../lib/props'
 import { getArrayFromRecord } from '../../../lib/utils/array'
 import { getDocTitle } from '../../../lib/utils/patterns'
 import { Column, ViewTableData } from '../../../lib/views/table'
 import PropPicker from '../../Props/PropPicker'
-import ViewsSelector, { ViewsSelectorProps } from '../ViewsSelector'
+import TableFilterContext from './TableFilterContext'
 import TablePropertiesContext from './TablePropertiesContext'
 
 type TableViewProps = {
   view: SerializedView
   docs: SerializedDocWithSupplemental[]
   currentUserIsCoreMember: boolean
-} & ViewsSelectorProps
+  viewsSelector: React.ReactNode
+}
 
 const TableView = ({
   view,
   docs,
   currentUserIsCoreMember,
-  ...viewsSelectorProps
+  viewsSelector,
 }: TableViewProps) => {
   const { sendingMap, deleteViewApi, updateViewApi } = useCloudApi()
   const { openContextModal } = useModal()
@@ -46,9 +49,22 @@ const TableView = ({
     return (state as ViewTableData).columns || {}
   }, [state])
 
+  const setFilters = useCallback((filters: SerializedQuery) => {
+    setState((prev) => {
+      return {
+        ...prev,
+        filter: filters as SerializedQuery,
+      }
+    })
+  }, [])
+
   const filteredDocs = useMemo(() => {
-    return docs
-  }, [docs])
+    if (state.filter == null || state.filter.length === 0) {
+      return docs
+    }
+
+    return docs.filter(buildDashboardQueryCheck(state.filter))
+  }, [state.filter, docs])
 
   const addColumn = useCallback(
     (col: Column) => {
@@ -87,26 +103,39 @@ const TableView = ({
     [columns]
   )
 
-  const actionsRef = useRef({ addColumn, removeColumn })
+  const actionsRef = useRef({ addColumn, removeColumn, setFilters })
   useEffect(() => {
     actionsRef.current = {
       addColumn: addColumn,
       removeColumn: removeColumn,
+      setFilters,
     }
-  }, [removeColumn, addColumn])
-
-  const saveDataRef = useRef<() => Promise<BulkApiActionRes> | undefined>(() =>
-    updateViewApi(view, { data: state })
-  )
-  useEffect(() => {
-    saveDataRef.current = () => {
-      return updateViewApi(view, { data: state })
-    }
-  }, [updateViewApi, state, view])
+  }, [removeColumn, addColumn, setFilters])
 
   useEffect(() => {
     setState(Object.assign({}, view.data as ViewTableData))
   }, [view.data])
+
+  useEffect(() => {
+    const saveEventHandler = (event: TableViewEvent) => {
+      if (event.detail.target !== view.id.toString()) {
+        return
+      }
+      switch (event.detail.type) {
+        case 'save':
+          return updateViewApi(view, {
+            data: state,
+          })
+        default:
+          return
+      }
+    }
+
+    TableViewEventEmitter.listen(saveEventHandler)
+    return () => {
+      TableViewEventEmitter.unlisten(saveEventHandler)
+    }
+  }, [state, updateViewApi, view])
 
   return (
     <Container>
@@ -115,9 +144,32 @@ const TableView = ({
         alignItems='end'
         className='views__header'
       >
-        <ViewsSelector {...viewsSelectorProps} />
+        {viewsSelector}
         <Flexbox flex='0 0 auto'>
-          <Button variant='transparent'>Filter</Button>
+          <Button
+            variant='transparent'
+            active={state.filter != null && state.filter.length > 0}
+            onClick={(ev) =>
+              openContextModal(
+                ev,
+                <TableFilterContext
+                  sendFilters={actionsRef.current.setFilters}
+                  filters={state.filter}
+                />,
+                {
+                  width: 800,
+                  alignment: 'bottom-right',
+                  onClose: () =>
+                    TableViewEventEmitter.dispatch({
+                      type: 'save',
+                      target: view.id.toString(),
+                    }),
+                }
+              )
+            }
+          >
+            Filter
+          </Button>
           <Button
             variant='transparent'
             onClick={(ev) =>
@@ -133,7 +185,11 @@ const TableView = ({
                   hideBackground: true,
                   removePadding: true,
                   alignment: 'bottom-right',
-                  onClose: saveDataRef.current,
+                  onClose: () =>
+                    TableViewEventEmitter.dispatch({
+                      type: 'save',
+                      target: view.id.toString(),
+                    }),
                 }
               )
             }
