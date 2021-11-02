@@ -4,7 +4,7 @@ import TableCell from '../atoms/TableCell'
 import { TableRowProps } from '../tableInterfaces'
 
 interface InternalTableRowProps extends TableRowProps {
-  widths: (number | undefined)[]
+  widths?: (number | undefined)[]
   disabledAddColumn?: boolean
 }
 
@@ -12,13 +12,14 @@ const TableRow = ({
   cells = [],
   widths = [],
   disabledAddColumn,
+  children,
 }: InternalTableRowProps) => {
   return (
     <Container>
       {cells.map((cell, i) => (
         <TableCell {...cell} width={widths[i]} key={`table-cell-${i}`} />
       ))}
-
+      {children}
       {!disabledAddColumn && <div className='table-row__spacer'></div>}
     </Container>
   )

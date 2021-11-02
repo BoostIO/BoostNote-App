@@ -3,6 +3,10 @@ import originalFilenamify from 'filenamify'
 import { Url } from '../../lib/router'
 import { format as formatUrl } from 'url'
 
+export function isString(x: any): x is string {
+  return typeof x === 'string'
+}
+
 export function filenamify(value: string) {
   return originalFilenamify(value, { replacement: '-' })
 }
