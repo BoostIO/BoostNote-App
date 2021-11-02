@@ -171,3 +171,9 @@ export type BoostHubAppRouterEvent = CustomEvent<BoostHubAppRouterEventDetail>
 export const boostHubAppRouterEventEmitter = createCustomEventEmitter<
   BoostHubAppRouterEventDetail
 >('BoostHub:appRouter')
+
+export type TableViewEventDetail = { type: 'save'; target: string }
+export type TableViewEvent = CustomEvent<TableViewEventDetail>
+export const TableViewEventEmitter = createCustomEventEmitter<
+  TableViewEventDetail
+>('BoostHub:views:table')

@@ -1,9 +1,11 @@
 import { generate } from 'shortid'
+import { SerializedQuery } from '../../interfaces/db/dashboard'
 import { PropType } from '../../interfaces/db/props'
 import { isString } from '../utils/string'
 
 export interface ViewTableData {
   columns: Record<string, Column>
+  filter?: SerializedQuery
 }
 
 export function makeTablePropColId(name: string, type?: string) {

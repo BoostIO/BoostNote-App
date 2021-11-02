@@ -47,11 +47,15 @@ const ViewsList = ({
         </Flexbox>
       ) : currentView.type === 'table' ? (
         <TableView
-          selectedViewId={selectedViewId}
-          setSelectedViewId={setSelectedViewId}
-          createViewApi={createViewApi}
-          parent={parent}
-          views={views}
+          viewsSelector={
+            <ViewsSelector
+              selectedViewId={selectedViewId}
+              setSelectedViewId={setSelectedViewId}
+              createViewApi={createViewApi}
+              parent={parent}
+              views={views}
+            />
+          }
           view={currentView}
           docs={docs}
           currentUserIsCoreMember={currentUserIsCoreMember}
