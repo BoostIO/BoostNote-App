@@ -1,4 +1,3 @@
-import { mdiPlus } from '@mdi/js'
 import React, { useCallback, useState } from 'react'
 import BorderSeparator from '../../../../../design/components/atoms/BorderSeparator'
 import Button, {
@@ -17,8 +16,8 @@ import {
 import { SerializedQuery } from '../../../../interfaces/db/dashboard'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
-import { EditableCondition, EditableQuery } from './interfaces'
-import ConditionItem from './ConditionItem'
+import { EditableQuery } from './interfaces'
+import DashboardConditionRows from './DashboardConditionRows'
 
 interface DashboardFormProps {
   action: 'Create' | 'Update'
@@ -54,14 +53,6 @@ const DashboardForm = ({
     []
   )
 
-  const removeConditionByIndex = useCallback((index: number) => {
-    setConditions((previousConditions) => {
-      const newConditions = [...previousConditions]
-      newConditions.splice(index, 1)
-      return newConditions
-    })
-  }, [])
-
   const submitForm: React.FormEventHandler = useCallback(
     (event) => {
       event.preventDefault()
@@ -91,47 +82,10 @@ const DashboardForm = ({
             ],
           }}
         />
-        {conditions.map((condition, index) => {
-          const updateCondition = (updatedCondition: EditableCondition) => {
-            setConditions((previousConditions) => {
-              const newConditions = [...previousConditions]
-              newConditions.splice(index, 1, updatedCondition)
-              return newConditions
-            })
-          }
-
-          const removeCondition = () => {
-            removeConditionByIndex(index)
-          }
-
-          return (
-            <ConditionItem
-              key={index}
-              condition={condition}
-              update={updateCondition}
-              remove={removeCondition}
-            />
-          )
-        })}
-
-        <FormRow>
-          <FormRowItem
-            item={{
-              type: 'button',
-              props: {
-                iconPath: mdiPlus,
-                variant: 'transparent',
-                label: 'Add a filter',
-                onClick: () =>
-                  setConditions((prev) => [
-                    ...prev,
-                    { type: 'null', rule: 'and' },
-                  ]),
-              },
-            }}
-          />
-        </FormRow>
-
+        <DashboardConditionRows
+          conditions={conditions}
+          setConditions={setConditions}
+        />
         <FormRow
           fullWidth={true}
           row={{
@@ -219,7 +173,7 @@ const Container = styled.div`
 
 export default DashboardForm
 
-function removeNullConditions(editable: EditableQuery): SerializedQuery {
+export function removeNullConditions(editable: EditableQuery): SerializedQuery {
   return JSON.parse(
     JSON.stringify(editable.filter((condition) => condition.type !== 'null'))
   )
