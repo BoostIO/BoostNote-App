@@ -105,31 +105,35 @@ const TablePropertiesContext = ({
             ))}
           </>
         )}
-        <MetadataContainerRow
-          row={{ type: 'header', content: 'Add Properties' }}
-        />
-        {unusedProperties.map((propName, i) => {
-          const initialData = getInitialPropDataOfProp(propName)
-          return (
+        {unusedProperties.length > 0 && (
+          <>
             <MetadataContainerRow
-              key={`prop-${propName}-${i}`}
-              row={{
-                type: 'button',
-                props: {
-                  id: `prop-${propName}-${i}`,
-                  iconPath: getIconPathOfProp(propName),
-                  label: getLabelOfProp(propName),
-                  onClick: () =>
-                    addCol({
-                      id: makeTablePropColId(propName, initialData.type),
-                      name: getLabelOfProp(propName),
-                      type: initialData.type,
-                    }),
-                },
-              }}
+              row={{ type: 'header', content: 'Add Properties' }}
             />
-          )
-        })}
+            {unusedProperties.map((propName, i) => {
+              const initialData = getInitialPropDataOfProp(propName)
+              return (
+                <MetadataContainerRow
+                  key={`prop-${propName}-${i}`}
+                  row={{
+                    type: 'button',
+                    props: {
+                      id: `prop-${propName}-${i}`,
+                      iconPath: getIconPathOfProp(propName),
+                      label: getLabelOfProp(propName),
+                      onClick: () =>
+                        addCol({
+                          id: makeTablePropColId(propName, initialData.type),
+                          name: getLabelOfProp(propName),
+                          type: initialData.type,
+                        }),
+                    },
+                  }}
+                />
+              )
+            })}
+          </>
+        )}
       </MetadataContainer>
     </Container>
   )
