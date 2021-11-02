@@ -530,7 +530,10 @@ const Application = ({
       />
 
       <AnnouncementAlert />
-      <div id='application__anchor' />
+      <div
+        id='application__anchor'
+        style={{ zIndex: 99999, position: 'fixed' }}
+      />
       {usingElectron && <InPageSearchContainer id={'inPageSearchContainer'} />}
       {showInPageSearch && (
         <InPageSearch
