@@ -4,6 +4,7 @@ import {
   mdiArrowDownDropCircleOutline,
   mdiCalendarMonthOutline,
   mdiCheckAll,
+  mdiLabelOutline,
   mdiTimerOutline,
   mdiTimerSandEmpty,
 } from '@mdi/js'
@@ -71,6 +72,8 @@ export function getIconPathOfProp(propName: string): string | undefined {
       return mdiAccountCheckOutline
     case 'assignees':
       return mdiAccountOutline
+    case 'label':
+      return mdiLabelOutline
     default:
       return
   }

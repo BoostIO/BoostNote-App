@@ -12,3 +12,16 @@ export function useRefState<S>(initialValue: S) {
     React.Dispatch<React.SetStateAction<S>>
   ]
 }
+
+export function useSimpleDebounce<S>(value: S, delay: number) {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value, delay])
+  return debouncedValue
+}
