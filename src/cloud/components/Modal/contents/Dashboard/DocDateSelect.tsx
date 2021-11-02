@@ -63,7 +63,9 @@ export function normalizeLocalDate(date: Date) {
 }
 
 export function localizeDate(date: Date) {
-  const [dateString] = date.toISOString().split('T')
+  const [dateString] = (typeof date === 'string' ? new Date(date) : date)
+    .toISOString()
+    .split('T')
 
   return new Date(dateString)
 }
