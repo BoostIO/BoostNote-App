@@ -31,7 +31,7 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
   const [selectedDashboardId, setSelectedDashboardId] = useState<string>()
   const { dashboardsMap, docsMap, viewsMap } = useNav()
   const { openModal, openContextModal, closeAllModals } = useModal()
-  const { team } = usePage()
+  const { team, currentUserIsCoreMember } = usePage()
   const { listViewsApi, sendingMap } = useCloudApi()
 
   useEffectOnce(() => {
@@ -146,6 +146,7 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
                   views={selectedDashboardViews}
                   parent={{ type: 'dashboard', target: selectedDashboard }}
                   docs={selectedDashboardDocs}
+                  currentUserIsCoreMember={currentUserIsCoreMember}
                 />
               )}
             </>

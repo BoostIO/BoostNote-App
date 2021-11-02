@@ -104,3 +104,9 @@ export function isUUIDArray<T>(source: T): boolean {
     return acc
   }, true)
 }
+
+export function getArrayFromRecord<K>(
+  source: Record<'string | number | symbol', K>
+): K[] {
+  return Object.entries(source).map(([, val]) => val)
+}

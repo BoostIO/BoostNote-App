@@ -1,8 +1,8 @@
-import { MouseEventHandler, DragEventHandler, ReactNode } from 'react'
+import React, { MouseEventHandler, DragEventHandler } from 'react'
 
 export type TableRowVariant = 'default' | 'header'
 
-export interface TableRowProps {
+export type TableRowProps = React.PropsWithChildren<{
   id?: string
   variant?: TableRowVariant
   cells?: TableCellProps[]
@@ -10,14 +10,13 @@ export interface TableRowProps {
   onDragEnd?: DragEventHandler
   onDrop?: DragEventHandler
   onContextMenu?: MouseEventHandler
-}
+}>
 
-export interface TableCellProps {
+export type TableCellProps = React.PropsWithChildren<{
   onClick?: MouseEventHandler
   onContextMenu?: MouseEventHandler
   onDrop?: DragEventHandler
-  children?: ReactNode | ReactNode[]
-}
+}>
 
 export interface TableColProps {
   id?: string

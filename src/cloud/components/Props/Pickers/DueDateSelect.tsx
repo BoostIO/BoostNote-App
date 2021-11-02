@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, ReactNode } from 'react'
 import DatePicker from 'react-datepicker'
 import PropertyValueButton from './PropertyValueButton'
 import { format as formatDate } from 'date-fns'
@@ -11,6 +11,7 @@ import {
 } from '@mdi/js'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
+import Portal from '../../../../design/components/atoms/Portal'
 
 interface DueDateSelectProps {
   className?: string
@@ -20,6 +21,7 @@ interface DueDateSelectProps {
   onDueDateChange: (newDueDate: Date | null) => void
   disabled?: boolean
   shortenedLabel?: boolean
+  portalId?: string
 }
 
 const DueDateSelect = ({
@@ -30,6 +32,7 @@ const DueDateSelect = ({
   shortenedLabel,
   dueDate: dueDateString,
   onDueDateChange,
+  portalId,
 }: DueDateSelectProps) => {
   const { translate } = useI18n()
   const [dueDate, setDueDate] = useState(() => {
@@ -53,6 +56,15 @@ const DueDateSelect = ({
         selected={dueDate}
         onChange={onDueDateChange}
         popperPlacement='top-end'
+        popperContainer={
+          portalId != null
+            ? (props: { children: ReactNode[] }) => (
+                <Portal domTarget={document.getElementById(portalId)}>
+                  {props.children}
+                </Portal>
+              )
+            : undefined
+        }
         customInput={
           <PropertyValueButton
             className={isDue ? 'due__date__expired' : ''}
