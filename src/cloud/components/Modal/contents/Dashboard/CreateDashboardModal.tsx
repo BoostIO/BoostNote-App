@@ -18,7 +18,7 @@ interface CreateDashboardModalProps {
 const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
-  const { createDashboardApi } = useCloudApi()
+  const { createDashboardApi, createViewApi } = useCloudApi()
   const [sending, setSending] = useState(false)
   const { push } = useRouter()
 
@@ -32,6 +32,7 @@ const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
 
       if (!res.err) {
         const { data: dashboard } = res.data as CreateDashboardResponseBody
+        await createViewApi({ dashboard: dashboard.id, type: 'table' })
         closeModal()
         if (onCreate != null) {
           return onCreate(res.data)
@@ -41,7 +42,7 @@ const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
       }
       setSending(false)
     },
-    [team, onCreate, push, closeModal, createDashboardApi]
+    [team, onCreate, push, closeModal, createDashboardApi, createViewApi]
   )
 
   if (team == null) {
