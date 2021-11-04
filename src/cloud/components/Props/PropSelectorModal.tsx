@@ -19,15 +19,9 @@ const PropSelectorModal = ({
   addProp,
 }: PropSelectorModalProps) => {
   const props = useMemo(() => {
-    return supportedPropertyNames
-      .filter((propName) => !propsToIgnore.includes(propName))
-      .sort((a, b) => {
-        if (a > b) {
-          return 1
-        } else {
-          return -1
-        }
-      })
+    return supportedPropertyNames.filter(
+      (propName) => !propsToIgnore.includes(propName)
+    )
   }, [propsToIgnore])
 
   return (
