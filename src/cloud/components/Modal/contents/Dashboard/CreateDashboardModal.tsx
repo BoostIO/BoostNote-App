@@ -1,6 +1,9 @@
 import React, { useState, useCallback } from 'react'
 import { useModal } from '../../../../../design/lib/stores/modal'
-import { CreateDashboardRequestBody } from '../../../../api/teams/dashboard'
+import {
+  CreateDashboardRequestBody,
+  CreateDashboardResponseBody,
+} from '../../../../api/teams/dashboard'
 import { usePage } from '../../../../lib/stores/pageStore'
 import { useRouter } from '../../../../lib/router'
 import DashboardForm from './DashboardForm'
@@ -25,16 +28,17 @@ const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
         return
       }
       setSending(true)
-      await createDashboardApi(team.id, body, {
-        afterSuccess: (dashboard) => {
-          closeModal()
-          if (onCreate != null) {
-            return onCreate(dashboard)
-          } else {
-            push(getTeamLinkHref(team, 'index', { dashboard: dashboard.id }))
-          }
-        },
-      })
+      const res = await createDashboardApi(team.id, body)
+
+      if (!res.err) {
+        const { data: dashboard } = res.data as CreateDashboardResponseBody
+        closeModal()
+        if (onCreate != null) {
+          return onCreate(res.data)
+        } else {
+          push(getTeamLinkHref(team, 'index', { dashboard: dashboard.id }))
+        }
+      }
       setSending(false)
     },
     [team, onCreate, push, closeModal, createDashboardApi]
