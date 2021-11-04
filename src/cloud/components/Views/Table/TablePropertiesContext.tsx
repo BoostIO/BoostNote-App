@@ -63,15 +63,7 @@ const TablePropertiesContext = ({
 
   const unusedProperties = useMemo(() => {
     const activeCols = sortedActiveCols.map((col) => col.id.split(':')[1])
-    return supportedPropertyNames
-      .filter((value) => !activeCols.includes(value))
-      .sort((a, b) => {
-        if (a < b) {
-          return -1
-        } else {
-          return 1
-        }
-      })
+    return supportedPropertyNames.filter((value) => !activeCols.includes(value))
   }, [sortedActiveCols])
 
   return (
