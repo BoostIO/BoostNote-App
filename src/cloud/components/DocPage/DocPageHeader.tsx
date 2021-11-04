@@ -6,8 +6,8 @@ import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import Button from '../../../design/components/atoms/Button'
 import Icon from '../../../design/components/atoms/Icon'
 import {
-  mdiChevronDown,
   mdiChevronRight,
+  mdiChevronUp,
   mdiCommentTextOutline,
   mdiPencil,
   mdiPlus,
@@ -77,8 +77,8 @@ const DocPageHeader = ({
         <div className='doc__page__header__wrapper'>
           <div className='doc__page__header__props'>
             <Flexbox alignItems='flex-start' flex='1 1 auto'>
-              <Flexbox flex='0 0 auto'>
-                {preferences.docPropertiesAreHidden ? (
+              {preferences.docPropertiesAreHidden ? (
+                <Flexbox flex='0 0 auto'>
                   <Button
                     id='properties-show'
                     variant='transparent'
@@ -89,19 +89,8 @@ const DocPageHeader = ({
                   >
                     Show Properties
                   </Button>
-                ) : (
-                  <Button
-                    id='properties-hide'
-                    variant='icon'
-                    iconPath={mdiChevronDown}
-                    size='sm'
-                    onClick={() =>
-                      setPreferences({ docPropertiesAreHidden: true })
-                    }
-                  />
-                )}
-              </Flexbox>
-              {!preferences.docPropertiesAreHidden && (
+                </Flexbox>
+              ) : (
                 <Flexbox
                   flex='1 1 auto'
                   direction='column'
@@ -191,6 +180,17 @@ const DocPageHeader = ({
                     }}
                   >
                     Add a property
+                  </Button>
+                  <Button
+                    id='properties-hide'
+                    variant='transparent'
+                    className='doc__page__header__property'
+                    iconPath={mdiChevronUp}
+                    onClick={() =>
+                      setPreferences({ docPropertiesAreHidden: true })
+                    }
+                  >
+                    Hide Properties
                   </Button>
                 </Flexbox>
               )}
@@ -285,7 +285,7 @@ const Container = styled.div`
   }
 
   #properties-hide {
-    margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    margin-left: 0;
   }
 
   .doc__page__header__property {
@@ -327,6 +327,22 @@ const Container = styled.div`
 
   .doc__page__header__property + .doc__page__header__property {
     margin-top: 2px;
+  }
+
+  div.doc__page__header__property {
+    width: 100%;
+    .doc__page__header__property__label {
+      flex-grow: 0;
+      min-width: 130px;
+    }
+    .doc__page__header__property__picker {
+      flex-grow: 1;
+
+      .item__property__button,
+      .react-datepicker-wrapper {
+        width: 100%;
+      }
+    }
   }
 `
 
