@@ -20,31 +20,39 @@ const SUPPORTED_CONDTION_TYPES = [
 ] as const
 
 interface ConditionItemProps {
+  hideConditionRuleType: boolean
   condition: EditableCondition
   update: (newCondition: EditableCondition) => void
   remove: () => void
 }
 
-const ConditionItem = ({ condition, update, remove }: ConditionItemProps) => {
+const ConditionItem = ({
+  condition,
+  hideConditionRuleType,
+  update,
+  remove,
+}: ConditionItemProps) => {
   const { translate } = useI18n()
   return (
     <FormRow fullWidth={true}>
-      <FormRowItem
-        item={{
-          type: 'select',
-          props: {
-            minWidth: 140,
-            value: getRuleOptionByType(translate, condition.rule),
-            options: [
-              getRuleOptionByType(translate, 'and'),
-              getRuleOptionByType(translate, 'or'),
-            ],
-            onChange: (selectedOption: { value: 'and' | 'or' }) => {
-              update({ ...condition, rule: selectedOption.value })
+      {!hideConditionRuleType && (
+        <FormRowItem
+          item={{
+            type: 'select',
+            props: {
+              minWidth: 140,
+              value: getRuleOptionByType(translate, condition.rule),
+              options: [
+                getRuleOptionByType(translate, 'and'),
+                getRuleOptionByType(translate, 'or'),
+              ],
+              onChange: (selectedOption: { value: 'and' | 'or' }) => {
+                update({ ...condition, rule: selectedOption.value })
+              },
             },
-          },
-        }}
-      />
+          }}
+        />
+      )}
       <FormRowItem
         item={{
           type: 'select',
