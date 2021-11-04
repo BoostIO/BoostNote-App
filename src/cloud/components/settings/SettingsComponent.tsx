@@ -12,7 +12,6 @@ import {
   mdiAccountCircleOutline,
   mdiClose,
   mdiHelpCircleOutline,
-  mdiTimelineAlert,
 } from '@mdi/js'
 import { usePage } from '../../lib/stores/pageStore'
 import { focusFirstChildFromElement } from '../../lib/dom'
@@ -325,11 +324,6 @@ const SettingsComponent = () => {
             label={t(lngKeys.KeyboardShortcuts)}
             href='https://intercom.help/boostnote-for-teams/en/articles/4347206-keyboard-shortcuts'
             id='setting-keyboard-shortcuts'
-          />
-          <SettingSidenavHeader
-            path={mdiTimelineAlert}
-            text={'Beta Program'}
-            size={16}
           />
         </SettingSidenav>
       }
