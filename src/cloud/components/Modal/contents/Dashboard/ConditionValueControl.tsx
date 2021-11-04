@@ -70,6 +70,7 @@ const ConditionValueControl = ({
             <FormInput
               value={condition.value.name}
               onChange={(ev) => updateValue({ name: ev.target.value })}
+              placeholder='Property name..'
             />
           </FormRowItem>
           <FormRowItem>
@@ -101,6 +102,7 @@ const ConditionValueControl = ({
               <FormInput
                 value={condition.value.value}
                 onChange={(ev) => updateValue({ value: ev.target.value })}
+                placeholder='Property value..'
               />
             )}
             {inputType === 'number' && (
@@ -108,6 +110,7 @@ const ConditionValueControl = ({
                 type='number'
                 value={condition.value.value}
                 onChange={(ev) => updateValue({ value: ev.target.value })}
+                placeholder='Property value..'
               />
             )}
             {inputType === 'date' && (
