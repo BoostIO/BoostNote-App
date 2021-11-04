@@ -9,6 +9,7 @@ import {
   mdiChevronRight,
   mdiChevronUp,
   mdiCommentTextOutline,
+  mdiLabelOutline,
   mdiPencil,
   mdiPlus,
   mdiTrashCanOutline,
@@ -27,6 +28,7 @@ import PropSelectorModal from '../Props/PropSelectorModal'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
 import DocTagsList from './DocTagsList'
+import { getIconPathOfProp } from '../../lib/props'
 
 interface DocPageHeaderProps {
   docIsEditable?: boolean
@@ -98,9 +100,15 @@ const DocPageHeader = ({
                   className='doc__page__header__properties'
                 >
                   <div className='doc__page__header__property'>
-                    <span className='doc__page__header__property__label'>
+                    <Button
+                      className='doc__page__header__property__label'
+                      variant='transparent'
+                      size='sm'
+                      iconPath={mdiLabelOutline}
+                      disabled={true}
+                    >
                       Labels
-                    </span>
+                    </Button>
                     <div className='doc__page__header__property__picker'>
                       <DocTagsList
                         team={team}
@@ -110,6 +118,7 @@ const DocPageHeader = ({
                     </div>
                   </div>
                   {docProperties.map((prop, i) => {
+                    const iconPath = getIconPathOfProp(prop[1].name)
                     return (
                       <div
                         className='doc__page__header__property'
@@ -119,6 +128,7 @@ const DocPageHeader = ({
                           className='doc__page__header__property__label'
                           variant='transparent'
                           size='sm'
+                          iconPath={iconPath}
                           onClick={(event) => {
                             openContextModal(
                               event,
