@@ -46,6 +46,7 @@ const DashboardConditionRows = ({
             condition={condition}
             update={updateCondition}
             remove={removeCondition}
+            hideConditionRuleType={index === 0}
           />
         )
       })}
