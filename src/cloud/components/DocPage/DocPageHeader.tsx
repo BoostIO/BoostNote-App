@@ -303,7 +303,7 @@ const Container = styled.div`
       padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
     }
     &:not(div) {
-      padding-left: 0;
+      padding-left: 9px;
     }
     flex: 1 1 auto;
     display: flex;
