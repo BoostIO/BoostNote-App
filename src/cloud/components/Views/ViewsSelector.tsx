@@ -62,19 +62,21 @@ const ViewsSelector = ({
           {capitalize(view.type)}
         </Button>
       ))}
-      <LoadingButton
-        spinning={sending}
-        disabled={sending}
-        variant='icon'
-        iconPath={mdiPlus}
-        iconSize={20}
-        onClick={(ev) =>
-          openContextModal(ev, <ViewModal createNewView={createNewView} />, {
-            alignment: 'bottom-left',
-            width: 300,
-          })
-        }
-      />
+      {!views.map((view) => view.type).includes('table') && (
+        <LoadingButton
+          spinning={sending}
+          disabled={sending}
+          variant='icon'
+          iconPath={mdiPlus}
+          iconSize={20}
+          onClick={(ev) =>
+            openContextModal(ev, <ViewModal createNewView={createNewView} />, {
+              alignment: 'bottom-left',
+              width: 300,
+            })
+          }
+        />
+      )}
     </Container>
   )
 }
