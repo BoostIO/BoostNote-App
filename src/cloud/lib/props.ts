@@ -13,12 +13,12 @@ import { NullablePropData } from '../interfaces/db/props'
 
 export const supportedPropertyNames = [
   'assignees',
-  'reviewers',
   'dueDate',
+  'reviewers',
   'startDate',
+  'status',
   'timeEstimate',
   'timeTracked',
-  'status',
 ]
 
 export function getPropsOfItem(props: Record<string, NullablePropData>) {
