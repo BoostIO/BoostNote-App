@@ -8,6 +8,7 @@ import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
 import { EditableCondition } from './interfaces'
 import ConditionValueControl from './ConditionValueControl'
+import Flexbox from '../../../../../design/components/atoms/Flexbox'
 
 const SUPPORTED_CONDTION_TYPES = [
   'null',
@@ -35,51 +36,55 @@ const ConditionItem = ({
   const { translate } = useI18n()
   return (
     <FormRow fullWidth={true}>
-      {!hideConditionRuleType && (
+      <Flexbox flex='1 1 auto'>
+        {!hideConditionRuleType && (
+          <FormRowItem
+            item={{
+              type: 'select',
+              props: {
+                minWidth: 140,
+                value: getRuleOptionByType(translate, condition.rule),
+                options: [
+                  getRuleOptionByType(translate, 'and'),
+                  getRuleOptionByType(translate, 'or'),
+                ],
+                onChange: (selectedOption: { value: 'and' | 'or' }) => {
+                  update({ ...condition, rule: selectedOption.value })
+                },
+              },
+            }}
+          />
+        )}
         <FormRowItem
           item={{
             type: 'select',
             props: {
+              value: getConditionOptionByType(translate, condition.type),
+              options: SUPPORTED_CONDTION_TYPES.map((condition) =>
+                getConditionOptionByType(translate, condition)
+              ),
               minWidth: 140,
-              value: getRuleOptionByType(translate, condition.rule),
-              options: [
-                getRuleOptionByType(translate, 'and'),
-                getRuleOptionByType(translate, 'or'),
-              ],
-              onChange: (selectedOption: { value: 'and' | 'or' }) => {
-                update({ ...condition, rule: selectedOption.value })
+              onChange: (selectedOption: {
+                label: string
+                value: typeof SUPPORTED_CONDTION_TYPES[number]
+              }) => {
+                update(getDefaultConditionByType(selectedOption.value))
               },
             },
           }}
         />
-      )}
-      <FormRowItem
-        item={{
-          type: 'select',
-          props: {
-            value: getConditionOptionByType(translate, condition.type),
-            options: SUPPORTED_CONDTION_TYPES.map((condition) =>
-              getConditionOptionByType(translate, condition)
-            ),
-            minWidth: 140,
-            onChange: (selectedOption: {
-              label: string
-              value: typeof SUPPORTED_CONDTION_TYPES[number]
-            }) => {
-              update(getDefaultConditionByType(selectedOption.value))
-            },
-          },
-        }}
-      />
-      <ConditionValueControl condition={condition} update={update} />
-      <FormRowItem />
-      <FormRowItem>
-        <Button
-          variant='transparent'
-          iconPath={mdiTrashCanOutline}
-          onClick={remove}
-        />
-      </FormRowItem>
+        <ConditionValueControl condition={condition} update={update} />
+        <FormRowItem />
+      </Flexbox>
+      <Flexbox flex='0 0 auto'>
+        <FormRowItem>
+          <Button
+            variant='transparent'
+            iconPath={mdiTrashCanOutline}
+            onClick={remove}
+          />
+        </FormRowItem>
+      </Flexbox>
     </FormRow>
   )
 }
