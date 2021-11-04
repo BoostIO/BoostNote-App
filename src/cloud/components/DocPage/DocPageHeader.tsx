@@ -6,10 +6,10 @@ import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import Button from '../../../design/components/atoms/Button'
 import Icon from '../../../design/components/atoms/Icon'
 import {
-  mdiChevronRight,
-  mdiChevronUp,
   mdiCommentTextOutline,
   mdiLabelOutline,
+  mdiMenuDown,
+  mdiMenuUp,
   mdiPencil,
   mdiPlus,
   mdiTrashCanOutline,
@@ -84,7 +84,7 @@ const DocPageHeader = ({
                   <Button
                     id='properties-show'
                     variant='transparent'
-                    iconPath={mdiChevronRight}
+                    iconPath={mdiMenuDown}
                     onClick={() =>
                       setPreferences({ docPropertiesAreHidden: false })
                     }
@@ -195,7 +195,7 @@ const DocPageHeader = ({
                     id='properties-hide'
                     variant='transparent'
                     className='doc__page__header__property'
-                    iconPath={mdiChevronUp}
+                    iconPath={mdiMenuUp}
                     onClick={() =>
                       setPreferences({ docPropertiesAreHidden: true })
                     }
