@@ -151,6 +151,7 @@ const DashboardForm = ({
                 condition={condition}
                 update={updateSecondaryCondition}
                 remove={removeCondition}
+                hideConditionRuleType={index === 0}
               />
             )
           })}
