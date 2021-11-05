@@ -5,9 +5,7 @@ import {
   CreateDashboardResponseBody,
 } from '../../../../api/teams/dashboard'
 import { usePage } from '../../../../lib/stores/pageStore'
-import { useRouter } from '../../../../lib/router'
 import DashboardForm from './DashboardForm'
-import { getTeamLinkHref } from '../../../Link/TeamLink'
 import { SerializedDashboard } from '../../../../interfaces/db/dashboard'
 import { useCloudApi } from '../../../../lib/hooks/useCloudApi'
 
@@ -20,7 +18,6 @@ const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
   const { team } = usePage()
   const { createDashboardApi, createViewApi } = useCloudApi()
   const [sending, setSending] = useState(false)
-  const { push } = useRouter()
 
   const submit = useCallback(
     async (body: CreateDashboardRequestBody) => {
@@ -36,13 +33,11 @@ const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
         closeModal()
         if (onCreate != null) {
           return onCreate(res.data)
-        } else {
-          push(getTeamLinkHref(team, 'index', { dashboard: dashboard.id }))
         }
       }
       setSending(false)
     },
-    [team, onCreate, push, closeModal, createDashboardApi, createViewApi]
+    [team, onCreate, closeModal, createDashboardApi, createViewApi]
   )
 
   if (team == null) {
