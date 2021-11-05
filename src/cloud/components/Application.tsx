@@ -387,8 +387,6 @@ const Application = ({
                 labelClick: () => push(teamUrl),
                 id: 'sidebar__button__inbox',
                 active: pathname === teamUrl,
-                pastille:
-                  team != null && counts[team.id] ? counts[team.id] : undefined,
               },
               {
                 label: translate(lngKeys.GeneralInbox),
