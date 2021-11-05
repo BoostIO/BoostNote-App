@@ -11,7 +11,6 @@ import ConditionValueControl from './ConditionValueControl'
 import Flexbox from '../../../../../design/components/atoms/Flexbox'
 
 const SUPPORTED_CONDTION_TYPES = [
-  'null',
   'label',
   'due_date',
   'creation_date',
@@ -68,7 +67,12 @@ const ConditionItem = ({
                 label: string
                 value: typeof SUPPORTED_CONDTION_TYPES[number]
               }) => {
-                update(getDefaultConditionByType(selectedOption.value))
+                update(
+                  getDefaultConditionByType(
+                    selectedOption.value,
+                    condition.rule
+                  )
+                )
               },
             },
           }}
@@ -108,21 +112,24 @@ function getConditionOptionByType(
       return { label: 'Prop', value: 'prop' }
     case 'null':
     default:
-      return { label: t(lngKeys.GeneralSelectVerb), value: 'null' }
+      return { label: 'Select condition..', value: 'null' }
   }
 }
 
-function getDefaultConditionByType(type: string): EditableCondition {
+function getDefaultConditionByType(
+  type: string,
+  rule: 'and' | 'or'
+): EditableCondition {
   switch (type) {
     case 'prop':
       return {
-        rule: 'and',
+        rule,
         type: 'prop',
         value: { name: '', value: '' },
       }
     case 'label':
       return {
-        rule: 'and',
+        rule,
         type: 'label',
         value: [],
       }
@@ -130,7 +137,7 @@ function getDefaultConditionByType(type: string): EditableCondition {
     case 'creation_date':
     case 'update_date':
       return {
-        rule: 'and',
+        rule,
         type,
         value: {
           type: 'relative',
@@ -141,7 +148,7 @@ function getDefaultConditionByType(type: string): EditableCondition {
     default:
       return {
         type: 'null',
-        rule: 'and',
+        rule,
       }
   }
 }
