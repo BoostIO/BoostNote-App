@@ -381,6 +381,8 @@ export enum lngKeys {
   CreatedBy = 'Created.By',
   UpdatedBy = 'Updated.By',
   Contributors = 'Contributors',
+  WordCount = 'Word.Count',
+  CharacterCount = 'Character.Count',
   History = 'History',
   Share = 'Share',
   PublicSharing = 'Public.Sharing',

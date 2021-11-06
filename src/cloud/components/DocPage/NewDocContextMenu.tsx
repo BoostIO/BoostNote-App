@@ -3,6 +3,8 @@ import {
   mdiAccountMultiple,
   mdiClockOutline,
   mdiContentSaveOutline,
+  mdiText,
+  mdiFormatLetterCase,
 } from '@mdi/js'
 import React, { useMemo, useState } from 'react'
 import Button from '../../../design/components/atoms/Button'
@@ -211,6 +213,26 @@ const DocContextMenu = ({
           }}
         />
       )}
+      {currentDoc.head && [
+        <MetadataContainerRow
+          key='word-count'
+          row={{
+            label: translate(lngKeys.WordCount),
+            type: 'content',
+            icon: mdiFormatLetterCase,
+            content: currentDoc.head.content.match(/\S+/g)?.length || 0,
+          }}
+        />,
+        <MetadataContainerRow
+          key='character-count'
+          row={{
+            label: translate(lngKeys.CharacterCount),
+            type: 'content',
+            icon: mdiText,
+            content: currentDoc.head.content.replace(/\s+/g, '').length || 0,
+          }}
+        />,
+      ]}
       <BackLinksList team={team} docs={backLinks} />
       <MetadataContainerBreak />
       <DocContextMenuActions
