@@ -360,6 +360,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.CreatedBy]: 'Created By',
   [lngKeys.UpdatedBy]: 'Updated By',
   [lngKeys.Contributors]: 'Contributors',
+  [lngKeys.WordCount]: 'Word Count',
+  [lngKeys.CharacterCount]: 'Character Count',
   [lngKeys.History]: 'History',
   [lngKeys.Share]: 'Share',
   [lngKeys.PublicSharing]: 'Public Sharing',
