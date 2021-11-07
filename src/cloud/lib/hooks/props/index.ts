@@ -1,6 +1,7 @@
+import { isObject } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
-import { NullablePropData, Props } from '../../../interfaces/db/props'
+import { Props, SerializedPropData } from '../../../interfaces/db/props'
 import { getPropsOfItem } from '../../props'
 import { useCloudApi } from '../useCloudApi'
 
@@ -8,7 +9,7 @@ export function useProps(
   itemProps: Props,
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
 ) {
-  const [props, setProps] = useState<Record<string, NullablePropData>>(
+  const [props, setProps] = useState<Record<string, SerializedPropData>>(
     itemProps
   )
   const { updateDocPropsApi } = useCloudApi()
@@ -30,7 +31,7 @@ export function useProps(
 
   const orderedProps = useMemo(() => {
     return Object.entries(getPropsOfItem(props)).sort((a, b) => {
-      if (a[0] > b[0]) {
+      if (a[1].data.createdAt > b[1].data.createdAt) {
         return 1
       } else {
         return -1
@@ -38,15 +39,27 @@ export function useProps(
     })
   }, [props])
 
-  const updateProp = useCallback((propName: string, data: NullablePropData) => {
-    setProps((prev) => {
-      const newProps = Object.assign({}, prev)
-      if (newProps[propName] == null) {
-        newProps[propName] = data
-      }
-      return newProps
-    })
-  }, [])
+  const updateProp = useCallback(
+    (propName: string, data: SerializedPropData) => {
+      setProps((prev) => {
+        const newProps = Object.assign({}, prev)
+        if (newProps[propName] == null) {
+          newProps[propName] = data
+
+          if (parent.type === 'doc') {
+            updateDocPropsApi(parent.target, [
+              propName,
+              isObject(data.data)
+                ? { type: data.type, data: data.data }
+                : { type: data.type, data: null },
+            ])
+          }
+        }
+        return newProps
+      })
+    },
+    [updateDocPropsApi, parent]
+  )
 
   const removeProp = useCallback(
     async (propName: string) => {

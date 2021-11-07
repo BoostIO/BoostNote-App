@@ -50,13 +50,21 @@ const validators: Validators = {
 
   prop: (doc, condition) => {
     const prop = doc.props[condition.value.name]
-    if (prop == null) {
+    if (prop == null || prop.data == null) {
+      return false
+    }
+
+    const nonNullableVal = Array.isArray(prop.data)
+      ? prop.data.filter((d) => d != null)
+      : prop.data
+
+    if (nonNullableVal.length > 0) {
       return false
     }
 
     switch (prop.type) {
       case 'date':
-        return equalsOrContains(isEqual, prop.data, condition.value.value)
+        return equalsOrContains(isEqual, nonNullableVal, condition.value.value)
       case 'json':
         return false
       case 'user':
@@ -66,14 +74,14 @@ const validators: Validators = {
                 acc ||
                 equalsOrContains(
                   (permission, id) => permission.userId === id,
-                  prop.data,
+                  nonNullableVal,
                   val
                 )
               )
             }, true as boolean)
           : equalsOrContains(
               (permission, id) => permission.userId === id,
-              prop.data,
+              nonNullableVal,
               condition.value.value
             )
       case 'number':
