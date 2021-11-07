@@ -29,6 +29,7 @@ interface DashboardFormProps {
   ) => void
   onCancel?: () => void
   buttonsAreDisabled?: boolean
+  showOnlyConditions?: boolean
 }
 
 const DashboardForm = ({
@@ -37,6 +38,7 @@ const DashboardForm = ({
   defaultPrivate = true,
   defaultConditions,
   buttonsAreDisabled,
+  showOnlyConditions,
   onCancel,
   onSubmit,
 }: DashboardFormProps) => {
@@ -73,54 +75,61 @@ const DashboardForm = ({
           : translate(lngKeys.ModalsDashboardEditTitle)}
       </h2>
       <Form className='smart__folder__form' onSubmit={submitForm}>
-        <FormRow
-          fullWidth={true}
-          row={{
-            title: translate(lngKeys.GeneralName),
-            items: [
-              { type: 'input', props: { value: name, onChange: updateName } },
-            ],
-          }}
-        />
+        {!showOnlyConditions && (
+          <FormRow
+            fullWidth={true}
+            row={{
+              title: translate(lngKeys.GeneralName),
+              items: [
+                { type: 'input', props: { value: name, onChange: updateName } },
+              ],
+            }}
+          />
+        )}
         <DashboardConditionRows
           conditions={conditions}
           setConditions={setConditions}
         />
-        <FormRow
-          fullWidth={true}
-          row={{
-            items: [{ type: 'node', element: <BorderSeparator /> }],
-          }}
-        />
 
-        <FormRow fullWidth={true} className='privacy-row'>
-          <FormRowItem>
-            <div>
-              <h3 className='privacy-row__label'>
-                {translate(lngKeys.ModalsWorkspaceMakePrivate)}
-              </h3>
-              <p>
-                {makingPrivate ? (
-                  <>{translate(lngKeys.ModalsDashboardPrivateDisclaimer)}</>
-                ) : (
-                  <>{translate(lngKeys.ModalsDashboardPublicDisclaimer)}</>
-                )}
-              </p>
-            </div>
-          </FormRowItem>
-          <FormRowItem className='form__row__item--shrink'>
-            <Switch
-              id='shared-custom-switch'
-              checked={makingPrivate}
-              onChange={(checked) => {
-                setMakingPrivate(checked)
+        {!showOnlyConditions && (
+          <>
+            <FormRow
+              fullWidth={true}
+              row={{
+                items: [{ type: 'node', element: <BorderSeparator /> }],
               }}
-              height={20}
-              width={30}
-              handleSize={14}
             />
-          </FormRowItem>
-        </FormRow>
+
+            <FormRow fullWidth={true} className='privacy-row'>
+              <FormRowItem>
+                <div>
+                  <h3 className='privacy-row__label'>
+                    {translate(lngKeys.ModalsWorkspaceMakePrivate)}
+                  </h3>
+                  <p>
+                    {makingPrivate ? (
+                      <>{translate(lngKeys.ModalsDashboardPrivateDisclaimer)}</>
+                    ) : (
+                      <>{translate(lngKeys.ModalsDashboardPublicDisclaimer)}</>
+                    )}
+                  </p>
+                </div>
+              </FormRowItem>
+              <FormRowItem className='form__row__item--shrink'>
+                <Switch
+                  id='shared-custom-switch'
+                  checked={makingPrivate}
+                  onChange={(checked) => {
+                    setMakingPrivate(checked)
+                  }}
+                  height={20}
+                  width={30}
+                  handleSize={14}
+                />
+              </FormRowItem>
+            </FormRow>
+          </>
+        )}
         <FormRow>
           <ButtonGroup layout='spread'>
             {onCancel != null && (
