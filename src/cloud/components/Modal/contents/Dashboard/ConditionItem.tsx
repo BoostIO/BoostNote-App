@@ -36,7 +36,9 @@ const ConditionItem = ({
   return (
     <FormRow fullWidth={true}>
       <Flexbox flex='1 1 auto'>
-        {!hideConditionRuleType && (
+        {hideConditionRuleType ? (
+          <FormRowItem item={{ type: 'node', element: <span>WHERE</span> }} />
+        ) : (
           <FormRowItem
             item={{
               type: 'select',
