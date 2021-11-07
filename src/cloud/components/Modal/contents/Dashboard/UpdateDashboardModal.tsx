@@ -14,11 +14,13 @@ import { EditableQuery } from './interfaces'
 
 interface UpdateDashboardModalProps {
   dashboard: SerializedDashboard
+  showOnlyConditions?: boolean
   onUpdate?: (dashboard: SerializedDashboard) => void
 }
 
 const UpdateDashboardModal = ({
   dashboard,
+  showOnlyConditions,
   onUpdate,
 }: UpdateDashboardModalProps) => {
   const { closeLastModal: closeModal } = useModal()
@@ -63,6 +65,7 @@ const UpdateDashboardModal = ({
       action='Update'
       onCancel={closeModal}
       onSubmit={submit}
+      showOnlyConditions={showOnlyConditions}
       buttonsAreDisabled={sending}
       defaultName={dashboard.name}
       defaultPrivate={dashboard.private}

@@ -18,7 +18,6 @@ import { getArrayFromRecord } from '../../../lib/utils/array'
 import { getDocTitle } from '../../../lib/utils/patterns'
 import { Column, ViewTableData } from '../../../lib/views/table'
 import PropPicker from '../../Props/PropPicker'
-import TableFilterContext from './TableFilterContext'
 import TablePropertiesContext from './TablePropertiesContext'
 
 type TableViewProps = {
@@ -26,6 +25,7 @@ type TableViewProps = {
   docs: SerializedDocWithSupplemental[]
   currentUserIsCoreMember: boolean
   viewsSelector: React.ReactNode
+  filterButton: React.ReactNode
 }
 
 const TableView = ({
@@ -33,6 +33,7 @@ const TableView = ({
   docs,
   currentUserIsCoreMember,
   viewsSelector,
+  filterButton,
 }: TableViewProps) => {
   const { sendingMap, deleteViewApi, updateViewApi } = useCloudApi()
   const { openContextModal } = useModal()
@@ -146,30 +147,7 @@ const TableView = ({
       >
         {viewsSelector}
         <Flexbox flex='0 0 auto'>
-          <Button
-            variant='transparent'
-            active={state.filter != null && state.filter.length > 0}
-            onClick={(ev) =>
-              openContextModal(
-                ev,
-                <TableFilterContext
-                  sendFilters={actionsRef.current.setFilters}
-                  filters={state.filter}
-                />,
-                {
-                  width: 800,
-                  alignment: 'bottom-right',
-                  onClose: () =>
-                    TableViewEventEmitter.dispatch({
-                      type: 'save',
-                      target: view.id.toString(),
-                    }),
-                }
-              )
-            }
-          >
-            Filter
-          </Button>
+          {filterButton}
           <Button
             variant='transparent'
             onClick={(ev) =>
