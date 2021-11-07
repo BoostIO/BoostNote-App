@@ -3,7 +3,7 @@ import {
   DocStatus,
   SerializedDocWithSupplemental,
 } from '../../interfaces/db/doc'
-import { NullablePropData, PropData, Props } from '../../interfaces/db/props'
+import { SerializedPropData, PropData, Props } from '../../interfaces/db/props'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import AssigneeSelect from './Pickers/AssigneeSelect'
 import DueDateSelect from './Pickers/DueDateSelect'
@@ -16,7 +16,7 @@ import { getLabelOfProp } from '../../lib/props'
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
   propName: string
-  propData: NullablePropData
+  propData: SerializedPropData
   readOnly?: boolean
   onUpdate?: (newProps: Props) => void
   portalId?: string
@@ -64,7 +64,9 @@ const PropPicker = ({
           }
           update={(val) =>
             updateProp(
-              val.length === 0 ? null : { type: 'user', data: val as any }
+              val.length === 0
+                ? { type: 'user', data: null }
+                : { type: 'user', data: val as any }
             )
           }
         />
@@ -86,7 +88,10 @@ const PropPicker = ({
                       formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z'
                     ),
                   }
-                : null
+                : {
+                    type: 'date',
+                    data: null,
+                  }
             )
           }
         />
@@ -110,7 +115,7 @@ const PropPicker = ({
                       type: 'string',
                       data: val,
                     }
-                  : null
+                  : { type: 'string', data: null }
               )
             }
           />
