@@ -32,7 +32,7 @@ const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
         await createViewApi({ dashboard: dashboard.id, type: 'table' })
         closeModal()
         if (onCreate != null) {
-          return onCreate(res.data)
+          return onCreate(dashboard)
         }
       }
       setSending(false)
