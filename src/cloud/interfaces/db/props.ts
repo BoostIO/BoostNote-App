@@ -3,22 +3,26 @@ import { SerializedUserTeamPermissions } from './userTeamPermissions'
 interface Prop<T, D> {
   type: T
   data: D | D[]
+  createdAt: string
 }
 
-export type PropData =
+export type PropData = Omit<SerializedPropData, 'createdAt'>
+export type NullablePropData<T> = T | undefined
+
+export type FilledSerializedPropData =
   | Prop<'string', string>
   | Prop<'date', Date>
   | Prop<'json', any>
   | Prop<'number', number>
   | Prop<'user', SerializedUserTeamPermissions>
 
-export type PropType = PropData['type']
-
-export type Props = Record<string, PropData>
-
-export type NullablePropData =
-  | Prop<'string', string | null>
-  | Prop<'date', Date | null>
+export type SerializedPropData =
+  | Prop<'string', NullablePropData<string>>
+  | Prop<'date', NullablePropData<Date>>
   | Prop<'json', any>
-  | Prop<'number', number | null>
-  | Prop<'user', SerializedUserTeamPermissions | null>
+  | Prop<'number', NullablePropData<number>>
+  | Prop<'user', NullablePropData<SerializedUserTeamPermissions>>
+
+export type PropType = SerializedPropData['type']
+
+export type Props = Record<string, SerializedPropData>

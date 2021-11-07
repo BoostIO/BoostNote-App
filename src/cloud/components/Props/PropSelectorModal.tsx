@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import { NullablePropData } from '../../interfaces/db/props'
+import { SerializedPropData } from '../../interfaces/db/props'
 import {
   getIconPathOfProp,
   getInitialPropDataOfProp,
@@ -11,7 +11,7 @@ import {
 
 interface PropSelectorModalProps {
   propsToIgnore?: string[]
-  addProp: (propName: string, propData: NullablePropData) => void
+  addProp: (propName: string, propData: SerializedPropData) => void
 }
 
 const PropSelectorModal = ({
