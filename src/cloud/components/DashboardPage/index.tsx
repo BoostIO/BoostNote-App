@@ -115,9 +115,9 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
                     createNewDashboard={() =>
                       openModal(
                         <CreateDashboardModal
-                          onCreate={(dashboard) =>
+                          onCreate={(dashboard) => {
                             setSelectedDashboardId(dashboard.id)
-                          }
+                          }}
                         />
                       )
                     }
