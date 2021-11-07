@@ -86,20 +86,21 @@ const DashboardForm = ({
             }}
           />
         )}
+
+        {showOnlyConditions && <FormRow row={{ title: 'Filters' }} />}
         <DashboardConditionRows
           conditions={conditions}
           setConditions={setConditions}
         />
 
+        <FormRow
+          fullWidth={true}
+          row={{
+            items: [{ type: 'node', element: <BorderSeparator /> }],
+          }}
+        />
         {!showOnlyConditions && (
           <>
-            <FormRow
-              fullWidth={true}
-              row={{
-                items: [{ type: 'node', element: <BorderSeparator /> }],
-              }}
-            />
-
             <FormRow fullWidth={true} className='privacy-row'>
               <FormRowItem>
                 <div>
