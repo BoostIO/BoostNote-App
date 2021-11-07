@@ -1,9 +1,12 @@
 import React, { useMemo, useState } from 'react'
+import Button from '../../../design/components/atoms/Button'
 import Flexbox from '../../../design/components/atoms/Flexbox'
+import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedView, ViewParent } from '../../interfaces/db/view'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
+import UpdateDashboardModal from '../Modal/contents/Dashboard/UpdateDashboardModal'
 import TableView from './Table/TableView'
 import ViewsSelector from './ViewsSelector'
 
@@ -24,6 +27,7 @@ const ViewsList = ({
     views.length > 0 ? views[0].id : undefined
   )
   const { createViewApi } = useCloudApi()
+  const { openModal } = useModal()
 
   const currentView = useMemo(() => {
     if (selectedViewId == null) {
@@ -55,6 +59,24 @@ const ViewsList = ({
               parent={parent}
               views={views}
             />
+          }
+          filterButton={
+            parent.type === 'dashboard' ? (
+              <Button
+                variant='transparent'
+                active={parent.target.condition.length > 0}
+                onClick={() =>
+                  openModal(
+                    <UpdateDashboardModal
+                      dashboard={parent.target}
+                      showOnlyConditions={true}
+                    />
+                  )
+                }
+              >
+                Filter
+              </Button>
+            ) : null
           }
           view={currentView}
           docs={docs}
