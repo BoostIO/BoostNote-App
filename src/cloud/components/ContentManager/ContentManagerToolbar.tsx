@@ -292,7 +292,8 @@ const ContentManagerToolbar = ({
     values.dueDate =
       docs[0].props.dueDate != null &&
       docs[0].props.dueDate.type === 'date' &&
-      !Array.isArray(docs[0].props.dueDate.data)
+      !Array.isArray(docs[0].props.dueDate.data) &&
+      docs[0].props.dueDate.data != null
         ? docs[0].props.dueDate.data.toString()
         : undefined
 

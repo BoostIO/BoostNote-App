@@ -9,7 +9,10 @@ import {
   mdiTimerSandEmpty,
 } from '@mdi/js'
 import { capitalize } from 'lodash'
-import { NullablePropData } from '../interfaces/db/props'
+import {
+  FilledSerializedPropData,
+  SerializedPropData,
+} from '../interfaces/db/props'
 
 export const supportedPropertyNames = [
   'assignees',
@@ -21,10 +24,12 @@ export const supportedPropertyNames = [
   'timeTracked',
 ]
 
-export function getPropsOfItem(props: Record<string, NullablePropData>) {
+export function getPropsOfItem(
+  props: Record<string, SerializedPropData & { createdAt: string }>
+) {
   const properties: Record<
     string,
-    { name: string; data: NullablePropData }
+    { name: string; data: SerializedPropData & { createdAt: string } }
   > = {}
 
   Object.entries(props).forEach((prop) => {
@@ -79,19 +84,37 @@ export function getIconPathOfProp(propName: string): string | undefined {
   }
 }
 
-export function getInitialPropDataOfProp(propName: string): NullablePropData {
+export function getInitialPropDataOfProp(propName: string): SerializedPropData {
   switch (propName) {
     case 'dueDate':
     case 'startDate':
-      return { type: 'date', data: null }
+      return { type: 'date', data: undefined, createdAt: new Date().toString() }
     case 'timeEstimate':
     case 'timeTracked':
-      return { type: 'json', data: { dataType: 'timeperiod', data: null } }
+      return {
+        type: 'json',
+        data: { dataType: 'timeperiod', data: null },
+        createdAt: new Date().toString(),
+      }
     case 'reviewers':
     case 'assignees':
-      return { type: 'user', data: null }
+      return { type: 'user', data: undefined, createdAt: new Date().toString() }
     case 'status':
     default:
-      return { type: 'string', data: null }
+      return {
+        type: 'string',
+        data: undefined,
+        createdAt: new Date().toString(),
+      }
   }
+}
+
+export function isPropFilled(
+  x: SerializedPropData
+): x is FilledSerializedPropData {
+  if (x.data == null) {
+    return false
+  }
+
+  return true
 }
