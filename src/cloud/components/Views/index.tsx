@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Button from '../../../design/components/atoms/Button'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import { useModal } from '../../../design/lib/stores/modal'
@@ -23,11 +23,21 @@ const ViewsList = ({
   docs,
   currentUserIsCoreMember,
 }: ViewsListProps) => {
+  const targetIdRef = useRef(parent.target.id)
   const [selectedViewId, setSelectedViewId] = useState<number | undefined>(() =>
     views.length > 0 ? views[0].id : undefined
   )
   const { createViewApi } = useCloudApi()
   const { openModal } = useModal()
+
+  useEffect(() => {
+    if (parent.target.id === targetIdRef.current) {
+      return
+    }
+
+    targetIdRef.current = parent.target.id
+    setSelectedViewId(views.length > 0 ? views[0].id : undefined)
+  }, [parent.target, views])
 
   const currentView = useMemo(() => {
     if (selectedViewId == null) {
