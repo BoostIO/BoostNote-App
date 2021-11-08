@@ -10,29 +10,29 @@ import FormRow from '../../../../../design/components/molecules/Form/templates/F
 import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
 import styled from '../../../../../design/lib/styled'
 import {
-  UpdateDashboardRequestBody,
-  CreateDashboardRequestBody,
-} from '../../../../api/teams/dashboard'
-import { SerializedQuery } from '../../../../interfaces/db/dashboard'
+  UpdateSmartViewRequestBody,
+  CreateSmartViewRequestBody,
+} from '../../../../api/teams/smartViews'
+import { SerializedQuery } from '../../../../interfaces/db/smartView'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
 import { EditableQuery } from './interfaces'
-import DashboardConditionRows from './DashboardConditionRows'
+import SmartViewConditionRows from './SmartViewConditionRows'
 
-interface DashboardFormProps {
+interface SmmartViewFormProps {
   action: 'Create' | 'Update'
   defaultName?: string
   defaultPrivate?: boolean
   defaultConditions: EditableQuery
   onSubmit: (
-    body: CreateDashboardRequestBody | UpdateDashboardRequestBody
+    body: CreateSmartViewRequestBody | UpdateSmartViewRequestBody
   ) => void
   onCancel?: () => void
   buttonsAreDisabled?: boolean
   showOnlyConditions?: boolean
 }
 
-const DashboardForm = ({
+const SmartViewForm = ({
   action,
   defaultName = '',
   defaultPrivate = true,
@@ -41,7 +41,7 @@ const DashboardForm = ({
   showOnlyConditions,
   onCancel,
   onSubmit,
-}: DashboardFormProps) => {
+}: SmmartViewFormProps) => {
   const [name, setName] = useState(defaultName)
   const [makingPrivate, setMakingPrivate] = useState(defaultPrivate)
   const { translate } = useI18n()
@@ -71,8 +71,8 @@ const DashboardForm = ({
     <Container>
       <h2 className='modal__heading'>
         {action === 'Create'
-          ? translate(lngKeys.ModalsDashboardCreateTitle)
-          : translate(lngKeys.ModalsDashboardEditTitle)}
+          ? translate(lngKeys.ModalsSmartViewCreateTitle)
+          : translate(lngKeys.ModalsSmartViewEditTitle)}
       </h2>
       <Form className='smart__folder__form' onSubmit={submitForm}>
         {!showOnlyConditions && (
@@ -88,7 +88,7 @@ const DashboardForm = ({
         )}
 
         {showOnlyConditions && <FormRow row={{ title: 'Filters' }} />}
-        <DashboardConditionRows
+        <SmartViewConditionRows
           conditions={conditions}
           setConditions={setConditions}
         />
@@ -109,9 +109,9 @@ const DashboardForm = ({
                   </h3>
                   <p>
                     {makingPrivate ? (
-                      <>{translate(lngKeys.ModalsDashboardPrivateDisclaimer)}</>
+                      <>{translate(lngKeys.ModalsSmartViewPrivateDisclaimer)}</>
                     ) : (
-                      <>{translate(lngKeys.ModalsDashboardPublicDisclaimer)}</>
+                      <>{translate(lngKeys.ModalsSmartViewPublicDisclaimer)}</>
                     )}
                   </p>
                 </div>
@@ -181,7 +181,7 @@ const Container = styled.div`
   }
 `
 
-export default DashboardForm
+export default SmartViewForm
 
 export function removeNullConditions(editable: EditableQuery): SerializedQuery {
   return JSON.parse(

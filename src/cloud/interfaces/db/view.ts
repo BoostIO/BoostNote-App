@@ -1,4 +1,4 @@
-import { SerializedDashboard } from './dashboard'
+import { SerializedSmartView } from './smartView'
 import { SerializedFolder, SerializedFolderWithBookmark } from './folder'
 
 export type SupportedViewTypes = 'table'
@@ -10,14 +10,14 @@ export interface ViewState {
 export interface SerializableViewProps {
   id: number
   folderId?: string
-  dashboardId?: string
+  smartViewId?: string
   type: SupportedViewTypes
   data: Object
 }
 
 export interface SerializedUnserializableViewProps {
   folder?: SerializedFolder
-  dashboard: SerializedDashboard
+  smartView: SerializedSmartView
 }
 
 export type SerializedView = SerializedUnserializableViewProps &
@@ -25,4 +25,4 @@ export type SerializedView = SerializedUnserializableViewProps &
 
 export type ViewParent =
   | { type: 'folder'; target: SerializedFolderWithBookmark }
-  | { type: 'dashboard'; target: SerializedDashboard }
+  | { type: 'smartView'; target: SerializedSmartView }

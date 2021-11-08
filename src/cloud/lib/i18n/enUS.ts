@@ -296,12 +296,12 @@ const enTranslation: TranslationSource = {
   [lngKeys.ModalsImportDisclaimer]:
     'Select how you want to import files ( 5Mb max per file )',
 
-  [lngKeys.ModalsDashboardCreateTitle]: 'Create a dashboard',
-  [lngKeys.ModalsDashboardEditTitle]: 'Edit a dashboard',
-  [lngKeys.ModalsDashboardPrivateDisclaimer]:
-    'This dashboard will become private. Only you can see it.',
-  [lngKeys.ModalsDashboardPublicDisclaimer]:
-    'The dashboard will become public. Every member can see it.',
+  [lngKeys.ModalsSmartViewCreateTitle]: 'Create a smart view',
+  [lngKeys.ModalsSmartViewEditTitle]: 'Edit smart view',
+  [lngKeys.ModalsSmartViewPrivateDisclaimer]:
+    'This smart view will become private. Only you can see it.',
+  [lngKeys.ModalsSmartViewPublicDisclaimer]:
+    'The smart view will become public. Every member can see it.',
 
   [lngKeys.EditorToolbarTooltipHeader]: 'Add header text',
   [lngKeys.EditorToolbarTooltipAdmonition]: 'Add admonition',
@@ -401,7 +401,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.GeneralBookmarks]: 'Bookmarks',
   [lngKeys.GeneralUnbookmarkVerb]: 'Remove from Bookmarks',
   [lngKeys.GeneralBookmarkVerb]: 'Add to bookmarks',
-  [lngKeys.GeneralDashboards]: 'Smart Folders',
+  [lngKeys.GeneralSmartViews]: 'Smart Views',
   [lngKeys.GeneralWorkspaces]: 'Workspaces',
   [lngKeys.GeneralPrivate]: 'Private',
   [lngKeys.GeneralLabels]: 'Labels',

@@ -1,59 +1,59 @@
 import React, { useState, useCallback } from 'react'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import {
-  UpdateDashboardRequestBody,
-  UpdateDashboardResponseBody,
-} from '../../../../api/teams/dashboard'
+  UpdateSmartViewRequestBody,
+  UpdateSmartViewResponseBody,
+} from '../../../../api/teams/smartViews'
 import { usePage } from '../../../../lib/stores/pageStore'
 import { useRouter } from '../../../../lib/router'
-import { SerializedDashboard } from '../../../../interfaces/db/dashboard'
-import DashboardForm from './DashboardForm'
+import { SerializedSmartView } from '../../../../interfaces/db/smartView'
+import SmartViewForm from './SmartViewForm'
 import { getTeamLinkHref } from '../../../Link/TeamLink'
 import { useCloudApi } from '../../../../lib/hooks/useCloudApi'
 import { EditableQuery } from './interfaces'
 
-interface UpdateDashboardModalProps {
-  dashboard: SerializedDashboard
+interface UpdateSmartViewModalProps {
+  smartView: SerializedSmartView
   showOnlyConditions?: boolean
-  onUpdate?: (dashboard: SerializedDashboard) => void
+  onUpdate?: (smartView: SerializedSmartView) => void
 }
 
-const UpdateDashboardModal = ({
-  dashboard,
+const UpdateSmartViewModal = ({
+  smartView,
   showOnlyConditions,
   onUpdate,
-}: UpdateDashboardModalProps) => {
+}: UpdateSmartViewModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
 
-  const { updateDashboardApi } = useCloudApi()
+  const { updateSmartViewApi } = useCloudApi()
   const [sending, setSending] = useState(false)
   const { push } = useRouter()
 
   const submit = useCallback(
-    async (body: UpdateDashboardRequestBody) => {
+    async (body: UpdateSmartViewRequestBody) => {
       if (team == null) {
         return
       }
       setSending(true)
 
-      const res = await updateDashboardApi(dashboard, body)
+      const res = await updateSmartViewApi(smartView, body)
 
       if (!res.err) {
         closeModal()
         if (onUpdate != null) {
-          return onUpdate((res.data as UpdateDashboardResponseBody).data)
+          return onUpdate((res.data as UpdateSmartViewResponseBody).data)
         } else {
           push(
             getTeamLinkHref(team, 'index', {
-              dashboard: (res.data as UpdateDashboardResponseBody).data.id,
+              smartView: (res.data as UpdateSmartViewResponseBody).data.id,
             })
           )
         }
       }
       setSending(false)
     },
-    [team, dashboard, updateDashboardApi, closeModal, push, onUpdate]
+    [team, smartView, updateSmartViewApi, closeModal, push, onUpdate]
   )
 
   if (team == null) {
@@ -61,21 +61,21 @@ const UpdateDashboardModal = ({
   }
 
   return (
-    <DashboardForm
+    <SmartViewForm
       action='Update'
       onCancel={closeModal}
       onSubmit={submit}
       showOnlyConditions={showOnlyConditions}
       buttonsAreDisabled={sending}
-      defaultName={dashboard.name}
-      defaultPrivate={dashboard.private}
+      defaultName={smartView.name}
+      defaultPrivate={smartView.private}
       defaultConditions={
-        Array.isArray(dashboard.condition)
-          ? (dashboard.condition as EditableQuery)
+        Array.isArray(smartView.condition)
+          ? (smartView.condition as EditableQuery)
           : []
       }
     />
   )
 }
 
-export default UpdateDashboardModal
+export default UpdateSmartViewModal

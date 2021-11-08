@@ -3,7 +3,7 @@ import { SerializedView, SupportedViewTypes } from '../../../interfaces/db/view'
 
 export type ListViewsRequestBody =
   | {
-      dashboard: string
+      smartView: string
       type?: SupportedViewTypes
     }
   | { folder: string; type?: SupportedViewTypes }
@@ -21,7 +21,7 @@ export async function listViews(body: ListViewsRequestBody) {
 
 export type CreateViewRequestBody =
   | {
-      dashboard: string
+      smartView: string
       type: SupportedViewTypes
     }
   | { folder: string; type: SupportedViewTypes }
