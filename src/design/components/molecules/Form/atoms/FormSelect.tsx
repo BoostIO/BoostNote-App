@@ -10,6 +10,11 @@ export interface FormSelectOption {
   value: string
 }
 
+export interface FormSelectGroupOption {
+  label: string | React.ReactNode
+  options: FormSelectOption[]
+}
+
 interface FormSelectCommonProps {
   id?: string
   closeMenuOnSelect?: boolean
@@ -27,7 +32,7 @@ interface FormSelectCommonProps {
 
 interface StandardFormSelectOptions {
   value?: FormSelectOption | FormSelectOption[]
-  options: FormSelectOption[]
+  options: (FormSelectOption | FormSelectGroupOption)[]
   onChange: (val: any) => void
 }
 
@@ -160,6 +165,10 @@ export const SimpleFormSelect = ({
 const Container = styled.div`
   .form__select .form__select__indicator-separator {
     width: 0;
+  }
+
+  .form__select__group-heading {
+    font-size: ${({ theme }) => theme.sizes.fonts.md}px;
   }
 
   .form__select .form__select__control,
