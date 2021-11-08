@@ -6,7 +6,7 @@ import styled from '../../../design/lib/styled'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedView, ViewParent } from '../../interfaces/db/view'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
-import UpdateDashboardModal from '../Modal/contents/Dashboard/UpdateDashboardModal'
+import UpdateDashboardModal from '../Modal/contents/SmartView/UpdateSmartViewModal'
 import TableView from './Table/TableView'
 import ViewsSelector from './ViewsSelector'
 
@@ -71,14 +71,14 @@ const ViewsList = ({
             />
           }
           filterButton={
-            parent.type === 'dashboard' ? (
+            parent.type === 'smartView' ? (
               <Button
                 variant='transparent'
                 active={parent.target.condition.length > 0}
                 onClick={() =>
                   openModal(
                     <UpdateDashboardModal
-                      dashboard={parent.target}
+                      smartView={parent.target}
                       showOnlyConditions={true}
                     />
                   )

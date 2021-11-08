@@ -15,7 +15,7 @@ import MetadataContainer from '../../design/components/organisms/MetadataContain
 import MetadataContainerBreak from '../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import MetadataContainerRow from '../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { getMapValues } from '../../design/lib/utils/array'
-import { SerializedDashboard } from '../interfaces/db/dashboard'
+import { SerializedSmartView } from '../interfaces/db/smartView'
 import { SerializedTeam } from '../interfaces/db/team'
 import { SerializedUser } from '../interfaces/db/user'
 import { boostHubBaseUrl } from '../lib/consts'
@@ -26,34 +26,34 @@ import { usePage } from '../lib/stores/pageStore'
 import UserIcon from './UserIcon'
 import copy from 'copy-to-clipboard'
 import { usingElectron, sendToHost } from '../lib/stores/electron'
-import UpdateDashboardModal from './Modal/contents/Dashboard/UpdateDashboardModal'
+import UpdateSmartViewModal from './Modal/contents/SmartView/UpdateSmartViewModal'
 import { useModal } from '../../design/lib/stores/modal'
 import { useCloudApi } from '../lib/hooks/useCloudApi'
 import { useDialog } from '../../design/lib/stores/dialog'
 import { getTeamLinkHref } from './Link/TeamLink'
 
-interface DashboardContextMenuProps {
-  dashboard: SerializedDashboard
+interface SmartViewContextMenuProps {
+  smartView: SerializedSmartView
   team: SerializedTeam
 }
 
-const DashboardContextMenu = ({
+const SmartViewContextMenu = ({
   team,
-  dashboard: dashboard,
-}: DashboardContextMenuProps) => {
+  smartView,
+}: SmartViewContextMenuProps) => {
   const { translate } = useI18n()
   const { permissions = [], currentUserIsCoreMember } = usePage()
   const [copied, setCopied] = useState(false)
-  const { openModal } = useModal()
-  const { sendingMap, deleteDashboardApi } = useCloudApi()
+  const { openModal, closeAllModals } = useModal()
+  const { sendingMap, deleteSmartViewApi } = useCloudApi()
   const { messageBox } = useDialog()
 
   const docUrl = useMemo(() => {
     return (
       boostHubBaseUrl +
-      getTeamLinkHref(team, 'index', { dashboard: dashboard.id })
+      getTeamLinkHref(team, 'index', { smartView: smartView.id })
     )
-  }, [team, dashboard])
+  }, [team, smartView])
 
   const copyButtonHandler = useCallback(() => {
     copy(docUrl)
@@ -73,7 +73,7 @@ const DashboardContextMenu = ({
   }, [permissions])
 
   const creator =
-    dashboard.userId != null ? usersMap.get(dashboard.userId) : undefined
+    smartView.userId != null ? usersMap.get(smartView.userId) : undefined
 
   return (
     <MetadataContainer>
@@ -89,7 +89,7 @@ const DashboardContextMenu = ({
           type: 'content',
           icon: mdiClockOutline,
           content: getFormattedDateTime(
-            dashboard.createdAt,
+            smartView.createdAt,
             undefined,
             'MMM dd, yyyy, HH:mm'
           ),
@@ -115,7 +115,7 @@ const DashboardContextMenu = ({
           type: 'content',
           icon: mdiContentSaveOutline,
           content: getFormattedDateTime(
-            dashboard.updatedAt,
+            smartView.updatedAt,
             undefined,
             'MMM dd, yyyy, HH:mm'
           ),
@@ -126,7 +126,7 @@ const DashboardContextMenu = ({
           label: translate(lngKeys.ModalsWorkspaceAccess),
           type: 'content',
           icon: mdiAccountMultiple,
-          content: dashboard.private ? (
+          content: smartView.private ? (
             translate(lngKeys.GeneralPrivate)
           ) : (
             <Flexbox wrap='wrap'>
@@ -173,12 +173,12 @@ const DashboardContextMenu = ({
             row={{
               type: 'button',
               props: {
-                disabled: sendingMap.has(dashboard.id),
+                disabled: sendingMap.has(smartView.id),
                 id: 'metadata-move',
                 label: translate(lngKeys.GeneralEditVerb),
                 iconPath: mdiPencil,
                 onClick: () =>
-                  openModal(<UpdateDashboardModal dashboard={dashboard} />),
+                  openModal(<UpdateSmartViewModal smartView={smartView} />),
               },
             }}
           />
@@ -186,15 +186,15 @@ const DashboardContextMenu = ({
             row={{
               type: 'button',
               props: {
-                disabled: sendingMap.has(dashboard.id),
-                spinning: sendingMap.get(dashboard.id) === 'delete',
+                disabled: sendingMap.has(smartView.id),
+                spinning: sendingMap.get(smartView.id) === 'delete',
                 id: 'metadata-delete',
                 label: translate(lngKeys.GeneralDelete),
                 iconPath: mdiTrashCanOutline,
                 onClick: () => {
                   messageBox({
-                    title: `Delete ${dashboard.name}?`,
-                    message: `Are you sure to delete this dashboard?`,
+                    title: `Delete ${smartView.name}?`,
+                    message: `Are you sure to delete this smart view?`,
                     buttons: [
                       {
                         variant: 'secondary',
@@ -206,7 +206,8 @@ const DashboardContextMenu = ({
                         variant: 'danger',
                         label: translate(lngKeys.GeneralDelete),
                         onClick: async () => {
-                          await deleteDashboardApi(dashboard)
+                          await deleteSmartViewApi(smartView)
+                          closeAllModals()
                         },
                       },
                     ],
@@ -221,4 +222,4 @@ const DashboardContextMenu = ({
   )
 }
 
-export default React.memo(DashboardContextMenu)
+export default React.memo(SmartViewContextMenu)

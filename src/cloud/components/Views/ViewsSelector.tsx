@@ -39,7 +39,7 @@ const ViewsSelector = ({
       await createViewApi(
         parent.type === 'folder'
           ? { folder: parent.target.id, type }
-          : { dashboard: parent.target.id, type }
+          : { smartView: parent.target.id, type }
       )
       setSending(false)
     },

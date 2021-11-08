@@ -9,7 +9,7 @@ import { capitalize } from '../../../../lib/utils/string'
 import FormInput from '../../../../../design/components/molecules/Form/atoms/FormInput'
 import FormDatePicker from '../../../../../design/components/molecules/Form/atoms/FormDatePicker'
 import { isValid } from 'date-fns'
-import { DateCondition } from '../../../../interfaces/db/dashboard'
+import { DateCondition } from '../../../../interfaces/db/smartView'
 import { PropType } from '../../../../interfaces/db/props'
 import { isUUIDArray } from '../../../../lib/utils/array'
 
