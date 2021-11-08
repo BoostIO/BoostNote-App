@@ -168,7 +168,7 @@ const Container = styled.div`
   }
 
   .form__select__group-heading {
-    font-size: ${({ theme }) => theme.sizes.fonts.md}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   }
 
   .form__select .form__select__control,

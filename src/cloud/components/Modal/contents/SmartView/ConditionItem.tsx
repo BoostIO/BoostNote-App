@@ -9,15 +9,16 @@ import { lngKeys } from '../../../../lib/i18n/types'
 import { EditableCondition } from './interfaces'
 import ConditionValueControl from './ConditionValueControl'
 import Flexbox from '../../../../../design/components/atoms/Flexbox'
-
-const SUPPORTED_CONDTION_TYPES = [
-  'label',
-  'due_date',
-  'creation_date',
-  'update_date',
-  'prop',
-  //'query',
-] as const
+import {
+  FormSelectGroupOption,
+  FormSelectOption,
+} from '../../../../../design/components/molecules/Form/atoms/FormSelect'
+import Icon from '../../../../../design/components/atoms/Icon'
+import {
+  supportedCustomPropertyTypes,
+  supportedStaticPropertyTypes,
+} from '../../../../lib/smartViews'
+import styled from '../../../../../design/lib/styled'
 
 interface ConditionItemProps {
   hideConditionRuleType: boolean
@@ -33,20 +34,21 @@ const ConditionItem = ({
   remove,
 }: ConditionItemProps) => {
   const { translate } = useI18n()
+
   return (
     <FormRow fullWidth={true}>
       <Flexbox flex='1 1 auto'>
         {hideConditionRuleType ? (
           <FormRowItem
-            flex='0 0 auto'
-            item={{ type: 'node', element: <span>WHERE</span> }}
+            flex='0 1 100px'
+            item={{ type: 'node', element: <span>Where</span> }}
           />
         ) : (
           <FormRowItem
+            flex='0 1 100px'
             item={{
               type: 'select',
               props: {
-                minWidth: 140,
                 value: getRuleOptionByType(translate, condition.rule),
                 options: [
                   getRuleOptionByType(translate, 'and'),
@@ -60,18 +62,14 @@ const ConditionItem = ({
           />
         )}
         <FormRowItem
+          flex='0 1 180px'
           item={{
             type: 'select',
             props: {
-              value: getConditionOptionByType(translate, condition.type),
-              options: SUPPORTED_CONDTION_TYPES.map((condition) =>
-                getConditionOptionByType(translate, condition)
-              ),
-              minWidth: 140,
-              onChange: (selectedOption: {
-                label: string
-                value: typeof SUPPORTED_CONDTION_TYPES[number]
-              }) => {
+              placeholder: 'Select..',
+              value: inferConditionPrimaryType(translate, condition),
+              options: SUPPORTED_PRIMARY_OPTIONS,
+              onChange: (selectedOption: { label: any; value: string }) => {
                 update(
                   getDefaultConditionByType(
                     selectedOption.value,
@@ -100,24 +98,82 @@ const ConditionItem = ({
 
 export default ConditionItem
 
-function getConditionOptionByType(
-  t: TFunction,
-  value: EditableCondition['type']
-) {
-  switch (value) {
+//label', 'due_date', 'creation_date', 'update_date', 'prop']
+
+function inferConditionPrimaryType(t: TFunction, condition: EditableCondition) {
+  switch (condition.type) {
     case 'label':
-      return { label: t(lngKeys.GeneralLabels), value: 'label' }
-    case 'due_date':
-      return { label: t(lngKeys.DueDate), value: 'due_date' }
+      return {
+        label: (
+          <StyledOption
+            icon={supportedCustomPropertyTypes['label'].icon}
+            label={t(lngKeys.GeneralLabels)}
+          />
+        ),
+        value: supportedCustomPropertyTypes['label'].value,
+      }
     case 'creation_date':
       return { label: t(lngKeys.CreationDate), value: 'creation_date' }
     case 'update_date':
       return { label: t(lngKeys.UpdateDate), value: 'update_date' }
     case 'prop':
-      return { label: 'Prop', value: 'prop' }
+      switch (condition.value.type) {
+        case 'date':
+          return {
+            label: (
+              <StyledOption
+                icon={supportedCustomPropertyTypes['date'].icon}
+                label={supportedCustomPropertyTypes['date'].label}
+              />
+            ),
+            value: supportedCustomPropertyTypes['date'].value,
+          }
+        case 'user':
+          return {
+            label: (
+              <StyledOption
+                icon={supportedCustomPropertyTypes['person'].icon}
+                label={supportedCustomPropertyTypes['person'].label}
+              />
+            ),
+            value: supportedCustomPropertyTypes['person'].value,
+          }
+        case 'string':
+          if (condition.value.name.toLocaleLowerCase() === 'status') {
+            return {
+              label: (
+                <StyledOption
+                  icon={supportedCustomPropertyTypes['status'].icon}
+                  label={supportedCustomPropertyTypes['status'].label}
+                />
+              ),
+              value: supportedCustomPropertyTypes['status'].value,
+            }
+          }
+          break
+        case 'json':
+          switch (condition.value.value.type) {
+            case 'timeperiod':
+              return {
+                label: (
+                  <StyledOption
+                    icon={supportedCustomPropertyTypes['timeperiod'].icon}
+                    label={supportedCustomPropertyTypes['timeperiod'].label}
+                  />
+                ),
+                value: supportedCustomPropertyTypes['timeperiod'].value,
+              }
+            default:
+              break
+          }
+
+        //unsupported
+        case 'number':
+        default:
+      }
     case 'null':
     default:
-      return { label: 'Select condition..', value: 'null' }
+      return undefined
   }
 }
 
@@ -126,11 +182,52 @@ function getDefaultConditionByType(
   rule: 'and' | 'or'
 ): EditableCondition {
   switch (type) {
-    case 'prop':
+    case 'date': {
       return {
         rule,
         type: 'prop',
-        value: { name: '', value: '' },
+        value: {
+          name: '',
+          value: {
+            type: 'relative',
+            period: 0,
+          },
+          type: 'date',
+        },
+      }
+    }
+    case 'user':
+      return {
+        rule,
+        type: 'prop',
+        value: {
+          name: '',
+          value: [],
+          type: 'user',
+        },
+      }
+    case 'json':
+      return {
+        rule,
+        type: 'prop',
+        value: {
+          name: '',
+          value: {
+            type: 'timeperiod',
+            value: 0,
+          },
+          type: 'json',
+        },
+      }
+    case 'status':
+      return {
+        rule,
+        type: 'prop',
+        value: {
+          name: 'status',
+          value: '',
+          type: 'string',
+        },
       }
     case 'label':
       return {
@@ -138,7 +235,6 @@ function getDefaultConditionByType(
         type: 'label',
         value: [],
       }
-    case 'due_date':
     case 'creation_date':
     case 'update_date':
       return {
@@ -166,3 +262,49 @@ function getRuleOptionByType(_t: TFunction, value: 'and' | 'or') {
       return { label: 'OR', value: 'or' }
   }
 }
+
+const StyledOption = ({ label, icon }: { label: string; icon?: string }) => {
+  return (
+    <StyledSelectOption>
+      {icon != null && <Icon path={icon} />}
+      <span>{label}</span>
+    </StyledSelectOption>
+  )
+}
+
+const StyledSelectOption = styled.div`
+  display: flex;
+  align-items: center;
+
+  span {
+    padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+`
+
+const SUPPORTED_PRIMARY_OPTIONS: (
+  | FormSelectOption
+  | FormSelectGroupOption
+)[] = [
+  {
+    label: 'Custom Props',
+    options: Object.values(supportedCustomPropertyTypes).map((propertyType) => {
+      return {
+        label: (
+          <StyledOption icon={propertyType.icon} label={propertyType.label} />
+        ),
+        value: propertyType.value,
+      }
+    }),
+  },
+  {
+    label: 'Static',
+    options: Object.values(supportedStaticPropertyTypes).map((propertyType) => {
+      return {
+        label: (
+          <StyledOption icon={propertyType.icon} label={propertyType.label} />
+        ),
+        value: propertyType.value,
+      }
+    }),
+  },
+]

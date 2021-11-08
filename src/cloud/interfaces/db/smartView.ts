@@ -33,13 +33,37 @@ export interface ConditionType<T extends string, U extends any> {
   inverse?: boolean
 }
 
+export interface PropConditionType<T extends string, U extends any> {
+  name: string
+  type: T
+  value: U
+}
+
+export type SmartViewPropConditionTypes =
+  | 'user'
+  | 'json'
+  | 'string'
+  | 'number'
+  | 'date'
+
+export interface JsonPropCondition {
+  type: string
+  value: any
+}
+
+export type PropCondition =
+  | PropConditionType<'user', string[]>
+  | PropConditionType<'json', JsonPropCondition>
+  | PropConditionType<'string', string>
+  | PropConditionType<'number', number>
+  | PropConditionType<'date', DateCondition>
+
 export type Condition =
   | ConditionType<'query', Query>
   | ConditionType<'label', string[]>
-  | ConditionType<'due_date', DateCondition>
   | ConditionType<'creation_date', DateCondition>
   | ConditionType<'update_date', DateCondition>
-  | ConditionType<'prop', { name: string; value: any }>
+  | ConditionType<'prop', PropCondition>
 
 export type DateCondition =
   | { type: 'relative'; period: number }

@@ -10,11 +10,16 @@ import { Kind } from './interfaces'
 import Portal from '../../../../../design/components/atoms/Portal'
 
 interface DocDateSelectProps {
+  usePortal?: boolean
   value: DateCondition | null
   update: (value: DateCondition | null) => void
 }
 
-const DocDateSelect = ({ value, update }: DocDateSelectProps) => {
+const DocDateSelect = ({
+  value,
+  usePortal = true,
+  update,
+}: DocDateSelectProps) => {
   return (
     <>
       <DateConditionValueTypeSelect value={value} update={update} />
@@ -22,10 +27,14 @@ const DocDateSelect = ({ value, update }: DocDateSelectProps) => {
         (value.type === 'specific' ||
           value.type === 'before' ||
           value.type === 'after') && (
-          <SpecificDatePicker value={value} update={update} />
+          <SpecificDatePicker
+            usePortal={usePortal}
+            value={value}
+            update={update}
+          />
         )}
       {value != null && value.type === 'between' && (
-        <DateRangePicker value={value} update={update} />
+        <DateRangePicker usePortal={usePortal} value={value} update={update} />
       )}
     </>
   )
@@ -34,11 +43,16 @@ const DocDateSelect = ({ value, update }: DocDateSelectProps) => {
 export default DocDateSelect
 
 interface SpecificDatePickerProps {
+  usePortal?: boolean
   value: Kind<DateCondition, 'specific' | 'after' | 'before'>
   update: (value: DateCondition) => void
 }
 
-const SpecificDatePicker = ({ value, update }: SpecificDatePickerProps) => {
+const SpecificDatePicker = ({
+  value,
+  usePortal,
+  update,
+}: SpecificDatePickerProps) => {
   const updateDate = (newDate: Date) => {
     update({
       ...value,
@@ -55,11 +69,17 @@ const SpecificDatePicker = ({ value, update }: SpecificDatePickerProps) => {
       selected={localDate}
       onChange={updateDate}
       customInput={<DatePickerButton date={localDate} />}
-      popperContainer={(props: { children: React.ReactNode[] }) => (
-        <Portal domTarget={document.getElementById('application__anchor')}>
-          {props.children}
-        </Portal>
-      )}
+      popperContainer={
+        usePortal
+          ? (props: { children: React.ReactNode[] }) => (
+              <Portal
+                domTarget={document.getElementById('application__anchor')}
+              >
+                {props.children}
+              </Portal>
+            )
+          : undefined
+      }
     />
   )
 }
@@ -77,11 +97,16 @@ export function localizeDate(date: Date) {
 }
 
 interface DateRangePickerProps {
+  usePortal?: boolean
   value: Kind<DateCondition, 'between'>
   update: (value: DateCondition) => void
 }
 
-const DateRangePicker = ({ value, update }: DateRangePickerProps) => {
+const DateRangePicker = ({
+  value,
+  usePortal,
+  update,
+}: DateRangePickerProps) => {
   const updateFromDate = (date: Date) => {
     update({
       ...value,
@@ -108,11 +133,17 @@ const DateRangePicker = ({ value, update }: DateRangePickerProps) => {
         selected={localFromDate}
         onChange={updateFromDate}
         placeholderText='Select Start Date'
-        popperContainer={(props: { children: React.ReactNode[] }) => (
-          <Portal domTarget={document.getElementById('application__anchor')}>
-            {props.children}
-          </Portal>
-        )}
+        popperContainer={
+          usePortal
+            ? (props: { children: React.ReactNode[] }) => (
+                <Portal
+                  domTarget={document.getElementById('application__anchor')}
+                >
+                  {props.children}
+                </Portal>
+              )
+            : undefined
+        }
         customInput={
           <DatePickerButton
             date={localFromDate}
@@ -124,11 +155,17 @@ const DateRangePicker = ({ value, update }: DateRangePickerProps) => {
         selected={localToDate}
         onChange={updateToDate}
         placeholderText='Select End Date'
-        popperContainer={(props: { children: React.ReactNode[] }) => (
-          <Portal domTarget={document.getElementById('application__anchor')}>
-            {props.children}
-          </Portal>
-        )}
+        popperContainer={
+          usePortal
+            ? (props: { children: React.ReactNode[] }) => (
+                <Portal
+                  domTarget={document.getElementById('application__anchor')}
+                >
+                  {props.children}
+                </Portal>
+              )
+            : undefined
+        }
         customInput={
           <DatePickerButton
             date={localToDate}
