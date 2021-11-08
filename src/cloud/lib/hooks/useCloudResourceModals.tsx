@@ -121,7 +121,6 @@ export function useCloudResourceModals() {
         {
           showCloseIcon: false,
           width: 'small',
-          hideBackground: true,
         }
       )
     },
