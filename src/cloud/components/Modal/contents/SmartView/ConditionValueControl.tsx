@@ -1,17 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 import DocLabelSelect from './DocLabelSelect'
 import DocAssigneeSelect from './DocAssigneeSelect'
-import DocDateSelect, { DatePickerButton } from './DocDateSelect'
+import DocDateSelect from './DocDateSelect'
 import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
 import { EditableCondition, Kind } from './interfaces'
-import FormSelect from '../../../../../design/components/molecules/Form/atoms/FormSelect'
-import { capitalize } from '../../../../lib/utils/string'
 import FormInput from '../../../../../design/components/molecules/Form/atoms/FormInput'
-import FormDatePicker from '../../../../../design/components/molecules/Form/atoms/FormDatePicker'
-import { isValid } from 'date-fns'
-import { DateCondition } from '../../../../interfaces/db/smartView'
-import { PropType } from '../../../../interfaces/db/props'
-import { isUUIDArray } from '../../../../lib/utils/array'
+import {
+  DateCondition,
+  PropCondition,
+} from '../../../../interfaces/db/smartView'
+import TimePeriodForm from './TimePeriodForm'
 
 interface ConditionValueControlProps {
   condition: EditableCondition
@@ -22,13 +20,8 @@ const ConditionValueControl = ({
   condition,
   update,
 }: ConditionValueControlProps) => {
-  const [inputType, setInputType] = useState<PropType>(() => {
-    return condition.type === 'prop'
-      ? inferPropType(condition.value.value)
-      : 'string'
-  })
+  console.log(condition)
   switch (condition.type) {
-    case 'due_date':
     case 'creation_date':
     case 'update_date':
       const updateDateValue = (dateConditionValue: DateCondition | null) => {
@@ -60,13 +53,13 @@ const ConditionValueControl = ({
       ) => {
         update({
           ...condition,
-          value: { ...condition.value, ...value },
+          value: Object.assign(condition.value, value) as PropCondition,
         })
       }
 
       return (
         <>
-          <FormRowItem>
+          <FormRowItem flex='0 1 180px'>
             <FormInput
               value={condition.value.name}
               onChange={(ev) => updateValue({ name: ev.target.value })}
@@ -74,54 +67,50 @@ const ConditionValueControl = ({
             />
           </FormRowItem>
           <FormRowItem>
-            <FormSelect
-              options={[
-                { label: 'String', value: 'string' },
-                { label: 'Number', value: 'number' },
-                { label: 'Date', value: 'date' },
-                { label: 'User', value: 'user' },
-              ]}
-              value={{
-                label: capitalize(inputType),
-                value: inputType,
-              }}
-              onChange={(val) => {
-                setInputType(val.value)
-                updateValue({ value: getDefaultPropValue(val.value) })
-              }}
-            />
-          </FormRowItem>
-          <FormRowItem>
-            {inputType === 'user' && (
+            {condition.value.type === 'user' && (
               <DocAssigneeSelect
                 value={condition.value.value}
                 update={(value) => updateValue({ value })}
               />
             )}
-            {inputType === 'string' && (
+            {condition.value.type === 'string' && (
               <FormInput
                 value={condition.value.value}
                 onChange={(ev) => updateValue({ value: ev.target.value })}
                 placeholder='Property value..'
               />
             )}
-            {inputType === 'number' && (
+            {condition.value.type === 'number' && (
               <FormInput
                 type='number'
-                value={condition.value.value}
-                onChange={(ev) => updateValue({ value: ev.target.value })}
+                value={condition.value.value.toString()}
+                onChange={(ev) =>
+                  updateValue({ value: parseInt(ev.target.value) })
+                }
                 placeholder='Property value..'
               />
             )}
-            {inputType === 'date' && (
-              <FormDatePicker
-                selected={
-                  isValid(condition.value.value)
-                    ? new Date(condition.value.value)
-                    : null
-                }
-                onChange={(value) => updateValue({ value })}
-                customInput={<DatePickerButton date={condition.value.value} />}
+            {condition.value.type === 'json' &&
+              condition.value.value.type === 'timeperiod' && (
+                <TimePeriodForm
+                  period={condition.value.value.value}
+                  updatePeriod={(period) => {
+                    updateValue({
+                      value: { type: 'timeperiod', value: period },
+                    })
+                  }}
+                />
+              )}
+            {condition.value.type === 'date' && (
+              <DocDateSelect
+                value={condition.value.value}
+                usePortal={false}
+                update={(value) => {
+                  updateValue({
+                    value:
+                      value == null ? { type: 'relative', period: 0 } : value,
+                  })
+                }}
               />
             )}
           </FormRowItem>
@@ -134,32 +123,3 @@ const ConditionValueControl = ({
 }
 
 export default ConditionValueControl
-
-function getDefaultPropValue(type: PropType) {
-  switch (type) {
-    case 'date':
-      return new Date()
-    case 'number':
-      return 0
-    case 'user':
-      return []
-    default:
-      return ''
-  }
-}
-
-function inferPropType(value: unknown): PropType {
-  if (typeof value === 'number') {
-    return 'number'
-  }
-
-  if (value instanceof Date) {
-    return 'date'
-  }
-
-  if (isUUIDArray(value)) {
-    return 'user'
-  }
-
-  return 'string'
-}

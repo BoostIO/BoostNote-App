@@ -54,7 +54,11 @@ const CreateSmartViewModal = ({ onCreate }: CreateSmartViewModalProps) => {
         {
           rule: 'and',
           type: 'prop',
-          value: { name: 'status', value: 'in_progress' },
+          value: {
+            type: 'string',
+            name: 'status',
+            value: 'in_progress',
+          },
         },
       ]}
     />
