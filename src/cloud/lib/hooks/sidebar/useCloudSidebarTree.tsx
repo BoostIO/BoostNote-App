@@ -65,6 +65,7 @@ import {
 } from '../../../../design/components/organisms/Sidebar/molecules/SidebarTree'
 import { CATEGORY_DRAG_TRANSFER_DATA_JSON } from '../../../interfaces/resources'
 import LabelsManagementModal from '../../../components/Modal/contents/LabelsManagementModal'
+import { isString } from '../../utils/string'
 
 export function useCloudSidebarTree() {
   const { team, currentUserIsCoreMember } = usePage()
@@ -472,10 +473,17 @@ export function useCloudSidebarTree() {
         bookmarked: doc.bookmarked,
         emoji: doc.emoji,
         defaultIcon: mdiFileDocumentOutline,
-        status: doc.props.status != null ? doc.props.status.data : undefined,
+        status:
+          doc.props != null &&
+          doc.props.status != null &&
+          isString(doc.props.status.data)
+            ? (doc.props.status.data as DocStatus)
+            : undefined,
         hidden:
           doc.archivedAt != null ||
-          (doc.props.status != null &&
+          (doc.props != null &&
+            doc.props.status != null &&
+            isString(doc.props.status.data) &&
             (doc.props.status.data === 'archived' ||
               doc.props.status.data === 'completed')),
         children: [],

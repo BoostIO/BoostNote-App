@@ -47,10 +47,13 @@ const DocPageHeader = ({
   const { currentUserIsCoreMember } = usePage()
   const { preferences, setPreferences } = usePreferences()
   const { openContextModal, closeAllModals } = useModal()
-  const { props: docProperties, updateProp, removeProp } = useProps(doc.props, {
-    type: 'doc',
-    target: doc,
-  })
+  const { props: docProperties, updateProp, removeProp } = useProps(
+    doc.props || {},
+    {
+      type: 'doc',
+      target: doc,
+    }
+  )
 
   return (
     <Container className={cc(['doc__page__header', className])}>

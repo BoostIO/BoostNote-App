@@ -1,5 +1,6 @@
-import { isObject } from 'lodash'
+import { isEqual, isObject } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { usePrevious } from '../../../../lib/hooks'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { Props, SerializedPropData } from '../../../interfaces/db/props'
 import { getPropsOfItem } from '../../props'
@@ -9,25 +10,28 @@ export function useProps(
   itemProps: Props,
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
 ) {
+  const previousProps = usePrevious(itemProps)
   const [props, setProps] = useState<Record<string, SerializedPropData>>(
     itemProps
   )
   const { updateDocPropsApi } = useCloudApi()
 
   useEffect(() => {
-    setProps((prev) => {
-      const newProps = Object.assign({}, prev)
-      Object.entries(itemProps).forEach((prop) => {
-        newProps[prop[0]] = prop[1]
+    if (previousProps && !isEqual(previousProps, itemProps)) {
+      setProps((prev) => {
+        const newProps = Object.assign({}, prev)
+        Object.entries(itemProps).forEach((prop) => {
+          newProps[prop[0]] = prop[1]
+        })
+        Object.entries(prev).forEach((prop) => {
+          if (typeof itemProps[prop[0]] === 'undefined') {
+            newProps[prop[0]] = Object.assign({}, prop[1], { data: null })
+          }
+        })
+        return newProps
       })
-      Object.entries(prev).forEach((prop) => {
-        if (typeof itemProps[prop[0]] === 'undefined') {
-          newProps[prop[0]] = Object.assign({}, prop[1], { data: null })
-        }
-      })
-      return newProps
-    })
-  }, [itemProps])
+    }
+  }, [itemProps, previousProps])
 
   const orderedProps = useMemo(() => {
     return Object.entries(getPropsOfItem(props)).sort((a, b) => {
