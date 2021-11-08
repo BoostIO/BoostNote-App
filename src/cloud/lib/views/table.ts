@@ -1,5 +1,5 @@
 import { generate } from 'shortid'
-import { SerializedQuery } from '../../interfaces/db/dashboard'
+import { SerializedQuery } from '../../interfaces/db/smartView'
 import { PropType } from '../../interfaces/db/props'
 import { isString } from '../utils/string'
 

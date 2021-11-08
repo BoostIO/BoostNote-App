@@ -59,7 +59,7 @@ import { getMapFromEntityArray } from '../../utils/array'
 import { SerializedTemplate } from '../../../interfaces/db/template'
 import { getAllTemplates } from '../../../api/teams/docs/templates'
 import { useToast } from '../../../../design/lib/stores/toast'
-import { SerializedDashboard } from '../../../interfaces/db/dashboard'
+import { SerializedSmartView } from '../../../interfaces/db/smartView'
 import { SerializedView } from '../../../interfaces/db/view'
 export * from './types'
 
@@ -106,8 +106,8 @@ function useNavStore(): NavContext {
   const [docsMap, setDocsMap] = useState<
     Map<string, SerializedDocWithSupplemental>
   >(new Map())
-  const [dashboardsMap, setDashboardsMap] = useState<
-    Map<string, SerializedDashboard>
+  const [smartViewsMap, setSmartViewsMap] = useState<
+    Map<string, SerializedSmartView>
   >(new Map())
   const [viewsMap, setViewsMap] = useState<Map<number, SerializedView>>(
     new Map()
@@ -146,17 +146,17 @@ function useNavStore(): NavContext {
     []
   )
 
-  const updateDashboardsMap = useCallback(
-    (...mappedTags: [string, SerializedDashboard][]) =>
-      setDashboardsMap((prevMap) => {
+  const updateSmartViewsMap = useCallback(
+    (...mappedTags: [string, SerializedSmartView][]) =>
+      setSmartViewsMap((prevMap) => {
         return new Map([...prevMap, ...mappedTags])
       }),
     []
   )
 
-  const removeFromDashboardsMap = useCallback(
+  const removeFromSmartViewsMap = useCallback(
     (...ids: string[]) =>
-      setDashboardsMap((prevMap) => {
+      setSmartViewsMap((prevMap) => {
         const newMap = new Map(prevMap)
         ids.forEach((workspaceId) => {
           newMap.delete(workspaceId)
@@ -271,7 +271,7 @@ function useNavStore(): NavContext {
             docs,
             tags = [],
             workspaces = [],
-            dashboards = [],
+            smartViews = [],
             appEvents = [],
           },
           { templates = [] },
@@ -292,7 +292,7 @@ function useNavStore(): NavContext {
           tags,
           workspaces,
           templates,
-          dashboards,
+          smartViews,
           appEvents,
         })
         setFoldersMap(maps.foldersData)
@@ -300,7 +300,7 @@ function useNavStore(): NavContext {
         setTagsMap(maps.tagsData)
         setWorkspacesMap(maps.workspacesData)
         setTemplatesMap(maps.templatesData)
-        setDashboardsMap(maps.dashboardsData)
+        setSmartViewsMap(maps.smartViewsData)
         setAppEventsMap(maps.appEventsData)
         setInitialLoadDone(true)
       }
@@ -900,11 +900,11 @@ function useNavStore(): NavContext {
     docsMap,
     updateDocsMap,
     removeFromDocsMap,
-    dashboardsMap: dashboardsMap,
+    smartViewsMap: smartViewsMap,
     appEventsMap,
     updateAppEventsMap,
-    updateDashboardsMap: updateDashboardsMap,
-    removeFromDashboardsMap: removeFromDashboardsMap,
+    updateSmartViewsMap: updateSmartViewsMap,
+    removeFromSmartViewsMap: removeFromSmartViewsMap,
     createFolderHandler,
     updateFolderHandler,
     createDocHandler,
@@ -968,7 +968,7 @@ interface CreateMapsFromPagePropsProps {
   tagsData: Map<string, SerializedTag>
   workspacesData: Map<string, SerializedWorkspace>
   templatesData: Map<string, SerializedTemplate>
-  dashboardsData: Map<string, SerializedDashboard>
+  smartViewsData: Map<string, SerializedSmartView>
   appEventsData: Map<string, SerializedAppEvent>
 }
 
@@ -982,7 +982,7 @@ function getTagsFoldersDocsMapsFromProps(
       tagsData: new Map(),
       workspacesData: new Map(),
       templatesData: new Map(),
-      dashboardsData: new Map(),
+      smartViewsData: new Map(),
       appEventsData: new Map(),
     }
   }
@@ -993,7 +993,7 @@ function getTagsFoldersDocsMapsFromProps(
     tags = [],
     workspaces = [],
     templates = [],
-    dashboards = [],
+    smartViews = [],
     appEvents = [],
   } = pageProps
 
@@ -1008,8 +1008,8 @@ function getTagsFoldersDocsMapsFromProps(
     workspaces as SerializedWorkspace[]
   )
   const templatesData = getMapFromEntityArray(templates as SerializedTemplate[])
-  const dashboardsData = getMapFromEntityArray(
-    dashboards as SerializedDashboard[]
+  const smartViewsData = getMapFromEntityArray(
+    smartViews as SerializedSmartView[]
   )
   const appEventsData = getMapFromEntityArray(appEvents as SerializedAppEvent[])
 
@@ -1019,7 +1019,7 @@ function getTagsFoldersDocsMapsFromProps(
     tagsData,
     workspacesData,
     templatesData,
-    dashboardsData,
+    smartViewsData,
     appEventsData,
   }
 }

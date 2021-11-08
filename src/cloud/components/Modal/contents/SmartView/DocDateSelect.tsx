@@ -5,7 +5,7 @@ import { format as formatDate } from 'date-fns'
 import { mdiCalendar, mdiCalendarStart, mdiCalendarEnd } from '@mdi/js'
 import Icon from '../../../../../design/components/atoms/Icon'
 import styled from '../../../../../design/lib/styled'
-import { DateCondition } from '../../../../interfaces/db/dashboard'
+import { DateCondition } from '../../../../interfaces/db/smartView'
 import { Kind } from './interfaces'
 import Portal from '../../../../../design/components/atoms/Portal'
 

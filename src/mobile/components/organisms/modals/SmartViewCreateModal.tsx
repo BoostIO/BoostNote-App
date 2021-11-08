@@ -1,51 +1,51 @@
 import React, { useState, useCallback } from 'react'
 import { useModal } from '../../../../design/lib/stores/modal'
 import {
-  createDashboard,
-  CreateDashboardRequestBody,
-} from '../../../../cloud/api/teams/dashboard'
+  createSmartView,
+  CreateSmartViewRequestBody,
+} from '../../../../cloud/api/teams/smartViews'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import { useToast } from '../../../../design/lib/stores/toast'
 import { useRouter } from '../../../../cloud/lib/router'
 import ModalContainer from './atoms/ModalContainer'
-import DashboardForm from './organisms/DashboardForm'
+import SmartViewForm from './organisms/SmartViewForm'
 import { useAppStatus } from '../../../lib/appStatus'
 import { getTeamLinkHref } from '../../../../cloud/components/Link/TeamLink'
-import { SerializedDashboard } from '../../../../cloud/interfaces/db/dashboard'
+import { SerializedSmartView } from '../../../../cloud/interfaces/db/smartView'
 
-interface CreateDashboardModalProps {
-  onCreate?: (dashboard: SerializedDashboard) => void
+interface CreateSmartViewModalProps {
+  onCreate?: (smartView: SerializedSmartView) => void
 }
 
-const DashboardCreateModal = ({ onCreate }: CreateDashboardModalProps) => {
+const SmartViewCreateModal = ({ onCreate }: CreateSmartViewModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
-  const { updateDashboardsMap: updateDashboardsMap } = useNav()
+  const { updateSmartViewsMap: updateSmartViewsMap } = useNav()
   const [sending, setSending] = useState(false)
   const { push } = useRouter()
   const { setShowingNavigator } = useAppStatus()
 
   const { pushApiErrorMessage } = useToast()
   const submit = useCallback(
-    async (body: CreateDashboardRequestBody) => {
+    async (body: CreateSmartViewRequestBody) => {
       if (team == null) {
         return
       }
       setSending(true)
       try {
-        const { data: dashboardFolder } = await createDashboard({
+        const { data: smartViewFolder } = await createSmartView({
           ...body,
           teamId: team.id,
         })
-        updateDashboardsMap([dashboardFolder.id, dashboardFolder])
+        updateSmartViewsMap([smartViewFolder.id, smartViewFolder])
         closeModal()
         setShowingNavigator(false)
         if (onCreate != null) {
-          return onCreate(dashboardFolder)
+          return onCreate(smartViewFolder)
         } else {
           push(
-            getTeamLinkHref(team, 'index', { dashboard: dashboardFolder.id })
+            getTeamLinkHref(team, 'index', { smartView: smartViewFolder.id })
           )
         }
       } catch (error) {
@@ -57,7 +57,7 @@ const DashboardCreateModal = ({ onCreate }: CreateDashboardModalProps) => {
     [
       team,
       push,
-      updateDashboardsMap,
+      updateSmartViewsMap,
       closeModal,
       pushApiErrorMessage,
       setShowingNavigator,
@@ -70,8 +70,8 @@ const DashboardCreateModal = ({ onCreate }: CreateDashboardModalProps) => {
   }
 
   return (
-    <ModalContainer title='Create a Dashboard'>
-      <DashboardForm
+    <ModalContainer title='Create a SmartView'>
+      <SmartViewForm
         action='Create'
         onSubmit={submit}
         buttonsAreDisabled={sending}
@@ -87,4 +87,4 @@ const DashboardCreateModal = ({ onCreate }: CreateDashboardModalProps) => {
   )
 }
 
-export default DashboardCreateModal
+export default SmartViewCreateModal

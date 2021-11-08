@@ -8,10 +8,10 @@ import Table from '../../../../design/components/organisms/Table'
 import { useModal } from '../../../../design/lib/stores/modal'
 import styled from '../../../../design/lib/styled'
 import { TableViewEvent, TableViewEventEmitter } from '../../../../lib/events'
-import { SerializedQuery } from '../../../interfaces/db/dashboard'
+import { SerializedQuery } from '../../../interfaces/db/smartView'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedView } from '../../../interfaces/db/view'
-import { buildDashboardQueryCheck } from '../../../lib/dashboards'
+import { buildSmartViewQueryCheck } from '../../../lib/smartViews'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { getInitialPropDataOfProp } from '../../../lib/props'
 import { getArrayFromRecord } from '../../../lib/utils/array'
@@ -64,7 +64,7 @@ const TableView = ({
       return docs
     }
 
-    return docs.filter(buildDashboardQueryCheck(state.filter))
+    return docs.filter(buildSmartViewQueryCheck(state.filter))
   }, [state.filter, docs])
 
   const addColumn = useCallback(

@@ -11,68 +11,68 @@ import NavigationItem from '../../../design/components/molecules/Navigation/Navi
 import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
 import { getMapValues } from '../../../design/lib/utils/array'
-import {
-  DashboardListPageResponseBody,
-  getDashboardListPageData,
-} from '../../api/pages/teams/dashboard/list'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
-import { buildDashboardQueryCheck } from '../../lib/dashboards'
+import { buildSmartViewQueryCheck } from '../../lib/smartViews'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import { useNav } from '../../lib/stores/nav'
 import { usePage } from '../../lib/stores/pageStore'
 import ApplicationContent from '../ApplicationContent'
 import ApplicationPage from '../ApplicationPage'
 import ApplicationTopbar from '../ApplicationTopbar'
-import DashboardFolderContextMenu from '../DashboardFolderContextMenu'
-import CreateDashboardModal from '../Modal/contents/Dashboard/CreateDashboardModal'
+import SmartViewFolderContextMenu from '../SmartViewContextMenu'
+import CreateSmartViewModal from '../Modal/contents/SmartView/CreateSmartViewModal'
 import Views from '../Views'
+import {
+  getSmartViewListPageData,
+  SmartViewListPageResponseBody,
+} from '../../api/pages/teams/smartViews/list'
 
-const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
-  const [selectedDashboardId, setSelectedDashboardId] = useState<string>()
-  const { dashboardsMap, docsMap, viewsMap } = useNav()
+const SmartViewPage = ({ data }: SmartViewListPageResponseBody) => {
+  const [selectedSmartViewId, setSelectedSmartViewId] = useState<string>()
+  const { smartViewsMap, docsMap, viewsMap } = useNav()
   const { openModal, openContextModal, closeAllModals } = useModal()
   const { team, currentUserIsCoreMember } = usePage()
   const { listViewsApi, sendingMap } = useCloudApi()
 
   useEffectOnce(() => {
     if (data.length > 0) {
-      setSelectedDashboardId(data[0].id)
-      listViewsApi({ dashboard: data[0].id })
+      setSelectedSmartViewId(data[0].id)
+      listViewsApi({ smartView: data[0].id })
     }
   })
 
-  const selectedDashboard = useMemo(() => {
-    if (selectedDashboardId == null) {
+  const selectedSmartView = useMemo(() => {
+    if (selectedSmartViewId == null) {
       return undefined
     }
 
-    return dashboardsMap.get(selectedDashboardId)
-  }, [dashboardsMap, selectedDashboardId])
+    return smartViewsMap.get(selectedSmartViewId)
+  }, [smartViewsMap, selectedSmartViewId])
 
-  const selectedDashboardViews = useMemo(() => {
-    if (selectedDashboard == null) {
+  const selectedSmartViewViews = useMemo(() => {
+    if (selectedSmartView == null) {
       return []
     }
 
     const views = getMapValues(viewsMap)
 
-    return views.filter((view) => view.dashboardId === selectedDashboard.id)
-  }, [viewsMap, selectedDashboard])
+    return views.filter((view) => view.smartViewId === selectedSmartView.id)
+  }, [viewsMap, selectedSmartView])
 
-  const selectedDashboardDocs = useMemo(() => {
-    if (selectedDashboard == null || selectedDashboard.condition.length === 0) {
+  const selectedSmartViewDocs = useMemo(() => {
+    if (selectedSmartView == null || selectedSmartView.condition.length === 0) {
       return []
     }
     const docs = getMapValues(docsMap)
 
-    return docs.filter(buildDashboardQueryCheck(selectedDashboard.condition))
-  }, [docsMap, selectedDashboard])
+    return docs.filter(buildSmartViewQueryCheck(selectedSmartView.condition))
+  }, [docsMap, selectedSmartView])
 
   return (
     <ApplicationPage>
       <ApplicationTopbar
         controls={
-          selectedDashboard == null || team == null
+          selectedSmartView == null || team == null
             ? []
             : [
                 {
@@ -82,8 +82,8 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
                   onClick: (event) =>
                     openContextModal(
                       event,
-                      <DashboardFolderContextMenu
-                        dashboard={selectedDashboard}
+                      <SmartViewFolderContextMenu
+                        smartView={selectedSmartView}
                         team={team}
                       />,
                       {
@@ -101,22 +101,22 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
           <Flexbox>
             <Button
               variant='transparent'
-              className='dashboard__control'
+              className='smartView__control'
               onClick={(event) => {
                 openContextModal(
                   event,
-                  <DashboardSelector
-                    selectDashboard={(id) => {
-                      setSelectedDashboardId(id)
-                      listViewsApi({ dashboard: id })
+                  <SmartViewSelector
+                    selectSmartView={(id) => {
+                      setSelectedSmartViewId(id)
+                      listViewsApi({ smartView: id })
                       closeAllModals()
                     }}
-                    selectedDashboardId={selectedDashboardId}
-                    createNewDashboard={() =>
+                    selectedSmartViewId={selectedSmartViewId}
+                    createNewSmartView={() =>
                       openModal(
-                        <CreateDashboardModal
-                          onCreate={(dashboard) => {
-                            setSelectedDashboardId(dashboard.id)
+                        <CreateSmartViewModal
+                          onCreate={(smartView) => {
+                            setSelectedSmartViewId(smartView.id)
                           }}
                         />
                       )
@@ -130,22 +130,22 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
               }}
             >
               <span>
-                {selectedDashboard != null
-                  ? selectedDashboard.name
-                  : 'Dashboards'}
+                {selectedSmartView != null
+                  ? selectedSmartView.name
+                  : 'Select a smart view'}
               </span>
               <Icon path={mdiChevronDown} />
             </Button>
           </Flexbox>
-          {selectedDashboard != null ? (
+          {selectedSmartView != null ? (
             <>
-              {sendingMap.get(selectedDashboard.id) === 'list-views' ? (
+              {sendingMap.get(selectedSmartView.id) === 'list-views' ? (
                 <Spinner />
               ) : (
                 <Views
-                  views={selectedDashboardViews}
-                  parent={{ type: 'dashboard', target: selectedDashboard }}
-                  docs={selectedDashboardDocs}
+                  views={selectedSmartViewViews}
+                  parent={{ type: 'smartView', target: selectedSmartView }}
+                  docs={selectedSmartViewDocs}
                   currentUserIsCoreMember={currentUserIsCoreMember}
                 />
               )}
@@ -157,44 +157,44 @@ const DashboardPage = ({ data }: DashboardListPageResponseBody) => {
   )
 }
 
-const DashboardSelector = ({
-  selectDashboard,
-  createNewDashboard,
+const SmartViewSelector = ({
+  selectSmartView,
+  createNewSmartView,
 }: {
-  selectedDashboardId?: string
-  createNewDashboard: () => void
-  selectDashboard: (id: string) => void
+  selectedSmartViewId?: string
+  createNewSmartView: () => void
+  selectSmartView: (id: string) => void
 }) => {
-  const { dashboardsMap } = useNav()
+  const { smartViewsMap } = useNav()
 
-  const dashboards = useMemo(() => {
-    return getMapValues(dashboardsMap)
-  }, [dashboardsMap])
+  const smartViews = useMemo(() => {
+    return getMapValues(smartViewsMap)
+  }, [smartViewsMap])
 
   return (
-    <DashboardSelectorContainer>
+    <SmartViewSelectorContainer>
       <UpDownList>
-        {dashboards.map((dashboard) => (
+        {smartViews.map((smartView) => (
           <NavigationItem
-            id={`dashboard__selector--${dashboard.id}`}
+            id={`smartView__selector--${smartView.id}`}
             borderRadius={true}
-            key={dashboard.id}
-            label={dashboard.name}
-            labelClick={() => selectDashboard(dashboard.id)}
+            key={smartView.id}
+            label={smartView.name}
+            labelClick={() => selectSmartView(smartView.id)}
           />
         ))}
 
-        {dashboards.length > 0 && <BorderSeparator variant='second' />}
+        {smartViews.length > 0 && <BorderSeparator variant='second' />}
         <Button
           variant='transparent'
           iconPath={mdiPlus}
-          onClick={createNewDashboard}
-          id='new-dashboard'
+          onClick={createNewSmartView}
+          id='new-smartView'
         >
-          Add new Dashboard
+          Add new SmartView
         </Button>
       </UpDownList>
-    </DashboardSelectorContainer>
+    </SmartViewSelectorContainer>
   )
 }
 
@@ -204,7 +204,7 @@ const Container = styled.div`
   flex-direction: column;
   flex: 1 1 auto;
 
-  .dashboard__control {
+  .smartView__control {
     margin: ${({ theme }) => theme.sizes.spaces.df}px
       ${({ theme }) => theme.sizes.spaces.sm}px;
     font-size: ${({ theme }) => theme.sizes.fonts.xl}px;
@@ -216,11 +216,11 @@ const Container = styled.div`
   }
 `
 
-const DashboardSelectorContainer = styled.div``
+const SmartViewSelectorContainer = styled.div``
 
-DashboardPage.getInitialProps = async (params: GetInitialPropsParameters) => {
-  const result = await getDashboardListPageData(params)
+SmartViewPage.getInitialProps = async (params: GetInitialPropsParameters) => {
+  const result = await getSmartViewListPageData(params)
   return result
 }
 
-export default DashboardPage
+export default SmartViewPage

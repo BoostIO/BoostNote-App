@@ -1,11 +1,11 @@
-import { localizeDate } from '../components/Modal/contents/Dashboard/DocDateSelect'
-import { Kind } from '../components/Modal/contents/Dashboard/interfaces'
+import { localizeDate } from '../components/Modal/contents/SmartView/DocDateSelect'
+import { Kind } from '../components/Modal/contents/SmartView/interfaces'
 import {
   Condition,
   DateCondition,
   SerializeDateProps,
   SerializedQuery,
-} from '../interfaces/db/dashboard'
+} from '../interfaces/db/smartView'
 import { SerializedDocWithSupplemental } from '../interfaces/db/doc'
 import { addDays, addSeconds, isEqual } from 'date-fns'
 
@@ -161,7 +161,7 @@ function checkRule(
   return rule === 'or' ? test1 || test2 : test1 && test2
 }
 
-export function buildDashboardQueryCheck(query: SerializedQuery) {
+export function buildSmartViewQueryCheck(query: SerializedQuery) {
   return (doc: SerializedDocWithSupplemental) => {
     if (!Array.isArray(query)) {
       return false
