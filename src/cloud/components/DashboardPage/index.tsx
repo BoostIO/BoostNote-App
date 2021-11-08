@@ -1,4 +1,4 @@
-import { mdiChevronDown, mdiDotsHorizontal, mdiPlus } from '@mdi/js'
+import { mdiChevronDown, mdiDotsHorizontal, mdiLock, mdiPlus } from '@mdi/js'
 import React, { useMemo, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 import BorderSeparator from '../../../design/components/atoms/BorderSeparator'
@@ -102,6 +102,11 @@ const SmartViewPage = ({ data }: SmartViewListPageResponseBody) => {
             <Button
               variant='transparent'
               className='smartView__control'
+              iconPath={
+                selectedSmartView != null && selectedSmartView.private
+                  ? mdiLock
+                  : undefined
+              }
               onClick={(event) => {
                 openContextModal(
                   event,
@@ -181,6 +186,9 @@ const SmartViewSelector = ({
             key={smartView.id}
             label={smartView.name}
             labelClick={() => selectSmartView(smartView.id)}
+            icon={
+              smartView.private ? { type: 'icon', path: mdiLock } : undefined
+            }
           />
         ))}
 
