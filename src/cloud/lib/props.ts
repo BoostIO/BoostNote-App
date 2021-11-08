@@ -4,6 +4,8 @@ import {
   mdiArrowDownDropCircleOutline,
   mdiCalendarMonthOutline,
   mdiCheckAll,
+  mdiClockOutline,
+  mdiContentSaveOutline,
   mdiLabelOutline,
   mdiTimerOutline,
   mdiTimerSandEmpty,
@@ -45,6 +47,10 @@ export function getPropsOfItem(
 
 export function getLabelOfProp(propName: string): string {
   switch (propName) {
+    case 'created_date':
+      return 'Created date'
+    case 'updated_date':
+      return 'Updated date'
     case 'dueDate':
       return 'Due Date'
     case 'startDate':
@@ -63,19 +69,26 @@ export function getLabelOfProp(propName: string): string {
 
 export function getIconPathOfProp(propName: string): string | undefined {
   switch (propName) {
+    case 'created_date':
+      return mdiClockOutline
+    case 'updated_date':
+      return mdiContentSaveOutline
     case 'dueDate':
       return mdiCheckAll
     case 'startDate':
+    case 'date':
       return mdiCalendarMonthOutline
     case 'timeEstimate':
       return mdiTimerSandEmpty
     case 'timeTracked':
+    case 'time':
       return mdiTimerOutline
     case 'status':
       return mdiArrowDownDropCircleOutline
     case 'reviewers':
       return mdiAccountCheckOutline
     case 'assignees':
+    case 'person':
       return mdiAccountOutline
     case 'label':
       return mdiLabelOutline

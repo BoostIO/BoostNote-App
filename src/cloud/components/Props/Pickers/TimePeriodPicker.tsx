@@ -19,7 +19,7 @@ interface TimePeriodPickerProps {
   sending?: boolean
   value?: number | null
   disabled?: boolean
-  isReadOnly: boolean
+  isReadOnly?: boolean
   onPeriodChange: (newVal: number | null) => void
   popupAlignment?: 'bottom-left' | 'top-left'
 }
@@ -29,7 +29,7 @@ const TimePeriodPicker = ({
   disabled,
   sending,
   value,
-  isReadOnly,
+  isReadOnly = false,
   popupAlignment = 'bottom-left',
   onPeriodChange,
 }: TimePeriodPickerProps) => {
@@ -105,9 +105,15 @@ const Container = styled.div``
 
 export default TimePeriodPicker
 
-const reasons: ReasonType[] = ['Seconds', 'Minutes', 'Hours', 'Days', 'Weeks']
+export const reasons: ReasonType[] = [
+  'Seconds',
+  'Minutes',
+  'Hours',
+  'Days',
+  'Weeks',
+]
 
-type ReasonType = 'Seconds' | 'Minutes' | 'Hours' | 'Days' | 'Weeks'
+export type ReasonType = 'Seconds' | 'Minutes' | 'Hours' | 'Days' | 'Weeks'
 
 const TimePeriodModal = ({
   defaultValue,
@@ -205,7 +211,7 @@ const TimePeriodModal = ({
   )
 }
 
-function getReasonMultiplier(reason: ReasonType) {
+export function getReasonMultiplier(reason: ReasonType) {
   switch (reason) {
     case 'Seconds':
       return 1
