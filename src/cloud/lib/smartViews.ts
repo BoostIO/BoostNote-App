@@ -49,6 +49,9 @@ const validators: Validators = {
   },
 
   prop: (doc, condition) => {
+    if (doc.props == null) {
+      return false
+    }
     const prop = doc.props[condition.value.name]
     if (prop == null || prop.data == null) {
       return false
