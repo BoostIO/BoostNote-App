@@ -7,9 +7,9 @@ import FormRow from '../../../../../design/components/molecules/Form/templates/F
 import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
 import styled from '../../../../../design/lib/styled'
 import {
-  UpdateDashboardRequestBody,
-  CreateDashboardRequestBody,
-} from '../../../../../cloud/api/teams/dashboard'
+  UpdateSmartViewRequestBody,
+  CreateSmartViewRequestBody,
+} from '../../../../../cloud/api/teams/smartViews'
 import { useI18n } from '../../../../../cloud/lib/hooks/useI18n'
 import { lngKeys } from '../../../../../cloud/lib/i18n/types'
 import MobileFormControl from '../../../atoms/MobileFormControl'
@@ -17,29 +17,29 @@ import BorderSeparator from '../../../../../design/components/atoms/BorderSepara
 import {
   EditableCondition,
   EditableQuery,
-} from '../../../../../cloud/components/Modal/contents/Dashboard/interfaces'
-import { SerializedQuery } from '../../../../../cloud/interfaces/db/dashboard'
-import ConditionItem from '../../../../../cloud/components/Modal/contents/Dashboard/ConditionItem'
+} from '../../../../../cloud/components/Modal/contents/SmartView/interfaces'
+import { SerializedQuery } from '../../../../../cloud/interfaces/db/smartView'
+import ConditionItem from '../../../../../cloud/components/Modal/contents/SmartView/ConditionItem'
 
-interface DashboardFormProps {
+interface SmartViewFormProps {
   action: 'Create' | 'Update'
   defaultName?: string
   defaultPrivate?: boolean
   defaultConditions: EditableQuery
   onSubmit: (
-    body: CreateDashboardRequestBody | UpdateDashboardRequestBody
+    body: CreateSmartViewRequestBody | UpdateSmartViewRequestBody
   ) => void
   buttonsAreDisabled?: boolean
 }
 
-const DashboardForm = ({
+const SmartViewForm = ({
   action,
   defaultName = '',
   defaultPrivate = true,
   defaultConditions,
   buttonsAreDisabled,
   onSubmit,
-}: DashboardFormProps) => {
+}: SmartViewFormProps) => {
   const [name, setName] = useState(defaultName)
   const [makingPrivate, setMakingPrivate] = useState(defaultPrivate)
   const { translate } = useI18n()
@@ -90,8 +90,8 @@ const DashboardForm = ({
     <Container>
       <h2 className='modal__heading'>
         {action === 'Create'
-          ? translate(lngKeys.ModalsDashboardCreateTitle)
-          : translate(lngKeys.ModalsDashboardEditTitle)}
+          ? translate(lngKeys.ModalsSmartViewCreateTitle)
+          : translate(lngKeys.ModalsSmartViewEditTitle)}
       </h2>
       <Form className='smart__folder__form' onSubmit={submitForm}>
         <FormRow
@@ -172,9 +172,9 @@ const DashboardForm = ({
               </h3>
               <p>
                 {makingPrivate ? (
-                  <>{translate(lngKeys.ModalsDashboardPrivateDisclaimer)}</>
+                  <>{translate(lngKeys.ModalsSmartViewPrivateDisclaimer)}</>
                 ) : (
-                  <>{translate(lngKeys.ModalsDashboardPublicDisclaimer)}</>
+                  <>{translate(lngKeys.ModalsSmartViewPublicDisclaimer)}</>
                 )}
               </p>
             </div>
@@ -248,4 +248,4 @@ const Container = styled.div`
   }
 `
 
-export default DashboardForm
+export default SmartViewForm

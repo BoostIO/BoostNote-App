@@ -69,14 +69,14 @@ import useBulkApi from '../../../design/lib/hooks/useBulkApi'
 import { getMapFromEntityArray } from '../../../design/lib/utils/array'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import {
-  createDashboard,
-  CreateDashboardRequestBody,
-  CreateDashboardResponseBody,
-  deleteDashboard,
-  updateDashboard,
-  UpdateDashboardRequestBody,
-  UpdateDashboardResponseBody,
-} from '../../api/teams/dashboard'
+  createSmartView,
+  CreateSmartViewRequestBody,
+  CreateSmartViewResponseBody,
+  deleteSmartView,
+  updateSmartView,
+  UpdateSmartViewRequestBody,
+  UpdateSmartViewResponseBody,
+} from '../../api/teams/smartViews'
 
 import { format as formatDate } from 'date-fns'
 import {
@@ -90,7 +90,7 @@ import {
   UpdateTagRequestBody,
   UpdateTagResponseBody,
 } from '../../api/teams/tags'
-import { SerializedDashboard } from '../../interfaces/db/dashboard'
+import { SerializedSmartView } from '../../interfaces/db/smartView'
 import {
   createView,
   CreateViewRequestBody,
@@ -113,7 +113,7 @@ export function useCloudApi() {
     updateFoldersMap,
     updateDocsMap,
     updateParentFolderOfDoc,
-    updateDashboardsMap,
+    updateSmartViewsMap,
     removeFromWorkspacesMap,
     foldersMap,
     docsMap,
@@ -121,7 +121,7 @@ export function useCloudApi() {
     removeFromDocsMap,
     removeFromFoldersMap,
     setCurrentPath,
-    removeFromDashboardsMap: removeFromDashboardsMap,
+    removeFromSmartViewsMap,
     removeFromTagsMap,
     updateViewsMap,
     removeFromViewsMap,
@@ -734,64 +734,64 @@ export function useCloudApi() {
     ]
   )
 
-  const createDashboardApi = useCallback(
+  const createSmartViewApi = useCallback(
     async (
       teamId: string,
-      body: CreateDashboardRequestBody,
+      body: CreateSmartViewRequestBody,
       options?: {
-        afterSuccess?: (dashboard: SerializedDashboard) => void
+        afterSuccess?: (smartView: SerializedSmartView) => void
       }
     ) => {
       return send(shortid.generate(), 'create', {
         api: () =>
-          createDashboard({
+          createSmartView({
             ...body,
             teamId: teamId,
           }),
-        cb: ({ data: dashboardFolder }: CreateDashboardResponseBody) => {
-          updateDashboardsMap([dashboardFolder.id, dashboardFolder])
+        cb: ({ data: smartViewFolder }: CreateSmartViewResponseBody) => {
+          updateSmartViewsMap([smartViewFolder.id, smartViewFolder])
 
           if (options?.afterSuccess != null) {
-            options.afterSuccess(dashboardFolder)
+            options.afterSuccess(smartViewFolder)
           }
         },
       })
     },
-    [updateDashboardsMap, send]
+    [updateSmartViewsMap, send]
   )
 
-  const updateDashboardApi = useCallback(
+  const updateSmartViewApi = useCallback(
     async (
-      target: SerializedDashboard,
-      body: UpdateDashboardRequestBody,
+      target: SerializedSmartView,
+      body: UpdateSmartViewRequestBody,
       options?: {
-        afterSuccess?: (dashboard: SerializedDashboard) => void
+        afterSuccess?: (smartView: SerializedSmartView) => void
       }
     ) => {
       return send(shortid.generate(), 'update', {
-        api: () => updateDashboard(target, body),
-        cb: ({ data: dashboardFolder }: UpdateDashboardResponseBody) => {
-          updateDashboardsMap([dashboardFolder.id, dashboardFolder])
+        api: () => updateSmartView(target, body),
+        cb: ({ data: smartViewFolder }: UpdateSmartViewResponseBody) => {
+          updateSmartViewsMap([smartViewFolder.id, smartViewFolder])
 
           if (options?.afterSuccess != null) {
-            options.afterSuccess(dashboardFolder)
+            options.afterSuccess(smartViewFolder)
           }
         },
       })
     },
-    [updateDashboardsMap, send]
+    [updateSmartViewsMap, send]
   )
 
-  const deleteDashboardApi = useCallback(
+  const deleteSmartViewApi = useCallback(
     async (target: { id: string; teamId: string }) => {
       return send(target.id, 'delete', {
-        api: () => deleteDashboard({ id: target.id }),
+        api: () => deleteSmartView({ id: target.id }),
         cb: () => {
-          removeFromDashboardsMap(target.id)
+          removeFromSmartViewsMap(target.id)
         },
       })
     },
-    [removeFromDashboardsMap, send]
+    [removeFromSmartViewsMap, send]
   )
 
   const createViewApi = useCallback(
@@ -833,7 +833,7 @@ export function useCloudApi() {
   const listViewsApi = useCallback(
     async (target: ListViewsRequestBody) => {
       return send(
-        'dashboard' in target ? target.dashboard : target.folder,
+        'smartView' in target ? target.smartView : target.folder,
         'list-views',
         {
           api: () => listViews(target),
@@ -866,8 +866,8 @@ export function useCloudApi() {
     deleteWorkspaceApi,
     deleteFolderApi,
     deleteDocApi,
-    createDashboardApi,
-    deleteDashboardApi,
+    createSmartViewApi,
+    deleteSmartViewApi,
     updateDocAssigneeApi,
     updateDocStatusApi,
     updateDocDueDateApi,
@@ -877,7 +877,7 @@ export function useCloudApi() {
     createViewApi,
     updateViewApi,
     deleteViewApi,
-    updateDashboardApi,
+    updateSmartViewApi,
     listViewsApi,
     updateDocPropsApi,
   }

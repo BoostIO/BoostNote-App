@@ -5,15 +5,15 @@ import FormRowItem from '../../../../../design/components/molecules/Form/templat
 import ConditionItem from './ConditionItem'
 import { EditableCondition, EditableQuery } from './interfaces'
 
-interface DashboardConditionRowsProps {
+interface SmartViewConditionRowsProps {
   conditions: EditableQuery
   setConditions: React.Dispatch<React.SetStateAction<EditableQuery>>
 }
 
-const DashboardConditionRows = ({
+const SmartViewConditionRows = ({
   conditions,
   setConditions,
-}: DashboardConditionRowsProps) => {
+}: SmartViewConditionRowsProps) => {
   const removeConditionByIndex = useCallback(
     (index: number) => {
       setConditions((previousConditions) => {
@@ -72,4 +72,4 @@ const DashboardConditionRows = ({
   )
 }
 
-export default DashboardConditionRows
+export default SmartViewConditionRows

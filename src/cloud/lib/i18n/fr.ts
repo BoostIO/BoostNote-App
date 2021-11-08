@@ -283,12 +283,12 @@ const frTranslation: TranslationSource = {
   [lngKeys.ModalsImportDisclaimer]:
     'Choissisez la méthode par laquelle vous souhaitez importer vos documents ( 5Mb max par fichier )',
 
-  [lngKeys.ModalsDashboardCreateTitle]: 'Créer un dashboard',
-  [lngKeys.ModalsDashboardEditTitle]: 'Editer un dashboard',
-  [lngKeys.ModalsDashboardPrivateDisclaimer]:
-    'Ce dashboard va devenir privé. Seulement vous pourrez le voir.',
-  [lngKeys.ModalsDashboardPublicDisclaimer]:
-    'Ce dashboard va devenir publique. Tous les membres pourront le voir.',
+  [lngKeys.ModalsSmartViewCreateTitle]: 'Create a smart view',
+  [lngKeys.ModalsSmartViewEditTitle]: 'Edit smart view',
+  [lngKeys.ModalsSmartViewPrivateDisclaimer]:
+    'This smart view will become private. Only you can see it.',
+  [lngKeys.ModalsSmartViewPublicDisclaimer]:
+    'The smart view will become public. Every member can see it.',
 
   [lngKeys.AttachmentsDeleteDisclaimer]:
     'Êtes vous certain de vouloir supprimer ce fichier? Il ne sera plus visible dans les documents où il a été inclus.',
@@ -407,7 +407,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.GeneralShared]: 'Partagé',
   [lngKeys.GeneralRenameVerb]: 'Renommer',
   [lngKeys.GeneralEditVerb]: 'Editer',
-  [lngKeys.GeneralDashboards]: 'Dossiers intelligents',
+  [lngKeys.GeneralSmartViews]: 'Vues intelligentes',
   [lngKeys.GeneralBookmarks]: 'Favoris',
   [lngKeys.GeneralUnbookmarkVerb]: 'Retirer des favoris',
   [lngKeys.GeneralBookmarkVerb]: 'Ajouter aux favoris',

@@ -2,7 +2,7 @@ import { SerializedTeam } from './team'
 import { SerializedUser } from './user'
 import { SerializedView } from './view'
 
-export interface SerializableDashboardProps {
+interface SerializableSmartViewProps {
   id: string
   name: string
   private: boolean
@@ -10,7 +10,7 @@ export interface SerializableDashboardProps {
   userId: string
 }
 
-export interface SerializedUnserializableDashboardProps {
+interface SerializedUnserializableSmartViewProps {
   condition: SerializedQuery
   team?: SerializedTeam
   user?: SerializedUser
@@ -19,8 +19,8 @@ export interface SerializedUnserializableDashboardProps {
   views?: SerializedView[]
 }
 
-export type SerializedDashboard = SerializableDashboardProps &
-  SerializedUnserializableDashboardProps
+export type SerializedSmartView = SerializableSmartViewProps &
+  SerializedUnserializableSmartViewProps
 
 export type SerializedQuery = SerializeDateProps<Query>
 

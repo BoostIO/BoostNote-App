@@ -1,6 +1,6 @@
 import React from 'react'
 import FormSelect from '../../../../../design/components/molecules/Form/atoms/FormSelect'
-import { DateCondition } from '../../../../interfaces/db/dashboard'
+import { DateCondition } from '../../../../interfaces/db/smartView'
 
 const DAYS_7 = 60 * 60 * 24 * 7
 const DAYS_30 = 60 * 60 * 24 * 30

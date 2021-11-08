@@ -1,43 +1,43 @@
 import React, { useState, useCallback } from 'react'
 import { useModal } from '../../../../../design/lib/stores/modal'
 import {
-  CreateDashboardRequestBody,
-  CreateDashboardResponseBody,
-} from '../../../../api/teams/dashboard'
+  CreateSmartViewRequestBody,
+  CreateSmartViewResponseBody,
+} from '../../../../api/teams/smartViews'
 import { usePage } from '../../../../lib/stores/pageStore'
-import DashboardForm from './DashboardForm'
-import { SerializedDashboard } from '../../../../interfaces/db/dashboard'
+import SmartViewForm from './SmartViewForm'
+import { SerializedSmartView } from '../../../../interfaces/db/smartView'
 import { useCloudApi } from '../../../../lib/hooks/useCloudApi'
 
-interface CreateDashboardModalProps {
-  onCreate?: (dashboard: SerializedDashboard) => void
+interface CreateSmartViewModalProps {
+  onCreate?: (smartView: SerializedSmartView) => void
 }
 
-const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
+const CreateSmartViewModal = ({ onCreate }: CreateSmartViewModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
-  const { createDashboardApi, createViewApi } = useCloudApi()
+  const { createSmartViewApi, createViewApi } = useCloudApi()
   const [sending, setSending] = useState(false)
 
   const submit = useCallback(
-    async (body: CreateDashboardRequestBody) => {
+    async (body: CreateSmartViewRequestBody) => {
       if (team == null) {
         return
       }
       setSending(true)
-      const res = await createDashboardApi(team.id, body)
+      const res = await createSmartViewApi(team.id, body)
 
       if (!res.err) {
-        const { data: dashboard } = res.data as CreateDashboardResponseBody
-        await createViewApi({ dashboard: dashboard.id, type: 'table' })
+        const { data: smartView } = res.data as CreateSmartViewResponseBody
+        await createViewApi({ smartView: smartView.id, type: 'table' })
         closeModal()
         if (onCreate != null) {
-          return onCreate(dashboard)
+          return onCreate(smartView)
         }
       }
       setSending(false)
     },
-    [team, onCreate, closeModal, createDashboardApi, createViewApi]
+    [team, onCreate, closeModal, createSmartViewApi, createViewApi]
   )
 
   if (team == null) {
@@ -45,7 +45,7 @@ const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
   }
 
   return (
-    <DashboardForm
+    <SmartViewForm
       action='Create'
       onCancel={closeModal}
       onSubmit={submit}
@@ -61,4 +61,4 @@ const CreateDashboardModal = ({ onCreate }: CreateDashboardModalProps) => {
   )
 }
 
-export default CreateDashboardModal
+export default CreateSmartViewModal

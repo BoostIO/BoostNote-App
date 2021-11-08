@@ -56,8 +56,8 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     updateFoldersMap,
     updateTemplatesMap,
     removeFromTemplatesMap,
-    updateDashboardsMap: updateDashboardFoldersMap,
-    removeFromDashboardsMap: removeFromDashboardFoldersMap,
+    updateSmartViewsMap: updateSmartViewFoldersMap,
+    removeFromSmartViewsMap: removeFromSmartViewFoldersMap,
     updateAppEventsMap,
     removeFromViewsMap,
     updateViewsMap,
@@ -376,20 +376,20 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     ]
   )
 
-  const dashboardFolderUpdateHandler = useCallback(
+  const smartViewFolderUpdateHandler = useCallback(
     (event: SerializedAppEvent) => {
-      updateDashboardFoldersMap([
-        event.data.dashboardFolder.id,
-        event.data.dashboardFolder,
+      updateSmartViewFoldersMap([
+        event.data.smartViewFolder.id,
+        event.data.smartViewFolder,
       ])
     },
-    [updateDashboardFoldersMap]
+    [updateSmartViewFoldersMap]
   )
-  const dashboardFolderDeleteHandler = useCallback(
+  const smartViewFolderDeleteHandler = useCallback(
     (event: SerializedAppEvent) => {
-      removeFromDashboardFoldersMap(event.data.dashboardFolderId)
+      removeFromSmartViewFoldersMap(event.data.smartViewFolderId)
     },
-    [removeFromDashboardFoldersMap]
+    [removeFromSmartViewFoldersMap]
   )
 
   const viewChangeEventHandler = useCallback(
@@ -460,12 +460,12 @@ const EventSource = ({ teamId }: EventSourceProps) => {
           case 'commentDeleted':
             commentsEventListener(event)
             break
-          case 'dashboardFolderCreate':
-          case 'dashboardFolderUpdate':
-            dashboardFolderUpdateHandler(event)
+          case 'smartViewFolderCreate':
+          case 'smartViewFolderUpdate':
+            smartViewFolderUpdateHandler(event)
             break
-          case 'dashboardFolderDelete':
-            dashboardFolderDeleteHandler(event)
+          case 'smartViewFolderDelete':
+            smartViewFolderDeleteHandler(event)
             break
           case 'notificationCreated':
           case 'notificationViewed':
@@ -494,8 +494,8 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     teamUpdateHandler,
     templateChangeEventHandler,
     commentsEventListener,
-    dashboardFolderUpdateHandler,
-    dashboardFolderDeleteHandler,
+    smartViewFolderUpdateHandler,
+    smartViewFolderDeleteHandler,
     updateAppEventsMap,
     notificationsEventListener,
     viewChangeEventHandler,

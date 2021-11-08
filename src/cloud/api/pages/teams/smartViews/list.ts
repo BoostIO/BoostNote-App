@@ -2,21 +2,21 @@ import { GeneralAppProps } from '../../../../interfaces/api'
 import { callApi } from '../../../../lib/client'
 import { GetInitialPropsParameters } from '../../../../interfaces/pages'
 import querystring from 'querystring'
-import { SerializedDashboard } from '../../../../interfaces/db/dashboard'
+import { SerializedSmartView } from '../../../../interfaces/db/smartView'
 
-export type DashboardListPageResponseBody = GeneralAppProps & {
-  data: SerializedDashboard[]
+export type SmartViewListPageResponseBody = GeneralAppProps & {
+  data: SerializedSmartView[]
 }
 
-export async function getDashboardListPageData({
+export async function getSmartViewListPageData({
   pathname,
   search,
   signal,
 }: GetInitialPropsParameters) {
   const [, teamId] = pathname.split('/')
 
-  const data = await callApi<DashboardListPageResponseBody>(
-    'api/pages/teams/dashboard/list',
+  const data = await callApi<SmartViewListPageResponseBody>(
+    'api/pages/teams/smartView/list',
     {
       search: {
         ...querystring.parse(search),

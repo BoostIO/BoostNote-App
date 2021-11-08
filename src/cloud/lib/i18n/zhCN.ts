@@ -262,12 +262,12 @@ const zhTranslation: TranslationSource = {
   [lngKeys.ModalsImportDestinationDisclaimer]: '选择要导入文档的文件夹',
   [lngKeys.ModalsImportDisclaimer]: '选择导入文件的方式（每个文件最多5Mb）',
 
-  [lngKeys.ModalsDashboardCreateTitle]: '创建智能文件夹',
-  [lngKeys.ModalsDashboardEditTitle]: '编辑智能文件夹',
-  [lngKeys.ModalsDashboardPrivateDisclaimer]:
-    '此智能文件夹将成为私有文件夹。只有你能看到。',
-  [lngKeys.ModalsDashboardPublicDisclaimer]:
-    '智能文件夹将成为公共文件夹。每个成员都能看到它。',
+  [lngKeys.ModalsSmartViewCreateTitle]: 'Create a smart view',
+  [lngKeys.ModalsSmartViewEditTitle]: 'Edit smart view',
+  [lngKeys.ModalsSmartViewPrivateDisclaimer]:
+    'This smart view will become private. Only you can see it.',
+  [lngKeys.ModalsSmartViewPublicDisclaimer]:
+    'The smart view will become public. Every member can see it.',
 
   [lngKeys.EditorToolbarTooltipHeader]: '添加标题文本',
   [lngKeys.EditorToolbarTooltipAdmonition]: '添加警告',
@@ -365,7 +365,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.GeneralBookmarks]: '书签',
   [lngKeys.GeneralUnbookmarkVerb]: '移除书签',
   [lngKeys.GeneralBookmarkVerb]: 'A添加书签',
-  [lngKeys.GeneralDashboards]: '智能文件夹',
+  [lngKeys.GeneralSmartViews]: '智能文件夹',
   [lngKeys.GeneralWorkspaces]: '工作区',
   [lngKeys.GeneralPrivate]: '私有',
   [lngKeys.GeneralLabels]: '标签',

@@ -1,4 +1,4 @@
-import { Condition, ConditionType } from '../../../../interfaces/db/dashboard'
+import { Condition, ConditionType } from '../../../../interfaces/db/smartView'
 
 export type EditableQuery = EditableCondition[]
 
