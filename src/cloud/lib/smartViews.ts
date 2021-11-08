@@ -7,7 +7,47 @@ import {
   SerializedQuery,
 } from '../interfaces/db/smartView'
 import { SerializedDocWithSupplemental } from '../interfaces/db/doc'
-import { addDays, addSeconds, isEqual } from 'date-fns'
+import { addDays, addSeconds } from 'date-fns'
+import {
+  mdiAccountOutline,
+  mdiArrowDownDropCircleOutline,
+  mdiCalendarMonthOutline,
+  mdiClockOutline,
+  mdiContentSaveOutline,
+  mdiLabelOutline,
+  mdiTimerOutline,
+} from '@mdi/js'
+
+export const supportedCustomPropertyTypes: Record<
+  string,
+  { label: string; value: string; icon: string }
+> = {
+  date: { label: 'Date', value: 'date', icon: mdiCalendarMonthOutline },
+  person: { label: 'Person', value: 'user', icon: mdiAccountOutline },
+  timeperiod: { label: 'Time', value: 'json', icon: mdiTimerOutline },
+  status: {
+    label: 'Status',
+    value: 'status',
+    icon: mdiArrowDownDropCircleOutline,
+  },
+  label: { label: 'Label', value: 'label', icon: mdiLabelOutline },
+}
+
+export const supportedStaticPropertyTypes: Record<
+  string,
+  { label: string; value: string; icon: string }
+> = {
+  date: {
+    label: 'Creation Date',
+    value: 'creation_date',
+    icon: mdiClockOutline,
+  },
+  person: {
+    label: 'Update Date',
+    value: 'update_date',
+    icon: mdiContentSaveOutline,
+  },
+}
 
 type Validators = {
   [P in Condition['type']]: (
@@ -30,12 +70,14 @@ const validators: Validators = {
     return false
   },
 
+  /*
   due_date: (doc, condition) => {
     if (doc.props.dueDate == null) {
       return false
     }
     return validateDateValue(new Date(doc.props.dueDate.data), condition.value)
-  },
+  }
+  */
 
   creation_date: (doc, condition) => {
     return validateDateValue(new Date(doc.createdAt), condition.value)
@@ -61,13 +103,13 @@ const validators: Validators = {
       ? prop.data.filter((d) => d != null)
       : prop.data
 
-    if (nonNullableVal.length > 0) {
+    if (Array.isArray(nonNullableVal) && nonNullableVal.length === 0) {
       return false
     }
 
-    switch (prop.type) {
+    switch (condition.value.type) {
       case 'date':
-        return equalsOrContains(isEqual, nonNullableVal, condition.value.value)
+        return validateDateValue(nonNullableVal, condition.value.value)
       case 'json':
         return false
       case 'user':
