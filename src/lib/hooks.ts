@@ -25,3 +25,11 @@ export function useSimpleDebounce<S>(value: S, delay: number) {
   }, [value, delay])
   return debouncedValue
 }
+
+export function usePrevious<S>(value: S) {
+  const ref = useRef<S>()
+  useEffect(() => {
+    ref.current = value
+  }, [value])
+  return ref.current
+}
