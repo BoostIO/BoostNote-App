@@ -37,7 +37,10 @@ const ConditionItem = ({
     <FormRow fullWidth={true}>
       <Flexbox flex='1 1 auto'>
         {hideConditionRuleType ? (
-          <FormRowItem item={{ type: 'node', element: <span>WHERE</span> }} />
+          <FormRowItem
+            flex='0 0 auto'
+            item={{ type: 'node', element: <span>WHERE</span> }}
+          />
         ) : (
           <FormRowItem
             item={{
