@@ -376,18 +376,15 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     ]
   )
 
-  const smartViewFolderUpdateHandler = useCallback(
+  const smartViewUpdateHandler = useCallback(
     (event: SerializedAppEvent) => {
-      updateSmartViewFoldersMap([
-        event.data.smartViewFolder.id,
-        event.data.smartViewFolder,
-      ])
+      updateSmartViewFoldersMap([event.data.smartView.id, event.data.smartView])
     },
     [updateSmartViewFoldersMap]
   )
-  const smartViewFolderDeleteHandler = useCallback(
+  const smartViewDeleteHandler = useCallback(
     (event: SerializedAppEvent) => {
-      removeFromSmartViewFoldersMap(event.data.smartViewFolderId)
+      removeFromSmartViewFoldersMap(event.data.smartViewId)
     },
     [removeFromSmartViewFoldersMap]
   )
@@ -460,12 +457,12 @@ const EventSource = ({ teamId }: EventSourceProps) => {
           case 'commentDeleted':
             commentsEventListener(event)
             break
-          case 'smartViewFolderCreate':
-          case 'smartViewFolderUpdate':
-            smartViewFolderUpdateHandler(event)
+          case 'smartViewCreate':
+          case 'smartViewUpdate':
+            smartViewUpdateHandler(event)
             break
-          case 'smartViewFolderDelete':
-            smartViewFolderDeleteHandler(event)
+          case 'smartViewDelete':
+            smartViewDeleteHandler(event)
             break
           case 'notificationCreated':
           case 'notificationViewed':
@@ -494,8 +491,8 @@ const EventSource = ({ teamId }: EventSourceProps) => {
     teamUpdateHandler,
     templateChangeEventHandler,
     commentsEventListener,
-    smartViewFolderUpdateHandler,
-    smartViewFolderDeleteHandler,
+    smartViewUpdateHandler,
+    smartViewDeleteHandler,
     updateAppEventsMap,
     notificationsEventListener,
     viewChangeEventHandler,
