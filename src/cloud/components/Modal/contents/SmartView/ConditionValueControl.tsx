@@ -20,7 +20,6 @@ const ConditionValueControl = ({
   condition,
   update,
 }: ConditionValueControlProps) => {
-  console.log(condition)
   switch (condition.type) {
     case 'creation_date':
     case 'update_date':
