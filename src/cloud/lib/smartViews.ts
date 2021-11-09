@@ -82,6 +82,7 @@ const validators: Validators = {
   },
 
   prop: (doc, condition) => {
+    console.log(doc.props)
     if (doc.props == null) {
       return false
     }
@@ -89,7 +90,7 @@ const validators: Validators = {
     if (
       prop == null ||
       prop.data == null ||
-      prop.data.type !== condition.value.type
+      prop.type !== condition.value.type
     ) {
       return false
     }
@@ -206,6 +207,7 @@ export function buildSmartViewQueryCheck(query: SerializedQuery) {
     if (!Array.isArray(query)) {
       return false
     }
+
     return query.reduce((result, condition) => {
       const validator = validators[condition.type]
       return checkRule(validator(doc, condition as any), condition.rule, result)
