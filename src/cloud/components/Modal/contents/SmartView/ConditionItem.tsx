@@ -81,7 +81,6 @@ const ConditionItem = ({
           }}
         />
         <ConditionValueControl condition={condition} update={update} />
-        <FormRowItem />
       </Flexbox>
       <Flexbox flex='0 0 auto'>
         <FormRowItem>
