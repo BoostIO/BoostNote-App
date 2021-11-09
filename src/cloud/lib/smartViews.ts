@@ -70,15 +70,6 @@ const validators: Validators = {
     return false
   },
 
-  /*
-  due_date: (doc, condition) => {
-    if (doc.props.dueDate == null) {
-      return false
-    }
-    return validateDateValue(new Date(doc.props.dueDate.data), condition.value)
-  }
-  */
-
   creation_date: (doc, condition) => {
     return validateDateValue(new Date(doc.createdAt), condition.value)
   },
@@ -95,7 +86,11 @@ const validators: Validators = {
       return false
     }
     const prop = doc.props[condition.value.name]
-    if (prop == null || prop.data == null) {
+    if (
+      prop == null ||
+      prop.data == null ||
+      prop.data.type !== condition.value.type
+    ) {
       return false
     }
 
