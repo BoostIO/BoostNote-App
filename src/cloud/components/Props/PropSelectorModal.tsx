@@ -1,42 +1,61 @@
-import React, { useMemo } from 'react'
+import cc from 'classcat'
+import React, { useMemo, useState } from 'react'
+import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
 import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { SerializedPropData } from '../../interfaces/db/props'
 import {
-  getIconPathOfProp,
-  getInitialPropDataOfProp,
-  getLabelOfProp,
-  supportedPropertyNames,
+  getIconPathOfPropType,
+  getInitialPropDataOfPropType,
+  getLabelOfPropType,
+  supportedPropTypes,
 } from '../../lib/props'
 
 interface PropSelectorModalProps {
-  propsToIgnore?: string[]
+  disallowedNames?: string[]
   addProp: (propName: string, propData: SerializedPropData) => void
 }
 
 const PropSelectorModal = ({
-  propsToIgnore = [],
+  disallowedNames = [],
   addProp,
 }: PropSelectorModalProps) => {
-  const props = useMemo(() => {
-    return supportedPropertyNames.filter(
-      (propName) => !propsToIgnore.includes(propName)
-    )
-  }, [propsToIgnore])
+  const [propName, setPropName] = useState('')
+  const disallowedNamesSet = useMemo(() => new Set(disallowedNames), [
+    disallowedNames,
+  ])
 
   return (
     <MetadataContainer>
-      {props.map((propName) => (
+      <MetadataContainerRow row={{ type: 'header', content: 'NAME' }} />
+      <MetadataContainerRow
+        row={{
+          type: 'content',
+          content: (
+            <FormInput
+              className={cc([
+                disallowedNamesSet.has(propName) && 'form__input__error',
+              ])}
+              value={propName}
+              onChange={(ev) => setPropName(ev.target.value)}
+            />
+          ),
+        }}
+      />
+      {supportedPropTypes.map((propType) => (
         <MetadataContainerRow
-          key={propName}
+          key={propType}
           row={{
             type: 'button',
             props: {
-              id: `prop-modal-${propName}`,
-              label: getLabelOfProp(propName),
-              iconPath: getIconPathOfProp(propName),
-              onClick: () =>
-                addProp(propName, getInitialPropDataOfProp(propName)),
+              id: `prop-modal-${propType}`,
+              label: getLabelOfPropType(propType),
+              iconPath: getIconPathOfPropType(propType),
+              onClick: () => {
+                if (propName !== '' && !disallowedNamesSet.has(propName)) {
+                  addProp(propName, getInitialPropDataOfPropType(propType))
+                }
+              },
             },
           }}
         />
