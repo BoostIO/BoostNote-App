@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react'
 import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
 import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import styled from '../../../design/lib/styled'
 import { SerializedPropData } from '../../interfaces/db/props'
 import {
   getIconPathOfPropType,
@@ -26,21 +27,33 @@ const PropSelectorModal = ({
   ])
 
   return (
-    <MetadataContainer>
+    <StyledContainer>
       <MetadataContainerRow row={{ type: 'header', content: 'NAME' }} />
       <MetadataContainerRow
         row={{
           type: 'content',
           content: (
             <FormInput
-              className={cc([
-                disallowedNamesSet.has(propName) && 'form__input__error',
-              ])}
               value={propName}
               onChange={(ev) => setPropName(ev.target.value)}
             />
           ),
         }}
+      />
+      {disallowedNamesSet.has(propName) && (
+        <MetadataContainerRow
+          row={{
+            type: 'content',
+            content: (
+              <p className='warning__text'>
+                A property names {propName} already exists on this Doc
+              </p>
+            ),
+          }}
+        />
+      )}
+      <MetadataContainerRow
+        row={{ type: 'header', content: 'PROPERTY TYPE' }}
       />
       {supportedPropTypes.map((propType) => (
         <MetadataContainerRow
@@ -60,8 +73,16 @@ const PropSelectorModal = ({
           }}
         />
       ))}
-    </MetadataContainer>
+    </StyledContainer>
   )
 }
+
+const StyledContainer = styled(MetadataContainer)`
+  & .warning__text {
+    color: ${({ theme }) => theme.colors.variants.warning.base};
+    line-height: 18px;
+    margin: 0;
+  }
+`
 
 export default PropSelectorModal
