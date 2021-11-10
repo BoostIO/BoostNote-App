@@ -227,7 +227,7 @@ function getDefaultConditionByType(
         rule,
         type: 'prop',
         value: {
-          name: 'status',
+          name: 'Status',
           value: '',
           type: 'string',
         },
