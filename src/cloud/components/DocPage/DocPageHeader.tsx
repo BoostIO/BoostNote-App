@@ -55,8 +55,6 @@ const DocPageHeader = ({
     }
   )
 
-  console.log(docProperties)
-
   return (
     <Container className={cc(['doc__page__header', className])}>
       <div className='doc__page__padding'>
