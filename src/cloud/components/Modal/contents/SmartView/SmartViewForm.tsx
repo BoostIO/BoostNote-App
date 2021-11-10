@@ -20,6 +20,7 @@ import { EditableQuery } from './interfaces'
 import SmartViewConditionRows from './SmartViewConditionRows'
 
 interface SmmartViewFormProps {
+  teamId: string
   action: 'Create' | 'Update'
   defaultName?: string
   defaultPrivate?: boolean
@@ -39,6 +40,7 @@ const SmartViewForm = ({
   defaultConditions,
   buttonsAreDisabled,
   showOnlyConditions,
+  teamId,
   onCancel,
   onSubmit,
 }: SmmartViewFormProps) => {
@@ -89,6 +91,7 @@ const SmartViewForm = ({
 
         {showOnlyConditions && <FormRow row={{ title: 'Filters' }} />}
         <SmartViewConditionRows
+          teamId={teamId}
           conditions={conditions}
           setConditions={setConditions}
         />
