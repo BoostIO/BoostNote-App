@@ -23,7 +23,8 @@ export const ConditionNameSuggestionsPerTypeOrSubType: Record<
   user: ['Assignees', 'Reviewers'],
   timeperiod: ['Time Estimate', 'Time Tracked'],
   date: ['Due Date', 'Start Date'],
-  status: ['Status'],
+  string: ['Status', 'Text'],
+  number: ['Number'],
 }
 
 export const supportedPropertyNames = [
