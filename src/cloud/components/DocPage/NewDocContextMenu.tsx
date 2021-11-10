@@ -87,6 +87,13 @@ const DocContextMenu = ({
       ? usersMap.get(currentDoc.userId)
       : undefined
 
+  const contentCounters = useMemo(() => {
+    return {
+      wordCount: currentDoc?.head?.content.match(/\S+/g)?.length || 0,
+      characterCount: currentDoc?.head?.content.replace(/\s+/g, '').length || 0,
+    }
+  }, [currentDoc?.head?.content])
+
   if (currentDoc == null) {
     return (
       <MetadataContainer
@@ -213,26 +220,22 @@ const DocContextMenu = ({
           }}
         />
       )}
-      {currentDoc.head && [
-        <MetadataContainerRow
-          key='word-count'
-          row={{
-            label: translate(lngKeys.WordCount),
-            type: 'content',
-            icon: mdiFormatLetterCase,
-            content: currentDoc.head.content.match(/\S+/g)?.length || 0,
-          }}
-        />,
-        <MetadataContainerRow
-          key='character-count'
-          row={{
-            label: translate(lngKeys.CharacterCount),
-            type: 'content',
-            icon: mdiText,
-            content: currentDoc.head.content.replace(/\s+/g, '').length || 0,
-          }}
-        />,
-      ]}
+      <MetadataContainerRow
+        row={{
+          label: translate(lngKeys.WordCount),
+          type: 'content',
+          icon: mdiFormatLetterCase,
+          content: contentCounters.wordCount,
+        }}
+      />
+      <MetadataContainerRow
+        row={{
+          label: translate(lngKeys.CharacterCount),
+          type: 'content',
+          icon: mdiText,
+          content: contentCounters.characterCount,
+        }}
+      />
       <BackLinksList team={team} docs={backLinks} />
       <MetadataContainerBreak />
       <DocContextMenuActions
