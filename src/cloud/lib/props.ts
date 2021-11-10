@@ -37,6 +37,59 @@ export const supportedPropertyNames = [
   'timeTracked',
 ]
 
+export const supportedPropTypes = ['date', 'timeperiod', 'status', 'person']
+
+export function getLabelOfPropType(propType: string): string {
+  switch (propType) {
+    case 'timeperiod':
+      return 'Time Period'
+    case 'date':
+    case 'status':
+    case 'person':
+    default:
+      return capitalize(propType)
+  }
+}
+
+export function getIconPathOfPropType(propType: string): string | undefined {
+  switch (propType) {
+    case 'timeperiod':
+      return mdiTimerOutline
+    case 'date':
+      return mdiCalendarMonthOutline
+    case 'status':
+      return mdiArrowDownDropCircleOutline
+    case 'person':
+      return mdiAccountOutline
+    default:
+      return
+  }
+}
+
+export function getInitialPropDataOfPropType(
+  propType: string
+): SerializedPropData {
+  switch (propType) {
+    case 'date':
+      return { type: 'date', data: undefined, createdAt: new Date().toString() }
+    case 'timeperiod':
+      return {
+        type: 'json',
+        data: { dataType: 'timeperiod', data: null },
+        createdAt: new Date().toString(),
+      }
+    case 'user':
+      return { type: 'user', data: undefined, createdAt: new Date().toString() }
+    case 'status':
+    default:
+      return {
+        type: 'string',
+        data: undefined,
+        createdAt: new Date().toString(),
+      }
+  }
+}
+
 export function getPropsOfItem(
   props: Record<string, SerializedPropData & { createdAt: string }>
 ) {
@@ -46,11 +99,7 @@ export function getPropsOfItem(
   > = {}
 
   Object.entries(props).forEach((prop) => {
-    if (!supportedPropertyNames.includes(prop[0])) {
-      return
-    }
-
-    properties[getLabelOfProp(prop[0])] = { name: prop[0], data: prop[1] }
+    properties[prop[0]] = { name: prop[0], data: prop[1] }
   })
 
   return properties
