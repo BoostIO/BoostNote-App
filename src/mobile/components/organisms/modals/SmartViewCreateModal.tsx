@@ -72,6 +72,7 @@ const SmartViewCreateModal = ({ onCreate }: CreateSmartViewModalProps) => {
   return (
     <ModalContainer title='Create a SmartView'>
       <SmartViewForm
+        teamId={team.id}
         action='Create'
         onSubmit={submit}
         buttonsAreDisabled={sending}

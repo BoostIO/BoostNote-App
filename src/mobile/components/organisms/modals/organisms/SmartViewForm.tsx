@@ -22,6 +22,7 @@ import { SerializedQuery } from '../../../../../cloud/interfaces/db/smartView'
 import ConditionItem from '../../../../../cloud/components/Modal/contents/SmartView/ConditionItem'
 
 interface SmartViewFormProps {
+  teamId: string
   action: 'Create' | 'Update'
   defaultName?: string
   defaultPrivate?: boolean
@@ -38,6 +39,7 @@ const SmartViewForm = ({
   defaultPrivate = true,
   defaultConditions,
   buttonsAreDisabled,
+  teamId,
   onSubmit,
 }: SmartViewFormProps) => {
   const [name, setName] = useState(defaultName)
@@ -148,6 +150,7 @@ const SmartViewForm = ({
             return (
               <ConditionItem
                 key={index}
+                teamId={teamId}
                 condition={condition}
                 update={updateSecondaryCondition}
                 remove={removeCondition}

@@ -6,11 +6,13 @@ import ConditionItem from './ConditionItem'
 import { EditableCondition, EditableQuery } from './interfaces'
 
 interface SmartViewConditionRowsProps {
+  teamId: string
   conditions: EditableQuery
   setConditions: React.Dispatch<React.SetStateAction<EditableQuery>>
 }
 
 const SmartViewConditionRows = ({
+  teamId,
   conditions,
   setConditions,
 }: SmartViewConditionRowsProps) => {
@@ -43,6 +45,7 @@ const SmartViewConditionRows = ({
         return (
           <ConditionItem
             key={index}
+            teamId={teamId}
             condition={condition}
             update={updateCondition}
             remove={removeCondition}

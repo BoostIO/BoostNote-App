@@ -16,6 +16,16 @@ import {
   SerializedPropData,
 } from '../interfaces/db/props'
 
+export const ConditionNameSuggestionsPerTypeOrSubType: Record<
+  string,
+  string[]
+> = {
+  user: ['Assignees', 'Reviewers'],
+  timeperiod: ['Time Estimate', 'Time Tracked'],
+  date: ['Due Date', 'Start Date'],
+  status: ['Status'],
+}
+
 export const supportedPropertyNames = [
   'assignees',
   'dueDate',

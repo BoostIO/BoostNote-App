@@ -11,10 +11,15 @@ import {
 
 interface TimePeriodFormProps {
   period: number
+  disabled?: boolean
   updatePeriod: (period: number) => void
 }
 
-const TimePeriodForm = ({ period, updatePeriod }: TimePeriodFormProps) => {
+const TimePeriodForm = ({
+  period,
+  disabled,
+  updatePeriod,
+}: TimePeriodFormProps) => {
   const [value, setValue] = useState('0')
   const [reason, setReason] = useState<ReasonType>('Hours')
 
@@ -77,6 +82,7 @@ const TimePeriodForm = ({ period, updatePeriod }: TimePeriodFormProps) => {
           onChange={(event) =>
             setPeriod({ type: 'value', val: event.target.value })
           }
+          disabled={disabled}
         />
       </FormRowItem>
       <FormRowItem>
@@ -86,6 +92,7 @@ const TimePeriodForm = ({ period, updatePeriod }: TimePeriodFormProps) => {
           onChange={(val) =>
             setPeriod({ type: 'reason', val: val as ReasonType })
           }
+          isDisabled={disabled}
         />
       </FormRowItem>
     </>

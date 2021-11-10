@@ -7,13 +7,19 @@ import FormSelect, {
 import styled from '../../../../../design/lib/styled'
 import UserIcon from '../../../UserIcon'
 import { overflowEllipsis } from '../../../../../design/lib/styled/styleFunctions'
+import cc from 'classcat'
 
 interface DocAssigneeSelectProps {
   value: string[]
   update: (value: string[]) => void
+  isDisabled?: boolean
 }
 
-const DocAssigneeSelect = ({ value, update }: DocAssigneeSelectProps) => {
+const DocAssigneeSelect = ({
+  value,
+  isDisabled,
+  update,
+}: DocAssigneeSelectProps) => {
   const { permissions } = usePage()
 
   const options = useMemo(() => {
@@ -51,6 +57,7 @@ const DocAssigneeSelect = ({ value, update }: DocAssigneeSelectProps) => {
       options={options}
       value={selectedOptions}
       onChange={updateAssignees}
+      isDisabled={isDisabled}
     />
   )
 }
@@ -60,7 +67,11 @@ export default DocAssigneeSelect
 const ItemContainer = styled.div`
   display: flex;
   align-items: center;
-  max-width: 200px;
+  height: 20px;
+
+  &.--shrinked {
+    max-width: 50px;
+  }
 
   .option__user__icon {
     flex: 0 0 auto;
@@ -71,10 +82,13 @@ const ItemContainer = styled.div`
   }
 `
 
-function getOptionByUser(user: SerializedUser): FormSelectOption {
+function getOptionByUser(
+  user: SerializedUser,
+  shrinked?: boolean
+): FormSelectOption {
   return {
     label: (
-      <ItemContainer>
+      <ItemContainer className={cc([shrinked && `--shrinked`])}>
         <UserIcon
           className='option__user__icon'
           user={user}
@@ -104,7 +118,7 @@ function getSelectedOptionsByUserId(
       console.warn(`User Id ${userId} does not exist in page props`)
       return options
     }
-    const option = getOptionByUser(user)
+    const option = getOptionByUser(user, true)
     options.push(option)
     return options
   }, [])
