@@ -33,6 +33,10 @@ const UserPreferencesForm = () => {
     settings['general.editorFontFamily']
   )
 
+  const resetSettings = useCallback(() => {
+    setSettings({})
+  }, [setSettings])
+
   const selectLanguage = useCallback(
     (formOption: FormSelectOption) => {
       setSettings({
@@ -408,6 +412,22 @@ const UserPreferencesForm = () => {
             {
               type: 'node',
               element: <MarkdownTabForm />,
+            },
+          ],
+        }}
+      />
+      <FormRow
+        fullWidth={true}
+        row={{
+          title: t(lngKeys.SettingsPreferencesResetTitle),
+          items: [
+            {
+              type: 'button',
+              props: {
+                variant: 'secondary',
+                label: t(lngKeys.SettingsPreferencesResetLabel),
+                onClick: () => resetSettings(),
+              },
             },
           ],
         }}

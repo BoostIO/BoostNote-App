@@ -37,6 +37,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsMarkdownPreviewStyleTitle]: 'Preview Style',
   [lngKeys.SettingsMarkdownPreviewStyleResetLabel]: 'Use Default Style',
   [lngKeys.SettingsPreferences]: 'Preferences',
+  [lngKeys.SettingsPreferencesResetTitle]: 'Reset Preferences',
+  [lngKeys.SettingsPreferencesResetLabel]: 'Use Default Preferences',
   [lngKeys.SettingsTeamUpgrade]: 'Upgrade',
   [lngKeys.SettingsTeamSubscription]: 'Billing',
   [lngKeys.SettingsIntegrations]: 'Integrations',
