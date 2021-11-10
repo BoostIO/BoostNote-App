@@ -1,14 +1,7 @@
-import React, {
-  CSSProperties,
-  useRef,
-  useCallback,
-  useEffect,
-  useMemo,
-} from 'react'
+import React, { CSSProperties, useRef, useCallback, useEffect } from 'react'
 import {
   boostHubWebViewUserAgent,
   boostHubPreloadUrl,
-  useBoostHub,
 } from '../../lib/boosthub'
 import {
   WebviewTag,
@@ -16,6 +9,7 @@ import {
   IpcMessageEvent,
   DidNavigateInPageEvent,
   NewWindowEvent,
+  WillNavigateEvent,
 } from 'electron'
 import { useEffectOnce } from 'react-use'
 import { openNew } from '../../lib/platform'
@@ -34,16 +28,15 @@ import {
   boostHubAppRouterEventEmitter,
   boostHubCreateCloudSpaceEventEmitter,
 } from '../../lib/events'
-import { usePreferences } from '../../lib/preferences'
 import {
   openContextMenu,
   openExternal,
   openNewWindow,
   signInBroadcast,
-  signOutBroadcast,
 } from '../../lib/electronOnly'
 import { DidFailLoadEvent } from 'electron/main'
 import styled from '../../design/lib/styled'
+import { boostHubBaseUrl } from '../../cloud/lib/consts'
 
 export interface WebviewControl {
   focus(): void
@@ -73,17 +66,7 @@ const BoostHubWebview = ({
   onDidFailLoad,
 }: BoostHubWebviewProps) => {
   const webviewRef = useRef<WebviewTag>(null)
-  const { preferences } = usePreferences()
-  const { signOutCloud } = useBoostHub()
   const domReadyRef = useRef<boolean>(false)
-  const cloudUser = preferences['cloud.user']
-
-  const accessToken = useMemo(() => {
-    if (cloudUser == null) {
-      return null
-    }
-    return cloudUser.accessToken
-  }, [cloudUser])
 
   const reload = useCallback(() => {
     webviewRef.current!.reload()
@@ -123,10 +106,28 @@ const BoostHubWebview = ({
     }
   }, [controlRef, reload, goBack, goForward, openDevTools, sendMessage, focus])
 
-  const cloudSignOutHandler = useCallback(() => {
-    signOutCloud()
-    signOutBroadcast()
-  }, [signOutCloud])
+  useEffect(() => {
+    const webview = webviewRef.current!
+    const willNavigateEventListener = async (event: WillNavigateEvent) => {
+      if (!new URL(event.url).href.startsWith(boostHubBaseUrl)) {
+        openExternal(event.url)
+      }
+    }
+
+    const newWindowEventListener = async (event: NewWindowEvent) => {
+      if (!new URL(event.url).href.startsWith(boostHubBaseUrl)) {
+        openExternal(event.url)
+      }
+    }
+
+    webview.addEventListener('will-navigate', willNavigateEventListener)
+    webview.addEventListener('new-window', newWindowEventListener)
+
+    return () => {
+      webview.removeEventListener('will-navigate', willNavigateEventListener)
+      webview.removeEventListener('new-window', newWindowEventListener)
+    }
+  }, [])
 
   useEffect(() => {
     const webview = webviewRef.current!
@@ -207,9 +208,6 @@ const BoostHubWebview = ({
         case 'account-delete':
           boostHubAccountDeleteEventEmitter.dispatch()
           break
-        case 'request-access-token':
-          webview.send('update-access-token', accessToken)
-          break
         case 'open-external-url':
           const [url] = event.args
           openExternal(url)
@@ -266,17 +264,15 @@ const BoostHubWebview = ({
               {
                 type: 'normal',
                 label: 'Sign Out',
-                click: () => cloudSignOutHandler(),
               },
             ],
           })
           break
         case 'sign-out':
-          cloudSignOutHandler()
           break
         case 'sign-in-event':
           // broadcast to other windows that sign in event happened
-          signInBroadcast()
+          signInBroadcast(webview.getWebContentsId())
           break
         default:
           console.log('Unhandled ipc message event', event.channel, event.args)

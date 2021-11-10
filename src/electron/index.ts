@@ -6,7 +6,6 @@ import {
   Menu,
   MenuItemConstructorOptions,
   protocol,
-  session,
   autoUpdater,
   webContents,
 } from 'electron'
@@ -21,6 +20,14 @@ const MAC = process.platform === 'darwin'
 // single instance lock
 const singleInstance = app.requestSingleInstanceLock()
 
+const electronFrontendUrl = dev
+  ? 'http://localhost:3000/app'
+  : url.format({
+      pathname: path.join(app.getAppPath(), './compiled/index.html'),
+      protocol: 'file',
+      slashes: true,
+    })
+
 const keymap = new Map<string, string>([
   ['toggleGlobalSearch', 'Ctrl + P'],
   ['toggleSplitEditMode', 'Ctrl + \\'],
@@ -33,7 +40,7 @@ function applyMenuTemplate(template: MenuItemConstructorOptions[]) {
   Menu.setApplicationMenu(menu)
 }
 
-function createAWindow(options?: BrowserWindowConstructorOptions) {
+function createAWindow(url: string, options?: BrowserWindowConstructorOptions) {
   const windowOptions: BrowserWindowConstructorOptions = {
     webPreferences: {
       nodeIntegration: true,
@@ -54,19 +61,7 @@ function createAWindow(options?: BrowserWindowConstructorOptions) {
 
   const window = new BrowserWindow(windowOptions)
 
-  if (dev) {
-    window.loadURL(`http://localhost:3000/app`, {
-      userAgent: session.defaultSession.getUserAgent() + ` BoostNote`,
-    })
-  } else {
-    window.loadURL(
-      url.format({
-        pathname: path.join(app.getAppPath(), './compiled/index.html'),
-        protocol: 'file',
-        slashes: true,
-      })
-    )
-  }
+  window.loadURL(url)
 
   applyMenuTemplate(getTemplateFromKeymap(keymap))
 
@@ -139,7 +134,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // on macOS it is common to re-create a window even after all windows have been closed
   if (windows.size === 0) {
-    const mainWindow = createAWindow()
+    const mainWindow = createAWindow(electronFrontendUrl)
     windows.add(mainWindow)
   } else {
     const allWindows = [...windows.values()]
@@ -158,7 +153,7 @@ app.on('ready', () => {
     const pathname = decodeURI(request.url.replace('file:///', ''))
     callback(pathname)
   })
-  const mainWindow = createAWindow()
+  const mainWindow = createAWindow(electronFrontendUrl)
   windows.add(mainWindow)
 
   ipcMain.on('menuAcceleratorChanged', (_, args) => {
@@ -174,20 +169,19 @@ app.on('ready', () => {
 
   // multiple windows support
   ipcMain.on('new-window-event', (args: any) => {
-    const newWindow = createAWindow(args.windowOptions)
+    const url =
+      args.url == null
+        ? electronFrontendUrl
+        : `${electronFrontendUrl}?url=${args.url}`
+    const newWindow = createAWindow(url, args.windowOptions)
     windows.add(newWindow)
 
-    if (args.url != null) {
-      newWindow.on('ready-to-show', () => {
-        newWindow.webContents.send('load-specific-page', args.url)
-      })
-    }
     return newWindow
   })
 
-  ipcMain.on('sign-in-event', (windowId?: any) => {
+  ipcMain.on('sign-in-event', (windowId?: any, webviewContentsId?: any) => {
     for (const webContent of webContents.getAllWebContents()) {
-      if (webContent.id == windowId) {
+      if (webContent.id === windowId || webContent.id === webviewContentsId) {
         continue
       }
       webContent.reload()

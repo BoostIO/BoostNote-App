@@ -131,10 +131,11 @@
     })
   }
 
-  function signInBroadcast() {
+  function signInBroadcast(webviewContentsId) {
     electron.remote.ipcMain.emit(
       'sign-in-event',
-      electron.remote.getCurrentWindow().id
+      electron.remote.getCurrentWindow().id,
+      webviewContentsId
     )
   }
 
