@@ -1,7 +1,7 @@
 import React from 'react'
 import '../lib/i18n'
 import { getBoostHubHomepageUrl } from '../lib/boosthub'
-import BoostHubWebview from './atoms/BoostHubWebview'
+import BoostHubWebview from './BoostHubWebview'
 import styled from '../design/lib/styled'
 import { createGlobalStyle } from 'styled-components'
 import querystring from 'querystring'

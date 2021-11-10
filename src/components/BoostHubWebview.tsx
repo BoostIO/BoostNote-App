@@ -1,8 +1,5 @@
 import React, { CSSProperties, useRef, useCallback, useEffect } from 'react'
-import {
-  boostHubWebViewUserAgent,
-  boostHubPreloadUrl,
-} from '../../lib/boosthub'
+import { boostHubWebViewUserAgent, boostHubPreloadUrl } from '../lib/boosthub'
 import {
   WebviewTag,
   DidNavigateEvent,
@@ -12,7 +9,7 @@ import {
   WillNavigateEvent,
 } from 'electron'
 import { useEffectOnce } from 'react-use'
-import { openNew } from '../../lib/platform'
+import { openNew } from '../lib/platform'
 import {
   boostHubNavigateRequestEventEmitter,
   boostHubTeamCreateEventEmitter,
@@ -27,16 +24,16 @@ import {
   boostHubSidebarSpaceEventEmitter,
   boostHubAppRouterEventEmitter,
   boostHubCreateCloudSpaceEventEmitter,
-} from '../../lib/events'
+} from '../lib/events'
 import {
   openContextMenu,
   openExternal,
   openNewWindow,
   signInBroadcast,
-} from '../../lib/electronOnly'
+} from '../lib/electronOnly'
 import { DidFailLoadEvent } from 'electron/main'
-import styled from '../../design/lib/styled'
-import { boostHubBaseUrl } from '../../cloud/lib/consts'
+import styled from '../design/lib/styled'
+import { boostHubBaseUrl } from '../cloud/lib/consts'
 
 export interface WebviewControl {
   focus(): void
