@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from '../../../design/lib/styled'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import cc from 'classcat'
@@ -28,7 +28,7 @@ import PropSelectorModal from '../Props/PropSelectorModal'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
 import DocTagsList from './DocTagsList'
-import { getIconPathOfProp } from '../../lib/props'
+import { getIconPathOfPropType } from '../../lib/props'
 
 interface DocPageHeaderProps {
   docIsEditable?: boolean
@@ -54,6 +54,10 @@ const DocPageHeader = ({
       target: doc,
     }
   )
+
+  const existingPropNames = useMemo(() => {
+    return docProperties.map((prop) => prop[1].name)
+  }, [docProperties])
 
   return (
     <Container className={cc(['doc__page__header', className])}>
@@ -121,7 +125,7 @@ const DocPageHeader = ({
                     </div>
                   </div>
                   {docProperties.map((prop, i) => {
-                    const iconPath = getIconPathOfProp(prop[1].name)
+                    const iconPath = getIconPathOfPropType(prop[1].data.type)
                     return (
                       <div
                         className='doc__page__header__property'
@@ -180,13 +184,11 @@ const DocPageHeader = ({
                       openContextModal(
                         event,
                         <PropSelectorModal
+                          disallowedNames={existingPropNames}
                           addProp={(propName, propData) => {
                             updateProp(propName, propData)
                             closeAllModals()
                           }}
-                          propsToIgnore={docProperties.map(
-                            (prop) => prop[1].name
-                          )}
                         />,
                         { width: 200, alignment: 'right', removePadding: true }
                       )
