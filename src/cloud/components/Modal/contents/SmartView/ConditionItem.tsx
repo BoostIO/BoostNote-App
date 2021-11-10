@@ -21,6 +21,7 @@ import {
 import styled from '../../../../../design/lib/styled'
 
 interface ConditionItemProps {
+  teamId: string
   hideConditionRuleType: boolean
   condition: EditableCondition
   update: (newCondition: EditableCondition) => void
@@ -30,6 +31,7 @@ interface ConditionItemProps {
 const ConditionItem = ({
   condition,
   hideConditionRuleType,
+  teamId,
   update,
   remove,
 }: ConditionItemProps) => {
@@ -62,7 +64,7 @@ const ConditionItem = ({
           />
         )}
         <FormRowItem
-          flex='0 1 180px'
+          flex='0 0 160px'
           item={{
             type: 'select',
             props: {
@@ -80,7 +82,11 @@ const ConditionItem = ({
             },
           }}
         />
-        <ConditionValueControl condition={condition} update={update} />
+        <ConditionValueControl
+          condition={condition}
+          update={update}
+          teamId={teamId}
+        />
       </Flexbox>
       <Flexbox flex='0 0 auto'>
         <FormRowItem>
@@ -96,8 +102,6 @@ const ConditionItem = ({
 }
 
 export default ConditionItem
-
-//label', 'due_date', 'creation_date', 'update_date', 'prop']
 
 function inferConditionPrimaryType(t: TFunction, condition: EditableCondition) {
   switch (condition.type) {

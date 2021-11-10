@@ -46,6 +46,7 @@ const CreateSmartViewModal = ({ onCreate }: CreateSmartViewModalProps) => {
 
   return (
     <SmartViewForm
+      teamId={team.id}
       action='Create'
       onCancel={closeModal}
       onSubmit={submit}

@@ -167,6 +167,14 @@ const Container = styled.div`
     width: 0;
   }
 
+  .form__select__multi-value__label {
+    padding: 2px;
+  }
+
+  .form__select__value-container--is-multi {
+    flex-wrap: nowrap;
+  }
+
   .form__select__group-heading {
     font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   }

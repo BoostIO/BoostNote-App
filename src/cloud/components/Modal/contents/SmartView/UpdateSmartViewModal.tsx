@@ -62,6 +62,7 @@ const UpdateSmartViewModal = ({
 
   return (
     <SmartViewForm
+      teamId={smartView.teamId}
       action='Update'
       onCancel={closeModal}
       onSubmit={submit}
