@@ -12,17 +12,23 @@ import Portal from '../../../../../design/components/atoms/Portal'
 interface DocDateSelectProps {
   usePortal?: boolean
   value: DateCondition | null
+  disabled?: boolean
   update: (value: DateCondition | null) => void
 }
 
 const DocDateSelect = ({
   value,
+  disabled,
   usePortal = true,
   update,
 }: DocDateSelectProps) => {
   return (
     <>
-      <DateConditionValueTypeSelect value={value} update={update} />
+      <DateConditionValueTypeSelect
+        value={value}
+        update={update}
+        disabled={disabled}
+      />
       {value != null &&
         (value.type === 'specific' ||
           value.type === 'before' ||
@@ -31,10 +37,16 @@ const DocDateSelect = ({
             usePortal={usePortal}
             value={value}
             update={update}
+            disabled={disabled}
           />
         )}
       {value != null && value.type === 'between' && (
-        <DateRangePicker usePortal={usePortal} value={value} update={update} />
+        <DateRangePicker
+          usePortal={usePortal}
+          value={value}
+          update={update}
+          disabled={disabled}
+        />
       )}
     </>
   )
@@ -45,11 +57,13 @@ export default DocDateSelect
 interface SpecificDatePickerProps {
   usePortal?: boolean
   value: Kind<DateCondition, 'specific' | 'after' | 'before'>
+  disabled?: boolean
   update: (value: DateCondition) => void
 }
 
 const SpecificDatePicker = ({
   value,
+  disabled,
   usePortal,
   update,
 }: SpecificDatePickerProps) => {
@@ -66,6 +80,7 @@ const SpecificDatePicker = ({
 
   return (
     <DatePicker
+      disabled={disabled}
       selected={localDate}
       onChange={updateDate}
       customInput={<DatePickerButton date={localDate} />}
@@ -98,12 +113,14 @@ export function localizeDate(date: Date) {
 
 interface DateRangePickerProps {
   usePortal?: boolean
+  disabled?: boolean
   value: Kind<DateCondition, 'between'>
   update: (value: DateCondition) => void
 }
 
 const DateRangePicker = ({
   value,
+  disabled,
   usePortal,
   update,
 }: DateRangePickerProps) => {
@@ -130,6 +147,7 @@ const DateRangePicker = ({
   return (
     <>
       <DatePicker
+        disabled={disabled}
         selected={localFromDate}
         onChange={updateFromDate}
         placeholderText='Select Start Date'
@@ -152,6 +170,7 @@ const DateRangePicker = ({
         }
       />
       <DatePicker
+        disabled={disabled}
         selected={localToDate}
         onChange={updateToDate}
         placeholderText='Select End Date'
@@ -178,6 +197,7 @@ const DateRangePicker = ({
 }
 
 interface DatePickerButtonProps {
+  disabled?: boolean
   customIconPath?: string
   placeholder?: string
   date: Date | null
@@ -190,6 +210,7 @@ export const DatePickerButton = forwardRef<
 >(
   (
     {
+      disabled,
       customIconPath = mdiCalendar,
       date,
       onClick,
@@ -198,7 +219,12 @@ export const DatePickerButton = forwardRef<
     ref
   ) => {
     return (
-      <ButtonContainer ref={ref} type='button' onClick={onClick}>
+      <ButtonContainer
+        disabled={disabled}
+        ref={ref}
+        type='button'
+        onClick={onClick}
+      >
         <Icon path={customIconPath} />
         {date != null ? formatDate(date, 'MMM dd, yyyy') : placeholder}
       </ButtonContainer>

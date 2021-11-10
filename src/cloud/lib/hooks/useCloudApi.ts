@@ -105,6 +105,11 @@ import {
 } from '../../api/teams/views'
 import { SerializedView } from '../../interfaces/db/view'
 import { PropData } from '../../interfaces/db/props'
+import {
+  listPropertySuggestions,
+  ListPropertySuggestionsRequestBody,
+  ListPropertySuggestionsResponseBody,
+} from '../../api/teams/props'
 
 export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
@@ -851,6 +856,18 @@ export function useCloudApi() {
     [updateViewsMap, send]
   )
 
+  const fetchPropertySuggestionsApi = useCallback(
+    async (target: ListPropertySuggestionsRequestBody) => {
+      return send('properties', 'suggestions', {
+        api: () => listPropertySuggestions(target),
+        cb: (_body: ListPropertySuggestionsResponseBody) => {
+          return
+        },
+      })
+    },
+    [send]
+  )
+
   return {
     send,
     sendingMap,
@@ -880,5 +897,6 @@ export function useCloudApi() {
     updateSmartViewApi,
     listViewsApi,
     updateDocPropsApi,
+    fetchPropertySuggestionsApi,
   }
 }

@@ -29,15 +29,18 @@ const OPTIONS = [
 
 interface DateValueTypeSelectProps {
   value: DateCondition | null
+  disabled?: boolean
   update: (dateConditionValue: DateCondition) => void
 }
 
 const DateConditionValueTypeSelect = ({
   value: dateConditionValue,
+  disabled,
   update,
 }: DateValueTypeSelectProps) => {
   return (
     <FormSelect
+      isDisabled={disabled}
       options={OPTIONS}
       value={
         dateConditionValue != null

@@ -82,7 +82,6 @@ const validators: Validators = {
   },
 
   prop: (doc, condition) => {
-    console.log(doc.props)
     if (doc.props == null) {
       return false
     }

@@ -62,6 +62,7 @@ const SmartViewUpdateModal = ({
   return (
     <ModalContainer title='Edit a SmartView'>
       <SmartViewForm
+        teamId={smartView.teamId}
         action='Update'
         onSubmit={submit}
         buttonsAreDisabled={sending}
