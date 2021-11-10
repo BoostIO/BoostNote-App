@@ -113,6 +113,8 @@ export enum lngKeys {
   SettingsMarkdownPreviewStyleTitle = 'settings.markdownPreviewStyleTitle',
   SettingsMarkdownPreviewStyleResetLabel = 'settings.markdownPreviewStyleResetLabel',
   SettingsPreferences = 'settings.preferences',
+  SettingsPreferencesResetTitle = 'settings.preferencesResetTitle',
+  SettingsPreferencesResetLabel = 'settings.preferencesResetLabel',
   SettingsTeamInfo = 'settings.teamInfo',
   SettingsTeamUpgrade = 'settings.teamUpgrade',
   SettingsTeamSubscription = 'settings.teamSubscription',
