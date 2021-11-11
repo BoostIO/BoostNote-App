@@ -1,4 +1,4 @@
-import React, { useMemo, MouseEventHandler } from 'react'
+import React, { useMemo, MouseEventHandler, useState } from 'react'
 import styled from '../../../lib/styled'
 import cc from 'classcat'
 
@@ -9,6 +9,7 @@ import TableCol from './atoms/TableCol'
 import Icon from '../../atoms/Icon'
 import { mdiPlus } from '@mdi/js'
 import { TableColProps, TableRowProps } from './tableInterfaces'
+import shortid from 'shortid'
 
 interface TableProps {
   cols?: TableColProps[]
@@ -28,6 +29,7 @@ const Table: AppComponent<TableProps> = ({
   disabledAddRow = false,
   onAddRowButtonClick,
 }) => {
+  const [tableId] = useState(shortid.generate())
   const columnWidths = useMemo(() => {
     return cols.map((col) => {
       return col.width
@@ -38,8 +40,8 @@ const Table: AppComponent<TableProps> = ({
     <TableContainer className={cc(['table', className])}>
       <Scroller className='table__wrapper'>
         <div className='table__header'>
-          {cols.map((col) => (
-            <TableCol {...col} key={`head-${col.children}`} />
+          {cols.map((col, i) => (
+            <TableCol {...col} key={`${tableId}-head-${i}`} />
           ))}
           {!disabledAddColumn && (
             <button
