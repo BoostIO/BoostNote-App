@@ -76,9 +76,11 @@ scrollbar-height: 8px;
 `
 
 export default createGlobalStyle<BaseTheme>`
-  html {
-    width: 100vw;
-    min-height: 100vh;
+  html, body, #root{
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
   }
 
   body {
@@ -124,7 +126,7 @@ export default createGlobalStyle<BaseTheme>`
   td {
     background-color: ${({ theme }) => theme.colors.background.primary};
   }
-  
+
   .icon {
     transition: 100ms color;
   }
