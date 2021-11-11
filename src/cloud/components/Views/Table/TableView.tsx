@@ -269,7 +269,7 @@ const TableView = ({
               width: 250,
               hideBackground: true,
               removePadding: true,
-              alignment: 'bottom-right',
+              alignment: 'bottom-left',
               onClose: () =>
                 TableViewEventEmitter.dispatch({
                   type: 'save',
