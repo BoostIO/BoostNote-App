@@ -171,12 +171,18 @@ const PropConfig = ({
 export default PropConfig
 
 const StyledContainer = styled(MetadataContainer)`
-  .prop__config__submenu__button {
+  & .prop__config__submenu__button {
     & .button__label {
       flex-grow: 1;
       & span {
         flex-grow: 1;
       }
     }
+  }
+
+  & .warning__text {
+    color: ${({ theme }) => theme.colors.variants.warning.base};
+    line-height: 18px;
+    margin: 0;
   }
 `
