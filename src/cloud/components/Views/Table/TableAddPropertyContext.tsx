@@ -37,6 +37,7 @@ const TableAddPropertyContext = ({
   useEffectOnce(() => {
     if (inputRef.current != null) {
       inputRef.current.focus()
+      inputRef.current.setSelectionRange(0, columnName.length)
     }
   })
 
