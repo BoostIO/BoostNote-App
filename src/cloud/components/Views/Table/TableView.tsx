@@ -19,6 +19,7 @@ import { getDocTitle } from '../../../lib/utils/patterns'
 import { Column, ViewTableData } from '../../../lib/views/table'
 import PropPicker from '../../Props/PropPicker'
 import TablePropertiesContext from './TablePropertiesContext'
+import TableAddPropertyContext from './TableAddPropertyContext'
 
 type TableViewProps = {
   view: SerializedView
@@ -172,7 +173,7 @@ const TableView = ({
               )
             }
           >
-            Properties
+            Columns
           </Button>
           <LoadingButton
             spinning={sendingMap.get(view.id.toString()) === 'delete'}
@@ -223,7 +224,26 @@ const TableView = ({
             ],
           }
         })}
-        disabledAddColumn={true}
+        onAddColButtonClick={(ev) =>
+          openContextModal(
+            ev,
+            <TableAddPropertyContext
+              columns={columns}
+              addColumn={actionsRef.current.addColumn}
+            />,
+            {
+              width: 250,
+              hideBackground: true,
+              removePadding: true,
+              alignment: 'bottom-right',
+              onClose: () =>
+                TableViewEventEmitter.dispatch({
+                  type: 'save',
+                  target: view.id.toString(),
+                }),
+            }
+          )
+        }
         disabledAddRow={true}
       />
     </Container>
