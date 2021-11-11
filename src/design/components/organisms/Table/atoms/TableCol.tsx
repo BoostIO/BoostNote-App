@@ -2,6 +2,7 @@ import React, { useMemo, CSSProperties } from 'react'
 import styled from '../../../../lib/styled'
 import { TableColProps } from '../tableInterfaces'
 import TableSlider from './TableSlider'
+import cc from 'classcat'
 
 interface InternalTableColProps extends TableColProps {
   width?: number
@@ -27,7 +28,10 @@ const TableCol = ({
   return (
     <>
       <Container
-        className='table__col'
+        className={cc([
+          'table__col',
+          onClick != null && 'table__col--interactive',
+        ])}
         style={style}
         onClick={onClick}
         onContextMenu={onContextMenu}
@@ -58,5 +62,9 @@ const Container = styled.div`
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.background.secondary};
+  }
+
+  &.table__col--interactive {
+    cursor: pointer;
   }
 `
