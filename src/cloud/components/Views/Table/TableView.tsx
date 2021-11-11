@@ -311,6 +311,10 @@ const Container = styled.div`
     z-index: 2;
   }
 
+  .navigation__item {
+    height: 100%;
+  }
+
   .th__cell__icon {
     margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
     color: ${({ theme }) => theme.colors.text.subtle};
