@@ -1,4 +1,4 @@
-import { mdiTrashCanOutline } from '@mdi/js'
+import { mdiFileDocumentOutline, mdiTrashCanOutline } from '@mdi/js'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Button, {
   LoadingButton,
@@ -15,7 +15,7 @@ import { buildSmartViewQueryCheck } from '../../../lib/smartViews'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import {
   getIconPathOfPropType,
-  getInitialPropDataOfProp,
+  getInitialPropDataOfPropType,
 } from '../../../lib/props'
 import { getArrayFromRecord } from '../../../lib/utils/array'
 import { getDocTitle } from '../../../lib/utils/patterns'
@@ -24,6 +24,10 @@ import PropPicker from '../../Props/PropPicker'
 import TablePropertiesContext from './TablePropertiesContext'
 import TableAddPropertyContext from './TableAddPropertyContext'
 import Icon from '../../../../design/components/atoms/Icon'
+import NavigationItem from '../../../../design/components/molecules/Navigation/NavigationItem'
+import { getDocLinkHref } from '../../Link/DocLink'
+import { SerializedTeam } from '../../../interfaces/db/team'
+import { useRouter } from '../../../lib/router'
 
 type TableViewProps = {
   view: SerializedView
@@ -31,6 +35,7 @@ type TableViewProps = {
   currentUserIsCoreMember: boolean
   viewsSelector: React.ReactNode
   filterButton: React.ReactNode
+  team: SerializedTeam
 }
 
 const TableView = ({
@@ -39,9 +44,11 @@ const TableView = ({
   currentUserIsCoreMember,
   viewsSelector,
   filterButton,
+  team,
 }: TableViewProps) => {
   const { sendingMap, deleteViewApi, updateViewApi } = useCloudApi()
   const { openContextModal } = useModal()
+  const { push } = useRouter()
   const [state, setState] = useState<ViewTableData>(
     Object.assign({}, view.data as ViewTableData)
   )
@@ -213,20 +220,35 @@ const TableView = ({
           }),
         ]}
         rows={filteredDocs.map((doc) => {
+          const docLink = getDocLinkHref(doc, team, 'index')
           return {
             cells: [
-              { children: getDocTitle(doc, 'Untitled') },
+              {
+                children: (
+                  <NavigationItem
+                    labelHref={docLink}
+                    labelClick={() => push(docLink)}
+                    label={getDocTitle(doc, 'Untitled')}
+                    icon={
+                      doc.emoji != null
+                        ? { type: 'emoji', path: doc.emoji }
+                        : { type: 'icon', path: mdiFileDocumentOutline }
+                    }
+                  />
+                ),
+              },
               ...getArrayFromRecord(columns).map((col) => {
+                const propType = col.id.split(':').pop() as any
                 const propName = col.id.split(':')[1]
+                const propData =
+                  (doc.props || {})[propName] ||
+                  getInitialPropDataOfPropType(propType)
                 return {
                   children: (
                     <PropPicker
                       parent={{ type: 'doc', target: doc }}
                       propName={propName}
-                      propData={
-                        (doc.props || {})[propName] ||
-                        getInitialPropDataOfProp(propName)
-                      }
+                      propData={propData}
                       readOnly={!currentUserIsCoreMember}
                       portalId={`portal-anchor-${view.id}`}
                     />
