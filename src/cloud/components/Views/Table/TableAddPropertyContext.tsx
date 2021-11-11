@@ -8,7 +8,11 @@ import styled from '../../../../design/lib/styled'
 import { PropType, StaticPropType } from '../../../interfaces/db/props'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
 import { getIconPathOfPropType } from '../../../lib/props'
-import { Column, makeTablePropColId } from '../../../lib/views/table'
+import {
+  Column,
+  getInsertedColumnOrder,
+  makeTablePropColId,
+} from '../../../lib/views/table'
 
 interface TableAddPropertyContextProps {
   columns: Record<string, Column>
@@ -33,20 +37,18 @@ const TableAddPropertyContext = ({
 
   const addCol = useCallback(
     (type: PropType, subType?: string) => {
-      const col: Column = {
+      addColumn({
         id: makeTablePropColId(
           columnName,
           `${type}${subType != null ? `:${subType}` : ''}`
         ),
         name: columnName,
         type,
-      }
-      if (subType != null) {
-        col.subType = subType
-      }
-      addColumn(col)
+        subType,
+        order: getInsertedColumnOrder(columns),
+      })
     },
-    [addColumn, columnName]
+    [addColumn, columnName, columns]
   )
 
   const addStaticCol = useCallback(
@@ -55,9 +57,10 @@ const TableAddPropertyContext = ({
         id: makeTablePropColId(columnName, prop),
         name: columnName,
         prop,
+        order: getInsertedColumnOrder(columns),
       })
     },
-    [addColumn, columnName]
+    [addColumn, columnName, columns]
   )
 
   const isColumnNameInvalid = useMemo(() => {
