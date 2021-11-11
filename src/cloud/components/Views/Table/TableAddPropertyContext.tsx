@@ -4,7 +4,6 @@ import ColoredBlock from '../../../../design/components/atoms/ColoredBlock'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import { useModal } from '../../../../design/lib/stores/modal'
 import styled from '../../../../design/lib/styled'
 import { PropType, StaticPropType } from '../../../interfaces/db/props'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
@@ -22,7 +21,6 @@ const TableAddPropertyContext = ({
 }: TableAddPropertyContextProps) => {
   const menuRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const { closeAllModals } = useModal()
   const [columnName, setColumnName] = useState(
     `Column ${Object.keys(columns).length + 1}`
   )
@@ -35,18 +33,20 @@ const TableAddPropertyContext = ({
 
   const addCol = useCallback(
     (type: PropType, subType?: string) => {
-      addColumn({
+      const col: Column = {
         id: makeTablePropColId(
           columnName,
           `${type}${subType != null ? `:${subType}` : ''}`
         ),
         name: columnName,
         type,
-        subType,
-      })
-      closeAllModals()
+      }
+      if (subType != null) {
+        col.subType = subType
+      }
+      addColumn(col)
     },
-    [addColumn, columnName, closeAllModals]
+    [addColumn, columnName]
   )
 
   const addStaticCol = useCallback(
@@ -56,9 +56,8 @@ const TableAddPropertyContext = ({
         name: columnName,
         prop,
       })
-      closeAllModals()
     },
-    [addColumn, columnName, closeAllModals]
+    [addColumn, columnName]
   )
 
   const isColumnNameInvalid = useMemo(() => {
