@@ -8,6 +8,7 @@ import {
 } from '@mdi/js'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useEffectOnce } from 'react-use'
+import ColoredBlock from '../../../../design/components/atoms/ColoredBlock'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
@@ -65,6 +66,11 @@ const TableAddPropertyContext = ({
 
   const isColumnNameInvalid = useMemo(() => {
     const lowercaseValue = columnName.toLocaleLowerCase().trim()
+
+    if (lowercaseValue === '') {
+      return false
+    }
+
     return Object.values(columns).reduce((acc, value) => {
       if (value.name.toLocaleLowerCase() === lowercaseValue) {
         acc = true
@@ -74,6 +80,7 @@ const TableAddPropertyContext = ({
   }, [columns, columnName])
 
   useUpDownNavigationListener(menuRef, { overrideInput: true })
+
   return (
     <Container ref={menuRef}>
       <MetadataContainer>
@@ -91,6 +98,18 @@ const TableAddPropertyContext = ({
             ),
           }}
         />
+        {isColumnNameInvalid && (
+          <MetadataContainerRow
+            row={{
+              type: 'content',
+              content: (
+                <ColoredBlock variant='warning'>
+                  A property named &apos;{columnName}&apos; already exists.
+                </ColoredBlock>
+              ),
+            }}
+          />
+        )}
         <MetadataContainerRow
           row={{ type: 'header', content: 'Custom Props' }}
         />
