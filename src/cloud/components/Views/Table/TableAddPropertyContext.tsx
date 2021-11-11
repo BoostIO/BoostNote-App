@@ -4,6 +4,7 @@ import ColoredBlock from '../../../../design/components/atoms/ColoredBlock'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import styled from '../../../../design/lib/styled'
 import { PropType, StaticPropType } from '../../../interfaces/db/props'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
@@ -11,20 +12,24 @@ import { getIconPathOfPropType } from '../../../lib/props'
 import {
   Column,
   getInsertedColumnOrder,
+  isPropCol,
   makeTablePropColId,
 } from '../../../lib/views/table'
 
 interface TableAddPropertyContextProps {
   columns: Record<string, Column>
-  addColumn: (col: Column) => void
+  addColumn: (col: Column) => Promise<BulkApiActionRes> | undefined
+  close: () => void
 }
 
 const TableAddPropertyContext = ({
   columns,
   addColumn,
+  close,
 }: TableAddPropertyContextProps) => {
   const menuRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const [sending, setSending] = useState<string>()
   const [columnName, setColumnName] = useState(
     `Column ${Object.keys(columns).length + 1}`
   )
@@ -36,8 +41,24 @@ const TableAddPropertyContext = ({
   })
 
   const addCol = useCallback(
+    async (col: Column) => {
+      if (sending != null) {
+        return
+      }
+
+      setSending(isPropCol(col) ? col.subType || col.type : col.prop)
+      const res = await addColumn(col)
+      if (res != null && !res.err) {
+        close()
+      }
+      setSending(undefined)
+    },
+    [addColumn, close, sending]
+  )
+
+  const addPropCol = useCallback(
     (type: PropType, subType?: string) => {
-      addColumn({
+      addCol({
         id: makeTablePropColId(
           columnName,
           `${type}${subType != null ? `:${subType}` : ''}`
@@ -48,19 +69,19 @@ const TableAddPropertyContext = ({
         order: getInsertedColumnOrder(columns),
       })
     },
-    [addColumn, columnName, columns]
+    [addCol, columnName, columns]
   )
 
   const addStaticCol = useCallback(
     (prop: StaticPropType) => {
-      addColumn({
+      addCol({
         id: makeTablePropColId(columnName, prop),
         name: columnName,
         prop,
         order: getInsertedColumnOrder(columns),
       })
     },
-    [addColumn, columnName, columns]
+    [addCol, columnName, columns]
   )
 
   const isColumnNameInvalid = useMemo(() => {
@@ -118,9 +139,10 @@ const TableAddPropertyContext = ({
             props: {
               label: 'Date',
               iconPath: getIconPathOfPropType('date'),
-              disabled: isColumnNameInvalid,
+              disabled: isColumnNameInvalid || sending != null,
+              spinning: sending === 'date',
               id: 'new-date-col',
-              onClick: () => addCol('date'),
+              onClick: () => addPropCol('date'),
             },
           }}
         />
@@ -131,8 +153,9 @@ const TableAddPropertyContext = ({
               label: 'Person',
               id: 'new-person-col',
               iconPath: getIconPathOfPropType('user'),
-              disabled: isColumnNameInvalid,
-              onClick: () => addCol('user'),
+              disabled: isColumnNameInvalid || sending != null,
+              spinning: sending === 'user',
+              onClick: () => addPropCol('user'),
             },
           }}
         />
@@ -143,8 +166,9 @@ const TableAddPropertyContext = ({
               label: 'Time',
               id: 'new-time-col',
               iconPath: getIconPathOfPropType('timeperiod'),
-              disabled: isColumnNameInvalid,
-              onClick: () => addCol('json', 'timeperiod'),
+              disabled: isColumnNameInvalid || sending != null,
+              spinning: sending === 'timeperiod',
+              onClick: () => addPropCol('json', 'timeperiod'),
             },
           }}
         />
@@ -166,7 +190,8 @@ const TableAddPropertyContext = ({
               label: 'Label',
               id: 'new-label-col',
               iconPath: getIconPathOfPropType('label'),
-              disabled: isColumnNameInvalid,
+              disabled: isColumnNameInvalid || sending != null,
+              spinning: sending === 'label',
               onClick: () => addStaticCol('label'),
             },
           }}
@@ -178,7 +203,8 @@ const TableAddPropertyContext = ({
               label: 'Creation Date',
               id: 'new-creation-date-col',
               iconPath: getIconPathOfPropType('creation_date'),
-              disabled: isColumnNameInvalid,
+              disabled: isColumnNameInvalid || sending != null,
+              spinning: sending === 'creation_date',
               onClick: () => addStaticCol('creation_date'),
             },
           }}
@@ -190,7 +216,8 @@ const TableAddPropertyContext = ({
               label: 'Update Date',
               id: 'new-update-date-col',
               iconPath: getIconPathOfPropType('update_date'),
-              disabled: isColumnNameInvalid,
+              disabled: isColumnNameInvalid || sending != null,
+              spinning: sending === 'update_date',
               onClick: () => addStaticCol('update_date'),
             },
           }}

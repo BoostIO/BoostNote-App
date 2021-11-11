@@ -7,8 +7,6 @@ import Flexbox from '../../../../design/components/atoms/Flexbox'
 import Table from '../../../../design/components/organisms/Table'
 import { useModal } from '../../../../design/lib/stores/modal'
 import styled from '../../../../design/lib/styled'
-import { TableViewEvent, TableViewEventEmitter } from '../../../../lib/events'
-import { SerializedQuery } from '../../../interfaces/db/smartView'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedView } from '../../../interfaces/db/view'
 import { buildSmartViewQueryCheck } from '../../../lib/smartViews'
@@ -21,6 +19,8 @@ import { getArrayFromRecord } from '../../../lib/utils/array'
 import { getDocTitle } from '../../../lib/utils/patterns'
 import {
   Column,
+  ColumnMoveType,
+  getColumnOrderAfterMove,
   sortTableViewColumns,
   ViewTableData,
 } from '../../../lib/views/table'
@@ -32,6 +32,8 @@ import NavigationItem from '../../../../design/components/molecules/Navigation/N
 import { getDocLinkHref } from '../../Link/DocLink'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { useRouter } from '../../../lib/router'
+import ColumnSettingsContext from './ColSettingsContext'
+import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
 
 type TableViewProps = {
   view: SerializedView
@@ -66,15 +68,6 @@ const TableView = ({
     return (state as ViewTableData).columns || {}
   }, [state])
 
-  const setFilters = useCallback((filters: SerializedQuery) => {
-    setState((prev) => {
-      return {
-        ...prev,
-        filter: filters as SerializedQuery,
-      }
-    })
-  }, [])
-
   const filteredDocs = useMemo(() => {
     if (state.filter == null || state.filter.length === 0) {
       return docs
@@ -96,7 +89,6 @@ const TableView = ({
       const newState = Object.assign(state, {
         columns: Object.assign(state.columns, { [col.id]: col }),
       })
-      setState(newState)
       return updateViewApi(view, {
         data: newState,
       })
@@ -106,57 +98,53 @@ const TableView = ({
 
   const removeColumn = useCallback(
     (col: Column) => {
-      if (columns[col.id] == null) {
+      const newColumns = Object.assign(state.columns)
+      delete newColumns[col.id]
+      const newState = Object.assign(state, {
+        columns: newColumns,
+      })
+      return updateViewApi(view, {
+        data: newState,
+      })
+    },
+    [state, updateViewApi, view]
+  )
+
+  const moveColumn = useCallback(
+    (column: Column, move: ColumnMoveType) => {
+      const newState = Object.assign(state, {
+        columns: Object.assign(state.columns, {
+          [column.id]: {
+            ...column,
+            order: getColumnOrderAfterMove(columns, column.id, move),
+          },
+        }),
+      })
+
+      if (newState.columns[column.id].order === column.order) {
         return
       }
 
-      setState((prev) => {
-        const newCols = Object.assign(columns)
-        delete newCols[col.id]
-        return {
-          ...prev,
-          columns: newCols,
-        }
+      return updateViewApi(view, {
+        data: newState,
       })
     },
-    [columns]
+    [columns, state, updateViewApi, view]
   )
 
-  const actionsRef = useRef({ addColumn, removeColumn, setFilters })
+  const actionsRef = useRef({ addColumn, removeColumn, moveColumn })
 
   useEffect(() => {
     actionsRef.current = {
+      moveColumn: moveColumn,
       addColumn: addColumn,
       removeColumn: removeColumn,
-      setFilters,
     }
-  }, [removeColumn, addColumn, setFilters])
+  }, [removeColumn, addColumn, moveColumn])
 
   useEffect(() => {
     setState(Object.assign({}, view.data as ViewTableData))
   }, [view.data])
-
-  useEffect(() => {
-    const saveEventHandler = (event: TableViewEvent) => {
-      if (event.detail.target !== view.id.toString()) {
-        return
-      }
-
-      switch (event.detail.type) {
-        case 'save':
-          return updateViewApi(view, {
-            data: state,
-          })
-        default:
-          return
-      }
-    }
-
-    TableViewEventEmitter.listen(saveEventHandler)
-    return () => {
-      TableViewEventEmitter.unlisten(saveEventHandler)
-    }
-  }, [state, updateViewApi, view])
 
   const orderedColumns = useMemo(() => {
     return sortTableViewColumns(columns)
@@ -187,11 +175,6 @@ const TableView = ({
                   hideBackground: true,
                   removePadding: true,
                   alignment: 'bottom-right',
-                  onClose: () =>
-                    TableViewEventEmitter.dispatch({
-                      type: 'save',
-                      target: view.id.toString(),
-                    }),
                 }
               )
             }
@@ -228,6 +211,24 @@ const TableView = ({
                 </Flexbox>
               ),
               width: 200,
+              onClick: (ev: any) =>
+                openContextModal(
+                  ev,
+                  <ColumnSettingsContext
+                    column={col}
+                    removeColumn={actionsRef.current.removeColumn}
+                    moveColumn={(type) =>
+                      actionsRef.current.moveColumn(col, type)
+                    }
+                    close={closeAllModals}
+                  />,
+                  {
+                    width: 250,
+                    hideBackground: true,
+                    removePadding: true,
+                    alignment: 'bottom-left',
+                  }
+                ),
             }
           }),
         ]}
@@ -281,10 +282,8 @@ const TableView = ({
             ev,
             <TableAddPropertyContext
               columns={columns}
-              addColumn={(col) => {
-                actionsRef.current.addColumn(col)
-                closeAllModals()
-              }}
+              addColumn={actionsRef.current.addColumn}
+              close={closeAllModals}
             />,
             {
               width: 250,
@@ -315,9 +314,18 @@ const Container = styled.div`
     height: 100%;
   }
 
-  .th__cell__icon {
-    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
-    color: ${({ theme }) => theme.colors.text.subtle};
+  .table__col {
+    .th__cell {
+      .th__cell__icon {
+        margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+        color: ${({ theme }) => theme.colors.text.subtle};
+        flex: 0 0 auto;
+      }
+
+      span {
+        ${overflowEllipsis()}
+      }
+    }
   }
 
   .item__property__button,
