@@ -12,6 +12,7 @@ interface PropertyValueButtonProps {
   sending?: boolean
   empty?: boolean
   isReadOnly: boolean
+  isErrored?: boolean
   id?: string
   className?: string
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -30,6 +31,7 @@ const PropertyValueButton = forwardRef<
       empty,
       onClick,
       isReadOnly,
+      isErrored,
       className,
       id,
     },
@@ -45,6 +47,7 @@ const PropertyValueButton = forwardRef<
           'item__property__button',
           empty && 'item__property__button--empty',
           isReadOnly && 'item__property__button--readOnly',
+          isErrored && 'item__property__button--errored',
           className,
         ])}
       >
@@ -125,6 +128,14 @@ const ButtonContainer = styled.button`
       .item__property__button__icon {
         color: ${({ theme }) => theme.colors.text.primary};
       }
+    }
+  }
+
+  &.item__property__button--errored {
+    background-color: rgba(100, 4, 4, 0.2) !important;
+
+    &:hover {
+      background-color: rgba(100, 4, 4, 0.2) !important;
     }
   }
 `

@@ -16,6 +16,7 @@ interface AssigneeSelectProps {
   update: (value: string[]) => void
   isLoading: boolean
   readOnly: boolean
+  isErrored?: boolean
   popupAlignment?: 'bottom-left' | 'top-left'
 }
 
@@ -23,6 +24,7 @@ const AssigneeSelect = ({
   disabled = false,
   defaultValue,
   isLoading,
+  isErrored,
   readOnly,
   update,
   popupAlignment = 'bottom-left',
@@ -60,6 +62,7 @@ const AssigneeSelect = ({
       <PropertyValueButton
         disabled={disabled}
         sending={isLoading}
+        isErrored={isErrored}
         empty={defaultValue.length === 0}
         isReadOnly={readOnly}
         iconPath={

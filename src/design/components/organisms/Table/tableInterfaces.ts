@@ -13,6 +13,8 @@ export type TableRowProps = React.PropsWithChildren<{
 }>
 
 export type TableCellProps = React.PropsWithChildren<{
+  className?: string
+  addPadding?: boolean
   onClick?: MouseEventHandler
   onContextMenu?: MouseEventHandler
   onDrop?: DragEventHandler
