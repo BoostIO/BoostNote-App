@@ -12,7 +12,6 @@ import {
   mdiMenuUp,
   mdiPencil,
   mdiPlus,
-  mdiTrashCanOutline,
 } from '@mdi/js'
 import { usePage } from '../../lib/stores/pageStore'
 import { SerializedTeam } from '../../interfaces/db/team'
@@ -25,10 +24,9 @@ import PropPicker from '../Props/PropPicker'
 import { useProps } from '../../lib/hooks/props'
 import { useModal } from '../../../design/lib/stores/modal'
 import PropSelectorModal from '../Props/PropSelectorModal'
-import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
 import DocTagsList from './DocTagsList'
 import { getIconPathOfPropType } from '../../lib/props'
+import PropConfig from '../Props/PropConfig'
 
 interface DocPageHeaderProps {
   docIsEditable?: boolean
@@ -47,7 +45,7 @@ const DocPageHeader = ({
   const { currentUserIsCoreMember } = usePage()
   const { preferences, setPreferences } = usePreferences()
   const { openContextModal, closeAllModals } = useModal()
-  const { props: docProperties, updateProp, removeProp } = useProps(
+  const { props: docProperties, updateProp, modifyProp, removeProp } = useProps(
     doc.props || {},
     {
       type: 'doc',
@@ -139,22 +137,28 @@ const DocPageHeader = ({
                           onClick={(event) => {
                             openContextModal(
                               event,
-                              <MetadataContainer>
-                                <MetadataContainerRow
-                                  row={{
-                                    type: 'button',
-                                    props: {
-                                      onClick: () => {
-                                        removeProp(prop[1].name)
-                                        closeAllModals()
-                                      },
-                                      label: 'Delete property',
-                                      iconPath: mdiTrashCanOutline,
-                                      id: 'delete-property',
-                                    },
-                                  }}
-                                />
-                              </MetadataContainer>,
+                              <PropConfig
+                                disallowedNames={existingPropNames.filter(
+                                  (name) => name != prop[1].name
+                                )}
+                                prop={prop[1]}
+                                onUpdate={(prop, updated) => {
+                                  if (
+                                    prop.name !== updated.name ||
+                                    prop.data.type !== updated.data.type
+                                  ) {
+                                    modifyProp(
+                                      prop.name,
+                                      updated.name,
+                                      updated.data
+                                    )
+                                  }
+                                }}
+                                onDelete={({ name }) => {
+                                  removeProp(name)
+                                  closeAllModals()
+                                }}
+                              />,
                               {
                                 width: 200,
                                 alignment: 'bottom-left',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, ReactNode } from 'react'
 import DatePicker from 'react-datepicker'
 import PropertyValueButton from './PropertyValueButton'
-import { format as formatDate } from 'date-fns'
+import { format as formatDate, isValid } from 'date-fns'
 import styled from '../../../../design/lib/styled'
 import Button from '../../../../design/components/atoms/Button'
 import {
@@ -36,7 +36,8 @@ const DueDateSelect = ({
 }: DueDateSelectProps) => {
   const { translate } = useI18n()
   const [dueDate, setDueDate] = useState(() => {
-    return dueDateString != null ? new Date(dueDateString) : null
+    const date = dueDateString != null ? new Date(dueDateString) : null
+    return date == null || !isValid(date) ? null : date
   })
   const isDue = useMemo(() => {
     const today = new Date()
@@ -45,7 +46,10 @@ const DueDateSelect = ({
   }, [dueDate])
 
   useEffect(() => {
-    setDueDate(dueDateString != null ? new Date(dueDateString) : null)
+    setDueDate(() => {
+      const date = dueDateString != null ? new Date(dueDateString) : null
+      return date == null || !isValid(date) ? null : date
+    })
   }, [dueDateString])
 
   return (
