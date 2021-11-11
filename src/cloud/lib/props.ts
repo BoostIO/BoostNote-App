@@ -37,15 +37,16 @@ export const supportedPropertyNames = [
   'timeTracked',
 ]
 
-export const supportedPropTypes = ['date', 'timeperiod', 'status', 'person']
+export const supportedPropTypes = ['date', 'timeperiod', 'status', 'user']
 
 export function getLabelOfPropType(propType: string): string {
   switch (propType) {
     case 'timeperiod':
       return 'Time Period'
+    case 'user':
+      return 'Person'
     case 'date':
     case 'status':
-    case 'person':
     default:
       return capitalize(propType)
   }
@@ -59,7 +60,7 @@ export function getIconPathOfPropType(propType: string): string | undefined {
       return mdiCalendarMonthOutline
     case 'status':
       return mdiArrowDownDropCircleOutline
-    case 'person':
+    case 'user':
       return mdiAccountOutline
     default:
       return

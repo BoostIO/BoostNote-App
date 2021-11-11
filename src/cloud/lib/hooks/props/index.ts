@@ -65,6 +65,28 @@ export function useProps(
     [updateDocPropsApi, parent]
   )
 
+  const modifyProp = useCallback(
+    (propName: string, newName: string, data: SerializedPropData) => {
+      setProps((prev) => {
+        const newProps = Object.assign({}, prev)
+        if (newProps[propName] != null) {
+          const newData = { ...data, createdAt: newProps[propName].createdAt }
+          delete newProps[propName]
+          newProps[newName] = newData
+
+          if (parent.type === 'doc') {
+            if (propName !== newName) {
+              updateDocPropsApi(parent.target, [propName, null])
+            }
+            updateDocPropsApi(parent.target, [newName, newData])
+          }
+        }
+        return newProps
+      })
+    },
+    [updateDocPropsApi, parent]
+  )
+
   const removeProp = useCallback(
     async (propName: string) => {
       setProps((prev) => {
@@ -91,6 +113,7 @@ export function useProps(
     props: orderedProps,
     updateProp,
     removeProp,
+    modifyProp,
     isPropPresent,
   }
 }

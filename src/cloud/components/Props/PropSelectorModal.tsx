@@ -1,4 +1,3 @@
-import cc from 'classcat'
 import React, { useMemo, useState } from 'react'
 import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
 import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
