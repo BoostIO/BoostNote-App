@@ -13,13 +13,17 @@ import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedView } from '../../../interfaces/db/view'
 import { buildSmartViewQueryCheck } from '../../../lib/smartViews'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
-import { getInitialPropDataOfProp } from '../../../lib/props'
+import {
+  getIconPathOfPropType,
+  getInitialPropDataOfProp,
+} from '../../../lib/props'
 import { getArrayFromRecord } from '../../../lib/utils/array'
 import { getDocTitle } from '../../../lib/utils/patterns'
 import { Column, ViewTableData } from '../../../lib/views/table'
 import PropPicker from '../../Props/PropPicker'
 import TablePropertiesContext from './TablePropertiesContext'
 import TableAddPropertyContext from './TableAddPropertyContext'
+import Icon from '../../../../design/components/atoms/Icon'
 
 type TableViewProps = {
   view: SerializedView
@@ -189,13 +193,21 @@ const TableView = ({
         cols={[
           {
             id: 'doc-title',
-            name: 'Title',
+            children: 'Title',
             width: 300,
           },
           ...getArrayFromRecord(columns).map((col) => {
+            const icon = getIconPathOfPropType(col.id.split(':').pop() as any)
             return {
               id: col.id,
-              name: col.name,
+              children: (
+                <Flexbox className='th__cell'>
+                  {icon != null && (
+                    <Icon className='th__cell__icon' path={icon} />
+                  )}
+                  <span>{col.name}</span>
+                </Flexbox>
+              ),
               width: 200,
             }
           }),
@@ -259,6 +271,11 @@ const Container = styled.div`
 
   .react-datepicker-popper {
     z-index: 2;
+  }
+
+  .th__cell__icon {
+    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    color: ${({ theme }) => theme.colors.text.subtle};
   }
 `
 
