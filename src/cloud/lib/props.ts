@@ -19,17 +19,6 @@ import {
   StaticPropType,
 } from '../interfaces/db/props'
 
-export const ConditionNameSuggestionsPerTypeOrSubType: Record<
-  string,
-  string[]
-> = {
-  user: ['Assignees', 'Reviewers'],
-  timeperiod: ['Time Estimate', 'Time Tracked'],
-  date: ['Due Date', 'Start Date'],
-  string: ['Status', 'Text'],
-  number: ['Number'],
-}
-
 export const supportedPropertyNames = [
   'assignees',
   'dueDate',
@@ -78,29 +67,6 @@ export function getLabelOfProp(propName: string): string {
     case 'assignees':
     default:
       return capitalize(propName)
-  }
-}
-
-export function getIconPathOfPropType(
-  type: PropType | StaticPropType | PropSubType
-): string | undefined {
-  switch (type) {
-    case 'creation_date':
-      return mdiClockOutline
-    case 'update_date':
-      return mdiContentSaveOutline
-    case 'date':
-      return mdiCalendarMonthOutline
-    case 'timeperiod':
-      return mdiTimerOutline
-    case 'user':
-      return mdiAccountOutline
-    case 'label':
-      return mdiLabelOutline
-    case 'string':
-      return mdiArrowDownDropCircleOutline
-    default:
-      return
   }
 }
 
@@ -167,4 +133,64 @@ export function isPropFilled(
   }
 
   return true
+}
+
+/// ### NEW CONVENTIONS
+
+export const ConditionNameSuggestionsPerTypeOrSubType: Record<
+  string,
+  string[]
+> = {
+  user: ['Assignees', 'Reviewers'],
+  timeperiod: ['Time Estimate', 'Time Tracked'],
+  date: ['Due Date', 'Start Date'],
+  string: ['Status', 'Text'],
+  number: ['Number'],
+}
+
+export function getIconPathOfPropType(
+  type: PropType | StaticPropType | PropSubType
+): string | undefined {
+  switch (type) {
+    case 'creation_date':
+      return mdiClockOutline
+    case 'update_date':
+      return mdiContentSaveOutline
+    case 'date':
+      return mdiCalendarMonthOutline
+    case 'timeperiod':
+      return mdiTimerOutline
+    case 'user':
+      return mdiAccountOutline
+    case 'label':
+      return mdiLabelOutline
+    case 'string':
+      return mdiArrowDownDropCircleOutline
+    default:
+      return
+  }
+}
+
+export function getInitialPropDataOfPropType(
+  type: PropType | PropSubType
+): SerializedPropData {
+  switch (type) {
+    case 'date':
+      return { type: 'date', data: undefined, createdAt: new Date().toString() }
+    case 'timeperiod':
+      return {
+        type: 'json',
+        data: { dataType: 'timeperiod', data: null },
+        createdAt: new Date().toString(),
+      }
+    case 'user':
+      return { type: 'user', data: undefined, createdAt: new Date().toString() }
+    case 'string':
+    default:
+      return {
+        type: 'string',
+        data: undefined,
+        createdAt: new Date().toString(),
+      }
+  }
 }

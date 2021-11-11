@@ -4,6 +4,7 @@ import Flexbox from '../../../design/components/atoms/Flexbox'
 import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
+import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedView, ViewParent } from '../../interfaces/db/view'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import UpdateDashboardModal from '../Modal/contents/SmartView/UpdateSmartViewModal'
@@ -15,6 +16,7 @@ interface ViewsListProps {
   parent: ViewParent
   docs: SerializedDocWithSupplemental[]
   currentUserIsCoreMember: boolean
+  team: SerializedTeam
 }
 
 const ViewsList = ({
@@ -22,6 +24,7 @@ const ViewsList = ({
   parent,
   docs,
   currentUserIsCoreMember,
+  team,
 }: ViewsListProps) => {
   const targetIdRef = useRef(parent.target.id)
   const [selectedViewId, setSelectedViewId] = useState<number | undefined>(() =>
@@ -70,6 +73,7 @@ const ViewsList = ({
               views={views}
             />
           }
+          team={team}
           filterButton={
             parent.type === 'smartView' ? (
               <Button
