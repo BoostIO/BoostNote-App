@@ -27,6 +27,7 @@ const TableCol = ({
   return (
     <>
       <Container
+        className='table__col'
         style={style}
         onClick={onClick}
         onContextMenu={onContextMenu}
@@ -44,7 +45,7 @@ const TableCol = ({
 export default TableCol
 
 const Container = styled.div`
-  padding: ${({ theme }) => theme.sizes.spaces.xsm}px
+  padding: ${({ theme }) => theme.sizes.spaces.df}px
     ${({ theme }) => theme.sizes.spaces.sm}px;
   &:last-child {
     border-right: none;
@@ -53,6 +54,7 @@ const Container = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  color: ${({ theme }) => theme.colors.text.subtle};
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.background.secondary};
