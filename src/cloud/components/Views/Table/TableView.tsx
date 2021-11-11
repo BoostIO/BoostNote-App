@@ -19,7 +19,11 @@ import {
 } from '../../../lib/props'
 import { getArrayFromRecord } from '../../../lib/utils/array'
 import { getDocTitle } from '../../../lib/utils/patterns'
-import { Column, ViewTableData } from '../../../lib/views/table'
+import {
+  Column,
+  sortTableViewColumns,
+  ViewTableData,
+} from '../../../lib/views/table'
 import PropPicker from '../../Props/PropPicker'
 import TablePropertiesContext from './TablePropertiesContext'
 import TableAddPropertyContext from './TableAddPropertyContext'
@@ -154,6 +158,10 @@ const TableView = ({
     }
   }, [state, updateViewApi, view])
 
+  const orderedColumns = useMemo(() => {
+    return sortTableViewColumns(columns)
+  }, [columns])
+
   return (
     <Container>
       <Flexbox
@@ -207,7 +215,7 @@ const TableView = ({
             children: 'Title',
             width: 300,
           },
-          ...getArrayFromRecord(columns).map((col) => {
+          ...orderedColumns.map((col) => {
             const icon = getIconPathOfPropType(col.id.split(':').pop() as any)
             return {
               id: col.id,
@@ -241,7 +249,7 @@ const TableView = ({
                   />
                 ),
               },
-              ...getArrayFromRecord(columns).map((col) => {
+              ...orderedColumns.map((col) => {
                 const propType = col.id.split(':').pop() as any
                 const propName = col.id.split(':')[1]
                 const propData =
