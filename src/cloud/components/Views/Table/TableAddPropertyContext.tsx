@@ -1,11 +1,3 @@
-import {
-  mdiAccountOutline,
-  mdiArrowDownCircleOutline,
-  mdiCalendarMonthOutline,
-  mdiClockOutline,
-  mdiContentSaveOutline,
-  mdiLabelOutline,
-} from '@mdi/js'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 import ColoredBlock from '../../../../design/components/atoms/ColoredBlock'
@@ -15,6 +7,7 @@ import MetadataContainerRow from '../../../../design/components/organisms/Metada
 import styled from '../../../../design/lib/styled'
 import { PropType, StaticPropType } from '../../../interfaces/db/props'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
+import { getIconPathOfPropType } from '../../../lib/props'
 import { Column, makeTablePropColId } from '../../../lib/views/table'
 
 interface TableAddPropertyContextProps {
@@ -118,7 +111,7 @@ const TableAddPropertyContext = ({
             type: 'button',
             props: {
               label: 'Date',
-              iconPath: mdiCalendarMonthOutline,
+              iconPath: getIconPathOfPropType('date'),
               disabled: isColumnNameInvalid,
               id: 'new-date-col',
               onClick: () => addCol('date'),
@@ -131,7 +124,7 @@ const TableAddPropertyContext = ({
             props: {
               label: 'Person',
               id: 'new-person-col',
-              iconPath: mdiAccountOutline,
+              iconPath: getIconPathOfPropType('user'),
               disabled: isColumnNameInvalid,
               onClick: () => addCol('user'),
             },
@@ -143,7 +136,7 @@ const TableAddPropertyContext = ({
             props: {
               label: 'Time',
               id: 'new-time-col',
-              iconPath: mdiAccountOutline,
+              iconPath: getIconPathOfPropType('timeperiod'),
               disabled: isColumnNameInvalid,
               onClick: () => addCol('json', 'timeperiod'),
             },
@@ -154,7 +147,7 @@ const TableAddPropertyContext = ({
             type: 'button',
             props: {
               label: 'Status',
-              iconPath: mdiArrowDownCircleOutline,
+              iconPath: getIconPathOfPropType('string'),
               disabled: true,
             },
           }}
@@ -166,7 +159,7 @@ const TableAddPropertyContext = ({
             props: {
               label: 'Label',
               id: 'new-label-col',
-              iconPath: mdiLabelOutline,
+              iconPath: getIconPathOfPropType('label'),
               disabled: isColumnNameInvalid,
               onClick: () => addStaticCol('label'),
             },
@@ -178,7 +171,7 @@ const TableAddPropertyContext = ({
             props: {
               label: 'Creation Date',
               id: 'new-creation-date-col',
-              iconPath: mdiClockOutline,
+              iconPath: getIconPathOfPropType('creation_date'),
               disabled: isColumnNameInvalid,
               onClick: () => addStaticCol('creation_date'),
             },
@@ -190,7 +183,7 @@ const TableAddPropertyContext = ({
             props: {
               label: 'Update Date',
               id: 'new-update-date-col',
-              iconPath: mdiContentSaveOutline,
+              iconPath: getIconPathOfPropType('update_date'),
               disabled: isColumnNameInvalid,
               onClick: () => addStaticCol('update_date'),
             },
