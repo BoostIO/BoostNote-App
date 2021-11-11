@@ -13,7 +13,10 @@ import {
 import { capitalize } from 'lodash'
 import {
   FilledSerializedPropData,
+  PropSubType,
+  PropType,
   SerializedPropData,
+  StaticPropType,
 } from '../interfaces/db/props'
 
 export const ConditionNameSuggestionsPerTypeOrSubType: Record<
@@ -125,6 +128,29 @@ export function getLabelOfProp(propName: string): string {
     case 'assignees':
     default:
       return capitalize(propName)
+  }
+}
+
+export function getIconPathOfPropType(
+  type: PropType | StaticPropType | PropSubType
+): string | undefined {
+  switch (type) {
+    case 'creation_date':
+      return mdiClockOutline
+    case 'update_date':
+      return mdiContentSaveOutline
+    case 'date':
+      return mdiCalendarMonthOutline
+    case 'timeperiod':
+      return mdiTimerOutline
+    case 'user':
+      return mdiAccountOutline
+    case 'label':
+      return mdiLabelOutline
+    case 'string':
+      return mdiArrowDownDropCircleOutline
+    default:
+      return
   }
 }
 

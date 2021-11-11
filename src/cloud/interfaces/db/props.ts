@@ -25,5 +25,6 @@ export type SerializedPropData =
 
 export type PropType = SerializedPropData['type']
 export type StaticPropType = 'creation_date' | 'update_date' | 'label'
+export type PropSubType = 'timeperiod'
 
 export type Props = Record<string, SerializedPropData>

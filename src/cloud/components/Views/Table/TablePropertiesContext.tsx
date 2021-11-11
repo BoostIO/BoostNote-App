@@ -5,17 +5,12 @@ import Flexbox from '../../../../design/components/atoms/Flexbox'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import styled from '../../../../design/lib/styled'
-import {
-  getIconPathOfProp,
-  getInitialPropDataOfProp,
-  getLabelOfProp,
-  supportedPropertyNames,
-} from '../../../lib/props'
+import { getIconPathOfPropType } from '../../../lib/props'
 import {
   getArrayFromRecord,
   sortByAttributeAsc,
 } from '../../../lib/utils/array'
-import { Column, makeTablePropColId } from '../../../lib/views/table'
+import { Column } from '../../../lib/views/table'
 
 interface TablePropertiesContextProps {
   columns: Record<string, Column>
@@ -25,26 +20,11 @@ interface TablePropertiesContextProps {
 
 const TablePropertiesContext = ({
   columns: viewColumns,
-  addColumn,
   removeColumn,
 }: TablePropertiesContextProps) => {
   const menuRef = useRef<HTMLDivElement>(null)
   const [activeColumns, setActiveColumns] = useState(
     getArrayFromRecord(viewColumns)
-  )
-
-  const addCol = useCallback(
-    (col: Column) => {
-      setActiveColumns((prev) => {
-        const newArray = prev.slice()
-        if (newArray.findIndex((element) => element.name === col.name) === -1) {
-          newArray.push(col)
-          addColumn(col)
-        }
-        return newArray
-      })
-    },
-    [addColumn]
   )
 
   const removeCol = useCallback(
@@ -61,11 +41,6 @@ const TablePropertiesContext = ({
     return sortByAttributeAsc('name', activeColumns)
   }, [activeColumns])
 
-  const unusedProperties = useMemo(() => {
-    const activeCols = sortedActiveCols.map((col) => col.id.split(':')[1])
-    return supportedPropertyNames.filter((value) => !activeCols.includes(value))
-  }, [sortedActiveCols])
-
   return (
     <Container ref={menuRef}>
       <MetadataContainer>
@@ -79,7 +54,7 @@ const TablePropertiesContext = ({
                 key={`prop-${col.name}-${i}`}
                 row={{
                   type: 'content',
-                  icon: getIconPathOfProp(col.id.split(':')[1]),
+                  icon: getIconPathOfPropType(col.id.split(':').pop() as any),
                   label: col.name,
                   content: (
                     <Flexbox justifyContent='flex-end'>
@@ -95,35 +70,6 @@ const TablePropertiesContext = ({
                 }}
               />
             ))}
-          </>
-        )}
-        {unusedProperties.length > 0 && (
-          <>
-            <MetadataContainerRow
-              row={{ type: 'header', content: 'Add Properties' }}
-            />
-            {unusedProperties.map((propName, i) => {
-              const initialData = getInitialPropDataOfProp(propName)
-              return (
-                <MetadataContainerRow
-                  key={`prop-${propName}-${i}`}
-                  row={{
-                    type: 'button',
-                    props: {
-                      id: `prop-${propName}-${i}`,
-                      iconPath: getIconPathOfProp(propName),
-                      label: getLabelOfProp(propName),
-                      onClick: () =>
-                        addCol({
-                          id: makeTablePropColId(propName, initialData.type),
-                          name: getLabelOfProp(propName),
-                          type: initialData.type,
-                        }),
-                    },
-                  }}
-                />
-              )
-            })}
           </>
         )}
       </MetadataContainer>
