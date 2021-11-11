@@ -20,6 +20,7 @@ interface TimePeriodPickerProps {
   value?: number | null
   disabled?: boolean
   isReadOnly?: boolean
+  isErrored?: boolean
   onPeriodChange: (newVal: number | null) => void
   popupAlignment?: 'bottom-left' | 'top-left'
 }
@@ -29,6 +30,7 @@ const TimePeriodPicker = ({
   disabled,
   sending,
   value,
+  isErrored,
   isReadOnly = false,
   popupAlignment = 'bottom-left',
   onPeriodChange,
@@ -70,6 +72,7 @@ const TimePeriodPicker = ({
         disabled={disabled}
         empty={parsedValue == null}
         isReadOnly={isReadOnly}
+        isErrored={isErrored}
         iconPath={mdiClockOutline}
         sending={sending}
         onClick={(e) =>

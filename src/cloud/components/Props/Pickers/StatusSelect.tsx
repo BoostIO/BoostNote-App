@@ -23,6 +23,7 @@ interface StatusSelectProps {
   sending?: boolean
   status?: DocStatus | null
   disabled?: boolean
+  isErrored?: boolean
   isReadOnly: boolean
   onClick?: (event: React.MouseEvent) => void
   onStatusChange: (status: DocStatus | null) => void
@@ -32,6 +33,7 @@ const StatusSelect = ({
   status,
   sending,
   disabled,
+  isErrored,
   isReadOnly,
   onStatusChange,
   onClick,
@@ -41,6 +43,7 @@ const StatusSelect = ({
     <Container className='item__status__select prop__margin'>
       <PropertyValueButton
         sending={sending}
+        isErrored={isErrored}
         isReadOnly={isReadOnly}
         empty={status == null}
         disabled={disabled}
