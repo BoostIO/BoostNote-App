@@ -14,7 +14,6 @@ import { Column } from '../../../lib/views/table'
 
 interface TablePropertiesContextProps {
   columns: Record<string, Column>
-  addColumn: (col: Column) => void
   removeColumn: (col: Column) => void
 }
 
