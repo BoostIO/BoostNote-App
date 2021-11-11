@@ -22,6 +22,7 @@ interface DueDateSelectProps {
   disabled?: boolean
   shortenedLabel?: boolean
   portalId?: string
+  isErrored?: boolean
 }
 
 const DueDateSelect = ({
@@ -29,6 +30,7 @@ const DueDateSelect = ({
   sending,
   disabled,
   isReadOnly,
+  isErrored,
   shortenedLabel,
   dueDate: dueDateString,
   onDueDateChange,
@@ -75,6 +77,7 @@ const DueDateSelect = ({
             sending={sending}
             empty={dueDate == null}
             isReadOnly={isReadOnly}
+            isErrored={isErrored}
             iconPath={
               !isDue ? mdiCalendarMonthOutline : mdiCalendarRemoveOutline
             }

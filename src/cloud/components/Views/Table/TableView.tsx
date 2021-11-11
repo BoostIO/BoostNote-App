@@ -243,13 +243,19 @@ const TableView = ({
                 const propData =
                   (doc.props || {})[propName] ||
                   getInitialPropDataOfPropType(propType)
+
+                const isPropDataAccurate =
+                  propData.type === propType ||
+                  (propData.type === 'json' &&
+                    propData.data.dataType === propType)
                 return {
                   children: (
                     <PropPicker
                       parent={{ type: 'doc', target: doc }}
                       propName={propName}
                       propData={propData}
-                      readOnly={!currentUserIsCoreMember}
+                      readOnly={!currentUserIsCoreMember || !isPropDataAccurate}
+                      isErrored={!isPropDataAccurate}
                       portalId={`portal-anchor-${view.id}`}
                     />
                   ),
@@ -298,6 +304,17 @@ const Container = styled.div`
   .th__cell__icon {
     margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
     color: ${({ theme }) => theme.colors.text.subtle};
+  }
+
+  .item__property__button,
+  .react-datepicker-wrapper {
+    width: 100%;
+    border-radius: 0 !important;
+  }
+
+  .item__property__button {
+    padding: ${({ theme }) => theme.sizes.spaces.md}px
+      ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 `
 

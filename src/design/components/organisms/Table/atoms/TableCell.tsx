@@ -2,6 +2,7 @@ import React, { CSSProperties, useMemo } from 'react'
 import styled from '../../../../lib/styled'
 import { TableCellProps } from '../tableInterfaces'
 import TableSlider from './TableSlider'
+import cc from 'classcat'
 
 interface InternalTableCellProps extends TableCellProps {
   width?: number
@@ -9,6 +10,8 @@ interface InternalTableCellProps extends TableCellProps {
 
 const TableCell = ({
   width = 80,
+  addPadding,
+  className,
   onClick,
   onContextMenu,
   onDrop,
@@ -25,6 +28,12 @@ const TableCell = ({
   return (
     <>
       <Container
+        className={cc([
+          'table__row__cell',
+          onClick != null && 'table__row__cell--interactive',
+          !addPadding && 'table__row__cell--no-padding',
+          className,
+        ])}
         style={style}
         onClick={onClick}
         onContextMenu={onContextMenu}
@@ -40,8 +49,6 @@ const TableCell = ({
 export default TableCell
 
 const Container = styled.div`
-  padding: ${({ theme }) => theme.sizes.spaces.xsm}px
-    ${({ theme }) => theme.sizes.spaces.sm}px;
   min-width: 80px;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -50,7 +57,12 @@ const Container = styled.div`
     border-right: none;
   }
 
-  &:hover {
+  &.not(.table__row__cell--no-padding) {
+    padding: ${({ theme }) => theme.sizes.spaces.xsm}px
+      ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  &.table__row__cell--interactive:hover {
     background-color: ${({ theme }) => theme.colors.background.secondary};
   }
 `
