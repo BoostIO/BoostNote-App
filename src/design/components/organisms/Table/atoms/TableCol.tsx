@@ -8,7 +8,7 @@ interface InternalTableColProps extends TableColProps {
 }
 
 const TableCol = ({
-  name,
+  children: name,
   width = 80,
   onClick,
   onContextMenu,

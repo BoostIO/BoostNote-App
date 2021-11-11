@@ -20,7 +20,7 @@ export type TableCellProps = React.PropsWithChildren<{
 
 export interface TableColProps {
   id?: string
-  name: string
+  children: React.ReactNode
   width?: number
   onClick?: MouseEventHandler
   onContextMenu?: MouseEventHandler
