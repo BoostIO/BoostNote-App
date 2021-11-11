@@ -1,10 +1,13 @@
-import { mdiTrashCanOutline } from '@mdi/js'
+import { mdiChevronRight, mdiTrashCanOutline } from '@mdi/js'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useEffectOnce } from 'react-use'
+import Button from '../../../design/components/atoms/Button'
+import Icon from '../../../design/components/atoms/Icon'
 import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
 import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { useModal } from '../../../design/lib/stores/modal'
+import styled from '../../../design/lib/styled'
 import { SerializedPropData } from '../../interfaces/db/props'
 import {
   getIconPathOfPropType,
@@ -56,7 +59,7 @@ const PropConfig = ({
   })
 
   return (
-    <MetadataContainer>
+    <StyledContainer>
       <MetadataContainerRow row={{ type: 'header', content: 'NAME' }} />
       <MetadataContainerRow
         row={{
@@ -94,50 +97,57 @@ const PropConfig = ({
       />
       <MetadataContainerRow
         row={{
-          type: 'button',
-          props: {
-            label: getLabelOfPropType(newProp.data.type),
-            iconPath: getIconPathOfPropType(newProp.data.type),
-            onClick: (event) => {
-              openContextModal(
-                event,
-                <MetadataContainer>
-                  {supportedPropTypes.map((propType) => (
-                    <MetadataContainerRow
-                      key={propType}
-                      row={{
-                        type: 'button',
-                        props: {
-                          id: `prop-modal-${propType}`,
-                          label: getLabelOfPropType(propType),
-                          iconPath: getIconPathOfPropType(propType),
-                          onClick: () => {
-                            setNewProp((prev) => {
-                              return prev.data.type === propType
-                                ? prev
-                                : {
-                                    ...prev,
-                                    data: getInitialPropDataOfPropType(
-                                      propType
-                                    ),
-                                  }
-                            })
-                            closeLastModal()
+          type: 'content',
+          content: (
+            <Button
+              variant='transparent'
+              className='metadata__button prop__config__submenu__button'
+              iconPath={getIconPathOfPropType(newProp.data.type)}
+              iconSize={16}
+              onClick={(event) => {
+                openContextModal(
+                  event,
+                  <MetadataContainer>
+                    {supportedPropTypes.map((propType) => (
+                      <MetadataContainerRow
+                        key={propType}
+                        row={{
+                          type: 'button',
+                          props: {
+                            id: `prop-modal-${propType}`,
+                            label: getLabelOfPropType(propType),
+                            iconPath: getIconPathOfPropType(propType),
+                            onClick: () => {
+                              setNewProp((prev) => {
+                                return prev.data.type === propType
+                                  ? prev
+                                  : {
+                                      ...prev,
+                                      data: getInitialPropDataOfPropType(
+                                        propType
+                                      ),
+                                    }
+                              })
+                              closeLastModal()
+                            },
                           },
-                        },
-                      }}
-                    />
-                  ))}
-                </MetadataContainer>,
-                {
-                  alignment: 'right',
-                  keepAll: true,
-                  width: 200,
-                  removePadding: true,
-                }
-              )
-            },
-          },
+                        }}
+                      />
+                    ))}
+                  </MetadataContainer>,
+                  {
+                    alignment: 'right',
+                    keepAll: true,
+                    width: 200,
+                    removePadding: true,
+                  }
+                )
+              }}
+            >
+              <span>{getLabelOfPropType(newProp.data.type)}</span>
+              <Icon path={mdiChevronRight} size={16} />
+            </Button>
+          ),
         }}
       />
       <MetadataContainerRow
@@ -154,8 +164,19 @@ const PropConfig = ({
           },
         }}
       />
-    </MetadataContainer>
+    </StyledContainer>
   )
 }
 
 export default PropConfig
+
+const StyledContainer = styled(MetadataContainer)`
+  .prop__config__submenu__button {
+    & .button__label {
+      flex-grow: 1;
+      & span {
+        flex-grow: 1;
+      }
+    }
+  }
+`
