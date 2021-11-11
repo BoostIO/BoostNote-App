@@ -17,7 +17,7 @@ export type MetadataContainerRowProps = (
       direction?: 'row' | 'column'
       content?: React.ReactNode
       icon?: string
-      label: string
+      label?: string
     }
   | { type: 'header'; content: React.ReactNode }
 ) & {
