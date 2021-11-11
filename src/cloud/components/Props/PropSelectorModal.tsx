@@ -60,6 +60,7 @@ const PropSelectorModal = ({
           row={{
             type: 'button',
             props: {
+              disabled: propType === 'status',
               id: `prop-modal-${propType}`,
               label: getLabelOfPropType(propType),
               iconPath: getIconPathOfPropType(propType),
