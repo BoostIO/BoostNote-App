@@ -50,6 +50,8 @@ export async function updateView(
   view: SerializedView,
   body: UpdateViewRequestBody
 ) {
+  console.log(`last body--`)
+  console.log(body)
   return callApi<UpdateViewResponseBody>(`/api/views/${view.id}`, {
     json: body,
     method: 'patch',

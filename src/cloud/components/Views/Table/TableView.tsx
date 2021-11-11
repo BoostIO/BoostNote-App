@@ -47,7 +47,7 @@ const TableView = ({
   team,
 }: TableViewProps) => {
   const { sendingMap, deleteViewApi, updateViewApi } = useCloudApi()
-  const { openContextModal } = useModal()
+  const { openContextModal, closeAllModals } = useModal()
   const { push } = useRouter()
   const [state, setState] = useState<ViewTableData>(
     Object.assign({}, view.data as ViewTableData)
@@ -82,20 +82,22 @@ const TableView = ({
   const addColumn = useCallback(
     (col: Column) => {
       if (
-        getArrayFromRecord(columns).findIndex(
+        getArrayFromRecord(state.columns).findIndex(
           (val) => val.name === col.name
         ) !== -1
       ) {
         return
       }
-      setState((prev) => {
-        return {
-          ...prev,
-          columns: Object.assign(columns, { [col.id]: col }),
-        }
+
+      const newState = Object.assign(state, {
+        columns: Object.assign(state.columns, { [col.id]: col }),
+      })
+      setState(newState)
+      return updateViewApi(view, {
+        data: newState,
       })
     },
-    [columns]
+    [state, updateViewApi, view]
   )
 
   const removeColumn = useCallback(
@@ -117,6 +119,7 @@ const TableView = ({
   )
 
   const actionsRef = useRef({ addColumn, removeColumn, setFilters })
+
   useEffect(() => {
     actionsRef.current = {
       addColumn: addColumn,
@@ -134,6 +137,7 @@ const TableView = ({
       if (event.detail.target !== view.id.toString()) {
         return
       }
+
       switch (event.detail.type) {
         case 'save':
           return updateViewApi(view, {
@@ -162,12 +166,12 @@ const TableView = ({
           {filterButton}
           <Button
             variant='transparent'
+            disabled={Object.keys(columns).length === 0}
             onClick={(ev) =>
               openContextModal(
                 ev,
                 <TablePropertiesContext
                   columns={columns}
-                  addColumn={actionsRef.current.addColumn}
                   removeColumn={actionsRef.current.removeColumn}
                 />,
                 {
@@ -269,18 +273,16 @@ const TableView = ({
             ev,
             <TableAddPropertyContext
               columns={columns}
-              addColumn={actionsRef.current.addColumn}
+              addColumn={(col) => {
+                actionsRef.current.addColumn(col)
+                closeAllModals()
+              }}
             />,
             {
               width: 250,
               hideBackground: true,
               removePadding: true,
               alignment: 'bottom-left',
-              onClose: () =>
-                TableViewEventEmitter.dispatch({
-                  type: 'save',
-                  target: view.id.toString(),
-                }),
             }
           )
         }
