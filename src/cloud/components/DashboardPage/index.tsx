@@ -142,12 +142,13 @@ const SmartViewPage = ({ data }: SmartViewListPageResponseBody) => {
               <Icon path={mdiChevronDown} />
             </Button>
           </Flexbox>
-          {selectedSmartView != null ? (
+          {selectedSmartView != null && team != null ? (
             <>
               {sendingMap.get(selectedSmartView.id) === 'list-views' ? (
                 <Spinner />
               ) : (
                 <Views
+                  team={team}
                   views={selectedSmartViewViews}
                   parent={{ type: 'smartView', target: selectedSmartView }}
                   docs={selectedSmartViewDocs}
