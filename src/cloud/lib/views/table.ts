@@ -35,17 +35,11 @@ export function isColumn(item: any): item is Column {
 }
 
 export function isPropCol(item: any): item is PropCol {
-  return (
-    item != null && typeof item.id === 'string' && typeof item.name === 'string'
-  )
+  return item != null && typeof item.type === 'string'
 }
 
 export function isStaticPropCol(item: any): item is StaticPropCol {
-  return (
-    item != null &&
-    typeof item.prop === 'string' &&
-    typeof item.name === 'string'
-  )
+  return item != null && typeof item.prop === 'string'
 }
 
 export type ViewTable = Column[]
@@ -65,16 +59,18 @@ export function getInsertedColumnOrder(columns: Record<string, Column>) {
   }
 }
 
+export type ColumnMoveType =
+  | 'before'
+  | 'after'
+  | {
+      targetId: string
+      type: 'before' | 'after'
+    }
+
 export function getColumnOrderAfterMove(
   columns: Record<string, Column>,
   movedColumnId: string,
-  move:
-    | 'before'
-    | 'after'
-    | {
-        targetId: string
-        type: 'before' | 'after'
-      }
+  move: ColumnMoveType
 ): string | undefined {
   const colValues = sortTableViewColumns(columns)
   const movedColumnIndex = colValues.findIndex(

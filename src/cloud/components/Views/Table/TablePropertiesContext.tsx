@@ -1,9 +1,10 @@
 import { mdiTrashCanOutline } from '@mdi/js'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
-import Button from '../../../../design/components/atoms/Button'
+import { LoadingButton } from '../../../../design/components/atoms/Button'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import styled from '../../../../design/lib/styled'
 import { getIconPathOfPropType } from '../../../lib/props'
 import {
@@ -14,7 +15,7 @@ import { Column } from '../../../lib/views/table'
 
 interface TablePropertiesContextProps {
   columns: Record<string, Column>
-  removeColumn: (col: Column) => void
+  removeColumn: (col: Column) => Promise<BulkApiActionRes>
 }
 
 const TablePropertiesContext = ({
@@ -25,15 +26,24 @@ const TablePropertiesContext = ({
   const [activeColumns, setActiveColumns] = useState(
     getArrayFromRecord(viewColumns)
   )
+  const [sending, setSending] = useState<string>()
 
   const removeCol = useCallback(
-    (col: Column) => {
-      setActiveColumns((prev) => {
-        return prev.slice().filter((elem) => elem.id !== col.id)
-      })
-      removeColumn(col)
+    async (col: Column) => {
+      if (sending != null) {
+        return
+      }
+
+      setSending(`${col.id}-delete`)
+      const res = await removeColumn(col)
+      if (!res.err) {
+        setActiveColumns((prev) => {
+          return prev.slice().filter((elem) => elem.id !== col.id)
+        })
+      }
+      setSending(undefined)
     },
-    [removeColumn]
+    [removeColumn, sending]
   )
 
   const sortedActiveCols = useMemo(() => {
@@ -54,8 +64,10 @@ const TablePropertiesContext = ({
                 label: col.name,
                 content: (
                   <Flexbox justifyContent='flex-end'>
-                    <Button
+                    <LoadingButton
                       variant='icon'
+                      disabled={sending != null}
+                      spinning={sending === `${col.id}-delete`}
                       iconPath={mdiTrashCanOutline}
                       onClick={() => removeCol(col)}
                       id={`prop-active-${col.id.split(':')[1]}-${i}`}
@@ -67,12 +79,7 @@ const TablePropertiesContext = ({
             />
           ))
         ) : (
-          <MetadataContainerRow
-            row={{
-              type: 'content',
-              content: 'No columns left to manage.',
-            }}
-          />
+          <div className='metadata__item'>No columns left to manage.</div>
         )}
       </MetadataContainer>
     </Container>
