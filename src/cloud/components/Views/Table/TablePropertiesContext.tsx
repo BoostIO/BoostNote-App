@@ -43,33 +43,36 @@ const TablePropertiesContext = ({
   return (
     <Container ref={menuRef}>
       <MetadataContainer>
-        {sortedActiveCols.length > 0 && (
-          <>
+        <MetadataContainerRow row={{ type: 'header', content: 'Properties' }} />
+        {sortedActiveCols.length > 0 ? (
+          sortedActiveCols.map((col, i) => (
             <MetadataContainerRow
-              row={{ type: 'header', content: 'Properties' }}
+              key={`prop-${col.name}-${i}`}
+              row={{
+                type: 'content',
+                icon: getIconPathOfPropType(col.id.split(':').pop() as any),
+                label: col.name,
+                content: (
+                  <Flexbox justifyContent='flex-end'>
+                    <Button
+                      variant='icon'
+                      iconPath={mdiTrashCanOutline}
+                      onClick={() => removeCol(col)}
+                      id={`prop-active-${col.id.split(':')[1]}-${i}`}
+                      size='sm'
+                    />
+                  </Flexbox>
+                ),
+              }}
             />
-            {sortedActiveCols.map((col, i) => (
-              <MetadataContainerRow
-                key={`prop-${col.name}-${i}`}
-                row={{
-                  type: 'content',
-                  icon: getIconPathOfPropType(col.id.split(':').pop() as any),
-                  label: col.name,
-                  content: (
-                    <Flexbox justifyContent='flex-end'>
-                      <Button
-                        variant='icon'
-                        iconPath={mdiTrashCanOutline}
-                        onClick={() => removeCol(col)}
-                        id={`prop-active-${col.id.split(':')[1]}-${i}`}
-                        size='sm'
-                      />
-                    </Flexbox>
-                  ),
-                }}
-              />
-            ))}
-          </>
+          ))
+        ) : (
+          <MetadataContainerRow
+            row={{
+              type: 'content',
+              content: 'No columns left to manage.',
+            }}
+          />
         )}
       </MetadataContainer>
     </Container>
