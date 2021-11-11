@@ -77,8 +77,7 @@ export default PropertyValueButton
 const ButtonContainer = styled.button`
   display: flex;
   width: fit-content;
-  height: 100%;
-  min-height: 32px;
+  height: 32px;
   display: flex;
   justify-content: left;
   align-items: center;
