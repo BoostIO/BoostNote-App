@@ -21,6 +21,7 @@ import {
   Column,
   ColumnMoveType,
   getColumnOrderAfterMove,
+  isStaticPropCol,
   sortTableViewColumns,
   ViewTableData,
 } from '../../../lib/views/table'
@@ -34,6 +35,8 @@ import { SerializedTeam } from '../../../interfaces/db/team'
 import { useRouter } from '../../../lib/router'
 import ColumnSettingsContext from './ColSettingsContext'
 import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
+import DocTagsList from '../../DocPage/DocTagsList'
+import { getFormattedBoosthubDateTime } from '../../../lib/date'
 
 type TableViewProps = {
   view: SerializedView
@@ -251,27 +254,60 @@ const TableView = ({
                 ),
               },
               ...orderedColumns.map((col) => {
-                const propType = col.id.split(':').pop() as any
-                const propName = col.id.split(':')[1]
-                const propData =
-                  (doc.props || {})[propName] ||
-                  getInitialPropDataOfPropType(propType)
+                if (isStaticPropCol(col)) {
+                  switch (col.prop) {
+                    case 'creation_date':
+                    case 'update_date':
+                      return {
+                        children: (
+                          <Flexbox className='static__dates'>
+                            {getFormattedBoosthubDateTime(
+                              doc[
+                                col.prop === 'creation_date'
+                                  ? 'createdAt'
+                                  : 'updatedAt'
+                              ]
+                            )}
+                          </Flexbox>
+                        ),
+                      }
+                    case 'label':
+                    default:
+                      return {
+                        children: (
+                          <DocTagsList
+                            doc={doc}
+                            team={team}
+                            readOnly={!currentUserIsCoreMember}
+                          />
+                        ),
+                      }
+                  }
+                } else {
+                  const propType = col.id.split(':').pop() as any
+                  const propName = col.id.split(':')[1]
+                  const propData =
+                    (doc.props || {})[propName] ||
+                    getInitialPropDataOfPropType(propType)
 
-                const isPropDataAccurate =
-                  propData.type === propType ||
-                  (propData.type === 'json' &&
-                    propData.data.dataType === propType)
-                return {
-                  children: (
-                    <PropPicker
-                      parent={{ type: 'doc', target: doc }}
-                      propName={propName}
-                      propData={propData}
-                      readOnly={!currentUserIsCoreMember || !isPropDataAccurate}
-                      isErrored={!isPropDataAccurate}
-                      portalId={`portal-anchor-${view.id}`}
-                    />
-                  ),
+                  const isPropDataAccurate =
+                    propData.type === propType ||
+                    (propData.type === 'json' &&
+                      propData.data.dataType === propType)
+                  return {
+                    children: (
+                      <PropPicker
+                        parent={{ type: 'doc', target: doc }}
+                        propName={propName}
+                        propData={propData}
+                        readOnly={
+                          !currentUserIsCoreMember || !isPropDataAccurate
+                        }
+                        isErrored={!isPropDataAccurate}
+                        portalId={`portal-anchor-${view.id}`}
+                      />
+                    ),
+                  }
                 }
               }),
             ],
@@ -337,6 +373,16 @@ const Container = styled.div`
   .item__property__button {
     padding: ${({ theme }) => theme.sizes.spaces.md}px
       ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  .static__dates {
+    height: 100%;
+    justify-content: center;
+    color: ${({ theme }) => theme.colors.text.subtle};
+  }
+
+  .doc__tags__icon {
+    display: none;
   }
 `
 
