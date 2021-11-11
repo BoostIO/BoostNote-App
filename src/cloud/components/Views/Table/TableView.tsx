@@ -381,8 +381,19 @@ const Container = styled.div`
     color: ${({ theme }) => theme.colors.text.subtle};
   }
 
+  .table__row__cell > *,
+  .table__row__cell .react-datepicker-wrapper,
+  .table__row__cell .react-datepicker__input-container {
+    height: 100%;
+  }
+
   .doc__tags__icon {
     display: none;
+  }
+
+  .item__property__button {
+    height: 100% !important;
+    min-height: 32px;
   }
 `
 
