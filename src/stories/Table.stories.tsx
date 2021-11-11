@@ -30,25 +30,25 @@ export const Primary = Template.bind({})
 Primary.args = {
   cols: [
     {
-      name: 'Title',
+      children: 'Title',
     },
     {
-      name: 'Assignees',
+      children: 'Assignees',
     },
     {
-      name: 'Due Date',
+      children: 'Due Date',
     },
     {
-      name: 'Status',
+      children: 'Status',
     },
     {
-      name: 'Assignees',
+      children: 'Assignees',
     },
     {
-      name: 'Due Date',
+      children: 'Due Date',
     },
     {
-      name: 'Status',
+      children: 'Status',
     },
   ],
   rows: [

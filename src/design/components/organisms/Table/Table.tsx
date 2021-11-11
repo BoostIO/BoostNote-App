@@ -39,7 +39,7 @@ const Table: AppComponent<TableProps> = ({
       <Scroller className='table__wrapper'>
         <div className='table__header'>
           {cols.map((col) => (
-            <TableCol {...col} key={`head-${col.name}`} />
+            <TableCol {...col} key={`head-${col.children}`} />
           ))}
           {!disabledAddColumn && (
             <button
