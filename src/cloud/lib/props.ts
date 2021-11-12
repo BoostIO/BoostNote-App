@@ -29,57 +29,32 @@ export const supportedPropertyNames = [
   'timeTracked',
 ]
 
-export const supportedPropTypes = ['date', 'timeperiod', 'status', 'user']
+export const supportedPropTypes: {
+  type: PropType
+  subType?: PropSubType
+}[] = [
+  { type: 'date' },
+  { type: 'json', subType: 'timeperiod' },
+  { type: 'string' },
+  { type: 'user' },
+]
 
-export function getLabelOfPropType(propType: string): string {
+export function getLabelOfPropType(
+  propType: PropType | StaticPropType | PropSubType
+): string {
   switch (propType) {
     case 'timeperiod':
-      return 'Time Period'
+      return 'Time'
     case 'user':
       return 'Person'
-    case 'date':
-    case 'status':
+    case 'creation_date':
+      return 'Creation Date'
+    case 'update_date':
+      return 'Update Date'
+    case 'string':
+      return 'Status'
     default:
       return capitalize(propType)
-  }
-}
-
-export function getIconPathOfPropType(propType: string): string | undefined {
-  switch (propType) {
-    case 'timeperiod':
-      return mdiTimerOutline
-    case 'date':
-      return mdiCalendarMonthOutline
-    case 'status':
-      return mdiArrowDownDropCircleOutline
-    case 'user':
-      return mdiAccountOutline
-    default:
-      return
-  }
-}
-
-export function getInitialPropDataOfPropType(
-  propType: string
-): SerializedPropData {
-  switch (propType) {
-    case 'date':
-      return { type: 'date', data: undefined, createdAt: new Date().toString() }
-    case 'timeperiod':
-      return {
-        type: 'json',
-        data: { dataType: 'timeperiod', data: null },
-        createdAt: new Date().toString(),
-      }
-    case 'user':
-      return { type: 'user', data: undefined, createdAt: new Date().toString() }
-    case 'status':
-    default:
-      return {
-        type: 'string',
-        data: undefined,
-        createdAt: new Date().toString(),
-      }
   }
 }
 
