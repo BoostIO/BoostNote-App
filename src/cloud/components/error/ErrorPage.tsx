@@ -76,8 +76,19 @@ const ErrorPage = ({ error }: ErrorPageProps) => {
           )}
           {currentUser == null && statusCode === 401 && (
             <div className='text-center' style={{ marginTop: 20 }}>
-              <h3>Or Sign in</h3>
-              <SignInForm redirectTo={pathname + search} />
+              <h3>Or Sign up / in</h3>
+              {usingElectron ? (
+                <Button
+                  variant='primary'
+                  onClick={() => {
+                    window.location.href = '/desktop'
+                  }}
+                >
+                  Go to Sign in page
+                </Button>
+              ) : (
+                <SignInForm redirectTo={pathname + search} />
+              )}
             </div>
           )}
           {mockBackend && (
