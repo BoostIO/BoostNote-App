@@ -102,7 +102,12 @@ const PropConfig = ({
             <Button
               variant='transparent'
               className='metadata__button prop__config__submenu__button'
-              iconPath={getIconPathOfPropType(newProp.data.type)}
+              iconPath={getIconPathOfPropType(
+                newProp.data.type === 'json' &&
+                  newProp.data.data.dataType != null
+                  ? newProp.data.data.dataType
+                  : newProp.data.type
+              )}
               iconSize={16}
               onClick={(event) => {
                 openContextModal(
@@ -147,7 +152,14 @@ const PropConfig = ({
                 )
               }}
             >
-              <span>{getLabelOfPropType(newProp.data.type)}</span>
+              <span>
+                {getLabelOfPropType(
+                  newProp.data.type === 'json' &&
+                    newProp.data.data.dataType != null
+                    ? newProp.data.data.dataType
+                    : newProp.data.type
+                )}
+              </span>
               <Icon path={mdiChevronRight} size={16} />
             </Button>
           ),
