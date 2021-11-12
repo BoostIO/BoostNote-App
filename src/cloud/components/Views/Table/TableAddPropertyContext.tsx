@@ -8,7 +8,7 @@ import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import styled from '../../../../design/lib/styled'
 import { PropType, StaticPropType } from '../../../interfaces/db/props'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
-import { getIconPathOfPropType } from '../../../lib/props'
+import { getIconPathOfPropType, getLabelOfPropType } from '../../../lib/props'
 import {
   Column,
   getInsertedColumnOrder,
@@ -138,7 +138,7 @@ const TableAddPropertyContext = ({
           row={{
             type: 'button',
             props: {
-              label: 'Date',
+              label: getLabelOfPropType('date'),
               iconPath: getIconPathOfPropType('date'),
               disabled: isColumnNameInvalid || sending != null,
               spinning: sending === 'date',
@@ -151,7 +151,7 @@ const TableAddPropertyContext = ({
           row={{
             type: 'button',
             props: {
-              label: 'Person',
+              label: getLabelOfPropType('user'),
               id: 'new-person-col',
               iconPath: getIconPathOfPropType('user'),
               disabled: isColumnNameInvalid || sending != null,
@@ -164,7 +164,7 @@ const TableAddPropertyContext = ({
           row={{
             type: 'button',
             props: {
-              label: 'Time',
+              label: getLabelOfPropType('timeperiod'),
               id: 'new-time-col',
               iconPath: getIconPathOfPropType('timeperiod'),
               disabled: isColumnNameInvalid || sending != null,
@@ -177,7 +177,7 @@ const TableAddPropertyContext = ({
           row={{
             type: 'button',
             props: {
-              label: 'Status',
+              label: getLabelOfPropType('string'),
               iconPath: getIconPathOfPropType('string'),
               disabled: true,
             },
@@ -188,7 +188,7 @@ const TableAddPropertyContext = ({
           row={{
             type: 'button',
             props: {
-              label: 'Label',
+              label: getLabelOfPropType('label'),
               id: 'new-label-col',
               iconPath: getIconPathOfPropType('label'),
               disabled: isColumnNameInvalid || sending != null,
@@ -201,7 +201,7 @@ const TableAddPropertyContext = ({
           row={{
             type: 'button',
             props: {
-              label: 'Creation Date',
+              label: getLabelOfPropType('creation_date'),
               id: 'new-creation-date-col',
               iconPath: getIconPathOfPropType('creation_date'),
               disabled: isColumnNameInvalid || sending != null,
@@ -214,7 +214,7 @@ const TableAddPropertyContext = ({
           row={{
             type: 'button',
             props: {
-              label: 'Update Date',
+              label: getLabelOfPropType('update_date'),
               id: 'new-update-date-col',
               iconPath: getIconPathOfPropType('update_date'),
               disabled: isColumnNameInvalid || sending != null,

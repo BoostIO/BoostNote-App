@@ -123,7 +123,12 @@ const DocPageHeader = ({
                     </div>
                   </div>
                   {docProperties.map((prop, i) => {
-                    const iconPath = getIconPathOfPropType(prop[1].data.type)
+                    const iconPath = getIconPathOfPropType(
+                      prop[1].data.type === 'json' &&
+                        prop[1].data.data.dataType != null
+                        ? prop[1].data.data.dataType
+                        : prop[1].data.type
+                    )
                     return (
                       <div
                         className='doc__page__header__property'
