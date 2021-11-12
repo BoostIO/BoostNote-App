@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
+import { useEffectOnce } from 'react-use'
 import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
 import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
@@ -20,10 +21,17 @@ const PropSelectorModal = ({
   disallowedNames = [],
   addProp,
 }: PropSelectorModalProps) => {
+  const inputRef = useRef<HTMLInputElement>(null)
   const [propName, setPropName] = useState('')
   const disallowedNamesSet = useMemo(() => new Set(disallowedNames), [
     disallowedNames,
   ])
+
+  useEffectOnce(() => {
+    if (inputRef.current != null) {
+      inputRef.current.focus()
+    }
+  })
 
   return (
     <StyledContainer>
@@ -35,6 +43,7 @@ const PropSelectorModal = ({
             <FormInput
               value={propName}
               onChange={(ev) => setPropName(ev.target.value)}
+              ref={inputRef}
             />
           ),
         }}
