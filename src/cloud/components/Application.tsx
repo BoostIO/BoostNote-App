@@ -41,7 +41,7 @@ import {
   mdiWeb,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
-import { sendToHost, useElectron, usingElectron } from '../lib/stores/electron'
+import { useElectron, usingElectron } from '../lib/stores/electron'
 import cc from 'classcat'
 import { useCloudResourceModals } from '../lib/hooks/useCloudResourceModals'
 import FuzzyNavigation from '../../design/components/organisms/FuzzyNavigation'
@@ -59,7 +59,6 @@ import useNotificationState from '../../design/lib/hooks/useNotificationState'
 import { useNotifications } from '../../design/lib/stores/notifications'
 import '../lib/i18n'
 import { useI18n } from '../lib/hooks/useI18n'
-import { TFunction } from 'i18next'
 import { lngKeys } from '../lib/i18n/types'
 import Sidebar, {
   PopOverState,
@@ -105,7 +104,6 @@ const Application = ({
   const { openModal } = useModal()
   const {
     globalData: { currentUser },
-    setPartialGlobalData,
   } = useGlobalData()
   const { push, query, pathname } = useRouter()
   const [popOverState, setPopOverState] = useState<PopOverState>(null)
@@ -273,14 +271,56 @@ const Application = ({
     setPopOverState(null)
   }, [])
 
-  const spaceBottomRows = useMemo(
-    () =>
-      buildSpacesBottomRows(push, translate, () => {
-        setPartialGlobalData({ currentUser: undefined, teams: [] })
-        push('/desktop')
-      }),
-    [push, setPartialGlobalData, translate]
-  )
+  const spaceBottomRows = useMemo(() => {
+    const bottomRows: {
+      label: string
+      icon: string
+      linkProps: React.AnchorHTMLAttributes<{}>
+    }[] = [
+      {
+        label: translate(lngKeys.CreateNewSpace),
+        icon: mdiPlusCircleOutline,
+        linkProps: {
+          href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,
+          onClick: (event: React.MouseEvent) => {
+            event.preventDefault()
+            push(`/cooperate`)
+          },
+        },
+      },
+    ]
+
+    if (!usingElectron) {
+      bottomRows.push({
+        label: translate(lngKeys.DownloadDesktopApp),
+        icon: mdiDownload,
+        linkProps: {
+          href: 'https://github.com/BoostIO/BoostNote-App/releases/latest',
+          target: '_blank',
+          rel: 'noopener noreferrer',
+        },
+      })
+    }
+    bottomRows.push({
+      label: translate(lngKeys.LogOut),
+      icon: mdiLogoutVariant,
+      linkProps: {
+        href: '/api/oauth/signout',
+        onClick: (event: React.MouseEvent) => {
+          event.preventDefault()
+
+          if (usingElectron) {
+            window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout?redirectTo=/desktop`
+            return
+          } else {
+            window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout`
+            return
+          }
+        },
+      },
+    })
+    return bottomRows
+  }, [push, translate])
 
   const {
     state: notificationState,
@@ -476,74 +516,6 @@ const Application = ({
 }
 
 export default Application
-
-function buildSpacesBottomRows(
-  push: (url: string) => void,
-  t: TFunction,
-  onSignOut: () => void
-) {
-  return usingElectron
-    ? [
-        {
-          label: t(lngKeys.CreateNewSpace),
-          icon: mdiPlusCircleOutline,
-          linkProps: {
-            href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,
-            onClick: (event: React.MouseEvent) => {
-              event.preventDefault()
-              sendToHost('new-space')
-            },
-          },
-        },
-        {
-          label: t(lngKeys.LogOut),
-          icon: mdiLogoutVariant,
-          linkProps: {
-            href: '/api/oauth/signout',
-            onClick: (event: React.MouseEvent) => {
-              event.preventDefault()
-              sendToHost('sign-out')
-              if (onSignOut != null) {
-                onSignOut()
-              }
-            },
-          },
-        },
-      ]
-    : [
-        {
-          label: t(lngKeys.CreateNewSpace),
-          icon: mdiPlusCircleOutline,
-          linkProps: {
-            href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,
-            onClick: (event: React.MouseEvent) => {
-              event.preventDefault()
-              push(`/cooperate`)
-            },
-          },
-        },
-        {
-          label: t(lngKeys.DownloadDesktopApp),
-          icon: mdiDownload,
-          linkProps: {
-            href: 'https://github.com/BoostIO/BoostNote-App/releases/latest',
-            target: '_blank',
-            rel: 'noopener noreferrer',
-          },
-        },
-        {
-          label: t(lngKeys.LogOut),
-          icon: mdiLogoutVariant,
-          linkProps: {
-            href: '/api/oauth/signout',
-            onClick: (event: React.MouseEvent) => {
-              event.preventDefault()
-              window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout`
-            },
-          },
-        },
-      ]
-}
 
 function isCodeMirrorTextAreaEvent(event: KeyboardEvent) {
   const target = event.target as HTMLTextAreaElement
