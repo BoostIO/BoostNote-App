@@ -9,8 +9,7 @@ const HomePage = () => {
   const {
     globalData: { currentUser, teams },
   } = useGlobalData()
-  const havingTeam = teams.length > 0
-  if (currentUser && havingTeam) {
+  if (currentUser) {
     return <HomeForm user={currentUser} teams={teams} />
   }
 
