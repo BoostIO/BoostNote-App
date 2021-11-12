@@ -54,19 +54,22 @@ const PropSelectorModal = ({
       <MetadataContainerRow
         row={{ type: 'header', content: 'PROPERTY TYPE' }}
       />
-      {supportedPropTypes.map((propType) => (
+      {supportedPropTypes.map(({ type: propType, subType }) => (
         <MetadataContainerRow
           key={propType}
           row={{
             type: 'button',
             props: {
-              disabled: propType === 'status',
+              disabled: propType === 'string',
               id: `prop-modal-${propType}`,
-              label: getLabelOfPropType(propType),
-              iconPath: getIconPathOfPropType(propType),
+              label: getLabelOfPropType(subType || propType),
+              iconPath: getIconPathOfPropType(subType || propType),
               onClick: () => {
                 if (propName !== '' && !disallowedNamesSet.has(propName)) {
-                  addProp(propName, getInitialPropDataOfPropType(propType))
+                  addProp(
+                    propName,
+                    getInitialPropDataOfPropType(subType || propType)
+                  )
                 }
               },
             },
