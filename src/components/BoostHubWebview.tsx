@@ -11,25 +11,12 @@ import {
 import { useEffectOnce } from 'react-use'
 import { openNew } from '../lib/platform'
 import {
-  boostHubNavigateRequestEventEmitter,
-  boostHubTeamCreateEventEmitter,
-  boostHubTeamUpdateEventEmitter,
-  boostHubTeamDeleteEventEmitter,
-  boostHubAccountDeleteEventEmitter,
-  boostHubReloadAllWebViewsEventEmitter,
-  boostHubCreateLocalSpaceEventEmitter,
-  boostHubSubscriptionDeleteEventEmitter,
-  boostHubSubscriptionUpdateEventEmitter,
-  boosthubNotificationCountsEventEmitter,
-  boostHubSidebarSpaceEventEmitter,
-  boostHubAppRouterEventEmitter,
-  boostHubCreateCloudSpaceEventEmitter,
-} from '../lib/events'
-import {
   openContextMenu,
   openExternal,
   openNewWindow,
   signInBroadcast,
+  addIpcListener,
+  removeIpcListener,
 } from '../lib/electronOnly'
 import { DidFailLoadEvent } from 'electron/main'
 import styled from '../design/lib/styled'
@@ -150,6 +137,36 @@ const BoostHubWebview = ({
 
   useEffectOnce(() => {
     const webview = webviewRef.current!
+    if (webview == null) {
+      return
+    }
+    const reloadIpcEventHandler = () => {
+      webview.reload()
+    }
+    const forceReloadIpcEventHandler = () => {
+      webview.reloadIgnoringCache()
+    }
+    const toggleDevToolsIpcEventHandler = () => {
+      if (webview.isDevToolsOpened()) {
+        webview.closeDevTools()
+      } else {
+        webview.openDevTools()
+      }
+    }
+
+    addIpcListener('reload', reloadIpcEventHandler)
+    addIpcListener('force-reload', forceReloadIpcEventHandler)
+    addIpcListener('toggle-dev-tools', toggleDevToolsIpcEventHandler)
+
+    return () => {
+      removeIpcListener('reload', reloadIpcEventHandler)
+      removeIpcListener('force-reload', forceReloadIpcEventHandler)
+      removeIpcListener('toggle-dev-tools', toggleDevToolsIpcEventHandler)
+    }
+  })
+
+  useEffectOnce(() => {
+    const webview = webviewRef.current!
 
     const ipcMessageEventHandler = (event: IpcMessageEvent) => {
       switch (event.channel) {
@@ -164,46 +181,6 @@ const BoostHubWebview = ({
             // todo: [komediruzecki-2021-10-18] once window is opened, send some request to load particular link there
             // this could be done by the above function or separately
           }
-          break
-        case 'new-space':
-          boostHubCreateCloudSpaceEventEmitter.dispatch()
-          break
-        case 'router':
-          boostHubAppRouterEventEmitter.dispatch({ target: event.args[0] })
-          break
-        case 'sidebar-spaces':
-          boostHubSidebarSpaceEventEmitter.dispatch()
-          break
-        case 'request-app-navigate':
-          boostHubNavigateRequestEventEmitter.dispatch({ url: event.args[0] })
-          break
-        case 'create-local-space':
-          boostHubCreateLocalSpaceEventEmitter.dispatch()
-          break
-        case 'team-create':
-          boostHubTeamCreateEventEmitter.dispatch({ team: event.args[0] })
-          break
-        case 'team-update':
-          boostHubTeamUpdateEventEmitter.dispatch({ team: event.args[0] })
-          break
-        case 'notification-counts':
-          boosthubNotificationCountsEventEmitter.dispatch(event.args[0])
-          break
-        case 'subscription-update':
-          boostHubSubscriptionUpdateEventEmitter.dispatch({
-            subscription: event.args[0],
-          })
-          break
-        case 'subscription-delete':
-          boostHubSubscriptionDeleteEventEmitter.dispatch({
-            subscription: event.args[0],
-          })
-          break
-        case 'team-delete':
-          boostHubTeamDeleteEventEmitter.dispatch({ team: event.args[0] })
-          break
-        case 'account-delete':
-          boostHubAccountDeleteEventEmitter.dispatch()
           break
         case 'open-external-url':
           const [url] = event.args
@@ -284,11 +261,6 @@ const BoostHubWebview = ({
     }
     webview.addEventListener('new-window', newWindowEventHandler)
 
-    const reloadHandler = () => {
-      webview.reload()
-    }
-    boostHubReloadAllWebViewsEventEmitter.listen(reloadHandler)
-
     const domReadyHandler = () => {
       domReadyRef.current = true
     }
@@ -298,7 +270,6 @@ const BoostHubWebview = ({
       webview.removeEventListener('ipc-message', ipcMessageEventHandler)
       webview.removeEventListener('new-window', newWindowEventHandler)
       webview.removeEventListener('dom-ready', domReadyHandler)
-      boostHubReloadAllWebViewsEventEmitter.unlisten(reloadHandler)
     }
   })
 
