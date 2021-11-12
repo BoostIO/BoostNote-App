@@ -11,7 +11,6 @@ import { format as formatDate } from 'date-fns'
 import { toLower } from 'lodash'
 import StatusSelect from './Pickers/StatusSelect'
 import TimePeriodPicker from './Pickers/TimePeriodPicker'
-import { getLabelOfProp } from '../../lib/props'
 
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
@@ -136,7 +135,7 @@ const PropPicker = ({
       ) {
         return (
           <TimePeriodPicker
-            label={getLabelOfProp(propName)}
+            label={propName}
             isReadOnly={readOnly}
             isErrored={isErrored}
             sending={sendingMap.get(parent.target.id) === propName}
