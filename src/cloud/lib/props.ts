@@ -1,14 +1,11 @@
 import {
-  mdiAccountCheckOutline,
   mdiAccountOutline,
   mdiArrowDownDropCircleOutline,
   mdiCalendarMonthOutline,
-  mdiCheckAll,
   mdiClockOutline,
   mdiContentSaveOutline,
   mdiLabelOutline,
   mdiTimerOutline,
-  mdiTimerSandEmpty,
 } from '@mdi/js'
 import { capitalize } from 'lodash'
 import {
@@ -18,16 +15,6 @@ import {
   SerializedPropData,
   StaticPropType,
 } from '../interfaces/db/props'
-
-export const supportedPropertyNames = [
-  'assignees',
-  'dueDate',
-  'reviewers',
-  'startDate',
-  'status',
-  'timeEstimate',
-  'timeTracked',
-]
 
 export const supportedPropTypes: {
   type: PropType
@@ -71,83 +58,6 @@ export function getPropsOfItem(
   })
 
   return properties
-}
-
-export function getLabelOfProp(propName: string): string {
-  switch (propName) {
-    case 'created_date':
-      return 'Created date'
-    case 'updated_date':
-      return 'Updated date'
-    case 'dueDate':
-      return 'Due Date'
-    case 'startDate':
-      return 'Start Date'
-    case 'timeEstimate':
-      return 'Time Estimate'
-    case 'timeTracked':
-      return 'Time Tracked'
-    case 'status':
-    case 'reviewers':
-    case 'assignees':
-    default:
-      return capitalize(propName)
-  }
-}
-
-export function getIconPathOfProp(propName: string): string | undefined {
-  switch (propName) {
-    case 'created_date':
-      return mdiClockOutline
-    case 'updated_date':
-      return mdiContentSaveOutline
-    case 'dueDate':
-      return mdiCheckAll
-    case 'startDate':
-    case 'date':
-      return mdiCalendarMonthOutline
-    case 'timeEstimate':
-      return mdiTimerSandEmpty
-    case 'timeTracked':
-    case 'time':
-      return mdiTimerOutline
-    case 'status':
-      return mdiArrowDownDropCircleOutline
-    case 'reviewers':
-      return mdiAccountCheckOutline
-    case 'assignees':
-    case 'person':
-      return mdiAccountOutline
-    case 'label':
-      return mdiLabelOutline
-    default:
-      return
-  }
-}
-
-export function getInitialPropDataOfProp(propName: string): SerializedPropData {
-  switch (propName) {
-    case 'dueDate':
-    case 'startDate':
-      return { type: 'date', data: undefined, createdAt: new Date().toString() }
-    case 'timeEstimate':
-    case 'timeTracked':
-      return {
-        type: 'json',
-        data: { dataType: 'timeperiod', data: null },
-        createdAt: new Date().toString(),
-      }
-    case 'reviewers':
-    case 'assignees':
-      return { type: 'user', data: undefined, createdAt: new Date().toString() }
-    case 'status':
-    default:
-      return {
-        type: 'string',
-        data: undefined,
-        createdAt: new Date().toString(),
-      }
-  }
 }
 
 export function isPropFilled(
