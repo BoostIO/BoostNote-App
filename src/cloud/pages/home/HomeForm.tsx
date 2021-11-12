@@ -15,7 +15,6 @@ import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
 import Button from '../../../design/components/atoms/Button'
 import { useElectron } from '../../lib/stores/electron'
-import { useGlobalData } from '../../lib/stores/globalData'
 
 interface HomePageTeamSelectForm {
   user: SerializedUser
@@ -24,11 +23,10 @@ interface HomePageTeamSelectForm {
   })[]
 }
 
-const HomeForm = ({ user, teams }: HomePageTeamSelectForm) => {
+const HomeForm = ({ user, teams = [] }: HomePageTeamSelectForm) => {
   const { push } = useRouter()
   const { translate } = useI18n()
-  const { sendToElectron, usingElectron } = useElectron()
-  const { setPartialGlobalData } = useGlobalData()
+  const { usingElectron } = useElectron()
   const navigateToTeam = useCallback(
     (selectedTeamId) => {
       const selectedTeam = teams.find(
@@ -47,15 +45,12 @@ const HomeForm = ({ user, teams }: HomePageTeamSelectForm) => {
   )
 
   const signOutCloud = useCallback(() => {
-    setPartialGlobalData({
-      currentUser: undefined,
-      teams: [],
-    })
     if (usingElectron) {
-      sendToElectron('sign-out')
+      location.href = '/api/oauth/signout?redirectTo=/desktop'
+    } else {
+      location.href = '/api/oauth/signout'
     }
-    // push('/desktop')
-  }, [sendToElectron, setPartialGlobalData, usingElectron])
+  }, [usingElectron])
 
   return (
     <Container>
@@ -95,7 +90,7 @@ const HomeForm = ({ user, teams }: HomePageTeamSelectForm) => {
                     </span>
                     <span>
                       (
-                      <Button variant={'link'} onClick={() => signOutCloud()}>
+                      <Button variant={'link'} onClick={signOutCloud}>
                         {translate(lngKeys.GeneralSignout)}
                       </Button>
                       )
@@ -124,7 +119,7 @@ const HomeForm = ({ user, teams }: HomePageTeamSelectForm) => {
                 type: 'button',
                 props: {
                   label: 'Create space',
-                  variant: 'secondary',
+                  variant: 'primary',
                   onClick: () => push('/cooperate'),
                 },
               },
