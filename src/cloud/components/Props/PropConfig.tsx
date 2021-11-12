@@ -108,15 +108,17 @@ const PropConfig = ({
                 openContextModal(
                   event,
                   <MetadataContainer>
-                    {supportedPropTypes.map((propType) => (
+                    {supportedPropTypes.map(({ type: propType, subType }) => (
                       <MetadataContainerRow
                         key={propType}
                         row={{
                           type: 'button',
                           props: {
                             id: `prop-modal-${propType}`,
-                            label: getLabelOfPropType(propType),
-                            iconPath: getIconPathOfPropType(propType),
+                            label: getLabelOfPropType(subType || propType),
+                            iconPath: getIconPathOfPropType(
+                              subType || propType
+                            ),
                             onClick: () => {
                               setNewProp((prev) => {
                                 return prev.data.type === propType
