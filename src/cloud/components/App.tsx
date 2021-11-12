@@ -7,21 +7,27 @@ import {
   sendToHost,
   useElectron,
   globalContextMenuIsConfigured,
+  getCurrentDesktopAppVersion,
 } from '../lib/stores/electron'
 import { GlobalDataProvider } from '../lib/stores/globalData'
 import { useEffectOnce } from 'react-use'
 import { gaTrackingId, nodeEnv, boostHubBaseUrl } from '../lib/consts'
 import '../lib/i18n'
+import ltSemver from 'semver/functions/lt'
 
 import { RealtimeConnProvider } from '../lib/stores/realtimeConn'
 import { V2ToastProvider } from '../../design/lib/stores/toast'
 const App = () => {
   useElectron()
+  // TODO: Deprecate after v0.23.0
   const [accessTokenInitialized, setAccessTokenInitialized] = useState(false)
 
   useEffectOnce(() => {
     ;(async () => {
-      await initAccessToken()
+      const currentVersion = getCurrentDesktopAppVersion()
+      if (currentVersion != null && ltSemver(currentVersion, '0.23.0')) {
+        await initAccessToken()
+      }
 
       setAccessTokenInitialized(true)
     })()

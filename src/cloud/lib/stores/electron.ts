@@ -64,7 +64,7 @@ export function getCurrentDesktopAppVersion() {
 const currentDesktopAppVersion = getCurrentDesktopAppVersion()
 export const usingLegacyElectron =
   currentDesktopAppVersion != null
-    ? ltSemver(currentDesktopAppVersion, '0.20.0')
+    ? ltSemver(currentDesktopAppVersion, '0.23.0')
     : false
 
 export function openInBrowser(url: string) {
@@ -108,10 +108,14 @@ export function initAccessToken(): Promise<string | null> {
 }
 
 export function getAccessToken(): string | null {
-  if (accessTokenHasBeenInitialized) {
-    return accessToken
+  const currentVersion = getCurrentDesktopAppVersion()
+  if (currentVersion != null && ltSemver(currentVersion, '0.23.0')) {
+    if (accessTokenHasBeenInitialized) {
+      return accessToken
+    }
+    throw new Error('AccessToken has not been initialized yet.')
   }
-  throw new Error('AccessToken has not been initialized yet.')
+  return null
 }
 
 interface PrintToPDFOptions {
