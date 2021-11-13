@@ -8,6 +8,8 @@ import {
 } from 'electron'
 import { checkForUpdates } from './updater'
 import { createEmitIpcMenuItemHandler } from './ipc'
+import { createAWindow } from './windows'
+import { electronFrontendUrl } from './consts'
 
 const mac = process.platform === 'darwin'
 
@@ -33,6 +35,16 @@ export function getTemplateFromKeymap(
             label: app.getName(),
             submenu: [
               { role: 'about' },
+              { type: 'separator' },
+              {
+                type: 'normal',
+                label: 'New Window',
+                click: () => {
+                  console.log('new window')
+                  createAWindow(electronFrontendUrl)
+                },
+                accelerator: 'Cmd + Shift + N',
+              },
               { type: 'separator' },
               {
                 label: 'Preferences',
@@ -71,12 +83,6 @@ export function getTemplateFromKeymap(
               click: createEmitIpcMenuItemHandler('new-doc'),
               accelerator: 'Cmd + N',
             },
-            {
-              type: 'normal',
-              label: 'New Folder',
-              click: createEmitIpcMenuItemHandler('new-folder'),
-              accelerator: 'Cmd + Shift + N',
-            },
             { type: 'separator' },
             {
               type: 'normal',
@@ -90,15 +96,18 @@ export function getTemplateFromKeymap(
         : ([
             {
               type: 'normal',
+              label: 'New Window',
+              click: () => {
+                createAWindow(electronFrontendUrl)
+              },
+              accelerator: 'Ctrl + Shift + N',
+            },
+            { type: 'separator' },
+            {
+              type: 'normal',
               label: 'New Document',
               click: createEmitIpcMenuItemHandler('new-doc'),
               accelerator: 'Ctrl + N',
-            },
-            {
-              type: 'normal',
-              label: 'New Folder',
-              click: createEmitIpcMenuItemHandler('new-folder'),
-              accelerator: 'Ctrl + Shift + N',
             },
             { type: 'separator' },
             {
