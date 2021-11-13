@@ -1,14 +1,8 @@
 import { openNew } from './platform'
 import { format as formatUrl } from 'url'
 import { join } from 'path'
-import { getPathByName, removeCookie } from './electronOnly'
-import { useCallback } from 'react'
-import { createStoreContext } from './context'
+import { getPathByName } from './electronOnly'
 import ky from 'ky'
-import { useRouteParams } from './routeParams'
-import { useGeneralStatus } from './generalStatus'
-import { usePreferences } from './preferences'
-import { useRouter } from './router'
 import { SerializedSubscription } from '../cloud/interfaces/db/subscription'
 import { SerializedUserTeamPermissions } from '../cloud/interfaces/db/userTeamPermissions'
 
@@ -110,45 +104,3 @@ export async function createDesktopAccessToken(
     .json()
   return data as { token: string }
 }
-
-function useBoostHubStore() {
-  const { push } = useRouter()
-  const { setPreferences } = usePreferences()
-  const { setGeneralStatus } = useGeneralStatus()
-  const routeParams = useRouteParams()
-
-  // todo: [komediruzecki-2021-10-18] Probably we would delete this old sign out with desktop access token
-  // todo: [komediruzecki-2021-10-18] We should probably remove fetch desktop data as well?
-  const signOut = useCallback(async () => {
-    if (
-      routeParams.name === 'boosthub.teams.show' ||
-      routeParams.name === 'boosthub.teams.create'
-    ) {
-      push('/app/boosthub/login')
-    }
-    setPreferences({
-      'cloud.user': null,
-    })
-    setGeneralStatus({
-      boostHubTeams: [],
-    })
-
-    removeCookie(boostHubBaseUrl, 'desktop_access_token')
-  }, [routeParams.name, setPreferences, setGeneralStatus, push])
-
-  const signOutCloud = useCallback(async () => {
-    removeCookie(boostHubBaseUrl, 'session')
-    removeCookie(boostHubBaseUrl, 'intercom-session-cvsnhh77')
-  }, [])
-
-  return {
-    fetchDesktopGlobalData,
-    signOut,
-    signOutCloud,
-  }
-}
-
-export const {
-  StoreProvider: BoostHubStoreProvider,
-  useStore: useBoostHub,
-} = createStoreContext(useBoostHubStore)

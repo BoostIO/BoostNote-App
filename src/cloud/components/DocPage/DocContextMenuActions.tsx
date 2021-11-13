@@ -34,7 +34,7 @@ import {
   exportAsHtmlFile,
   filenamifyTitle,
 } from '../../lib/export'
-import { downloadBlob } from '../../lib/download'
+import { downloadBlob } from '../../../design/lib/dom'
 import { useNav } from '../../lib/stores/nav'
 import MoveItemModal from '../Modal/contents/Forms/MoveItemModal'
 import { useModal } from '../../../design/lib/stores/modal'

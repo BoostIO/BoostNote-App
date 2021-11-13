@@ -30,14 +30,6 @@ function createCustomEventEmitter<D = any>(name: string) {
   }
 }
 
-export const noteDetailFocusTitleInputEventEmitter = createCustomEventEmitter(
-  'NoteDetail:focusTitleInput'
-)
-
-export const boostHubLoginRequestEventEmitter = createCustomEventEmitter(
-  'BoostHub:loginRequest'
-)
-
 interface BoostHubLoginEventDetail {
   code: string
 }

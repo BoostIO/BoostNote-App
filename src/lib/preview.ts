@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { localLiteStorage } from 'ltstrg'
-import { previewStyleKey } from './localStorageKeys'
 import { createStoreContext } from './context'
+
+const previewStyleKey = 'note.boostio.co:previewStyleKey'
 
 export const defaultCustomizablePreviewStyle = `
 -ms-text-size-adjust: 100%;
