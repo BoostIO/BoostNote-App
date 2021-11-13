@@ -14,8 +14,8 @@ import {
 } from '../../../components/atoms/form'
 import { useRouter } from '../../lib/router'
 import { useGlobalData } from '../../lib/stores/globalData'
-import BoostNoteFeatureIntro from './BoostNoteFeatureIntro'
-import { flexCenter } from '../../../design/lib/styled/styleFunctions'
+import Image from '../../../design/components/atoms/Image'
+import Form from '../../../design/components/molecules/Form'
 
 const HomePageSignInForm = () => {
   const { sendToElectron, usingElectron } = useElectron()
@@ -86,121 +86,154 @@ const HomePageSignInForm = () => {
             currentUser: loginData.user || undefined,
             teams: loginData.teams || [],
           })
-          push('/desktop')
 
           if (usingElectron) {
             sendToElectron('sign-in-event')
           }
+          if (loginData.teams.length > 0) {
+            push(`/${loginData.teams[0].domain}`)
+          } else {
+            push('/cooperate')
+          }
         })
         .catch((err) => console.log('Error logging in', err))
     },
-    [push, sendToElectron, setPartialGlobalData, usingElectron]
+    [setPartialGlobalData, usingElectron, sendToElectron, push]
   )
 
   return (
-    <PageContainer>
-      <Container>
-        <h1 className='heading'>Create Account or Sign in</h1>
-        {status === 'idle' ? (
-          <>
-            <div style={{ maxWidth: '1020px' }}>
-              <BoostNoteFeatureIntro />
-            </div>
-            <div className='control'>
-              <Button variant={'primary'} onClick={() => onSignIn()}>
-                Sign Up
-              </Button>
+    <Container>
+      <Form
+        fullWidth={true}
+        rows={[
+          {
+            items: [
+              {
+                type: 'node',
+                element: (
+                  <Image src={'/static/logo.png'} className={'intro__logo'} />
+                ),
+              },
+            ],
+          },
+          {
+            items: [
+              {
+                type: 'node',
+                element: (
+                  <h1 className='intro__heading'>Welcome to Boost Note!</h1>
+                ),
+              },
+            ],
+          },
+        ]}
+      />
+      {status === 'idle' ? (
+        <>
+          <div className='control'>
+            <Button variant={'primary'} onClick={onSignIn}>
+              Sign Up
+            </Button>
 
-              <Button variant={'secondary'} onClick={() => onSignIn()}>
-                Sign In
-              </Button>
-            </div>
-          </>
-        ) : status === 'logging-in' ? (
-          <p>
+            <Button variant={'secondary'} onClick={onSignIn}>
+              Sign In
+            </Button>
+          </div>
+        </>
+      ) : status === 'logging-in' ? (
+        <p>
+          <Icon path={mdiLoading} spin />
+          &nbsp;Signing In...
+        </p>
+      ) : (
+        <>
+          <p style={{ textAlign: 'center' }}>
             <Icon path={mdiLoading} spin />
-            &nbsp;Signing In...
+            &nbsp;Waiting for signing in from browser...
           </p>
-        ) : (
-          <>
-            <p style={{ textAlign: 'center' }}>
-              <Icon path={mdiLoading} spin />
-              &nbsp;Waiting for signing in from browser...
-            </p>
+          <FormGroup style={{ textAlign: 'center' }}>
+            <Button variant={'primary'} onClick={openLoginRequestPage}>
+              Open request signing in page again
+            </Button>
+          </FormGroup>
+          <FormGroup style={{ textAlign: 'center' }}>
+            <a className='control-link' onClick={cancelSigningIn}>
+              Cancel Signing In
+            </a>
+          </FormGroup>
+          {errorMessage != null && (
             <FormGroup style={{ textAlign: 'center' }}>
-              <Button variant={'primary'} onClick={openLoginRequestPage}>
-                Open request signing in page again
-              </Button>
+              <div>{errorMessage}</div>
             </FormGroup>
+          )}
+          {manualFormOpened ? (
+            <>
+              <hr />
+              <FormGroup style={{ textAlign: 'center' }}>
+                <FormTextInput
+                  placeholder='Insert Code from the browser'
+                  value={code}
+                  onChange={updateCode}
+                />
+              </FormGroup>
+              <FormGroup style={{ textAlign: 'center' }}>
+                <Button
+                  variant={'primary'}
+                  onClick={() => {
+                    login(code)
+                  }}
+                >
+                  Sign In
+                </Button>
+              </FormGroup>
+            </>
+          ) : (
             <FormGroup style={{ textAlign: 'center' }}>
-              <a className='control-link' onClick={cancelSigningIn}>
-                Cancel Signing In
-              </a>
+              <FormBlockquote>
+                Click{' '}
+                <a
+                  onClick={() => {
+                    setCode('')
+                    setManualFormOpened(true)
+                  }}
+                  style={{
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                  }}
+                >
+                  here
+                </a>{' '}
+                to type sign-in code manually
+              </FormBlockquote>
             </FormGroup>
-            {errorMessage != null && (
-              <FormGroup style={{ textAlign: 'center' }}>
-                <FormBlockquote variant='danger'>{errorMessage}</FormBlockquote>
-              </FormGroup>
-            )}
-            {manualFormOpened ? (
-              <>
-                <hr />
-                <FormGroup style={{ textAlign: 'center' }}>
-                  <FormTextInput
-                    placeholder='Insert Code from the browser'
-                    value={code}
-                    onChange={updateCode}
-                  />
-                </FormGroup>
-                <FormGroup style={{ textAlign: 'center' }}>
-                  <Button
-                    variant={'primary'}
-                    onClick={() => {
-                      login(code)
-                    }}
-                  >
-                    Sign In
-                  </Button>
-                </FormGroup>
-              </>
-            ) : (
-              <FormGroup style={{ textAlign: 'center' }}>
-                <FormBlockquote>
-                  Click{' '}
-                  <a
-                    onClick={() => {
-                      setCode('')
-                      setManualFormOpened(true)
-                    }}
-                    style={{
-                      textDecoration: 'underline',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    here
-                  </a>{' '}
-                  to type sign-in code manually
-                </FormBlockquote>
-              </FormGroup>
-            )}
-          </>
-        )}
-      </Container>
-    </PageContainer>
+          )}
+        </>
+      )}
+    </Container>
   )
 }
 
-const PageContainer = styled.div`
+const Container = styled.div`
+  display: block;
   width: 100%;
   height: 100%;
-  ${flexCenter}
-`
+  padding-top: ${({ theme }) => theme.sizes.spaces.xl}px;
+  position: relative;
+  padding: ${({ theme }) => theme.sizes.spaces.md}px;
+  max-width: 700px;
+  margin: 0 auto;
 
-const Container = styled.div`
-  & > .heading {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 36px;
+  .intro {
+    margin-top: ${({ theme }) => theme.sizes.spaces.xl}px;
+  }
+  .intro__logo {
+    max-width: 240px;
+  }
+  .intro__heading {
+    font-size: ${({ theme }) => theme.sizes.fonts.l}px;
+  }
+  .intro__description {
+    font-size: ${({ theme }) => theme.sizes.fonts.md}px;
   }
 
   & > .control {
