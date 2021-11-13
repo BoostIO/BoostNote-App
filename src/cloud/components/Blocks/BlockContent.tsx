@@ -20,7 +20,7 @@ import {
 } from '../../lib/stores/sidebarCollapse'
 import { FoldingProps } from '../../../design/components/atoms/FoldingWrapper'
 import { blockEventEmitter } from '../../lib/utils/events'
-import { sleep } from '../../../lib/sleep'
+import { sleep } from '../../lib/utils/sleep'
 import cc from 'classcat'
 import { useRouter } from '../../lib/router'
 
