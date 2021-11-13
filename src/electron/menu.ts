@@ -40,7 +40,6 @@ export function getTemplateFromKeymap(
                 type: 'normal',
                 label: 'New Window',
                 click: () => {
-                  console.log('new window')
                   createAWindow(electronFrontendUrl)
                 },
                 accelerator: 'Cmd + Shift + N',
