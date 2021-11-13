@@ -1,24 +1,16 @@
 import {
   app,
-  BrowserWindow,
-  BrowserWindowConstructorOptions,
   ipcMain,
   Menu,
   MenuItemConstructorOptions,
   protocol,
-  autoUpdater,
   webContents,
 } from 'electron'
 import path from 'path'
 import url from 'url'
 import { getTemplateFromKeymap } from './menu'
 import { dev } from './consts'
-
-const windows = new Set<BrowserWindow>()
-const MAC = process.platform === 'darwin'
-
-// single instance lock
-const singleInstance = app.requestSingleInstanceLock()
+import { createAWindow, getWindows } from './windows'
 
 const electronFrontendUrl = dev
   ? 'http://localhost:3000/app'
@@ -40,85 +32,19 @@ function applyMenuTemplate(template: MenuItemConstructorOptions[]) {
   Menu.setApplicationMenu(menu)
 }
 
-function createAWindow(url: string, options?: BrowserWindowConstructorOptions) {
-  const windowOptions: BrowserWindowConstructorOptions = {
-    webPreferences: {
-      nodeIntegration: true,
-      webSecurity: !dev,
-      webviewTag: true,
-      enableRemoteModule: true,
-      contextIsolation: false,
-      preload: dev
-        ? path.join(app.getAppPath(), '../static/main-preload.js')
-        : path.join(app.getAppPath(), './compiled/app/static/main-preload.js'),
-    },
-    width: 1200,
-    height: 800,
-    minWidth: 960,
-    minHeight: 630,
-    ...options,
-  }
-
-  const window = new BrowserWindow(windowOptions)
-
-  window.loadURL(url)
-
-  applyMenuTemplate(getTemplateFromKeymap(keymap))
-
-  if (MAC) {
-    window.on('close', (event) => {
-      event.preventDefault()
-      window.hide()
-    })
-
-    app.on('before-quit', () => {
-      window.removeAllListeners()
-    })
-
-    autoUpdater.on('before-quit-for-update', () => {
-      window.removeAllListeners()
-    })
-  }
-
-  window.on('closed', () => {
-    windows.delete(window)
-  })
-
-  return window
-}
-
-// single instance lock handler
+const singleInstance = app.requestSingleInstanceLock()
 if (!singleInstance) {
   app.quit()
 } else {
-  app.on('second-instance', (_event, argv) => {
-    const allWindows = [...windows.values()]
-    const mainWindow = allWindows[0]
-    if (allWindows.length >= 1) {
-      if (mainWindow != null) {
-        if (!mainWindow.isVisible()) {
-          mainWindow.show()
-        } else {
-          mainWindow.focus()
-        }
+  app.on('second-instance', (_event) => {
+    const firstWindow = getWindows()[0]
+    if (firstWindow == null) {
+      createAWindow(electronFrontendUrl)
+    } else {
+      if (firstWindow.isVisible()) {
+        firstWindow.show()
       }
-    }
-
-    // todo: [komediruzecki-2021-10-21] Can/do we want to handle this, what if multiple windows
-    if (!MAC) {
-      let urlWithBoostNoteProtocol
-      for (const arg of argv) {
-        if (/^boostnote:\/\//.test(arg)) {
-          urlWithBoostNoteProtocol = arg
-          break
-        }
-      }
-      if (urlWithBoostNoteProtocol != null && mainWindow != null) {
-        mainWindow.webContents.send(
-          'open-boostnote-url',
-          urlWithBoostNoteProtocol
-        )
-      }
+      firstWindow.focus()
     }
   })
 }
@@ -132,17 +58,13 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-  // on macOS it is common to re-create a window even after all windows have been closed
-  if (windows.size === 0) {
-    const mainWindow = createAWindow(electronFrontendUrl)
-    windows.add(mainWindow)
+  const windows = getWindows()
+  const firstWindow = windows[0]
+  if (firstWindow != null) {
+    firstWindow.show()
+    firstWindow.focus()
   } else {
-    const allWindows = [...windows.values()]
-    const mainWindow = allWindows[0]
-    if (mainWindow != null) {
-      mainWindow.show()
-      mainWindow.focus()
-    }
+    createAWindow(electronFrontendUrl)
   }
 })
 
@@ -153,8 +75,8 @@ app.on('ready', () => {
     const pathname = decodeURI(request.url.replace('file:///', ''))
     callback(pathname)
   })
-  const mainWindow = createAWindow(electronFrontendUrl)
-  windows.add(mainWindow)
+
+  createAWindow(electronFrontendUrl)
 
   ipcMain.on('menuAcceleratorChanged', (_, args) => {
     if (args.length != 2) {
@@ -174,7 +96,6 @@ app.on('ready', () => {
         ? electronFrontendUrl
         : `${electronFrontendUrl}?url=${args.url}`
     const newWindow = createAWindow(url, args.windowOptions)
-    windows.add(newWindow)
 
     return newWindow
   })
@@ -189,7 +110,7 @@ app.on('ready', () => {
   })
 
   ipcMain.on('sign-out-event', (windowId?: any) => {
-    windows.forEach((window) => {
+    getWindows().forEach((window) => {
       if (window.id !== windowId) {
         window.close()
       }
@@ -197,6 +118,8 @@ app.on('ready', () => {
   })
 
   app.on('open-url', (_event, url) => {
-    mainWindow!.webContents.send('open-boostnote-url', url)
+    getWindows().forEach((window) => {
+      window.webContents.send('open-boostnote-url', url)
+    })
   })
 })
