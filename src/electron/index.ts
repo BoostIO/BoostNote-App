@@ -6,19 +6,9 @@ import {
   protocol,
   webContents,
 } from 'electron'
-import path from 'path'
-import url from 'url'
+import { electronFrontendUrl } from './consts'
 import { getTemplateFromKeymap } from './menu'
-import { dev } from './consts'
 import { createAWindow, getWindows } from './windows'
-
-const electronFrontendUrl = dev
-  ? 'http://localhost:3000/app'
-  : url.format({
-      pathname: path.join(app.getAppPath(), './compiled/index.html'),
-      protocol: 'file',
-      slashes: true,
-    })
 
 const keymap = new Map<string, string>([
   ['toggleGlobalSearch', 'Ctrl + P'],
