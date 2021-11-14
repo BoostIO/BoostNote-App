@@ -10,13 +10,6 @@ import { electronFrontendUrl } from './consts'
 import { getTemplateFromKeymap } from './menu'
 import { createAWindow, getWindows } from './windows'
 
-const keymap = new Map<string, string>([
-  ['toggleGlobalSearch', 'Ctrl + P'],
-  ['toggleSplitEditMode', 'Ctrl + \\'],
-  ['togglePreviewMode', 'Ctrl + E'],
-  ['editorSaveAs', 'Ctrl + S'],
-])
-
 function applyMenuTemplate(template: MenuItemConstructorOptions[]) {
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
@@ -72,16 +65,7 @@ app.on('ready', () => {
     )}`
   )
 
-  ipcMain.on('menuAcceleratorChanged', (_, args) => {
-    if (args.length != 2) {
-      return
-    }
-    const menuItemId = args[0]
-    const newAcceleratorShortcut = args[1] == null ? undefined : args[1]
-
-    keymap.set(menuItemId, newAcceleratorShortcut)
-    applyMenuTemplate(getTemplateFromKeymap(keymap))
-  })
+  applyMenuTemplate(getTemplateFromKeymap())
 
   // multiple windows support
   ipcMain.on('new-window-event', (args: any) => {

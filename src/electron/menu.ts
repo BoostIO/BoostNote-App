@@ -12,18 +12,16 @@ import { electronFrontendUrl } from './consts'
 
 const mac = process.platform === 'darwin'
 
-export function getTemplateFromKeymap(
-  keymap: Map<string, string>
-): MenuItemConstructorOptions[] {
+export function getTemplateFromKeymap(): MenuItemConstructorOptions[] {
   const menu: MenuItemConstructorOptions[] = []
 
   if (mac) {
     menu.push(getMacRootMenu())
   }
 
-  menu.push(getFileMenu(keymap))
-  menu.push(getEditMenu(keymap))
-  menu.push(getViewMenu(keymap))
+  menu.push(getFileMenu())
+  menu.push(getEditMenu())
+  menu.push(getViewMenu())
   menu.push(getWindowMenu())
   menu.push(getCommunityMenu())
   menu.push({
@@ -75,7 +73,7 @@ function getMacRootMenu(): MenuItemConstructorOptions {
   }
 }
 
-function getFileMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
+function getFileMenu(): MenuItemConstructorOptions {
   const submenuItems: MenuItemConstructorOptions[] = mac
     ? [
         {
@@ -98,7 +96,7 @@ function getFileMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
           type: 'normal',
           label: 'Save As',
           click: createEmitIpcMenuItemHandler('save-as'),
-          accelerator: keymap.get('editorSaveAs'),
+          accelerator: 'Cmd + S',
         },
         { type: 'separator' },
         { role: 'close' },
@@ -124,7 +122,7 @@ function getFileMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
           type: 'normal',
           label: 'Save As',
           click: createEmitIpcMenuItemHandler('save-as'),
-          accelerator: keymap.get('editorSaveAs'),
+          accelerator: 'Ctrl + S',
         },
         { type: 'separator' },
         {
@@ -154,7 +152,7 @@ function getFileMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
   }
 }
 
-function getEditMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
+function getEditMenu(): MenuItemConstructorOptions {
   const submenuItems: MenuItemConstructorOptions[] = [
     {
       label: 'Format',
@@ -186,7 +184,7 @@ function getEditMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
       type: 'normal',
       label: 'Search',
       click: createEmitIpcMenuItemHandler('search'),
-      accelerator: keymap.get('toggleGlobalSearch'),
+      accelerator: mac ? 'Cmd + P' : 'Ctrl + P',
     },
     { type: 'separator' },
   ]
@@ -210,11 +208,11 @@ function getEditMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
   }
   return {
     label: 'Edit',
-    submenu: [],
+    submenu: submenuItems,
   }
 }
 
-function getViewMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
+function getViewMenu(): MenuItemConstructorOptions {
   const submenuItems: MenuItemConstructorOptions[] = [
     {
       type: 'submenu',
@@ -294,13 +292,13 @@ function getViewMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
       type: 'normal',
       label: 'Toggle Preview Mode',
       click: createEmitIpcMenuItemHandler('toggle-preview-mode'),
-      accelerator: keymap.get('togglePreviewMode'),
+      accelerator: mac ? 'Cmd + E' : 'Ctrl + E',
     },
     {
       type: 'normal',
       label: 'Toggle Split Edit Mode',
       click: createEmitIpcMenuItemHandler('toggle-split-edit-mode'),
-      accelerator: keymap.get('toggleSplitEditMode'),
+      accelerator: mac ? 'Cmd + \\' : 'Ctrl + \\',
     },
     { type: 'separator' },
     {
@@ -358,11 +356,11 @@ function createSwitchWorkspaceHandler(index: number) {
   return (_menu: MenuItem, browserWindow?: BrowserWindow) => {
     if (browserWindow == null) {
       console.warn(
-        `Failed to emit \`switch-workspace\` ipc event because the browser window for menu item is missing`
+        `Failed to emit \`switch-space\` ipc event because the browser window for menu item is missing`
       )
       return
     }
-    browserWindow.webContents.send('switch-workspace', index)
+    browserWindow.webContents.send('switch-space', index)
   }
 }
 
