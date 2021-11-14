@@ -15,6 +15,7 @@ import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
 import Button from '../../../design/components/atoms/Button'
 import { useElectron } from '../../lib/stores/electron'
+import { useEffectOnce } from 'react-use'
 
 interface HomePageTeamSelectForm {
   user: SerializedUser
@@ -24,7 +25,7 @@ interface HomePageTeamSelectForm {
 }
 
 const HomeForm = ({ user, teams = [] }: HomePageTeamSelectForm) => {
-  const { push } = useRouter()
+  const { push, query } = useRouter()
   const { translate } = useI18n()
   const { usingElectron } = useElectron()
   const navigateToTeam = useCallback(
@@ -51,6 +52,16 @@ const HomeForm = ({ user, teams = [] }: HomePageTeamSelectForm) => {
       location.href = '/api/oauth/signout'
     }
   }, [usingElectron])
+
+  useEffectOnce(() => {
+    if (query['desktop-init'] === 'true' && teams[0] != null) {
+      const teamHref = getTeamLinkHref(
+        { id: teams[0].id, domain: teams[0].domain },
+        'index'
+      )
+      push(teamHref)
+    }
+  })
 
   return (
     <Container>
