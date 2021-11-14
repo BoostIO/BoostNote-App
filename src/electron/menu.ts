@@ -4,7 +4,6 @@ import {
   MenuItem,
   MenuItemConstructorOptions,
   shell,
-  ipcMain,
 } from 'electron'
 import { checkForUpdates } from './updater'
 import { createEmitIpcMenuItemHandler } from './ipc'
@@ -49,15 +48,6 @@ function getMacRootMenu(): MenuItemConstructorOptions {
       { role: 'about' },
       { type: 'separator' },
       {
-        type: 'normal',
-        label: 'New Window',
-        click: () => {
-          createAWindow(electronFrontendUrl)
-        },
-        accelerator: 'Cmd + Shift + N',
-      },
-      { type: 'separator' },
-      {
         label: 'Preferences',
         accelerator: 'Cmd+,',
         click: createEmitIpcMenuItemHandler('toggle-settings'),
@@ -65,7 +55,9 @@ function getMacRootMenu(): MenuItemConstructorOptions {
       { type: 'separator' },
       {
         label: 'Add Space',
-        click: createEmitIpcMenuItemHandler('create-cloud-space'),
+        click: () => {
+          createAWindow(electronFrontendUrl + '/cooperate')
+        },
       },
       { type: 'separator' },
       {
@@ -86,6 +78,15 @@ function getMacRootMenu(): MenuItemConstructorOptions {
 function getFileMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
   const submenuItems: MenuItemConstructorOptions[] = mac
     ? [
+        {
+          type: 'normal',
+          label: 'New Window',
+          click: () => {
+            createAWindow(electronFrontendUrl)
+          },
+          accelerator: 'Cmd + Shift + N',
+        },
+        { type: 'separator' },
         {
           type: 'normal',
           label: 'New Document',
@@ -128,7 +129,9 @@ function getFileMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
         { type: 'separator' },
         {
           label: 'Add Space',
-          click: createEmitIpcMenuItemHandler('create-cloud-space'),
+          click: () => {
+            createAWindow(electronFrontendUrl + '/cooperate')
+          },
         },
         { type: 'separator' },
         {
@@ -365,22 +368,8 @@ function createSwitchWorkspaceHandler(index: number) {
 
 function getWindowMenu(): MenuItemConstructorOptions {
   const submenuItems: MenuItemConstructorOptions[] = mac
-    ? [
-        { role: 'minimize' },
-        { type: 'separator' },
-        { role: 'front' },
-        { type: 'separator' },
-        { role: 'window' },
-      ]
-    : [
-        { role: 'minimize' },
-        { role: 'close' },
-        {
-          type: 'normal',
-          label: 'New window',
-          click: () => ipcMain.emit('new-window-event'),
-        },
-      ]
+    ? [{ role: 'minimize' }, { type: 'separator' }, { role: 'front' }]
+    : [{ role: 'minimize' }]
   return {
     label: 'Window',
     submenu: submenuItems,
