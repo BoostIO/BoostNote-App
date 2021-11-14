@@ -14,6 +14,7 @@ import {
   toggleSettingsMembersEventEmitter,
   toggleSidebarSearchEventEmitter,
   toggleSidebarNotificationsEventEmitter,
+  switchSpaceEventEmitter,
 } from '../utils/events'
 import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../keyboard'
 import { IpcRendererEvent } from 'electron'
@@ -190,11 +191,15 @@ const useElectronStore = (): ElectronStore => {
       toggleSplitEditModeEventEmitter.dispatch()
     })
     addHostListener('apply-bold-style', () => {
+      console.log('dispatch bold')
       applyBoldStyleEventEmitter.dispatch()
     })
     addHostListener('apply-italic-style', () => {
       applyItalicStyleEventEmitter.dispatch()
     })
+    /**
+     * TODO: Should be discarded after v0.23
+     */
     addHostListener(
       'update-access-token',
       (_event: IpcRendererEvent, accessToken: string | null) => {
@@ -202,6 +207,17 @@ const useElectronStore = (): ElectronStore => {
           accessTokenHasBeenInitialized = true
         }
         setAccessToken(accessToken)
+      }
+    )
+
+    addHostListener(
+      'switch-space',
+      (_event: IpcRendererEvent, index: number) => {
+        if (typeof index !== 'number') {
+          console.warn('index of switch-space event must be a number')
+          return
+        }
+        switchSpaceEventEmitter.dispatch({ index })
       }
     )
 

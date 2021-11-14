@@ -18,7 +18,7 @@ import {
   addIpcListener,
   removeIpcListener,
 } from '../lib/electronOnly'
-import { DidFailLoadEvent } from 'electron/main'
+import { DidFailLoadEvent, IpcRendererEvent } from 'electron/main'
 import styled from '../design/lib/styled'
 import { boostHubBaseUrl } from '../cloud/lib/consts'
 
@@ -158,10 +158,75 @@ const BoostHubWebview = ({
     addIpcListener('force-reload', forceReloadIpcEventHandler)
     addIpcListener('toggle-dev-tools', toggleDevToolsIpcEventHandler)
 
+    const newDocIpcEventHandler = () => {
+      webview.send('new-doc')
+    }
+    const searchIpcEventHandler = () => {
+      webview.send('search')
+    }
+    const toggleSettingsIpcEventHandler = () => {
+      webview.send('toggle-settings')
+    }
+    const saveAsIpcEventHandler = () => {
+      webview.send('save-as')
+    }
+    const applyBoldStyleIpcEventHandler = () => {
+      webview.send('apply-bold-style')
+    }
+    const applyItalicStyleIpcEventHandler = () => {
+      webview.send('apply-italic-style')
+    }
+    const focusEditorIpcEventHandler = () => {
+      webview.send('focus-editor')
+    }
+    const focusTitleIpcEventHandler = () => {
+      webview.send('focus-title')
+    }
+    const togglePreviewModeIpcEventHandler = () => {
+      webview.send('toggle-preview-mode')
+    }
+    const toggleSplitEditModeIpcEventHandler = () => {
+      webview.send('toggle-split-edit-mode')
+    }
+    const switchSpaceIpcEventHandler = (
+      _event: IpcRendererEvent,
+      index: number
+    ) => {
+      console.log('trying to switch team', index)
+      webview.send('switch-space', index)
+    }
+
+    addIpcListener('new-doc', newDocIpcEventHandler)
+    addIpcListener('search', searchIpcEventHandler)
+    addIpcListener('toggle-settings', toggleSettingsIpcEventHandler)
+    addIpcListener('save-as', saveAsIpcEventHandler)
+    addIpcListener('apply-bold-style', applyBoldStyleIpcEventHandler)
+    addIpcListener('apply-italic-style', applyItalicStyleIpcEventHandler)
+    addIpcListener('focus-editor', focusEditorIpcEventHandler)
+    addIpcListener('focus-title', focusTitleIpcEventHandler)
+    addIpcListener('toggle-preview-mode', togglePreviewModeIpcEventHandler)
+    addIpcListener('toggle-split-edit-mode', toggleSplitEditModeIpcEventHandler)
+    addIpcListener('switch-space', switchSpaceIpcEventHandler)
+
     return () => {
       removeIpcListener('reload', reloadIpcEventHandler)
       removeIpcListener('force-reload', forceReloadIpcEventHandler)
       removeIpcListener('toggle-dev-tools', toggleDevToolsIpcEventHandler)
+
+      removeIpcListener('new-doc', newDocIpcEventHandler)
+      removeIpcListener('search', searchIpcEventHandler)
+      removeIpcListener('toggle-settings', toggleSettingsIpcEventHandler)
+      removeIpcListener('save-as', saveAsIpcEventHandler)
+      removeIpcListener('apply-bold-style', applyBoldStyleIpcEventHandler)
+      removeIpcListener('apply-italic-style', applyItalicStyleIpcEventHandler)
+      removeIpcListener('focus-editor', focusEditorIpcEventHandler)
+      removeIpcListener('focus-title', focusTitleIpcEventHandler)
+      removeIpcListener('toggle-preview-mode', togglePreviewModeIpcEventHandler)
+      removeIpcListener(
+        'toggle-split-edit-mode',
+        toggleSplitEditModeIpcEventHandler
+      )
+      removeIpcListener('switch-space', switchSpaceIpcEventHandler)
     }
   })
 
@@ -172,14 +237,13 @@ const BoostHubWebview = ({
       switch (event.channel) {
         case 'new-window':
           const urlToOpen = event.args[0]
-          if (urlToOpen && urlToOpen.startsWith('https://boostnote.io')) {
-            // open in new browser window
+          if (
+            urlToOpen &&
+            urlToOpen.startsWith(process.env.BOOST_HUB_BASE_URL!)
+          ) {
             openExternal(urlToOpen)
           } else {
-            // open inside new window (desktop app webview)
             openNewWindow(urlToOpen)
-            // todo: [komediruzecki-2021-10-18] once window is opened, send some request to load particular link there
-            // this could be done by the above function or separately
           }
           break
         case 'open-external-url':
@@ -213,7 +277,7 @@ const BoostHubWebview = ({
                 submenu: [
                   {
                     type: 'normal',
-                    label: 'Go To Home Page',
+                    label: 'Go To Desktop Home Page',
                     click: () => {
                       webview.loadURL(src)
                     },

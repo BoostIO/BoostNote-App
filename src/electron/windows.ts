@@ -21,13 +21,6 @@ function applyMenuTemplate(template: MenuItemConstructorOptions[]) {
   Menu.setApplicationMenu(menu)
 }
 
-const keymap = new Map<string, string>([
-  ['toggleGlobalSearch', 'Ctrl + P'],
-  ['toggleSplitEditMode', 'Ctrl + \\'],
-  ['togglePreviewMode', 'Ctrl + E'],
-  ['editorSaveAs', 'Ctrl + S'],
-])
-
 const MAC = process.platform === 'darwin'
 
 export function createAWindow(
@@ -57,7 +50,7 @@ export function createAWindow(
 
   window.loadURL(url)
 
-  applyMenuTemplate(getTemplateFromKeymap(keymap))
+  applyMenuTemplate(getTemplateFromKeymap())
 
   if (MAC) {
     window.on('close', (event) => {
