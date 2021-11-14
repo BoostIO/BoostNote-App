@@ -1,5 +1,6 @@
 import path from 'path'
 import { parse as _parseUrl } from 'url'
+import querystring from 'querystring'
 
 export interface Location {
   pathname: string
@@ -23,11 +24,19 @@ export function normalizeLocation({ pathname, ...otherProps }: Location) {
   }
 }
 
-export function parseUrl(urlStr: string): Location {
-  const url = _parseUrl(urlStr, true)
-  return {
-    pathname: url.pathname || '',
-    hash: url.hash || '',
-    search: url.search || '',
-  }
+export function getQueryMap() {
+  const parsedQuery = querystring.parse(location.search.slice(1))
+  const queryMap = Object.entries(parsedQuery).reduce<Map<string, string>>(
+    (map, [key, value]) => {
+      if (typeof value === 'string') {
+        map.set(key, value)
+      } else if (typeof value[0] === 'string') {
+        map.set(key, value[0])
+      }
+      return map
+    },
+    new Map()
+  )
+
+  return queryMap
 }

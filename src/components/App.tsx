@@ -4,15 +4,15 @@ import { getBoostHubHomepageUrl } from '../lib/boosthub'
 import BoostHubWebview from './BoostHubWebview'
 import styled from '../design/lib/styled'
 import { createGlobalStyle } from 'styled-components'
-import querystring from 'querystring'
+import { getQueryMap } from '../lib/url'
 
-const parsedQuery = querystring.parse(location.search.slice(1))
-const targetUrl = typeof parsedQuery.url === 'string' ? parsedQuery.url : ''
+const parsedQuery = getQueryMap()
+const resolvedInitialUrl = resolveUrl(parsedQuery.get('url'))
 
 const App = () => {
   return (
     <Container>
-      <BoostHubWebview src={resolveUrl(targetUrl)} />
+      <BoostHubWebview src={resolvedInitialUrl} />
       <GlobalStyle />
     </Container>
   )
@@ -34,8 +34,12 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-function resolveUrl(url: string) {
-  if (url === '' || !url.startsWith(process.env.BOOST_HUB_BASE_URL!)) {
+function resolveUrl(url: string | undefined): string {
+  if (
+    url == null ||
+    url === '' ||
+    !url.startsWith(process.env.BOOST_HUB_BASE_URL!)
+  ) {
     return getBoostHubHomepageUrl()
   }
 
