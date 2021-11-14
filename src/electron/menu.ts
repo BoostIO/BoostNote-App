@@ -154,25 +154,6 @@ function getFileMenu(): MenuItemConstructorOptions {
 
 function getEditMenu(): MenuItemConstructorOptions {
   const submenuItems: MenuItemConstructorOptions[] = [
-    {
-      label: 'Format',
-      type: 'submenu',
-      submenu: [
-        {
-          type: 'normal',
-          label: 'Bold',
-          click: createEmitIpcMenuItemHandler('apply-bold-style'),
-          accelerator: mac ? 'Cmd + B' : 'Ctrl + B',
-        },
-        {
-          type: 'normal',
-          label: 'Italic',
-          click: createEmitIpcMenuItemHandler('apply-italic-style'),
-          accelerator: mac ? 'Cmd + I' : 'Ctrl + I',
-        },
-      ],
-    },
-    { type: 'separator' },
     { role: 'undo' },
     { role: 'redo' },
     { type: 'separator' },
@@ -187,25 +168,20 @@ function getEditMenu(): MenuItemConstructorOptions {
       accelerator: mac ? 'Cmd + P' : 'Ctrl + P',
     },
     { type: 'separator' },
+    { role: 'delete' },
+    { type: 'separator' },
+    { role: 'selectAll' },
   ]
   if (mac) {
     submenuItems.push(
-      { role: 'pasteAndMatchStyle' },
-      { role: 'delete' },
-      { role: 'selectAll' },
       { type: 'separator' },
       {
         label: 'Speech',
         submenu: [{ role: 'startSpeaking' }, { role: 'stopSpeaking' }],
       }
     )
-  } else {
-    submenuItems.push(
-      { role: 'delete' },
-      { type: 'separator' },
-      { role: 'selectAll' }
-    )
   }
+
   return {
     label: 'Edit',
     submenu: submenuItems,

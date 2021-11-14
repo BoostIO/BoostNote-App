@@ -23,6 +23,8 @@ import {
   toggleSidebarSearchEventEmitter,
   toggleSidebarNotificationsEventEmitter,
   newDocEventEmitter,
+  switchSpaceEventEmitter,
+  SwitchSpaceEventDetails,
 } from '../lib/utils/events'
 import { usePathnameChangeEffect, useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
@@ -159,6 +161,24 @@ const Application = ({
   }, [permissions, currentUser])
 
   const { spaces } = useCloudSidebarSpaces()
+
+  useEffect(() => {
+    const switchSpaceEventHandler = (
+      event: CustomEvent<SwitchSpaceEventDetails>
+    ) => {
+      const targetSpace = spaces[event.detail.index]
+      if (targetSpace == null) {
+        console.warn('invalid space index')
+        return
+      }
+      push(`${targetSpace.linkProps.href}`)
+    }
+    switchSpaceEventEmitter.listen(switchSpaceEventHandler)
+
+    return () => {
+      switchSpaceEventEmitter.unlisten(switchSpaceEventHandler)
+    }
+  }, [spaces, push])
 
   const openCreateFolderModal = useCallback(() => {
     openNewFolderForm({

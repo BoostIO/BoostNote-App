@@ -100,3 +100,11 @@ export type ResourceDeleteEventDetails = {
 export const resourceDeleteEventEmitter = createCustomEventEmitter<
   ResourceDeleteEventDetails
 >('delete-resource')
+
+export type SwitchSpaceEventDetails = {
+  index: number
+}
+
+export const switchSpaceEventEmitter = createCustomEventEmitter<
+  SwitchSpaceEventDetails
+>('switch-space')
