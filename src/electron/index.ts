@@ -66,7 +66,11 @@ app.on('ready', () => {
     callback(pathname)
   })
 
-  createAWindow(electronFrontendUrl)
+  createAWindow(
+    `${electronFrontendUrl}?url=${encodeURIComponent(
+      `${process.env.BOOST_HUB_BASE_URL!}?desktop-init=true`
+    )}`
+  )
 
   ipcMain.on('menuAcceleratorChanged', (_, args) => {
     if (args.length != 2) {
@@ -104,12 +108,6 @@ app.on('ready', () => {
       if (window.id !== windowId) {
         window.close()
       }
-    })
-  })
-
-  app.on('open-url', (_event, url) => {
-    getWindows().forEach((window) => {
-      window.webContents.send('open-boostnote-url', url)
     })
   })
 })
