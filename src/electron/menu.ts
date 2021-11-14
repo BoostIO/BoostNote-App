@@ -212,121 +212,142 @@ function getEditMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
 }
 
 function getViewMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
+  const submenuItems: MenuItemConstructorOptions[] = [
+    {
+      type: 'submenu',
+      label: 'Switch Space',
+      submenu: [
+        {
+          type: 'normal',
+          label: 'Switch to First Space',
+          accelerator: mac ? 'Cmd + 1' : 'Ctrl + 1',
+          click: createSwitchWorkspaceHandler(0),
+        },
+        {
+          type: 'normal',
+          label: 'Switch to Second Space',
+          accelerator: mac ? 'Cmd + 2' : 'Ctrl + 2',
+          click: createSwitchWorkspaceHandler(1),
+        },
+        {
+          type: 'normal',
+          label: 'Switch to Third Space',
+          accelerator: mac ? 'Cmd + 3' : 'Ctrl + 3',
+          click: createSwitchWorkspaceHandler(2),
+        },
+        {
+          type: 'normal',
+          label: 'Switch to 4th Space',
+          accelerator: mac ? 'Cmd + 4' : 'Ctrl + 4',
+          click: createSwitchWorkspaceHandler(3),
+        },
+        {
+          type: 'normal',
+          label: 'Switch to 5th Space',
+          accelerator: mac ? 'Cmd + 5' : 'Ctrl + 5',
+          click: createSwitchWorkspaceHandler(4),
+        },
+        {
+          type: 'normal',
+          label: 'Switch to 6th Space',
+          accelerator: mac ? 'Cmd + 6' : 'Ctrl + 6',
+          click: createSwitchWorkspaceHandler(5),
+        },
+        {
+          type: 'normal',
+          label: 'Switch to 7th Space',
+          accelerator: mac ? 'Cmd + 7' : 'Ctrl + 7',
+          click: createSwitchWorkspaceHandler(6),
+        },
+        {
+          type: 'normal',
+          label: 'Switch to 8th Space',
+          accelerator: mac ? 'Cmd + 8' : 'Ctrl + 8',
+          click: createSwitchWorkspaceHandler(7),
+        },
+        {
+          type: 'normal',
+          label: 'Switch to 9th Space',
+          accelerator: mac ? 'Cmd + 9' : 'Ctrl + 9',
+          click: createSwitchWorkspaceHandler(8),
+        },
+      ],
+    },
+    { type: 'separator' },
+    {
+      type: 'normal',
+      label: 'Focus On Editor',
+      click: createEmitIpcMenuItemHandler('focus-editor'),
+      accelerator: mac ? 'Cmd + J' : 'Ctrl + J',
+    },
+    {
+      type: 'normal',
+      label: 'Focus On Title',
+      click: createEmitIpcMenuItemHandler('focus-title'),
+      accelerator: mac ? 'Cmd +Shift+ J' : 'Ctrl+Shift + J',
+    },
+    { type: 'separator' },
+    {
+      type: 'normal',
+      label: 'Toggle Preview Mode',
+      click: createEmitIpcMenuItemHandler('toggle-preview-mode'),
+      accelerator: keymap.get('togglePreviewMode'),
+    },
+    {
+      type: 'normal',
+      label: 'Toggle Split Edit Mode',
+      click: createEmitIpcMenuItemHandler('toggle-split-edit-mode'),
+      accelerator: keymap.get('toggleSplitEditMode'),
+    },
+    { type: 'separator' },
+    {
+      type: 'normal',
+      label: 'Reload',
+      click: createEmitIpcMenuItemHandler('reload'),
+      accelerator: mac ? 'Cmd + R' : 'Ctrl + R',
+    },
+    { type: 'separator' },
+    {
+      type: 'submenu',
+      label: 'Developer',
+      submenu: [
+        {
+          type: 'normal',
+          label: 'Force Reload',
+          click: createEmitIpcMenuItemHandler('force-reload'),
+          accelerator: mac ? 'Cmd + Shift + R' : 'Ctrl + Shift + R',
+        },
+        {
+          type: 'normal',
+          label: 'Toggle Web View Dev Tools',
+          click: createEmitIpcMenuItemHandler('toggle-dev-tools'),
+          accelerator: mac ? 'Cmd + Alt + I' : 'Ctrl + Alt + I',
+        },
+        {
+          type: 'normal',
+          label: 'Toggle Browser Window Dev Tools',
+          click: (_menuItem: MenuItem, browserWindow?: BrowserWindow) => {
+            if (browserWindow == null) {
+              return
+            }
+            browserWindow.webContents.toggleDevTools()
+          },
+          accelerator: mac ? 'Cmd + Shift + Alt + I' : 'Ctrl + Shift + Alt + I',
+        },
+      ],
+    },
+
+    { type: 'separator' },
+    { role: 'resetZoom' },
+    { role: 'zoomIn' },
+    { role: 'zoomOut' },
+    { type: 'separator' },
+    { role: 'togglefullscreen' },
+  ]
+
   return {
     label: 'View',
-    submenu: [
-      {
-        type: 'submenu',
-        label: 'Switch Space',
-        submenu: [
-          {
-            type: 'normal',
-            label: 'Switch to First Space',
-            accelerator: mac ? 'Cmd + 1' : 'Ctrl + 1',
-            click: createSwitchWorkspaceHandler(0),
-          },
-          {
-            type: 'normal',
-            label: 'Switch to Second Space',
-            accelerator: mac ? 'Cmd + 2' : 'Ctrl + 2',
-            click: createSwitchWorkspaceHandler(1),
-          },
-          {
-            type: 'normal',
-            label: 'Switch to Third Space',
-            accelerator: mac ? 'Cmd + 3' : 'Ctrl + 3',
-            click: createSwitchWorkspaceHandler(2),
-          },
-          {
-            type: 'normal',
-            label: 'Switch to 4th Space',
-            accelerator: mac ? 'Cmd + 4' : 'Ctrl + 4',
-            click: createSwitchWorkspaceHandler(3),
-          },
-          {
-            type: 'normal',
-            label: 'Switch to 5th Space',
-            accelerator: mac ? 'Cmd + 5' : 'Ctrl + 5',
-            click: createSwitchWorkspaceHandler(4),
-          },
-          {
-            type: 'normal',
-            label: 'Switch to 6th Space',
-            accelerator: mac ? 'Cmd + 6' : 'Ctrl + 6',
-            click: createSwitchWorkspaceHandler(5),
-          },
-          {
-            type: 'normal',
-            label: 'Switch to 7th Space',
-            accelerator: mac ? 'Cmd + 7' : 'Ctrl + 7',
-            click: createSwitchWorkspaceHandler(6),
-          },
-          {
-            type: 'normal',
-            label: 'Switch to 8th Space',
-            accelerator: mac ? 'Cmd + 8' : 'Ctrl + 8',
-            click: createSwitchWorkspaceHandler(7),
-          },
-          {
-            type: 'normal',
-            label: 'Switch to 9th Space',
-            accelerator: mac ? 'Cmd + 9' : 'Ctrl + 9',
-            click: createSwitchWorkspaceHandler(8),
-          },
-        ],
-      },
-      { type: 'separator' },
-      {
-        type: 'normal',
-        label: 'Focus On Editor',
-        click: createEmitIpcMenuItemHandler('focus-editor'),
-        accelerator: mac ? 'Cmd + J' : 'Ctrl + J',
-      },
-      {
-        type: 'normal',
-        label: 'Focus On Title',
-        click: createEmitIpcMenuItemHandler('focus-title'),
-        accelerator: mac ? 'Cmd +Shift+ J' : 'Ctrl+Shift + J',
-      },
-      { type: 'separator' },
-      {
-        type: 'normal',
-        label: 'Toggle Preview Mode',
-        click: createEmitIpcMenuItemHandler('toggle-preview-mode'),
-        accelerator: keymap.get('togglePreviewMode'),
-      },
-      {
-        type: 'normal',
-        label: 'Toggle Split Edit Mode',
-        click: createEmitIpcMenuItemHandler('toggle-split-edit-mode'),
-        accelerator: keymap.get('toggleSplitEditMode'),
-      },
-      { type: 'separator' },
-      {
-        type: 'normal',
-        label: 'Reload',
-        click: createEmitIpcMenuItemHandler('reload'),
-        accelerator: mac ? 'Cmd + R' : 'Ctrl + R',
-      },
-      {
-        type: 'normal',
-        label: 'Force Reload',
-        click: createEmitIpcMenuItemHandler('force-reload'),
-        accelerator: mac ? 'Cmd + Shift + R' : 'Ctrl + Shift + R',
-      },
-      {
-        type: 'normal',
-        label: 'Toggle Dev Tools',
-        click: createEmitIpcMenuItemHandler('toggle-dev-tools'),
-        accelerator: mac ? 'Cmd + Alt + I' : 'Ctrl + Alt + I',
-      },
-      { type: 'separator' },
-      { role: 'resetZoom' },
-      { role: 'zoomIn' },
-      { role: 'zoomOut' },
-      { type: 'separator' },
-      { role: 'togglefullscreen' },
-    ],
+    submenu: submenuItems,
   }
 }
 
