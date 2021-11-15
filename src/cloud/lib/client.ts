@@ -1,4 +1,8 @@
-import { getAccessToken, usingElectron } from './stores/electron'
+import {
+  getAccessToken,
+  usingElectron,
+  usingLegacyElectron,
+} from './stores/electron'
 import ky from 'ky'
 import { boostHubBaseUrl, boostPdfExportBaseUrl, mockBackend } from './consts'
 import { mockHandler } from '../api/mock/mockHandler'
@@ -47,6 +51,7 @@ export async function callApi<T = any>(
   }
   const accessToken = getAccessToken()
   if (
+    usingLegacyElectron &&
     usingElectron &&
     accessToken != null &&
     mergedHeaders['Authorization'] == null
