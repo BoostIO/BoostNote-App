@@ -61,7 +61,7 @@ app.on('ready', () => {
 
   createAWindow(
     `${electronFrontendUrl}?url=${encodeURIComponent(
-      `${process.env.BOOST_HUB_BASE_URL!}?desktop-init=true`
+      `${process.env.BOOST_HUB_BASE_URL!}/desktop?desktop-init=true`
     )}`
   )
 
