@@ -10,20 +10,27 @@ import Icon from '../../atoms/Icon'
 import { mdiPlus } from '@mdi/js'
 import { TableColProps, TableRowProps } from './tableInterfaces'
 import shortid from 'shortid'
+import Checkbox from '../../molecules/Form/atoms/FormCheckbox'
 
 interface TableProps {
   cols?: TableColProps[]
   rows?: TableRowProps[]
   disabledAddColumn?: boolean
   disabledAddRow?: boolean
+  allRowsAreSelected?: boolean
+  showCheckboxes?: boolean
   onAddColButtonClick?: MouseEventHandler<HTMLButtonElement>
   onAddRowButtonClick?: MouseEventHandler<HTMLButtonElement>
+  selectAllRows?: (val: boolean) => void
 }
 
 const Table: AppComponent<TableProps> = ({
   className,
   cols = [],
   rows = [],
+  selectAllRows,
+  showCheckboxes,
+  allRowsAreSelected,
   disabledAddColumn = false,
   onAddColButtonClick,
   disabledAddRow = false,
@@ -40,6 +47,18 @@ const Table: AppComponent<TableProps> = ({
     <TableContainer className={cc(['table', className])}>
       <Scroller className='table__wrapper'>
         <div className='table__header'>
+          {showCheckboxes && selectAllRows != null && (
+            <div className='table-row__checkbox__wrapper'>
+              <Checkbox
+                className={cc([
+                  'table-row__checkbox',
+                  allRowsAreSelected && 'table-row__checkbox--checked',
+                ])}
+                checked={allRowsAreSelected}
+                toggle={() => selectAllRows(!allRowsAreSelected)}
+              />
+            </div>
+          )}
           {cols.map((col, i) => (
             <TableCol {...col} key={`${tableId}-head-${i}`} />
           ))}
@@ -103,6 +122,24 @@ const TableContainer = styled.div`
 
     &:hover {
       background-color: ${({ theme }) => theme.colors.background.secondary};
+    }
+  }
+
+  .table-row__checkbox__wrapper {
+    display: flex;
+    align-items: center;
+  }
+  .table-row:hover .table-row__checkbox,
+  .table__header:hover .table-row__checkbox {
+    opacity: 1;
+  }
+
+  .table-row__checkbox {
+    opacity: 0;
+    margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
+
+    &.table-row__checkbox--checked {
+      opacity: 1;
     }
   }
 `
