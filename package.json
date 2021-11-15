@@ -30,7 +30,7 @@
     "build:electron-main-staging": "rimraf electron/index.js && env-cmd --file .env.staging ts-node -P tsconfig-webpack.json scripts/build-electron-main",
     "build:electron-main-prod": "rimraf electron/index.js && env-cmd --file .env.production ts-node -P tsconfig-webpack.json scripts/build-electron-main",
     "meta": "node scripts/meta.js",
-    "prepack": "rimraf dist && npm run meta && env-cmd --file .env.production electron-builder --dir",
+    "prepack": "rimraf dist && npm run meta && env-cmd --file .env.production cross-env PREPACK=true electron-builder --dir",
     "pack": "rimraf dist && npm run meta && env-cmd --file .env.production electron-builder",
     "release": "npm run build:electron && rimraf dist && npm run meta && env-cmd --file .env.production electron-builder -- --publish",
     "build:cloud-staging": "rimraf compiled-cloud && env-cmd --file .env.staging cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production --config webpack.cloud.config.ts",
