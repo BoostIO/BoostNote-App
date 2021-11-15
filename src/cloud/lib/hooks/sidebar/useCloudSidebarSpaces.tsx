@@ -66,13 +66,7 @@ export function useCloudSidebarSpaces() {
           href,
           onClick: (event: React.MouseEvent) => {
             event.preventDefault()
-            if (usingElectron) {
-              // todo: [komediruzecki-2021-10-12] Fix teams navigation in electron - this should be fine fix for now
-              // sendToHost('request-app-navigate', `/${globalTeam.domain}`)
-              push(href)
-            } else {
-              push(href)
-            }
+            push(href)
           },
         },
       })
