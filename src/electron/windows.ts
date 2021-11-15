@@ -42,6 +42,7 @@ export function createAWindow(
     height: 800,
     minWidth: 960,
     minHeight: 630,
+    show: false,
     ...options,
   }
 
@@ -49,6 +50,9 @@ export function createAWindow(
   windows.add(window)
 
   window.loadURL(url)
+  window.once('ready-to-show', () => {
+    window.show()
+  })
 
   applyMenuTemplate(getTemplateFromKeymap())
 
