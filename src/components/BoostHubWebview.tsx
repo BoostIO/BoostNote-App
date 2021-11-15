@@ -258,6 +258,12 @@ const BoostHubWebview = ({
           if (accessToken != null) {
             webview.send('sign-in-via-access-token', accessToken)
           }
+
+          localStorage.setItem(
+            'backup:note.boostio.co:preferences',
+            preferences
+          )
+          localStorage.removeItem('note.boostio.co:preferences')
           return
         case 'new-window':
           const urlToOpen = event.args[0]
