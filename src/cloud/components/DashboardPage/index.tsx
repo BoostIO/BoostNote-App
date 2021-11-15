@@ -29,7 +29,7 @@ import {
 
 const SmartViewPage = ({ data }: SmartViewListPageResponseBody) => {
   const [selectedSmartViewId, setSelectedSmartViewId] = useState<string>()
-  const { smartViewsMap, docsMap, viewsMap } = useNav()
+  const { smartViewsMap, docsMap, viewsMap, workspacesMap } = useNav()
   const { openModal, openContextModal, closeAllModals } = useModal()
   const { team, currentUserIsCoreMember } = usePage()
   const { listViewsApi, sendingMap } = useCloudApi()
@@ -153,6 +153,7 @@ const SmartViewPage = ({ data }: SmartViewListPageResponseBody) => {
                   parent={{ type: 'smartView', target: selectedSmartView }}
                   docs={selectedSmartViewDocs}
                   currentUserIsCoreMember={currentUserIsCoreMember}
+                  workspacesMap={workspacesMap}
                 />
               )}
             </>
@@ -212,6 +213,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  height: 100%;
 
   .smartView__control {
     margin: ${({ theme }) => theme.sizes.spaces.df}px
@@ -222,6 +224,11 @@ const Container = styled.div`
       padding-right: ${({ theme }) => theme.sizes.spaces.sm}px;
       color: ${({ theme }) => theme.colors.text.primary};
     }
+  }
+
+  .views__list {
+    flex: 1 1 auto;
+    height: 100%;
   }
 `
 

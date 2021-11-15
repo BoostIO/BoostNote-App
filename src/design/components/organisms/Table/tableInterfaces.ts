@@ -6,6 +6,9 @@ export type TableRowProps = React.PropsWithChildren<{
   id?: string
   variant?: TableRowVariant
   cells?: TableCellProps[]
+  checked?: boolean
+  showCheckbox?: boolean
+  onCheckboxToggle?: (val: boolean) => void
   onDragStart?: DragEventHandler
   onDragEnd?: DragEventHandler
   onDrop?: DragEventHandler

@@ -6,6 +6,7 @@ import styled from '../../../design/lib/styled'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedView, ViewParent } from '../../interfaces/db/view'
+import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import UpdateDashboardModal from '../Modal/contents/SmartView/UpdateSmartViewModal'
 import TableView from './Table/TableView'
@@ -14,6 +15,7 @@ import ViewsSelector from './ViewsSelector'
 interface ViewsListProps {
   views: SerializedView[]
   parent: ViewParent
+  workspacesMap: Map<string, SerializedWorkspace>
   docs: SerializedDocWithSupplemental[]
   currentUserIsCoreMember: boolean
   team: SerializedTeam
@@ -23,6 +25,7 @@ const ViewsList = ({
   views,
   parent,
   docs,
+  workspacesMap,
   currentUserIsCoreMember,
   team,
 }: ViewsListProps) => {
@@ -64,6 +67,7 @@ const ViewsList = ({
         </Flexbox>
       ) : currentView.type === 'table' ? (
         <TableView
+          workspacesMap={workspacesMap}
           viewsSelector={
             <ViewsSelector
               selectedViewId={selectedViewId}
