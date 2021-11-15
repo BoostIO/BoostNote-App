@@ -164,7 +164,7 @@ const HomePageSignInForm = () => {
   return (
     <Container>
       <div className='intro'>
-        <Image src={'/static/logo.png'} className={'intro__logo'} />
+        <Image src={'/app/static/images/logo.png'} className={'intro__logo'} />
         <h1 className='intro__heading'>Welcome to Boost Note!</h1>
       </div>
 
