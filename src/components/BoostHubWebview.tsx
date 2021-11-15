@@ -1,4 +1,10 @@
-import React, { CSSProperties, useRef, useCallback, useEffect } from 'react'
+import React, {
+  CSSProperties,
+  useRef,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
 import { boostHubWebViewUserAgent, boostHubPreloadUrl } from '../lib/boosthub'
 import {
   WebviewTag,
@@ -21,6 +27,7 @@ import {
 import { DidFailLoadEvent, IpcRendererEvent } from 'electron/main'
 import styled from '../design/lib/styled'
 import { boostHubBaseUrl } from '../cloud/lib/consts'
+import Button from '../design/components/atoms/Button'
 
 export interface WebviewControl {
   focus(): void
@@ -38,7 +45,6 @@ interface BoostHubWebviewProps {
   controlRef?: React.MutableRefObject<WebviewControl | undefined>
   onDidNavigate?: (event: DidNavigateEvent) => void
   onDidNavigateInPage?: (event: DidNavigateInPageEvent) => void
-  onDidFailLoad?: (event: DidFailLoadEvent) => void
 }
 
 const BoostHubWebview = ({
@@ -47,10 +53,10 @@ const BoostHubWebview = ({
   className,
   controlRef,
   onDidNavigate,
-  onDidFailLoad,
 }: BoostHubWebviewProps) => {
   const webviewRef = useRef<WebviewTag>(null)
   const domReadyRef = useRef<boolean>(false)
+  const [connectionErrorOccurred, setConnectionErrorOccurred] = useState(false)
 
   const reload = useCallback(() => {
     webviewRef.current!.reload()
@@ -126,14 +132,18 @@ const BoostHubWebview = ({
 
   useEffect(() => {
     const webview = webviewRef.current!
-    if (onDidFailLoad == null) {
-      return
+    const onDidFailLoad = (event: DidFailLoadEvent) => {
+      console.warn('did fail load', event)
+      if (event.errorDescription !== 'ERR_CONNECTION_REFUSED') {
+        return
+      }
+      setConnectionErrorOccurred(true)
     }
     webview.addEventListener('did-fail-load', onDidFailLoad)
     return () => {
       webview.removeEventListener('did-fail-load', onDidFailLoad)
     }
-  }, [onDidFailLoad])
+  }, [])
 
   useEffectOnce(() => {
     const webview = webviewRef.current!
@@ -339,6 +349,26 @@ const BoostHubWebview = ({
 
   return (
     <Container className={className} style={style}>
+      {connectionErrorOccurred && (
+        <div className='connection-error'>
+          <div className='connection-error__body'>
+            <h1>Connection Refused</h1>
+            <p>
+              Cannot reach the server... Please check your internet connection.
+            </p>
+            <div>
+              <Button
+                onClick={() => {
+                  setConnectionErrorOccurred(false)
+                  reload()
+                }}
+              >
+                Reload
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       <webview
         ref={webviewRef}
         src={src}
@@ -367,5 +397,26 @@ const Container = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
+  }
+
+  & > .connection-error {
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #1e2024;
+    color: #fff;
+    font-family: ${({ theme }) => theme.fonts.family};
+    display: flex;
+    justify-content: center;
+  }
+
+  .connection-error__body {
+    max-width: 640px;
+    padding: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 `
