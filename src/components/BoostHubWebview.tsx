@@ -245,6 +245,20 @@ const BoostHubWebview = ({
 
     const ipcMessageEventHandler = (event: IpcMessageEvent) => {
       switch (event.channel) {
+        case 'sign-in-page-load':
+          const preferences = localStorage.getItem(
+            'note.boostio.co:preferences'
+          )
+          if (preferences == null) {
+            return
+          }
+          const parsedPreferences = JSON.parse(preferences)
+          const accessToken = parsedPreferences['cloud.user']?.accessToken
+
+          if (accessToken != null) {
+            webview.send('sign-in-via-access-token', accessToken)
+          }
+          return
         case 'new-window':
           const urlToOpen = event.args[0]
           if (typeof urlToOpen !== 'string') {
