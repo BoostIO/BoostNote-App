@@ -1,8 +1,18 @@
-import React, { ChangeEventHandler, useCallback, useRef, useState } from 'react'
+import React, {
+  ChangeEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import styled from '../../../design/lib/styled'
 import Button from '../../../design/components/atoms/Button'
 import { generateId } from '../../../lib/string'
-import { loginRequest, loginWithStateAndCode } from '../../api/desktop/login'
+import {
+  loginRequest,
+  loginWithAccessToken,
+  loginWithStateAndCode,
+} from '../../api/desktop/login'
 import { useElectron } from '../../lib/stores/electron'
 import { osName } from '../../../design/lib/platform'
 import Icon from '../../../design/components/atoms/Icon'
@@ -15,6 +25,11 @@ import {
 import { useRouter } from '../../lib/router'
 import { useGlobalData } from '../../lib/stores/globalData'
 import Image from '../../../design/components/atoms/Image'
+import { useEffectOnce } from 'react-use'
+import {
+  SignInViaAccessTokenDetails,
+  signInViaAccessTokenEventEmitter,
+} from '../../lib/utils/events'
 
 const HomePageSignInForm = () => {
   const { sendToElectron, usingElectron } = useElectron()
@@ -99,6 +114,52 @@ const HomePageSignInForm = () => {
     },
     [setPartialGlobalData, usingElectron, sendToElectron, push]
   )
+
+  useEffectOnce(() => {
+    if (!usingElectron) {
+      return
+    }
+
+    sendToElectron('sign-in-page-load')
+  })
+
+  useEffect(() => {
+    if (!usingElectron) {
+      return
+    }
+    const signInViaAccessToken = (
+      event: CustomEvent<SignInViaAccessTokenDetails>
+    ) => {
+      const accessToken = event.detail.accessToken
+      if (typeof accessToken !== 'string') {
+        console.warn('accessToken of sign-in-via-access-token is invalid')
+        return
+      }
+
+      loginWithAccessToken(accessToken)
+        .then((loginData) => {
+          setPartialGlobalData({
+            currentUser: loginData.user || undefined,
+            teams: loginData.teams || [],
+          })
+
+          if (usingElectron) {
+            sendToElectron('sign-in-event')
+          }
+          if (loginData.teams.length > 0) {
+            push(`/${loginData.teams[0].domain}`)
+          } else {
+            push('/cooperate')
+          }
+        })
+        .catch((err) => console.log('Error logging in', err))
+    }
+    signInViaAccessTokenEventEmitter.listen(signInViaAccessToken)
+
+    return () => {
+      signInViaAccessTokenEventEmitter.unlisten(signInViaAccessToken)
+    }
+  }, [push, sendToElectron, setPartialGlobalData, usingElectron])
 
   return (
     <Container>

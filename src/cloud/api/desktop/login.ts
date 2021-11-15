@@ -30,6 +30,14 @@ export async function loginWithStateAndCode(state: string, code: string) {
 
   return data
 }
+export async function loginWithAccessToken(accessToken: string) {
+  const data = await callApi<any>('api/desktop/login', {
+    method: 'post',
+    search: { accessToken },
+  })
+
+  return data
+}
 
 export async function loginRequest(state: string) {
   return boostHubBaseUrl + `/desktop/login/?state=${state}`

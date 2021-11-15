@@ -15,6 +15,7 @@ import {
   toggleSidebarSearchEventEmitter,
   toggleSidebarNotificationsEventEmitter,
   switchSpaceEventEmitter,
+  signInViaAccessTokenEventEmitter,
 } from '../utils/events'
 import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../keyboard'
 import { IpcRendererEvent } from 'electron'
@@ -197,6 +198,16 @@ const useElectronStore = (): ElectronStore => {
     addHostListener('apply-italic-style', () => {
       applyItalicStyleEventEmitter.dispatch()
     })
+
+    addHostListener(
+      'sign-in-via-access-token',
+      (_event, accessToken: string) => {
+        console.log('dispatch')
+        signInViaAccessTokenEventEmitter.dispatch({
+          accessToken,
+        })
+      }
+    )
     /**
      * TODO: Should be discarded after v0.23
      */

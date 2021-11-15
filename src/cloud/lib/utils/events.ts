@@ -108,3 +108,11 @@ export type SwitchSpaceEventDetails = {
 export const switchSpaceEventEmitter = createCustomEventEmitter<
   SwitchSpaceEventDetails
 >('switch-space')
+
+export type SignInViaAccessTokenDetails = {
+  accessToken: string
+}
+
+export const signInViaAccessTokenEventEmitter = createCustomEventEmitter<
+  SignInViaAccessTokenDetails
+>('sign-in-via-access-token')
