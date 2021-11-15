@@ -73,7 +73,10 @@ const HomeForm = ({ user, teams = [] }: HomePageTeamSelectForm) => {
               {
                 type: 'node',
                 element: (
-                  <Image src={'/static/logo.png'} className={'intro__logo'} />
+                  <Image
+                    src={'/app/static/images/logo.png'}
+                    className={'intro__logo'}
+                  />
                 ),
               },
             ],
