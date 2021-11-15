@@ -247,13 +247,17 @@ const BoostHubWebview = ({
       switch (event.channel) {
         case 'new-window':
           const urlToOpen = event.args[0]
-          if (
-            urlToOpen &&
-            urlToOpen.startsWith(process.env.BOOST_HUB_BASE_URL!)
-          ) {
-            openExternal(urlToOpen)
-          } else {
+          if (typeof urlToOpen !== 'string') {
+            console.warn(
+              'The first argument of new-window event must be a string.'
+            )
+            return
+          }
+
+          if (urlToOpen.startsWith(process.env.BOOST_HUB_BASE_URL!)) {
             openNewWindow(urlToOpen)
+          } else {
+            openExternal(urlToOpen)
           }
           break
         case 'open-external-url':
