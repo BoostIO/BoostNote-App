@@ -3,18 +3,21 @@ import '../lib/i18n'
 import { getBoostHubHomepageUrl } from '../lib/boosthub'
 import BoostHubWebview from './BoostHubWebview'
 import styled from '../design/lib/styled'
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { getQueryMap } from '../lib/url'
+import { darkTheme } from '../design/lib/styled/dark'
 
 const parsedQuery = getQueryMap()
 const resolvedInitialUrl = resolveUrl(parsedQuery.get('url'))
 
 const App = () => {
   return (
-    <Container>
-      <BoostHubWebview src={resolvedInitialUrl} />
-      <GlobalStyle />
-    </Container>
+    <ThemeProvider theme={darkTheme}>
+      <Container>
+        <BoostHubWebview src={resolvedInitialUrl} />
+        <GlobalStyle />
+      </Container>
+    </ThemeProvider>
   )
 }
 
