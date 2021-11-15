@@ -38,10 +38,6 @@ import Scroller from '../../../design/components/atoms/Scroller'
 import { FormSelectOption } from '../../../design/components/molecules/Form/atoms/FormSelect'
 import Checkbox from '../../../design/components/molecules/Form/atoms/FormCheckbox'
 
-export type ContentManagerParent =
-  | { type: 'folder'; item: SerializedFolderWithBookmark }
-  | { type: 'workspace'; item: SerializedWorkspace }
-
 type ContentTab = 'all' | 'folders' | 'docs'
 
 interface ContentManagerProps {
