@@ -15,7 +15,6 @@ import {
 import { useRouter } from '../../lib/router'
 import { useGlobalData } from '../../lib/stores/globalData'
 import Image from '../../../design/components/atoms/Image'
-import Form from '../../../design/components/molecules/Form'
 
 const HomePageSignInForm = () => {
   const { sendToElectron, usingElectron } = useElectron()
@@ -103,31 +102,11 @@ const HomePageSignInForm = () => {
 
   return (
     <Container>
-      <Form
-        fullWidth={true}
-        rows={[
-          {
-            items: [
-              {
-                type: 'node',
-                element: (
-                  <Image src={'/static/logo.png'} className={'intro__logo'} />
-                ),
-              },
-            ],
-          },
-          {
-            items: [
-              {
-                type: 'node',
-                element: (
-                  <h1 className='intro__heading'>Welcome to Boost Note!</h1>
-                ),
-              },
-            ],
-          },
-        ]}
-      />
+      <div className='intro'>
+        <Image src={'/static/logo.png'} className={'intro__logo'} />
+        <h1 className='intro__heading'>Welcome to Boost Note!</h1>
+      </div>
+
       {status === 'idle' ? (
         <>
           <div className='control'>
@@ -225,6 +204,9 @@ const Container = styled.div`
 
   .intro {
     margin-top: ${({ theme }) => theme.sizes.spaces.xl}px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .intro__logo {
     max-width: 240px;
