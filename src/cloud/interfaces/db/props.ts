@@ -1,3 +1,4 @@
+import { SerializedStatus } from './status'
 import { SerializedUserTeamPermissions } from './userTeamPermissions'
 
 interface Prop<T, D> {
@@ -22,6 +23,7 @@ export type SerializedPropData =
   | Prop<'json', any>
   | Prop<'number', NullablePropData<number>>
   | Prop<'user', NullablePropData<SerializedUserTeamPermissions>>
+  | Prop<'status', NullablePropData<SerializedStatus>>
 
 export type PropType = SerializedPropData['type']
 export type StaticPropType = 'creation_date' | 'update_date' | 'label'

@@ -1,14 +1,10 @@
 import React, { useCallback } from 'react'
-import {
-  DocStatus,
-  SerializedDocWithSupplemental,
-} from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedPropData, PropData, Props } from '../../interfaces/db/props'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import AssigneeSelect from './Pickers/AssigneeSelect'
 import DueDateSelect from './Pickers/DueDateSelect'
 import { format as formatDate } from 'date-fns'
-import { toLower } from 'lodash'
 import StatusSelect from './Pickers/StatusSelect'
 import TimePeriodPicker from './Pickers/TimePeriodPicker'
 
@@ -99,34 +95,24 @@ const PropPicker = ({
           }
         />
       )
-    case 'string':
-      if (toLower(propName) === 'status') {
-        return (
-          <StatusSelect
-            status={
-              typeof propData.data === 'string'
-                ? (propData.data as DocStatus)
-                : null
-            }
-            isErrored={isErrored}
-            sending={sendingMap.get(parent.target.id) === 'status'}
-            disabled={sendingMap.get(parent.target.id) != null || readOnly}
-            isReadOnly={readOnly}
-            onStatusChange={(val) =>
-              updateProp(
-                val != null
-                  ? {
-                      type: 'string',
-                      data: val,
-                    }
-                  : { type: 'string', data: null }
-              )
-            }
-          />
-        )
-      } else {
-        return null
-      }
+    case 'status':
+      return (
+        <StatusSelect
+          status={
+            Array.isArray(propData.data) ? propData.data[0] : propData.data
+          }
+          isErrored={isErrored}
+          sending={sendingMap.get(parent.target.id) === 'status'}
+          disabled={sendingMap.get(parent.target.id) != null || readOnly}
+          isReadOnly={readOnly}
+          onStatusChange={(val) =>
+            updateProp({
+              type: 'status',
+              data: val == null ? val : val.id,
+            })
+          }
+        />
+      )
     case 'json':
       if (
         propData.data != null &&
