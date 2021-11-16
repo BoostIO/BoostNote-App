@@ -24,6 +24,7 @@ import {
   addIpcListener,
   removeIpcListener,
   sendIpcMessage,
+  signOutBroadcast,
 } from '../lib/electronOnly'
 import { DidFailLoadEvent, IpcRendererEvent } from 'electron/main'
 import styled from '../design/lib/styled'
@@ -349,7 +350,8 @@ const BoostHubWebview = ({
             ],
           })
           break
-        case 'sign-out':
+        case 'sign-out-event':
+          signOutBroadcast()
           break
         case 'sign-in-event':
           // broadcast to other windows that sign in event happened
