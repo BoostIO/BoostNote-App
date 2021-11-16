@@ -458,8 +458,7 @@ const Container = styled.div`
       border-radius: 0 !important;
     }
     .item__property__button {
-      padding: ${({ theme }) => theme.sizes.spaces.df}px
-        ${({ theme }) => theme.sizes.spaces.sm}px;
+      padding: 16px ${({ theme }) => theme.sizes.spaces.sm}px;
       height: 100% !important;
       min-height: 32px;
       border: 0 !important;
