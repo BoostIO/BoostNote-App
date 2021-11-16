@@ -23,6 +23,7 @@ import {
   signInBroadcast,
   addIpcListener,
   removeIpcListener,
+  sendIpcMessage,
 } from '../lib/electronOnly'
 import { DidFailLoadEvent, IpcRendererEvent } from 'electron/main'
 import styled from '../design/lib/styled'
@@ -353,6 +354,9 @@ const BoostHubWebview = ({
         case 'sign-in-event':
           // broadcast to other windows that sign in event happened
           signInBroadcast(webview.getWebContentsId())
+          break
+        case 'register-protocol':
+          sendIpcMessage('register-protocol', [])
           break
         default:
           console.log('Unhandled ipc message event', event.channel, event.args)

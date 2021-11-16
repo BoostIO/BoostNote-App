@@ -70,10 +70,11 @@ const HomePageSignInForm = () => {
   const startLoginRequest = useCallback(async () => {
     setStatus('requesting')
     setErrorMessage(null)
+    sendToElectron('register-protocol')
     const authState = generateId()
     authStateRef.current = authState
     await openLoginPage(authState)
-  }, [openLoginPage])
+  }, [openLoginPage, sendToElectron])
 
   const onSignIn = useCallback(() => {
     startLoginRequest().catch((err) => console.log('Cannot log in', err))
