@@ -1,6 +1,10 @@
 import { generate } from 'shortid'
 import { SerializedQuery } from '../../interfaces/db/smartView'
-import { PropType, StaticPropType } from '../../interfaces/db/props'
+import {
+  PropSubType,
+  PropType,
+  StaticPropType,
+} from '../../interfaces/db/props'
 import { isString } from '../utils/string'
 import { sortByAttributeAsc } from '../../../design/lib/utils/array'
 import { LexoRank } from 'lexorank'
@@ -13,6 +17,10 @@ export interface ViewTableData {
 
 export function makeTablePropColId(name: string, type?: string) {
   return generate() + ':' + name + ':' + type
+}
+
+export function getPropTypeFromColId(colId: string) {
+  return colId.split(':').pop() as PropSubType | PropType
 }
 
 export interface StaticPropCol {

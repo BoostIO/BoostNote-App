@@ -5,7 +5,6 @@ import {
   mdiTrashCanOutline,
 } from '@mdi/js'
 import {
-  DocStatus,
   SerializedDoc,
   SerializedDocWithSupplemental,
 } from '../../interfaces/db/doc'
@@ -26,13 +25,24 @@ import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import DocDueDateSelect from '../Props/Pickers/DueDateSelect'
-import DocStatusSelect from '../Props/Pickers/StatusSelect'
-import ContentManagerToolbarStatusPopup from './ContentManagerToolbarStatusPopup'
 import DocAssigneeSelect from '../Props/Pickers/AssigneeSelect'
 import DocLabelSelectionModal from '../Props/Pickers/DocLabelSelectionModal'
 import BulkActionProgress, {
   BulkActionState,
 } from '../../../design/components/molecules/BulkActionProgress'
+import {
+  Column,
+  getPropTypeFromColId,
+  isStaticPropCol,
+} from '../../lib/views/table'
+import {
+  FilledSerializedPropData,
+  PropData,
+  PropSubType,
+  PropType,
+} from '../../interfaces/db/props'
+import { isPropFilled } from '../../lib/props'
+import TimePeriodPicker from '../Props/Pickers/TimePeriodPicker'
 
 interface ContentManagerToolbarProps {
   team: SerializedTeam
@@ -43,18 +53,11 @@ interface ContentManagerToolbarProps {
   selectedFolders: Set<string>
   updating: string[]
   setUpdating: React.Dispatch<React.SetStateAction<string[]>>
-}
-
-enum BulkActions {
-  move = 0,
-  delete = 1,
-  duedate = 2,
-  status = 3,
-  assignees = 4,
-  label = 5,
+  propsColumns: Column[]
 }
 
 const ContentManagerToolbar = ({
+  propsColumns,
   team,
   selectedDocs,
   selectedFolders,
@@ -63,15 +66,13 @@ const ContentManagerToolbar = ({
   updating,
   setUpdating,
 }: ContentManagerToolbarProps) => {
-  const [sending, setSending] = useState<number>()
+  const [sending, setSending] = useState<string>()
   const {
     updateDoc,
     updateFolder,
     deleteFolderApi,
     deleteDocApi,
-    updateDocStatusApi,
-    updateDocDueDateApi,
-    updateDocAssigneeApi,
+    updateDocPropsApi,
     updateDocTagsBulkApi,
   } = useCloudApi()
   const { translate } = useI18n()
@@ -139,7 +140,7 @@ const ContentManagerToolbar = ({
         ...[...selectedFolders.values()].map(getFolderIdFromString)
       )
       setUpdating((prev) => [...prev, ...patternedIds])
-      setSending(BulkActions.move)
+      setSending('move')
       setBulkActionState(() => {
         return {
           jobCount: patternedIds.length,
@@ -216,7 +217,7 @@ const ContentManagerToolbar = ({
               ...[...selectedFolders.values()].map(getFolderIdFromString)
             )
             setUpdating((prev) => [...prev, ...patternedIds])
-            setSending(BulkActions.delete)
+            setSending('delete')
             for (const folderId of selectedFolders.values()) {
               const target = foldersMap.get(folderId)
               if (target != null) {
@@ -252,12 +253,17 @@ const ContentManagerToolbar = ({
   ])
 
   const selectedDocumentsCommonValues = useMemo(() => {
-    const values: {
-      assignees: string[]
-      status?: DocStatus
-      tags: string[]
-      dueDate?: string
-    } = { tags: [], assignees: [] }
+    const values: Record<
+      string,
+      | { type: PropType; subType?: PropSubType; value: any }
+      | { type: 'static'; prop: 'label'; value: string[] }
+    > = {
+      tags: {
+        type: 'static',
+        prop: 'label',
+        value: [],
+      },
+    }
 
     if (selectedDocs.size === 0) {
       return values
@@ -275,156 +281,113 @@ const ContentManagerToolbar = ({
       return values
     }
 
-    values.assignees =
-      docs[0].props.assignees == null
-        ? []
-        : Array.isArray(docs[0].props.assignees.data)
-        ? docs[0].props.assignees.data.map((assignee) => assignee.userId)
-        : [docs[0].props.assignees.data.userId]
+    values.tags.value = (docs[0].tags || []).map((tag) => tag.text)
+    const props = docs[0].props || {}
+    Object.keys(props).forEach((key) => {
+      if (!isPropFilled(props[key])) {
+        return
+      }
 
-    values.status =
-      docs[0].props.status != null &&
-      docs[0].props.status.type === 'string' &&
-      !Array.isArray(docs[0].props.status.data)
-        ? (docs[0].props.status.data as DocStatus)
-        : undefined
-    values.tags = (docs[0].tags || []).map((tag) => tag.text)
-    values.dueDate =
-      docs[0].props.dueDate != null &&
-      docs[0].props.dueDate.type === 'date' &&
-      !Array.isArray(docs[0].props.dueDate.data) &&
-      docs[0].props.dueDate.data != null
-        ? docs[0].props.dueDate.data.toString()
-        : undefined
+      const docProp = props[key] as FilledSerializedPropData
+      switch (docProp.type) {
+        case 'json':
+          if (docProp.data.dataType === 'timeperiod') {
+            values[key] = {
+              type: docProp.type,
+              subType: 'timeperiod',
+              value: docProp.data.data,
+            }
+          }
+          break
+        case 'user':
+          values[key] = {
+            type: docProp.type,
+            value:
+              docProp.data == null
+                ? []
+                : Array.isArray(docProp.data)
+                ? docProp.data.map((assignee) => assignee.userId)
+                : [docProp.data.userId],
+          }
+          break
+        case 'date':
+        case 'string':
+          values[key] = {
+            type: docProp.type,
+            value: docProp.data,
+          }
+          break
+        default:
+          break
+      }
+    })
 
     docs.forEach((doc) => {
       /** iterative */
-      let newAssigneeArray = values.assignees.slice()
-      let newTagsArray = values.tags.slice()
+      let newTagsArray = values['tags']['value'].slice()
       /****/
 
-      const docAssignees =
-        doc.props.assignees == null
-          ? []
-          : Array.isArray(doc.props.assignees.data)
-          ? doc.props.assignees.data.map((assignee) => assignee.userId)
-          : [doc.props.assignees.data.userId]
-
       const docTags = (doc.tags || []).map((tag) => tag.text)
-
-      values.assignees.forEach((assignee) => {
-        if (!docAssignees.includes(assignee)) {
-          newAssigneeArray = newAssigneeArray.filter((val) => val !== assignee)
-        }
-      })
-
-      values.tags.forEach((tag) => {
+      values.tags.value.forEach((tag: string) => {
         if (!docTags.includes(tag)) {
-          newTagsArray = newTagsArray.filter((val) => val !== tag)
+          newTagsArray = newTagsArray.filter((val: string) => val !== tag)
         }
       })
+      values.tags.value = newTagsArray
 
-      if (
-        values.dueDate != null &&
-        values.dueDate !== doc.props.dueDate?.data
-      ) {
-        values.dueDate = undefined
-      }
+      const props = doc.props || {}
+      Object.keys(values).forEach((key) => {
+        if (key === 'tags') {
+          return
+        }
 
-      if (values.status != null && values.status !== doc.props.status?.data) {
-        values.status = undefined
-      }
+        if (
+          props[key] == null ||
+          !isPropFilled(props[key]) ||
+          props[key].type !== values[key].type
+        ) {
+          delete values[key]
+          return
+        }
 
-      /** changes **/
-      values.assignees = newAssigneeArray
-      values.tags = newTagsArray
+        const docProp = props[key] as FilledSerializedPropData
+        switch (docProp.type) {
+          case 'json':
+            if (
+              docProp.data.dataType !== 'timeperiod' ||
+              docProp.data.data !== values[key]['value']
+            ) {
+              delete values[key]
+            }
+            break
+          case 'user':
+            {
+              let newUserArray = values[key].value.slice() as string[]
+              const docUserIds: string[] = Array.isArray(docProp.data)
+                ? docProp.data.map((user) => user.userId)
+                : [docProp.data.userId]
+
+              ;(values[key].value as string[]).forEach((user: string) => {
+                if (!docUserIds.includes(user)) {
+                  newUserArray = newUserArray.filter((val) => val !== user)
+                }
+              })
+            }
+            break
+          case 'date':
+          case 'string':
+            if (docProp.data !== values[key]['value']) {
+              delete values[key]
+            }
+            break
+          default:
+            break
+        }
+      })
     })
 
     return values
   }, [selectedDocs, documentsMap])
-
-  const sendUpdateDocDueDate = useCallback(
-    async (newDate: Date | null) => {
-      if (selectedDocsAreUpdating || selectedDocs.size === 0) {
-        return
-      }
-      const patternedIds = [...selectedDocs.values()].map(getDocIdFromString)
-      setUpdating((prev) => [...prev, ...patternedIds])
-      setSending(BulkActions.duedate)
-      for (const docId of selectedDocs.values()) {
-        const doc = documentsMap.get(docId)
-        if (doc == null) {
-          continue
-        }
-        await updateDocDueDateApi(doc, newDate)
-      }
-      setSending(undefined)
-      setUpdating((prev) => difference(prev, patternedIds))
-    },
-    [
-      selectedDocs,
-      selectedDocsAreUpdating,
-      documentsMap,
-      updateDocDueDateApi,
-      setUpdating,
-    ]
-  )
-
-  const sendUpdateStatus = useCallback(
-    async (status: DocStatus | null) => {
-      closeAllModals()
-      if (selectedDocsAreUpdating || selectedDocs.size === 0) {
-        return
-      }
-      const patternedIds = [...selectedDocs.values()].map(getDocIdFromString)
-      setUpdating((prev) => [...prev, ...patternedIds])
-      setSending(BulkActions.status)
-      for (const docId of selectedDocs.values()) {
-        const doc = documentsMap.get(docId)
-        if (doc == null) {
-          continue
-        }
-        await updateDocStatusApi(doc, status)
-      }
-      setSending(undefined)
-      setUpdating((prev) => difference(prev, patternedIds))
-    },
-    [
-      selectedDocs,
-      selectedDocsAreUpdating,
-      documentsMap,
-      updateDocStatusApi,
-      setUpdating,
-      closeAllModals,
-    ]
-  )
-
-  const sendUpdateAssignees = useCallback(
-    async (newAssignees: string[]) => {
-      if (selectedDocsAreUpdating || selectedDocs.size === 0) {
-        return
-      }
-      const patternedIds = [...selectedDocs.values()].map(getDocIdFromString)
-      setUpdating((prev) => [...prev, ...patternedIds])
-      setSending(BulkActions.assignees)
-      for (const docId of selectedDocs.values()) {
-        const doc = documentsMap.get(docId)
-        if (doc == null) {
-          continue
-        }
-        await updateDocAssigneeApi(doc, newAssignees)
-      }
-      setSending(undefined)
-      setUpdating((prev) => difference(prev, patternedIds))
-    },
-    [
-      selectedDocs,
-      selectedDocsAreUpdating,
-      updateDocAssigneeApi,
-      setUpdating,
-      documentsMap,
-    ]
-  )
 
   const sendTags = useCallback(
     async (newTags: string[]) => {
@@ -434,7 +397,7 @@ const ContentManagerToolbar = ({
       }
       const patternedIds = [...selectedDocs.values()].map(getDocIdFromString)
       setUpdating((prev) => [...prev, ...patternedIds])
-      setSending(BulkActions.label)
+      setSending('label')
       for (const docId of selectedDocs.values()) {
         await updateDocTagsBulkApi(
           { id: docId, teamId: team.id } as SerializedDoc,
@@ -454,6 +417,132 @@ const ContentManagerToolbar = ({
     ]
   )
 
+  const updateProp = useCallback(
+    async (prop: [string, PropData | null]) => {
+      closeAllModals()
+      if (selectedDocsAreUpdating || selectedDocs.size === 0) {
+        return
+      }
+      const patternedIds = [...selectedDocs.values()].map(getDocIdFromString)
+      setUpdating((prev) => [...prev, ...patternedIds])
+      setSending(prop[0])
+      for (const docId of selectedDocs.values()) {
+        const doc = documentsMap.get(docId)
+        if (doc == null) {
+          continue
+        }
+
+        await updateDocPropsApi(doc, prop)
+      }
+      setSending(undefined)
+      setUpdating((prev) => difference(prev, patternedIds))
+    },
+    [
+      closeAllModals,
+      documentsMap,
+      selectedDocs,
+      selectedDocsAreUpdating,
+      setUpdating,
+      updateDocPropsApi,
+    ]
+  )
+
+  const propsButtons = useMemo(() => {
+    const filteredColumns = propsColumns.filter((col) => !isStaticPropCol(col))
+    if (filteredColumns.length === 0) {
+      return []
+    }
+
+    return (
+      <>
+        {filteredColumns.map((propColumn) => {
+          const columnType = getPropTypeFromColId(propColumn.id)
+          switch (columnType) {
+            case 'user':
+              return (
+                <DocAssigneeSelect
+                  isLoading={sending === propColumn.id}
+                  disabled={selectedDocsAreUpdating}
+                  defaultValue={
+                    selectedDocumentsCommonValues[propColumn.name] != null
+                      ? selectedDocumentsCommonValues[propColumn.name].value
+                      : []
+                  }
+                  readOnly={selectedDocsAreUpdating}
+                  popupAlignment='top-left'
+                  update={(val: string[]) => {
+                    updateProp([
+                      propColumn.name,
+                      {
+                        type: 'user',
+                        data: val,
+                      },
+                    ])
+                  }}
+                  label={propColumn.name}
+                />
+              )
+            case 'date':
+              return (
+                <DocDueDateSelect
+                  dueDate={
+                    selectedDocumentsCommonValues[propColumn.name] != null
+                      ? selectedDocumentsCommonValues[propColumn.name].value
+                      : undefined
+                  }
+                  isReadOnly={selectedDocsAreUpdating}
+                  sending={sending === propColumn.name}
+                  shortenedLabel={true}
+                  onDueDateChange={(newDate: Date | null) => {
+                    updateProp([
+                      propColumn.name,
+                      {
+                        type: 'date',
+                        data: newDate,
+                      },
+                    ])
+                  }}
+                  label={propColumn.name}
+                  disabled={selectedDocsAreUpdating}
+                />
+              )
+            case 'timeperiod':
+              return (
+                <TimePeriodPicker
+                  label={propColumn.name}
+                  isReadOnly={selectedDocsAreUpdating}
+                  sending={sending === propColumn.name}
+                  disabled={selectedDocsAreUpdating}
+                  value={
+                    selectedDocumentsCommonValues[propColumn.name] != null
+                      ? selectedDocumentsCommonValues[propColumn.name].value
+                      : undefined
+                  }
+                  onPeriodChange={(val) => {
+                    updateProp([
+                      propColumn.name,
+                      {
+                        type: 'json',
+                        data: { dataType: 'timeperiod', data: val },
+                      },
+                    ])
+                  }}
+                />
+              )
+            default:
+              return null
+          }
+        })}
+      </>
+    )
+  }, [
+    propsColumns,
+    selectedDocsAreUpdating,
+    selectedDocumentsCommonValues,
+    sending,
+    updateProp,
+  ])
+
   if (selectedDocs.size === 0 && selectedFolders.size === 0) {
     return null
   }
@@ -467,6 +556,7 @@ const ContentManagerToolbar = ({
           </span>
           {selectedDocs.size > 0 && selectedFolders.size === 0 && (
             <>
+              {propsButtons}
               <LoadingButton
                 className='cm__tool'
                 variant='bordered'
@@ -475,7 +565,9 @@ const ContentManagerToolbar = ({
                   openContextModal(
                     event,
                     <DocLabelSelectionModal
-                      selectedTags={selectedDocumentsCommonValues.tags}
+                      selectedTags={
+                        selectedDocumentsCommonValues['tags']['value']
+                      }
                       sendTags={sendTags}
                     />,
                     {
@@ -485,21 +577,14 @@ const ContentManagerToolbar = ({
                   )
                 }}
                 disabled={selectedDocsAreUpdating}
-                spinning={sending === BulkActions.label}
+                spinning={sending === 'label'}
               >
                 {translate(lngKeys.GeneralLabels)}
-                {selectedDocumentsCommonValues.tags.length > 0
-                  ? ` (${selectedDocumentsCommonValues.tags.length})`
+                {selectedDocumentsCommonValues['tags']['value'].length > 0
+                  ? ` (${selectedDocumentsCommonValues['tags']['value'].length})`
                   : null}
               </LoadingButton>
-              <DocAssigneeSelect
-                isLoading={sending === BulkActions.assignees}
-                disabled={selectedDocsAreUpdating}
-                defaultValue={selectedDocumentsCommonValues.assignees}
-                readOnly={selectedDocsAreUpdating}
-                update={sendUpdateAssignees}
-                popupAlignment='top-left'
-              />
+              {/* 
               <DocStatusSelect
                 status={selectedDocumentsCommonValues.status}
                 sending={sending === BulkActions.status}
@@ -526,6 +611,7 @@ const ContentManagerToolbar = ({
                 shortenedLabel={true}
                 onDueDateChange={sendUpdateDocDueDate}
               />
+              */}
             </>
           )}
           <LoadingButton
@@ -534,7 +620,7 @@ const ContentManagerToolbar = ({
             iconPath={mdiFolderMoveOutline}
             onClick={openMoveForm}
             disabled={selectedDocsAreUpdating || selectedFoldersAreUpdating}
-            spinning={sending === BulkActions.move}
+            spinning={sending === 'move'}
           >
             {translate(lngKeys.GeneralMoveVerb)}
           </LoadingButton>
@@ -544,13 +630,13 @@ const ContentManagerToolbar = ({
             iconPath={mdiTrashCanOutline}
             onClick={bulkDeleteCallback}
             disabled={selectedDocsAreUpdating || selectedFoldersAreUpdating}
-            spinning={sending === BulkActions.delete}
+            spinning={sending === 'delete'}
           >
             {translate(lngKeys.GeneralDelete)}
           </LoadingButton>
         </div>
       </Container>
-      {sending === BulkActions.move && (
+      {sending === 'move' && (
         <BulkActionProgress bulkActionState={bulkActionState} />
       )}
     </>
