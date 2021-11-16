@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import cc from 'classcat'
 import styled from '../../../../design/lib/styled'
 import PropertyValueButton from './PropertyValueButton'
@@ -9,6 +9,13 @@ import FormInput from '../../../../design/components/molecules/Form/atoms/FormIn
 import Spinner from '../../../../design/components/atoms/Spinner'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
 import { isChildNode } from '../../../lib/dom'
+import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
+import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import { mdiDotsHorizontal, mdiTrashCanOutline } from '@mdi/js'
+import { useModal } from '../../../../design/lib/stores/modal'
+import Flexbox from '../../../../design/components/atoms/Flexbox'
+import Icon from '../../../../design/components/atoms/Icon'
+import { useEffectOnce } from 'react-use'
 
 interface StatusSelectProps {
   sending?: boolean
@@ -29,38 +36,37 @@ const StatusSelect = ({
   onStatusChange,
   onClick,
 }: StatusSelectProps) => {
-  const [showInput, setShowInput] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const onBlurHandler = useCallback((event: any) => {
-    if (
-      containerRef.current !== event.relatedTarget &&
-      !isChildNode(
-        containerRef.current,
-        event.relatedTarget as HTMLElement | null
+  const { openContextModal, closeLastModal } = useModal()
+  const onStatusChangeRef = useRef(onStatusChange)
+  useEffect(() => {
+    onStatusChangeRef.current = onStatusChange
+  }, [onStatusChange])
+
+  const openSelector: React.MouseEventHandler = useCallback(
+    (ev) => {
+      openContextModal(
+        ev,
+        <StatusSelector
+          onSelect={(status) => {
+            onStatusChangeRef.current(status)
+            closeLastModal()
+          }}
+        />,
+        { alignment: 'bottom-left', width: 200, removePadding: true }
       )
-    ) {
-      setShowInput(false)
-    }
-  }, [])
+    },
+    [openContextModal, closeLastModal]
+  )
+
   return (
-    <Container
-      onBlur={onBlurHandler}
-      ref={containerRef}
-      className={cc([
-        'doc__tags__create',
-        'item__status__select',
-        'prop__margin',
-      ])}
-    >
+    <div className={cc(['item__status__select', 'prop__margin'])}>
       <PropertyValueButton
         sending={sending}
         isErrored={isErrored}
         isReadOnly={isReadOnly}
         empty={status == null}
         disabled={disabled}
-        onClick={(e) =>
-          onClick != null ? onClick(e) : setShowInput((prev) => !prev)
-        }
+        onClick={(e) => (onClick != null ? onClick(e) : openSelector(e))}
       >
         {status != null ? (
           <StatusView
@@ -71,15 +77,7 @@ const StatusSelect = ({
           <StatusView name='No Status' />
         )}
       </PropertyValueButton>
-      {showInput && (
-        <StatusSelector
-          onSelect={(status) => {
-            onStatusChange(status)
-            setShowInput(false)
-          }}
-        />
-      )}
-    </Container>
+    </div>
   )
 }
 
@@ -91,11 +89,12 @@ const StatusSelector = ({
   onSelect: (status: SerializedStatus | null) => void
 }) => {
   const { team } = usePage()
-  const { state, addStatus } = useStatuses(team!.id)
+  const { state, addStatus, removeStatus, editStatus } = useStatuses(team!.id)
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [sending, setSending] = useState<boolean>(false)
   const [tagText, setTagText] = useState<string>('')
+  const { openContextModal, closeLastModal } = useModal()
 
   const createStatusHandler = useCallback(
     async (name: string) => {
@@ -117,6 +116,32 @@ const StatusSelector = ({
     [setTagText]
   )
 
+  const openEditor = useCallback(
+    (ev: React.MouseEvent, status: SerializedStatus) => {
+      ev.stopPropagation()
+      ev.preventDefault()
+      openContextModal(
+        ev,
+        <StatusEditor
+          status={status}
+          onDelete={(status) => {
+            removeStatus(status)
+            closeLastModal()
+          }}
+          onSave={(status) => {
+            editStatus(status)
+          }}
+        />,
+        {
+          removePadding: true,
+          width: 200,
+          keepAll: true,
+        }
+      )
+    },
+    [openContextModal, removeStatus, editStatus, closeLastModal]
+  )
+
   const options = useMemo(() => {
     return state.statuses.filter((status) => status.name.startsWith(tagText))
   }, [state.statuses, tagText])
@@ -136,7 +161,7 @@ const StatusSelector = ({
   })
 
   return (
-    <div ref={containerRef} className='autocomplete__container'>
+    <Container ref={containerRef} className='autocomplete__container'>
       <FormInput
         ref={inputRef}
         className='autocomplete__input'
@@ -179,20 +204,106 @@ const StatusSelector = ({
             href='#'
             onClick={() => onSelect(status)}
           >
-            <StatusView
-              name={status.name}
-              backgroundColor={status.backgroundColor}
-            />
+            <Flexbox justifyContent='space-between'>
+              <StatusView
+                name={status.name}
+                backgroundColor={status.backgroundColor}
+              />
+              <span onClick={(ev) => openEditor(ev, status)}>
+                <Icon path={mdiDotsHorizontal} />
+              </span>
+            </Flexbox>
           </a>
         ))}
       </div>
-    </div>
+    </Container>
+  )
+}
+
+interface StatusEditorProps {
+  status: SerializedStatus
+  onDelete: (status: SerializedStatus) => void
+  onSave: (status: SerializedStatus) => void
+}
+
+const StatusEditor = ({ status, onDelete, onSave }: StatusEditorProps) => {
+  const [editingStatus, setEditingStatus] = useState(status)
+  const editingStatusRef = useRef(status)
+  const onSaveRef = useRef(onSave)
+
+  useEffect(() => {
+    editingStatusRef.current = editingStatus
+  }, [editingStatus])
+
+  useEffect(() => {
+    onSaveRef.current = onSave
+  }, [onSave])
+
+  useEffectOnce(() => {
+    return () => {
+      if (
+        editingStatusRef.current.name !== status.name ||
+        editingStatusRef.current.backgroundColor !== status.backgroundColor
+      ) {
+        onSaveRef.current(editingStatusRef.current)
+      }
+    }
+  })
+
+  const setName: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (ev) => {
+      const name = ev.target.value
+      setEditingStatus((prev) => ({ ...prev, name }))
+    },
+    []
+  )
+  const setColor: React.ChangeEventHandler<HTMLInputElement> = useCallback(
+    (ev) => {
+      const backgroundColor = ev.target.value
+      setEditingStatus((prev) => ({
+        ...prev,
+        backgroundColor: backgroundColor === '' ? undefined : backgroundColor,
+      }))
+    },
+    []
+  )
+
+  return (
+    <MetadataContainer>
+      <MetadataContainerRow row={{ type: 'header', content: 'STATUS TITLE' }} />
+      <MetadataContainerRow
+        row={{
+          type: 'content',
+          content: <FormInput value={editingStatus.name} onChange={setName} />,
+        }}
+      />
+      <MetadataContainerRow row={{ type: 'header', content: 'COLOR' }} />
+      <MetadataContainerRow
+        row={{
+          type: 'content',
+          content: (
+            <FormInput
+              value={editingStatus.backgroundColor || ''}
+              onChange={setColor}
+            />
+          ),
+        }}
+      />
+      <MetadataContainerRow
+        row={{
+          type: 'button',
+          props: {
+            label: 'Delete',
+            iconPath: mdiTrashCanOutline,
+            onClick: () => onDelete(editingStatus),
+          },
+        }}
+      />
+    </MetadataContainer>
   )
 }
 
 const Container = styled.div`
-  position: relative;
-
   .autocomplete__input {
     line-height: inherit !important;
     height: 28px !important;
@@ -200,8 +311,6 @@ const Container = styled.div`
   }
 
   .autocomplete__container {
-    z-index: 9000;
-    position: absolute;
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
     max-width: auto;
     max-height: 300px;
@@ -212,7 +321,6 @@ const Container = styled.div`
     display: inline-flex;
     flex-direction: column;
     border: none;
-    left: 0;
     top: 100%;
     background-color: ${({ theme }) => theme.colors.background.primary};
     box-shadow: ${({ theme }) => theme.colors.shadow};
@@ -229,6 +337,7 @@ const Container = styled.div`
     white-space: nowrap;
     color: ${({ theme }) => theme.colors.text.subtle};
     text-decoration: none;
+    position: relative;
 
     &:hover,
     &:focus {
@@ -248,6 +357,12 @@ const Container = styled.div`
       display: inline-flex;
     }
   }
+
+  .status__editor {
+    position: absolute;
+    top: 0;
+    left: 100%;
+  }
 `
 
 const StatusView = ({
@@ -257,11 +372,7 @@ const StatusView = ({
   name: string
   backgroundColor?: string
 }) => {
-  return (
-    <StyledStatus style={{ backgroundColor: backgroundColor || '#353940' }}>
-      {name}
-    </StyledStatus>
-  )
+  return <StyledStatus style={{ backgroundColor }}>{name}</StyledStatus>
 }
 
 const StyledStatus = styled.span`
@@ -269,4 +380,5 @@ const StyledStatus = styled.span`
   padding: 0.25em 0.5em;
   border-radius: 4px;
   color: white;
+  background-color: #353940;
 `
