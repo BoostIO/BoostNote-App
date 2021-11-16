@@ -20,7 +20,7 @@ export async function createStatus(body: StatusCreateRequestBody) {
 }
 
 export interface StatusUpdateRequestBody {
-  id: string
+  id: number
   name: string
   backgroundColor?: string
 }

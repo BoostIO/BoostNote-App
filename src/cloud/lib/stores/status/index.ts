@@ -6,7 +6,6 @@ import {
   deleteStatus,
   listStatuses,
   StatusCreateRequestBody,
-  StatusUpdateRequestBody,
   updateStatus,
 } from '../../../api/status'
 import { SerializedStatus } from '../../../interfaces/db/status'
@@ -91,7 +90,7 @@ export function useStatuses(team: string) {
     }
   }, [])
 
-  const editStatus = useCallback(async (data: StatusUpdateRequestBody) => {
+  const editStatus = useCallback(async (data: SerializedStatus) => {
     try {
       setWorkingCount(increment)
       const status = await updateStatus(data)
