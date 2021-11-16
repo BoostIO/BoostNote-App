@@ -6,7 +6,11 @@ import MetadataContainer from '../../../../design/components/organisms/MetadataC
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import styled from '../../../../design/lib/styled'
-import { PropType, StaticPropType } from '../../../interfaces/db/props'
+import {
+  PropSubType,
+  PropType,
+  StaticPropType,
+} from '../../../interfaces/db/props'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
 import { getIconPathOfPropType, getLabelOfPropType } from '../../../lib/props'
 import {
@@ -58,12 +62,9 @@ const TableAddPropertyContext = ({
   )
 
   const addPropCol = useCallback(
-    (type: PropType, subType?: string) => {
+    (type: PropType, subType?: PropSubType) => {
       addCol({
-        id: makeTablePropColId(
-          columnName,
-          `${type}${subType != null ? `:${subType}` : ''}`
-        ),
+        id: makeTablePropColId(columnName, type, subType),
         name: columnName,
         type,
         subType,
