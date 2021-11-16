@@ -21,7 +21,6 @@ import ContentManagerDocRow from './Rows/ContentManagerDocRow'
 import ContentmanagerFolderRow from './Rows/ContentManagerFolderRow'
 import { difference } from 'ramda'
 import ContentManagerToolbar from './ContentManagerToolbar'
-import Button from '../../../design/components/atoms/Button'
 import styled from '../../../design/lib/styled'
 import { usePreferences } from '../../lib/stores/preferences'
 import EmptyRow from './Rows/EmptyRow'
@@ -36,9 +35,6 @@ import { useCloudDnd } from '../../lib/hooks/sidebar/useCloudDnd'
 import { DraggedTo } from '../../../design/lib/dnd'
 import Scroller from '../../../design/components/atoms/Scroller'
 import { FormSelectOption } from '../../../design/components/molecules/Form/atoms/FormSelect'
-import Checkbox from '../../../design/components/molecules/Form/atoms/FormCheckbox'
-
-type ContentTab = 'all' | 'folders' | 'docs'
 
 interface ContentManagerProps {
   team: SerializedTeam
@@ -60,7 +56,6 @@ const ContentManager = ({
   currentUserIsCoreMember,
 }: ContentManagerProps) => {
   const { preferences, setPreferences } = usePreferences()
-  const [contentTab, setContentTab] = useState<ContentTab>('all')
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
     preferences.folderSortingOrder
   )
@@ -179,11 +174,6 @@ const ContentManager = ({
     )
   }, [orderedFolders, hasFolder])
 
-  const selectingAllItems =
-    (selectingAllDocs && selectingAllFolders) ||
-    (orderedFolders.length === 0 && selectingAllDocs) ||
-    (orderedDocs.length === 0 && selectingAllFolders)
-
   const selectAllDocs = useCallback(() => {
     orderedDocs.forEach((doc) => addDoc(doc.id))
   }, [orderedDocs, addDoc])
@@ -191,16 +181,6 @@ const ContentManager = ({
   const selectAllFolders = useCallback(() => {
     orderedFolders.forEach((folder) => addFolder(folder.id))
   }, [orderedFolders, addFolder])
-
-  const selectAllItems = useCallback(() => {
-    orderedDocs.forEach((doc) => addDoc(doc.id))
-    orderedFolders.forEach((folder) => addFolder(folder.id))
-  }, [orderedDocs, orderedFolders, addDoc, addFolder])
-
-  const unselectAllItems = useCallback(() => {
-    resetDocs()
-    resetFolders()
-  }, [resetDocs, resetFolders])
 
   const onChangeOrder = useCallback(
     (val: FormSelectOption) => {
@@ -262,132 +242,82 @@ const ContentManager = ({
     <Container>
       <Scroller className='cm__scroller'>
         <StyledContentManagerHeader>
-          {folders != null ? (
-            <div className='header__left'>
-              {currentUserIsCoreMember && (
-                <Checkbox
-                  checked={selectingAllItems}
-                  disabled={orderedDocs.length + orderedFolders.length === 0}
-                  className={cc([
-                    'header__left__checkbox',
-                    selectingAllItems && 'header__left__checkbox--checked',
-                  ])}
-                  toggle={selectingAllItems ? unselectAllItems : selectAllItems}
-                />
-              )}
-              <Button
-                variant='transparent'
-                active={contentTab === 'all'}
-                onClick={() => setContentTab('all')}
-              >
-                {translate(lngKeys.GeneralAll)}
-              </Button>
-              <Button
-                variant='transparent'
-                active={contentTab === 'folders'}
-                onClick={() => setContentTab('folders')}
-              >
-                {translate(lngKeys.GeneralFolders)}
-              </Button>
-              <Button
-                variant='transparent'
-                active={contentTab === 'docs'}
-                onClick={() => setContentTab('docs')}
-              >
-                {translate(lngKeys.GeneralDocuments)}
-              </Button>
-            </div>
-          ) : (
-            <div className='header__left' />
-          )}
-
+          <div className='header__left' />
           <div className='header__right'>
             <SortingOption value={order} onChange={onChangeOrder} />
           </div>
         </StyledContentManagerHeader>
         <StyledContentManagerList>
-          {(contentTab === 'all' || contentTab === 'docs') && (
-            <>
-              <ContentManagerRow
-                label={translate(lngKeys.GeneralDocuments)}
-                checked={selectingAllDocs}
-                onSelect={selectingAllDocs ? resetDocs : selectAllDocs}
-                showCheckbox={currentUserIsCoreMember}
-                type='header'
-              >
-                <ContentManagerCell>
-                  {translate(lngKeys.Assignees)}
-                </ContentManagerCell>
-                <ContentManagerCell>
-                  <Flexbox justifyContent='space-between' flex='1 1 auto'>
-                    <span>{translate(lngKeys.GeneralStatus)}</span>
-                    <ContentManagerStatusFilter
-                      statusFilterSet={statusFilterSet}
-                      setStatusFilterSet={setStatusFilterSet}
-                    />
-                  </Flexbox>
-                </ContentManagerCell>
-                <ContentManagerCell>
-                  {translate(lngKeys.DueDate)}
-                </ContentManagerCell>
-              </ContentManagerRow>
-              {orderedDocs.map((doc) => (
-                <ContentManagerDocRow
-                  doc={doc}
-                  key={doc.id}
-                  workspace={workspacesMap.get(doc.workspaceId)}
-                  team={team}
-                  updating={updating.includes(getDocId(doc))}
-                  setUpdating={setUpdating}
-                  checked={hasDoc(doc.id)}
-                  onSelect={() => toggleDoc(doc.id)}
-                  showPath={page != null}
-                  currentUserIsCoreMember={currentUserIsCoreMember}
-                  onDrop={onDropDoc}
-                  onDragEnd={onDragEnd}
-                  onDragStart={onDragStartDoc}
+          <ContentManagerRow
+            label={translate(lngKeys.GeneralDocuments)}
+            checked={selectingAllDocs}
+            onSelect={selectingAllDocs ? resetDocs : selectAllDocs}
+            showCheckbox={currentUserIsCoreMember}
+            type='header'
+          >
+            <ContentManagerCell>
+              {translate(lngKeys.Assignees)}
+            </ContentManagerCell>
+            <ContentManagerCell>
+              <Flexbox justifyContent='space-between' flex='1 1 auto'>
+                <span>{translate(lngKeys.GeneralStatus)}</span>
+                <ContentManagerStatusFilter
+                  statusFilterSet={statusFilterSet}
+                  setStatusFilterSet={setStatusFilterSet}
                 />
-              ))}
-              {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
-            </>
-          )}
-          {(contentTab === 'all' || contentTab === 'folders') &&
-            folders != null && (
-              <>
-                <ContentManagerRow
-                  label={translate(lngKeys.GeneralFolders)}
-                  checked={selectingAllFolders}
-                  onSelect={
-                    selectingAllFolders ? resetFolders : selectAllFolders
-                  }
-                  showCheckbox={currentUserIsCoreMember}
-                  type='header'
-                  className={cc([
-                    orderedDocs.length > 0 &&
-                      contentTab === 'all' &&
-                      'content__manager__list__header--margin',
-                  ])}
-                />
+              </Flexbox>
+            </ContentManagerCell>
+            <ContentManagerCell>
+              {translate(lngKeys.DueDate)}
+            </ContentManagerCell>
+          </ContentManagerRow>
+          {orderedDocs.map((doc) => (
+            <ContentManagerDocRow
+              doc={doc}
+              key={doc.id}
+              workspace={workspacesMap.get(doc.workspaceId)}
+              team={team}
+              updating={updating.includes(getDocId(doc))}
+              setUpdating={setUpdating}
+              checked={hasDoc(doc.id)}
+              onSelect={() => toggleDoc(doc.id)}
+              showPath={page != null}
+              currentUserIsCoreMember={currentUserIsCoreMember}
+              onDrop={onDropDoc}
+              onDragEnd={onDragEnd}
+              onDragStart={onDragStartDoc}
+            />
+          ))}
+          {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
+          <ContentManagerRow
+            label={translate(lngKeys.GeneralFolders)}
+            checked={selectingAllFolders}
+            onSelect={selectingAllFolders ? resetFolders : selectAllFolders}
+            showCheckbox={currentUserIsCoreMember}
+            type='header'
+            className={cc([
+              orderedDocs.length > 0 &&
+                'content__manager__list__header--margin',
+            ])}
+          />
 
-                {orderedFolders.map((folder) => (
-                  <ContentmanagerFolderRow
-                    folder={folder}
-                    key={folder.id}
-                    team={team}
-                    updating={updating.includes(getFolderId(folder))}
-                    setUpdating={setUpdating}
-                    checked={hasFolder(folder.id)}
-                    onSelect={() => toggleFolder(folder.id)}
-                    currentUserIsCoreMember={currentUserIsCoreMember}
-                    onDrop={onDropFolder}
-                    onDragEnd={onDragEnd}
-                    onDragStart={onDragStartFolder}
-                  />
-                ))}
+          {orderedFolders.map((folder) => (
+            <ContentmanagerFolderRow
+              folder={folder}
+              key={folder.id}
+              team={team}
+              updating={updating.includes(getFolderId(folder))}
+              setUpdating={setUpdating}
+              checked={hasFolder(folder.id)}
+              onSelect={() => toggleFolder(folder.id)}
+              currentUserIsCoreMember={currentUserIsCoreMember}
+              onDrop={onDropFolder}
+              onDragEnd={onDragEnd}
+              onDragStart={onDragStartFolder}
+            />
+          ))}
 
-                {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
-              </>
-            )}
+          {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
         </StyledContentManagerList>
       </Scroller>
 
