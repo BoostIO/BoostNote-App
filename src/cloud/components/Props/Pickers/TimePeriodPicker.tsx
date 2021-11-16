@@ -89,6 +89,7 @@ const TimePeriodPicker = ({
             />,
             {
               alignment: popupAlignment,
+              minHeight: 56,
             }
           )
         }
