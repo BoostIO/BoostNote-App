@@ -7,6 +7,7 @@ export type ListViewsRequestBody =
       type?: SupportedViewTypes
     }
   | { folder: string; type?: SupportedViewTypes }
+  | { workspace: string; type?: SupportedViewTypes }
 
 export interface ListViewsResponseBody {
   data: SerializedView[]
