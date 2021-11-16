@@ -330,6 +330,7 @@ const Application = ({
           event.preventDefault()
 
           if (usingElectron) {
+            sendToElectron('sign-out-event')
             window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout?redirectTo=/desktop`
             return
           } else {
@@ -340,7 +341,7 @@ const Application = ({
       },
     })
     return bottomRows
-  }, [push, translate])
+  }, [push, sendToElectron, translate])
 
   const {
     state: notificationState,

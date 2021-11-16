@@ -67,8 +67,8 @@ const __ELECTRON_ONLY__: {
   stopFindInPage(
     action: 'clearSelection' | 'keepSelection' | 'activateSelection'
   ): void
-  signInBroadcast(windowId: number): void
-  signOutBroadcast(windowId: number): void
+  signInBroadcast(windowContentsId: number): void
+  signOutBroadcast(): void
   got: Got
 } = (window as any).__ELECTRON_ONLY__
 

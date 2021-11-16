@@ -14,7 +14,7 @@ import { getTeamLinkHref } from '../../components/Link/TeamLink'
 import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
 import Button from '../../../design/components/atoms/Button'
-import { useElectron } from '../../lib/stores/electron'
+import { sendToHost, useElectron } from '../../lib/stores/electron'
 import { useEffectOnce } from 'react-use'
 
 interface HomePageTeamSelectForm {
@@ -47,6 +47,7 @@ const HomeForm = ({ user, teams = [] }: HomePageTeamSelectForm) => {
 
   const signOutCloud = useCallback(() => {
     if (usingElectron) {
+      sendToHost('sign-out-event')
       location.href = '/api/oauth/signout?redirectTo=/desktop'
     } else {
       location.href = '/api/oauth/signout'
