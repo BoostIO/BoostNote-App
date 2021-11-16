@@ -3,7 +3,6 @@ import {
   ipcMain,
   Menu,
   MenuItemConstructorOptions,
-  protocol,
   webContents,
 } from 'electron'
 import { electronFrontendUrl } from './consts'
@@ -15,11 +14,13 @@ function applyMenuTemplate(template: MenuItemConstructorOptions[]) {
   Menu.setApplicationMenu(menu)
 }
 
+const mac = process.platform === 'darwin'
+
 const singleInstance = app.requestSingleInstanceLock()
 if (!singleInstance) {
   app.quit()
 } else {
-  app.on('second-instance', (_event) => {
+  app.on('second-instance', (_event, argv) => {
     const firstWindow = getWindows()[0]
     if (firstWindow == null) {
       createAWindow(electronFrontendUrl)
@@ -28,6 +29,24 @@ if (!singleInstance) {
         firstWindow.show()
       }
       firstWindow.focus()
+    }
+
+    if (!mac) {
+      let urlWithBoostNoteProtocol: string | null = null
+      for (const arg of argv) {
+        if (/^boostnote:\/\//.test(arg)) {
+          urlWithBoostNoteProtocol = arg
+          break
+        }
+      }
+      if (urlWithBoostNoteProtocol != null) {
+        getWindows().forEach((window) => {
+          window.webContents.send(
+            'open-boostnote-url',
+            urlWithBoostNoteProtocol
+          )
+        })
+      }
     }
   })
 }
@@ -53,11 +72,8 @@ app.on('activate', () => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
-  /* This file protocol registration will be needed from v9.x.x for PDF export feature */
-  protocol.registerFileProtocol('file', (request, callback) => {
-    const pathname = decodeURI(request.url.replace('file:///', ''))
-    callback(pathname)
-  })
+  // TODO: Should request when a user try to sign in
+  app.setAsDefaultProtocolClient('boostnote')
 
   createAWindow(
     `${electronFrontendUrl}?url=${encodeURIComponent(
@@ -92,6 +108,13 @@ app.on('ready', () => {
       if (window.id !== windowId) {
         window.close()
       }
+    })
+  })
+
+  app.on('open-url', (_event, url) => {
+    console.log(url, 'open-url!')
+    getWindows().forEach((window) => {
+      window.webContents.send('open-boostnote-url', url)
     })
   })
 })

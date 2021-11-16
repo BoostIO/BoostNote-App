@@ -202,8 +202,13 @@ const BoostHubWebview = ({
       _event: IpcRendererEvent,
       index: number
     ) => {
-      console.log('trying to switch team', index)
       webview.send('switch-space', index)
+    }
+    const openBoostNoteUrlIpcEventHandler = (
+      _event: IpcRendererEvent,
+      index: number
+    ) => {
+      webview.send('open-boostnote-url', index)
     }
 
     addIpcListener('new-doc', newDocIpcEventHandler)
@@ -217,6 +222,7 @@ const BoostHubWebview = ({
     addIpcListener('toggle-preview-mode', togglePreviewModeIpcEventHandler)
     addIpcListener('toggle-split-edit-mode', toggleSplitEditModeIpcEventHandler)
     addIpcListener('switch-space', switchSpaceIpcEventHandler)
+    addIpcListener('open-boostnote-url', openBoostNoteUrlIpcEventHandler)
 
     return () => {
       removeIpcListener('reload', reloadIpcEventHandler)
@@ -237,6 +243,7 @@ const BoostHubWebview = ({
         toggleSplitEditModeIpcEventHandler
       )
       removeIpcListener('switch-space', switchSpaceIpcEventHandler)
+      removeIpcListener('open-boostnote-url', openBoostNoteUrlIpcEventHandler)
     }
   })
 
@@ -245,6 +252,7 @@ const BoostHubWebview = ({
 
     const ipcMessageEventHandler = (event: IpcMessageEvent) => {
       switch (event.channel) {
+        // Discard after v0.23: sign-in-page-load is for smooth migration from <= v0.22 to v0.23
         case 'sign-in-page-load':
           const preferences = localStorage.getItem(
             'note.boostio.co:preferences'
