@@ -22,7 +22,7 @@ export const supportedPropTypes: {
 }[] = [
   { type: 'date' },
   { type: 'json', subType: 'timeperiod' },
-  { type: 'string' },
+  { type: 'status' },
   { type: 'user' },
 ]
 
@@ -99,7 +99,7 @@ export function getIconPathOfPropType(
       return mdiAccountOutline
     case 'label':
       return mdiLabelOutline
-    case 'string':
+    case 'status':
       return mdiArrowDownDropCircleOutline
     default:
       return
@@ -120,6 +120,12 @@ export function getInitialPropDataOfPropType(
       }
     case 'user':
       return { type: 'user', data: undefined, createdAt: new Date().toString() }
+    case 'status':
+      return {
+        type: 'status',
+        data: undefined,
+        createdAt: new Date().toString(),
+      }
     case 'string':
     default:
       return {
