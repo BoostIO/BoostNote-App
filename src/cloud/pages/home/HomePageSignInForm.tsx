@@ -30,6 +30,10 @@ import {
   SignInViaAccessTokenDetails,
   signInViaAccessTokenEventEmitter,
 } from '../../lib/utils/events'
+import {
+  BoostHubLoginEvent,
+  boostHubLoginEventEmitter,
+} from '../../../lib/events'
 
 const HomePageSignInForm = () => {
   const { sendToElectron, usingElectron } = useElectron()
@@ -114,6 +118,24 @@ const HomePageSignInForm = () => {
     },
     [setPartialGlobalData, usingElectron, sendToElectron, push]
   )
+
+  useEffect(() => {
+    if (!usingElectron) {
+      return
+    }
+    if (status !== 'requesting') {
+      return
+    }
+    const boostHubLoginEventHandler = (event: BoostHubLoginEvent) => {
+      login(event.detail.code)
+    }
+
+    boostHubLoginEventEmitter.listen(boostHubLoginEventHandler)
+
+    return () => {
+      boostHubLoginEventEmitter.unlisten(boostHubLoginEventHandler)
+    }
+  }, [login, usingElectron, status])
 
   useEffectOnce(() => {
     if (!usingElectron) {

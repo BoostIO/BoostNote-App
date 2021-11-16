@@ -21,6 +21,8 @@ import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../keyboard'
 import { IpcRendererEvent } from 'electron'
 import { useEffectOnce } from 'react-use'
 import ltSemver from 'semver/functions/lt'
+import { parse as parseUrl } from 'url'
+import { boostHubLoginEventEmitter } from '../../../lib/events'
 
 export function addFoundInPageListener(
   callback: (matches: number | null) => void
@@ -229,6 +231,27 @@ const useElectronStore = (): ElectronStore => {
           return
         }
         switchSpaceEventEmitter.dispatch({ index })
+      }
+    )
+
+    addHostListener(
+      'open-boostnote-url',
+      (_event: IpcRendererEvent, url: string) => {
+        console.log('open-boostnote-url')
+        const parsedUrl = parseUrl(url, true)
+
+        switch (parsedUrl.pathname) {
+          case '/login':
+            const { code } = parsedUrl.query
+            if (typeof code !== 'string') {
+              console.warn('`code` is missing')
+              return
+            }
+            boostHubLoginEventEmitter.dispatch({ code })
+            break
+          default:
+            console.warn(`Not supported URL: ${url}`)
+        }
       }
     )
 
