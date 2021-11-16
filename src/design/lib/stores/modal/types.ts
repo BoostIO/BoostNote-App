@@ -5,6 +5,7 @@ export interface ModalElement {
   width: 'large' | 'default' | 'small' | 'full' | number
   height?: number
   maxHeight?: number
+  minHeight?: number
   position?: {
     left: number
     right: number
@@ -37,6 +38,7 @@ export type ContextModalOpeningOptions = ModalOpeningOptions & {
   removePadding?: boolean
   maxHeight?: number
   height?: number
+  minHeight?: number
 }
 
 export interface ModalsContext {
