@@ -275,7 +275,6 @@ const ContentManager = ({
                   toggle={selectingAllItems ? unselectAllItems : selectAllItems}
                 />
               )}
-
               <Button
                 variant='transparent'
                 active={contentTab === 'all'}

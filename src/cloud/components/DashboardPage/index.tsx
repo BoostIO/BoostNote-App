@@ -209,7 +209,6 @@ const SmartViewSelector = ({
 }
 
 const Container = styled.div`
-  margin: 0 ${({ theme }) => theme.sizes.spaces.df}px;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
