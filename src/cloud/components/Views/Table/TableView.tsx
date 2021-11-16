@@ -288,7 +288,6 @@ const TableView = ({
             return {
               checked: hasDoc(doc.id),
               onCheckboxToggle: () => toggleDoc(doc.id),
-              showCheckbox: currentUserIsCoreMember,
               cells: [
                 {
                   children: (
@@ -407,6 +406,7 @@ const Container = styled.div`
 
   .view__scroller {
     height: 100%;
+    padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
   }
 
   .views__header {

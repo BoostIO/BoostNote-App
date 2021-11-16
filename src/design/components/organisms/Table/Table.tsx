@@ -77,6 +77,7 @@ const Table: AppComponent<TableProps> = ({
             {...row}
             widths={columnWidths}
             disabledAddColumn={disabledAddColumn}
+            showCheckbox={showCheckboxes}
           />
         ))}
 
@@ -136,6 +137,7 @@ const TableContainer = styled.div`
 
   .table-row__checkbox {
     opacity: 0;
+    margin-left: ${({ theme }) => theme.sizes.spaces.df}px;
     margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
 
     &.table-row__checkbox--checked {
