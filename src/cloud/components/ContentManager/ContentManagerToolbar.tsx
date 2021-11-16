@@ -518,6 +518,7 @@ const ContentManagerToolbar = ({
                       ? selectedDocumentsCommonValues[propColumn.name].value
                       : undefined
                   }
+                  emptyLabel={propColumn.name}
                   onPeriodChange={(val) => {
                     updateProp([
                       propColumn.name,
