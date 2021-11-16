@@ -25,6 +25,7 @@ export type CreateViewRequestBody =
       type: SupportedViewTypes
     }
   | { folder: string; type: SupportedViewTypes }
+  | { workspace: string; type: SupportedViewTypes }
 
 export interface CreateViewResponseBody {
   data: SerializedView
