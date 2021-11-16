@@ -52,7 +52,7 @@ const Container = styled.div`
   min-width: 80px;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow: hidden;
+
   &:last-child {
     border-right: none;
   }
