@@ -69,7 +69,6 @@ const PropSelectorModal = ({
           row={{
             type: 'button',
             props: {
-              disabled: propType === 'string',
               id: `prop-modal-${propType}`,
               label: getLabelOfPropType(subType || propType),
               iconPath: getIconPathOfPropType(subType || propType),
