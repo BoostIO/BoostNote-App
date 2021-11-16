@@ -72,9 +72,6 @@ app.on('activate', () => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
-  // TODO: Should request when a user try to sign in
-  app.setAsDefaultProtocolClient('boostnote')
-
   createAWindow(
     `${electronFrontendUrl}?url=${encodeURIComponent(
       `${process.env.BOOST_HUB_BASE_URL!}/desktop?desktop-init=true`
@@ -111,8 +108,11 @@ app.on('ready', () => {
     })
   })
 
+  ipcMain.on('register-protocol', () => {
+    app.setAsDefaultProtocolClient('boostnote')
+  })
+
   app.on('open-url', (_event, url) => {
-    console.log(url, 'open-url!')
     getWindows().forEach((window) => {
       window.webContents.send('open-boostnote-url', url)
     })
