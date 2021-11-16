@@ -9,14 +9,40 @@ import { isString } from '../utils/string'
 import { sortByAttributeAsc } from '../../../design/lib/utils/array'
 import { LexoRank } from 'lexorank'
 import { getArrayFromRecord } from '../utils/array'
+import { SerializedView, ViewParent } from '../../interfaces/db/view'
 
 export interface ViewTableData {
   columns: Record<string, Column>
+  sort?: ViewTableSortingOptions
   filter?: SerializedQuery
 }
 
-export function makeTablePropColId(name: string, type?: string) {
-  return generate() + ':' + name + ':' + type
+export type ViewTableSortingOptions =
+  | {
+      type: 'static'
+      sort: 'creation_date' | 'title_az' | 'title_za'
+    }
+  | {
+      type: 'column'
+      columnId: string
+    }
+
+export function makeTablePropColId(
+  name: string,
+  type: PropType | StaticPropType,
+  subType?: PropSubType
+) {
+  return (
+    generate() +
+    ':' +
+    name +
+    ':' +
+    `${type}${subType != null ? `:${subType}` : ''}`
+  )
+}
+
+export function getGeneratedIdFromColId(colId: string) {
+  return colId.split(':').shift()
 }
 
 export function getPropTypeFromColId(colId: string) {
@@ -130,4 +156,40 @@ export function sortTableViewColumns(
   })
 
   return sortByAttributeAsc('order', getArrayFromRecord(columns))
+}
+
+export function getDefaultTableView(parent: ViewParent): SerializedView {
+  return {
+    id: -1,
+    workspace: parent.type === 'workspace' ? parent.target : undefined,
+    workspaceId: parent.type === 'workspace' ? parent.target.id : undefined,
+    folder: parent.type === 'folder' ? parent.target : undefined,
+    folderId: parent.type === 'folder' ? parent.target.id : undefined,
+    smartView: parent.type === 'smartView' ? parent.target : undefined,
+    smartViewId: parent.type === 'smartView' ? parent.target.id : undefined,
+    type: 'table',
+    data: {
+      columns: {
+        Labels: {
+          id: makeTablePropColId('Label', 'label'),
+          prop: 'label',
+          name: 'Label',
+          order: LexoRank.min().between(LexoRank.middle()).toString(),
+        },
+        Assignees: {
+          id: makeTablePropColId('Assignees', 'user'),
+          type: 'user',
+          name: 'Assignees',
+          order: LexoRank.middle().toString(),
+        },
+        'Due Date': {
+          id: makeTablePropColId('Due Date', 'date'),
+          type: 'date',
+          name: 'Due Date',
+          order: LexoRank.max().between(LexoRank.middle()).toString(),
+        },
+      },
+      sort: { type: 'static', sort: 'creation_date' },
+    },
+  } as SerializedView
 }
