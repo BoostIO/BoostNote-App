@@ -838,7 +838,11 @@ export function useCloudApi() {
   const listViewsApi = useCallback(
     async (target: ListViewsRequestBody) => {
       return send(
-        'smartView' in target ? target.smartView : target.folder,
+        'smartView' in target
+          ? target.smartView
+          : 'folder' in target
+          ? target.folder
+          : target.workspace,
         'list-views',
         {
           api: () => listViews(target),
