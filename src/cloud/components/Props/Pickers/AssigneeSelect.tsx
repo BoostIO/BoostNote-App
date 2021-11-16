@@ -17,6 +17,7 @@ interface AssigneeSelectProps {
   isLoading: boolean
   readOnly: boolean
   isErrored?: boolean
+  label?: string
   popupAlignment?: 'bottom-left' | 'top-left'
 }
 
@@ -25,6 +26,7 @@ const AssigneeSelect = ({
   defaultValue,
   isLoading,
   isErrored,
+  label,
   readOnly,
   update,
   popupAlignment = 'bottom-left',
@@ -85,6 +87,8 @@ const AssigneeSelect = ({
       >
         {defaultValue.length !== 0
           ? selectedUsers
+          : label != null
+          ? label
           : translate(lngKeys.Unassigned)}
       </PropertyValueButton>
     </Container>

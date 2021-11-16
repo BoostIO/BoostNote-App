@@ -394,6 +394,7 @@ const ContentManager = ({
 
       {currentUserIsCoreMember && (
         <ContentManagerToolbar
+          propsColumns={[]}
           selectedDocs={selectedDocSet}
           selectedFolders={selectedFolderSet}
           documentsMap={currentDocumentsRef.current}

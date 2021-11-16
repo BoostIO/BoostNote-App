@@ -16,6 +16,7 @@ import Portal from '../../../../design/components/atoms/Portal'
 interface DueDateSelectProps {
   className?: string
   sending?: boolean
+  label?: string
   isReadOnly: boolean
   dueDate?: string | null
   onDueDateChange: (newDueDate: Date | null) => void
@@ -30,6 +31,7 @@ const DueDateSelect = ({
   sending,
   disabled,
   isReadOnly,
+  label,
   isErrored,
   shortenedLabel,
   dueDate: dueDateString,
@@ -84,6 +86,8 @@ const DueDateSelect = ({
           >
             {dueDate != null
               ? formatDate(dueDate, 'MMM dd, yyyy')
+              : label != null
+              ? label
               : shortenedLabel
               ? translate(lngKeys.DueDate)
               : translate(lngKeys.AddDueDate)}

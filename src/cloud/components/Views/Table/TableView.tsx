@@ -386,6 +386,7 @@ const TableView = ({
 
       {currentUserIsCoreMember && (
         <ContentManagerToolbar
+          propsColumns={orderedColumns}
           selectedDocs={selectedDocSet}
           selectedFolders={new Set()}
           documentsMap={currentDocumentsRef.current}
@@ -461,6 +462,12 @@ const Container = styled.div`
         ${({ theme }) => theme.sizes.spaces.sm}px;
       height: 100% !important;
       min-height: 32px;
+      border: 0 !important;
+    }
+
+    .doc__tags__list__item {
+      margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px !important;
+      margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px !important;
     }
   }
 `
