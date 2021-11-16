@@ -16,6 +16,7 @@ import plur from 'plur'
 
 interface TimePeriodPickerProps {
   label: string
+  emptyLabel?: string
   sending?: boolean
   value?: number | null
   disabled?: boolean
@@ -33,6 +34,7 @@ const TimePeriodPicker = ({
   isErrored,
   isReadOnly = false,
   popupAlignment = 'bottom-left',
+  emptyLabel,
   onPeriodChange,
 }: TimePeriodPickerProps) => {
   const { openContextModal, closeAllModals } = useModal()
@@ -93,7 +95,9 @@ const TimePeriodPicker = ({
       >
         <span className={cc([])}>
           {parsedValue == null
-            ? 'Add'
+            ? emptyLabel != null
+              ? emptyLabel
+              : 'Add'
             : `${parsedValue.value} ${plur(
                 parsedValue.reason.slice(0, -1),
                 parseInt(parsedValue.value)
