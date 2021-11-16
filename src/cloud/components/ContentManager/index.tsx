@@ -306,38 +306,6 @@ const ContentManager = ({
           </div>
         </StyledContentManagerHeader>
         <StyledContentManagerList>
-          {(contentTab === 'all' || contentTab === 'folders') &&
-            folders != null && (
-              <>
-                <ContentManagerRow
-                  label={translate(lngKeys.GeneralFolders)}
-                  checked={selectingAllFolders}
-                  onSelect={
-                    selectingAllFolders ? resetFolders : selectAllFolders
-                  }
-                  showCheckbox={currentUserIsCoreMember}
-                  type='header'
-                />
-
-                {orderedFolders.map((folder) => (
-                  <ContentmanagerFolderRow
-                    folder={folder}
-                    key={folder.id}
-                    team={team}
-                    updating={updating.includes(getFolderId(folder))}
-                    setUpdating={setUpdating}
-                    checked={hasFolder(folder.id)}
-                    onSelect={() => toggleFolder(folder.id)}
-                    currentUserIsCoreMember={currentUserIsCoreMember}
-                    onDrop={onDropFolder}
-                    onDragEnd={onDragEnd}
-                    onDragStart={onDragStartFolder}
-                  />
-                ))}
-
-                {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
-              </>
-            )}
           {(contentTab === 'all' || contentTab === 'docs') && (
             <>
               <ContentManagerRow
@@ -346,11 +314,6 @@ const ContentManager = ({
                 onSelect={selectingAllDocs ? resetDocs : selectAllDocs}
                 showCheckbox={currentUserIsCoreMember}
                 type='header'
-                className={cc([
-                  folders != null &&
-                    contentTab === 'all' &&
-                    'content__manager__list__header--margin',
-                ])}
               >
                 <ContentManagerCell>
                   {translate(lngKeys.Assignees)}
@@ -388,6 +351,43 @@ const ContentManager = ({
               {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
             </>
           )}
+          {(contentTab === 'all' || contentTab === 'folders') &&
+            folders != null && (
+              <>
+                <ContentManagerRow
+                  label={translate(lngKeys.GeneralFolders)}
+                  checked={selectingAllFolders}
+                  onSelect={
+                    selectingAllFolders ? resetFolders : selectAllFolders
+                  }
+                  showCheckbox={currentUserIsCoreMember}
+                  type='header'
+                  className={cc([
+                    orderedDocs.length > 0 &&
+                      contentTab === 'all' &&
+                      'content__manager__list__header--margin',
+                  ])}
+                />
+
+                {orderedFolders.map((folder) => (
+                  <ContentmanagerFolderRow
+                    folder={folder}
+                    key={folder.id}
+                    team={team}
+                    updating={updating.includes(getFolderId(folder))}
+                    setUpdating={setUpdating}
+                    checked={hasFolder(folder.id)}
+                    onSelect={() => toggleFolder(folder.id)}
+                    currentUserIsCoreMember={currentUserIsCoreMember}
+                    onDrop={onDropFolder}
+                    onDragEnd={onDragEnd}
+                    onDragStart={onDragStartFolder}
+                  />
+                ))}
+
+                {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
+              </>
+            )}
         </StyledContentManagerList>
       </Scroller>
 
