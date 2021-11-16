@@ -120,7 +120,7 @@ const ContextModalItem = ({
     }
 
     if (properties.maxHeight! < 80) {
-      properties.minHeight = 56
+      properties.minHeight = modal.minHeight != null ? modal.minHeight : 100
       properties.maxHeight = 200
       properties.top = undefined
       properties.bottom = 6
@@ -128,6 +128,7 @@ const ContextModalItem = ({
 
     return properties
   }, [
+    modal.minHeight,
     modal.position,
     windowWidth,
     modalWidth,
