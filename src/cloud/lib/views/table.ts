@@ -159,6 +159,9 @@ export function sortTableViewColumns(
 }
 
 export function getDefaultTableView(parent: ViewParent): SerializedView {
+  const labelColId = makeTablePropColId('Label', 'label')
+  const assigneesColId = makeTablePropColId('Assignees', 'user')
+  const dueDateColId = makeTablePropColId('Due Date', 'date')
   return {
     id: -1,
     workspace: parent.type === 'workspace' ? parent.target : undefined,
@@ -170,20 +173,20 @@ export function getDefaultTableView(parent: ViewParent): SerializedView {
     type: 'table',
     data: {
       columns: {
-        Labels: {
-          id: makeTablePropColId('Label', 'label'),
+        [labelColId]: {
+          id: labelColId,
           prop: 'label',
           name: 'Label',
           order: LexoRank.min().between(LexoRank.middle()).toString(),
         },
-        Assignees: {
-          id: makeTablePropColId('Assignees', 'user'),
+        [assigneesColId]: {
+          id: assigneesColId,
           type: 'user',
           name: 'Assignees',
           order: LexoRank.middle().toString(),
         },
-        'Due Date': {
-          id: makeTablePropColId('Due Date', 'date'),
+        [dueDateColId]: {
+          id: dueDateColId,
           type: 'date',
           name: 'Due Date',
           order: LexoRank.max().between(LexoRank.middle()).toString(),
@@ -192,4 +195,8 @@ export function getDefaultTableView(parent: ViewParent): SerializedView {
       sort: { type: 'static', sort: 'creation_date' },
     },
   } as SerializedView
+}
+
+export function isDefaultView(view: SerializedView) {
+  return view.id === -1
 }

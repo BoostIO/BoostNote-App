@@ -1,6 +1,7 @@
 import { SerializedSmartView } from './smartView'
 import { SerializedFolder, SerializedFolderWithBookmark } from './folder'
 import { SerializedWorkspace } from './workspace'
+import { ViewTableData } from '../../lib/views/table'
 
 export type SupportedViewTypes = 'table'
 
@@ -14,7 +15,7 @@ export interface SerializableViewProps {
   smartViewId?: string
   workspaceId?: string
   type: SupportedViewTypes
-  data: Object
+  data: ViewTableData
 }
 
 export interface SerializedUnserializableViewProps {

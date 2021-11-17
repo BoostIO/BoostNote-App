@@ -1,8 +1,5 @@
-import React, { useMemo, useCallback } from 'react'
-import {
-  DocStatus,
-  SerializedDocWithSupplemental,
-} from '../../../interfaces/db/doc'
+import React, { useMemo } from 'react'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import ContentManagerRow from './ContentManagerRow'
 import { getDocTitle } from '../../../lib/utils/patterns'
@@ -15,13 +12,8 @@ import { useRouter } from '../../../lib/router'
 import styled from '../../../../design/lib/styled'
 import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
 import DocTagsListItem from '../../DocTagsListItem'
-import ContentManagerCell from '../ContentManagerCell'
 import { getFormattedBoosthubDateTime } from '../../../lib/date'
 import EditorsIcons from '../../EditorsIcons'
-import DocAssigneeSelect from '../../Props/Pickers/AssigneeSelect'
-import { useCloudApi } from '../../../lib/hooks/useCloudApi'
-import DocStatusSelect from '../../Props/Pickers/StatusSelect'
-import DocDueDateSelect from '../../Props/Pickers/DueDateSelect'
 
 interface ContentManagerDocRowProps {
   team: SerializedTeam
@@ -52,13 +44,6 @@ const ContentManagerDocRow = ({
 }: ContentManagerDocRowProps) => {
   const { permissions = [] } = usePage()
   const { push } = useRouter()
-  const {
-    updateDocAssigneeApi,
-    updateDocDueDateApi,
-    updateDocStatusApi,
-    sendingMap,
-  } = useCloudApi()
-
   const fullPath = useMemo(() => {
     if (!showPath) {
       return
@@ -102,41 +87,6 @@ const ContentManagerDocRow = ({
     }, [] as SerializedUser[])
   }, [permissions, doc])
 
-  const sendUpdateDocAssignees = useCallback(
-    async (newAssignees: string[]) => {
-      if (sendingMap.has(doc.id)) {
-        return
-      }
-
-      await updateDocAssigneeApi(doc, newAssignees)
-    },
-    [doc, updateDocAssigneeApi, sendingMap]
-  )
-
-  const sendUpdateStatus = useCallback(
-    async (newStatus: DocStatus | null) => {
-      if (
-        (doc.props.status != null && doc.props.status.data === newStatus) ||
-        sendingMap.has(doc.id)
-      ) {
-        return
-      }
-
-      await updateDocStatusApi(doc, newStatus)
-    },
-    [doc, sendingMap, updateDocStatusApi]
-  )
-
-  const sendUpdateDocDueDate = useCallback(
-    async (newDate: Date | null) => {
-      if (sendingMap.has(doc.id)) {
-        return
-      }
-      await updateDocDueDateApi(doc, newDate)
-    },
-    [doc, sendingMap, updateDocDueDateApi]
-  )
-
   const href = getDocLinkHref(doc, team, 'index')
 
   return (
@@ -178,47 +128,7 @@ const ContentManagerDocRow = ({
       onDragStart={(event: any) => onDragStart(event, doc)}
       onDragEnd={(event: any) => onDragEnd(event)}
       onDrop={(event: any) => onDrop(event, doc)}
-    >
-      <ContentManagerCell fullWidth={true}>
-        <DocAssigneeSelect
-          isLoading={sendingMap.get(doc.id) === 'assignees'}
-          disabled={sendingMap.has(doc.id) || !currentUserIsCoreMember}
-          defaultValue={
-            doc.props.assignees != null
-              ? Array.isArray(doc.props.assignees.data)
-                ? doc.props.assignees.data.map((data) => data.userId)
-                : [doc.props.assignees.data.userId]
-              : []
-          }
-          readOnly={!currentUserIsCoreMember}
-          update={sendUpdateDocAssignees}
-        />
-      </ContentManagerCell>
-      <ContentManagerCell fullWidth={true}>
-        <DocStatusSelect
-          status={
-            typeof doc.props.status?.data === 'string'
-              ? (doc.props.status.data as DocStatus)
-              : null
-          }
-          sending={sendingMap.get(doc.id) === 'status'}
-          onStatusChange={sendUpdateStatus}
-          disabled={!currentUserIsCoreMember}
-          isReadOnly={!currentUserIsCoreMember}
-        />
-      </ContentManagerCell>
-      <ContentManagerCell fullWidth={true}>
-        <DocDueDateSelect
-          className='context__content__date_select'
-          sending={sendingMap.get(doc.id) === 'duedate'}
-          dueDate={doc.props.dueDate?.data}
-          onDueDateChange={sendUpdateDocDueDate}
-          disabled={!currentUserIsCoreMember}
-          isReadOnly={!currentUserIsCoreMember}
-          shortenedLabel={true}
-        />
-      </ContentManagerCell>
-    </ContentManagerRow>
+    />
   )
 }
 

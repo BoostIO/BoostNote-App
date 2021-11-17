@@ -1,8 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import {
-  DocStatus,
-  SerializedDocWithSupplemental,
-} from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
 import { useSet } from 'react-use'
 import { sortByAttributeAsc, sortByAttributeDesc } from '../../lib/utils/array'
@@ -28,9 +25,6 @@ import cc from 'classcat'
 import ContentManagerRow from './Rows/ContentManagerRow'
 import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
-import ContentManagerCell from './ContentManagerCell'
-import Flexbox from '../../../design/components/atoms/Flexbox'
-import ContentManagerStatusFilter from './ContentManagerStatusFilter'
 import { useCloudDnd } from '../../lib/hooks/sidebar/useCloudDnd'
 import { DraggedTo } from '../../../design/lib/dnd'
 import Scroller from '../../../design/components/atoms/Scroller'
@@ -114,28 +108,13 @@ const ContentManager = ({
     currentFoldersRef.current = newMap
   }, [folders, removeFolder])
 
-  const [statusFilterSet, setStatusFilterSet] = useState(
-    new Set<DocStatus>(preferences.docStatusDisplayed)
-  )
-
   const orderedDocs = useMemo(() => {
-    const filteredDocs = documents
-      .filter((doc) => {
-        if (doc.props.status == null) {
-          if (doc.archivedAt == null) {
-            return true
-          }
-          return statusFilterSet.has('archived')
-        }
-
-        return statusFilterSet.has(doc.props.status.data)
-      })
-      .map((doc) => {
-        return {
-          ...doc,
-          title: getDocTitle(doc, 'untitled'),
-        }
-      })
+    const filteredDocs = documents.map((doc) => {
+      return {
+        ...doc,
+        title: getDocTitle(doc, 'untitled'),
+      }
+    })
     switch (order) {
       case 'Title A-Z':
         return sortByAttributeAsc('title', filteredDocs)
@@ -145,7 +124,7 @@ const ContentManager = ({
       default:
         return sortByAttributeDesc('updatedAt', filteredDocs)
     }
-  }, [order, documents, statusFilterSet])
+  }, [order, documents])
 
   const orderedFolders = useMemo(() => {
     if (folders == null) {
@@ -254,23 +233,7 @@ const ContentManager = ({
             onSelect={selectingAllDocs ? resetDocs : selectAllDocs}
             showCheckbox={currentUserIsCoreMember}
             type='header'
-          >
-            <ContentManagerCell>
-              {translate(lngKeys.Assignees)}
-            </ContentManagerCell>
-            <ContentManagerCell>
-              <Flexbox justifyContent='space-between' flex='1 1 auto'>
-                <span>{translate(lngKeys.GeneralStatus)}</span>
-                <ContentManagerStatusFilter
-                  statusFilterSet={statusFilterSet}
-                  setStatusFilterSet={setStatusFilterSet}
-                />
-              </Flexbox>
-            </ContentManagerCell>
-            <ContentManagerCell>
-              {translate(lngKeys.DueDate)}
-            </ContentManagerCell>
-          </ContentManagerRow>
+          />
           {orderedDocs.map((doc) => (
             <ContentManagerDocRow
               doc={doc}
@@ -289,35 +252,39 @@ const ContentManager = ({
             />
           ))}
           {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
-          <ContentManagerRow
-            label={translate(lngKeys.GeneralFolders)}
-            checked={selectingAllFolders}
-            onSelect={selectingAllFolders ? resetFolders : selectAllFolders}
-            showCheckbox={currentUserIsCoreMember}
-            type='header'
-            className={cc([
-              orderedDocs.length > 0 &&
-                'content__manager__list__header--margin',
-            ])}
-          />
+          {folders != null && (
+            <>
+              <ContentManagerRow
+                label={translate(lngKeys.GeneralFolders)}
+                checked={selectingAllFolders}
+                onSelect={selectingAllFolders ? resetFolders : selectAllFolders}
+                showCheckbox={currentUserIsCoreMember}
+                type='header'
+                className={cc([
+                  orderedDocs.length > 0 &&
+                    'content__manager__list__header--margin',
+                ])}
+              />
 
-          {orderedFolders.map((folder) => (
-            <ContentmanagerFolderRow
-              folder={folder}
-              key={folder.id}
-              team={team}
-              updating={updating.includes(getFolderId(folder))}
-              setUpdating={setUpdating}
-              checked={hasFolder(folder.id)}
-              onSelect={() => toggleFolder(folder.id)}
-              currentUserIsCoreMember={currentUserIsCoreMember}
-              onDrop={onDropFolder}
-              onDragEnd={onDragEnd}
-              onDragStart={onDragStartFolder}
-            />
-          ))}
+              {orderedFolders.map((folder) => (
+                <ContentmanagerFolderRow
+                  folder={folder}
+                  key={folder.id}
+                  team={team}
+                  updating={updating.includes(getFolderId(folder))}
+                  setUpdating={setUpdating}
+                  checked={hasFolder(folder.id)}
+                  onSelect={() => toggleFolder(folder.id)}
+                  currentUserIsCoreMember={currentUserIsCoreMember}
+                  onDrop={onDropFolder}
+                  onDragEnd={onDragEnd}
+                  onDragStart={onDragStartFolder}
+                />
+              ))}
 
-          {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
+              {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
+            </>
+          )}
         </StyledContentManagerList>
       </Scroller>
 
