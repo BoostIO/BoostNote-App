@@ -56,8 +56,11 @@ export function createAWindow(
 
   applyMenuTemplate(getTemplateFromKeymap())
 
-  if (MAC && windows.size <= 1) {
+  if (MAC) {
     window.on('close', (event) => {
+      if (getWindows().length > 1) {
+        return
+      }
       event.preventDefault()
       window.hide()
     })
