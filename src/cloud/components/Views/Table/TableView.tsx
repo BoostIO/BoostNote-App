@@ -81,21 +81,6 @@ const TableView = ({
         >
           <Flexbox flex='0 0 auto'>
             <Button
-              iconPath={mdiSortAscending}
-              variant='transparent'
-              disabled={Object.keys(columns).length === 0}
-              onClick={(ev) =>
-                openContextModal(ev, <></>, {
-                  width: 250,
-                  hideBackground: true,
-                  removePadding: true,
-                  alignment: 'bottom-right',
-                })
-              }
-            >
-              Title A-z
-            </Button>
-            <Button
               variant='transparent'
               disabled={Object.keys(columns).length === 0}
               onClick={(ev) =>
