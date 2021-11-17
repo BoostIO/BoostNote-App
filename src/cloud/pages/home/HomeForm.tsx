@@ -1,6 +1,6 @@
 import UserIcon from '../../components/UserIcon'
 import Form from '../../../design/components/molecules/Form'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useRouter } from '../../lib/router'
 import styled from '../../../design/lib/styled'
 import { SerializedUser } from '../../interfaces/db/user'
@@ -16,6 +16,7 @@ import { useI18n } from '../../lib/hooks/useI18n'
 import Button from '../../../design/components/atoms/Button'
 import { sendToHost, useElectron } from '../../lib/stores/electron'
 import { useEffectOnce } from 'react-use'
+import { FormRowProps } from '../../../design/components/molecules/Form/templates/FormRow'
 
 interface HomePageTeamSelectForm {
   user: SerializedUser
@@ -28,6 +29,7 @@ const HomeForm = ({ user, teams = [] }: HomePageTeamSelectForm) => {
   const { push, query } = useRouter()
   const { translate } = useI18n()
   const { usingElectron } = useElectron()
+  const [ready, setReady] = useState(false)
   const navigateToTeam = useCallback(
     (selectedTeamId) => {
       const selectedTeam = teams.find(
@@ -61,7 +63,9 @@ const HomeForm = ({ user, teams = [] }: HomePageTeamSelectForm) => {
         'index'
       )
       push(teamHref)
+      return
     }
+    setReady(true)
   })
 
   return (
@@ -92,54 +96,60 @@ const HomeForm = ({ user, teams = [] }: HomePageTeamSelectForm) => {
               },
             ],
           },
-          {
-            items: [
-              {
-                type: 'node',
-                element: (
-                  <div className='intro__user'>
-                    <span className='intro__user__prefix'>Signed in as </span>
-                    <UserIcon className='intro__user__icon' user={user} />{' '}
-                    <span className='intro__user__displayName'>
-                      {user.displayName}
-                    </span>
-                    <span>
-                      (
-                      <Button variant={'link'} onClick={signOutCloud}>
-                        {translate(lngKeys.GeneralSignout)}
-                      </Button>
-                      )
-                    </span>
-                  </div>
-                ),
-              },
-            ],
-          },
-          {
-            items: [
-              {
-                type: 'select--string',
-                props: {
-                  value: 'Select team',
-                  onChange: navigateToTeam,
-                  options: teams.map((team) => team.id),
-                  labels: teams.map((team) => team.name),
+          ...(ready
+            ? ([
+                {
+                  items: [
+                    {
+                      type: 'node',
+                      element: (
+                        <div className='intro__user'>
+                          <span className='intro__user__prefix'>
+                            Signed in as{' '}
+                          </span>
+                          <UserIcon className='intro__user__icon' user={user} />{' '}
+                          <span className='intro__user__displayName'>
+                            {user.displayName}
+                          </span>
+                          <span>
+                            (
+                            <Button variant={'link'} onClick={signOutCloud}>
+                              {translate(lngKeys.GeneralSignout)}
+                            </Button>
+                            )
+                          </span>
+                        </div>
+                      ),
+                    },
+                  ],
                 },
-              },
-            ],
-          },
-          {
-            items: [
-              {
-                type: 'button',
-                props: {
-                  label: 'Create space',
-                  variant: 'primary',
-                  onClick: () => push('/cooperate'),
+                {
+                  items: [
+                    {
+                      type: 'select--string',
+                      props: {
+                        value: 'Select team',
+                        onChange: navigateToTeam,
+                        options: teams.map((team) => team.id),
+                        labels: teams.map((team) => team.name),
+                      },
+                    },
+                  ],
                 },
-              },
-            ],
-          },
+                {
+                  items: [
+                    {
+                      type: 'button',
+                      props: {
+                        label: 'Create space',
+                        variant: 'primary',
+                        onClick: () => push('/cooperate'),
+                      },
+                    },
+                  ],
+                },
+              ] as FormRowProps[])
+            : []),
         ]}
       />
     </Container>
