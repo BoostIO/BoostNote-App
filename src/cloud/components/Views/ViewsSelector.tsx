@@ -46,14 +46,6 @@ const ViewsSelector = ({
     [closeAllModals, parent, createViewApi]
   )
 
-  if (
-    selectedViewId != null &&
-    views.length === 1 &&
-    views[0].id === selectedViewId
-  ) {
-    return <Container className='views__selector' />
-  }
-
   return (
     <Container className='views__selector'>
       {views.map((view) => (

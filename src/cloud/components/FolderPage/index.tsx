@@ -21,7 +21,6 @@ import {
   mdiFolderPlusOutline,
 } from '@mdi/js'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
-import ContentManager from '../ContentManager'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { LoadingButton } from '../../../design/components/atoms/Button'
 import FolderContextMenu from './NewFolderContextMenu'
@@ -40,6 +39,9 @@ import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationContent from '../ApplicationContent'
 import Spinner from '../../../design/components/atoms/Spinner'
+import ViewsList from '../Views'
+import { getMapValues } from '../../../design/lib/utils/array'
+import { getDefaultTableView } from '../../lib/views/table'
 
 const FolderPage = () => {
   const { pageFolder, team, currentUserIsCoreMember, pageData } = usePage()
@@ -49,6 +51,7 @@ const FolderPage = () => {
     setCurrentPath,
     workspacesMap,
     currentWorkspaceId,
+    viewsMap,
   } = useNav()
   const { toggleFolderBookmark, sendingMap } = useCloudApi()
   const {
@@ -158,6 +161,23 @@ const FolderPage = () => {
 
     return map
   }, [currentWorkspace])
+
+  const currentViews = useMemo(() => {
+    if (currentFolder == null) {
+      return []
+    }
+
+    const views = getMapValues(viewsMap)
+
+    const filteredViews = views.filter(
+      (view) => view.folderId === currentFolder.id
+    )
+    if (filteredViews.length === 0) {
+      return [getDefaultTableView({ type: 'folder', target: currentFolder })]
+    }
+
+    return filteredViews
+  }, [viewsMap, currentFolder])
 
   const topbarControls = useMemo(() => {
     if (team == null || currentFolder == null) {
@@ -305,9 +325,11 @@ const FolderPage = () => {
       </ApplicationTopbar>
       <ApplicationContent>
         <FolderPageInviteSection />
-        <ContentManager
+        <ViewsList
+          parent={{ type: 'folder', target: currentFolder }}
+          views={currentViews}
           team={team}
-          documents={childDocs}
+          docs={childDocs}
           folders={childFolders}
           workspacesMap={workspaceMap}
           currentFolderId={currentFolder.id}

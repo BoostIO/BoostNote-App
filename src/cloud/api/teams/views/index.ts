@@ -20,13 +20,13 @@ export async function listViews(body: ListViewsRequestBody) {
   })
 }
 
-export type CreateViewRequestBody =
-  | {
-      smartView: string
-      type: SupportedViewTypes
-    }
-  | { folder: string; type: SupportedViewTypes }
-  | { workspace: string; type: SupportedViewTypes }
+export type CreateViewRequestBody = {
+  data?: Object
+  type: SupportedViewTypes
+  smartView?: string
+  folder?: string
+  workspace?: string
+}
 
 export interface CreateViewResponseBody {
   data: SerializedView
