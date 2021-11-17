@@ -89,7 +89,7 @@ const validators: Validators = {
     const prop = doc.props[condition.value.name]
     if (
       prop == null ||
-      prop.data == null ||
+      (prop.data == null && prop.type !== 'status') ||
       prop.type !== condition.value.type
     ) {
       return false
@@ -134,7 +134,9 @@ const validators: Validators = {
       case 'status':
         return equalsOrContains(
           (st, id) => {
-            console.log(st, id)
+            if (st == null) {
+              return id === -1
+            }
             return st.id === id
           },
           prop.data,
