@@ -141,7 +141,7 @@ function inferConditionPrimaryType(t: TFunction, condition: EditableCondition) {
             ),
             value: supportedCustomPropertyTypes['person'].value,
           }
-        case 'string':
+        case 'status':
           if (condition.value.name.toLocaleLowerCase() === 'status') {
             return {
               label: (
@@ -229,7 +229,7 @@ function getDefaultConditionByType(
         value: {
           name: 'Status',
           value: '',
-          type: 'string',
+          type: 'status',
         },
       }
     case 'label':

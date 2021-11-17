@@ -57,6 +57,7 @@ export type PropCondition =
   | PropConditionType<'string', string>
   | PropConditionType<'number', number>
   | PropConditionType<'date', DateCondition>
+  | PropConditionType<'status', number>
 
 export type Condition =
   | ConditionType<'query', Query>

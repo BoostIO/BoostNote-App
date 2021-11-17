@@ -85,6 +85,7 @@ const validators: Validators = {
     if (doc.props == null) {
       return false
     }
+
     const prop = doc.props[condition.value.name]
     if (
       prop == null ||
@@ -127,6 +128,15 @@ const validators: Validators = {
       case 'number':
         return equalsOrContains(
           (n, n2) => n === Number(n2),
+          prop.data,
+          condition.value.value
+        )
+      case 'status':
+        return equalsOrContains(
+          (st, id) => {
+            console.log(st, id)
+            return st.id === id
+          },
           prop.data,
           condition.value.value
         )
