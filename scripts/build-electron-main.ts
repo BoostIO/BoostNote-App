@@ -18,6 +18,7 @@ const compiler = webpack({
       },
     ],
   },
+  plugins: [new webpack.EnvironmentPlugin(['NODE_ENV', 'BOOST_HUB_BASE_URL'])],
   resolve: {
     extensions: ['.ts', '.js'],
   },
