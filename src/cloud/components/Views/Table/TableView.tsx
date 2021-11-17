@@ -1,12 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import Button from '../../../../design/components/atoms/Button'
-import Flexbox from '../../../../design/components/atoms/Flexbox'
-import { useModal } from '../../../../design/lib/stores/modal'
 import styled from '../../../../design/lib/styled'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedView } from '../../../interfaces/db/view'
-import { Column, ViewTableData } from '../../../lib/views/table'
-import TablePropertiesContext from './TablePropertiesContext'
+import { ViewTableData } from '../../../lib/views/table'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
@@ -39,14 +35,10 @@ const TableView = ({
   team,
   selectViewId,
 }: TableViewProps) => {
-  const { openContextModal } = useModal()
   const currentStateRef = useRef(view.data)
   const [state, setState] = useState<ViewTableData>(
     Object.assign({}, view.data as ViewTableData)
   )
-  const columns: Record<string, Column> = useMemo(() => {
-    return (state as ViewTableData).columns || {}
-  }, [state])
 
   const filteredDocs = useMemo(() => {
     if (state.filter == null || state.filter.length === 0) {
@@ -73,35 +65,6 @@ const TableView = ({
   return (
     <Container>
       <Scroller className='view__scroller'>
-        <Flexbox
-          justifyContent='flex-end'
-          alignItems='end'
-          className='views__header'
-        >
-          <Flexbox flex='0 0 auto'>
-            <Button
-              variant='transparent'
-              disabled={Object.keys(columns).length === 0}
-              onClick={(ev) =>
-                openContextModal(
-                  ev,
-                  <TablePropertiesContext
-                    columns={columns}
-                    removeColumn={actionsRef.current.removeColumn}
-                  />,
-                  {
-                    width: 250,
-                    hideBackground: true,
-                    removePadding: true,
-                    alignment: 'bottom-right',
-                  }
-                )
-              }
-            >
-              Columns
-            </Button>
-          </Flexbox>
-        </Flexbox>
         <TableViewContentManager
           team={team}
           documents={filteredDocs}
