@@ -8,7 +8,6 @@ import { usePage } from '../../../lib/stores/pageStore'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import Spinner from '../../../../design/components/atoms/Spinner'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
-import { isChildNode } from '../../../lib/dom'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { mdiDotsHorizontal, mdiTrashCanOutline } from '@mdi/js'
@@ -16,6 +15,7 @@ import { useModal } from '../../../../design/lib/stores/modal'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import Icon from '../../../../design/components/atoms/Icon'
 import { useEffectOnce } from 'react-use'
+import FormColorSelect from '../../../../design/components/molecules/Form/atoms/FormColorSelect'
 
 interface StatusSelectProps {
   sending?: boolean
@@ -257,16 +257,12 @@ const StatusEditor = ({ status, onDelete, onSave }: StatusEditorProps) => {
     },
     []
   )
-  const setColor: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (ev) => {
-      const backgroundColor = ev.target.value
-      setEditingStatus((prev) => ({
-        ...prev,
-        backgroundColor: backgroundColor === '' ? undefined : backgroundColor,
-      }))
-    },
-    []
-  )
+  const setColor = useCallback((backgroundColor: string) => {
+    setEditingStatus((prev) => ({
+      ...prev,
+      backgroundColor: backgroundColor === '' ? undefined : backgroundColor,
+    }))
+  }, [])
 
   return (
     <MetadataContainer>
@@ -282,7 +278,7 @@ const StatusEditor = ({ status, onDelete, onSave }: StatusEditorProps) => {
         row={{
           type: 'content',
           content: (
-            <FormInput
+            <FormColorSelect
               value={editingStatus.backgroundColor || ''}
               onChange={setColor}
             />
