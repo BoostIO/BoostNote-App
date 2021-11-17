@@ -431,6 +431,15 @@ const ContentManagerToolbar = ({
         if (doc == null) {
           continue
         }
+        const docProps = doc.props || {}
+        if (
+          docProps != null &&
+          docProps[prop[0]] != null &&
+          prop[1] != null &&
+          docProps[prop[0]].type !== prop[1].type
+        ) {
+          continue
+        }
 
         await updateDocPropsApi(doc, prop)
       }
@@ -491,7 +500,7 @@ const ContentManagerToolbar = ({
                       : undefined
                   }
                   isReadOnly={selectedDocsAreUpdating}
-                  sending={sending === propColumn.name}
+                  sending={sending === propColumn.id}
                   shortenedLabel={true}
                   onDueDateChange={(newDate: Date | null) => {
                     updateProp([
@@ -511,7 +520,7 @@ const ContentManagerToolbar = ({
                 <TimePeriodPicker
                   label={propColumn.name}
                   isReadOnly={selectedDocsAreUpdating}
-                  sending={sending === propColumn.name}
+                  sending={sending === propColumn.id}
                   disabled={selectedDocsAreUpdating}
                   value={
                     selectedDocumentsCommonValues[propColumn.name] != null
