@@ -11,6 +11,11 @@ interface StatusSelectProps {
   placeholder?: string
 }
 
+const NO_STATUS = {
+  label: <StatusView name={'No Status'} />,
+  value: 'none',
+}
+
 const StatusSelect = ({
   value,
   update,
@@ -21,7 +26,7 @@ const StatusSelect = ({
   const { state } = useStatuses(team!.id)
 
   const options = useMemo(() => {
-    return state.statuses.map((status) => ({
+    const statuses = state.statuses.map((status) => ({
       label: (
         <StatusView
           name={status.name}
@@ -30,16 +35,20 @@ const StatusSelect = ({
       ),
       value: status.id.toString(),
     }))
+    return [NO_STATUS].concat(statuses)
   }, [state.statuses])
 
   const selectValue = useMemo(() => {
+    if (value === -1) {
+      return NO_STATUS
+    }
     return options.find((option) => option.value === value.toString())
   }, [options, value])
 
   return (
     <FormSelect
       value={selectValue}
-      onChange={(val) => update(Number(val.value))}
+      onChange={(val) => update(val.value === 'none' ? -1 : Number(val.value))}
       options={options}
       placeholder={placeholder}
       isLoading={state.isWorking}
