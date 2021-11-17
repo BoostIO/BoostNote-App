@@ -61,13 +61,13 @@ export function arraysAreIdentical<T>(source: T[], compare: T[]) {
   return true
 }
 
-type WithId<T> = T & { id: string }
+type WithId<T, K> = T & { id: K }
 
-export function getMapFromEntityArray<T>(arr: WithId<T>[]): Map<string, T> {
+export function getMapFromEntityArray<T, K>(arr: WithId<T, K>[]): Map<K, T> {
   return arr.reduce((acc, val) => {
     acc.set(val.id, val)
     return acc
-  }, new Map<string, T>())
+  }, new Map<K, T>())
 }
 
 export function removeDuplicates<T>(arr: T[]) {
