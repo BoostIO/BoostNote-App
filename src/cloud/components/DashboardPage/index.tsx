@@ -5,7 +5,6 @@ import BorderSeparator from '../../../design/components/atoms/BorderSeparator'
 import Button from '../../../design/components/atoms/Button'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import Icon from '../../../design/components/atoms/Icon'
-import Spinner from '../../../design/components/atoms/Spinner'
 import UpDownList from '../../../design/components/atoms/UpDownList'
 import NavigationItem from '../../../design/components/molecules/Navigation/NavigationItem'
 import { useModal } from '../../../design/lib/stores/modal'
@@ -13,7 +12,6 @@ import styled from '../../../design/lib/styled'
 import { getMapValues } from '../../../design/lib/utils/array'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 import { buildSmartViewQueryCheck } from '../../lib/smartViews'
-import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import { useNav } from '../../lib/stores/nav'
 import { usePage } from '../../lib/stores/pageStore'
 import ApplicationContent from '../ApplicationContent'
@@ -21,6 +19,7 @@ import ApplicationPage from '../ApplicationPage'
 import ApplicationTopbar from '../ApplicationTopbar'
 import SmartViewFolderContextMenu from '../SmartViewContextMenu'
 import CreateSmartViewModal from '../Modal/contents/SmartView/CreateSmartViewModal'
+import UpdateSmartViewModal from '../Modal/contents/SmartView/UpdateSmartViewModal'
 import Views from '../Views'
 import {
   getSmartViewListPageData,
@@ -32,12 +31,10 @@ const SmartViewPage = ({ data }: SmartViewListPageResponseBody) => {
   const { smartViewsMap, docsMap, viewsMap, workspacesMap } = useNav()
   const { openModal, openContextModal, closeAllModals } = useModal()
   const { team, currentUserIsCoreMember } = usePage()
-  const { listViewsApi, sendingMap } = useCloudApi()
 
   useEffectOnce(() => {
     if (data.length > 0) {
       setSelectedSmartViewId(data[0].id)
-      listViewsApi({ smartView: data[0].id })
     }
   })
 
@@ -113,7 +110,6 @@ const SmartViewPage = ({ data }: SmartViewListPageResponseBody) => {
                   <SmartViewSelector
                     selectSmartView={(id) => {
                       setSelectedSmartViewId(id)
-                      listViewsApi({ smartView: id })
                       closeAllModals()
                     }}
                     selectedSmartViewId={selectedSmartViewId}
@@ -144,18 +140,31 @@ const SmartViewPage = ({ data }: SmartViewListPageResponseBody) => {
           </Flexbox>
           {selectedSmartView != null && team != null ? (
             <>
-              {sendingMap.get(selectedSmartView.id) === 'list-views' ? (
-                <Spinner />
-              ) : (
-                <Views
-                  team={team}
-                  views={selectedSmartViewViews}
-                  parent={{ type: 'smartView', target: selectedSmartView }}
-                  docs={selectedSmartViewDocs}
-                  currentUserIsCoreMember={currentUserIsCoreMember}
-                  workspacesMap={workspacesMap}
-                />
-              )}
+              <Flexbox className='smartView__filters'>
+                <Button
+                  variant='transparent-blue'
+                  iconPath={mdiPlus}
+                  size='sm'
+                  onClick={() =>
+                    openModal(
+                      <UpdateSmartViewModal
+                        smartView={selectedSmartView}
+                        showOnlyConditions={true}
+                      />
+                    )
+                  }
+                >
+                  Add filter
+                </Button>
+              </Flexbox>
+              <Views
+                team={team}
+                views={selectedSmartViewViews}
+                parent={{ type: 'smartView', target: selectedSmartView }}
+                docs={selectedSmartViewDocs}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+                workspacesMap={workspacesMap}
+              />
             </>
           ) : null}
         </Container>
@@ -228,6 +237,10 @@ const Container = styled.div`
   .views__list {
     flex: 1 1 auto;
     height: 100%;
+  }
+
+  .smartView__filters {
+    padding-left: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 `
 
