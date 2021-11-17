@@ -6,6 +6,7 @@ import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { callApi } from '../../../lib/client'
 import { SerializedSmartView } from '../../../interfaces/db/smartView'
 import { SerializedAppEvent } from '../../../interfaces/db/appEvents'
+import { SerializedView } from '../../../interfaces/db/view'
 
 export interface MoveResourceRequestBody {
   targetedResourceId: string
@@ -43,6 +44,7 @@ export interface GetResourcesResponseBody {
   tags?: SerializedTag[]
   smartViews?: SerializedSmartView[]
   appEvents?: SerializedAppEvent[]
+  views?: SerializedView[]
 }
 
 export async function getResources(
