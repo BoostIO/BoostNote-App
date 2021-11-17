@@ -594,34 +594,6 @@ const ContentManagerToolbar = ({
                   ? ` (${selectedDocumentsCommonValues['tags']['value'].length})`
                   : null}
               </LoadingButton>
-              {/* 
-              <DocStatusSelect
-                status={selectedDocumentsCommonValues.status}
-                sending={sending === BulkActions.status}
-                onStatusChange={sendUpdateStatus}
-                disabled={selectedDocsAreUpdating}
-                isReadOnly={selectedDocsAreUpdating}
-                onClick={(event) => {
-                  openContextModal(
-                    event,
-                    <ContentManagerToolbarStatusPopup
-                      onStatusChange={sendUpdateStatus}
-                    />,
-                    {
-                      alignment: 'top-left',
-                      width: 300,
-                    }
-                  )
-                }}
-              />
-              <DocDueDateSelect
-                dueDate={selectedDocumentsCommonValues.dueDate}
-                isReadOnly={selectedDocsAreUpdating}
-                sending={sending === BulkActions.duedate}
-                shortenedLabel={true}
-                onDueDateChange={sendUpdateDocDueDate}
-              />
-              */}
             </>
           )}
           <LoadingButton
