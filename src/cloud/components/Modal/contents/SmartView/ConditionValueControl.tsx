@@ -21,6 +21,7 @@ import FormSelect, {
   FormSelectOption,
 } from '../../../../../design/components/molecules/Form/atoms/FormSelect'
 import { ConditionNameSuggestionsPerTypeOrSubType } from '../../../../lib/props'
+import StatusSelect from './StatusSelect'
 
 interface ConditionValueControlProps {
   teamId: string
@@ -183,12 +184,12 @@ const PropConditionValueControl = ({
             }
           />
         )}
-        {condition.type === 'string' && (
-          <FormInput
+        {condition.type === 'status' && (
+          <StatusSelect
             value={condition.value}
-            onChange={(ev) => updateValue({ value: ev.target.value })}
+            update={(value) => updateValue({ value })}
             placeholder='Property value..'
-            disabled={
+            isDisabled={
               condition.name.trim() === '' ||
               sendingMap.get('properties') === 'suggestions'
             }

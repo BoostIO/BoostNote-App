@@ -361,7 +361,7 @@ const Container = styled.div`
   }
 `
 
-const StatusView = ({
+export const StatusView = ({
   name,
   backgroundColor,
 }: {
