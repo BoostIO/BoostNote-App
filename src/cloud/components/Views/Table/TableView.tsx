@@ -1,4 +1,3 @@
-import { mdiSortAscending } from '@mdi/js'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Button from '../../../../design/components/atoms/Button'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
