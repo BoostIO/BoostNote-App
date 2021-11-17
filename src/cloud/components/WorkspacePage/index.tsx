@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import { usePage } from '../../lib/stores/pageStore'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { useNav } from '../../lib/stores/nav'
-import ContentManager from '../ContentManager'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import { useI18n } from '../../lib/hooks/useI18n'
 import InviteCTAButton from '../buttons/InviteCTAButton'
@@ -24,10 +23,13 @@ import ApplicationPage from '../ApplicationPage'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationContent from '../ApplicationContent'
+import { getDefaultTableView } from '../../lib/views/table'
+import { getMapValues } from '../../../design/lib/utils/array'
+import ViewsList from '../Views'
 
 const WorkspacePage = ({ workspace }: { workspace: SerializedWorkspace }) => {
   const { team, currentUserIsCoreMember } = usePage()
-  const { docsMap, foldersMap } = useNav()
+  const { docsMap, foldersMap, viewsMap } = useNav()
   const { openNewFolderForm, openNewDocForm } = useCloudResourceModals()
   const { sendingMap } = useCloudApi()
   const { translate } = useI18n()
@@ -155,6 +157,23 @@ const WorkspacePage = ({ workspace }: { workspace: SerializedWorkspace }) => {
     team,
   ])
 
+  const currentViews = useMemo(() => {
+    if (workspace == null) {
+      return []
+    }
+
+    const views = getMapValues(viewsMap)
+
+    const filteredViews = views.filter(
+      (view) => view.workspaceId === workspace.id
+    )
+    if (filteredViews.length === 0) {
+      return [getDefaultTableView({ type: 'workspace', target: workspace })]
+    }
+
+    return filteredViews
+  }, [viewsMap, workspace])
+
   if (team == null) {
     return (
       <ApplicationPage showingTopbarPlaceholder={true}>
@@ -180,9 +199,11 @@ const WorkspacePage = ({ workspace }: { workspace: SerializedWorkspace }) => {
       <ApplicationTopbar controls={topbarControls} />
       <ApplicationContent>
         <FolderPageInviteSection />
-        <ContentManager
+        <ViewsList
+          parent={{ type: 'workspace', target: workspace }}
+          views={currentViews}
           team={team}
-          documents={childDocs}
+          docs={childDocs}
           folders={childFolders}
           workspacesMap={workspaceMap}
           currentWorkspaceId={workspace.id}
