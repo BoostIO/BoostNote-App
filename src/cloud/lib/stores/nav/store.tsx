@@ -273,6 +273,7 @@ function useNavStore(): NavContext {
             workspaces = [],
             smartViews = [],
             appEvents = [],
+            views = [],
           },
           { templates = [] },
         ] = await Promise.all([
@@ -294,6 +295,7 @@ function useNavStore(): NavContext {
           templates,
           smartViews,
           appEvents,
+          views,
         })
         setFoldersMap(maps.foldersData)
         setDocsMap(maps.docsData)
@@ -302,6 +304,7 @@ function useNavStore(): NavContext {
         setTemplatesMap(maps.templatesData)
         setSmartViewsMap(maps.smartViewsData)
         setAppEventsMap(maps.appEventsData)
+        setViewsMap(maps.viewsData)
         setInitialLoadDone(true)
       }
     }
@@ -970,6 +973,7 @@ interface CreateMapsFromPagePropsProps {
   templatesData: Map<string, SerializedTemplate>
   smartViewsData: Map<string, SerializedSmartView>
   appEventsData: Map<string, SerializedAppEvent>
+  viewsData: Map<number, SerializedView>
 }
 
 function getTagsFoldersDocsMapsFromProps(
@@ -984,6 +988,7 @@ function getTagsFoldersDocsMapsFromProps(
       templatesData: new Map(),
       smartViewsData: new Map(),
       appEventsData: new Map(),
+      viewsData: new Map(),
     }
   }
 
@@ -995,6 +1000,7 @@ function getTagsFoldersDocsMapsFromProps(
     templates = [],
     smartViews = [],
     appEvents = [],
+    views = [],
   } = pageProps
 
   const foldersData = getMapFromEntityArray(
@@ -1012,6 +1018,7 @@ function getTagsFoldersDocsMapsFromProps(
     smartViews as SerializedSmartView[]
   )
   const appEventsData = getMapFromEntityArray(appEvents as SerializedAppEvent[])
+  const viewsData = getMapFromEntityArray(views as SerializedView[])
 
   return {
     foldersData,
@@ -1021,5 +1028,6 @@ function getTagsFoldersDocsMapsFromProps(
     templatesData,
     smartViewsData,
     appEventsData,
+    viewsData,
   }
 }
