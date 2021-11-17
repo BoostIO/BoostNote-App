@@ -16,6 +16,7 @@ export type FilledSerializedPropData =
   | Prop<'json', any>
   | Prop<'number', number>
   | Prop<'user', SerializedUserTeamPermissions>
+  | Prop<'status', SerializedStatus>
 
 export type SerializedPropData =
   | Prop<'string', NullablePropData<string>>
