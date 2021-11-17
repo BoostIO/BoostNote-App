@@ -228,7 +228,7 @@ function getDefaultConditionByType(
         type: 'prop',
         value: {
           name: 'Status',
-          value: '',
+          value: -1,
           type: 'status',
         },
       }
