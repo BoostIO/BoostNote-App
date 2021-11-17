@@ -44,6 +44,8 @@ import ContentManagerRow from '../../ContentManager/Rows/ContentManagerRow'
 import EmptyRow from '../../ContentManager/Rows/EmptyRow'
 import ContentManagerFolderRow from '../../ContentManager/Rows/ContentManagerFolderRow'
 import ContentManagerToolbar from '../../ContentManager/ContentManagerToolbar'
+import Button from '../../../../design/components/atoms/Button'
+import TablePropertiesContext from './TablePropertiesContext'
 
 interface ContentManagerProps {
   team: SerializedTeam
@@ -222,6 +224,35 @@ const TableViewContentManager = ({
       <Scroller className='cm__scroller'>
         <StyledContentManagerList>
           <div id={`portal-anchor-${view.id}`} />
+          <Flexbox
+            justifyContent='flex-end'
+            alignItems='end'
+            className='views__header'
+          >
+            <Flexbox flex='0 0 auto'>
+              <Button
+                variant='transparent'
+                disabled={Object.keys(columns).length === 0}
+                onClick={(ev) =>
+                  openContextModal(
+                    ev,
+                    <TablePropertiesContext
+                      columns={columns}
+                      removeColumn={actionsRef.current.removeColumn}
+                    />,
+                    {
+                      width: 250,
+                      hideBackground: true,
+                      removePadding: true,
+                      alignment: 'bottom-right',
+                    }
+                  )
+                }
+              >
+                Columns
+              </Button>
+            </Flexbox>
+          </Flexbox>
           <Table
             allRowsAreSelected={selectingAllDocs}
             selectAllRows={selectingAllDocs ? resetDocs : selectAllDocs}
