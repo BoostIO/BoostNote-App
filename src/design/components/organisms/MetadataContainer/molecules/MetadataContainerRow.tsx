@@ -108,7 +108,6 @@ const Container = styled.div`
     min-height: 30px;
     flex: 1 1 auto;
     display: block;
-    overflow: hidden;
   }
 
   &.metadata__item {

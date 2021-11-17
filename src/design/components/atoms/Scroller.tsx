@@ -26,6 +26,7 @@ const Scroller = React.forwardRef<
           autoHideDelay: 300,
         },
         overflowBehavior,
+        clipAlways: false,
       }}
       id={id}
       onClick={onClick}
