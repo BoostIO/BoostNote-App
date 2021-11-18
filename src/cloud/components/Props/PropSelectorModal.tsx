@@ -72,6 +72,8 @@ const PropSelectorModal = ({
               id: `prop-modal-${propType}`,
               label: getLabelOfPropType(subType || propType),
               iconPath: getIconPathOfPropType(subType || propType),
+              disabled:
+                propName.trim() === '' || disallowedNamesSet.has(propName),
               onClick: () => {
                 if (propName !== '' && !disallowedNamesSet.has(propName)) {
                   addProp(
