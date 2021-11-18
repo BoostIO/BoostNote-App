@@ -64,7 +64,9 @@ const PropertyValueButton = forwardRef<
                 className='item__property__button__icon'
               />
             )}
-            <span className='item__property__button__label'>{children}</span>
+            {!empty && (
+              <span className='item__property__button__label'>{children}</span>
+            )}
           </>
         )}
       </ButtonContainer>

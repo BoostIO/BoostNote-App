@@ -224,6 +224,11 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
 }
 
 const Container = styled.div`
+  &.doc__tags__create--empty {
+    width: 100%;
+    margin-bottom: 0 !important;
+  }
+
   .tag__add {
     font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     border-radius: 100%;
