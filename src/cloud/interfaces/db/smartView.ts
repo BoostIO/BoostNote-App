@@ -45,6 +45,7 @@ export type SmartViewPropConditionTypes =
   | 'string'
   | 'number'
   | 'date'
+  | 'status'
 
 export interface JsonPropCondition {
   type: string
