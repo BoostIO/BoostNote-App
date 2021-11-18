@@ -244,6 +244,7 @@ function useNavStore(): NavContext {
         setDocsMap(new Map())
         setTagsMap(new Map())
         setWorkspacesMap(new Map())
+        setViewsMap(new Map())
         return
       }
       if (team.id !== prevTeamId.current) {
@@ -297,6 +298,7 @@ function useNavStore(): NavContext {
           appEvents,
           views,
         })
+        console.log(maps.viewsData)
         setFoldersMap(maps.foldersData)
         setDocsMap(maps.docsData)
         setTagsMap(maps.tagsData)
