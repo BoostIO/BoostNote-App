@@ -110,7 +110,6 @@ const DocPageHeader = ({
                       variant='transparent'
                       size='sm'
                       iconPath={mdiLabelOutline}
-                      disabled={true}
                     >
                       Labels
                     </Button>
