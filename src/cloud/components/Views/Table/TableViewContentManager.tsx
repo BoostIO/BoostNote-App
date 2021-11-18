@@ -469,4 +469,9 @@ const Container = styled.div`
   .cm__scroller {
     height: 100%;
   }
+
+  .item__property__button.item__property__button--empty
+    .item__property__button__icon {
+    flex-grow: 1;
+  }
 `

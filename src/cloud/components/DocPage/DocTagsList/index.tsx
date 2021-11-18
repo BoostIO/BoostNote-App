@@ -134,11 +134,16 @@ const ListContainer = styled.div`
     flex-wrap: wrap;
     height: 100%;
     box-sizing: content-box;
+
+    &.doc__tags__wrapper--empty {
+      width: 100%;
+    }
+
     &.doc__tags__wrapper--full {
       padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
-    }
-    > * {
-      margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px !important;
+      & > * {
+        margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px !important;
+      }
     }
   }
 
