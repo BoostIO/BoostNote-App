@@ -75,8 +75,9 @@ export function useTableView({
 
   const addColumn = useCallback(
     (col: Column) => {
+      const columnState = state.columns || {}
       if (
-        getArrayFromRecord(state.columns).findIndex(
+        getArrayFromRecord(columnState).findIndex(
           (val) => val.name === col.name
         ) !== -1
       ) {
@@ -84,7 +85,7 @@ export function useTableView({
       }
 
       const newState = Object.assign(state, {
-        columns: Object.assign(state.columns, { [col.id]: col }),
+        columns: Object.assign(columnState, { [col.id]: col }),
       })
       return saveView(view, newState)
     },
@@ -93,7 +94,8 @@ export function useTableView({
 
   const removeColumn = useCallback(
     (col: Column) => {
-      const newColumns = Object.assign(state.columns)
+      const columnState = state.columns || {}
+      const newColumns = Object.assign(columnState)
       delete newColumns[col.id]
       const newState = Object.assign(state, {
         columns: newColumns,
@@ -105,15 +107,12 @@ export function useTableView({
 
   const moveColumn = useCallback(
     (column: Column, move: ColumnMoveType) => {
+      const columnState = state.columns || {}
       const newState = Object.assign(state, {
-        columns: Object.assign(state.columns, {
+        columns: Object.assign(columnState, {
           [column.id]: {
             ...column,
-            order: getColumnOrderAfterMove(
-              state.columns || {},
-              column.id,
-              move
-            ),
+            order: getColumnOrderAfterMove(columnState, column.id, move),
           },
         }),
       })
