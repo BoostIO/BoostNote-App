@@ -69,7 +69,7 @@ const DocTagsListItem = ({
 const Container = styled.div`
   display: inline-flex;
   flex-wrap: wrap;
-  padding: 2px 5px;
+  padding: 0.25em 0.5em;
   position: relative;
   margin: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
   color: ${({ theme }) => theme.colors.text.primary};
@@ -77,12 +77,13 @@ const Container = styled.div`
   background: ${({ theme }) => theme.colors.background.secondary};
   border-radius: 3px;
   vertical-align: middle;
-  height: 32px;
-  align-items: center;
+  align-items: flex-start;
+  height: 22px;
   flex: 0 1 auto;
   width: fit-content;
 
   .doc__tags__list__item__remove {
+    height: 100%;
     display: inline-block;
     cursor: pointer;
     margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
