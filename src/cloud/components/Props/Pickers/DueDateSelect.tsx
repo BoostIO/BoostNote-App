@@ -9,14 +9,12 @@ import {
   mdiCalendarRemoveOutline,
   mdiClose,
 } from '@mdi/js'
-import { useI18n } from '../../../lib/hooks/useI18n'
-import { lngKeys } from '../../../lib/i18n/types'
 import Portal from '../../../../design/components/atoms/Portal'
 
 interface DueDateSelectProps {
   className?: string
   sending?: boolean
-  label?: string
+  emptyLabel?: string
   isReadOnly: boolean
   dueDate?: string | null
   onDueDateChange: (newDueDate: Date | null) => void
@@ -31,14 +29,12 @@ const DueDateSelect = ({
   sending,
   disabled,
   isReadOnly,
-  label,
+  emptyLabel,
   isErrored,
-  shortenedLabel,
   dueDate: dueDateString,
   onDueDateChange,
   portalId,
 }: DueDateSelectProps) => {
-  const { translate } = useI18n()
   const [dueDate, setDueDate] = useState(() => {
     const date = dueDateString != null ? new Date(dueDateString) : null
     return date == null || !isValid(date) ? null : date
@@ -77,7 +73,7 @@ const DueDateSelect = ({
           <PropertyValueButton
             className={isDue ? 'due__date__expired' : ''}
             sending={sending}
-            empty={dueDate == null}
+            empty={dueDate == null && emptyLabel == null}
             isReadOnly={isReadOnly}
             isErrored={isErrored}
             iconPath={
@@ -86,11 +82,9 @@ const DueDateSelect = ({
           >
             {dueDate != null
               ? formatDate(dueDate, 'MMM dd, yyyy')
-              : label != null
-              ? label
-              : shortenedLabel
-              ? translate(lngKeys.DueDate)
-              : translate(lngKeys.AddDueDate)}
+              : emptyLabel != null
+              ? emptyLabel
+              : 'Add Date'}
           </PropertyValueButton>
         }
       />

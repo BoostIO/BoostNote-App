@@ -121,7 +121,7 @@ const PropPicker = ({
       ) {
         return (
           <TimePeriodPicker
-            label={propName}
+            modalLabel={propName}
             isReadOnly={readOnly}
             isErrored={isErrored}
             sending={sendingMap.get(parent.target.id) === propName}

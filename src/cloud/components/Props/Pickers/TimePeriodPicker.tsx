@@ -15,7 +15,7 @@ import Button from '../../../../design/components/atoms/Button'
 import plur from 'plur'
 
 interface TimePeriodPickerProps {
-  label: string
+  modalLabel: string
   emptyLabel?: string
   sending?: boolean
   value?: number | null
@@ -27,7 +27,7 @@ interface TimePeriodPickerProps {
 }
 
 const TimePeriodPicker = ({
-  label,
+  modalLabel,
   disabled,
   sending,
   value,
@@ -72,7 +72,7 @@ const TimePeriodPicker = ({
     <Container>
       <PropertyValueButton
         disabled={disabled}
-        empty={parsedValue == null}
+        empty={parsedValue == null && emptyLabel == null}
         isReadOnly={isReadOnly}
         isErrored={isErrored}
         iconPath={mdiClockOutline}
@@ -81,7 +81,7 @@ const TimePeriodPicker = ({
           openContextModal(
             e,
             <TimePeriodModal
-              label={label}
+              label={modalLabel}
               defaultValue={parsedValue?.value}
               defaultReason={parsedValue?.reason}
               submitUpdate={onPeriodChange}
