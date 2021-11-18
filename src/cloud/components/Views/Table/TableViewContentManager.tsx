@@ -570,7 +570,7 @@ const Container = styled.div`
     min-height: 46px;
   }
   .table__row__cell {
-    min-height: 34px;
+    min-height: 38px;
     .item__property__button,
     .react-datepicker-wrapper {
       width: 100%;
