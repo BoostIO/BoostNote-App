@@ -130,9 +130,9 @@ const PropConfig = ({
                                 return prev.data.type === propType
                                   ? prev
                                   : {
-                                      ...prev,
+                                      name: prev.name,
                                       data: getInitialPropDataOfPropType(
-                                        propType
+                                        subType || propType
                                       ),
                                     }
                               })
