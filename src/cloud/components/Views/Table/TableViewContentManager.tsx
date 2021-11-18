@@ -265,7 +265,7 @@ const TableViewContentManager = ({
             cols={[
               {
                 id: 'doc-title',
-                children: 'Title',
+                children: 'Documents',
                 width: 300,
               },
               ...orderedColumns.map((col) => {
