@@ -364,9 +364,17 @@ const Container = styled.div`
     .doc__page__header__property__picker {
       flex-grow: 1;
 
-      .item__property__button,
-      .react-datepicker-wrapper {
+      .item__property__button {
         width: 100%;
+      }
+
+      .item__due-date__select,
+      .item__due-date__select > div.react-datepicker-wrapper {
+        width: 100%;
+      }
+
+      .item__due-date__select .react-datepicker__triangle {
+        left: auto !important;
       }
     }
   }
