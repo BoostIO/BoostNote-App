@@ -142,7 +142,7 @@ const ListContainer = styled.div`
     &.doc__tags__wrapper--full {
       padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
       & > * {
-        margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px !important;
+        margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px !important;
       }
     }
   }
