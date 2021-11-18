@@ -4,7 +4,6 @@ import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedView } from '../../../interfaces/db/view'
 import { ViewTableData } from '../../../lib/views/table'
 import { SerializedTeam } from '../../../interfaces/db/team'
-import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import Scroller from '../../../../design/components/atoms/Scroller'
 import { useTableView } from '../../../lib/hooks/views/tableView'
@@ -88,75 +87,6 @@ const Container = styled.div`
   .view__scroller {
     height: 100%;
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
-  }
-
-  .views__header {
-    width: 100%;
-    margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
-  }
-
-  .react-datepicker-popper {
-    z-index: 2;
-  }
-
-  .navigation__item {
-    height: 100%;
-  }
-
-  .table__col {
-    .th__cell {
-      .th__cell__icon {
-        margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
-        color: ${({ theme }) => theme.colors.text.subtle};
-        flex: 0 0 auto;
-      }
-
-      span {
-        ${overflowEllipsis()}
-      }
-    }
-  }
-
-  .static__dates {
-    height: 100%;
-    justify-content: center;
-    color: ${({ theme }) => theme.colors.text.subtle};
-  }
-
-  .table__row__cell > *,
-  .table__row__cell .react-datepicker-wrapper,
-  .table__row__cell .react-datepicker__input-container {
-    height: 100%;
-  }
-
-  .doc__tags__icon {
-    display: none;
-  }
-
-  .table__row__cell {
-    .item__property__button,
-    .react-datepicker-wrapper {
-      width: 100%;
-      border-radius: 0 !important;
-    }
-    .item__property__button {
-      padding: 16px ${({ theme }) => theme.sizes.spaces.sm}px;
-      height: 100% !important;
-      min-height: 32px;
-      border: 0 !important;
-    }
-
-    .doc__tags__list__item {
-      margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px !important;
-      margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px !important;
-    }
-  }
-
-  .doc__tags__wrapper--empty,
-  .doc__tags__create--empty {
-    height: 100%;
-    margin: 0 !important;
-    width: 100%;
   }
 `
 
