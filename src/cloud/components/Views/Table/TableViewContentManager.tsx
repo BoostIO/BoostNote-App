@@ -515,7 +515,7 @@ const Container = styled.div`
   }
 
   .item__property__button.item__property__button--empty
-    .item__property__button__icon {
-    flex-grow: 1;
+    .item__property__button__label {
+    display: none;
   }
 `

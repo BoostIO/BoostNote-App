@@ -17,7 +17,7 @@ interface AssigneeSelectProps {
   isLoading: boolean
   readOnly: boolean
   isErrored?: boolean
-  label?: string
+  emptyLabel?: string
   popupAlignment?: 'bottom-left' | 'top-left'
 }
 
@@ -26,7 +26,7 @@ const AssigneeSelect = ({
   defaultValue,
   isLoading,
   isErrored,
-  label,
+  emptyLabel,
   readOnly,
   update,
   popupAlignment = 'bottom-left',
@@ -65,7 +65,7 @@ const AssigneeSelect = ({
         disabled={disabled}
         sending={isLoading}
         isErrored={isErrored}
-        empty={defaultValue.length === 0}
+        empty={defaultValue.length === 0 && emptyLabel == null}
         isReadOnly={readOnly}
         iconPath={
           defaultValue.length === 0 ? mdiAccountCircleOutline : undefined
@@ -87,8 +87,8 @@ const AssigneeSelect = ({
       >
         {defaultValue.length !== 0
           ? selectedUsers
-          : label != null
-          ? label
+          : emptyLabel != null
+          ? emptyLabel
           : translate(lngKeys.Unassigned)}
       </PropertyValueButton>
     </Container>

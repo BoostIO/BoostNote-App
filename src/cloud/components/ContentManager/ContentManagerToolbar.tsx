@@ -500,6 +500,7 @@ const ContentManagerToolbar = ({
               return (
                 <StatusSelect
                   key={`cm__toolbar--${propColumn.id}`}
+                  emptyLabel={propColumn.name}
                   status={
                     selectedDocumentsCommonValues[propColumn.name] != null
                       ? selectedDocumentsCommonValues[propColumn.name].value
@@ -525,6 +526,7 @@ const ContentManagerToolbar = ({
               return (
                 <DocAssigneeSelect
                   key={`cm__toolbar--${propColumn.id}`}
+                  emptyLabel={propColumn.name}
                   isLoading={sending === propColumn.name}
                   disabled={selectedDocsAreUpdating}
                   defaultValue={
@@ -543,13 +545,13 @@ const ContentManagerToolbar = ({
                       },
                     ])
                   }}
-                  label={propColumn.name}
                 />
               )
             case 'date':
               return (
                 <DocDueDateSelect
                   key={`cm__toolbar--${propColumn.id}`}
+                  emptyLabel={propColumn.name}
                   dueDate={
                     selectedDocumentsCommonValues[propColumn.name] != null
                       ? selectedDocumentsCommonValues[propColumn.name].value
@@ -567,7 +569,6 @@ const ContentManagerToolbar = ({
                       },
                     ])
                   }}
-                  label={propColumn.name}
                   disabled={selectedDocsAreUpdating}
                 />
               )
@@ -575,7 +576,7 @@ const ContentManagerToolbar = ({
               return (
                 <TimePeriodPicker
                   key={`cm__toolbar--${propColumn.id}`}
-                  label={propColumn.name}
+                  modalLabel={propColumn.name}
                   isReadOnly={selectedDocsAreUpdating}
                   sending={sending === propColumn.name}
                   disabled={selectedDocsAreUpdating}
