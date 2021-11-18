@@ -3,12 +3,11 @@ import styled from '../../../../design/lib/styled'
 
 interface EmptyRowProps {
   label: string
-  className?: string
 }
 
-const EmptyRow = ({ label, className }: EmptyRowProps) => {
+const EmptyRow = ({ label }: EmptyRowProps) => {
   return (
-    <Container className={className}>
+    <Container>
       <p>{label}</p>
     </Container>
   )
