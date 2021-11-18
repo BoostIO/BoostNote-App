@@ -17,6 +17,7 @@ import {
   mdiLabelOutline,
   mdiTimerOutline,
 } from '@mdi/js'
+import { getInitialPropDataOfPropType } from './props'
 
 export const supportedCustomPropertyTypes: Record<
   string,
@@ -86,10 +87,15 @@ const validators: Validators = {
       return false
     }
 
-    const prop = doc.props[condition.value.name]
+    let prop = doc.props[condition.value.name]
+
+    if (prop == null && condition.value.type === 'status') {
+      prop = getInitialPropDataOfPropType('status')
+    }
+
     if (
       prop == null ||
-      (prop.data == null && prop.type !== 'status') ||
+      (prop.data == null && condition.value.type !== 'status') ||
       prop.type !== condition.value.type
     ) {
       return false
