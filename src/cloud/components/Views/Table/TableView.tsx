@@ -151,6 +151,13 @@ const Container = styled.div`
       margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px !important;
     }
   }
+
+  .doc__tags__wrapper--empty,
+  .doc__tags__create--empty {
+    height: 100%;
+    margin: 0 !important;
+    width: 100%;
+  }
 `
 
 export default TableView
