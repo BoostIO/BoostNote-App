@@ -43,6 +43,7 @@ import {
 } from '../../interfaces/db/props'
 import { isPropFilled } from '../../lib/props'
 import TimePeriodPicker from '../Props/Pickers/TimePeriodPicker'
+import StatusSelect from '../Props/Pickers/StatusSelect'
 
 interface ContentManagerToolbarProps {
   team: SerializedTeam
@@ -467,10 +468,34 @@ const ContentManagerToolbar = ({
         {filteredColumns.map((propColumn) => {
           const columnType = getPropTypeFromColId(propColumn.id)
           switch (columnType) {
+            case 'status':
+              return (
+                <StatusSelect
+                  status={
+                    selectedDocumentsCommonValues[propColumn.name] != null
+                      ? selectedDocumentsCommonValues[propColumn.name].value
+                      : undefined
+                  }
+                  sending={sending === propColumn.name}
+                  disabled={selectedDocsAreUpdating}
+                  isReadOnly={selectedDocsAreUpdating}
+                  popupAlignment='top-left'
+                  onStatusChange={(val) =>
+                    updateProp([
+                      propColumn.name,
+                      {
+                        type: 'status',
+                        data: val == null ? val : val.id,
+                      },
+                    ])
+                  }
+                />
+              )
+
             case 'user':
               return (
                 <DocAssigneeSelect
-                  isLoading={sending === propColumn.id}
+                  isLoading={sending === propColumn.name}
                   disabled={selectedDocsAreUpdating}
                   defaultValue={
                     selectedDocumentsCommonValues[propColumn.name] != null
@@ -500,7 +525,7 @@ const ContentManagerToolbar = ({
                       : undefined
                   }
                   isReadOnly={selectedDocsAreUpdating}
-                  sending={sending === propColumn.id}
+                  sending={sending === propColumn.name}
                   shortenedLabel={true}
                   onDueDateChange={(newDate: Date | null) => {
                     updateProp([
@@ -520,7 +545,7 @@ const ContentManagerToolbar = ({
                 <TimePeriodPicker
                   label={propColumn.name}
                   isReadOnly={selectedDocsAreUpdating}
-                  sending={sending === propColumn.id}
+                  sending={sending === propColumn.name}
                   disabled={selectedDocsAreUpdating}
                   value={
                     selectedDocumentsCommonValues[propColumn.name] != null
