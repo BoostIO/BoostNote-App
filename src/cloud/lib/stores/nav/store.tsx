@@ -298,7 +298,6 @@ function useNavStore(): NavContext {
           appEvents,
           views,
         })
-        console.log(maps.viewsData)
         setFoldersMap(maps.foldersData)
         setDocsMap(maps.docsData)
         setTagsMap(maps.tagsData)
