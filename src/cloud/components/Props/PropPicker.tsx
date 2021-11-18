@@ -7,6 +7,9 @@ import DueDateSelect from './Pickers/DueDateSelect'
 import { format as formatDate } from 'date-fns'
 import StatusSelect from './Pickers/StatusSelect'
 import TimePeriodPicker from './Pickers/TimePeriodPicker'
+import { mdiAlertOutline } from '@mdi/js'
+import PropertyValueButton from './Pickers/PropertyValueButton'
+import WithTooltip from '../../../design/components/atoms/WithTooltip'
 
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
@@ -42,6 +45,22 @@ const PropPicker = ({
     },
     [parent.target, propName, onUpdate, updateDocPropsApi]
   )
+
+  if (isErrored) {
+    return (
+      <WithTooltip
+        tooltip={`This property's data is of a different type than its column's. Please modify it from the document page.`}
+      >
+        <PropertyValueButton
+          className='property--errored'
+          disabled={true}
+          isErrored={isErrored}
+          isReadOnly={readOnly}
+          iconPath={mdiAlertOutline}
+        />
+      </WithTooltip>
+    )
+  }
 
   switch (propData.type) {
     case 'user':
