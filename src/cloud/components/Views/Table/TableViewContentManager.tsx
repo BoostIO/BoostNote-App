@@ -581,7 +581,7 @@ const Container = styled.div`
     }
 
     .doc__tags__list__item,
-    .doc__tags__create {
+    .doc__tags__create:not(.doc__tags__create--empty) {
       margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px !important;
       margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px !important;
     }
