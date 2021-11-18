@@ -25,6 +25,7 @@ import {
   getSmartViewListPageData,
   SmartViewListPageResponseBody,
 } from '../../api/pages/teams/smartViews/list'
+import { getDefaultTableView } from '../../lib/views/table'
 
 const SmartViewPage = ({ data }: SmartViewListPageResponseBody) => {
   const [selectedSmartViewId, setSelectedSmartViewId] = useState<string>()
@@ -51,9 +52,17 @@ const SmartViewPage = ({ data }: SmartViewListPageResponseBody) => {
       return []
     }
 
-    const views = getMapValues(viewsMap)
+    const views = getMapValues(viewsMap).filter(
+      (view) => view.smartViewId === selectedSmartView.id
+    )
 
-    return views.filter((view) => view.smartViewId === selectedSmartView.id)
+    if (views.length === 0) {
+      return [
+        getDefaultTableView({ target: selectedSmartView, type: 'smartView' }),
+      ]
+    }
+
+    return views
   }, [viewsMap, selectedSmartView])
 
   const selectedSmartViewDocs = useMemo(() => {
