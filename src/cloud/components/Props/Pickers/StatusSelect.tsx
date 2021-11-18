@@ -25,7 +25,6 @@ interface StatusSelectProps {
   sending?: boolean
   status?: SerializedStatus
   disabled?: boolean
-  isErrored?: boolean
   isReadOnly: boolean
   emptyLabel?: string
   showIcon?: boolean
@@ -39,7 +38,6 @@ const StatusSelect = ({
   sending,
   disabled,
   emptyLabel,
-  isErrored,
   isReadOnly,
   showIcon,
   popupAlignment = 'bottom-left',
@@ -72,7 +70,6 @@ const StatusSelect = ({
     <div className={cc(['item__status__select', 'prop__margin'])}>
       <PropertyValueButton
         sending={sending}
-        isErrored={isErrored}
         isReadOnly={isReadOnly}
         disabled={disabled}
         onClick={(e) => (onClick != null ? onClick(e) : openSelector(e))}
