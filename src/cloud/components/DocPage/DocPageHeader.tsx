@@ -355,6 +355,9 @@ const Container = styled.div`
 
   div.doc__page__header__property {
     width: 100%;
+    .doc__tags {
+      height: auto;
+    }
     .doc__page__header__property__label {
       flex-grow: 0;
       min-width: 130px;
