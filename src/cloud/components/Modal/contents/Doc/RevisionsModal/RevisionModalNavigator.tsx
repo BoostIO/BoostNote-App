@@ -43,18 +43,21 @@ const RevisionModalNavigator = React.forwardRef<
   HTMLButtonElement,
   RevisionModalNavigatorProps
 >(
-  ({
-    currentUserPermissions,
-    menuRef,
-    fetching,
-    revisions,
-    currentPage,
-    totalPages,
-    setRevisionIndex,
-    revisionIndex,
-    fetchRevisions,
-    subscription,
-  }) => {
+  (
+    {
+      currentUserPermissions,
+      menuRef,
+      fetching,
+      revisions,
+      currentPage,
+      totalPages,
+      setRevisionIndex,
+      revisionIndex,
+      fetchRevisions,
+      subscription,
+    },
+    _ref
+  ) => {
     const { openSettingsTab } = useSettings()
     const { closeAllModals } = useModal()
     const keydownHandler = useMemo(() => {
