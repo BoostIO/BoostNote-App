@@ -566,8 +566,11 @@ const Container = styled.div`
     display: none;
   }
 
+  .table__col {
+    min-height: 46px;
+  }
   .table__row__cell {
-    min-height: 34px;
+    min-height: 36px;
     .item__property__button,
     .react-datepicker-wrapper {
       width: 100%;
