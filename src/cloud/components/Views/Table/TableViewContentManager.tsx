@@ -2,7 +2,10 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { useSet } from 'react-use'
-import { sortByAttributeAsc } from '../../../lib/utils/array'
+import {
+  sortByAttributeAsc,
+  sortByAttributeDesc,
+} from '../../../lib/utils/array'
 import {
   docToDataTransferItem,
   folderToDataTransferItem,
@@ -48,6 +51,11 @@ import TableViewContentManagerRow from './TableViewContentManagerRow'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import TableContentManagerRow from './TableContentManagerRow'
 import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
+import { usePreferences } from '../../../lib/stores/preferences'
+import SortingOption, {
+  sortingOrders,
+} from '../../ContentManager/SortingOption'
+import { FormSelectOption } from '../../../../design/components/molecules/Form/atoms/FormSelect'
 
 interface ContentManagerProps {
   team: SerializedTeam
@@ -77,6 +85,10 @@ const TableViewContentManager = ({
   const { openContextModal, closeAllModals } = useModal()
   const { openNewFolderForm, openNewDocForm } = useCloudResourceModals()
   const { push } = useRouter()
+  const { preferences, setPreferences } = usePreferences()
+  const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
+    preferences.folderSortingOrder
+  )
 
   const [
     selectedFolderSet,
@@ -146,8 +158,16 @@ const TableViewContentManager = ({
         title: getDocTitle(doc, 'untitled'),
       }
     })
-    return sortByAttributeAsc('title', filteredDocs)
-  }, [documents])
+    switch (order) {
+      case 'Title A-Z':
+        return sortByAttributeAsc('title', filteredDocs)
+      case 'Title Z-A':
+        return sortByAttributeDesc('title', filteredDocs)
+      case 'Latest Updated':
+      default:
+        return sortByAttributeDesc('updatedAt', filteredDocs)
+    }
+  }, [order, documents])
 
   const orderedFolders = useMemo(() => {
     if (folders == null) {
@@ -224,6 +244,14 @@ const TableViewContentManager = ({
     [clearDragTransferData]
   )
 
+  const onChangeOrder = useCallback(
+    (val: FormSelectOption) => {
+      setOrder(val.value)
+      setPreferences({ folderSortingOrder: val.value as any })
+    },
+    [setPreferences]
+  )
+
   return (
     <Container>
       <Scroller className='cm__scroller'>
@@ -234,6 +262,9 @@ const TableViewContentManager = ({
             alignItems='end'
             className='views__header'
           >
+            <Flexbox flex='0 0 auto'>
+              <SortingOption value={order} onChange={onChangeOrder} />
+            </Flexbox>
             <Flexbox flex='0 0 auto'>
               <Button
                 variant='transparent'
@@ -523,6 +554,7 @@ const Container = styled.div`
   .property--errored {
     justify-content: center;
   }
+
   .views__header {
     width: 100%;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
@@ -595,5 +627,9 @@ const Container = styled.div`
     height: 100%;
     margin: 0 !important;
     width: 100%;
+  }
+
+  .rc-select .form__select__single-value {
+    display: flex;
   }
 `
