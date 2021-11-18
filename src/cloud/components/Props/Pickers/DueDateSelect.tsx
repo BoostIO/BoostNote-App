@@ -94,7 +94,7 @@ const DueDateSelect = ({
           </PropertyValueButton>
         }
       />
-      {dueDate != null && (
+      {dueDate != null && !isErrored && (
         <Button
           variant='icon'
           iconPath={mdiClose}
