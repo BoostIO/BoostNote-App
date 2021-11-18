@@ -515,10 +515,6 @@ const Container = styled.div`
     padding: 0;
   }
 
-  .content__manager__folder__create {
-    padding-left: 28px;
-  }
-
   .item__property__button.item__property__button--empty
     .item__property__button__icon {
     flex-grow: 1;
