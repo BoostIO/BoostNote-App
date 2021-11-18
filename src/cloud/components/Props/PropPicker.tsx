@@ -68,7 +68,6 @@ const PropPicker = ({
         <AssigneeSelect
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
           isLoading={sendingMap.get(parent.target.id) === propName}
-          isErrored={isErrored}
           readOnly={readOnly}
           defaultValue={
             propData.data != null
@@ -93,7 +92,6 @@ const PropPicker = ({
         <DueDateSelect
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
           sending={sendingMap.get(parent.target.id) === propName}
-          isErrored={isErrored}
           isReadOnly={readOnly}
           portalId={portalId}
           dueDate={propData.data == null ? null : propData.data.toString()}
@@ -120,7 +118,6 @@ const PropPicker = ({
           status={
             Array.isArray(propData.data) ? propData.data[0] : propData.data
           }
-          isErrored={isErrored}
           sending={sendingMap.get(parent.target.id) === 'status'}
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
           isReadOnly={readOnly}
@@ -142,7 +139,6 @@ const PropPicker = ({
           <TimePeriodPicker
             modalLabel={propName}
             isReadOnly={readOnly}
-            isErrored={isErrored}
             sending={sendingMap.get(parent.target.id) === propName}
             disabled={sendingMap.get(parent.target.id) != null || readOnly}
             value={propData.data.data}
