@@ -44,6 +44,7 @@ import {
 import { isPropFilled } from '../../lib/props'
 import TimePeriodPicker from '../Props/Pickers/TimePeriodPicker'
 import StatusSelect from '../Props/Pickers/StatusSelect'
+import { SerializedStatus } from '../../interfaces/db/status'
 
 interface ContentManagerToolbarProps {
   team: SerializedTeam
@@ -311,6 +312,17 @@ const ContentManagerToolbar = ({
                 : [docProp.data.userId],
           }
           break
+        case 'status':
+          values[key] = {
+            type: docProp.type,
+            value:
+              docProp.data == null
+                ? undefined
+                : Array.isArray(docProp.data)
+                ? docProp.data[0]
+                : docProp.data,
+          }
+          break
         case 'date':
         case 'string':
           values[key] = {
@@ -373,6 +385,22 @@ const ContentManagerToolbar = ({
                   newUserArray = newUserArray.filter((val) => val !== user)
                 }
               })
+            }
+            break
+          case 'status':
+            {
+              const docPropStatus: SerializedStatus | undefined =
+                props[key] == null
+                  ? undefined
+                  : Array.isArray(props[key].data)
+                  ? props[key].data[0]
+                  : props[key].data
+              if (
+                docPropStatus == null ||
+                docPropStatus.id !== values[key].value.id
+              ) {
+                delete values[key]
+              }
             }
             break
           case 'date':
