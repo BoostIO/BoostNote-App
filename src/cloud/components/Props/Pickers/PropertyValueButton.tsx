@@ -6,7 +6,7 @@ import cc from 'classcat'
 import Icon from '../../../../design/components/atoms/Icon'
 
 interface PropertyValueButtonProps {
-  children: React.ReactNode
+  children?: React.ReactNode
   iconPath?: string
   disabled?: boolean
   sending?: boolean
