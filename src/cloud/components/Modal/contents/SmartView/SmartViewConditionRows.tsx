@@ -31,7 +31,6 @@ const SmartViewConditionRows = ({
     <>
       {conditions.map((condition, index) => {
         const updateCondition = (updatedCondition: EditableCondition) => {
-          console.log(updatedCondition)
           setConditions((previousConditions) => {
             const newConditions = [...previousConditions]
             newConditions.splice(index, 1, updatedCondition)
