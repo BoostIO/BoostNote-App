@@ -1,7 +1,7 @@
 {
   "name": "boostnote.next",
   "productName": "Boost Note",
-  "version": "0.22.0",
+  "version": "0.23.0",
   "description": "A Polished Notes App with Github Flavored Markdown",
   "main": "app/index.js",
   "repository": {
@@ -23,10 +23,13 @@
     "ico": "png2icons static/logo.png static/icon -allwe",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
+    "build:electron-dev": "npm run build:electron-renderer-dev && npm run build:electron-main-dev",
     "build:electron-staging": "npm run build:electron-renderer-staging && npm run build:electron-main-staging",
     "build:electron-prod": "npm run build:electron-renderer-prod && npm run build:electron-main-prod",
+    "build:electron-renderer-dev": "rimraf electron/compiled && env-cmd --file .env cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production",
     "build:electron-renderer-staging": "rimraf electron/compiled && env-cmd --file .env.staging cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production",
     "build:electron-renderer-prod": "rimraf electron/compiled && env-cmd --file .env.production cross-env TS_NODE_PROJECT=\"tsconfig-webpack.json\" webpack --mode production",
+    "build:electron-main-dev": "rimraf electron/index.js && env-cmd --file .env ts-node -P tsconfig-webpack.json scripts/build-electron-main",
     "build:electron-main-staging": "rimraf electron/index.js && env-cmd --file .env.staging ts-node -P tsconfig-webpack.json scripts/build-electron-main",
     "build:electron-main-prod": "rimraf electron/index.js && env-cmd --file .env.production ts-node -P tsconfig-webpack.json scripts/build-electron-main",
     "meta": "node scripts/meta.js",
