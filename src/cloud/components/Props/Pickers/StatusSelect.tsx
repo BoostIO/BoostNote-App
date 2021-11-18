@@ -10,7 +10,11 @@ import Spinner from '../../../../design/components/atoms/Spinner'
 import { useUpDownNavigationListener } from '../../../lib/keyboard'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import { mdiDotsHorizontal, mdiTrashCanOutline } from '@mdi/js'
+import {
+  mdiArrowDownDropCircleOutline,
+  mdiDotsHorizontal,
+  mdiTrashCanOutline,
+} from '@mdi/js'
 import { useModal } from '../../../../design/lib/stores/modal'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import Icon from '../../../../design/components/atoms/Icon'
@@ -24,6 +28,7 @@ interface StatusSelectProps {
   isErrored?: boolean
   isReadOnly: boolean
   emptyLabel?: string
+  showIcon?: boolean
   popupAlignment?: 'bottom-left' | 'top-left'
   onClick?: (event: React.MouseEvent) => void
   onStatusChange: (status: SerializedStatus | null) => void
@@ -36,6 +41,7 @@ const StatusSelect = ({
   emptyLabel,
   isErrored,
   isReadOnly,
+  showIcon,
   popupAlignment = 'bottom-left',
   onStatusChange,
   onClick,
@@ -70,6 +76,7 @@ const StatusSelect = ({
         isReadOnly={isReadOnly}
         disabled={disabled}
         onClick={(e) => (onClick != null ? onClick(e) : openSelector(e))}
+        iconPath={showIcon ? mdiArrowDownDropCircleOutline : undefined}
       >
         {status != null ? (
           <StatusView

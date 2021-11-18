@@ -506,6 +506,9 @@ const ContentManagerToolbar = ({
                       ? selectedDocumentsCommonValues[propColumn.name].value
                       : undefined
                   }
+                  showIcon={
+                    selectedDocumentsCommonValues[propColumn.name] == null
+                  }
                   sending={sending === propColumn.name}
                   disabled={selectedDocsAreUpdating}
                   isReadOnly={selectedDocsAreUpdating}
