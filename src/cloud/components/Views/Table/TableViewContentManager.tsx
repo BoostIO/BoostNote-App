@@ -42,10 +42,11 @@ import { useRouter } from '../../../lib/router'
 import { StyledContentManagerList } from '../../ContentManager/styled'
 import ContentManagerRow from '../../ContentManager/Rows/ContentManagerRow'
 import EmptyRow from '../../ContentManager/Rows/EmptyRow'
-import ContentManagerFolderRow from '../../ContentManager/Rows/ContentManagerFolderRow'
 import ContentManagerToolbar from '../../ContentManager/ContentManagerToolbar'
 import Button from '../../../../design/components/atoms/Button'
 import TablePropertiesContext from './TablePropertiesContext'
+import TableViewContentManagerFolderRow from './TableViewContentManagerFolderRow'
+import TableViewContentManagerRow from './TableViewContentManagerRow'
 
 interface ContentManagerProps {
   team: SerializedTeam
@@ -404,7 +405,7 @@ const TableViewContentManager = ({
 
           {folders != null && (
             <>
-              <ContentManagerRow
+              <TableViewContentManagerRow
                 label={translate(lngKeys.GeneralFolders)}
                 checked={selectingAllFolders}
                 onSelect={selectingAllFolders ? resetFolders : selectAllFolders}
@@ -417,7 +418,7 @@ const TableViewContentManager = ({
               />
 
               {orderedFolders.map((folder) => (
-                <ContentManagerFolderRow
+                <TableViewContentManagerFolderRow
                   folder={folder}
                   key={folder.id}
                   team={team}
