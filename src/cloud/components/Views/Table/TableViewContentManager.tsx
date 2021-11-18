@@ -33,7 +33,7 @@ import { getDocLinkHref } from '../../Link/DocLink'
 import PropPicker from '../../Props/PropPicker'
 import DocTagsList from '../../DocPage/DocTagsList'
 import { getFormattedBoosthubDateTime } from '../../../lib/date'
-import { mdiFileDocumentOutline } from '@mdi/js'
+import { mdiFileDocumentOutline, mdiPlus } from '@mdi/js'
 import NavigationItem from '../../../../design/components/molecules/Navigation/NavigationItem'
 import TableAddPropertyContext from './TableAddPropertyContext'
 import { TableViewActionsRef } from '../../../lib/hooks/views/tableView'
@@ -46,6 +46,7 @@ import Button from '../../../../design/components/atoms/Button'
 import TablePropertiesContext from './TablePropertiesContext'
 import TableViewContentManagerFolderRow from './TableViewContentManagerFolderRow'
 import TableViewContentManagerRow from './TableViewContentManagerRow'
+import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 
 interface ContentManagerProps {
   team: SerializedTeam
@@ -68,9 +69,12 @@ const TableViewContentManager = ({
   currentUserIsCoreMember,
   view,
   tableActionsRef: actionsRef,
+  currentFolderId,
+  currentWorkspaceId,
 }: ContentManagerProps) => {
   const { translate } = useI18n()
   const { openContextModal, closeAllModals } = useModal()
+  const { openNewFolderForm } = useCloudResourceModals()
   const { push } = useRouter()
 
   const [
@@ -431,7 +435,29 @@ const TableViewContentManager = ({
                   onDragStart={onDragStartFolder}
                 />
               ))}
-              {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
+              {orderedFolders.length === 0 && (
+                <EmptyRow
+                  className='content__manager--no-border'
+                  label='No Folders'
+                />
+              )}
+              {currentWorkspaceId != null && (
+                <div className='content__manager__folder__create'>
+                  <Button
+                    onClick={() =>
+                      openNewFolderForm({
+                        team,
+                        parentFolderId: currentFolderId,
+                        workspaceId: currentWorkspaceId,
+                      })
+                    }
+                    variant='transparent'
+                    iconPath={mdiPlus}
+                  >
+                    {translate(lngKeys.ModalsCreateNewFolder)}
+                  </Button>
+                </div>
+              )}
             </>
           )}
         </StyledContentManagerList>
@@ -468,6 +494,14 @@ const Container = styled.div`
 
   .cm__scroller {
     height: 100%;
+  }
+
+  .content__manager--no-border {
+    border: none;
+  }
+
+  .content__manager__folder__create {
+    padding-left: 28px;
   }
 
   .item__property__button.item__property__button--empty
