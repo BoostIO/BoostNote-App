@@ -47,6 +47,7 @@ import TablePropertiesContext from './TablePropertiesContext'
 import TableViewContentManagerFolderRow from './TableViewContentManagerFolderRow'
 import TableViewContentManagerRow from './TableViewContentManagerRow'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
+import TableContentManagerRow from './TableContentManagerRow'
 
 interface ContentManagerProps {
   team: SerializedTeam
@@ -74,7 +75,7 @@ const TableViewContentManager = ({
 }: ContentManagerProps) => {
   const { translate } = useI18n()
   const { openContextModal, closeAllModals } = useModal()
-  const { openNewFolderForm } = useCloudResourceModals()
+  const { openNewFolderForm, openNewDocForm } = useCloudResourceModals()
   const { push } = useRouter()
 
   const [
@@ -405,6 +406,24 @@ const TableViewContentManager = ({
             disabledAddRow={true}
           />
           {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
+          {currentWorkspaceId != null && (
+            <TableContentManagerRow>
+              <Button
+                className='content__manager--no-padding'
+                variant='transparent'
+                iconPath={mdiPlus}
+                onClick={() =>
+                  openNewDocForm({
+                    team,
+                    parentFolderId: currentFolderId,
+                    workspaceId: currentWorkspaceId,
+                  })
+                }
+              >
+                {translate(lngKeys.ModalsCreateNewDocument)}
+              </Button>
+            </TableContentManagerRow>
+          )}
 
           {folders != null && (
             <>
@@ -414,10 +433,7 @@ const TableViewContentManager = ({
                 onSelect={selectingAllFolders ? resetFolders : selectAllFolders}
                 showCheckbox={currentUserIsCoreMember}
                 type='header'
-                className={cc([
-                  orderedDocs.length > 0 &&
-                    'content__manager__list__header--margin',
-                ])}
+                className='content__manager__list__header--margin'
               />
 
               {orderedFolders.map((folder) => (
@@ -435,15 +451,10 @@ const TableViewContentManager = ({
                   onDragStart={onDragStartFolder}
                 />
               ))}
-              {orderedFolders.length === 0 && (
-                <EmptyRow
-                  className='content__manager--no-border'
-                  label='No Folders'
-                />
-              )}
               {currentWorkspaceId != null && (
-                <div className='content__manager__folder__create'>
+                <TableContentManagerRow className='content__manager--no-border'>
                   <Button
+                    className='content__manager--no-padding'
                     onClick={() =>
                       openNewFolderForm({
                         team,
@@ -456,7 +467,7 @@ const TableViewContentManager = ({
                   >
                     {translate(lngKeys.ModalsCreateNewFolder)}
                   </Button>
-                </div>
+                </TableContentManagerRow>
               )}
             </>
           )}
@@ -498,6 +509,10 @@ const Container = styled.div`
 
   .content__manager--no-border {
     border: none;
+  }
+
+  .content__manager--no-padding {
+    padding: 0;
   }
 
   .content__manager__folder__create {
