@@ -53,10 +53,10 @@ const TableAddPropertyContext = ({
 
       setSending(isPropCol(col) ? col.subType || col.type : col.prop)
       const res = await addColumn(col)
+      setSending(undefined)
       if (res != null && !res.err) {
         close()
       }
-      setSending(undefined)
     },
     [addColumn, close, sending]
   )
