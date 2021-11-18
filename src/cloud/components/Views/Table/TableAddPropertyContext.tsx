@@ -178,9 +178,11 @@ const TableAddPropertyContext = ({
           row={{
             type: 'button',
             props: {
-              label: getLabelOfPropType('string'),
-              iconPath: getIconPathOfPropType('string'),
-              disabled: true,
+              label: getLabelOfPropType('status'),
+              iconPath: getIconPathOfPropType('status'),
+              disabled: isColumnNameInvalid || sending != null,
+              spinning: sending === 'status',
+              onClick: () => addPropCol('status'),
             },
           }}
         />
