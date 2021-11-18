@@ -23,6 +23,7 @@ interface StatusSelectProps {
   disabled?: boolean
   isErrored?: boolean
   isReadOnly: boolean
+  popupAlignment?: 'bottom-left' | 'top-left'
   onClick?: (event: React.MouseEvent) => void
   onStatusChange: (status: SerializedStatus | null) => void
 }
@@ -33,6 +34,7 @@ const StatusSelect = ({
   disabled,
   isErrored,
   isReadOnly,
+  popupAlignment = 'bottom-left',
   onStatusChange,
   onClick,
 }: StatusSelectProps) => {
@@ -52,10 +54,10 @@ const StatusSelect = ({
             closeLastModal()
           }}
         />,
-        { alignment: 'bottom-left', width: 200, removePadding: true }
+        { alignment: popupAlignment, width: 200, removePadding: true }
       )
     },
-    [openContextModal, closeLastModal]
+    [openContextModal, closeLastModal, popupAlignment]
   )
 
   return (
