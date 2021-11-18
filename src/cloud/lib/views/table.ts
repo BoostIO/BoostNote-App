@@ -82,8 +82,11 @@ export function isViewTableData(data: any): data is ViewTableData {
   return data.columns != null && Object.values(data.columns).every(isString)
 }
 
-export function getInsertedColumnOrder(columns: Record<string, Column>) {
-  const colValues = sortByAttributeAsc('order', Object.values(columns))
+export function getInsertedColumnOrder(columns: Record<string, Column> = {}) {
+  const colValues =
+    Object.keys(columns).length === 0
+      ? []
+      : sortByAttributeAsc('order', Object.values(columns))
   if (colValues.length === 0) {
     return LexoRank.middle().toString()
   } else {
@@ -102,7 +105,7 @@ export type ColumnMoveType =
     }
 
 export function getColumnOrderAfterMove(
-  columns: Record<string, Column>,
+  columns: Record<string, Column> = {},
   movedColumnId: string,
   move: ColumnMoveType
 ): string | undefined {
@@ -147,8 +150,12 @@ export function getColumnOrderAfterMove(
 }
 
 export function sortTableViewColumns(
-  columns: Record<string, Column>
+  columns: Record<string, Column> = {}
 ): Column[] {
+  if (Object.keys(columns).length === 0) {
+    return []
+  }
+
   Object.keys(columns).forEach((key) => {
     if (columns[key].order == null) {
       columns[key].order = LexoRank.middle().toString()
