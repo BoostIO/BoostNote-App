@@ -518,4 +518,8 @@ const Container = styled.div`
     .item__property__button__label {
     display: none;
   }
+
+  .property--errored {
+    justify-content: center;
+  }
 `
