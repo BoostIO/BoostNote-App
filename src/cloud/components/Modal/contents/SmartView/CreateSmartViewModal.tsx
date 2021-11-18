@@ -16,7 +16,7 @@ interface CreateSmartViewModalProps {
 const CreateSmartViewModal = ({ onCreate }: CreateSmartViewModalProps) => {
   const { closeLastModal: closeModal } = useModal()
   const { team } = usePage()
-  const { createSmartViewApi, createViewApi } = useCloudApi()
+  const { createSmartViewApi } = useCloudApi()
   const [sending, setSending] = useState(false)
 
   const submit = useCallback(
@@ -29,7 +29,6 @@ const CreateSmartViewModal = ({ onCreate }: CreateSmartViewModalProps) => {
 
       if (!res.err) {
         const { data: smartView } = res.data as CreateSmartViewResponseBody
-        await createViewApi({ smartView: smartView.id, type: 'table' })
         closeModal()
         if (onCreate != null) {
           return onCreate(smartView)
@@ -37,7 +36,7 @@ const CreateSmartViewModal = ({ onCreate }: CreateSmartViewModalProps) => {
       }
       setSending(false)
     },
-    [team, onCreate, closeModal, createSmartViewApi, createViewApi]
+    [team, onCreate, closeModal, createSmartViewApi]
   )
 
   if (team == null) {
