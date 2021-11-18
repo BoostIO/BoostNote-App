@@ -38,8 +38,6 @@ export function getLabelOfPropType(
       return 'Creation Date'
     case 'update_date':
       return 'Update Date'
-    case 'string':
-      return 'Status'
     default:
       return capitalize(propType)
   }
