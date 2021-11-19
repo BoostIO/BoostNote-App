@@ -22,6 +22,7 @@ interface TableProps {
   onAddColButtonClick?: MouseEventHandler<HTMLButtonElement>
   onAddRowButtonClick?: MouseEventHandler<HTMLButtonElement>
   selectAllRows?: (val: boolean) => void
+  stickyFirstCol?: boolean
 }
 
 const Table: AppComponent<TableProps> = ({
@@ -35,6 +36,7 @@ const Table: AppComponent<TableProps> = ({
   onAddColButtonClick,
   disabledAddRow = false,
   onAddRowButtonClick,
+  stickyFirstCol = true,
 }) => {
   const [tableId] = useState(shortid.generate())
   const columnWidths = useMemo(() => {
@@ -44,41 +46,54 @@ const Table: AppComponent<TableProps> = ({
   }, [cols])
 
   return (
-    <TableContainer className={cc(['table', className])}>
+    <TableContainer
+      className={cc([
+        'table',
+        className,
+        stickyFirstCol && 'table--sticky-col',
+        showCheckboxes && 'table--with-checkbox',
+      ])}
+    >
       <Scroller className='table__wrapper'>
-        <div className='table__header'>
-          {showCheckboxes && selectAllRows != null && (
-            <div className='table-row__checkbox__wrapper'>
-              <Checkbox
-                className={cc([
-                  'table-row__checkbox',
-                  allRowsAreSelected && 'table-row__checkbox--checked',
-                ])}
-                checked={allRowsAreSelected}
-                toggle={() => selectAllRows(!allRowsAreSelected)}
-              />
-            </div>
-          )}
-          {cols.map((col, i) => (
-            <TableCol {...col} key={`${tableId}-head-${i}`} />
-          ))}
-          {!disabledAddColumn && (
-            <button
-              className='table__header__addColButton'
-              onClick={onAddColButtonClick}
-            >
-              <Icon path={mdiPlus} size={16} />
-            </button>
-          )}
+        <div>
+          <div className='table__header'>
+            {showCheckboxes && selectAllRows != null && (
+              <div className='table-row__checkbox__wrapper'>
+                <Checkbox
+                  className={cc([
+                    'table-row__checkbox',
+                    allRowsAreSelected && 'table-row__checkbox--checked',
+                  ])}
+                  checked={allRowsAreSelected}
+                  toggle={() => selectAllRows(!allRowsAreSelected)}
+                />
+              </div>
+            )}
+            {cols.map((col, i) => (
+              <TableCol {...col} key={`${tableId}-head-${i}`} />
+            ))}
+            {!disabledAddColumn && (
+              <button
+                className='table__header__addColButton'
+                onClick={onAddColButtonClick}
+              >
+                <Icon path={mdiPlus} size={16} />
+              </button>
+            )}
+          </div>
         </div>
         {rows.map((row, i) => (
-          <TableRow
+          <div
+            className='table-row__wrapper'
             key={row.id != null ? row.id : `row-${i}`}
-            {...row}
-            widths={columnWidths}
-            disabledAddColumn={disabledAddColumn}
-            showCheckbox={showCheckboxes}
-          />
+          >
+            <TableRow
+              {...row}
+              widths={columnWidths}
+              disabledAddColumn={disabledAddColumn}
+              showCheckbox={showCheckboxes}
+            />
+          </div>
         ))}
 
         {!disabledAddRow && (
@@ -96,9 +111,10 @@ export default Table
 const TableContainer = styled.div`
   border-style: solid;
   border-width: 1px 0;
+  overflow-x: auto;
   border-color: ${({ theme }) => theme.colors.border.main};
   .table__header {
-    display: flex;
+    display: inline-flex;
     border-bottom: solid 1px ${({ theme }) => theme.colors.border.main};
   }
 
@@ -143,5 +159,65 @@ const TableContainer = styled.div`
     &.table-row__checkbox--checked {
       opacity: 1;
     }
+  }
+
+  &.table--sticky-col {
+    .table__header > div:first-child {
+      z-index: 10;
+      position: sticky;
+      left: 0;
+      background-color: ${({ theme }) => theme.colors.background.primary};
+    }
+
+    .table__header > div:nth-child(2) {
+      z-index: 10;
+      position: sticky;
+      left: 300px;
+      background-color: ${({ theme }) => theme.colors.background.primary};
+    }
+
+    .table-row > div:first-child {
+      z-index: 10;
+      position: sticky;
+      left: 0;
+      background-color: ${({ theme }) => theme.colors.background.primary};
+    }
+
+    .table-row > div:nth-child(2) {
+      z-index: 10;
+      position: sticky;
+      left: 300px;
+      background-color: ${({ theme }) => theme.colors.background.primary};
+    }
+
+    &.table--with-checkbox {
+      .table-row > div:nth-child(2) {
+        position: sticky;
+        left: 42px;
+      }
+
+      .table-row > div:nth-child(3) {
+        z-index: 10;
+        position: sticky;
+        left: 340px;
+        background-color: ${({ theme }) => theme.colors.background.primary};
+      }
+
+      .table__header > div:nth-child(2) {
+        position: sticky;
+        left: 42px;
+      }
+
+      .table__header > div:nth-child(3) {
+        z-index: 10;
+        position: sticky;
+        left: 340px;
+        background-color: ${({ theme }) => theme.colors.background.primary};
+      }
+    }
+  }
+
+  .table-row__wrapper:last-child > .table-row {
+    border-bottom: none;
   }
 `
