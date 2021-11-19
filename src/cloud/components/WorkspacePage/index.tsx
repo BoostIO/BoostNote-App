@@ -2,19 +2,8 @@ import React, { useMemo } from 'react'
 import { usePage } from '../../lib/stores/pageStore'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { useNav } from '../../lib/stores/nav'
-import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
-import { useI18n } from '../../lib/hooks/useI18n'
 import InviteCTAButton from '../buttons/InviteCTAButton'
-import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import { useCloudApi } from '../../lib/hooks/useCloudApi'
-import {
-  mdiDotsHorizontal,
-  mdiFolderPlusOutline,
-  mdiPlus,
-  mdiTextBoxPlus,
-} from '@mdi/js'
-import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
-import { lngKeys } from '../../lib/i18n/types'
+import { mdiDotsHorizontal } from '@mdi/js'
 import { useModal } from '../../../design/lib/stores/modal'
 import FolderPageInviteSection from '../Onboarding/FolderPageInviteSection'
 import { TopbarControlProps } from '../../../design/components/organisms/Topbar'
@@ -30,9 +19,6 @@ import ViewsList from '../Views'
 const WorkspacePage = ({ workspace }: { workspace: SerializedWorkspace }) => {
   const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, foldersMap, viewsMap } = useNav()
-  const { openNewFolderForm, openNewDocForm } = useCloudResourceModals()
-  const { sendingMap } = useCloudApi()
-  const { translate } = useI18n()
   const { openContextModal } = useModal()
 
   const childFolders = useMemo(() => {
@@ -74,58 +60,6 @@ const WorkspacePage = ({ workspace }: { workspace: SerializedWorkspace }) => {
       },
     ]
 
-    if (currentUserIsCoreMember) {
-      controls.push({
-        type: 'button',
-        variant: 'icon',
-        iconPath: mdiPlus,
-        onClick: (event) =>
-          openContextModal(
-            event,
-            <MetadataContainer>
-              <MetadataContainerRow
-                row={{
-                  type: 'button',
-                  props: {
-                    disabled: sendingMap.has(workspace.id),
-                    id: 'folder-add-doc',
-                    label: translate(lngKeys.CreateNewDoc),
-                    iconPath: mdiTextBoxPlus,
-                    onClick: () =>
-                      openNewDocForm({
-                        team,
-                        workspaceId: workspace.id,
-                      }),
-                  },
-                }}
-              />
-              <MetadataContainerRow
-                row={{
-                  type: 'button',
-                  props: {
-                    disabled: sendingMap.has(workspace.id),
-                    id: 'folder-add-folder',
-                    label: translate(lngKeys.ModalsCreateNewFolder),
-                    iconPath: mdiFolderPlusOutline,
-                    onClick: () =>
-                      openNewFolderForm({
-                        team,
-                        workspaceId: workspace.id,
-                      }),
-                  },
-                }}
-              />
-            </MetadataContainer>,
-            {
-              hideBackground: true,
-              removePadding: true,
-              width: 300,
-              alignment: 'bottom-right',
-            }
-          ),
-      })
-    }
-
     controls.push({
       type: 'button',
       variant: 'icon',
@@ -146,16 +80,7 @@ const WorkspacePage = ({ workspace }: { workspace: SerializedWorkspace }) => {
     })
 
     return controls
-  }, [
-    workspace,
-    currentUserIsCoreMember,
-    openContextModal,
-    openNewDocForm,
-    openNewFolderForm,
-    sendingMap,
-    translate,
-    team,
-  ])
+  }, [workspace, currentUserIsCoreMember, openContextModal, team])
 
   const currentViews = useMemo(() => {
     if (workspace == null) {

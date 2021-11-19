@@ -12,26 +12,15 @@ import {
   isFolderEditShortcut,
 } from '../../lib/shortcuts'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
-import {
-  mdiStarOutline,
-  mdiStar,
-  mdiDotsHorizontal,
-  mdiPlus,
-  mdiTextBoxPlus,
-  mdiFolderPlusOutline,
-} from '@mdi/js'
+import { mdiStarOutline, mdiStar, mdiDotsHorizontal } from '@mdi/js'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { LoadingButton } from '../../../design/components/atoms/Button'
 import FolderContextMenu from './NewFolderContextMenu'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
-import { useI18n } from '../../lib/hooks/useI18n'
 import InviteCTAButton from '../buttons/InviteCTAButton'
 import { useModal } from '../../../design/lib/stores/modal'
-import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
-import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import { lngKeys } from '../../lib/i18n/types'
 import { TopbarControlProps } from '../../../design/components/organisms/Topbar'
 import FolderPageInviteSection from '../Onboarding/FolderPageInviteSection'
 import ApplicationPage from '../ApplicationPage'
@@ -54,13 +43,7 @@ const FolderPage = () => {
     viewsMap,
   } = useNav()
   const { toggleFolderBookmark, sendingMap } = useCloudApi()
-  const {
-    openRenameFolderForm,
-    openNewFolderForm,
-    openNewDocForm,
-    deleteFolder,
-  } = useCloudResourceModals()
-  const { translate } = useI18n()
+  const { openRenameFolderForm, deleteFolder } = useCloudResourceModals()
   const { openContextModal } = useModal()
 
   const currentFolder = useMemo(() => {
@@ -191,60 +174,6 @@ const FolderPage = () => {
       },
     ]
 
-    if (currentUserIsCoreMember) {
-      controls.push({
-        type: 'button',
-        variant: 'icon',
-        iconPath: mdiPlus,
-        onClick: (event) =>
-          openContextModal(
-            event,
-            <MetadataContainer>
-              <MetadataContainerRow
-                row={{
-                  type: 'button',
-                  props: {
-                    disabled: sendingMap.has(currentFolder.id),
-                    id: 'folder-add-doc',
-                    label: translate(lngKeys.CreateNewDoc),
-                    iconPath: mdiTextBoxPlus,
-                    onClick: () =>
-                      openNewDocForm({
-                        team,
-                        parentFolderId: currentFolder.id,
-                        workspaceId: currentFolder.workspaceId,
-                      }),
-                  },
-                }}
-              />
-              <MetadataContainerRow
-                row={{
-                  type: 'button',
-                  props: {
-                    disabled: sendingMap.has(currentFolder.id),
-                    id: 'folder-add-folder',
-                    label: translate(lngKeys.ModalsCreateNewFolder),
-                    iconPath: mdiFolderPlusOutline,
-                    onClick: () =>
-                      openNewFolderForm({
-                        team,
-                        parentFolderId: currentFolder.id,
-                        workspaceId: currentFolder.workspaceId,
-                      }),
-                  },
-                }}
-              />
-            </MetadataContainer>,
-            {
-              hideBackground: true,
-              removePadding: true,
-              width: 300,
-              alignment: 'bottom-right',
-            }
-          ),
-      })
-    }
-
     controls.push({
       type: 'button',
       variant: 'icon',
@@ -265,16 +194,7 @@ const FolderPage = () => {
     })
 
     return controls
-  }, [
-    currentFolder,
-    currentUserIsCoreMember,
-    openContextModal,
-    openNewDocForm,
-    openNewFolderForm,
-    sendingMap,
-    translate,
-    team,
-  ])
+  }, [currentFolder, currentUserIsCoreMember, openContextModal, team])
 
   if (team == null) {
     return (
