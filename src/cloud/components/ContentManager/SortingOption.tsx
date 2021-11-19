@@ -88,7 +88,7 @@ const SortingOption = ({ value, onChange }: SortingOptionProps) => {
         options={sortingOrders}
         value={val != null ? { label: val.icon, value: val.value } : undefined}
         onChange={onChange}
-        className='rc-select'
+        className='sorting-options__select'
         isSearchable={false}
         isMulti={false}
       />
