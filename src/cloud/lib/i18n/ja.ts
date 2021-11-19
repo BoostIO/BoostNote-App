@@ -281,12 +281,12 @@ const jpTranslation: TranslationSource = {
   [lngKeys.ModalsImportDisclaimer]:
     'インポートするファイルを選びましょう（ファイル毎に５MBが最大です）',
 
-  [lngKeys.ModalsSmartViewCreateTitle]: 'Create a smart view',
-  [lngKeys.ModalsSmartViewEditTitle]: 'Edit smart view',
+  [lngKeys.ModalsSmartViewCreateTitle]: 'Create a dashboard',
+  [lngKeys.ModalsSmartViewEditTitle]: 'Edit dashboard',
   [lngKeys.ModalsSmartViewPrivateDisclaimer]:
-    'This smart view will become private. Only you can see it.',
+    'This dashboard will become private. Only you can see it.',
   [lngKeys.ModalsSmartViewPublicDisclaimer]:
-    'The smart view will become public. Every member can see it.',
+    'The dashboardwill become public. Every member can see it.',
 
   [lngKeys.EditorToolbarTooltipHeader]: 'ヘッダー',
   [lngKeys.EditorToolbarTooltipAdmonition]: 'Admonition',
