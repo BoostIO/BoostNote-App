@@ -375,7 +375,7 @@ const Container = styled.div`
       }
 
       .item__due-date__select .react-datepicker__triangle {
-        left: auto !important;
+        left: 30px !important;
       }
     }
   }
