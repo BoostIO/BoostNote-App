@@ -127,13 +127,15 @@ export async function updateDocDueDate(docId: string, dueDate: Date | null) {
 
 export async function updateUnsignedDocProps(
   docId: string,
-  prop: [string, PropData | null]
+  props: [string, PropData | null][]
 ) {
+  const body = {}
+  props.forEach((prop) => {
+    body[prop[0]] = prop[1]
+  })
   return callApi<UpdateDocPropsResponseBody>(`api/docs/${docId}/props`, {
     method: 'patch',
-    json: {
-      [prop[0]]: prop[1],
-    },
+    json: body,
   })
 }
 
