@@ -3,7 +3,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { usePrevious } from '../../../../lib/hooks'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { Props, SerializedPropData } from '../../../interfaces/db/props'
-import { getPropsOfItem } from '../../props'
+import {
+  getDomainOrInitialDataPropToPropData,
+  getPropsOfItem,
+} from '../../props'
 import { useCloudApi } from '../useCloudApi'
 
 export function useProps(
@@ -14,7 +17,7 @@ export function useProps(
   const [props, setProps] = useState<Record<string, SerializedPropData>>(
     itemProps
   )
-  const { updateDocPropsApi } = useCloudApi()
+  const { updateDocPropsApi, updateBulkDocPropsApi } = useCloudApi()
 
   useEffect(() => {
     if (previousProps && !isEqual(previousProps, itemProps)) {
@@ -70,21 +73,31 @@ export function useProps(
       setProps((prev) => {
         const newProps = Object.assign({}, prev)
         if (newProps[propName] != null) {
-          const newData = { ...data, createdAt: newProps[propName].createdAt }
+          const bodyData = {
+            ...getDomainOrInitialDataPropToPropData(data),
+            createdAt: newProps[propName].createdAt,
+          }
           delete newProps[propName]
-          newProps[newName] = newData
+          newProps[newName] = {
+            ...data,
+            createdAt: bodyData.createdAt,
+          }
 
           if (parent.type === 'doc') {
             if (propName !== newName) {
-              updateDocPropsApi(parent.target, [propName, null])
+              updateBulkDocPropsApi(parent.target, [
+                [propName, null],
+                [newName, bodyData],
+              ])
+            } else {
+              updateDocPropsApi(parent.target, [newName, bodyData])
             }
-            updateDocPropsApi(parent.target, [newName, newData])
           }
         }
         return newProps
       })
     },
-    [updateDocPropsApi, parent]
+    [updateDocPropsApi, updateBulkDocPropsApi, parent]
   )
 
   const removeProp = useCallback(

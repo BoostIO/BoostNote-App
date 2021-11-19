@@ -383,7 +383,31 @@ export function useCloudApi() {
       prop: [string, PropData | null]
     ) => {
       return send(target.id, prop[0], {
-        api: () => updateUnsignedDocProps(target.id, prop),
+        api: () => updateUnsignedDocProps(target.id, [prop]),
+        cb: ({ data }: UpdateDocPropsResponseBody) => {
+          const props = Object.assign({}, data)
+          const newDoc = {
+            ...target,
+            props,
+          } as SerializedDocWithSupplemental
+          updateDocsMap([newDoc.id, newDoc])
+
+          if (pageDoc != null && newDoc.id === pageDoc.id) {
+            setPartialPageData({ pageDoc: newDoc })
+          }
+        },
+      })
+    },
+    [pageDoc, updateDocsMap, setPartialPageData, send]
+  )
+
+  const updateBulkDocPropsApi = useCallback(
+    async (
+      target: SerializedDocWithSupplemental,
+      props: [string, PropData | null][]
+    ) => {
+      return send(target.id, `props`, {
+        api: () => updateUnsignedDocProps(target.id, props),
         cb: ({ data }: UpdateDocPropsResponseBody) => {
           const props = Object.assign({}, data)
           const newDoc = {
@@ -901,6 +925,7 @@ export function useCloudApi() {
     updateSmartViewApi,
     listViewsApi,
     updateDocPropsApi,
+    updateBulkDocPropsApi,
     fetchPropertySuggestionsApi,
   }
 }
