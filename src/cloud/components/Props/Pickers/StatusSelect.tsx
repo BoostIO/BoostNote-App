@@ -174,7 +174,7 @@ const StatusSelector = ({
       <FormInput
         ref={inputRef}
         className='autocomplete__input'
-        placeholder='Search Status...'
+        placeholder='Type to search or add..'
         value={tagText}
         onChange={inputOnChangeEvent}
         disabled={sending}
