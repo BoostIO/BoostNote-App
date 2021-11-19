@@ -89,13 +89,19 @@ const validators: Validators = {
 
     let prop = doc.props[condition.value.name]
 
-    if (prop == null && condition.value.type === 'status') {
-      prop = getInitialPropDataOfPropType('status')
+    if (
+      prop == null &&
+      (condition.value.type === 'status' || condition.value.type === 'user')
+    ) {
+      prop = getInitialPropDataOfPropType(condition.value.type)
     }
 
     if (
       prop == null ||
-      (prop.data == null && condition.value.type !== 'status') ||
+      (prop.data == null &&
+        !(
+          condition.value.type === 'status' || condition.value.type === 'user'
+        )) ||
       prop.type !== condition.value.type
     ) {
       return false
@@ -116,16 +122,19 @@ const validators: Validators = {
         return false
       case 'user':
         return Array.isArray(condition.value.value)
-          ? condition.value.value.reduce((acc, val) => {
-              return (
-                acc ||
-                equalsOrContains(
-                  (permission, id) => permission.userId === id,
-                  nonNullableVal,
-                  val
+          ? condition.value.value.length === 0
+            ? prop.data == null ||
+              (Array.isArray(prop.data) && prop.data.length === 0)
+            : condition.value.value.reduce((acc, val) => {
+                return (
+                  acc ||
+                  equalsOrContains(
+                    (permission, id) => permission.userId === id,
+                    nonNullableVal,
+                    val
+                  )
                 )
-              )
-            }, true as boolean)
+              }, true as boolean)
           : equalsOrContains(
               (permission, id) => permission.userId === id,
               nonNullableVal,
