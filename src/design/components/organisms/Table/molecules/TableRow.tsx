@@ -45,12 +45,8 @@ const TableRow = ({
 export default TableRow
 
 const Container = styled.div`
-  display: flex;
+  display: inline-flex;
   border-bottom: solid 1px ${({ theme }) => theme.colors.border.main};
-  &:last-child {
-    border-bottom: none;
-  }
-
   .table-row__spacer {
     min-width: 40px;
     flex: 1;
