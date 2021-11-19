@@ -49,6 +49,7 @@ const TableCol = ({
 export default TableCol
 
 const Container = styled.div`
+  flex: 0 0 auto;
   padding: ${({ theme }) => theme.sizes.spaces.df}px
     ${({ theme }) => theme.sizes.spaces.sm}px;
   &:last-child {
