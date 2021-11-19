@@ -138,7 +138,6 @@ export function getInitialPropDataOfPropType(
 export function getDomainOrInitialDataPropToPropData(
   data: SerializedPropData
 ): Omit<SerializedPropData, 'createdAt'> {
-  console.log(data)
   let propData = data.data
   if (data.data != null) {
     switch (data.type) {
@@ -163,7 +162,6 @@ export function getDomainOrInitialDataPropToPropData(
     }
   }
 
-  console.log('after cleanup')
   if (isObject(propData)) {
     return { type: data.type, data: propData }
   }
