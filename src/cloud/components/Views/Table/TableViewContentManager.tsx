@@ -629,7 +629,7 @@ const Container = styled.div`
     width: 100%;
   }
 
-  .rc-select .form__select__single-value {
+  .sorting-options__select .form__select__single-value {
     display: flex;
   }
 `
