@@ -296,7 +296,9 @@ const TableViewContentManager = ({
             cols={[
               {
                 id: 'doc-title',
-                children: 'Documents',
+                children: (
+                  <Flexbox style={{ height: '100%' }}>Documents</Flexbox>
+                ),
                 width: 300,
               },
               ...orderedColumns.map((col) => {
