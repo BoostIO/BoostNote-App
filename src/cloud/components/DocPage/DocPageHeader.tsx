@@ -124,6 +124,7 @@ const DocPageHeader = ({
                   {docProperties.map((prop, i) => {
                     const iconPath = getIconPathOfPropType(
                       prop[1].data.type === 'json' &&
+                        prop[1].data.data != null &&
                         prop[1].data.data.dataType != null
                         ? prop[1].data.data.dataType
                         : prop[1].data.type

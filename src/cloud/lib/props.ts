@@ -7,7 +7,7 @@ import {
   mdiLabelOutline,
   mdiTimerOutline,
 } from '@mdi/js'
-import { capitalize } from 'lodash'
+import { capitalize, isNumber, isObject } from 'lodash'
 import {
   FilledSerializedPropData,
   PropSubType,
@@ -15,6 +15,7 @@ import {
   SerializedPropData,
   StaticPropType,
 } from '../interfaces/db/props'
+import { isUUIDArray } from './utils/array'
 
 export const supportedPropTypes: {
   type: PropType
@@ -132,4 +133,40 @@ export function getInitialPropDataOfPropType(
         createdAt: new Date().toString(),
       }
   }
+}
+
+export function getDomainOrInitialDataPropToPropData(
+  data: SerializedPropData
+): Omit<SerializedPropData, 'createdAt'> {
+  console.log(data)
+  let propData = data.data
+  if (data.data != null) {
+    switch (data.type) {
+      case 'user':
+        const users = Array.isArray(data.data) ? data.data : [data.data]
+        if (!isUUIDArray(users)) {
+          propData = users
+            .filter((user) => user != null)
+            .map((user: any) => user.userId)
+        }
+        break
+      case 'status':
+        const statuses = Array.isArray(data.data) ? data.data : [data.data]
+        if (!statuses.every((status) => isNumber(status))) {
+          propData = statuses
+            .filter((status) => status != null)
+            .map((status: any) => status.id)
+        }
+        break
+      default:
+        break
+    }
+  }
+
+  console.log('after cleanup')
+  if (isObject(propData)) {
+    return { type: data.type, data: propData }
+  }
+
+  return { type: data.type, data: null }
 }
