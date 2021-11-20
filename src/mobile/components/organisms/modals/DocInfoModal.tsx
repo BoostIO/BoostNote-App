@@ -13,7 +13,6 @@ import {
 import {
   SerializedDocWithSupplemental,
   SerializedDoc,
-  DocStatus,
 } from '../../../../cloud/interfaces/db/doc'
 import { getFormattedDateTime } from '../../../../cloud/lib/date'
 import { SerializedTeam } from '../../../../cloud/interfaces/db/team'
@@ -57,7 +56,6 @@ const DocInfoModal = ({
 }: // restoreRevision,
 DocInfoModalProps) => {
   const {
-    updateDocStatusApi,
     updateDocDueDateApi,
     updateDocAssigneeApi,
     sendingMap,
@@ -112,20 +110,6 @@ DocInfoModalProps) => {
   //     docId: currentDoc.id,
   //   })
   // }, [currentDoc, openModal, restoreRevision, currentUserIsCoreMember])
-
-  const sendUpdateStatus = useCallback(
-    async (newStatus: DocStatus | null) => {
-      if (
-        currentDoc.props.status != null &&
-        currentDoc.props.status.data === newStatus
-      ) {
-        return
-      }
-
-      await updateDocStatusApi(currentDoc, newStatus)
-    },
-    [currentDoc, updateDocStatusApi]
-  )
 
   const sendUpdateDocDueDate = useCallback(
     async (newDate: Date | null) => {
@@ -216,9 +200,9 @@ DocInfoModalProps) => {
                           : undefined
                       }
                       sending={sendingMap.get(currentDoc.id) === 'status'}
-                      onStatusChange={sendUpdateStatus}
-                      disabled={!currentUserIsCoreMember}
-                      isReadOnly={!currentUserIsCoreMember}
+                      onStatusChange={() => {}}
+                      disabled={true}
+                      isReadOnly={true}
                     />
                   </div>
                 </div>
