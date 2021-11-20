@@ -153,10 +153,11 @@ function getPropsFromItemAndParent(
     newProps[propertyCol.name] = Object.assign(
       {},
       {
+        origin: 'parent',
         data: null,
         type: type,
         name: propertyCol.name,
-        createdAt: addMinutes(new Date(), 2),
+        createdAt: addMinutes(new Date(), 2).toISOString(),
       }
     ) as any
   })
