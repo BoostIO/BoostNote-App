@@ -1,4 +1,4 @@
-import { mdiTag, mdiWeb } from '@mdi/js'
+import { mdiTag, mdiViewDashboard, mdiWeb } from '@mdi/js'
 import { capitalize } from 'lodash'
 import React, { PropsWithChildren, useMemo } from 'react'
 import Topbar, {
@@ -138,6 +138,21 @@ const ApplicationTopbar = ({
           link: {
             href: getTeamLinkHref(team, 'shared'),
             navigateTo: () => push(getTeamLinkHref(team, 'shared')),
+          },
+        },
+      ]
+    }
+
+    if (splittedPathnames.length >= 2 && splittedPathnames[1] === 'dashboard') {
+      return [
+        {
+          label: capitalize(translate(lngKeys.GeneralDashboard)),
+          active: true,
+          parentId: topParentId,
+          icon: mdiViewDashboard,
+          link: {
+            href: getTeamLinkHref(team, 'dashboard'),
+            navigateTo: () => push(getTeamLinkHref(team, 'dashboard')),
           },
         },
       ]
