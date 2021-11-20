@@ -1,10 +1,11 @@
-import { mdiTag, mdiHome, mdiWeb } from '@mdi/js'
+import { mdiTag, mdiWeb } from '@mdi/js'
 import { capitalize } from 'lodash'
 import React, { PropsWithChildren, useMemo } from 'react'
 import Topbar, {
   TopbarControlProps,
 } from '../../design/components/organisms/Topbar'
 import { getTagHref } from '../../mobile/lib/href'
+import { SerializedWorkspace } from '../interfaces/db/workspace'
 import { useCloudResourceModals } from '../lib/hooks/useCloudResourceModals'
 import { useI18n } from '../lib/hooks/useI18n'
 import { lngKeys } from '../lib/i18n/types'
@@ -101,14 +102,24 @@ const ApplicationTopbar = ({
       return []
     }
 
+    let defaultWorkspace: null | SerializedWorkspace = null
+    for (const workspace of workspacesMap.values()) {
+      if (workspace.default) {
+        defaultWorkspace = workspace
+        break
+      }
+    }
+    if (defaultWorkspace == null) {
+      return []
+    }
+
     const [, ...splittedPathnames] = pathname.split('/')
     if (splittedPathnames.length === 1) {
       return [
         {
-          label: capitalize(translate(lngKeys.GeneralDashboard)),
+          label: defaultWorkspace.name,
           active: true,
           parentId: topParentId,
-          icon: mdiHome,
           link: {
             href: getTeamLinkHref(team, 'index'),
             navigateTo: () => push(getTeamLinkHref(team, 'index')),
