@@ -365,63 +365,70 @@ const Application = ({
   }, [])
 
   const sidebarHeader = useMemo(() => {
-    const teamUrl = team != null ? getTeamURL(team) : ''
+    if (team == null) {
+      return (
+        <SidebarHeader
+          onSpaceClick={onSpaceClick}
+          spaceName={'...'}
+          controls={sidebarHeaderControls}
+        />
+      )
+    }
+    const teamUrl = getTeamURL(team)
+    const teamDashboardUrl = getTeamLinkHref(team, 'dashboard')
+
     return (
       <>
         <SidebarHeader
           onSpaceClick={onSpaceClick}
-          spaceName={team != null ? team.name : '...'}
+          spaceName={team.name}
           spaceImage={
-            team != null && team.icon != null
-              ? buildIconUrl(team.icon.location)
-              : undefined
+            team.icon != null ? buildIconUrl(team.icon.location) : undefined
           }
           controls={sidebarHeaderControls}
         />
-        {team == null ? null : (
-          <SidebarButtonList
-            rows={[
-              {
-                label: translate(lngKeys.GeneralSearchVerb),
-                icon: mdiMagnify,
-                variant: 'transparent',
-                labelClick: () => setShowSearchScreen((prev) => !prev),
-                id: 'sidebar__button__search',
-                active: showSearchScreen,
+
+        <SidebarButtonList
+          rows={[
+            {
+              label: translate(lngKeys.GeneralSearchVerb),
+              icon: mdiMagnify,
+              variant: 'transparent',
+              labelClick: () => setShowSearchScreen((prev) => !prev),
+              id: 'sidebar__button__search',
+              active: showSearchScreen,
+            },
+            {
+              label: translate(lngKeys.GeneralDashboard),
+              icon: mdiViewDashboard,
+              variant: 'transparent',
+              labelHref: teamUrl,
+              labelClick: () => push(teamDashboardUrl),
+              id: 'sidebar__button__inbox',
+              active: pathname === teamDashboardUrl,
+            },
+            {
+              label: translate(lngKeys.GeneralInbox),
+              icon: mdiInbox,
+              variant: 'transparent',
+              labelClick: () => setPopOverState('notifications'),
+              id: 'sidebar__button__inbox',
+              pastille: counts[team.id] ? counts[team.id] : undefined,
+            },
+            {
+              label: translate(lngKeys.SidebarSettingsAndMembers),
+              icon: mdiCog,
+              variant: 'transparent',
+              labelClick: () => {
+                openSettingsTab('teamMembers')
+                trackEvent(MixpanelActionTrackTypes.InviteFromSidenav)
               },
-              {
-                label: translate(lngKeys.GeneralDashboard),
-                icon: mdiViewDashboard,
-                variant: 'transparent',
-                labelHref: teamUrl,
-                labelClick: () => push(`${teamUrl}/dashboard`),
-                id: 'sidebar__button__inbox',
-                active: pathname === `${teamUrl}/dashboard`,
-              },
-              {
-                label: translate(lngKeys.GeneralInbox),
-                icon: mdiInbox,
-                variant: 'transparent',
-                labelClick: () => setPopOverState('notifications'),
-                id: 'sidebar__button__inbox',
-                pastille:
-                  team != null && counts[team.id] ? counts[team.id] : undefined,
-              },
-              {
-                label: translate(lngKeys.SidebarSettingsAndMembers),
-                icon: mdiCog,
-                variant: 'transparent',
-                labelClick: () => {
-                  openSettingsTab('teamMembers')
-                  trackEvent(MixpanelActionTrackTypes.InviteFromSidenav)
-                },
-                id: 'sidebar__button__members',
-              },
-            ]}
-          >
-            {currentUserIsCoreMember && <NewDocButton team={team} />}
-          </SidebarButtonList>
-        )}
+              id: 'sidebar__button__members',
+            },
+          ]}
+        >
+          {currentUserIsCoreMember && <NewDocButton team={team} />}
+        </SidebarButtonList>
       </>
     )
   }, [
