@@ -3,18 +3,13 @@ import { usePreferences } from '../lib/stores/preferences'
 import { usePage } from '../lib/stores/pageStore'
 import {
   useGlobalKeyDownHandler,
-  isSingleKeyEventOutsideOfInput,
   preventKeyboardEventPropagation,
   isSingleKeyEvent,
 } from '../lib/keyboard'
 import { isActiveElementAnInput, InputableDomElement } from '../lib/dom'
 import { useEffectOnce } from 'react-use'
 import { useSettings } from '../lib/stores/settings'
-import {
-  isPageSearchShortcut,
-  isSidebarToggleShortcut,
-  shortcuts,
-} from '../lib/shortcuts'
+import { isPageSearchShortcut, isSidebarToggleShortcut } from '../lib/shortcuts'
 import { useSearch } from '../lib/stores/search'
 import AnnouncementAlert from './AnnouncementAlert'
 import {
@@ -239,11 +234,6 @@ const Application = ({
         })
       }
 
-      if (isSingleKeyEventOutsideOfInput(event, shortcuts.teamMembers)) {
-        preventKeyboardEventPropagation(event)
-        openSettingsTab('teamMembers')
-      }
-
       if (isSingleKeyEvent(event, 'escape') && isActiveElementAnInput()) {
         if (isCodeMirrorTextAreaEvent(event)) {
           return
@@ -262,7 +252,7 @@ const Application = ({
         }
       }
     },
-    [team, setPreferences, openSettingsTab, showInPageSearch]
+    [team, setPreferences, showInPageSearch]
   )
   useGlobalKeyDownHandler(overrideBrowserCtrlsHandler)
 
