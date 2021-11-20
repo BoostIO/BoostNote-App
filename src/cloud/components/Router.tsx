@@ -63,6 +63,7 @@ import Application from './Application'
 import { BaseTheme } from '../../design/lib/styled/types'
 import { PreviewStyleProvider } from '../../lib/preview'
 import HomePage from '../pages/home'
+import DashboardPage from '../pages/[teamId]/dashboard'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -452,6 +453,11 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: TagsShowPage,
           getInitialProps: TagsShowPage.getInitialProps,
+        }
+      case 'dashboard':
+        return {
+          Component: DashboardPage,
+          getInitialProps: DashboardPage.getInitialProps,
         }
       case 'workspaces':
         return {
