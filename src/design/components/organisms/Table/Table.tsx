@@ -118,6 +118,11 @@ const TableContainer = styled.div`
     border-bottom: solid 1px ${({ theme }) => theme.colors.border.main};
   }
 
+  .table-row,
+  .table__header {
+    min-width: 100%;
+  }
+
   .table__header__addColButton {
     background-color: transparent;
     color: ${({ theme }) => theme.colors.text.primary};
