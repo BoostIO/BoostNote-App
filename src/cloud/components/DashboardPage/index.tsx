@@ -1,6 +1,5 @@
 import { mdiChevronDown, mdiDotsHorizontal, mdiLock, mdiPlus } from '@mdi/js'
-import React, { useMemo, useState } from 'react'
-import { useEffectOnce } from 'react-use'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import BorderSeparator from '../../../design/components/atoms/BorderSeparator'
 import Button from '../../../design/components/atoms/Button'
 import Flexbox from '../../../design/components/atoms/Flexbox'
@@ -27,17 +26,28 @@ import {
 } from '../../api/pages/teams/smartViews/list'
 import { getDefaultTableView } from '../../lib/views/table'
 
-const SmartViewPage = ({ data }: SmartViewListPageResponseBody) => {
+const SmartViewPage = ({
+  data,
+  team: propsTeam,
+}: SmartViewListPageResponseBody) => {
   const [selectedSmartViewId, setSelectedSmartViewId] = useState<string>()
   const { smartViewsMap, docsMap, viewsMap, workspacesMap } = useNav()
   const { openModal, openContextModal, closeAllModals } = useModal()
   const { team, currentUserIsCoreMember } = usePage()
+  const teamRef = useRef<string | undefined>(undefined)
 
-  useEffectOnce(() => {
+  useEffect(() => {
+    if (teamRef.current === propsTeam.id) {
+      return
+    }
+
+    teamRef.current = propsTeam.id
     if (data.length > 0) {
       setSelectedSmartViewId(data[0].id)
+    } else {
+      setSelectedSmartViewId(undefined)
     }
-  })
+  }, [data, propsTeam])
 
   const selectedSmartView = useMemo(() => {
     if (selectedSmartViewId == null) {
