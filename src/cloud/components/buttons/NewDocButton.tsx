@@ -7,7 +7,7 @@ import { useModal } from '../../../design/lib/stores/modal'
 import {
   mdiPencilBoxMultipleOutline,
   mdiTextBoxPlusOutline,
-  mdiPencilBoxOutline,
+  mdiPlus,
   mdiPaletteOutline,
 } from '@mdi/js'
 import React, { useCallback } from 'react'
@@ -82,7 +82,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
   return (
     <SidebarButton
       variant='primary'
-      icon={mdiPencilBoxOutline}
+      icon={mdiPlus}
       id='sidebar-newdoc-btn'
       label={translate(lngKeys.CreateNewDoc)}
       labelClick={
