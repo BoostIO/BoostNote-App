@@ -76,17 +76,7 @@ const SmartViewCreateModal = ({ onCreate }: CreateSmartViewModalProps) => {
         action='Create'
         onSubmit={submit}
         buttonsAreDisabled={sending}
-        defaultConditions={[
-          {
-            rule: 'and',
-            type: 'prop',
-            value: {
-              type: 'string',
-              name: 'Status',
-              value: 'in_progress',
-            },
-          },
-        ]}
+        defaultConditions={[]}
       />
     </ModalContainer>
   )
