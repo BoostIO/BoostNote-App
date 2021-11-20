@@ -40,7 +40,6 @@ import {
   mdiLogoutVariant,
   mdiMagnify,
   mdiPlusCircleOutline,
-  mdiHome,
   mdiWeb,
   mdiViewDashboard,
 } from '@mdi/js'
