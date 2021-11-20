@@ -1,3 +1,4 @@
+import { addMinutes } from 'date-fns'
 import { isEqual, isObject } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { usePrevious } from '../../../../lib/hooks'
@@ -7,34 +8,31 @@ import {
   getDomainOrInitialDataPropToPropData,
   getPropsOfItem,
 } from '../../props'
+import { Column, isStaticPropCol } from '../../views/table'
 import { useCloudApi } from '../useCloudApi'
 
 export function useProps(
   itemProps: Props,
+  parentTableColumns: Column[],
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
 ) {
   const previousProps = usePrevious(itemProps)
+  const previousColumns = usePrevious(parentTableColumns)
   const [props, setProps] = useState<Record<string, SerializedPropData>>(
-    itemProps
+    getPropsFromItemAndParent({}, itemProps, parentTableColumns)
   )
   const { updateDocPropsApi, updateBulkDocPropsApi } = useCloudApi()
 
   useEffect(() => {
-    if (previousProps && !isEqual(previousProps, itemProps)) {
+    if (
+      (previousProps && !isEqual(previousProps, itemProps)) ||
+      (previousColumns && !isEqual(previousColumns, parentTableColumns))
+    ) {
       setProps((prev) => {
-        const newProps = Object.assign({}, prev)
-        Object.entries(itemProps).forEach((prop) => {
-          newProps[prop[0]] = prop[1]
-        })
-        Object.entries(prev).forEach((prop) => {
-          if (typeof itemProps[prop[0]] === 'undefined') {
-            newProps[prop[0]] = Object.assign({}, prop[1], { data: null })
-          }
-        })
-        return newProps
+        return getPropsFromItemAndParent(prev, itemProps, parentTableColumns)
       })
     }
-  }, [itemProps, previousProps])
+  }, [itemProps, previousProps, parentTableColumns, previousColumns])
 
   const orderedProps = useMemo(() => {
     return Object.entries(getPropsOfItem(props)).sort((a, b) => {
@@ -129,4 +127,38 @@ export function useProps(
     modifyProp,
     isPropPresent,
   }
+}
+
+function getPropsFromItemAndParent(
+  prev: Record<string, SerializedPropData>,
+  itemProps: Props,
+  parentTableColumns: Column[]
+) {
+  const newProps = Object.assign({}, prev)
+  Object.entries(itemProps).forEach((prop) => {
+    newProps[prop[0]] = prop[1]
+  })
+  Object.entries(prev).forEach((prop) => {
+    if (typeof itemProps[prop[0]] === 'undefined') {
+      newProps[prop[0]] = Object.assign({}, prop[1], { data: null })
+    }
+  })
+
+  parentTableColumns.forEach((propertyCol) => {
+    if (isStaticPropCol(propertyCol) || newProps[propertyCol.name] != null) {
+      return
+    }
+
+    const [_id, _name, type, _subType] = propertyCol.id.split(':')
+    newProps[propertyCol.name] = Object.assign(
+      {},
+      {
+        data: null,
+        type: type,
+        name: propertyCol.name,
+        createdAt: addMinutes(new Date(), 2),
+      }
+    ) as any
+  })
+  return newProps
 }

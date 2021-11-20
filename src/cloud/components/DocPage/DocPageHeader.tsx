@@ -27,6 +27,9 @@ import PropSelectorModal from '../Props/PropSelectorModal'
 import DocTagsList from './DocTagsList'
 import { getIconPathOfPropType } from '../../lib/props'
 import PropConfig from '../Props/PropConfig'
+import { useNav } from '../../lib/stores/nav'
+import { getMapValues } from '../../../design/lib/utils/array'
+import { sortTableViewColumns } from '../../lib/views/table'
 
 interface DocPageHeaderProps {
   docIsEditable?: boolean
@@ -45,8 +48,29 @@ const DocPageHeader = ({
   const { currentUserIsCoreMember } = usePage()
   const { preferences, setPreferences } = usePreferences()
   const { openContextModal, closeAllModals } = useModal()
+  const { viewsMap } = useNav()
+
+  const docParentColumns = useMemo(() => {
+    const parentViewItem =
+      doc.parentFolderId != null
+        ? getMapValues(viewsMap).find(
+            (view) =>
+              view.type === 'table' && view.folderId === doc.parentFolderId
+          )
+        : getMapValues(viewsMap).find(
+            (view) =>
+              view.type === 'table' && view.workspaceId === doc.workspaceId
+          )
+
+    if (parentViewItem == null) {
+      return []
+    }
+    return sortTableViewColumns(parentViewItem.data.columns)
+  }, [doc.parentFolderId, doc.workspaceId, viewsMap])
+
   const { props: docProperties, updateProp, modifyProp, removeProp } = useProps(
     doc.props || {},
+    docParentColumns,
     {
       type: 'doc',
       target: doc,
