@@ -16,7 +16,6 @@ export enum shortcuts {
   unfoldFolder = 'arrowright',
   userInfo = ',',
   teamPicker = 's',
-  teamMembers = 'i',
   search = 'p',
   pageSearch = 'f',
 }
