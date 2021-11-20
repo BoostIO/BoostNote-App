@@ -34,7 +34,10 @@ const __ELECTRON_ONLY__: {
   ): Promise<Electron.SaveDialogReturnValue>
   openExternal(url: string): void
   openPath(fullPath: string, folderOnly?: boolean): void
-  openNewWindow(options: BrowserWindowConstructorOptions): BrowserWindow
+  openNewWindow(
+    url?: string,
+    options?: BrowserWindowConstructorOptions
+  ): BrowserWindow
   openContextMenu(options: { menuItems: MenuItemConstructorOptions[] }): void
   getPathByName(name: string): string
   addIpcListener(
@@ -64,6 +67,8 @@ const __ELECTRON_ONLY__: {
   stopFindInPage(
     action: 'clearSelection' | 'keepSelection' | 'activateSelection'
   ): void
+  signInBroadcast(windowContentsId: number): void
+  signOutBroadcast(): void
   got: Got
 } = (window as any).__ELECTRON_ONLY__
 
@@ -99,6 +104,8 @@ const {
   setBadgeCount,
   findInPage,
   stopFindInPage,
+  signInBroadcast,
+  signOutBroadcast,
   got,
 } = __ELECTRON_ONLY__ || {}
 
@@ -159,5 +166,7 @@ export {
   setBadgeCount,
   findInPage,
   stopFindInPage,
+  signInBroadcast,
+  signOutBroadcast,
   got,
 }

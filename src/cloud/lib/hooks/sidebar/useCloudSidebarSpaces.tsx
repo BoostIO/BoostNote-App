@@ -11,7 +11,7 @@ import { stringify } from 'yaml'
 import { useI18n } from '../useI18n'
 import { lngKeys } from '../../i18n/types'
 import { capitalize } from 'lodash'
-import { sendToHost, usingElectron } from '../../stores/electron'
+import { usingElectron } from '../../stores/electron'
 
 export function useCloudSidebarSpaces() {
   const {
@@ -66,11 +66,7 @@ export function useCloudSidebarSpaces() {
           href,
           onClick: (event: React.MouseEvent) => {
             event.preventDefault()
-            if (usingElectron) {
-              sendToHost('request-app-navigate', `/${globalTeam.domain}`)
-            } else {
-              push(href)
-            }
+            push(href)
           },
         },
       })

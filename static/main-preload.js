@@ -124,8 +124,26 @@
     }
   }
 
-  function openNewWindow(options) {
-    return new electron.remote.BrowserWindow(options)
+  function openNewWindow(url, options) {
+    electron.remote.ipcMain.emit('new-window-event', {
+      url: url,
+      windowOptions: options,
+    })
+  }
+
+  function signInBroadcast(webviewContentsId) {
+    electron.remote.ipcMain.emit(
+      'sign-in-event',
+      electron.remote.getCurrentWindow().id,
+      webviewContentsId
+    )
+  }
+
+  function signOutBroadcast() {
+    electron.remote.ipcMain.emit(
+      'sign-out-event',
+      electron.remote.getCurrentWindow().id
+    )
   }
 
   function openContextMenu(options) {
@@ -260,4 +278,6 @@
   window.__ELECTRON_ONLY__.removeCookie = removeCookie
   window.__ELECTRON_ONLY__.setBadgeCount = setBadgeCount
   window.__ELECTRON_ONLY__.got = got
+  window.__ELECTRON_ONLY__.signInBroadcast = signInBroadcast
+  window.__ELECTRON_ONLY__.signOutBroadcast = signOutBroadcast
 })()

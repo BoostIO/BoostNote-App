@@ -4,6 +4,10 @@ const path = require('path')
 const electron_notarize = require('electron-notarize')
 
 module.exports = async function (params) {
+  if (process.env.PREPACK === 'true') {
+    console.log('skip notorizing(prepack)')
+    return
+  }
   if (process.platform !== 'darwin') {
     return
   }

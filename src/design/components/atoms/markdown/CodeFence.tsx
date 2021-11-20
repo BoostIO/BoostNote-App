@@ -1,7 +1,7 @@
 import React from 'react'
 import copy from 'copy-to-clipboard'
 import { mdiContentCopy, mdiContentSave } from '@mdi/js'
-import { downloadBlob } from '../../../../lib/download'
+import { downloadBlob } from '../../../lib/dom'
 import styled from '../../../lib/styled'
 import Icon from '../Icon'
 import { flexCenter } from '../../../lib/styled/styleFunctions'

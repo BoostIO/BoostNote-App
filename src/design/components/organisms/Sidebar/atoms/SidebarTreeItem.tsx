@@ -19,7 +19,7 @@ interface SidebarTreeItemProps {
   id?: string
   label: string
   labelHref?: string
-  labelClick?: () => void
+  labelClick?: (event?: any) => void
   controls?: ControlButtonProps[]
   contextControls?: MenuItem[]
   active?: boolean
@@ -66,7 +66,7 @@ const SidebarItem: AppComponent<SidebarTreeItemProps & SharedProps> = ({
         return
       }
       event.preventDefault()
-      labelClick()
+      labelClick(event)
     },
     [labelClick]
   )

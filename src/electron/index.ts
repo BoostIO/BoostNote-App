@@ -1,119 +1,51 @@
 import {
   app,
-  BrowserWindow,
-  BrowserWindowConstructorOptions,
   ipcMain,
   Menu,
   MenuItemConstructorOptions,
-  protocol,
-  session,
-  autoUpdater,
+  webContents,
 } from 'electron'
-import path from 'path'
-import url from 'url'
+import { electronFrontendUrl } from './consts'
 import { getTemplateFromKeymap } from './menu'
-import { dev } from './consts'
-
-// global reference to mainWindow (necessary to prevent window from being garbage collected)
-let mainWindow: BrowserWindow | null = null
-const MAC = process.platform === 'darwin'
-
-// single instance lock
-const singleInstance = app.requestSingleInstanceLock()
-
-const keymap = new Map<string, string>([
-  ['toggleGlobalSearch', 'Ctrl + P'],
-  ['toggleSplitEditMode', 'Ctrl + \\'],
-  ['togglePreviewMode', 'Ctrl + E'],
-  ['editorSaveAs', 'Ctrl + S'],
-])
+import { createAWindow, getWindows } from './windows'
 
 function applyMenuTemplate(template: MenuItemConstructorOptions[]) {
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
 }
 
-function createMainWindow() {
-  const windowOptions: BrowserWindowConstructorOptions = {
-    webPreferences: {
-      nodeIntegration: true,
-      webSecurity: !dev,
-      webviewTag: true,
-      enableRemoteModule: true,
-      contextIsolation: false,
-      preload: dev
-        ? path.join(app.getAppPath(), '../static/main-preload.js')
-        : path.join(app.getAppPath(), './compiled/app/static/main-preload.js'),
-    },
-    width: 1200,
-    height: 800,
-    minWidth: 960,
-    minHeight: 630,
-  }
+const mac = process.platform === 'darwin'
 
-  const window = new BrowserWindow(windowOptions)
-
-  if (dev) {
-    window.loadURL(`http://localhost:3000/app`, {
-      userAgent: session.defaultSession.getUserAgent() + ` BoostNote`,
-    })
-  } else {
-    window.loadURL(
-      url.format({
-        pathname: path.join(app.getAppPath(), './compiled/index.html'),
-        protocol: 'file',
-        slashes: true,
-      })
-    )
-  }
-
-  applyMenuTemplate(getTemplateFromKeymap(keymap))
-
-  if (MAC) {
-    window.on('close', (event) => {
-      event.preventDefault()
-      window.hide()
-    })
-
-    app.on('before-quit', () => {
-      window.removeAllListeners()
-    })
-
-    autoUpdater.on('before-quit-for-update', () => {
-      window.removeAllListeners()
-    })
-  }
-
-  window.on('closed', () => {
-    mainWindow = null
-  })
-
-  return window
-}
-
-// single instance lock handler
+const singleInstance = app.requestSingleInstanceLock()
 if (!singleInstance) {
   app.quit()
 } else {
   app.on('second-instance', (_event, argv) => {
-    if (mainWindow) {
-      if (!mainWindow.isVisible()) mainWindow.show()
-      mainWindow.focus()
+    const firstWindow = getWindows()[0]
+    if (firstWindow == null) {
+      createAWindow(electronFrontendUrl)
+    } else {
+      if (firstWindow.isVisible()) {
+        firstWindow.show()
+      }
+      firstWindow.focus()
     }
 
-    if (!MAC) {
-      let urlWithBoostNoteProtocol
+    if (!mac) {
+      let urlWithBoostNoteProtocol: string | null = null
       for (const arg of argv) {
         if (/^boostnote:\/\//.test(arg)) {
           urlWithBoostNoteProtocol = arg
           break
         }
       }
-      if (urlWithBoostNoteProtocol != null && mainWindow != null) {
-        mainWindow.webContents.send(
-          'open-boostnote-url',
-          urlWithBoostNoteProtocol
-        )
+      if (urlWithBoostNoteProtocol != null) {
+        getWindows().forEach((window) => {
+          window.webContents.send(
+            'open-boostnote-url',
+            urlWithBoostNoteProtocol
+          )
+        })
       }
     }
   })
@@ -128,36 +60,61 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-  // on macOS it is common to re-create a window even after all windows have been closed
-  if (mainWindow === null) {
-    mainWindow = createMainWindow()
+  const windows = getWindows()
+  const firstWindow = windows[0]
+  if (firstWindow != null) {
+    firstWindow.show()
+    firstWindow.focus()
   } else {
-    mainWindow.show()
-    mainWindow.focus()
+    createAWindow(electronFrontendUrl)
   }
 })
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
-  /* This file protocol registration will be needed from v9.x.x for PDF export feature */
-  protocol.registerFileProtocol('file', (request, callback) => {
-    const pathname = decodeURI(request.url.replace('file:///', ''))
-    callback(pathname)
+  createAWindow(
+    `${electronFrontendUrl}?url=${encodeURIComponent(
+      `${process.env.BOOST_HUB_BASE_URL!}/desktop?desktop-init=true`
+    )}`
+  )
+
+  applyMenuTemplate(getTemplateFromKeymap())
+
+  // multiple windows support
+  ipcMain.on('new-window-event', (args: any) => {
+    const url =
+      args.url == null
+        ? electronFrontendUrl
+        : `${electronFrontendUrl}?url=${args.url}`
+    const newWindow = createAWindow(url, args.windowOptions)
+
+    return newWindow
   })
-  mainWindow = createMainWindow()
 
-  ipcMain.on('menuAcceleratorChanged', (_, args) => {
-    if (args.length != 2) {
-      return
+  ipcMain.on('sign-in-event', (windowId?: any, webviewContentsId?: any) => {
+    for (const webContent of webContents.getAllWebContents()) {
+      if (webContent.id === windowId || webContent.id === webviewContentsId) {
+        continue
+      }
+      webContent.reload()
     }
-    const menuItemId = args[0]
-    const newAcceleratorShortcut = args[1] == null ? undefined : args[1]
+  })
 
-    keymap.set(menuItemId, newAcceleratorShortcut)
-    applyMenuTemplate(getTemplateFromKeymap(keymap))
+  ipcMain.on('sign-out-event', (windowId?: any) => {
+    getWindows().forEach((window) => {
+      if (window.id !== windowId) {
+        window.close()
+      }
+    })
+  })
+
+  ipcMain.on('register-protocol', () => {
+    app.setAsDefaultProtocolClient('boostnote')
   })
 
   app.on('open-url', (_event, url) => {
-    mainWindow!.webContents.send('open-boostnote-url', url)
+    getWindows().forEach((window) => {
+      window.webContents.send('open-boostnote-url', url)
+    })
   })
 })

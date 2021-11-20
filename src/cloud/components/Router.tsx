@@ -62,6 +62,7 @@ import { TeamPreferencesProvider } from '../lib/stores/teamPreferences'
 import Application from './Application'
 import { BaseTheme } from '../../design/lib/styled/types'
 import { PreviewStyleProvider } from '../../lib/preview'
+import HomePage from '../pages/home'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -415,6 +416,11 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: SharedPage,
           getInitialProps: SharedPage.getInitialProps,
+        }
+      case 'desktop':
+        return {
+          Component: HomePage,
+          getInitialProps: HomePage.getInitialProps,
         }
     }
   }
