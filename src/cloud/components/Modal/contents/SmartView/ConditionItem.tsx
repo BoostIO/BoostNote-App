@@ -142,16 +142,14 @@ function inferConditionPrimaryType(t: TFunction, condition: EditableCondition) {
             value: supportedCustomPropertyTypes['person'].value,
           }
         case 'status':
-          if (condition.value.name.toLocaleLowerCase() === 'status') {
-            return {
-              label: (
-                <StyledOption
-                  icon={supportedCustomPropertyTypes['status'].icon}
-                  label={supportedCustomPropertyTypes['status'].label}
-                />
-              ),
-              value: supportedCustomPropertyTypes['status'].value,
-            }
+          return {
+            label: (
+              <StyledOption
+                icon={supportedCustomPropertyTypes['status'].icon}
+                label={supportedCustomPropertyTypes['status'].label}
+              />
+            ),
+            value: supportedCustomPropertyTypes['status'].value,
           }
           break
         case 'json':
@@ -227,7 +225,7 @@ function getDefaultConditionByType(
         rule,
         type: 'prop',
         value: {
-          name: 'Status',
+          name: '',
           value: -1,
           type: 'status',
         },
