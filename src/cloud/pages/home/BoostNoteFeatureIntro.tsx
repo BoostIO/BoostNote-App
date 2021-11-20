@@ -1,16 +1,20 @@
 import React, { useCallback } from 'react'
-import Image from '../../design/components/atoms/Image'
-import { mdiAccountPlus, mdiHistory, mdiChartBar } from '@mdi/js'
-import { openNew } from '../../lib/platform'
-import { boostHubLearnMorePageUrl } from '../../lib/boosthub'
-import Icon from '../../design/components/atoms/Icon'
-import styled from '../../design/lib/styled'
-import { border, flexCenter } from '../../design/lib/styled/styleFunctions'
+import Icon from '../../../design/components/atoms/Icon'
+import { mdiAccountPlus, mdiChartBar, mdiHistory } from '@mdi/js'
+import styled from '../../../design/lib/styled'
+import { border, flexCenter } from '../../../design/lib/styled/styleFunctions'
+import { useElectron } from '../../lib/stores/electron'
+import { boostHubBaseUrl } from '../../lib/consts'
+import Image from '../../../design/components/atoms/Image'
 
-const BoostHubFeatureIntro = () => {
+const BoostNoteFeatureIntro = () => {
+  const { sendToElectron, usingElectron } = useElectron()
+
   const openLearnMorePage = useCallback(() => {
-    openNew(boostHubLearnMorePageUrl)
-  }, [])
+    if (usingElectron) {
+      sendToElectron('open-external-url', boostHubBaseUrl + `/features`)
+    }
+  }, [sendToElectron, usingElectron])
 
   return (
     <Container>
@@ -55,60 +59,68 @@ const BoostHubFeatureIntro = () => {
         </li>
       </ul>
       <div className='screenShot'>
-        <Image src='/app/static/img_ui_no-annotation.jpg' />
+        <Image src='/static/img_ui_no-annotation.jpg' />
       </div>
     </Container>
   )
 }
-export default BoostHubFeatureIntro
+export default BoostNoteFeatureIntro
 
 const Container = styled.div`
   display: flex;
   padding: 0 10px;
+
   .featureList {
     list-style: none;
     width: 300px;
-    margin: 0;
-    margin-right: 20px;
+    margin: 0 20px 0 0;
     padding: 0;
+
     & > .featureLearnMoreItem {
       text-align: right;
       color: ${({ theme }) => theme.colors.text.primary};
       cursor: pointer;
+
       &:hover {
         text-decoration: underline;
       }
     }
   }
+
   .featureList > .featureListItem {
     ${border};
     display: flex;
-    padding: 0 5px;
     margin-bottom: 20px;
     border-radius: 5px;
     padding: 10px 5px 10px 10px;
     background-color: ${({ theme }) => theme.colors.background.secondary};
+
     & > .featureListItemIcon {
       ${flexCenter};
       font-size: 24px;
       width: 24px;
       height: 24px;
     }
+
     & > .featureListItemBody {
       margin-left: 7px;
+
       & > h2 {
         font-size: 18px;
         margin-top: 0;
         margin-bottom: 10px;
       }
+
       & > p {
         font-size: 14px;
         margin: 0;
       }
     }
   }
+
   .screenShot {
     flex: 1;
+
     img {
       width: 100%;
       ${border};

@@ -65,6 +65,7 @@ import {
 } from '../../../../design/components/organisms/Sidebar/molecules/SidebarTree'
 import { CATEGORY_DRAG_TRANSFER_DATA_JSON } from '../../../interfaces/resources'
 import LabelsManagementModal from '../../../components/Modal/contents/LabelsManagementModal'
+import { useElectron } from '../../stores/electron'
 import { isString } from '../../utils/string'
 
 export function useCloudSidebarTree() {
@@ -74,6 +75,7 @@ export function useCloudSidebarTree() {
   const { preferences, setPreferences } = usePreferences()
   const { translate } = useI18n()
   const { showSearchScreen } = useSearch()
+  const { sendToElectron, usingElectron } = useElectron()
 
   const {
     initialLoadDone,
@@ -391,7 +393,13 @@ export function useCloudSidebarTree() {
         folding: getFoldEvents('folders', folder.id),
         href,
         active: !showSearchScreen && href === currentPathWithDomain,
-        navigateTo: () => push(href),
+        navigateTo: (event?: any) => {
+          if (event && event.shiftKey && usingElectron) {
+            sendToElectron('new-window', href)
+            return
+          }
+          push(href)
+        },
         ...coreRestrictedFeatures,
         parentId:
           folder.parentFolderId == null
@@ -469,7 +477,13 @@ export function useCloudSidebarTree() {
         id: docId,
         lastUpdated: doc.head != null ? doc.head.created : doc.updatedAt,
         label: getDocTitle(doc, 'Untitled'),
-        navigateTo: () => push(href),
+        navigateTo: (event?: any) => {
+          if (event && event.shiftKey && usingElectron) {
+            sendToElectron('new-window', href)
+            return
+          }
+          push(href)
+        },
         bookmarked: doc.bookmarked,
         emoji: doc.emoji,
         defaultIcon: mdiFileDocumentOutline,
@@ -581,7 +595,13 @@ export function useCloudSidebarTree() {
           defaultIcon: mdiTag,
           href,
           active: !showSearchScreen && href === currentPathWithDomain,
-          navigateTo: () => push(href),
+          navigateTo: (event?: any) => {
+            if (event && event.shiftKey && usingElectron) {
+              sendToElectron('new-window', href)
+              return
+            }
+            push(href)
+          },
         })
         return acc
       }, [] as SidebarTreeChildRow[])
@@ -741,9 +761,9 @@ export function useCloudSidebarTree() {
     translate,
     currentUserIsCoreMember,
     openWorkspaceCreateForm,
-    showSearchScreen,
     sideBarOpenedWorkspaceIdsSet,
     getFoldEvents,
+    showSearchScreen,
     dropInWorkspace,
     updateFolder,
     updateDoc,
@@ -756,6 +776,7 @@ export function useCloudSidebarTree() {
     sideBarOpenedFolderIdsSet,
     dropInDocOrFolder,
     saveFolderTransferData,
+    clearDragTransferData,
     toggleFolderBookmark,
     openRenameFolderForm,
     deleteFolder,
@@ -763,11 +784,12 @@ export function useCloudSidebarTree() {
     toggleDocBookmark,
     openRenameDocForm,
     deleteDoc,
+    usingElectron,
+    sendToElectron,
     openModal,
     createWorkspace,
     sideBarOpenedLinksIdsSet,
     toggleItem,
-    clearDragTransferData,
   ])
 
   const treeWithOrderedCategories = useMemo(() => {

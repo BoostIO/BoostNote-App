@@ -14,11 +14,15 @@ import {
   toggleSettingsMembersEventEmitter,
   toggleSidebarSearchEventEmitter,
   toggleSidebarNotificationsEventEmitter,
+  switchSpaceEventEmitter,
+  signInViaAccessTokenEventEmitter,
 } from '../utils/events'
 import { useGlobalKeyDownHandler, isWithGeneralCtrlKey } from '../keyboard'
 import { IpcRendererEvent } from 'electron'
 import { useEffectOnce } from 'react-use'
 import ltSemver from 'semver/functions/lt'
+import { parse as parseUrl } from 'url'
+import { boostHubLoginEventEmitter } from '../../../lib/events'
 
 export function addFoundInPageListener(
   callback: (matches: number | null) => void
@@ -64,7 +68,7 @@ export function getCurrentDesktopAppVersion() {
 const currentDesktopAppVersion = getCurrentDesktopAppVersion()
 export const usingLegacyElectron =
   currentDesktopAppVersion != null
-    ? ltSemver(currentDesktopAppVersion, '0.20.0')
+    ? ltSemver(currentDesktopAppVersion, '0.23.0')
     : false
 
 export function openInBrowser(url: string) {
@@ -108,10 +112,14 @@ export function initAccessToken(): Promise<string | null> {
 }
 
 export function getAccessToken(): string | null {
-  if (accessTokenHasBeenInitialized) {
-    return accessToken
+  const currentVersion = getCurrentDesktopAppVersion()
+  if (currentVersion != null && ltSemver(currentVersion, '0.23.0')) {
+    if (accessTokenHasBeenInitialized) {
+      return accessToken
+    }
+    throw new Error('AccessToken has not been initialized yet.')
   }
-  throw new Error('AccessToken has not been initialized yet.')
+  return null
 }
 
 interface PrintToPDFOptions {
@@ -186,11 +194,25 @@ const useElectronStore = (): ElectronStore => {
       toggleSplitEditModeEventEmitter.dispatch()
     })
     addHostListener('apply-bold-style', () => {
+      console.log('dispatch bold')
       applyBoldStyleEventEmitter.dispatch()
     })
     addHostListener('apply-italic-style', () => {
       applyItalicStyleEventEmitter.dispatch()
     })
+
+    addHostListener(
+      'sign-in-via-access-token',
+      (_event, accessToken: string) => {
+        console.log('dispatch')
+        signInViaAccessTokenEventEmitter.dispatch({
+          accessToken,
+        })
+      }
+    )
+    /**
+     * TODO: Should be discarded after v0.23
+     */
     addHostListener(
       'update-access-token',
       (_event: IpcRendererEvent, accessToken: string | null) => {
@@ -198,6 +220,38 @@ const useElectronStore = (): ElectronStore => {
           accessTokenHasBeenInitialized = true
         }
         setAccessToken(accessToken)
+      }
+    )
+
+    addHostListener(
+      'switch-space',
+      (_event: IpcRendererEvent, index: number) => {
+        if (typeof index !== 'number') {
+          console.warn('index of switch-space event must be a number')
+          return
+        }
+        switchSpaceEventEmitter.dispatch({ index })
+      }
+    )
+
+    addHostListener(
+      'open-boostnote-url',
+      (_event: IpcRendererEvent, url: string) => {
+        console.log('open-boostnote-url')
+        const parsedUrl = parseUrl(url, true)
+
+        switch (parsedUrl.pathname) {
+          case '/login':
+            const { code } = parsedUrl.query
+            if (typeof code !== 'string') {
+              console.warn('`code` is missing')
+              return
+            }
+            boostHubLoginEventEmitter.dispatch({ code })
+            break
+          default:
+            console.warn(`Not supported URL: ${url}`)
+        }
       }
     )
 

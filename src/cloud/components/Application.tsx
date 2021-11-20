@@ -23,6 +23,8 @@ import {
   toggleSidebarSearchEventEmitter,
   toggleSidebarNotificationsEventEmitter,
   newDocEventEmitter,
+  switchSpaceEventEmitter,
+  SwitchSpaceEventDetails,
 } from '../lib/utils/events'
 import { usePathnameChangeEffect, useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
@@ -42,7 +44,7 @@ import {
   mdiWeb,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
-import { sendToHost, usingElectron } from '../lib/stores/electron'
+import { useElectron, usingElectron } from '../lib/stores/electron'
 import cc from 'classcat'
 import { useCloudResourceModals } from '../lib/hooks/useCloudResourceModals'
 import FuzzyNavigation from '../../design/components/organisms/FuzzyNavigation'
@@ -60,7 +62,6 @@ import useNotificationState from '../../design/lib/hooks/useNotificationState'
 import { useNotifications } from '../../design/lib/stores/notifications'
 import '../lib/i18n'
 import { useI18n } from '../lib/hooks/useI18n'
-import { TFunction } from 'i18next'
 import { lngKeys } from '../lib/i18n/types'
 import Sidebar, {
   PopOverState,
@@ -119,6 +120,7 @@ const Application = ({
   } = useCloudSidebarTree()
   const { counts } = useNotifications()
   const { translate } = useI18n()
+  const { sendToElectron } = useElectron()
 
   const { history, showSearchScreen, setShowSearchScreen } = useSearch()
   const [showInPageSearch, setShowInPageSearch] = useState(false)
@@ -161,6 +163,24 @@ const Application = ({
   }, [permissions, currentUser])
 
   const { spaces } = useCloudSidebarSpaces()
+
+  useEffect(() => {
+    const switchSpaceEventHandler = (
+      event: CustomEvent<SwitchSpaceEventDetails>
+    ) => {
+      const targetSpace = spaces[event.detail.index]
+      if (targetSpace == null) {
+        console.warn('invalid space index')
+        return
+      }
+      push(`${targetSpace.linkProps.href}`)
+    }
+    switchSpaceEventEmitter.listen(switchSpaceEventHandler)
+
+    return () => {
+      switchSpaceEventEmitter.unlisten(switchSpaceEventHandler)
+    }
+  }, [spaces, push])
 
   const openCreateFolderModal = useCallback(() => {
     openNewFolderForm({
@@ -244,7 +264,7 @@ const Application = ({
         }
       }
     },
-    [openSettingsTab, showInPageSearch, team, setPreferences]
+    [team, setPreferences, openSettingsTab, showInPageSearch]
   )
   useGlobalKeyDownHandler(overrideBrowserCtrlsHandler)
 
@@ -273,10 +293,57 @@ const Application = ({
     setPopOverState(null)
   }, [])
 
-  const spaceBottomRows = useMemo(
-    () => buildSpacesBottomRows(push, translate),
-    [push, translate]
-  )
+  const spaceBottomRows = useMemo(() => {
+    const bottomRows: {
+      label: string
+      icon: string
+      linkProps: React.AnchorHTMLAttributes<{}>
+    }[] = [
+      {
+        label: translate(lngKeys.CreateNewSpace),
+        icon: mdiPlusCircleOutline,
+        linkProps: {
+          href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,
+          onClick: (event: React.MouseEvent) => {
+            event.preventDefault()
+            push(`/cooperate`)
+          },
+        },
+      },
+    ]
+
+    if (!usingElectron) {
+      bottomRows.push({
+        label: translate(lngKeys.DownloadDesktopApp),
+        icon: mdiDownload,
+        linkProps: {
+          href: 'https://github.com/BoostIO/BoostNote-App/releases/latest',
+          target: '_blank',
+          rel: 'noopener noreferrer',
+        },
+      })
+    }
+    bottomRows.push({
+      label: translate(lngKeys.LogOut),
+      icon: mdiLogoutVariant,
+      linkProps: {
+        href: '/api/oauth/signout',
+        onClick: (event: React.MouseEvent) => {
+          event.preventDefault()
+
+          if (usingElectron) {
+            sendToElectron('sign-out-event')
+            window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout?redirectTo=/desktop`
+            return
+          } else {
+            window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout`
+            return
+          }
+        },
+      },
+    })
+    return bottomRows
+  }, [push, sendToElectron, translate])
 
   const {
     state: notificationState,
@@ -385,7 +452,15 @@ const Application = ({
               variant: 'subtle',
               labelHref: getTeamLinkHref(team, 'shared'),
               active: getTeamLinkHref(team, 'shared') === pathname,
-              labelClick: () => push(getTeamLinkHref(team, 'shared')),
+              labelClick: (event) => {
+                const teamHref = getTeamLinkHref(team, 'shared')
+                if (event && event.shiftKey && usingElectron) {
+                  const loadUrl = `${process.env.BOOST_HUB_BASE_URL}${teamHref}`
+                  sendToElectron('new-window', loadUrl)
+                  return
+                }
+                push(teamHref)
+              },
               id: 'sidebar__button__shared',
             },
           ]}
@@ -408,7 +483,7 @@ const Application = ({
         </SidebarButtonList>
       </>
     )
-  }, [openModal, team, pathname, push, translate, subscription])
+  }, [team, translate, pathname, subscription, push, sendToElectron, openModal])
 
   return (
     <>
@@ -480,67 +555,6 @@ const Application = ({
 }
 
 export default Application
-
-function buildSpacesBottomRows(push: (url: string) => void, t: TFunction) {
-  return usingElectron
-    ? [
-        {
-          label: t(lngKeys.CreateNewSpace),
-          icon: mdiPlusCircleOutline,
-          linkProps: {
-            href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,
-            onClick: (event: React.MouseEvent) => {
-              event.preventDefault()
-              sendToHost('new-space')
-            },
-          },
-        },
-        {
-          label: t(lngKeys.LogOut),
-          icon: mdiLogoutVariant,
-          linkProps: {
-            href: '/api/oauth/signout',
-            onClick: (event: React.MouseEvent) => {
-              event.preventDefault()
-              sendToHost('sign-out')
-            },
-          },
-        },
-      ]
-    : [
-        {
-          label: t(lngKeys.CreateNewSpace),
-          icon: mdiPlusCircleOutline,
-          linkProps: {
-            href: `${process.env.BOOST_HUB_BASE_URL}/cooperate`,
-            onClick: (event: React.MouseEvent) => {
-              event.preventDefault()
-              push(`/cooperate`)
-            },
-          },
-        },
-        {
-          label: t(lngKeys.DownloadDesktopApp),
-          icon: mdiDownload,
-          linkProps: {
-            href: 'https://github.com/BoostIO/BoostNote-App/releases/latest',
-            target: '_blank',
-            rel: 'noopener noreferrer',
-          },
-        },
-        {
-          label: t(lngKeys.LogOut),
-          icon: mdiLogoutVariant,
-          linkProps: {
-            href: '/api/oauth/signout',
-            onClick: (event: React.MouseEvent) => {
-              event.preventDefault()
-              window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout`
-            },
-          },
-        },
-      ]
-}
 
 function isCodeMirrorTextAreaEvent(event: KeyboardEvent) {
   const target = event.target as HTMLTextAreaElement

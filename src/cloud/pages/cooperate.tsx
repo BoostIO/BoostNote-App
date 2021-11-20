@@ -1,7 +1,7 @@
 import React, { useState, useCallback, FormEvent } from 'react'
 import { createTeam, updateTeamIcon } from '../api/teams'
 import { getTeamLinkHref } from '../components/Link/TeamLink'
-import { useElectron } from '../lib/stores/electron'
+import { useElectron, usingLegacyElectron } from '../lib/stores/electron'
 import { useNav } from '../lib/stores/nav'
 import { usePage } from '../lib/stores/pageStore'
 import { useSidebarCollapse } from '../lib/stores/sidebarCollapse'
@@ -25,6 +25,7 @@ import { lngKeys } from '../lib/i18n/types'
 import { SpaceUsageIntent } from '../components/Onboarding/UsageFormRow'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 import { trackEvent } from '../api/track'
+import { useRouter } from '../lib/router'
 
 const CooperatePage = () => {
   const [intent, setIntent] = useState<SpaceUsageIntent>()
@@ -45,6 +46,7 @@ const CooperatePage = () => {
     doc: SerializedDoc
     openInvite: SerializedOpenInvite
   }>()
+  const { push } = useRouter()
 
   const changeHandler = useCallback((file: File) => {
     setIconFile(file)
@@ -58,7 +60,7 @@ const CooperatePage = () => {
 
       const { team, doc, openInvite, initialFolders } = await createTeam(body)
 
-      if (usingElectron) {
+      if (usingElectron && usingLegacyElectron) {
         sendToElectron('team-create', {
           id: team.id,
           domain: team.domain,
@@ -175,7 +177,7 @@ const CooperatePage = () => {
             iconSize={34}
             iconPath={mdiClose}
             onClick={() => {
-              sendToElectron('router', 'back')
+              push('/desktop')
             }}
             className='electron__goback'
           />

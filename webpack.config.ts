@@ -5,7 +5,6 @@ import express from 'express'
 import ErrorOverlayPlugin from 'error-overlay-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import packageJson from './package.json'
-import CompressionPlugin from 'compression-webpack-plugin'
 
 module.exports = (env, argv) => {
   const config: webpack.Configuration = {
@@ -13,7 +12,7 @@ module.exports = (env, argv) => {
 
     output: {
       filename: 'bundle.js',
-      path: path.resolve(__dirname, 'compiled'),
+      path: path.resolve(__dirname, 'electron', 'compiled'),
     },
 
     devtool: 'inline-source-map',
@@ -48,11 +47,6 @@ module.exports = (env, argv) => {
     },
 
     plugins: [
-      new webpack.NamedModulesPlugin(),
-      // prints more readable module names in the browser console on HMR updates
-
-      new webpack.NoEmitOnErrorsPlugin(),
-      // do not emit compiled assets that include errors
       new HtmlWebpackPlugin({
         template: 'index.html',
       }),
@@ -116,12 +110,8 @@ module.exports = (env, argv) => {
     config.optimization = {
       minimize: true,
     }
-    config.plugins.push(new CompressionPlugin())
-    if (process.env.TARGET === 'electron') {
-      config.output.path = path.resolve(__dirname, 'electron/compiled')
-    } else {
-      config.output.publicPath = '/app/'
-    }
+
+    config.output.path = path.resolve(__dirname, 'electron/compiled')
   }
 
   return config
