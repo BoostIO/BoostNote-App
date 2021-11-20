@@ -2,7 +2,6 @@ import { callApi } from '../../../lib/client'
 import {
   SerializedDocWithSupplemental,
   SerializedDoc,
-  DocStatus,
 } from '../../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
@@ -102,15 +101,6 @@ export async function updateDocEmoji(doc: SerializedDoc, emoji?: string) {
 
 export interface UpdateDocPropsResponseBody {
   data: Props
-}
-
-export async function updateDocStatus(docId: string, status: DocStatus | null) {
-  return callApi<UpdateDocPropsResponseBody>(`api/docs/${docId}/props`, {
-    method: 'patch',
-    json: {
-      status: { type: 'string', data: status },
-    },
-  })
 }
 
 export async function updateDocDueDate(docId: string, dueDate: Date | null) {

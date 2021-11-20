@@ -11,7 +11,6 @@ import {
   updateDocEmoji,
   UpdateDocRequestBody,
   UpdateDocResponseBody,
-  updateDocStatus,
   updateDocDueDate,
   updateDocTagsInBulk,
   UpdateDocTagsResponseBody,
@@ -50,7 +49,6 @@ import {
   DestroyWorkspaceResponseBody,
 } from '../../api/teams/workspaces'
 import {
-  DocStatus,
   SerializedDoc,
   SerializedDocWithSupplemental,
 } from '../../interfaces/db/doc'
@@ -432,32 +430,6 @@ export function useCloudApi() {
         cb: ({ data }: UpdateDocPropsResponseBody) => {
           const assignees = data.assignees
           const props = Object.assign({}, target.props || {}, { assignees })
-          const newDoc = {
-            ...target,
-            props,
-          } as SerializedDocWithSupplemental
-          updateDocsMap([newDoc.id, newDoc])
-
-          if (pageDoc != null && newDoc.id === pageDoc.id) {
-            setPartialPageData({ pageDoc: newDoc })
-          }
-        },
-      })
-    },
-    [pageDoc, updateDocsMap, setPartialPageData, send]
-  )
-
-  const updateDocStatusApi = useCallback(
-    async (
-      target: SerializedDocWithSupplemental,
-      newStatus: DocStatus | null
-    ) => {
-      await send(target.id, 'status', {
-        api: () => updateDocStatus(target.id, newStatus),
-        cb: ({ data }: UpdateDocPropsResponseBody) => {
-          const props = Object.assign({}, target.props || {}, {
-            status: data.status,
-          })
           const newDoc = {
             ...target,
             props,
@@ -914,7 +886,6 @@ export function useCloudApi() {
     createSmartViewApi,
     deleteSmartViewApi,
     updateDocAssigneeApi,
-    updateDocStatusApi,
     updateDocDueDateApi,
     updateDocTagsBulkApi,
     deleteTagApi,
