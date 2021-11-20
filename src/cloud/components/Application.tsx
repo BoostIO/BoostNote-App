@@ -42,6 +42,7 @@ import {
   mdiPlusCircleOutline,
   mdiHome,
   mdiWeb,
+  mdiViewDashboard,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
 import { useElectron, usingElectron } from '../lib/stores/electron'
@@ -391,12 +392,12 @@ const Application = ({
               },
               {
                 label: translate(lngKeys.GeneralDashboard),
-                icon: mdiHome,
+                icon: mdiViewDashboard,
                 variant: 'transparent',
                 labelHref: teamUrl,
-                labelClick: () => push(teamUrl),
+                labelClick: () => push(`${teamUrl}/dashboard`),
                 id: 'sidebar__button__inbox',
-                active: pathname === teamUrl,
+                active: pathname === `${teamUrl}/dashboard`,
               },
               {
                 label: translate(lngKeys.GeneralInbox),
