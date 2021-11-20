@@ -516,6 +516,10 @@ const StyledTooltipContent = styled.div`
 
 function makeCommentGutters(highlights: HighlightRange[]) {
   return (node: UnistNode): UnistNode | null => {
+    // todo: [komediruzecki-2021-11-20] End known to be null
+    if (node.position?.end == null) {
+      return null
+    }
     const posStart = node.position?.start.offset
     const posEnd = node.position?.end.offset
     if (posStart != null && posEnd != null) {
