@@ -532,6 +532,10 @@ const Container = styled.div`
   position: relative;
   height: 100%;
 
+  .table {
+    flex: 0 0 auto;
+  }
+
   .content__manager__list__header--margin {
     margin-top: ${({ theme }) => theme.sizes.spaces.l}px !important;
   }
