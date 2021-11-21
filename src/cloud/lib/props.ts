@@ -78,7 +78,7 @@ export const ConditionNameSuggestionsPerTypeOrSubType: Record<
   user: ['Assignees', 'Reviewers'],
   timeperiod: ['Time Estimate', 'Time Tracked'],
   date: ['Due Date', 'Start Date'],
-  string: ['Status', 'Text'],
+  status: ['Status'],
   number: ['Number'],
 }
 
