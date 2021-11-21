@@ -106,6 +106,17 @@ export enum MixpanelActionTrackTypes {
   InviteFromFolderPage = 'invite.folder',
   InviteFromSidenav = 'invite.sidenav',
   SendEditRequest = 'send.editrequest',
+  DashboardOpen = 'dashboard.open',
+  DocPropAdd = 'doc.props.add',
+  DocPropUpdateName = 'doc.props.update.name',
+  DocPropUpdateType = 'doc.props.update.type',
+  DocPropUpdateValue = 'doc.props.update.value',
+  DocPropDelete = 'doc.prop.delete',
+  TableColAdd = 'table.cols.add',
+  TableColUpdateName = 'table.cols.update.name',
+  TableColUpdateType = 'table.cols.update.type',
+  TableColUpdateOrder = 'table.cols.update.order',
+  TableColDelete = 'table.cols.delete',
 }
 
 export type MixpanelFrontEvent =
@@ -141,6 +152,17 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.BlockPropCreate
   | MixpanelActionTrackTypes.BlockPropEdit
   | MixpanelActionTrackTypes.BlockPropDelete
+  | MixpanelActionTrackTypes.DashboardOpen
+  | MixpanelActionTrackTypes.DocPropAdd
+  | MixpanelActionTrackTypes.DocPropUpdateName
+  | MixpanelActionTrackTypes.DocPropUpdateType
+  | MixpanelActionTrackTypes.DocPropUpdateValue
+  | MixpanelActionTrackTypes.DocPropDelete
+  | MixpanelActionTrackTypes.TableColAdd
+  | MixpanelActionTrackTypes.TableColUpdateName
+  | MixpanelActionTrackTypes.TableColUpdateType
+  | MixpanelActionTrackTypes.TableColUpdateOrder
+  | MixpanelActionTrackTypes.TableColDelete
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 
