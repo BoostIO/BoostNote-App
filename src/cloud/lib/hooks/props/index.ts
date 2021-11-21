@@ -135,12 +135,15 @@ function getPropsFromItemAndParent(
   parentTableColumns: Column[]
 ) {
   const newProps = Object.assign({}, prev)
-  Object.entries(itemProps).forEach((prop) => {
-    newProps[prop[0]] = prop[1]
+  Object.entries(itemProps).forEach(([key, value]) => {
+    newProps[key] = value
   })
-  Object.entries(prev).forEach((prop) => {
-    if (typeof itemProps[prop[0]] === 'undefined') {
-      newProps[prop[0]] = Object.assign({}, prop[1], { data: null })
+  Object.entries(prev).forEach(([key, value]) => {
+    if (typeof itemProps[key] === 'undefined') {
+      newProps[key] = {
+        ...value,
+        data: null,
+      } as SerializedPropData
     }
   })
 
@@ -149,12 +152,12 @@ function getPropsFromItemAndParent(
       return
     }
 
-    const [_id, _name, type, _subType] = propertyCol.id.split(':')
+    const [_id, _name, type, subType] = propertyCol.id.split(':')
     newProps[propertyCol.name] = Object.assign(
       {},
       {
         origin: 'parent',
-        data: null,
+        data: type === 'json' ? { dataType: subType, data: null } : null,
         type: type,
         name: propertyCol.name,
         createdAt: addMinutes(new Date(), 2).toISOString(),
