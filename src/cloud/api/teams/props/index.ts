@@ -7,7 +7,7 @@ export type ListPropertySuggestionsRequestBody = {
 }
 
 export interface ListPropertySuggestionsResponseBody {
-  data: string[]
+  data: { name: string; type: string }[]
 }
 
 export async function listPropertySuggestions(
