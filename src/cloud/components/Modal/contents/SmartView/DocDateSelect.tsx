@@ -8,6 +8,7 @@ import styled from '../../../../../design/lib/styled'
 import { DateCondition } from '../../../../interfaces/db/smartView'
 import { Kind } from './interfaces'
 import Portal from '../../../../../design/components/atoms/Portal'
+import { getISODateFromLocalTime, getISODateString } from '../../../../lib/date'
 
 interface DocDateSelectProps {
   usePortal?: boolean
@@ -70,7 +71,7 @@ const SpecificDatePicker = ({
   const updateDate = (newDate: Date) => {
     update({
       ...value,
-      date: normalizeLocalDate(newDate),
+      date: getISODateFromLocalTime(newDate),
     })
   }
 
@@ -99,14 +100,8 @@ const SpecificDatePicker = ({
   )
 }
 
-export function normalizeLocalDate(date: Date) {
-  return new Date(formatDate(date, 'yyyy-MM-dd') + 'T00:00:00.000Z')
-}
-
 export function localizeDate(date: Date) {
-  const [dateString] = (typeof date === 'string' ? new Date(date) : date)
-    .toISOString()
-    .split('T')
+  const dateString = getISODateString(date)
 
   return new Date(dateString)
 }
@@ -127,13 +122,13 @@ const DateRangePicker = ({
   const updateFromDate = (date: Date) => {
     update({
       ...value,
-      from: normalizeLocalDate(date),
+      from: getISODateFromLocalTime(date),
     })
   }
   const updateToDate = (date: Date) => {
     update({
       ...value,
-      to: normalizeLocalDate(date),
+      to: getISODateFromLocalTime(date),
     })
   }
 
