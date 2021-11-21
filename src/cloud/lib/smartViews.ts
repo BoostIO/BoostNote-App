@@ -1,4 +1,3 @@
-import { localizeDate } from '../components/Modal/contents/SmartView/DocDateSelect'
 import { Kind } from '../components/Modal/contents/SmartView/interfaces'
 import {
   Condition,
@@ -18,6 +17,7 @@ import {
   mdiTimerOutline,
 } from '@mdi/js'
 import { getInitialPropDataOfPropType } from './props'
+import { floorISOTime, getISODateFromLocalTime } from './date'
 
 export const supportedCustomPropertyTypes: Record<
   string,
@@ -72,14 +72,14 @@ const validators: Validators = {
   },
 
   creation_date: (doc, condition) => {
-    return validateDateValue(new Date(doc.createdAt), condition.value)
+    return validateDateTimeValue(new Date(doc.createdAt), condition.value)
   },
 
   update_date: (doc, condition) => {
     if (doc.updatedAt == null) {
       return false
     }
-    return validateDateValue(new Date(doc.updatedAt), condition.value)
+    return validateDateTimeValue(new Date(doc.updatedAt), condition.value)
   },
 
   prop: (doc, condition) => {
@@ -184,38 +184,74 @@ function equalsOrContains<T, U>(
 }
 
 function validateDateValue(
-  targetDate: Date,
+  targetDate: Date | string,
   dateConditionValue: SerializeDateProps<DateCondition>
 ) {
-  const todayDate = localizeDate(new Date())
-  const localizedTargetDate = localizeDate(targetDate)
+  const normalizedTodayDate = getISODateFromLocalTime(new Date())
+  const normalizedTargetDate = floorISOTime(targetDate)
 
   switch (dateConditionValue.type) {
     case 'relative':
       return (
-        localizedTargetDate >= addSeconds(todayDate, dateConditionValue.period)
+        normalizedTargetDate <= normalizedTodayDate &&
+        normalizedTargetDate >=
+          addSeconds(normalizedTodayDate, -dateConditionValue.period)
       )
     case 'after':
-      const afterDate = new Date(dateConditionValue.date)
-      return localizedTargetDate >= afterDate
+      const afterDate = floorISOTime(dateConditionValue.date)
+      return normalizedTargetDate >= afterDate
     case 'specific':
-      const specificDate = new Date(dateConditionValue.date)
+      const specificDate = floorISOTime(dateConditionValue.date)
       return (
-        localizedTargetDate >= specificDate &&
-        localizedTargetDate < addDays(specificDate, 1)
+        normalizedTargetDate >= specificDate &&
+        normalizedTargetDate < addDays(specificDate, 1)
       )
     case 'before':
-      const beforeDate = new Date(dateConditionValue.date)
-      return localizedTargetDate < beforeDate
+      const beforeDate = floorISOTime(dateConditionValue.date)
+      return normalizedTargetDate < beforeDate
     case 'between':
-      const fromDate = new Date(dateConditionValue.from)
-      const toDate = new Date(dateConditionValue.to)
-      return localizedTargetDate >= fromDate && localizedTargetDate <= toDate
+      const fromDate = floorISOTime(dateConditionValue.from)
+      const toDate = floorISOTime(dateConditionValue.to)
+      return normalizedTargetDate >= fromDate && normalizedTargetDate <= toDate
     default:
       return false
   }
 }
 
+function validateDateTimeValue(
+  targetDateWithTime: Date,
+  dateConditionValue: SerializeDateProps<DateCondition>
+) {
+  const normalizedTodayDate = getISODateFromLocalTime(new Date())
+  const normalizedTargetDate = getISODateFromLocalTime(targetDateWithTime)
+
+  switch (dateConditionValue.type) {
+    case 'relative':
+      return (
+        normalizedTargetDate <= normalizedTodayDate &&
+        normalizedTargetDate >=
+          addSeconds(normalizedTodayDate, -dateConditionValue.period)
+      )
+    case 'after':
+      const afterDate = floorISOTime(dateConditionValue.date)
+      return normalizedTargetDate >= afterDate
+    case 'specific':
+      const specificDate = floorISOTime(dateConditionValue.date)
+      return (
+        normalizedTargetDate >= specificDate &&
+        normalizedTargetDate < addDays(specificDate, 1)
+      )
+    case 'before':
+      const beforeDate = floorISOTime(dateConditionValue.date)
+      return normalizedTargetDate < beforeDate
+    case 'between':
+      const fromDate = floorISOTime(dateConditionValue.from)
+      const toDate = floorISOTime(dateConditionValue.to)
+      return normalizedTargetDate >= fromDate && normalizedTargetDate <= toDate
+    default:
+      return false
+  }
+}
 function checkRule(
   test2: boolean,
   rule: 'and' | 'or',
