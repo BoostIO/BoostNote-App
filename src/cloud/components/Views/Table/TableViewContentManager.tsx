@@ -274,7 +274,7 @@ const TableViewContentManager = ({
                     ev,
                     <TablePropertiesContext
                       columns={columns}
-                      removeColumn={actionsRef.current.removeColumn}
+                      tableActionsRef={actionsRef}
                     />,
                     {
                       width: 250,
