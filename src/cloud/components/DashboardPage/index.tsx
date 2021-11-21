@@ -25,6 +25,8 @@ import {
   SmartViewListPageResponseBody,
 } from '../../api/pages/teams/smartViews/list'
 import { getDefaultTableView } from '../../lib/views/table'
+import { trackEvent } from '../../api/track'
+import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 const SmartViewPage = ({
   data,
@@ -44,6 +46,7 @@ const SmartViewPage = ({
     teamRef.current = propsTeam.id
     if (data.length > 0) {
       setSelectedSmartViewId(data[0].id)
+      trackEvent(MixpanelActionTrackTypes.DashboardOpen)
     } else {
       setSelectedSmartViewId(undefined)
     }
