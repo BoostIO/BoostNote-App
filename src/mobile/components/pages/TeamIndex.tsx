@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import {
   getTeamIndexPageData,
-  TeamShowPageResponseBody,
+  TeamIndexPageResponseBody,
 } from '../../../cloud/api/pages/teams'
 import { GetInitialPropsParameters } from '../../../cloud/interfaces/pages'
 import ContentManager from '../organisms/ContentManager'
@@ -10,7 +10,7 @@ import { useNav } from '../../../cloud/lib/stores/nav'
 import { SerializedWorkspace } from '../../../cloud/interfaces/db/workspace'
 import AppLayout from '../layouts/AppLayout'
 
-const TeamIndex = ({ pageWorkspace }: TeamShowPageResponseBody) => {
+const TeamIndex = ({ pageWorkspace }: TeamIndexPageResponseBody) => {
   const { team, currentUserIsCoreMember } = usePage()
   const { docsMap, foldersMap } = useNav()
 
@@ -44,7 +44,7 @@ const TeamIndex = ({ pageWorkspace }: TeamShowPageResponseBody) => {
     return <div></div>
   }
   return (
-    <AppLayout>
+    <AppLayout title={pageWorkspace.name}>
       <ContentManager
         team={team}
         documents={childDocs}
