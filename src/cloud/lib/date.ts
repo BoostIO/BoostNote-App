@@ -12,6 +12,20 @@ export function getMonthlyDateString(date: Date) {
   return format(date, 'yyyy-MM')
 }
 
+export function getISODateString(date: Date) {
+  const [dateString] = date.toISOString().split('T')
+
+  return dateString
+}
+
+export function floorISOTime(date: Date | string) {
+  return new Date(getISODateString(new Date(date)) + 'T00:00:00.000Z')
+}
+
+export function getISODateFromLocalTime(date: Date | string) {
+  return new Date(getDateString(new Date(date)) + 'T00:00:00.000Z')
+}
+
 export function getFormattedBoosthubDate(date: string, prefixed = false) {
   const converted = new Date(date)
   const yesterday = new Date()
