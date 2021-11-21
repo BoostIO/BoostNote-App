@@ -1,6 +1,7 @@
 import React from 'react'
 import FormSelect from '../../../../../design/components/molecules/Form/atoms/FormSelect'
 import { DateCondition } from '../../../../interfaces/db/smartView'
+import { getISODateFromLocalTime } from '../../../../lib/date'
 
 const DAYS_7 = 60 * 60 * 24 * 7
 const DAYS_30 = 60 * 60 * 24 * 30
@@ -102,6 +103,7 @@ function getOptionByValueType(dateValue: DateCondition) {
 function getDefaultDateConditionValueByValueType(
   dateValueType: string
 ): DateCondition {
+  const today = getISODateFromLocalTime(new Date())
   switch (dateValueType) {
     case '7_days':
       return {
@@ -116,24 +118,24 @@ function getDefaultDateConditionValueByValueType(
     case 'specific':
       return {
         type: 'specific',
-        date: new Date(),
+        date: today,
       }
 
     case 'between':
       return {
         type: 'between',
-        from: new Date(),
-        to: new Date(),
+        from: today,
+        to: today,
       }
     case 'after':
       return {
         type: 'after',
-        date: new Date(),
+        date: today,
       }
     case 'before':
       return {
         type: 'before',
-        date: new Date(),
+        date: today,
       }
     case 'today':
     default:

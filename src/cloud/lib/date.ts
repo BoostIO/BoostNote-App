@@ -12,14 +12,14 @@ export function getMonthlyDateString(date: Date) {
   return format(date, 'yyyy-MM')
 }
 
-export function getISODateString(date: Date) {
-  const [dateString] = date.toISOString().split('T')
+export function getISODateString(date: Date | string) {
+  const [dateString] = new Date(date).toISOString().split('T')
 
   return dateString
 }
 
 export function floorISOTime(date: Date | string) {
-  return new Date(getISODateString(new Date(date)) + 'T00:00:00.000Z')
+  return new Date(getISODateString(date) + 'T00:00:00.000Z')
 }
 
 export function getISODateFromLocalTime(date: Date | string) {
