@@ -4,8 +4,8 @@ import { LoadingButton } from '../../../../design/components/atoms/Button'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import styled from '../../../../design/lib/styled'
+import { TableViewActionsRef } from '../../../lib/hooks/views/tableView'
 import { getIconPathOfPropType } from '../../../lib/props'
 import {
   getArrayFromRecord,
@@ -15,12 +15,12 @@ import { Column } from '../../../lib/views/table'
 
 interface TablePropertiesContextProps {
   columns: Record<string, Column>
-  removeColumn: (col: Column) => Promise<BulkApiActionRes>
+  tableActionsRef: TableViewActionsRef
 }
 
 const TablePropertiesContext = ({
   columns: viewColumns,
-  removeColumn,
+  tableActionsRef,
 }: TablePropertiesContextProps) => {
   const menuRef = useRef<HTMLDivElement>(null)
   const [activeColumns, setActiveColumns] = useState(
@@ -35,7 +35,7 @@ const TablePropertiesContext = ({
       }
 
       setSending(`${col.id}-delete`)
-      const res = await removeColumn(col)
+      const res = await tableActionsRef.current.removeColumn(col)
       if (!res.err) {
         setActiveColumns((prev) => {
           return prev.slice().filter((elem) => elem.id !== col.id)
@@ -43,7 +43,7 @@ const TablePropertiesContext = ({
       }
       setSending(undefined)
     },
-    [removeColumn, sending]
+    [tableActionsRef, sending]
   )
 
   const sortedActiveCols = useMemo(() => {
