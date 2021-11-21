@@ -51,7 +51,7 @@ const SmartViewContextMenu = ({
   const docUrl = useMemo(() => {
     return (
       boostHubBaseUrl +
-      getTeamLinkHref(team, 'index', { smartView: smartView.id })
+      getTeamLinkHref(team, 'dashboard', { smartView: smartView.id })
     )
   }, [team, smartView])
 
