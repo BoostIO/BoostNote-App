@@ -45,7 +45,9 @@ const SmartViewCreateModal = ({ onCreate }: CreateSmartViewModalProps) => {
           return onCreate(smartViewFolder)
         } else {
           push(
-            getTeamLinkHref(team, 'index', { smartView: smartViewFolder.id })
+            getTeamLinkHref(team, 'dashboard', {
+              smartView: smartViewFolder.id,
+            })
           )
         }
       } catch (error) {

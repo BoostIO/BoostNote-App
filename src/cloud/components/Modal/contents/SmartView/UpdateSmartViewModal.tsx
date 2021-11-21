@@ -45,7 +45,7 @@ const UpdateSmartViewModal = ({
           return onUpdate((res.data as UpdateSmartViewResponseBody).data)
         } else {
           push(
-            getTeamLinkHref(team, 'index', {
+            getTeamLinkHref(team, 'dashboard', {
               smartView: (res.data as UpdateSmartViewResponseBody).data.id,
             })
           )
