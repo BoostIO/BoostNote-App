@@ -424,6 +424,8 @@ const TableViewContentManager = ({
               openContextModal(
                 ev,
                 <TableAddPropertyContext
+                  teamId={team.id}
+                  view={view}
                   columns={columns}
                   addColumn={actionsRef.current.addColumn}
                   close={closeAllModals}

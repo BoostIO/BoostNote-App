@@ -168,3 +168,30 @@ export function getDomainOrInitialDataPropToPropData(
 
   return { type: data.type, data: null }
 }
+
+export function getDefaultStaticSuggestionsPerType(): {
+  type: StaticPropType
+  name: string
+}[] {
+  return [
+    { type: 'label', name: 'Label' },
+    { type: 'creation_date', name: 'Creation Date' },
+    { type: 'update_date', name: 'Update Date' },
+  ]
+}
+
+export function getDefaultColumnSuggestionsPerType(): {
+  type: PropType
+  subType?: PropSubType
+  name: string
+}[] {
+  return [
+    { type: 'user', name: 'Assignees' },
+    { type: 'user', name: 'Reviewers' },
+    { type: 'json', subType: 'timeperiod', name: 'Time Estimate' },
+    { type: 'json', subType: 'timeperiod', name: 'Time Tracked' },
+    { type: 'status', name: 'Status' },
+    { type: 'date', name: 'Due Date' },
+    { type: 'date', name: 'Start Date' },
+  ]
+}
