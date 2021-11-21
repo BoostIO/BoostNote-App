@@ -1,11 +1,9 @@
-import React, { useState, useCallback, useMemo, useRef } from 'react'
+import React, { useState, useMemo, useRef } from 'react'
 import { usePage } from '../../../../cloud/lib/stores/pageStore'
 import { useNav } from '../../../../cloud/lib/stores/nav'
 import {
   mdiClockOutline,
-  mdiLabelMultipleOutline,
   mdiArrowBottomLeft,
-  mdiListStatus,
   mdiAccountCircleOutline,
   mdiAccountMultiple,
   mdiContentSaveOutline,
@@ -20,7 +18,6 @@ import { SerializedRevision } from '../../../../cloud/interfaces/db/revision'
 import { SerializedUser } from '../../../../cloud/interfaces/db/user'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import UserIcon from '../../../../cloud/components/UserIcon'
-import DocTagsList from './organisms/DocTagsList'
 import DocLink from '../../../../cloud/components/Link/DocLink'
 import { getDocTitle } from '../../../../cloud/lib/utils/patterns'
 import { usePreferences } from '../../../lib/preferences'
@@ -28,16 +25,11 @@ import cc from 'classcat'
 import Icon from '../../../../design/components/atoms/Icon'
 import plur from 'plur'
 import styled from '../../../../design/lib/styled'
-import { format as formatDate } from 'date-fns'
 import { useI18n } from '../../../../cloud/lib/hooks/useI18n'
 import { lngKeys } from '../../../../cloud/lib/i18n/types'
-import DocDueDateSelect from './organisms/DocContextMenu/DocDueDateSelect'
-import DocAssigneeSelect from './organisms/DocContextMenu/DocAssigneeSelect'
 import ModalContainer from './atoms/ModalContainer'
 import DocInfoModalShareSection from './organisms/DocInfoModalShareSection'
-import DocStatusSelect from './organisms/DocContextMenu/DocStatusSelect'
 import Button from '../../../../design/components/atoms/Button'
-import { useCloudApi } from '../../../../cloud/lib/hooks/useCloudApi'
 
 interface DocInfoModalProps {
   currentDoc: SerializedDocWithSupplemental
@@ -55,17 +47,11 @@ const DocInfoModal = ({
   backLinks,
 }: // restoreRevision,
 DocInfoModalProps) => {
-  const {
-    updateDocDueDateApi,
-    updateDocAssigneeApi,
-    sendingMap,
-  } = useCloudApi()
   const { docsMap } = useNav()
   const {
     // subscription,
     permissions = [],
     currentUserPermissions,
-    currentUserIsCoreMember,
   } = usePage()
   // const { openModal } = useModal()
   const [sliceContributors, setSliceContributors] = useState(true)
@@ -98,38 +84,6 @@ DocInfoModalProps) => {
     }
   }, [contributors, sliceContributors])
 
-  // const revisionNavigateCallback = useCallback(() => {
-  //   openModal(
-  //     <MobileDocRevisionsModal
-  //       currentDoc={currentDoc}
-  //       restoreRevision={currentUserIsCoreMember ? restoreRevision : undefined}
-  //     />,
-  //     {}
-  //   )
-  //   trackEvent(MixpanelActionTrackTypes.RevisionHistoryOpen, {
-  //     docId: currentDoc.id,
-  //   })
-  // }, [currentDoc, openModal, restoreRevision, currentUserIsCoreMember])
-
-  const sendUpdateDocDueDate = useCallback(
-    async (newDate: Date | null) => {
-      await updateDocDueDateApi(
-        currentDoc,
-        newDate != null
-          ? new Date(formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z')
-          : null
-      )
-    },
-    [currentDoc, updateDocDueDateApi]
-  )
-
-  const sendUpdateDocAssignees = useCallback(
-    async (newAssignees: string[]) => {
-      await updateDocAssigneeApi(currentDoc, newAssignees)
-    },
-    [currentDoc, updateDocAssigneeApi]
-  )
-
   const creator =
     currentDoc.userId != null ? usersMap.get(currentDoc.userId) : undefined
 
@@ -142,116 +96,6 @@ DocInfoModalProps) => {
           <div className='context__container'>
             <div className='context__scroll__container'>
               <div className='context__scroll'>
-                <div className='context__row'>
-                  <div className='context__header'>
-                    {translate(lngKeys.DocInfo)}
-                  </div>
-                </div>
-
-                <div className='context__row'>
-                  <label className='context__label'>
-                    <Icon
-                      path={mdiAccountCircleOutline}
-                      size={20}
-                      className='context__icon'
-                    />{' '}
-                    {translate(lngKeys.Assignees)}
-                  </label>
-                  <div className='context__content'>
-                    <span>
-                      <DocAssigneeSelect
-                        isLoading={
-                          sendingMap.get(currentDoc.id) === 'assignees'
-                        }
-                        disabled={
-                          sendingMap.get(currentDoc.id) === 'assignees' ||
-                          !currentUserIsCoreMember
-                        }
-                        defaultValue={
-                          currentDoc.props.assignees == null
-                            ? []
-                            : Array.isArray(currentDoc.props.assignees.data)
-                            ? currentDoc.props.assignees.data.map(
-                                (assignee) => assignee.userId
-                              )
-                            : [currentDoc.props.assignees.data.userId]
-                        }
-                        readOnly={!currentUserIsCoreMember}
-                        update={sendUpdateDocAssignees}
-                      />
-                    </span>
-                  </div>
-                </div>
-
-                <div className='context__row'>
-                  <label className='context__label'>
-                    <Icon
-                      path={mdiListStatus}
-                      size={20}
-                      className='context__icon'
-                    />{' '}
-                    {translate(lngKeys.GeneralStatus)}
-                  </label>
-                  <div className='context__content'>
-                    <DocStatusSelect
-                      status={
-                        currentDoc.props.status != null
-                          ? currentDoc.props.status.data
-                          : undefined
-                      }
-                      sending={sendingMap.get(currentDoc.id) === 'status'}
-                      onStatusChange={() => {}}
-                      disabled={true}
-                      isReadOnly={true}
-                    />
-                  </div>
-                </div>
-
-                <div className='context__row'>
-                  <label className='context__label'>
-                    <Icon
-                      path={mdiClockOutline}
-                      size={20}
-                      className='context__icon'
-                    />{' '}
-                    {translate(lngKeys.DueDate)}
-                  </label>
-                  <div className='context__content'>
-                    <DocDueDateSelect
-                      className='context__content__date_select'
-                      sending={sendingMap.get(currentDoc.id) === 'duedate'}
-                      dueDate={
-                        currentDoc.props.dueDate != null
-                          ? currentDoc.props.dueDate.data
-                          : undefined
-                      }
-                      onDueDateChange={sendUpdateDocDueDate}
-                      disabled={!currentUserIsCoreMember}
-                      isReadOnly={!currentUserIsCoreMember}
-                    />
-                  </div>
-                </div>
-
-                <div className='context__row'>
-                  <label className='context__label' style={{ height: 32 }}>
-                    <Icon
-                      path={mdiLabelMultipleOutline}
-                      size={20}
-                      className='context__icon'
-                    />{' '}
-                    {translate(lngKeys.GeneralLabels)}
-                  </label>
-                  <div className='context__content'>
-                    <DocTagsList
-                      team={team}
-                      doc={currentDoc}
-                      readOnly={!currentUserIsCoreMember}
-                    />
-                  </div>
-                </div>
-
-                <div className='context__break' />
-
                 <div className='context__row'>
                   <label className='context__label'>
                     <Icon
@@ -383,46 +227,6 @@ DocInfoModalProps) => {
                   </div>
                 </div>
 
-                {/* <Flexbox
-                  className='context__row'
-                  justifyContent='space-between'
-                >
-                  <label className='context__label'>
-                    <Icon
-                      path={mdiHistory}
-                      size={20}
-                      className='context__icon'
-                    />{' '}
-                    {translate(lngKeys.History)}
-                  </label>
-                  <Flexbox
-                    className='context__content'
-                    justifyContent='flex-end'
-                  >
-                    {subscription == null ? (
-                      <UpgradeIntroModalButton
-                        className='context__badge'
-                        origin='revision'
-                        variant='secondary'
-                        popupVariant='version-history'
-                        query={{ teamId: team.id, docId: currentDoc.id }}
-                      />
-                    ) : (
-                      <Button
-                        variant='primary'
-                        onClick={revisionNavigateCallback}
-                        size='sm'
-                      >
-                        {subscription != null &&
-                        subscription.plan === 'standard'
-                          ? translate(lngKeys.SeeLimitedHistory, {
-                              days: revisionHistoryStandardDays,
-                            })
-                          : translate(lngKeys.SeeFullHistory)}
-                      </Button>
-                    )}
-                  </Flexbox>
-                </Flexbox> */}
                 <div className='context__break' />
                 {currentUserPermissions != null && (
                   <>
