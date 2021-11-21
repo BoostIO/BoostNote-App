@@ -48,6 +48,8 @@ const ContentManager = ({
   page,
   workspacesMap,
   currentUserIsCoreMember,
+  currentWorkspaceId,
+  currentFolderId,
 }: ContentManagerProps) => {
   const { preferences, setPreferences } = usePreferences()
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
@@ -174,6 +176,7 @@ const ContentManager = ({
     saveFolderTransferData,
     saveDocTransferData,
     clearDragTransferData,
+    dropOutsideFileToFolder,
   } = useCloudDnd()
 
   const onDragStartFolder = useCallback(
@@ -200,14 +203,38 @@ const ContentManager = ({
     [saveDocTransferData]
   )
 
+  const onDropExternalDocument = useCallback(
+    async (event: any) => {
+      if (currentWorkspaceId == null) {
+        return
+      }
+      if (event.dataTransfer.files.length > 0) {
+        return dropOutsideFileToFolder(
+          event,
+          currentWorkspaceId,
+          currentFolderId == null ? currentWorkspaceId : currentFolderId
+        )
+      }
+    },
+    [currentFolderId, currentWorkspaceId, dropOutsideFileToFolder]
+  )
+
   const onDropDoc = useCallback(
-    (event: any, doc: SerializedDocWithSupplemental) =>
-      dropInDocOrFolder(
+    (event: any, doc: SerializedDocWithSupplemental) => {
+      if (event.dataTransfer.files.length > 0) {
+        return dropOutsideFileToFolder(
+          event,
+          doc.workspaceId,
+          doc.parentFolderId == null ? doc.workspaceId : doc.parentFolderId
+        )
+      }
+      return dropInDocOrFolder(
         event,
         { type: 'doc', resource: docToDataTransferItem(doc) },
         DraggedTo.beforeItem
-      ),
-    [dropInDocOrFolder]
+      )
+    },
+    [dropInDocOrFolder, dropOutsideFileToFolder]
   )
 
   const onDragEnd = useCallback(
@@ -228,6 +255,7 @@ const ContentManager = ({
         </StyledContentManagerHeader>
         <StyledContentManagerList>
           <ContentManagerRow
+            onDrop={onDropExternalDocument}
             label={translate(lngKeys.GeneralDocuments)}
             checked={selectingAllDocs}
             onSelect={selectingAllDocs ? resetDocs : selectAllDocs}

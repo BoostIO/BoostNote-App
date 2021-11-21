@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { ipcRenderer, remote } = require('electron')
 const { parse } = require('url')
+const fs = require('fs')
 
 function sendToHost(channel, ...args) {
   ipcRenderer.sendToHost(channel, ...args)
@@ -104,10 +105,23 @@ function removeFoundInPageListener(callback) {
   }
 }
 
+function readFile(pathname) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(pathname, (error, result) => {
+      if (error != null) {
+        reject(error)
+        return
+      }
+      resolve(result)
+    })
+  })
+}
+
 window.__ELECTRON_ONLY__ = {}
 window.__ELECTRON_ONLY__.sendToHost = sendToHost
 window.__ELECTRON_ONLY__.convertHtmlStringToPdfBlob = convertHtmlStringToPdfBlob
 
+window.__ELECTRON_ONLY__.readFile = readFile
 window.__ELECTRON_ONLY__.addHostListener = addHostListener
 window.__ELECTRON_ONLY__.removeHostListener = removeHostListener
 window.__ELECTRON_ONLY__.removeAllHostListeners = removeAllHostListeners

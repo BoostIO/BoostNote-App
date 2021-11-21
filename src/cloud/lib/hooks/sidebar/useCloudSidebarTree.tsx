@@ -100,6 +100,7 @@ export function useCloudSidebarTree() {
     saveFolderTransferData,
     saveDocTransferData,
     clearDragTransferData,
+    dropOutsideFileToFolder,
   } = useCloudDnd()
 
   const {
@@ -299,12 +300,21 @@ export function useCloudSidebarTree() {
 
       const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
         ? {
-            onDrop: (event: any, position: SidebarDragState) =>
-              dropInDocOrFolder(
+            onDrop: (event: any, position: SidebarDragState) => {
+              if (event.dataTransfer.files.length > 0) {
+                return dropOutsideFileToFolder(
+                  event,
+                  folder.workspaceId,
+                  folder.id
+                )
+              }
+              return dropInDocOrFolder(
                 event,
                 { type: 'folder', resource: folderToDataTransferItem(folder) },
                 position
-              ),
+              )
+            },
+
             onDragStart: (event: any) => {
               saveFolderTransferData(event, folder)
             },

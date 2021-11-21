@@ -23,6 +23,9 @@ import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SidebarDragState } from '../../../../design/lib/dnd'
 import { useToast } from '../../../../design/lib/stores/toast'
 import { getMapFromEntityArray } from '../../../../design/lib/utils/array'
+import { readFile } from '../../../../lib/electronOnly'
+import { useElectron } from '../../stores/electron'
+import { useCloudApi } from '../useCloudApi'
 
 export function useCloudDnd() {
   const {
@@ -31,8 +34,45 @@ export function useCloudDnd() {
     updateWorkspacesMap,
     setCurrentPath,
   } = useNav()
-  const { pageDoc, pageFolder } = usePage()
+  const { pageDoc, pageFolder, team } = usePage()
   const { pushApiErrorMessage, pushMessage } = useToast()
+  const { usingElectron } = useElectron()
+  const { createDoc } = useCloudApi()
+
+  async function dropOutsideFileToFolder(
+    event: any,
+    workspaceId: string,
+    folderId: string
+  ) {
+    if (team == null) {
+      return
+    }
+    if (!usingElectron) {
+      return
+    }
+    if (event.dataTransfer.files.length == 0) {
+      return
+    }
+    for (const file of event.dataTransfer.files) {
+      const fileBuffer = await readFile(file.path)
+      if (['text/plain', 'text/markdown', 'text/html'].includes(file.type)) {
+        const fileContent = fileBuffer.toString()
+        await createDoc(team, {
+          workspaceId: workspaceId,
+          parentFolderId: folderId,
+          title: 'Untitled',
+          content: fileContent,
+        })
+      } else {
+        pushMessage({
+          title: 'Oops',
+          description:
+            'The dropeed file is not supported. Please select only TXT, MD and HTML files.',
+        })
+        return
+      }
+    }
+  }
 
   const dropInWorkspace = useCallback(
     async (
@@ -184,5 +224,6 @@ export function useCloudDnd() {
     saveFolderTransferData,
     saveDocTransferData,
     clearDragTransferData,
+    dropOutsideFileToFolder,
   }
 }
