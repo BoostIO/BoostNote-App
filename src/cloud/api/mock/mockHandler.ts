@@ -25,7 +25,7 @@ import {
   DocPageResourceProps,
   FolderPageResourceProps,
   ResourceShowPageResponseBody,
-  TeamShowPageResponseBody,
+  TeamIndexPageResponseBody,
 } from '../pages/teams'
 import { getResourceFromSlug } from './db/utils'
 import {
@@ -87,7 +87,7 @@ const routes: MockRoute[] = [
   },
   {
     pathname: 'api/pages/teams/show',
-    handler: ({ search }): TeamShowPageResponseBody => {
+    handler: ({ search }): TeamIndexPageResponseBody => {
       const { teamId: domain } = search
       if (typeof domain !== 'string') {
         throw new Error(`Invalid domain (Domain: ${domain})`)
