@@ -128,6 +128,7 @@ export function useCloudApi() {
     removeFromTagsMap,
     updateViewsMap,
     removeFromViewsMap,
+    updateParentWorkspaceOfDoc,
   } = useNav()
   const { push } = useRouter()
 
@@ -180,6 +181,8 @@ export function useCloudApi() {
           updateDocsMap([res.doc.id, res.doc])
           if (res.doc.parentFolder != null) {
             updateParentFolderOfDoc(res.doc)
+          } else if (res.doc.workspace != null) {
+            updateParentWorkspaceOfDoc(res.doc)
           }
           if (!options?.skipRedirect) {
             push(
@@ -195,7 +198,13 @@ export function useCloudApi() {
         },
       })
     },
-    [push, send, updateDocsMap, updateParentFolderOfDoc]
+    [
+      push,
+      send,
+      updateDocsMap,
+      updateParentFolderOfDoc,
+      updateParentWorkspaceOfDoc,
+    ]
   )
 
   const createFolderApi = useCallback(

@@ -503,7 +503,7 @@ const TableViewContentManager = ({
                           parentFolderId: currentFolderId,
                           workspaceId: currentWorkspaceId,
                         },
-                        { skipRedirect: true }
+                        { skipRedirect: true, precedingRows: [] }
                       )
                     }
                     variant='transparent'
