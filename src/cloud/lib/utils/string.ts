@@ -51,6 +51,15 @@ export function getColorFromString(key: string) {
   return colour
 }
 
+export function getTextColorFromBgColorHex(bgColor: string) {
+  const hex = bgColor.substr(1)
+  const r = parseInt(hex.substr(0, 2), 16)
+  const g = parseInt(hex.substr(2, 2), 16)
+  const b = parseInt(hex.substr(4, 2), 16)
+  const yiq = (r * 299 + g * 587 + b * 114) / 1000
+  return yiq >= 128 ? '#000' : '#fff'
+}
+
 export function isValidUUID(val: string) {
   let uuid = val
   if (val.length === 32) {
