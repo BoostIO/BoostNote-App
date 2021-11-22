@@ -193,6 +193,7 @@ const DocPageHeader = ({
                       openContextModal(
                         event,
                         <PropSelectorModal
+                          doc={doc}
                           disallowedNames={existingPropNames}
                           addProp={(propName, propData) => {
                             updateProp(propName, propData)

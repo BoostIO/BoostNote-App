@@ -8,6 +8,7 @@ import { callApi } from '../../../lib/client'
 export type ListPropertySuggestionsRequestBody = {
   team: string
   workspace?: string
+  doc?: string
   folder?: string
   propertyType?: string
   jsonPropertyType?: string
