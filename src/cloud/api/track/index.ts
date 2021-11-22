@@ -6,6 +6,7 @@ export async function trackEvent(
   eventName: MixpanelFrontEvent,
   data?: Record<string, any>
 ) {
+  console.log(eventName, data)
   if (mockBackend) {
     return
   }
