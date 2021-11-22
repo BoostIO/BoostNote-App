@@ -5,11 +5,7 @@ import { usePrevious } from '../../../../lib/hooks'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
-import {
-  PropData,
-  Props,
-  SerializedPropData,
-} from '../../../interfaces/db/props'
+import { Props, SerializedPropData } from '../../../interfaces/db/props'
 import {
   getDomainOrInitialDataPropToPropData,
   getPropsOfItem,

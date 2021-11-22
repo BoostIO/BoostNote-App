@@ -341,6 +341,21 @@ function useNavStore(): NavContext {
     []
   )
 
+  const updateParentWorkspaceOfDoc = useCallback(
+    (doc: SerializedDocWithSupplemental) =>
+      setWorkspacesMap((prevMap) => {
+        const parentWorkspace = doc.workspace!
+        const existingParentWorkspace = prevMap.get(parentWorkspace.id)
+        const newWorkspace: SerializedWorkspace = {
+          ...existingParentWorkspace,
+          ...parentWorkspace,
+        }
+
+        return new Map([...prevMap, [doc.workspaceId, newWorkspace]])
+      }),
+    []
+  )
+
   const updateParentFolderOfDoc = useCallback(
     (doc: SerializedDocWithSupplemental) =>
       setFoldersMap((prevMap) => {
@@ -930,6 +945,7 @@ function useNavStore(): NavContext {
     viewsMap,
     updateViewsMap,
     removeFromViewsMap,
+    updateParentWorkspaceOfDoc,
   }
 }
 

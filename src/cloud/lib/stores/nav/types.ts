@@ -91,4 +91,5 @@ export interface NavContext {
     targetedPosition: SidebarDragState
   ) => void
   eventSourceResourceUpdateHandler: (event: SerializedAppEvent) => void
+  updateParentWorkspaceOfDoc: (doc: SerializedDocWithSupplemental) => void
 }
