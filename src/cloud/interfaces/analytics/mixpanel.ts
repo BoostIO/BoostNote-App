@@ -113,10 +113,8 @@ export enum MixpanelActionTrackTypes {
   DocPropUpdateValue = 'doc.props.update.value',
   DocPropDelete = 'doc.prop.delete',
   TableColAdd = 'table.cols.add',
-  TableColUpdateName = 'table.cols.update.name',
-  TableColUpdateType = 'table.cols.update.type',
-  TableColUpdateOrder = 'table.cols.update.order',
   TableColDelete = 'table.cols.delete',
+  TableColUpdateOrder = 'table.cols.update.order',
 }
 
 export type MixpanelFrontEvent =
@@ -159,10 +157,8 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.DocPropUpdateValue
   | MixpanelActionTrackTypes.DocPropDelete
   | MixpanelActionTrackTypes.TableColAdd
-  | MixpanelActionTrackTypes.TableColUpdateName
-  | MixpanelActionTrackTypes.TableColUpdateType
-  | MixpanelActionTrackTypes.TableColUpdateOrder
   | MixpanelActionTrackTypes.TableColDelete
+  | MixpanelActionTrackTypes.TableColUpdateOrder
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 
