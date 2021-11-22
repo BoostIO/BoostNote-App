@@ -416,7 +416,9 @@ const TableAddPropertyContext = ({
 
         {showCreationForm && (
           <>
-            <MetadataContainerRow row={{ type: 'header', content: 'Static' }} />
+            <MetadataContainerRow
+              row={{ type: 'header', content: 'Static Type' }}
+            />
             <MetadataContainerRow
               row={{
                 type: 'button',
