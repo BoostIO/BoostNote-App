@@ -17,6 +17,7 @@ import Button from '../../../design/components/atoms/Button'
 import { sendToHost, useElectron } from '../../lib/stores/electron'
 import { useEffectOnce } from 'react-use'
 import { FormRowProps } from '../../../design/components/molecules/Form/templates/FormRow'
+import AnnouncementAlert from '../../components/AnnouncementAlert'
 
 interface HomePageTeamSelectForm {
   user: SerializedUser
@@ -70,6 +71,7 @@ const HomeForm = ({ user, teams = [] }: HomePageTeamSelectForm) => {
 
   return (
     <Container>
+      <AnnouncementAlert />
       <Form
         fullWidth={true}
         rows={[
