@@ -8,10 +8,13 @@ import {
   ColumnMoveType,
   getColumnOrderAfterMove,
   isDefaultView,
+  isPropCol,
   ViewTableData,
   ViewTableSortingOptions,
 } from '../../views/table'
 import { CreateViewResponseBody } from '../../../api/teams/views'
+import { trackEvent } from '../../../api/track'
+import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 
 interface TableViewStoreProps {
   state: ViewTableData
@@ -87,6 +90,10 @@ export function useTableView({
       const newState = Object.assign(state, {
         columns: Object.assign(columnState, { [col.id]: col }),
       })
+      trackEvent(MixpanelActionTrackTypes.TableColAdd, {
+        colName: col.name,
+        colType: isPropCol(col) ? col.type : col.prop,
+      })
       return saveView(view, newState)
     },
     [state, saveView, view]
@@ -99,6 +106,10 @@ export function useTableView({
       delete newColumns[col.id]
       const newState = Object.assign(state, {
         columns: newColumns,
+      })
+      trackEvent(MixpanelActionTrackTypes.TableColDelete, {
+        colName: col.name,
+        colType: isPropCol(col) ? col.type : col.prop,
       })
       return saveView(view, newState)
     },
@@ -121,6 +132,10 @@ export function useTableView({
         return
       }
 
+      trackEvent(MixpanelActionTrackTypes.TableColUpdateOrder, {
+        colName: column.name,
+        colType: isPropCol(column) ? column.type : column.prop,
+      })
       return saveView(view, newState)
     },
     [state, saveView, view]
