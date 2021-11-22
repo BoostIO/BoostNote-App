@@ -9,7 +9,10 @@ import MetadataContainerRow from '../../../../design/components/organisms/Metada
 import { focusFirstChildFromElement } from '../../../../design/lib/dom'
 import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import styled from '../../../../design/lib/styled'
-import { ListPropertySuggestionsResponseBody } from '../../../api/teams/props'
+import {
+  ListPropertySuggestionsRequestBody,
+  ListPropertySuggestionsResponseBody,
+} from '../../../api/teams/props'
 import {
   PropSubType,
   PropType,
@@ -79,11 +82,15 @@ const TableAddPropertyContext = ({
   }, [showCreationForm])
 
   const fetchSuggestions = useCallback(async () => {
-    const res = await fetchPropertySuggestionsApi({
-      team: teamId,
-      folder: view.folderId,
-      workspace: view.workspaceId,
-    })
+    const body: ListPropertySuggestionsRequestBody = { team: teamId }
+    if (view.folderId != null) {
+      body.folder = view.folderId
+    }
+
+    if (view.workspaceId != null) {
+      body.workspace = view.workspaceId
+    }
+    const res = await fetchPropertySuggestionsApi(body)
     if (!res.err) {
       setSuggestions((res.data as ListPropertySuggestionsResponseBody).data)
     } else {
@@ -193,23 +200,33 @@ const TableAddPropertyContext = ({
     let staticSuggestions = getDefaultStaticSuggestionsPerType()
     let propSuggestions = getDefaultColumnSuggestionsPerType()
 
+    const allowedSuggestionsNames = allowedSuggestions.map(
+      (suggestion) => suggestion.name
+    )
+
     if (columnName.trim() !== '') {
       staticSuggestions = staticSuggestions.filter((suggestion) => {
-        return suggestion.name
-          .toLocaleLowerCase()
-          .startsWith(columnName.toLocaleLowerCase())
+        return (
+          suggestion.name
+            .toLocaleLowerCase()
+            .startsWith(columnName.toLocaleLowerCase()) &&
+          !allowedSuggestionsNames.includes(suggestion.name)
+        )
       })
       propSuggestions = propSuggestions.filter((suggestion) => {
-        return suggestion.name
-          .toLocaleLowerCase()
-          .startsWith(columnName.toLocaleLowerCase())
+        return (
+          suggestion.name
+            .toLocaleLowerCase()
+            .startsWith(columnName.toLocaleLowerCase()) &&
+          !allowedSuggestionsNames.includes(suggestion.name)
+        )
       })
     }
     return {
       static: staticSuggestions,
       prop: propSuggestions,
     }
-  }, [columnName])
+  }, [columnName, allowedSuggestions])
 
   useUpDownNavigationListener(menuRef, { overrideInput: true })
 
@@ -440,7 +457,7 @@ const TableAddPropertyContext = ({
               }}
             />
             <MetadataContainerRow
-              row={{ type: 'header', content: 'Custom Props' }}
+              row={{ type: 'header', content: 'Property Type' }}
             />
             <MetadataContainerRow
               row={{
