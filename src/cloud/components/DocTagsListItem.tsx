@@ -6,6 +6,10 @@ import TagLink from './Link/TagLink'
 import { SerializedTag } from '../interfaces/db/tag'
 import styled from '../../design/lib/styled'
 import { LoadingButton } from '../../design/components/atoms/Button'
+import {
+  getColorFromString,
+  getTextColorFromBgColorHex,
+} from '../lib/utils/string'
 
 interface DocTagsListItemProps {
   tag: SerializedTag
@@ -26,10 +30,19 @@ const DocTagsListItem = ({
   onDeleteHandler,
   removing,
 }: DocTagsListItemProps) => {
+  const bgColor = getColorFromString(tag.id)
+  const textColor = getTextColorFromBgColorHex(bgColor)
   return (
     <Container
       key={tag.id}
-      className={cc(['doc__tags__list__item', className])}
+      className={cc([
+        'doc__tags__list__item',
+        textColor === '#000'
+          ? 'doc__tags__list__item--black'
+          : 'doc__tags__list__item--white',
+        className,
+      ])}
+      style={{ backgroundColor: getColorFromString(tag.id) }}
     >
       {showLink ? (
         <TagLink
@@ -72,13 +85,12 @@ const Container = styled.div`
   padding: 0.25em 0.5em;
   position: relative;
   margin: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
-  color: ${({ theme }) => theme.colors.text.primary};
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   background: ${({ theme }) => theme.colors.background.secondary};
   border-radius: 3px;
   vertical-align: middle;
   align-items: flex-start;
-  height: 22px;
+  min-height: 22px;
   flex: 0 1 auto;
   width: fit-content;
 
@@ -88,18 +100,8 @@ const Container = styled.div`
     cursor: pointer;
     margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
     color: ${({ theme }) => theme.colors.text.subtle};
-    &:hover,
-    &:focus {
-      color: ${({ theme }) => theme.colors.text.primary};
-    }
-
     &:disabled {
       pointer-events: none;
-    }
-
-    .button__spinner {
-      border-color: ${({ theme }) => theme.colors.variants.primary.text};
-      border-right-color: transparent;
     }
   }
 
@@ -110,7 +112,6 @@ const Container = styled.div`
     white-space: nowrap;
     text-overflow: ellipsis;
     cursor: pointer;
-    color: ${({ theme }) => theme.colors.text.primary};
     text-decoration: none;
     &:not(.doc__tags__list__item__link--text):hover,
     &:not(.doc__tags__list__item__link--text):focus {
@@ -121,6 +122,51 @@ const Container = styled.div`
   .tag-spinner {
     margin-top: -3px;
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+  }
+
+  &.doc__tags__list__item--black {
+    color: #000;
+
+    .doc__tags__list__item__remove {
+      color: #000;
+      opacity: 0.8;
+
+      &:hover,
+      &:focus {
+        opacity: 1;
+      }
+
+      .button__spinner {
+        border-color: #000;
+        border-right-color: transparent;
+      }
+    }
+
+    .doc__tags__list__item__link {
+      color: #000;
+    }
+  }
+  &.doc__tags__list__item--white {
+    color: #fff;
+
+    .doc__tags__list__item__remove {
+      color: #fff;
+      opacity: 0.8;
+
+      &:hover,
+      &:focus {
+        opacity: 1;
+      }
+
+      .button__spinner {
+        border-color: #fff;
+        border-right-color: transparent;
+      }
+    }
+
+    .doc__tags__list__item__link {
+      color: #fff;
+    }
   }
 `
 
