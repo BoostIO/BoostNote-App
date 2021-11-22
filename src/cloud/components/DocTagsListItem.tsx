@@ -86,7 +86,6 @@ const Container = styled.div`
   position: relative;
   margin: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
-  background: ${({ theme }) => theme.colors.background.secondary};
   border-radius: 3px;
   vertical-align: middle;
   align-items: flex-start;
@@ -99,7 +98,6 @@ const Container = styled.div`
     display: inline-block;
     cursor: pointer;
     margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
-    color: ${({ theme }) => theme.colors.text.subtle};
     &:disabled {
       pointer-events: none;
     }
@@ -128,7 +126,7 @@ const Container = styled.div`
     color: #000;
 
     .doc__tags__list__item__remove {
-      color: #000;
+      color: #000 !important;
       opacity: 0.8;
 
       &:hover,
@@ -146,11 +144,12 @@ const Container = styled.div`
       color: #000;
     }
   }
+
   &.doc__tags__list__item--white {
     color: #fff;
 
     .doc__tags__list__item__remove {
-      color: #fff;
+      color: #fff !important;
       opacity: 0.8;
 
       &:hover,
