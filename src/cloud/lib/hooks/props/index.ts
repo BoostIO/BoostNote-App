@@ -1,8 +1,15 @@
 import { isEqual, isObject } from 'lodash'
+import { equals } from 'ramda'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { usePrevious } from '../../../../lib/hooks'
+import { trackEvent } from '../../../api/track'
+import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
-import { Props, SerializedPropData } from '../../../interfaces/db/props'
+import {
+  PropData,
+  Props,
+  SerializedPropData,
+} from '../../../interfaces/db/props'
 import {
   getDomainOrInitialDataPropToPropData,
   getPropsOfItem,
@@ -53,6 +60,11 @@ export function useProps(
         if (newProps[propName] == null) {
           newProps[propName] = data
 
+          trackEvent(MixpanelActionTrackTypes.DocPropAdd, {
+            propName,
+            propType: newProps[propName].type,
+          })
+
           if (parent.type === 'doc') {
             updateDocPropsApi(parent.target, [
               propName,
@@ -77,10 +89,32 @@ export function useProps(
             ...getDomainOrInitialDataPropToPropData(data),
             createdAt: newProps[propName].createdAt,
           }
+          const prevData = newProps[propName]
           delete newProps[propName]
           newProps[newName] = {
             ...data,
             createdAt: bodyData.createdAt,
+          }
+
+          if (propName !== newName) {
+            trackEvent(MixpanelActionTrackTypes.DocPropUpdateName, {
+              propName: newName,
+              propType: prevData.type,
+            })
+          }
+
+          if (data.type !== prevData.type) {
+            trackEvent(MixpanelActionTrackTypes.DocPropUpdateType, {
+              propName: newName,
+              propType: data.type,
+            })
+          }
+
+          if (!equals(prevData.data, data.data)) {
+            trackEvent(MixpanelActionTrackTypes.DocPropUpdateValue, {
+              propName: newName,
+              propType: data.type,
+            })
           }
 
           if (parent.type === 'doc') {
@@ -104,6 +138,12 @@ export function useProps(
     async (propName: string) => {
       setProps((prev) => {
         const newProps = Object.assign({}, prev)
+        if (newProps[propName] != null) {
+          trackEvent(MixpanelActionTrackTypes.DocPropDelete, {
+            propName,
+            propType: newProps[propName].type,
+          })
+        }
         delete newProps[propName]
         return newProps
       })
