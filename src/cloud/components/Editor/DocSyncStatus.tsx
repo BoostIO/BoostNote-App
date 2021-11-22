@@ -13,24 +13,26 @@ interface DocSyncStatusProps {
 const DocSyncStatus = ({ connState, syncDate }: DocSyncStatusProps) => {
   return (
     <SyncStatus>
-      {connState == 'synced' && (
+      {connState === 'synced' && (
         <>
           <Icon className={'sync--status--success-color'} path={mdiCheck} />
           <span>Saved: {getDocStatusDateString(syncDate)}</span>
         </>
       )}
-      {(connState == 'disconnected' || connState == 'reconnecting') && (
+      {(connState === 'disconnected' || connState === 'reconnecting') && (
         <>
           <Icon
             className={'sync--status--offline-color'}
             path={mdiCloudOffOutline}
           />
-          <span className={'sync--status--sync-text'}>Offline</span>
+          <span className={'sync--status--sync-text'}>
+            {connState === 'disconnected' ? 'Offline' : 'Reconnecting...'}
+          </span>
         </>
       )}
-      {(connState == 'initialising' ||
-        connState == 'loaded' ||
-        connState == 'connected') && (
+      {(connState === 'initialising' ||
+        connState === 'loaded' ||
+        connState === 'connected') && (
         <>
           <Icon
             className={'sync--status--success-color'}
