@@ -162,7 +162,6 @@ const PropsAddForm = ({
             }}
           />
         )}
-        <MetadataContainerRow row={{ type: 'header', content: 'Name' }} />
         <MetadataContainerRow
           row={{
             type: 'content',
