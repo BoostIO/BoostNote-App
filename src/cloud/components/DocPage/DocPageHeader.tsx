@@ -153,7 +153,6 @@ const DocPageHeader = ({
                         ? prop[1].data.data.dataType
                         : prop[1].data.type
                     )
-
                     return (
                       <div
                         className='doc__page__header__property'
@@ -165,11 +164,7 @@ const DocPageHeader = ({
                           size='sm'
                           iconPath={iconPath}
                           onClick={(event) => {
-                            if (typeof prop[1].data['origin'] !== 'undefined') {
-                              return
-                            }
-
-                            return openContextModal(
+                            openContextModal(
                               event,
                               <PropConfig
                                 disallowedNames={existingPropNames.filter(
