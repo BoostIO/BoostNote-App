@@ -88,14 +88,16 @@ const Container = styled.div`
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   border-radius: 3px;
   vertical-align: middle;
-  align-items: flex-start;
   min-height: 22px;
   flex: 0 1 auto;
   width: fit-content;
+  align-items: center;
 
   .doc__tags__list__item__remove {
     height: 100%;
-    display: inline-block;
+    align-items: center;
+    display: inline-flex;
+    height: min-content !important;
     cursor: pointer;
     margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
     &:disabled {
