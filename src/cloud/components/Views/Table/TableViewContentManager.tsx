@@ -448,11 +448,17 @@ const TableViewContentManager = ({
                 variant='transparent'
                 iconPath={mdiPlus}
                 onClick={() =>
-                  openNewDocForm({
-                    team,
-                    parentFolderId: currentFolderId,
-                    workspaceId: currentWorkspaceId,
-                  })
+                  openNewDocForm(
+                    {
+                      team,
+                      parentFolderId: currentFolderId,
+                      workspaceId: currentWorkspaceId,
+                    },
+                    {
+                      skipRedirect: true,
+                      precedingRows: [],
+                    }
+                  )
                 }
               >
                 {translate(lngKeys.ModalsCreateNewDocument)}
@@ -491,11 +497,14 @@ const TableViewContentManager = ({
                   <Button
                     className='content__manager--no-padding'
                     onClick={() =>
-                      openNewFolderForm({
-                        team,
-                        parentFolderId: currentFolderId,
-                        workspaceId: currentWorkspaceId,
-                      })
+                      openNewFolderForm(
+                        {
+                          team,
+                          parentFolderId: currentFolderId,
+                          workspaceId: currentWorkspaceId,
+                        },
+                        { skipRedirect: true }
+                      )
                     }
                     variant='transparent'
                     iconPath={mdiPlus}
