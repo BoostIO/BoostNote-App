@@ -10,6 +10,8 @@ import TimePeriodPicker from './Pickers/TimePeriodPicker'
 import { mdiAlertOutline } from '@mdi/js'
 import PropertyValueButton from './Pickers/PropertyValueButton'
 import WithTooltip from '../../../design/components/atoms/WithTooltip'
+import { trackEvent } from '../../api/track'
+import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
@@ -35,6 +37,12 @@ const PropPicker = ({
   const updateProp = useCallback(
     async (newData: PropData | null) => {
       const res = await updateDocPropsApi(parent.target, [propName, newData])
+      if (newData != null) {
+        trackEvent(MixpanelActionTrackTypes.DocPropUpdateValue, {
+          propName,
+          propType: newData.type,
+        })
+      }
 
       if (!res.err && onUpdate != null) {
         const props = res.data as {
