@@ -67,7 +67,7 @@ const AnnouncementAlert = () => {
           </span>
           <p className='alert__text'>
             Please update the desktop app. This version is outdated (current
-            version: {currentDesktopAppVersion}, required version: &gt;=0.20.0).
+            version: {currentDesktopAppVersion}, required version: &gt;=0.23.0).
           </p>
           <button
             className='alert__btn--close'
@@ -346,7 +346,7 @@ const Container = styled.div`
   left: 52px;
   bottom: ${({ theme }) => theme.sizes.spaces.xl}px;
   width: fit-content;
-  z-index: 100;
+  z-index: 100000;
 
   .alert__link {
     font-weight: bold;

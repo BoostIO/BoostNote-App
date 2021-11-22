@@ -34,6 +34,7 @@ import {
   BoostHubLoginEvent,
   boostHubLoginEventEmitter,
 } from '../../../lib/events'
+import AnnouncementAlert from '../../components/AnnouncementAlert'
 
 const HomePageSignInForm = () => {
   const { sendToElectron, usingElectron } = useElectron()
@@ -186,6 +187,7 @@ const HomePageSignInForm = () => {
 
   return (
     <Container>
+      <AnnouncementAlert />
       <div className='intro'>
         <Image src={'/app/static/images/logo.png'} className={'intro__logo'} />
         <h1 className='intro__heading'>Welcome to Boost Note!</h1>
