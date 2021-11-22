@@ -46,11 +46,14 @@ const SmartViewPage = ({
     teamRef.current = propsTeam.id
     if (data.length > 0) {
       setSelectedSmartViewId(data[0].id)
-      trackEvent(MixpanelActionTrackTypes.DashboardOpen)
     } else {
       setSelectedSmartViewId(undefined)
     }
   }, [data, propsTeam])
+
+  useEffect(() => {
+    trackEvent(MixpanelActionTrackTypes.DashboardOpen)
+  }, [selectedSmartViewId])
 
   const selectedSmartView = useMemo(() => {
     if (selectedSmartViewId == null) {
