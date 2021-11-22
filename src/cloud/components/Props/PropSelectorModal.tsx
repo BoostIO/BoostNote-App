@@ -1,101 +1,85 @@
-import React, { useMemo, useRef, useState } from 'react'
-import { useEffectOnce } from 'react-use'
-import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
-import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
-import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import styled from '../../../design/lib/styled'
-import { SerializedPropData } from '../../interfaces/db/props'
+import React, { useCallback, useMemo, useState } from 'react'
+import { ListPropertySuggestionsResponseBody } from '../../api/teams/props'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import {
-  getIconPathOfPropType,
-  getInitialPropDataOfPropType,
-  getLabelOfPropType,
-  supportedPropTypes,
-} from '../../lib/props'
+  PropSubType,
+  PropType,
+  SerializedPropData,
+} from '../../interfaces/db/props'
+import { useCloudApi } from '../../lib/hooks/useCloudApi'
+import { getInitialPropDataOfPropType } from '../../lib/props'
+import PropsAddForm, { getPropsAddFormUniqueName } from './PropsAddForm'
 
 interface PropSelectorModalProps {
+  doc: SerializedDocWithSupplemental
   disallowedNames?: string[]
   addProp: (propName: string, propData: SerializedPropData) => void
 }
 
 const PropSelectorModal = ({
   disallowedNames = [],
+  doc,
   addProp,
 }: PropSelectorModalProps) => {
-  const inputRef = useRef<HTMLInputElement>(null)
   const [propName, setPropName] = useState('')
   const disallowedNamesSet = useMemo(() => new Set(disallowedNames), [
     disallowedNames,
   ])
+  const [sending, setSending] = useState<string>()
+  const { fetchPropertySuggestionsApi } = useCloudApi()
 
-  useEffectOnce(() => {
-    if (inputRef.current != null) {
-      inputRef.current.focus()
+  const fetchSuggestions = useCallback(async () => {
+    const res = await fetchPropertySuggestionsApi({
+      team: doc.teamId,
+      doc: doc.id,
+    })
+    if (!res.err) {
+      return (res.data as ListPropertySuggestionsResponseBody).data
+    } else {
+      return []
     }
-  })
+  }, [fetchPropertySuggestionsApi, doc.teamId, doc.id])
+
+  const addNewProp = useCallback(
+    (name: string, type: PropType, subType?: PropSubType) => {
+      if (sending != null) {
+        return
+      }
+
+      setSending(getPropsAddFormUniqueName(name, type, subType))
+      addProp(name, getInitialPropDataOfPropType(subType || type))
+    },
+    [addProp, sending]
+  )
+
+  const isColumnNameInvalid = useMemo(() => {
+    const lowercaseValue = propName.toLocaleLowerCase().trim()
+
+    if (lowercaseValue === '') {
+      return false
+    }
+
+    return disallowedNames.reduce((acc, value) => {
+      if (value.toLocaleLowerCase() === lowercaseValue) {
+        acc = true
+      }
+      return acc
+    }, false)
+  }, [disallowedNames, propName])
 
   return (
-    <StyledContainer>
-      <MetadataContainerRow row={{ type: 'header', content: 'NAME' }} />
-      <MetadataContainerRow
-        row={{
-          type: 'content',
-          content: (
-            <FormInput
-              value={propName}
-              onChange={(ev) => setPropName(ev.target.value)}
-              ref={inputRef}
-            />
-          ),
-        }}
-      />
-      {disallowedNamesSet.has(propName) && (
-        <MetadataContainerRow
-          row={{
-            type: 'content',
-            content: (
-              <p className='warning__text'>
-                A property names {propName} already exists on this Doc
-              </p>
-            ),
-          }}
-        />
-      )}
-      <MetadataContainerRow
-        row={{ type: 'header', content: 'PROPERTY TYPE' }}
-      />
-      {supportedPropTypes.map(({ type: propType, subType }) => (
-        <MetadataContainerRow
-          key={propType}
-          row={{
-            type: 'button',
-            props: {
-              id: `prop-modal-${propType}`,
-              label: getLabelOfPropType(subType || propType),
-              iconPath: getIconPathOfPropType(subType || propType),
-              disabled:
-                propName.trim() === '' || disallowedNamesSet.has(propName),
-              onClick: () => {
-                if (propName !== '' && !disallowedNamesSet.has(propName)) {
-                  addProp(
-                    propName,
-                    getInitialPropDataOfPropType(subType || propType)
-                  )
-                }
-              },
-            },
-          }}
-        />
-      ))}
-    </StyledContainer>
+    <PropsAddForm
+      allocatedNames={Array.from(disallowedNamesSet)}
+      columnName={propName}
+      setColumnName={setPropName}
+      showDocPageForm={true}
+      sending={sending}
+      fetchPropertySuggestions={fetchSuggestions}
+      addNewPropCol={addNewProp}
+      isColumnNameInvalid={isColumnNameInvalid}
+      addNewStaticCol={undefined}
+    />
   )
 }
-
-const StyledContainer = styled(MetadataContainer)`
-  & .warning__text {
-    color: ${({ theme }) => theme.colors.variants.warning.base};
-    line-height: 18px;
-    margin: 0;
-  }
-`
 
 export default PropSelectorModal
