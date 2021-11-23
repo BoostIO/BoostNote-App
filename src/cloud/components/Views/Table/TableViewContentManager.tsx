@@ -48,7 +48,6 @@ import Button from '../../../../design/components/atoms/Button'
 import TablePropertiesContext from './TablePropertiesContext'
 import TableViewContentManagerFolderRow from './TableViewContentManagerFolderRow'
 import TableViewContentManagerRow from './TableViewContentManagerRow'
-import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import TableContentManagerRow from './TableContentManagerRow'
 import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
 import { usePreferences } from '../../../lib/stores/preferences'
@@ -86,8 +85,7 @@ const TableViewContentManager = ({
 }: ContentManagerProps) => {
   const { translate } = useI18n()
   const { openContextModal, closeAllModals } = useModal()
-  const { openNewDocForm } = useCloudResourceModals()
-  const { createFolder } = useCloudApi()
+  const { createFolder, createDoc } = useCloudApi()
   const { push } = useRouter()
   const { preferences, setPreferences } = usePreferences()
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
@@ -264,7 +262,7 @@ const TableViewContentManager = ({
   const newFolderInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (newFolderInputRef.current != null) {
+    if (newFolderInputRef.current != null && newFolderRowState === 'editing') {
       newFolderInputRef.current.focus()
     }
   }, [newFolderRowState])
@@ -286,6 +284,36 @@ const TableViewContentManager = ({
     setNewFolderName('')
     setNewFolderRowState('idle')
   }, [currentWorkspaceId, currentFolderId, createFolder, team, newFolderName])
+
+  const [newDocRowState, setNewDocRowState] = useState<
+    'idle' | 'editing' | 'submitting'
+  >('idle')
+  const [newDocName, setNewDocName] = useState('')
+  const newDocCompositionStateRef = useRef(false)
+  const newDocInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (newDocInputRef.current != null && newDocRowState === 'editing') {
+      newDocInputRef.current.focus()
+    }
+  }, [newDocRowState])
+
+  const createNewDoc = useCallback(async () => {
+    setNewDocRowState('submitting')
+    if (currentWorkspaceId != null) {
+      await createDoc(
+        team,
+        {
+          title: newDocName,
+          workspaceId: currentWorkspaceId,
+          parentFolderId: currentFolderId,
+        },
+        { skipRedirect: true }
+      )
+    }
+    setNewDocName('')
+    setNewDocRowState('idle')
+  }, [currentWorkspaceId, createDoc, team, newDocName, currentFolderId])
 
   return (
     <Container>
@@ -478,26 +506,54 @@ const TableViewContentManager = ({
           {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
           {currentWorkspaceId != null && (
             <TableContentManagerRow>
-              <Button
-                className='content__manager--no-padding'
-                variant='transparent'
-                iconPath={mdiPlus}
-                onClick={() =>
-                  openNewDocForm(
-                    {
-                      team,
-                      parentFolderId: currentFolderId,
-                      workspaceId: currentWorkspaceId,
-                    },
-                    {
-                      skipRedirect: true,
-                      precedingRows: [],
+              {newDocRowState === 'idle' ? (
+                <Button
+                  className='content__manager--no-padding'
+                  variant='transparent'
+                  iconPath={mdiPlus}
+                  onClick={() => setNewDocRowState('editing')}
+                >
+                  {translate(lngKeys.ModalsCreateNewDocument)}
+                </Button>
+              ) : newDocRowState === 'editing' ? (
+                <FormInput
+                  ref={newDocInputRef}
+                  value={newDocName}
+                  onChange={(event) => {
+                    setNewDocName(event.target.value)
+                  }}
+                  onCompositionStart={() => {
+                    newDocCompositionStateRef.current = true
+                  }}
+                  onCompositionEnd={() => {
+                    newDocCompositionStateRef.current = false
+                    if (newDocInputRef.current != null) {
+                      newDocInputRef.current.focus()
                     }
-                  )
-                }
-              >
-                {translate(lngKeys.ModalsCreateNewDocument)}
-              </Button>
+                  }}
+                  onKeyPress={(event) => {
+                    if (newDocCompositionStateRef.current) {
+                      return
+                    }
+                    switch (event.key) {
+                      case 'Escape':
+                        event.preventDefault()
+                        setNewDocRowState('idle')
+                        setNewDocName('')
+                        return
+                      case 'Enter':
+                        event.preventDefault()
+                        createNewDoc()
+                        return
+                    }
+                  }}
+                  onBlur={() => {
+                    createNewDoc()
+                  }}
+                />
+              ) : (
+                <Spinner />
+              )}
             </TableContentManagerRow>
           )}
 
