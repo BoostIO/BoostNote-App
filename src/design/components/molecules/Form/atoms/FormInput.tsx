@@ -3,6 +3,7 @@ import React, {
   MouseEventHandler,
   FocusEventHandler,
   KeyboardEventHandler,
+  CompositionEventHandler,
 } from 'react'
 import cc from 'classcat'
 import styled from '../../../../lib/styled'
@@ -32,6 +33,9 @@ export interface FormInputProps {
   onDoubleClick?: MouseEventHandler<HTMLInputElement>
   onContextMenu?: MouseEventHandler<HTMLInputElement>
   onFocus?: FocusEventHandler<HTMLInputElement>
+  onCompositionStart?: CompositionEventHandler<HTMLInputElement>
+  onCompositionEnd?: CompositionEventHandler<HTMLInputElement>
+  onKeyPress?: KeyboardEventHandler<HTMLInputElement>
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>
 }
 
@@ -61,6 +65,9 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
       onDoubleClick,
       onContextMenu,
       onFocus,
+      onCompositionStart,
+      onCompositionEnd,
+      onKeyPress,
       onKeyDown,
     },
     ref
@@ -91,6 +98,9 @@ const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
         onDoubleClick={onDoubleClick}
         onContextMenu={onContextMenu}
         onFocus={onFocus}
+        onCompositionStart={onCompositionStart}
+        onCompositionEnd={onCompositionEnd}
+        onKeyPress={onKeyPress}
         onKeyDown={onKeyDown}
       />
     )
