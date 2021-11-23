@@ -56,6 +56,9 @@ import SortingOption, {
   sortingOrders,
 } from '../../ContentManager/SortingOption'
 import { FormSelectOption } from '../../../../design/components/molecules/Form/atoms/FormSelect'
+import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
+import { useCloudApi } from '../../../lib/hooks/useCloudApi'
+import Spinner from '../../../../design/components/atoms/Spinner'
 
 interface ContentManagerProps {
   team: SerializedTeam
@@ -83,7 +86,8 @@ const TableViewContentManager = ({
 }: ContentManagerProps) => {
   const { translate } = useI18n()
   const { openContextModal, closeAllModals } = useModal()
-  const { openNewFolderForm, openNewDocForm } = useCloudResourceModals()
+  const { openNewDocForm } = useCloudResourceModals()
+  const { createFolder } = useCloudApi()
   const { push } = useRouter()
   const { preferences, setPreferences } = usePreferences()
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
@@ -251,6 +255,37 @@ const TableViewContentManager = ({
     },
     [setPreferences]
   )
+
+  const [newFolderRowState, setNewFolderRowState] = useState<
+    'idle' | 'editing' | 'submitting'
+  >('idle')
+  const [newFolderName, setNewFolderName] = useState('')
+  const compositionStateRef = useRef(false)
+  const newFolderInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (newFolderInputRef.current != null) {
+      newFolderInputRef.current.focus()
+    }
+  }, [newFolderRowState])
+
+  const createNewFolder = useCallback(async () => {
+    setNewFolderRowState('submitting')
+    if (currentWorkspaceId != null) {
+      await createFolder(
+        team,
+        {
+          folderName: newFolderName,
+          description: '',
+          workspaceId: currentWorkspaceId,
+          parentFolderId: currentFolderId,
+        },
+        { skipRedirect: true }
+      )
+    }
+    setNewFolderName('')
+    setNewFolderRowState('idle')
+  }, [currentWorkspaceId, currentFolderId, createFolder, team, newFolderName])
 
   return (
     <Container>
@@ -492,25 +527,59 @@ const TableViewContentManager = ({
                   onDragStart={onDragStartFolder}
                 />
               ))}
+
               {currentWorkspaceId != null && (
                 <TableContentManagerRow className='content__manager--no-border'>
-                  <Button
-                    className='content__manager--no-padding'
-                    onClick={() =>
-                      openNewFolderForm(
-                        {
-                          team,
-                          parentFolderId: currentFolderId,
-                          workspaceId: currentWorkspaceId,
-                        },
-                        { skipRedirect: true, precedingRows: [] }
-                      )
-                    }
-                    variant='transparent'
-                    iconPath={mdiPlus}
-                  >
-                    {translate(lngKeys.ModalsCreateNewFolder)}
-                  </Button>
+                  {newFolderRowState === 'idle' ? (
+                    <Button
+                      className='content__manager--no-padding'
+                      onClick={() => {
+                        setNewFolderRowState('editing')
+                      }}
+                      variant='transparent'
+                      iconPath={mdiPlus}
+                    >
+                      {translate(lngKeys.ModalsCreateNewFolder)}
+                    </Button>
+                  ) : newFolderRowState === 'editing' ? (
+                    <FormInput
+                      ref={newFolderInputRef}
+                      value={newFolderName}
+                      onChange={(event) => {
+                        setNewFolderName(event.target.value)
+                      }}
+                      onCompositionStart={() => {
+                        compositionStateRef.current = true
+                      }}
+                      onCompositionEnd={() => {
+                        compositionStateRef.current = false
+                        if (newFolderInputRef.current != null) {
+                          newFolderInputRef.current.focus()
+                        }
+                      }}
+                      onKeyPress={(event) => {
+                        if (compositionStateRef.current) {
+                          return
+                        }
+                        switch (event.key) {
+                          case 'Escape':
+                            event.preventDefault()
+                            setNewFolderRowState('idle')
+                            setNewFolderName('')
+                            return
+                          case 'Enter':
+                            event.preventDefault()
+                            createNewFolder()
+                            return
+                        }
+                      }}
+                      onBlur={() => {
+                        createNewFolder()
+                      }}
+                    />
+                  ) : (
+                    <Spinner />
+                  )}
                 </TableContentManagerRow>
               )}
             </>
