@@ -129,14 +129,16 @@ const validators: Validators = {
                 return (
                   acc ||
                   equalsOrContains(
-                    (permission, id) => permission.userId === id,
+                    (permission, id) =>
+                      permission != null && permission.userId === id,
                     nonNullableVal,
                     val
                   )
                 )
-              }, true as boolean)
+              }, false as boolean)
           : equalsOrContains(
-              (permission, id) => permission.userId === id,
+              (permission, id) =>
+                permission != null && permission.userId === id,
               nonNullableVal,
               condition.value.value
             )
