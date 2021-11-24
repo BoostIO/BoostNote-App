@@ -35,7 +35,7 @@ import { getDocLinkHref } from '../../Link/DocLink'
 import PropPicker from '../../Props/PropPicker'
 import DocTagsList from '../../DocPage/DocTagsList'
 import { getFormattedBoosthubDateTime } from '../../../lib/date'
-import { mdiFileDocumentOutline, mdiPlus } from '@mdi/js'
+import { mdiFileDocumentOutline } from '@mdi/js'
 import NavigationItem from '../../../../design/components/molecules/Navigation/NavigationItem'
 import TableAddPropertyContext from './TableAddPropertyContext'
 import { TableViewActionsRef } from '../../../lib/hooks/views/tableView'
@@ -48,17 +48,14 @@ import Button from '../../../../design/components/atoms/Button'
 import TablePropertiesContext from './TablePropertiesContext'
 import TableViewContentManagerFolderRow from './TableViewContentManagerFolderRow'
 import TableViewContentManagerRow from './TableViewContentManagerRow'
-import TableContentManagerRow from './TableContentManagerRow'
 import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
 import { usePreferences } from '../../../lib/stores/preferences'
 import SortingOption, {
   sortingOrders,
 } from '../../ContentManager/SortingOption'
 import { FormSelectOption } from '../../../../design/components/molecules/Form/atoms/FormSelect'
-import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
-import { useCloudApi } from '../../../lib/hooks/useCloudApi'
-import Spinner from '../../../../design/components/atoms/Spinner'
 import TableViewContentManagerNewFolderRow from './TableViewContentmanagerNewFolderRow'
+import TableViewContentManagerNewDocRow from './TableViewContentManagerNewDocRow'
 
 interface ContentManagerProps {
   team: SerializedTeam
@@ -86,7 +83,6 @@ const TableViewContentManager = ({
 }: ContentManagerProps) => {
   const { translate } = useI18n()
   const { openContextModal, closeAllModals } = useModal()
-  const { createDoc } = useCloudApi()
   const { push } = useRouter()
   const { preferences, setPreferences } = usePreferences()
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
@@ -254,36 +250,6 @@ const TableViewContentManager = ({
     },
     [setPreferences]
   )
-
-  const [newDocRowState, setNewDocRowState] = useState<
-    'idle' | 'editing' | 'submitting'
-  >('idle')
-  const [newDocName, setNewDocName] = useState('')
-  const newDocCompositionStateRef = useRef(false)
-  const newDocInputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (newDocInputRef.current != null && newDocRowState === 'editing') {
-      newDocInputRef.current.focus()
-    }
-  }, [newDocRowState])
-
-  const createNewDoc = useCallback(async () => {
-    setNewDocRowState('submitting')
-    if (currentWorkspaceId != null) {
-      await createDoc(
-        team,
-        {
-          title: newDocName,
-          workspaceId: currentWorkspaceId,
-          parentFolderId: currentFolderId,
-        },
-        { skipRedirect: true }
-      )
-    }
-    setNewDocName('')
-    setNewDocRowState('idle')
-  }, [currentWorkspaceId, createDoc, team, newDocName, currentFolderId])
 
   return (
     <Container>
@@ -475,56 +441,11 @@ const TableViewContentManager = ({
           />
           {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
           {currentWorkspaceId != null && (
-            <TableContentManagerRow>
-              {newDocRowState === 'idle' ? (
-                <Button
-                  className='content__manager--no-padding'
-                  variant='transparent'
-                  iconPath={mdiPlus}
-                  onClick={() => setNewDocRowState('editing')}
-                >
-                  {translate(lngKeys.ModalsCreateNewDocument)}
-                </Button>
-              ) : newDocRowState === 'editing' ? (
-                <FormInput
-                  ref={newDocInputRef}
-                  value={newDocName}
-                  onChange={(event) => {
-                    setNewDocName(event.target.value)
-                  }}
-                  onCompositionStart={() => {
-                    newDocCompositionStateRef.current = true
-                  }}
-                  onCompositionEnd={() => {
-                    newDocCompositionStateRef.current = false
-                    if (newDocInputRef.current != null) {
-                      newDocInputRef.current.focus()
-                    }
-                  }}
-                  onKeyPress={(event) => {
-                    if (newDocCompositionStateRef.current) {
-                      return
-                    }
-                    switch (event.key) {
-                      case 'Escape':
-                        event.preventDefault()
-                        setNewDocRowState('idle')
-                        setNewDocName('')
-                        return
-                      case 'Enter':
-                        event.preventDefault()
-                        createNewDoc()
-                        return
-                    }
-                  }}
-                  onBlur={() => {
-                    createNewDoc()
-                  }}
-                />
-              ) : (
-                <Spinner />
-              )}
-            </TableContentManagerRow>
+            <TableViewContentManagerNewDocRow
+              team={team}
+              workspaceId={currentWorkspaceId}
+              folderId={currentFolderId}
+            />
           )}
 
           {folders != null && (
