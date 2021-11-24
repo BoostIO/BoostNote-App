@@ -25,6 +25,8 @@ const zhTranslation: TranslationSource = {
   [lngKeys.GeneralShowMore]: '现实更多',
   [lngKeys.GeneralDashboard]: 'Dashboard',
   // settings
+  [lngKeys.SettingsPreferencesResetTitle]: 'Reset Preferences',
+  [lngKeys.SettingsPreferencesResetLabel]: 'Use Default Preferences',
   [lngKeys.SettingsInfo]: '我的信息',
   [lngKeys.SettingsGeneral]: '我的首选项',
   [lngKeys.SettingsNotifications]: '邮件通知',

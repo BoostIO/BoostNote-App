@@ -25,6 +25,8 @@ const frTranslation: TranslationSource = {
   [lngKeys.GeneralShowMore]: 'En montrer plus',
   [lngKeys.GeneralDashboard]: 'Dashboard',
   // settings
+  [lngKeys.SettingsPreferencesResetTitle]: 'Reset Preferences',
+  [lngKeys.SettingsPreferencesResetLabel]: 'Use Default Preferences',
   [lngKeys.SettingsInfo]: 'Mon Profile',
   [lngKeys.SettingsGeneral]: 'Mes Préférences',
   [lngKeys.SettingsNotifications]: 'Notifications par mail',

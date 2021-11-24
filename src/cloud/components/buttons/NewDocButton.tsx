@@ -1,7 +1,7 @@
 import SidebarButton from '../../../design/components/organisms/Sidebar/atoms/SidebarButton'
 import { MenuTypes } from '../../../design/lib/stores/contextMenu'
 import { useModal } from '../../../design/lib/stores/modal'
-import { mdiPencilBoxMultipleOutline, mdiPencilBoxOutline } from '@mdi/js'
+import { mdiPencilBoxMultipleOutline, mdiPlus } from '@mdi/js'
 import React, { useCallback } from 'react'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
