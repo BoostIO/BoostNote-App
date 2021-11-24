@@ -146,7 +146,7 @@ const ApplicationTopbar = ({
     if (splittedPathnames.length >= 2 && splittedPathnames[1] === 'dashboard') {
       return [
         {
-          label: capitalize(translate(lngKeys.GeneralDashboard)),
+          label: capitalize(translate(lngKeys.GeneralSmartViews)),
           active: true,
           parentId: topParentId,
           icon: mdiViewDashboard,
