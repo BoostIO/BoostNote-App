@@ -58,6 +58,7 @@ import { FormSelectOption } from '../../../../design/components/molecules/Form/a
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import Spinner from '../../../../design/components/atoms/Spinner'
+import TableViewContentManagerNewFolderRow from './TableViewContentmanagerNewFolderRow'
 
 interface ContentManagerProps {
   team: SerializedTeam
@@ -85,7 +86,7 @@ const TableViewContentManager = ({
 }: ContentManagerProps) => {
   const { translate } = useI18n()
   const { openContextModal, closeAllModals } = useModal()
-  const { createFolder, createDoc } = useCloudApi()
+  const { createDoc } = useCloudApi()
   const { push } = useRouter()
   const { preferences, setPreferences } = usePreferences()
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
@@ -253,37 +254,6 @@ const TableViewContentManager = ({
     },
     [setPreferences]
   )
-
-  const [newFolderRowState, setNewFolderRowState] = useState<
-    'idle' | 'editing' | 'submitting'
-  >('idle')
-  const [newFolderName, setNewFolderName] = useState('')
-  const compositionStateRef = useRef(false)
-  const newFolderInputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (newFolderInputRef.current != null && newFolderRowState === 'editing') {
-      newFolderInputRef.current.focus()
-    }
-  }, [newFolderRowState])
-
-  const createNewFolder = useCallback(async () => {
-    setNewFolderRowState('submitting')
-    if (currentWorkspaceId != null) {
-      await createFolder(
-        team,
-        {
-          folderName: newFolderName,
-          description: '',
-          workspaceId: currentWorkspaceId,
-          parentFolderId: currentFolderId,
-        },
-        { skipRedirect: true }
-      )
-    }
-    setNewFolderName('')
-    setNewFolderRowState('idle')
-  }, [currentWorkspaceId, currentFolderId, createFolder, team, newFolderName])
 
   const [newDocRowState, setNewDocRowState] = useState<
     'idle' | 'editing' | 'submitting'
@@ -585,58 +555,12 @@ const TableViewContentManager = ({
               ))}
 
               {currentWorkspaceId != null && (
-                <TableContentManagerRow className='content__manager--no-border'>
-                  {newFolderRowState === 'idle' ? (
-                    <Button
-                      className='content__manager--no-padding'
-                      onClick={() => {
-                        setNewFolderRowState('editing')
-                      }}
-                      variant='transparent'
-                      iconPath={mdiPlus}
-                    >
-                      {translate(lngKeys.ModalsCreateNewFolder)}
-                    </Button>
-                  ) : newFolderRowState === 'editing' ? (
-                    <FormInput
-                      ref={newFolderInputRef}
-                      value={newFolderName}
-                      onChange={(event) => {
-                        setNewFolderName(event.target.value)
-                      }}
-                      onCompositionStart={() => {
-                        compositionStateRef.current = true
-                      }}
-                      onCompositionEnd={() => {
-                        compositionStateRef.current = false
-                        if (newFolderInputRef.current != null) {
-                          newFolderInputRef.current.focus()
-                        }
-                      }}
-                      onKeyPress={(event) => {
-                        if (compositionStateRef.current) {
-                          return
-                        }
-                        switch (event.key) {
-                          case 'Escape':
-                            event.preventDefault()
-                            setNewFolderRowState('idle')
-                            setNewFolderName('')
-                            return
-                          case 'Enter':
-                            event.preventDefault()
-                            createNewFolder()
-                            return
-                        }
-                      }}
-                      onBlur={() => {
-                        createNewFolder()
-                      }}
-                    />
-                  ) : (
-                    <Spinner />
-                  )}
-                </TableContentManagerRow>
+                <TableViewContentManagerNewFolderRow
+                  className='content__manager--no-border'
+                  team={team}
+                  folderId={currentFolderId}
+                  workspaceId={currentWorkspaceId}
+                />
               )}
             </>
           )}
