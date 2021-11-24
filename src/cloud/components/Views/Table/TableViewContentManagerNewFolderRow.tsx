@@ -22,29 +22,29 @@ const TableViewContentManagerNewFolderRow = ({
   folderId,
   className,
 }: TableViewContentManagerNewFolderRowProps) => {
-  const [newFolderRowState, setNewFolderRowState] = useState<
-    'idle' | 'editing' | 'submitting'
-  >('idle')
+  const [formState, setFormState] = useState<'idle' | 'editing' | 'submitting'>(
+    'idle'
+  )
 
   const { translate } = useI18n()
   const { createFolder } = useCloudApi()
-  const [newFolderName, setNewFolderName] = useState('')
+  const [newName, setNewName] = useState('')
   const compositionStateRef = useRef(false)
-  const newFolderInputRef = useRef<HTMLInputElement>(null)
+  const newNameInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (newFolderInputRef.current != null && newFolderRowState === 'editing') {
-      newFolderInputRef.current.focus()
+    if (newNameInputRef.current != null && formState === 'editing') {
+      newNameInputRef.current.focus()
     }
-  }, [newFolderRowState])
+  }, [formState])
 
   const createNewFolder = useCallback(async () => {
-    setNewFolderRowState('submitting')
+    setFormState('submitting')
     if (workspaceId != null) {
       await createFolder(
         team,
         {
-          folderName: newFolderName,
+          folderName: newName,
           description: '',
           workspaceId: workspaceId,
           parentFolderId: folderId,
@@ -52,42 +52,42 @@ const TableViewContentManagerNewFolderRow = ({
         { skipRedirect: true }
       )
     }
-    setNewFolderName('')
-    setNewFolderRowState('idle')
-  }, [workspaceId, folderId, createFolder, team, newFolderName])
+    setNewName('')
+    setFormState('idle')
+  }, [workspaceId, folderId, createFolder, team, newName])
 
   const cancelEditing = useCallback(() => {
-    setNewFolderRowState('idle')
-    setNewFolderName('')
+    setFormState('idle')
+    setNewName('')
   }, [])
 
   return (
     <TableContentManagerRow className={className}>
-      {newFolderRowState === 'idle' ? (
+      {formState === 'idle' ? (
         <Button
           className='content__manager--no-padding'
           onClick={() => {
-            setNewFolderRowState('editing')
+            setFormState('editing')
           }}
           variant='transparent'
           iconPath={mdiPlus}
         >
           {translate(lngKeys.ModalsCreateNewFolder)}
         </Button>
-      ) : newFolderRowState === 'editing' ? (
+      ) : formState === 'editing' ? (
         <FormInput
-          ref={newFolderInputRef}
-          value={newFolderName}
+          ref={newNameInputRef}
+          value={newName}
           onChange={(event) => {
-            setNewFolderName(event.target.value)
+            setNewName(event.target.value)
           }}
           onCompositionStart={() => {
             compositionStateRef.current = true
           }}
           onCompositionEnd={() => {
             compositionStateRef.current = false
-            if (newFolderInputRef.current != null) {
-              newFolderInputRef.current.focus()
+            if (newNameInputRef.current != null) {
+              newNameInputRef.current.focus()
             }
           }}
           onKeyPress={(event) => {
@@ -105,9 +105,7 @@ const TableViewContentManagerNewFolderRow = ({
                 return
             }
           }}
-          onBlur={() => {
-            cancelEditing()
-          }}
+          onBlur={cancelEditing}
         />
       ) : (
         <Spinner />
