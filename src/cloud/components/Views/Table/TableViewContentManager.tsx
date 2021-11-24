@@ -54,7 +54,7 @@ import SortingOption, {
   sortingOrders,
 } from '../../ContentManager/SortingOption'
 import { FormSelectOption } from '../../../../design/components/molecules/Form/atoms/FormSelect'
-import TableViewContentManagerNewFolderRow from './TableViewContentmanagerNewFolderRow'
+import TableViewContentManagerNewFolderRow from './TableViewContentManagerNewFolderRow'
 import TableViewContentManagerNewDocRow from './TableViewContentManagerNewDocRow'
 
 interface ContentManagerProps {
