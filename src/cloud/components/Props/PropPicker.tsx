@@ -90,7 +90,10 @@ const PropPicker = ({
             updateProp(
               val.length === 0
                 ? { type: 'user', data: null }
-                : { type: 'user', data: val as any }
+                : {
+                    type: 'user',
+                    data: val.filter((userId) => userId != null) as any,
+                  }
             )
           }
         />
