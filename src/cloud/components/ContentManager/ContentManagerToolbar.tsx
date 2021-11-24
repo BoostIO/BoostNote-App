@@ -545,7 +545,7 @@ const ContentManagerToolbar = ({
                       propColumn.name,
                       {
                         type: 'user',
-                        data: val,
+                        data: val.length > 0 ? val : null,
                       },
                     ])
                   }}
