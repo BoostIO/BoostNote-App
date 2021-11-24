@@ -389,7 +389,7 @@ const Application = ({
               active: showSearchScreen,
             },
             {
-              label: translate(lngKeys.GeneralDashboard),
+              label: translate(lngKeys.GeneralSmartViews),
               icon: mdiViewDashboard,
               variant: 'transparent',
               labelHref: teamUrl,

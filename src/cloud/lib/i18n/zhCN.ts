@@ -262,12 +262,12 @@ const zhTranslation: TranslationSource = {
   [lngKeys.ModalsImportDestinationDisclaimer]: '选择要导入文档的文件夹',
   [lngKeys.ModalsImportDisclaimer]: '选择导入文件的方式（每个文件最多5Mb）',
 
-  [lngKeys.ModalsSmartViewCreateTitle]: 'Create a dashboard',
-  [lngKeys.ModalsSmartViewEditTitle]: 'Edit dashboard',
+  [lngKeys.ModalsSmartViewCreateTitle]: 'Create a Smart view',
+  [lngKeys.ModalsSmartViewEditTitle]: 'Edit Smart view',
   [lngKeys.ModalsSmartViewPrivateDisclaimer]:
-    'This dashboard will become private. Only you can see it.',
+    'This Smart view will become private. Only you can see it.',
   [lngKeys.ModalsSmartViewPublicDisclaimer]:
-    'The dashboardwill become public. Every member can see it.',
+    'This Smart view will become public. Every member can see it.',
 
   [lngKeys.EditorToolbarTooltipHeader]: '添加标题文本',
   [lngKeys.EditorToolbarTooltipAdmonition]: '添加警告',

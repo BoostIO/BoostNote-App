@@ -283,12 +283,12 @@ const frTranslation: TranslationSource = {
   [lngKeys.ModalsImportDisclaimer]:
     'Choissisez la méthode par laquelle vous souhaitez importer vos documents ( 5Mb max par fichier )',
 
-  [lngKeys.ModalsSmartViewCreateTitle]: 'Create a dashboard',
-  [lngKeys.ModalsSmartViewEditTitle]: 'Edit dashboard',
+  [lngKeys.ModalsSmartViewCreateTitle]: 'Créer une vue intelligente',
+  [lngKeys.ModalsSmartViewEditTitle]: 'Editer une vue intelligente',
   [lngKeys.ModalsSmartViewPrivateDisclaimer]:
-    'This dashboard will become private. Only you can see it.',
+    'Cette vue intelligente va devenir privée. Seulement vous pouvez la voir.',
   [lngKeys.ModalsSmartViewPublicDisclaimer]:
-    'The dashboardwill become public. Every member can see it.',
+    'Cette vue intelligente va devenir publique. Chaque membre y a accès.',
 
   [lngKeys.AttachmentsDeleteDisclaimer]:
     'Êtes vous certain de vouloir supprimer ce fichier? Il ne sera plus visible dans les documents où il a été inclus.',
