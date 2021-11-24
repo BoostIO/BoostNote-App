@@ -16,6 +16,7 @@ interface AssigneeSelectProps {
   update: (value: string[]) => void
   isLoading: boolean
   readOnly: boolean
+  showIconPath?: boolean
   emptyLabel?: string
   popupAlignment?: 'bottom-left' | 'top-left'
 }
@@ -24,6 +25,7 @@ const AssigneeSelect = ({
   disabled = false,
   defaultValue,
   isLoading,
+  showIconPath,
   emptyLabel,
   readOnly,
   update,
@@ -65,7 +67,9 @@ const AssigneeSelect = ({
         empty={defaultValue.length === 0 && emptyLabel == null}
         isReadOnly={readOnly}
         iconPath={
-          defaultValue.length === 0 ? mdiAccountCircleOutline : undefined
+          showIconPath || defaultValue.length === 0
+            ? mdiAccountCircleOutline
+            : undefined
         }
         onClick={(e) =>
           openContextModal(
