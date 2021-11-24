@@ -235,7 +235,7 @@ const SmartViewSelector = ({
           onClick={createNewSmartView}
           id='new-smartView'
         >
-          Add new Dashboard
+          Add new Smart view
         </Button>
       </UpDownList>
     </SmartViewSelectorContainer>
