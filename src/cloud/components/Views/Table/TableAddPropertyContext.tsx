@@ -114,14 +114,14 @@ const TableAddPropertyContext = ({
   )
 
   const isColumnNameInvalid = useMemo(() => {
-    const lowercaseValue = columnName.toLocaleLowerCase().trim()
+    const value = columnName.trim()
 
-    if (lowercaseValue === '') {
+    if (value === '') {
       return false
     }
 
-    return Object.values(columns).reduce((acc, value) => {
-      if (value.name.toLocaleLowerCase() === lowercaseValue) {
+    return Object.values(columns).reduce((acc, val) => {
+      if (value === val.name) {
         acc = true
       }
       return acc

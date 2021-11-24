@@ -53,14 +53,14 @@ const PropSelectorModal = ({
   )
 
   const isColumnNameInvalid = useMemo(() => {
-    const lowercaseValue = propName.toLocaleLowerCase().trim()
+    const value = propName.trim()
 
-    if (lowercaseValue === '') {
+    if (value === '') {
       return false
     }
 
-    return disallowedNames.reduce((acc, value) => {
-      if (value.toLocaleLowerCase() === lowercaseValue) {
+    return disallowedNames.reduce((acc, val) => {
+      if (value === val) {
         acc = true
       }
       return acc
