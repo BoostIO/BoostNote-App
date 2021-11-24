@@ -25,6 +25,8 @@ const jpTranslation: TranslationSource = {
   [lngKeys.GeneralShowMore]: 'もっと見る',
   [lngKeys.GeneralDashboard]: 'Dashboard',
   // settings
+  [lngKeys.SettingsPreferencesResetTitle]: 'Reset Preferences',
+  [lngKeys.SettingsPreferencesResetLabel]: 'Use Default Preferences',
   [lngKeys.SettingsInfo]: 'プロフィール',
   [lngKeys.SettingsGeneral]: '設定',
   [lngKeys.SettingsNotifications]: 'メール通知',
