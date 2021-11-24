@@ -88,7 +88,7 @@ const PropPicker = ({
           }
           update={(val) =>
             updateProp(
-              val.length === 0
+              val.length === 0 || val == null
                 ? { type: 'user', data: null }
                 : {
                     type: 'user',
