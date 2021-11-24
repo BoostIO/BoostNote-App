@@ -4,6 +4,7 @@ import Button, {
   LoadingButton,
 } from '../../../../../design/components/atoms/Button'
 import ButtonGroup from '../../../../../design/components/atoms/ButtonGroup'
+import Flexbox from '../../../../../design/components/atoms/Flexbox'
 import Switch from '../../../../../design/components/atoms/Switch'
 import Form from '../../../../../design/components/molecules/Form'
 import FormRow from '../../../../../design/components/molecules/Form/templates/FormRow'
@@ -120,16 +121,18 @@ const SmartViewForm = ({
                 </div>
               </FormRowItem>
               <FormRowItem className='form__row__item--shrink'>
-                <Switch
-                  id='shared-custom-switch'
-                  checked={makingPrivate}
-                  onChange={(checked) => {
-                    setMakingPrivate(checked)
-                  }}
-                  height={20}
-                  width={30}
-                  handleSize={14}
-                />
+                <Flexbox justifyContent='flex-end'>
+                  <Switch
+                    id='shared-custom-switch'
+                    checked={makingPrivate}
+                    onChange={(checked) => {
+                      setMakingPrivate(checked)
+                    }}
+                    height={20}
+                    width={30}
+                    handleSize={14}
+                  />
+                </Flexbox>
               </FormRowItem>
             </FormRow>
           </>
