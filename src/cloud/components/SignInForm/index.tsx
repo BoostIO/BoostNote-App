@@ -59,7 +59,6 @@ const SignInForm = ({
           disabled={disabled || preventAction}
           setDisabled={setDisabled}
           query={loginQuery}
-          setError={setError}
           style={{ margin: '0 auto 10px', display: 'block' }}
         />
         <GithubLoginButton

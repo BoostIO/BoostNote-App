@@ -1,9 +1,8 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import cc from 'classcat'
-import GoogleLogin from 'react-google-login'
-import { postGoogleLoginCallback } from '../../../api/auth/google'
-import { useRouter } from '../../../lib/router'
+import { stringify } from 'querystring'
 import { mdiGoogle } from '@mdi/js'
+import { boostHubBaseUrl } from '../../../lib/consts'
 import styled from '../../../../design/lib/styled'
 import Icon from '../../../../design/components/atoms/Icon'
 
@@ -15,7 +14,6 @@ interface GoogleLoginButtonProps {
   query?: any
   disabled: boolean
   setDisabled: (val: boolean) => void
-  setError: (err: unknown) => void
 }
 
 const GoogleLoginButton = ({
@@ -24,91 +22,32 @@ const GoogleLoginButton = ({
   query,
   disabled,
   setDisabled,
-  setError,
 }: GoogleLoginButtonProps) => {
   const [sending, setSending] = useState<boolean>(false)
-  const [googleAuthIsInitialized, setGoogleAuthIsInitialized] = useState<
-    boolean
-  >(true)
-  const { push } = useRouter()
-
-  const responseGoogle = useCallback(
-    async (response: any) => {
-      setSending(true)
-      setDisabled(true)
-      setError(undefined)
-      try {
-        const data = await postGoogleLoginCallback({
-          ...query,
-          tokenId: response.tokenId,
-          accessToken: response.accessToken,
-          googleId: response.googleId,
-          scope: response.tokenObj.scope,
-        })
-        push(data.redirectTo)
-      } catch (error) {
-        setError(error)
-        setDisabled(false)
-        setSending(false)
-      }
-    },
-    [query, setError, push, setDisabled]
-  )
-
-  const errorHandler = (response: any) => {
-    console.log(response.error)
-    if (response.error === 'popup_closed_by_user') {
-      return
-    }
-
-    if (response.error === 'idpiframe_initialization_failed') {
-      setGoogleAuthIsInitialized(false)
-      setError(
-        `Third-party cookies and site data need to be enabled for Google Auth to work properly. Please adjust your browser settings.`
-      )
-      return
-    }
-
-    setError(response.error)
-  }
-
-  if (process.env.GOOGLE_CLIENT_ID == null) {
-    return null
-  }
+  const loginHref = `${boostHubBaseUrl}/api/oauth/google${
+    query != null ? `?${stringify(query)}` : ''
+  }`
 
   return (
-    <GoogleLogin
-      clientId={process.env.GOOGLE_CLIENT_ID}
-      render={(renderProps) => (
-        <StyledGoogleButton
-          onClick={renderProps.onClick}
-          disabled={
-            renderProps.disabled ||
-            sending ||
-            disabled ||
-            !googleAuthIsInitialized
-          }
-          style={style}
-          className={cc(['login-google-btn g-signin2', className])}
-        >
-          <Icon path={mdiGoogle} />
-          {sending ? (
-            <span>Signing in...</span>
-          ) : (
-            <span>Continue with Google</span>
-          )}
-        </StyledGoogleButton>
-      )}
-      onSuccess={responseGoogle}
-      onFailure={errorHandler}
-      cookiePolicy={'single_host_origin'}
-    />
+    <StyledGoogleButton
+      onClick={() => {
+        setDisabled(true)
+        setSending(true)
+      }}
+      href={loginHref}
+      disabled={disabled}
+      style={style}
+      className={cc(['login-google-btn', disabled && 'disabled', className])}
+    >
+      <Icon path={mdiGoogle} />
+      {sending ? <span>Signing in...</span> : <span>Continue with Google</span>}
+    </StyledGoogleButton>
   )
 }
 
 export default GoogleLoginButton
 
-const StyledGoogleButton = styled.button`
+const StyledGoogleButton = styled.a`
   text-decoration: none;
   width: 100%;
   height: 40px;
