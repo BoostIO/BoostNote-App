@@ -98,8 +98,8 @@ const Container = styled.div`
     align-items: center;
     display: inline-flex;
     height: min-content !important;
+    padding: 0 3px;
     cursor: pointer;
-    margin-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
     &:disabled {
       pointer-events: none;
     }
