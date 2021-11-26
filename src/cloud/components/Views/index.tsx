@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import styled from '../../../design/lib/styled'
@@ -39,6 +40,13 @@ const ViewsList = ({
   )
   const { createViewApi } = useCloudApi()
 
+  const selectedViewIdRef = useRef(selectedViewId)
+  const viewsIdsRef = useRef(views.map((v) => v.id))
+
+  useEffect(() => {
+    selectedViewIdRef.current = selectedViewId
+  }, [selectedViewId])
+
   useEffect(() => {
     if (parent.target.id === targetIdRef.current) {
       return
@@ -47,6 +55,19 @@ const ViewsList = ({
     targetIdRef.current = parent.target.id
     setSelectedViewId(views.length > 0 ? views[0].id : undefined)
   }, [parent.target, views])
+
+  useEffect(() => {
+    const newViewsIds = views.map((v) => v.id)
+    if (!isEqual(newViewsIds, viewsIdsRef.current)) {
+      if (
+        selectedViewIdRef.current != null &&
+        !newViewsIds.includes(selectedViewIdRef.current)
+      ) {
+        setSelectedViewId(views.length > 0 ? views[0].id : undefined)
+      }
+      viewsIdsRef.current = newViewsIds
+    }
+  }, [views])
 
   const currentView = useMemo(() => {
     if (selectedViewId == null) {
