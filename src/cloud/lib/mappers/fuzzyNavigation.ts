@@ -48,7 +48,9 @@ export function mapFuzzyNavigationRecentItems(
           team,
           'index'
         )}`
+
         items.push({
+          content: item.head?.content,
           emoji: item.emoji,
           icon: mdiFileDocumentOutline,
           label: getDocTitle(item, 'Untitled'),
@@ -57,6 +59,7 @@ export function mapFuzzyNavigationRecentItems(
           }`,
           href,
           onClick: () => push(href),
+          id: item.id,
         })
       }
     }
@@ -123,6 +126,8 @@ export function mapFuzzyNavigationItems(
       path: `${workspacesMap.get(val.workspaceId)?.name}${val.folderPathname}`,
       href,
       onClick: () => push(href),
+      content: val.head?.content,
+      id: val.id,
     })
   })
 
