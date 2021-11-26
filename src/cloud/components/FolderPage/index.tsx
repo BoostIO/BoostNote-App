@@ -31,6 +31,7 @@ import Spinner from '../../../design/components/atoms/Spinner'
 import ViewsList from '../Views'
 import { getMapValues } from '../../../design/lib/utils/array'
 import { getDefaultTableView } from '../../lib/views/table'
+import { filterIter } from '../../lib/utils/iterator'
 
 const FolderPage = () => {
   const { pageFolder, team, currentUserIsCoreMember, pageData } = usePage()
@@ -58,9 +59,11 @@ const FolderPage = () => {
     if (currentFolder == null) {
       return []
     }
-    return currentFolder.childDocsIds
-      .filter((docId) => docsMap.has(docId))
-      .map((docId) => docsMap.get(docId) as SerializedDocWithSupplemental)
+
+    return filterIter(
+      (doc) => doc.parentFolderId === currentFolder.id,
+      docsMap.values()
+    )
   }, [docsMap, currentFolder])
 
   const childFolders = useMemo(() => {
