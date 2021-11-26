@@ -11,7 +11,6 @@ import {
   isFolderDeleteShortcut,
   isFolderEditShortcut,
 } from '../../lib/shortcuts'
-import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { mdiStarOutline, mdiStar, mdiDotsHorizontal } from '@mdi/js'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
