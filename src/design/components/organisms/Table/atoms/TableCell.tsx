@@ -1,8 +1,9 @@
-import React, { CSSProperties, useMemo } from 'react'
+import React, { CSSProperties, useMemo, useRef, useState } from 'react'
 import styled from '../../../../lib/styled'
 import { TableCellProps } from '../tableInterfaces'
 import TableSlider from './TableSlider'
 import cc from 'classcat'
+import { onDragLeaveCb } from '../../../../lib/dnd'
 
 interface InternalTableCellProps extends TableCellProps {
   width?: number
@@ -24,7 +25,8 @@ const TableCell = ({
 
     return style
   }, [width])
-
+  const [draggedOver, setDraggedOver] = useState(false)
+  const dragRef = useRef<HTMLDivElement>(null)
   return (
     <>
       <Container
@@ -33,11 +35,22 @@ const TableCell = ({
           onClick != null && 'table__row__cell--interactive',
           !addPadding && 'table__row__cell--no-padding',
           className,
+          draggedOver && 'content__manager__row--draggedOver',
         ])}
         style={style}
         onClick={onClick}
         onContextMenu={onContextMenu}
         onDrop={onDrop}
+        onDragOver={(event: any) => {
+          event.preventDefault()
+          event.stopPropagation()
+          setDraggedOver(true)
+        }}
+        onDragLeave={(event: any) => {
+          onDragLeaveCb(event, dragRef, () => {
+            setDraggedOver(false)
+          })
+        }}
       >
         {children}
       </Container>
@@ -64,5 +77,9 @@ const Container = styled.div`
 
   &.table__row__cell--interactive:hover {
     background-color: ${({ theme }) => theme.colors.background.secondary};
+  }
+
+  &.content__manager__row--draggedOver {
+    background: ${({ theme }) => theme.colors.background.quaternary};
   }
 `
