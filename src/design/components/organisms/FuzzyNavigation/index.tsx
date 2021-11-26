@@ -12,6 +12,10 @@ import Fuse from 'fuse.js'
 import CloseButtonWrapper from '../../molecules/CloseButtonWrapper'
 import cc from 'classcat'
 import Scroller from '../../atoms/Scroller'
+import CustomizedMarkdownPreviewer from '../../../../cloud/components/MarkdownView/CustomizedMarkdownPreviewer'
+import { getDoc } from '../../../../cloud/api/teams/docs'
+import { usePage } from '../../../../cloud/lib/stores/pageStore'
+import Spinner from '../../atoms/Spinner'
 
 interface FuzzyNavigationProps {
   recentItems: FuzzyNavigationItemAttrbs[]
@@ -26,6 +30,9 @@ const FuzzyNavigation = ({
 }: FuzzyNavigationProps) => {
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const [loadingDocContent, setLoadingDocContent] = useState<boolean>(false)
+
+  const { team } = usePage()
 
   useEffectOnce(() => {
     if (inputRef.current != null) {
@@ -63,11 +70,46 @@ const FuzzyNavigation = ({
         refIndex: res.refIndex,
         labelMatches: res.matches?.find((val) => val.key === 'label')?.indices,
         pathMatches: res.matches?.find((val) => val.key === 'path')?.indices,
+        content: res.item.content != null ? res.item.content : undefined,
+        id: res.item.id,
       }
     })
 
     return items
   }, [allItems, query])
+  const [showMarkdownPreview, setShowMarkdownPreview] = useState<boolean>(false)
+  const [markdownPreviewContent, setMarkdownPreviewContent] = useState<
+    string | null
+  >(null)
+
+  const setMarkdownPreviewForItem = useCallback(
+    async (item) => {
+      setLoadingDocContent(false)
+      setMarkdownPreviewContent(null)
+      setShowMarkdownPreview(false)
+      if (item && item.content) {
+        setMarkdownPreviewContent(item.content)
+        setShowMarkdownPreview(true)
+      } else {
+        if (team == null || item.id == null) {
+          return
+        }
+        setLoadingDocContent(true)
+        const promise = getDoc(item.id, team.id).then((data) => data.doc)
+        const doc = await promise
+        setLoadingDocContent(false)
+        console.log('Got doc', doc)
+        if (doc != null && doc.head != null && doc.head.content) {
+          setMarkdownPreviewContent(doc.head.content)
+          setShowMarkdownPreview(true)
+        } else {
+          setMarkdownPreviewContent(null)
+          setShowMarkdownPreview(false)
+        }
+      }
+    },
+    [team]
+  )
 
   return (
     <Container className='fuzzy'>
@@ -96,29 +138,70 @@ const FuzzyNavigation = ({
                   ? `No recently visited items`
                   : `Recent items`}
               </span>
-              {recentItems.map((item, i) => (
-                <FuzzyNavigationItem
-                  item={item}
-                  id={`fuzzy-recent-${i}`}
-                  key={`fuzzy-recent-${i}`}
-                />
-              ))}
+              <ResultContainer>
+                <SearchResults>
+                  {recentItems.map((item, i) => (
+                    <FuzzyNavigationItem
+                      onMouseEnter={() => setMarkdownPreviewForItem(item)}
+                      item={item}
+                      id={`fuzzy-recent-${i}`}
+                      key={`fuzzy-recent-${i}`}
+                    />
+                  ))}
+                </SearchResults>
+                {!loadingDocContent &&
+                  showMarkdownPreview &&
+                  markdownPreviewContent != null && (
+                    <MarkdownPreviewContainer>
+                      <CustomizedMarkdownPreviewer
+                        content={markdownPreviewContent}
+                      />
+                    </MarkdownPreviewContainer>
+                  )}
+                {loadingDocContent && (
+                  <MarkdownPreviewContainer>
+                    <Spinner variant={'primary'} />
+                  </MarkdownPreviewContainer>
+                )}
+              </ResultContainer>
             </>
           ) : (
             <>
               {filteredItems.length === 0 && (
                 <span className='fuzzy__label'>No matching results</span>
               )}
-              {filteredItems.map((item, i) => (
-                <HighlightedFuzzyNavigationitem
-                  item={item}
-                  id={`fuzzy-filtered-${i}`}
-                  key={`fuzzy-filtered-${i}`}
-                  query={query.trim().toLocaleLowerCase()}
-                  labelMatches={item.labelMatches}
-                  pathMatches={item.pathMatches}
-                />
-              ))}
+
+              {filteredItems.length !== 0 && (
+                <ResultContainer>
+                  <SearchResults>
+                    {filteredItems.map((item, i) => (
+                      <HighlightedFuzzyNavigationitem
+                        onMouseEnter={() => setMarkdownPreviewForItem(item)}
+                        item={item}
+                        id={`fuzzy-filtered-${i}`}
+                        key={`fuzzy-filtered-${i}`}
+                        query={query.trim().toLocaleLowerCase()}
+                        labelMatches={item.labelMatches}
+                        pathMatches={item.pathMatches}
+                      />
+                    ))}
+                  </SearchResults>
+                  {!loadingDocContent &&
+                    showMarkdownPreview &&
+                    markdownPreviewContent != null && (
+                      <MarkdownPreviewContainer>
+                        <CustomizedMarkdownPreviewer
+                          content={markdownPreviewContent}
+                        />
+                      </MarkdownPreviewContainer>
+                    )}
+                  {loadingDocContent && (
+                    <MarkdownPreviewContainer>
+                      <Spinner variant={'primary'} />
+                    </MarkdownPreviewContainer>
+                  )}
+                </ResultContainer>
+              )}
             </>
           )}
         </Scroller>
@@ -126,6 +209,27 @@ const FuzzyNavigation = ({
     </Container>
   )
 }
+
+const MarkdownPreviewContainer = styled.div`
+  flex: 0 1 50%;
+  display: flex;
+  height: 100%;
+  max-width: 100%;
+
+  z-index: 9999;
+`
+
+const SearchResults = styled.div`
+  flex: 0 1 50%;
+  min-height: 100%;
+  max-width: 50%;
+`
+
+const ResultContainer = styled.div`
+  display: flex;
+  height: 75%;
+  max-height: 75%;
+`
 
 const Container = styled.div`
   .fuzzy__search {

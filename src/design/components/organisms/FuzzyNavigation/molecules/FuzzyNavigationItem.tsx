@@ -17,26 +17,37 @@ interface FuzzyNavigationItemProps {
   }
   id: string
   className?: string
+  onMouseEnter?: () => void
 }
 
 export interface FuzzyNavigationItemAttrbs {
+  content?: string
   label: string
   icon?: string
   emoji?: string
   path: string
   href?: string
   onClick: () => void
+  id?: string
 }
 
 const FuzzyNavigationItem = ({
   id,
   className,
   item,
+  onMouseEnter,
 }: FuzzyNavigationItemProps) => {
   const Tag = item.href == null ? 'button' : 'a'
 
   return (
-    <Container className={cc(['fuzzy__navigation__item__wrapper', className])}>
+    <Container
+      onMouseEnter={() => {
+        if (onMouseEnter != null) {
+          onMouseEnter()
+        }
+      }}
+      className={cc(['fuzzy__navigation__item__wrapper', className])}
+    >
       <Tag
         id={id}
         className='fuzzy__navigation__item'
@@ -71,6 +82,7 @@ type HighlightedFuzzyNavigationItemProps = {
   query: string
   labelMatches?: readonly [number, number][]
   pathMatches?: readonly [number, number][]
+  onMouseEnter?: () => void
 }
 
 export const HighlightedFuzzyNavigationitem = ({
