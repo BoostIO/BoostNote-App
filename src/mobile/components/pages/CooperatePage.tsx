@@ -79,15 +79,8 @@ const CooperatePage = () => {
                   const createTeamResult = await createTeam({
                     personal: true,
                   })
-                  const destinationHref =
-                    createTeamResult.doc == null
-                      ? getTeamLinkHref(createTeamResult.team, 'index')
-                      : getDocLinkHref(
-                          createTeamResult.doc,
-                          createTeamResult.team,
-                          'index'
-                        )
-                  push(destinationHref)
+
+                  push(getTeamLinkHref(createTeamResult.team, 'index'))
                 } catch (error) {
                   console.error(error)
                   setCreatingTeam(false)
