@@ -17,9 +17,10 @@ import { useEffectOnce } from 'react-use'
 import LabelManager, {
   LabelLike,
 } from '../../../../design/components/molecules/LabelManager'
-import { filterIter, mapIter } from '../../../lib/utils/iterator'
+import { mapIter } from '../../../lib/utils/iterator'
 import { SerializedTag } from '../../../interfaces/db/tag'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
+import { getColorFromString } from '../../../lib/utils/string'
 
 interface TagsAutoCompleteInputProps {
   doc: SerializedDocWithSupplemental
@@ -104,17 +105,18 @@ const TagsSelectorModal = ({ team, doc }: TagsSelectorModalProps) => {
 
   const autoCompleteOptions: LabelLikeTag[] = useMemo(() => {
     const allTags = mapIter(
-      (label) => ({ ...label, name: label.text }),
+      (label) => ({
+        ...label,
+        name: label.text,
+        backgroundColor:
+          label.backgroundColor != null
+            ? label.backgroundColor
+            : getColorFromString(label.text),
+      }),
       tagsMap.values()
     )
 
-    allTags.sort((a, b) => {
-      if (a.text < b.text) {
-        return -1
-      } else {
-        return 1
-      }
-    })
+    allTags.sort((a, b) => a.text.localeCompare(b.text))
 
     return allTags
   }, [tagsMap])
