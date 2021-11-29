@@ -17,7 +17,7 @@ import { useEffectOnce } from 'react-use'
 import LabelManager, {
   LabelLike,
 } from '../../../../design/components/molecules/LabelManager'
-import { filterIter } from '../../../lib/utils/iterator'
+import { filterIter, mapIter } from '../../../lib/utils/iterator'
 import { SerializedTag } from '../../../interfaces/db/tag'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 
@@ -103,10 +103,10 @@ const TagsSelectorModal = ({ team, doc }: TagsSelectorModalProps) => {
   }, [doc])
 
   const autoCompleteOptions: LabelLikeTag[] = useMemo(() => {
-    const allTags = filterIter(
-      (tag) => !tagsIdsAlreadyInDoc.has(tag.id),
+    const allTags = mapIter(
+      (label) => ({ ...label, name: label.text }),
       tagsMap.values()
-    ).map((label) => ({ ...label, name: label.text }))
+    )
 
     allTags.sort((a, b) => {
       if (a.text < b.text) {
@@ -117,7 +117,7 @@ const TagsSelectorModal = ({ team, doc }: TagsSelectorModalProps) => {
     })
 
     return allTags
-  }, [tagsMap, tagsIdsAlreadyInDoc])
+  }, [tagsMap])
 
   const createTagHandler = useCallback(
     async (newTag: LabelLike | null) => {
@@ -152,6 +152,15 @@ const TagsSelectorModal = ({ team, doc }: TagsSelectorModalProps) => {
     ]
   )
 
+  const selectTagHandler = useCallback(
+    (tag: LabelLikeTag | null) => {
+      if (tag != null && !tagsIdsAlreadyInDoc.has(tag.id)) {
+        createTagHandler(tag)
+      }
+    },
+    [tagsIdsAlreadyInDoc, createTagHandler]
+  )
+
   const updateTagHandler = useCallback(
     async (tag: LabelLikeTag) => {
       if (sending) {
@@ -179,7 +188,7 @@ const TagsSelectorModal = ({ team, doc }: TagsSelectorModalProps) => {
   return (
     <LabelManager
       labels={autoCompleteOptions}
-      onSelect={createTagHandler}
+      onSelect={selectTagHandler}
       onCreate={createTagHandler}
       onUpdate={updateTagHandler}
       onDelete={deleteTagApi}
