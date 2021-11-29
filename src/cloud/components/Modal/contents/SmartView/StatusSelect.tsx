@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
+import { Label } from '../../../../../design/components/atoms/Label'
 import FormSelect from '../../../../../design/components/molecules/Form/atoms/FormSelect'
 import { usePage } from '../../../../lib/stores/pageStore'
 import { useStatuses } from '../../../../lib/stores/status'
-import { StatusView } from '../../../Props/Pickers/StatusSelect'
 
 interface StatusSelectProps {
   value: number
@@ -12,7 +12,7 @@ interface StatusSelectProps {
 }
 
 const NO_STATUS = {
-  label: <StatusView name={'No Status'} />,
+  label: <Label name={'No Status'} />,
   value: 'none',
 }
 
@@ -28,10 +28,7 @@ const StatusSelect = ({
   const options = useMemo(() => {
     const statuses = state.statuses.map((status) => ({
       label: (
-        <StatusView
-          name={status.name}
-          backgroundColor={status.backgroundColor}
-        />
+        <Label name={status.name} backgroundColor={status.backgroundColor} />
       ),
       value: status.id.toString(),
     }))
