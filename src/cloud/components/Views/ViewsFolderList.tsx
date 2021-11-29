@@ -1,16 +1,19 @@
+import { mdiPlus } from '@mdi/js'
 import React, { useCallback, useMemo } from 'react'
+import FormToggableInput from '../../../design/components/molecules/Form/atoms/FormToggableInput'
 import { sortByAttributeAsc } from '../../../design/lib/utils/array'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { DraggedTo } from '../../lib/dnd'
 import { useCloudDnd } from '../../lib/hooks/sidebar/useCloudDnd'
+import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import { useRouter } from '../../lib/router'
 import { folderToDataTransferItem } from '../../lib/utils/patterns'
 import { getFolderHref } from '../Link/FolderLink'
-import TableViewContentManagerNewFolderRow from './Table/TableViewContentManagerNewFolderRow'
 import ViewManagerContentRow from './ViewManagerContentRow'
+import ViewManagerRow from './ViewManagerRow'
 
 interface ViewsFolderListProps {
   folders?: SerializedFolderWithBookmark[]
@@ -39,6 +42,7 @@ export const ViewsFolderList = ({
 }: ViewsFolderListProps) => {
   const { translate } = useI18n()
   const { push } = useRouter()
+  const { createFolder } = useCloudApi()
 
   const {
     dropInDocOrFolder,
@@ -122,12 +126,25 @@ export const ViewsFolderList = ({
       })}
 
       {currentWorkspaceId != null && (
-        <TableViewContentManagerNewFolderRow
-          className='content__manager--no-border'
-          team={team}
-          folderId={currentFolderId}
-          workspaceId={currentWorkspaceId}
-        />
+        <ViewManagerRow>
+          <FormToggableInput
+            iconPath={mdiPlus}
+            variant='transparent'
+            label={translate(lngKeys.ModalsCreateNewFolder)}
+            submit={(val: string) =>
+              createFolder(
+                team,
+                {
+                  folderName: val,
+                  description: '',
+                  workspaceId: currentWorkspaceId,
+                  parentFolderId: currentFolderId,
+                },
+                { skipRedirect: true }
+              )
+            }
+          />
+        </ViewManagerRow>
       )}
     </>
   )
