@@ -6,7 +6,9 @@ import { useStatuses } from '../../../lib/stores/status'
 import { usePage } from '../../../lib/stores/pageStore'
 import { mdiArrowDownDropCircleOutline } from '@mdi/js'
 import { useModal } from '../../../../design/lib/stores/modal'
-import LabelManager, { LabelLike } from '../../molecules/LabelManager'
+import LabelManager, {
+  LabelLike,
+} from '../../../../design/components/molecules/LabelManager'
 import { Label } from '../../../../design/components/atoms/Label'
 
 interface StatusSelectProps {

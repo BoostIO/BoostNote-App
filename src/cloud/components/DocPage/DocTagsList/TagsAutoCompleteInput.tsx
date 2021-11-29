@@ -14,7 +14,9 @@ import DocPropertyValueButton from '../../Props/Pickers/PropertyValueButton'
 import Icon from '../../../../design/components/atoms/Icon'
 import { useModal } from '../../../../design/lib/stores/modal'
 import { useEffectOnce } from 'react-use'
-import LabelManager, { LabelLike } from '../../molecules/LabelManager'
+import LabelManager, {
+  LabelLike,
+} from '../../../../design/components/molecules/LabelManager'
 import { filterIter } from '../../../lib/utils/iterator'
 import { SerializedTag } from '../../../interfaces/db/tag'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
