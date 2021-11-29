@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { SerializedTeam } from '../interfaces/db/team'
 import { mdiClose } from '@mdi/js'
 import cc from 'classcat'
@@ -30,23 +30,27 @@ const DocTagsListItem = ({
   onDeleteHandler,
   removing,
 }: DocTagsListItemProps) => {
-  const bgColor = getColorFromString(tag.id)
-  const textColor = getTextColorFromBgColorHex(bgColor)
+  const colors = useMemo(() => {
+    const bg =
+      tag.backgroundColor != null
+        ? tag.backgroundColor
+        : getColorFromString(tag.text)
+    const text = getTextColorFromBgColorHex(bg)
+    return { bg, text }
+  }, [tag])
+
   return (
     <Container
       key={tag.id}
       className={cc([
         'doc__tags__list__item',
-        textColor === '#000'
+        colors.text === '#000'
           ? 'doc__tags__list__item--black'
           : 'doc__tags__list__item--white',
         className,
       ])}
       style={{
-        backgroundColor:
-          tag.backgroundColor != null
-            ? tag.backgroundColor
-            : getColorFromString(tag.id),
+        backgroundColor: colors.bg,
       }}
     >
       {showLink ? (
