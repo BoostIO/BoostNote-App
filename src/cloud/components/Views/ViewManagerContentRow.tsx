@@ -1,12 +1,12 @@
 import React, { useCallback, useRef, useState } from 'react'
 import cc from 'classcat'
-import { onDragLeaveCb } from '../../../../design/lib/dnd'
-import styled from '../../../../design/lib/styled'
-import { AppComponent } from '../../../../design/lib/types'
-import EmojiIcon from '../../EmojiIcon'
-import Checkbox from '../../../../design/components/molecules/Form/atoms/FormCheckbox'
+import { onDragLeaveCb } from '../../../design/lib/dnd'
+import styled from '../../../design/lib/styled'
+import { AppComponent } from '../../../design/lib/types'
+import EmojiIcon from '../EmojiIcon'
+import Checkbox from '../../../design/components/molecules/Form/atoms/FormCheckbox'
 
-interface ContentManagerRowProps {
+interface ViewManagerContentRowProps {
   type?: 'header' | 'row'
   checked?: boolean
   onSelect: (val: boolean) => void
@@ -21,7 +21,7 @@ interface ContentManagerRowProps {
   onDrop?: (event: any) => void
 }
 
-const TableViewContentManagerRow: AppComponent<ContentManagerRowProps> = ({
+const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
   type = 'row',
   className,
   children,
@@ -125,7 +125,7 @@ const TableViewContentManagerRow: AppComponent<ContentManagerRowProps> = ({
   )
 }
 
-export default TableViewContentManagerRow
+export default ViewManagerContentRow
 
 const rowHeight = 40
 const StyledContentManagerRow = styled.div`

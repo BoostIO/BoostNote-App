@@ -10,7 +10,7 @@ import { useRouter } from '../../lib/router'
 import { folderToDataTransferItem } from '../../lib/utils/patterns'
 import { getFolderHref } from '../Link/FolderLink'
 import TableViewContentManagerNewFolderRow from './Table/TableViewContentManagerNewFolderRow'
-import TableViewContentManagerRow from './Table/TableViewContentManagerRow'
+import ViewManagerContentRow from './ViewManagerContentRow'
 
 interface ViewsFolderListProps {
   folders?: SerializedFolderWithBookmark[]
@@ -91,7 +91,7 @@ export const ViewsFolderList = ({
 
   return (
     <>
-      <TableViewContentManagerRow
+      <ViewManagerContentRow
         label={translate(lngKeys.GeneralFolders)}
         checked={selectingAllFolders}
         onSelect={
@@ -105,7 +105,7 @@ export const ViewsFolderList = ({
       {orderedFolders.map((folder) => {
         const href = getFolderHref(folder, team, 'index')
         return (
-          <TableViewContentManagerRow
+          <ViewManagerContentRow
             key={folder.id}
             checked={hasFolderInSelection(folder.id)}
             onSelect={() => toggleFolderInSelection(folder.id)}
