@@ -394,10 +394,6 @@ const Container = styled.div`
     border: none;
   }
 
-  .content__manager--no-padding {
-    padding: 0;
-  }
-
   .item__property__button.item__property__button--empty
     .item__property__button__label {
     display: none;
