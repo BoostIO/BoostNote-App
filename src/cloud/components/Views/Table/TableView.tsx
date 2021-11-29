@@ -58,6 +58,7 @@ type TableViewProps = {
   currentUserIsCoreMember: boolean
   currentWorkspaceId?: string
   currentFolderId?: string
+  viewsSelector: React.ReactNode
   selectViewId: (viewId: number) => void
   addDocInSelection: (key: string) => void
   hasDocInSelection: (key: string) => boolean
@@ -72,6 +73,7 @@ const TableView = ({
   currentWorkspaceId,
   currentFolderId,
   team,
+  viewsSelector,
   selectViewId,
   addDocInSelection,
   hasDocInSelection,
@@ -192,11 +194,10 @@ const TableView = ({
     <Container className='view view--table'>
       <StyledContentManagerList>
         <div id={`portal-anchor-${view.id}`} />
-        <Flexbox justifyContent='flex-end' alignItems='end'>
+        <Flexbox justifyContent='space-between' alignItems='end'>
+          {viewsSelector}
           <Flexbox flex='0 0 auto'>
             <SortingOption value={order} onChange={onChangeOrder} />
-          </Flexbox>
-          <Flexbox flex='0 0 auto'>
             <Button
               variant='transparent'
               disabled={Object.keys(columns).length === 0}
