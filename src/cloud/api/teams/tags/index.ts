@@ -6,6 +6,7 @@ import { callApi } from '../../../lib/client'
 export interface CreateTagRequestBody {
   docId: string
   text: string
+  backgroundColor?: string
 }
 
 export interface CreateTagResponseBody {
@@ -33,6 +34,7 @@ export interface UpdateTagResponseBody {
 
 export interface UpdateTagRequestBody {
   text: string
+  backgroundColor?: string
 }
 
 export async function updateTag(

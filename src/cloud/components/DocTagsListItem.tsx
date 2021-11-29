@@ -42,7 +42,12 @@ const DocTagsListItem = ({
           : 'doc__tags__list__item--white',
         className,
       ])}
-      style={{ backgroundColor: getColorFromString(tag.id) }}
+      style={{
+        backgroundColor:
+          tag.backgroundColor != null
+            ? tag.backgroundColor
+            : getColorFromString(tag.id),
+      }}
     >
       {showLink ? (
         <TagLink

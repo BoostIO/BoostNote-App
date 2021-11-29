@@ -5,6 +5,7 @@ export interface SerializableTagProps {
   id: string
   text: string
   teamId: string
+  backgroundColor?: string
 }
 
 export interface SerializedUnserializableTagProps {
