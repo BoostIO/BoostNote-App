@@ -27,10 +27,10 @@ import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationContent from '../ApplicationContent'
 import Spinner from '../../../design/components/atoms/Spinner'
-import ViewsList from '../Views'
 import { getMapValues } from '../../../design/lib/utils/array'
 import { getDefaultTableView } from '../../lib/views/table'
 import { filterIter } from '../../lib/utils/iterator'
+import { ViewsManager } from '../Views'
 
 const FolderPage = () => {
   const { pageFolder, team, currentUserIsCoreMember, pageData } = usePage()
@@ -247,7 +247,7 @@ const FolderPage = () => {
       </ApplicationTopbar>
       <ApplicationContent>
         <FolderPageInviteSection />
-        <ViewsList
+        <ViewsManager
           parent={{ type: 'folder', target: currentFolder }}
           views={currentViews}
           team={team}
