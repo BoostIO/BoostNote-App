@@ -19,7 +19,6 @@ import ApplicationTopbar from '../ApplicationTopbar'
 import SmartViewFolderContextMenu from '../SmartViewContextMenu'
 import CreateSmartViewModal from '../Modal/contents/SmartView/CreateSmartViewModal'
 import UpdateSmartViewModal from '../Modal/contents/SmartView/UpdateSmartViewModal'
-import Views from '../Views'
 import {
   getSmartViewListPageData,
   SmartViewListPageResponseBody,
@@ -27,6 +26,7 @@ import {
 import { getDefaultTableView } from '../../lib/views/table'
 import { trackEvent } from '../../api/track'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
+import { ViewsManager } from '../Views'
 
 const SmartViewPage = ({
   data,
@@ -182,7 +182,7 @@ const SmartViewPage = ({
                   Add filter
                 </Button>
               </Flexbox>
-              <Views
+              <ViewsManager
                 team={team}
                 views={selectedSmartViewViews}
                 parent={{ type: 'smartView', target: selectedSmartView }}

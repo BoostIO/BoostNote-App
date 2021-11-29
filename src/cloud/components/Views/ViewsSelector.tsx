@@ -16,7 +16,7 @@ import {
 
 export interface ViewsSelectorProps {
   selectedViewId: number | undefined
-  setSelectedViewId: React.Dispatch<React.SetStateAction<number | undefined>>
+  setSelectedViewId: (id: number) => void
   views: SerializedView[]
   parent: ViewParent
   createViewApi: (target: CreateViewRequestBody) => Promise<BulkApiActionRes>
@@ -39,6 +39,8 @@ const ViewsSelector = ({
       await createViewApi(
         parent.type === 'folder'
           ? { folder: parent.target.id, type }
+          : parent.type === 'workspace'
+          ? { workspace: parent.target.id, type }
           : { smartView: parent.target.id, type }
       )
       setSending(false)
