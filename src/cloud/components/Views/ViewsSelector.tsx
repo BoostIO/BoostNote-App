@@ -7,12 +7,16 @@ import NavigationItem from '../../../design/components/molecules/Navigation/Navi
 import { BulkApiActionRes } from '../../../design/lib/hooks/useBulkApi'
 import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
-import { CreateViewRequestBody } from '../../api/teams/views'
+import {
+  CreateViewRequestBody,
+  CreateViewResponseBody,
+} from '../../api/teams/views'
 import {
   SerializedView,
   SupportedViewTypes,
   ViewParent,
 } from '../../interfaces/db/view'
+import { filterIter } from '../../lib/utils/iterator'
 
 export interface ViewsSelectorProps {
   selectedViewId: number | undefined
@@ -36,16 +40,24 @@ const ViewsSelector = ({
     async (type: SupportedViewTypes) => {
       closeAllModals()
       setSending(true)
-      await createViewApi(
+      const viewsOfTheSameType = filterIter((view) => view.type === type, views)
+        .length
+      const name = `${capitalize(type)}${
+        viewsOfTheSameType === 0 ? '' : ` ${viewsOfTheSameType}`
+      }`
+      const res = await createViewApi(
         parent.type === 'folder'
-          ? { folder: parent.target.id, type }
+          ? { folder: parent.target.id, type, name }
           : parent.type === 'workspace'
-          ? { workspace: parent.target.id, type }
-          : { smartView: parent.target.id, type }
+          ? { workspace: parent.target.id, type, name }
+          : { smartView: parent.target.id, type, name }
       )
       setSending(false)
+      if (!res.err) {
+        setSelectedViewId((res.data as CreateViewResponseBody).data.id)
+      }
     },
-    [closeAllModals, parent, createViewApi]
+    [views, closeAllModals, parent, createViewApi, setSelectedViewId]
   )
 
   return (
@@ -61,7 +73,7 @@ const ViewsSelector = ({
           onClick={() => setSelectedViewId(view.id)}
           active={selectedViewId === view.id}
         >
-          {capitalize(view.type)}
+          {view.name}
         </Button>
       ))}
       <LoadingButton

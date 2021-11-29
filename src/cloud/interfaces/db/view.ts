@@ -11,6 +11,7 @@ export interface ViewState {
 
 export interface SerializableViewProps {
   id: number
+  name: string
   folderId?: string
   smartViewId?: string
   workspaceId?: string
