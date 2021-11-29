@@ -1,10 +1,10 @@
 import React, { useCallback, useRef, useState } from 'react'
 import cc from 'classcat'
-import { onDragLeaveCb } from '../../../design/lib/dnd'
-import styled from '../../../design/lib/styled'
-import { AppComponent } from '../../../design/lib/types'
-import EmojiIcon from '../EmojiIcon'
-import Checkbox from '../../../design/components/molecules/Form/atoms/FormCheckbox'
+import { onDragLeaveCb } from '../../../../design/lib/dnd'
+import styled from '../../../../design/lib/styled'
+import { AppComponent } from '../../../../design/lib/types'
+import EmojiIcon from '../../EmojiIcon'
+import Checkbox from '../../../../design/components/molecules/Form/atoms/FormCheckbox'
 
 interface ViewManagerContentRowProps {
   type?: 'header' | 'row'
