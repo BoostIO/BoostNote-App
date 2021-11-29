@@ -211,4 +211,25 @@ const Container = styled.div`
   .content__manager__list__header--margin {
     margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
   }
+
+  .content__manager__add-row {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.xl}px;
+    color: ${({ theme }) => theme.colors.text.subtle};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
+    width: 100%;
+
+    button {
+      padding: 0;
+      justify-content: flex-start;
+    }
+
+    .form__toggable__input,
+    button,
+    input {
+      width: 100%;
+    }
+  }
 `
