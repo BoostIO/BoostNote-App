@@ -14,7 +14,7 @@ import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationContent from '../ApplicationContent'
 import { getDefaultTableView } from '../../lib/views/table'
 import { getMapValues } from '../../../design/lib/utils/array'
-import ViewsList from '../Views'
+import { ViewsManager } from '../Views'
 
 const WorkspacePage = ({ workspace }: { workspace: SerializedWorkspace }) => {
   const { team, currentUserIsCoreMember } = usePage()
@@ -124,7 +124,7 @@ const WorkspacePage = ({ workspace }: { workspace: SerializedWorkspace }) => {
       <ApplicationTopbar controls={topbarControls} />
       <ApplicationContent>
         <FolderPageInviteSection />
-        <ViewsList
+        <ViewsManager
           parent={{ type: 'workspace', target: workspace }}
           views={currentViews}
           team={team}
