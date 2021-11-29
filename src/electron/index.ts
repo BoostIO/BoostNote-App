@@ -15,6 +15,7 @@ function applyMenuTemplate(template: MenuItemConstructorOptions[]) {
 }
 
 const mac = process.platform === 'darwin'
+let ready = false
 
 const singleInstance = app.requestSingleInstanceLock()
 if (!singleInstance) {
@@ -66,12 +67,15 @@ app.on('activate', () => {
     firstWindow.show()
     firstWindow.focus()
   } else {
-    createAWindow(electronFrontendUrl)
+    if (ready) {
+      createAWindow(electronFrontendUrl)
+    }
   }
 })
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
+  ready = true
   createAWindow(
     `${electronFrontendUrl}?url=${encodeURIComponent(
       `${process.env.BOOST_HUB_BASE_URL!}/desktop?desktop-init=true`
