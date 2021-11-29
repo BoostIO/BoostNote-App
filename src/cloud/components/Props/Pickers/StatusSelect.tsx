@@ -106,6 +106,7 @@ const StatusSelector = ({
       onUpdate={editStatus}
       onDelete={removeStatus}
       type='Status'
+      allowEmpty={true}
     />
   )
 }
