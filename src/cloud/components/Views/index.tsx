@@ -121,19 +121,24 @@ export const ViewsManager = ({
     [resetDocsInSelection, resetFoldersInSelection]
   )
 
+  const viewsSelector = useMemo(() => {
+    return (
+      <Flexbox justifyContent='space-between' className='views__header'>
+        <ViewsSelector
+          selectedViewId={selectedViewId}
+          setSelectedViewId={selectViewId}
+          createViewApi={createViewApi}
+          parent={parent}
+          views={views}
+        />
+      </Flexbox>
+    )
+  }, [createViewApi, parent, views, selectedViewId, selectViewId])
+
   return (
     <Container>
       <Scroller className='view__scroller'>
-        <Flexbox justifyContent='space-between' className='views__header'>
-          <ViewsSelector
-            selectedViewId={selectedViewId}
-            setSelectedViewId={selectViewId}
-            createViewApi={createViewApi}
-            parent={parent}
-            views={views}
-          />
-        </Flexbox>
-
+        {viewsSelector}
         {currentView != null && (
           <>
             {currentView.type === 'table' ? (
