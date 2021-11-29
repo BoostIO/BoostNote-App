@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { useSet } from 'react-use'
 import { difference } from 'lodash'
-import Flexbox from '../../../design/components/atoms/Flexbox'
 import styled from '../../../design/lib/styled'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
@@ -134,26 +133,24 @@ export const ViewsManager = ({
 
   const viewsSelector = useMemo(() => {
     return (
-      <Flexbox justifyContent='space-between' className='views__header'>
-        <ViewsSelector
-          selectedViewId={selectedViewId}
-          setSelectedViewId={selectViewId}
-          createViewApi={createViewApi}
-          parent={parent}
-          views={views}
-        />
-      </Flexbox>
+      <ViewsSelector
+        selectedViewId={selectedViewId}
+        setSelectedViewId={selectViewId}
+        createViewApi={createViewApi}
+        parent={parent}
+        views={views}
+      />
     )
   }, [createViewApi, parent, views, selectedViewId, selectViewId])
 
   return (
     <Container>
       <Scroller className='view__scroller'>
-        {viewsSelector}
         {currentView != null && (
           <>
             {currentView.type === 'table' ? (
               <TableView
+                viewsSelector={viewsSelector}
                 folders={folders}
                 team={team}
                 currentWorkspaceId={currentWorkspaceId}
