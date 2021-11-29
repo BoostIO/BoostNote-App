@@ -72,6 +72,7 @@ const ViewsSelector = ({
           iconSize={20}
           onClick={() => setSelectedViewId(view.id)}
           active={selectedViewId === view.id}
+          size='sm'
         >
           {view.name}
         </Button>
