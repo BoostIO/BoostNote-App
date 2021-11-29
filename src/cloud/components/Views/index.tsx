@@ -64,6 +64,7 @@ export const ViewsManager = ({
       reset: resetDocsInSelection,
     },
   ] = useSet<string>(new Set())
+  const parentRef = useRef(parent)
 
   const currentDocumentsRef = useRef(
     new Map<string, SerializedDocWithSupplemental>(
@@ -75,6 +76,16 @@ export const ViewsManager = ({
       (folders || []).map((folder) => [folder.id, folder])
     )
   )
+
+  useEffect(() => {
+    if (
+      parent.type !== parentRef.current.type ||
+      parentRef.current.target.id !== parent.target.id
+    ) {
+      setSelectedViewId(views.length > 0 ? views[0].id : undefined)
+      parentRef.current = parent
+    }
+  }, [parent, views])
 
   useEffect(() => {
     const newMap = new Map(docs.map((doc) => [doc.id, doc]))
