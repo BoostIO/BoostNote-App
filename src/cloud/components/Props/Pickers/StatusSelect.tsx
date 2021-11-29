@@ -105,6 +105,7 @@ const StatusSelector = ({
       onCreate={createStatus}
       onUpdate={editStatus}
       onDelete={removeStatus}
+      type='Status'
     />
   )
 }
