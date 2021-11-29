@@ -1,6 +1,6 @@
 import React from 'react'
 import { mdiPlus } from '@mdi/js'
-import TableContentManagerRow from './TableContentManagerRow'
+import ViewManagerRow from '../ViewManagerRow'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { useI18n } from '../../../lib/hooks/useI18n'
@@ -24,7 +24,7 @@ const TableViewContentManagerNewDocRow = ({
   const { createDoc } = useCloudApi()
 
   return (
-    <TableContentManagerRow className={className}>
+    <ViewManagerRow className={className}>
       <FormToggableInput
         label={translate(lngKeys.ModalsCreateNewDocument)}
         variant='transparent'
@@ -41,7 +41,7 @@ const TableViewContentManagerNewDocRow = ({
           )
         }
       />
-    </TableContentManagerRow>
+    </ViewManagerRow>
   )
 }
 
