@@ -32,12 +32,11 @@ import TablePropertiesContext from './TablePropertiesContext'
 import ColumnSettingsContext from './ColSettingsContext'
 import { getDocLinkHref } from '../../Link/DocLink'
 import NavigationItem from '../../../../design/components/molecules/Navigation/NavigationItem'
-import { mdiFileDocumentOutline } from '@mdi/js'
+import { mdiFileDocumentOutline, mdiPlus } from '@mdi/js'
 import DocTagsList from '../../DocPage/DocTagsList'
 import { getFormattedBoosthubDateTime } from '../../../lib/date'
 import PropPicker from '../../Props/PropPicker'
 import TableAddPropertyContext from './TableAddPropertyContext'
-import TableViewContentManagerNewDocRow from './TableViewContentManagerNewDocRow'
 import EmptyRow from '../../ContentManager/Rows/EmptyRow'
 import {
   getIconPathOfPropType,
@@ -46,6 +45,11 @@ import {
 import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
 import Table from '../../../../design/components/organisms/Table'
 import Icon from '../../../../design/components/atoms/Icon'
+import ViewManagerRow from '../ViewManagerRow'
+import FormToggableInput from '../../../../design/components/molecules/Form/atoms/FormToggableInput'
+import { lngKeys } from '../../../lib/i18n/types'
+import { useI18n } from '../../../lib/hooks/useI18n'
+import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 
 type TableViewProps = {
   view: SerializedView
@@ -79,6 +83,8 @@ const TableView = ({
   const [state, setState] = useState<ViewTableData>(
     Object.assign({}, view.data as ViewTableData)
   )
+  const { translate } = useI18n()
+  const { createDoc } = useCloudApi()
   const { openContextModal, closeAllModals } = useModal()
   const { push } = useRouter()
   const { preferences, setPreferences } = usePreferences()
@@ -366,11 +372,24 @@ const TableView = ({
         />
         {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
         {currentWorkspaceId != null && (
-          <TableViewContentManagerNewDocRow
-            team={team}
-            workspaceId={currentWorkspaceId}
-            folderId={currentFolderId}
-          />
+          <ViewManagerRow>
+            <FormToggableInput
+              label={translate(lngKeys.ModalsCreateNewDocument)}
+              variant='transparent'
+              iconPath={mdiPlus}
+              submit={(val: string) =>
+                createDoc(
+                  team,
+                  {
+                    title: val,
+                    workspaceId: currentWorkspaceId,
+                    parentFolderId: currentFolderId,
+                  },
+                  { skipRedirect: true }
+                )
+              }
+            />
+          </ViewManagerRow>
         )}
       </StyledContentManagerList>
     </Container>
@@ -388,10 +407,6 @@ const Container = styled.div`
 
   .content__manager__list__header--margin {
     margin-top: ${({ theme }) => theme.sizes.spaces.l}px !important;
-  }
-
-  .content__manager--no-border {
-    border: none;
   }
 
   .item__property__button.item__property__button--empty
