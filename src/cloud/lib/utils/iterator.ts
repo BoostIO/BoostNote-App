@@ -10,3 +10,11 @@ export function filterIter<T>(
   }
   return result
 }
+
+export function mapIter<T, U>(map: (value: T) => U, iter: Iterable<T>): U[] {
+  const result = []
+  for (const item of iter) {
+    result.push(map(item))
+  }
+  return result
+}
