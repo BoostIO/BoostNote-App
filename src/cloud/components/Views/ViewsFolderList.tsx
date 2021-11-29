@@ -6,8 +6,9 @@ import { DraggedTo } from '../../lib/dnd'
 import { useCloudDnd } from '../../lib/hooks/sidebar/useCloudDnd'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
-import { folderToDataTransferItem, getFolderId } from '../../lib/utils/patterns'
-import TableViewContentManagerFolderRow from './Table/TableViewContentManagerFolderRow'
+import { useRouter } from '../../lib/router'
+import { folderToDataTransferItem } from '../../lib/utils/patterns'
+import { getFolderHref } from '../Link/FolderLink'
 import TableViewContentManagerNewFolderRow from './Table/TableViewContentManagerNewFolderRow'
 import TableViewContentManagerRow from './Table/TableViewContentManagerRow'
 
@@ -27,18 +28,17 @@ interface ViewsFolderListProps {
 
 export const ViewsFolderList = ({
   folders,
-  updating,
   team,
   currentUserIsCoreMember,
   currentFolderId,
   currentWorkspaceId,
-  setUpdating,
   addFolderInSelection,
   hasFolderInSelection,
   toggleFolderInSelection,
   resetFoldersInSelection,
 }: ViewsFolderListProps) => {
   const { translate } = useI18n()
+  const { push } = useRouter()
 
   const {
     dropInDocOrFolder,
@@ -102,21 +102,24 @@ export const ViewsFolderList = ({
         className='content__manager__list__header--margin'
       />
 
-      {orderedFolders.map((folder) => (
-        <TableViewContentManagerFolderRow
-          folder={folder}
-          key={folder.id}
-          team={team}
-          updating={updating.includes(getFolderId(folder))}
-          setUpdating={setUpdating}
-          checked={hasFolderInSelection(folder.id)}
-          onSelect={() => toggleFolderInSelection(folder.id)}
-          currentUserIsCoreMember={currentUserIsCoreMember}
-          onDrop={onDropFolder}
-          onDragEnd={(event) => clearDragTransferData(event)}
-          onDragStart={onDragStartFolder}
-        />
-      ))}
+      {orderedFolders.map((folder) => {
+        const href = getFolderHref(folder, team, 'index')
+        return (
+          <TableViewContentManagerRow
+            key={folder.id}
+            checked={hasFolderInSelection(folder.id)}
+            onSelect={() => toggleFolderInSelection(folder.id)}
+            showCheckbox={currentUserIsCoreMember}
+            label={folder.name}
+            emoji={folder.emoji}
+            labelHref={href}
+            labelOnclick={() => push(href)}
+            onDragStart={(event: any) => onDragStartFolder(event, folder)}
+            onDragEnd={(event: any) => clearDragTransferData(event)}
+            onDrop={(event: any) => onDropFolder(event, folder)}
+          />
+        )
+      })}
 
       {currentWorkspaceId != null && (
         <TableViewContentManagerNewFolderRow
