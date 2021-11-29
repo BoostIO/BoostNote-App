@@ -26,6 +26,7 @@ export type CreateViewRequestBody = {
   smartView?: string
   folder?: string
   workspace?: string
+  name: string
 }
 
 export interface CreateViewResponseBody {
