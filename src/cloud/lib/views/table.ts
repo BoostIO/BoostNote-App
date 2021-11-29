@@ -176,6 +176,7 @@ export function getDefaultTableView(parent: ViewParent): SerializedView {
     smartView: parent.type === 'smartView' ? parent.target : undefined,
     smartViewId: parent.type === 'smartView' ? parent.target.id : undefined,
     type: 'table',
+    name: 'Table',
     data: {
       columns: {
         [labelColId]: {

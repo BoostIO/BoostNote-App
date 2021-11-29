@@ -15,6 +15,7 @@ import {
 import { CreateViewResponseBody } from '../../../api/teams/views'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
+import { capitalize } from 'lodash'
 
 interface TableViewStoreProps {
   state: ViewTableData
@@ -45,6 +46,7 @@ export function useTableView({
         const res = await createViewApi(
           Object.assign(
             {
+              name: capitalize(view.type),
               workspace: view.workspaceId,
               folder: view.folderId,
               smartView: view.smartViewId,
