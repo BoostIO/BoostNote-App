@@ -45,7 +45,6 @@ import {
 import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
 import Table from '../../../../design/components/organisms/Table'
 import Icon from '../../../../design/components/atoms/Icon'
-import ViewManagerRow from '../ViewManagerRow'
 import FormToggableInput from '../../../../design/components/molecules/Form/atoms/FormToggableInput'
 import { lngKeys } from '../../../lib/i18n/types'
 import { useI18n } from '../../../lib/hooks/useI18n'
@@ -372,7 +371,7 @@ const TableView = ({
         />
         {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
         {currentWorkspaceId != null && (
-          <ViewManagerRow>
+          <div className='content__manager__add-row'>
             <FormToggableInput
               label={translate(lngKeys.ModalsCreateNewDocument)}
               variant='transparent'
@@ -389,7 +388,7 @@ const TableView = ({
                 )
               }
             />
-          </ViewManagerRow>
+          </div>
         )}
       </StyledContentManagerList>
     </Container>

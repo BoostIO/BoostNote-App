@@ -13,7 +13,6 @@ import { useRouter } from '../../lib/router'
 import { folderToDataTransferItem } from '../../lib/utils/patterns'
 import { getFolderHref } from '../Link/FolderLink'
 import ViewManagerContentRow from './ViewManagerContentRow'
-import ViewManagerRow from './ViewManagerRow'
 
 interface ViewsFolderListProps {
   folders?: SerializedFolderWithBookmark[]
@@ -126,7 +125,7 @@ export const ViewsFolderList = ({
       })}
 
       {currentWorkspaceId != null && (
-        <ViewManagerRow>
+        <div className='content__manager__add-row'>
           <FormToggableInput
             iconPath={mdiPlus}
             variant='transparent'
@@ -144,7 +143,7 @@ export const ViewsFolderList = ({
               )
             }
           />
-        </ViewManagerRow>
+        </div>
       )}
     </>
   )
