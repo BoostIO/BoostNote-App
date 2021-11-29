@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { mdiDotsHorizontal, mdiTrashCanOutline } from '@mdi/js'
 import { useEffectOnce } from 'react-use'
-import { getColorFromString } from '../../lib/utils/string'
+import { capitalize, getColorFromString } from '../../lib/utils/string'
 import { useModal } from '../../../design/lib/stores/modal'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import Icon from '../../../design/components/atoms/Icon'
@@ -27,6 +27,7 @@ interface LabelManagerProps<T extends LabelLike> {
   onDelete: (label: T) => void
   sending?: boolean
   type?: string
+  allowEmpty?: boolean
 }
 
 const LabelManager = <T extends LabelLike>({
@@ -37,6 +38,7 @@ const LabelManager = <T extends LabelLike>({
   onDelete,
   type = 'label',
   sending = false,
+  allowEmpty = false,
 }: LabelManagerProps<T>) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -97,8 +99,11 @@ const LabelManager = <T extends LabelLike>({
   }, [labels, labelName])
 
   const showNoStatus = useMemo(() => {
-    return labelName === '' || 'No Status'.startsWith(labelName)
-  }, [labelName])
+    return (
+      (labelName === '' || `No ${capitalize(type)}`.startsWith(labelName)) &&
+      allowEmpty
+    )
+  }, [labelName, allowEmpty, type])
 
   useUpDownNavigationListener(containerRef, {
     overrideInput: true,
