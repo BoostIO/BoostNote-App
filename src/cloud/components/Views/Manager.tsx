@@ -133,6 +133,7 @@ export const ViewsManager = ({
             views={views}
           />
         </Flexbox>
+
         {currentView != null && (
           <>
             {currentView.type === 'table' ? (
