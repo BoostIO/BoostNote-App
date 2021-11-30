@@ -6,12 +6,16 @@ import {
   mdiTable,
   mdiTrashCanOutline,
 } from '@mdi/js'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
+import { useEffectOnce } from 'react-use'
 import Button, { LoadingButton } from '../../../design/components/atoms/Button'
 import ButtonGroup from '../../../design/components/atoms/ButtonGroup'
+import Spinner from '../../../design/components/atoms/Spinner'
 import UpDownList from '../../../design/components/atoms/UpDownList'
+import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
 import NavigationItem from '../../../design/components/molecules/Navigation/NavigationItem'
 import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
+import MetadataContainerBreak from '../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
@@ -148,6 +152,10 @@ const ViewContextModal = ({
   parent: ViewParent
   setSelectedViewId: (id: number) => void
 }) => {
+  const compositionStateRef = useRef(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [sending, setSending] = useState<'before' | 'after' | 'name'>()
+  const [value, setValue] = useState(view.name)
   const { closeLastModal } = useModal()
   const { actionsRef, sendingMap } = useViewHandler({
     parent,
@@ -166,7 +174,9 @@ const ViewContextModal = ({
 
   const moveView = useCallback(
     async (view: SerializedView, move: 'before' | 'after') => {
+      setSending(move)
       const res = await actionsRef.current.moveView(view, move)
+      setSending(undefined)
       if (!res.err) {
         closeLastModal()
       }
@@ -174,8 +184,64 @@ const ViewContextModal = ({
     [closeLastModal, actionsRef]
   )
 
+  const renameView = useCallback(
+    async (view: SerializedView, newName: string) => {
+      setSending('name')
+      const res = await actionsRef.current.updateView(view, { name: newName })
+      setSending(undefined)
+      if (!res.err) {
+        closeLastModal()
+      }
+    },
+    [closeLastModal, actionsRef]
+  )
+
+  useEffectOnce(() => {
+    if (inputRef.current != null) {
+      inputRef.current.focus()
+    }
+  })
+
   return (
-    <MetadataContainer>
+    <StyledContainer>
+      <MetadataContainerRow row={{ type: 'header', content: 'Name' }} />
+      <MetadataContainerRow
+        row={{
+          type: 'content',
+          content:
+            sending === 'name' ? (
+              <Spinner />
+            ) : (
+              <FormInput
+                className='view__name__input'
+                ref={inputRef}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                onCompositionStart={() => {
+                  compositionStateRef.current = true
+                }}
+                onCompositionEnd={() => {
+                  compositionStateRef.current = false
+                  if (inputRef.current != null) {
+                    inputRef.current.focus()
+                  }
+                }}
+                onKeyPress={(event) => {
+                  if (compositionStateRef.current) {
+                    return
+                  }
+                  switch (event.key) {
+                    case 'Enter':
+                      event.preventDefault()
+                      renameView(view, value)
+                      return
+                  }
+                }}
+              />
+            ),
+        }}
+      />
+      <MetadataContainerBreak />
       <MetadataContainerRow
         row={{
           type: 'button',
@@ -183,7 +249,7 @@ const ViewContextModal = ({
             id: 'metadata-move-left',
             label: 'Move left',
             iconPath: mdiArrowLeft,
-            spinning: sendingMap.get(view.id.toString()) === 'update',
+            spinning: sending === 'before',
             disabled: sendingMap.has(view.id.toString()),
             onClick: () => moveView(view, 'before'),
           },
@@ -196,7 +262,7 @@ const ViewContextModal = ({
             id: 'metadata-move-right',
             label: 'Move right',
             iconPath: mdiArrowRight,
-            spinning: sendingMap.get(view.id.toString()) === 'update',
+            spinning: sending === 'after',
             disabled: sendingMap.has(view.id.toString()),
             onClick: () => moveView(view, 'after'),
           },
@@ -215,9 +281,15 @@ const ViewContextModal = ({
           },
         }}
       />
-    </MetadataContainer>
+    </StyledContainer>
   )
 }
+
+const StyledContainer = styled(MetadataContainer)`
+  .view__name__input {
+    width: 100%;
+  }
+`
 
 const ViewModal = ({
   createNewView,
