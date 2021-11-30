@@ -3,7 +3,7 @@ import { SerializedFolder, SerializedFolderWithBookmark } from './folder'
 import { SerializedWorkspace } from './workspace'
 import { ViewTableData } from '../../lib/views/table'
 
-export type SupportedViewTypes = 'table'
+export type SupportedViewTypes = 'table' | 'calendar' | 'kanban'
 
 export interface ViewState {
   integrations: string[]
@@ -17,6 +17,7 @@ export interface SerializableViewProps {
   workspaceId?: string
   type: SupportedViewTypes
   data: ViewTableData
+  order: string
 }
 
 export interface SerializedUnserializableViewProps {
