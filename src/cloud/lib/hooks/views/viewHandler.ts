@@ -15,6 +15,7 @@ import { capitalize } from 'lodash'
 import { filterIter } from '../../utils/iterator'
 import { useNav } from '../../stores/nav'
 import { ViewMoveType } from '../../views'
+import { sortByLexorankProperty } from '../../utils/string'
 
 interface ViewHandlerStoreProps {
   parent: ViewParent
@@ -65,6 +66,10 @@ export function useViewHandler({
         )
     }
   }, [parent, viewsMap])
+
+  const orderedViews = useMemo(() => {
+    return sortByLexorankProperty(childrenViews, 'order')
+  }, [childrenViews])
 
   const createNewView = useCallback(
     async (type: SupportedViewTypes) => {
@@ -139,5 +144,6 @@ export function useViewHandler({
   return {
     actionsRef,
     sendingMap,
+    orderedViews,
   }
 }
