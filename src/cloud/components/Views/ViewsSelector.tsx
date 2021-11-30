@@ -24,7 +24,6 @@ import {
   ViewParent,
 } from '../../interfaces/db/view'
 import { useViewHandler } from '../../lib/hooks/views/viewHandler'
-import { sortByLexorankProperty } from '../../lib/utils/string'
 import { getIconPathOfViewType } from '../../lib/views'
 
 export interface ViewsSelectorProps {
@@ -35,13 +34,12 @@ export interface ViewsSelectorProps {
 }
 
 const ViewsSelector = ({
-  views,
   parent,
   selectedViewId,
   setSelectedViewId,
 }: ViewsSelectorProps) => {
   const { openContextModal, closeLastModal } = useModal()
-  const { actionsRef, sendingMap } = useViewHandler({
+  const { actionsRef, sendingMap, orderedViews } = useViewHandler({
     parent,
     selectNewView: setSelectedViewId,
   })
@@ -53,10 +51,6 @@ const ViewsSelector = ({
     },
     [closeLastModal, actionsRef]
   )
-
-  const orderedViews = useMemo(() => {
-    return sortByLexorankProperty(views, 'order')
-  }, [views])
 
   return (
     <Container className='views__selector'>
@@ -161,10 +155,19 @@ const ViewContextModal = ({
   const [sending, setSending] = useState<'before' | 'after' | 'name'>()
   const [value, setValue] = useState(view.name)
   const { closeLastModal } = useModal()
-  const { actionsRef, sendingMap } = useViewHandler({
+  const { actionsRef, sendingMap, orderedViews } = useViewHandler({
     parent,
     selectNewView: setSelectedViewId,
   })
+
+  const position = useMemo(() => {
+    return {
+      isFirst: orderedViews.findIndex((v) => v.id === view.id) === 0,
+      isLast:
+        orderedViews.findIndex((v) => v.id === view.id) ===
+        orderedViews.length - 1,
+    }
+  }, [orderedViews, view.id])
 
   const deleteView = useCallback(
     async (view: SerializedView) => {
@@ -255,7 +258,7 @@ const ViewContextModal = ({
             label: 'Move left',
             iconPath: mdiArrowLeft,
             spinning: sending === 'before',
-            disabled: sendingMap.has(view.id.toString()),
+            disabled: position.isFirst || sendingMap.has(view.id.toString()),
             onClick: () => moveView(view, 'before'),
           },
         }}
@@ -268,7 +271,7 @@ const ViewContextModal = ({
             label: 'Move right',
             iconPath: mdiArrowRight,
             spinning: sending === 'after',
-            disabled: sendingMap.has(view.id.toString()),
+            disabled: position.isLast || sendingMap.has(view.id.toString()),
             onClick: () => moveView(view, 'after'),
           },
         }}
