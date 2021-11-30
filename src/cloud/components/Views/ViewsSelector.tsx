@@ -3,7 +3,6 @@ import {
   mdiArrowRight,
   mdiDotsHorizontal,
   mdiPlus,
-  mdiTable,
   mdiTrashCanOutline,
 } from '@mdi/js'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
@@ -26,6 +25,7 @@ import {
 } from '../../interfaces/db/view'
 import { useViewHandler } from '../../lib/hooks/views/viewHandler'
 import { sortByLexorankProperty } from '../../lib/utils/string'
+import { getIconPathOfViewType } from '../../lib/views'
 
 export interface ViewsSelectorProps {
   selectedViewId: number | undefined
@@ -65,7 +65,7 @@ const ViewsSelector = ({
           <Button
             id={`view--${view.id}`}
             variant='icon'
-            iconPath={view.type === 'table' ? mdiTable : undefined}
+            iconPath={getIconPathOfViewType(view.type)}
             iconSize={20}
             onClick={() => setSelectedViewId(view.id)}
             active={selectedViewId === view.id}
@@ -99,6 +99,7 @@ const ViewsSelector = ({
         spinning={sendingMap.get('view-api') === 'create'}
         disabled={sendingMap.has('view-api')}
         variant='icon'
+        size='sm'
         iconPath={mdiPlus}
         iconSize={20}
         onClick={(ev) =>
@@ -117,7 +118,9 @@ const Container = styled.div`
   flex: 1 1 auto;
   align-items: center;
   flex-wrap: wrap;
-  margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
+  padding-top: ${({ theme }) => theme.sizes.spaces.df}px;
+  padding-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
+  padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
 
   .views__item {
     align-items: center;
@@ -125,6 +128,7 @@ const Container = styled.div`
     button {
       padding: 0;
     }
+
     .views__item__menu {
       opacity: 0;
       pointer-events: none;
@@ -301,21 +305,21 @@ const ViewModal = ({
       <NavigationItem
         id={`view__modal--table`}
         borderRadius={true}
-        icon={{ type: 'icon', path: mdiTable }}
+        icon={{ type: 'icon', path: getIconPathOfViewType('table') }}
         label={'Table'}
         labelClick={() => createNewView('table')}
       />
       <NavigationItem
         id={`view__modal--table`}
         borderRadius={true}
-        icon={{ type: 'icon', path: mdiTable }}
+        icon={{ type: 'icon', path: getIconPathOfViewType('kanban') }}
         label={'Kanban'}
         labelClick={() => createNewView('kanban')}
       />
       <NavigationItem
         id={`view__modal--table`}
         borderRadius={true}
-        icon={{ type: 'icon', path: mdiTable }}
+        icon={{ type: 'icon', path: getIconPathOfViewType('calendar') }}
         label={'Calendar'}
         labelClick={() => createNewView('calendar')}
       />

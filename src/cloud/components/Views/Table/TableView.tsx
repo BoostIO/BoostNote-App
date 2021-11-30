@@ -194,7 +194,7 @@ const TableView = ({
     <Container className='view view--table'>
       <StyledContentManagerList>
         <div id={`portal-anchor-${view.id}`} />
-        <Flexbox justifyContent='space-between' alignItems='end'>
+        <Flexbox justifyContent='space-between' alignItems='center'>
           {viewsSelector}
           <Flexbox flex='0 0 auto'>
             <SortingOption value={order} onChange={onChangeOrder} />
