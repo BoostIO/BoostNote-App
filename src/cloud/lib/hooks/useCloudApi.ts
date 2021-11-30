@@ -806,7 +806,7 @@ export function useCloudApi() {
 
   const createViewApi = useCallback(
     async (target: CreateViewRequestBody) => {
-      return send(shortid.generate(), 'create', {
+      return send('view-api', 'create', {
         api: () => createView(target),
         cb: ({ data }: CreateViewResponseBody) => {
           updateViewsMap([data.id, data])
