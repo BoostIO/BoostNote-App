@@ -42,6 +42,7 @@ export async function createView(body: CreateViewRequestBody) {
 }
 
 export interface UpdateViewRequestBody {
+  name?: string
   data?: Object
   move?: ViewMoveType
 }
