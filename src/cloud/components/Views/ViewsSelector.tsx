@@ -218,6 +218,7 @@ const ViewContextModal = ({
             ) : (
               <FormInput
                 className='view__name__input'
+                id='view__name__input'
                 ref={inputRef}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
