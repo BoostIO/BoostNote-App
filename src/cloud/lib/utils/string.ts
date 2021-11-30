@@ -2,6 +2,8 @@ import UuidParse from 'uuid-parse'
 import originalFilenamify from 'filenamify'
 import { Url } from '../../lib/router'
 import { format as formatUrl } from 'url'
+import { LexoRank } from 'lexorank'
+import { sortByAttributeAsc } from '../../../design/lib/utils/array'
 
 export function isString(x: any): x is string {
   return typeof x === 'string'
@@ -108,4 +110,21 @@ export function parseBoolean(str: string, deflt = false) {
   }
 
   return deflt
+}
+
+export function sortByLexorankProperty<T, K extends keyof T>(
+  items: T[],
+  prop: K
+): T[] {
+  if (items.length === 0) {
+    return []
+  }
+
+  items.forEach((item) => {
+    if (item[prop] == null) {
+      item[prop] = LexoRank.middle().toString() as any
+    }
+  })
+
+  return sortByAttributeAsc(prop, items)
 }
