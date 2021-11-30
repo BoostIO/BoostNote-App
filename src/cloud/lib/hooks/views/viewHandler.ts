@@ -7,7 +7,10 @@ import {
 } from '../../../interfaces/db/view'
 import { useCloudApi } from '../useCloudApi'
 import { getDefaultTableView } from '../../views/table'
-import { CreateViewResponseBody } from '../../../api/teams/views'
+import {
+  CreateViewResponseBody,
+  UpdateViewRequestBody,
+} from '../../../api/teams/views'
 import { capitalize } from 'lodash'
 import { filterIter } from '../../utils/iterator'
 import { useNav } from '../../stores/nav'
@@ -20,6 +23,10 @@ interface ViewHandlerStoreProps {
 
 export type ViewHandlerActionsRef = React.MutableRefObject<{
   createNewView: (type: SupportedViewTypes) => Promise<BulkApiActionRes>
+  updateView: (
+    view: SerializedView,
+    body: Omit<UpdateViewRequestBody, 'move'>
+  ) => Promise<BulkApiActionRes>
   deleteView: (view: SerializedView) => Promise<BulkApiActionRes>
   moveView: (
     view: SerializedView,
@@ -99,6 +106,13 @@ export function useViewHandler({
     [childrenViews, deleteViewApi, parent, selectNewView]
   )
 
+  const updateView = useCallback(
+    async (view: SerializedView, body: Omit<UpdateViewRequestBody, 'move'>) => {
+      return updateViewApi(view, body)
+    },
+    [updateViewApi]
+  )
+
   const moveView = useCallback(
     async (view: SerializedView, move: ViewMoveType) => {
       return updateViewApi(view, { move })
@@ -110,6 +124,7 @@ export function useViewHandler({
     createNewView,
     deleteView,
     moveView,
+    updateView,
   })
 
   useEffect(() => {
@@ -117,8 +132,9 @@ export function useViewHandler({
       createNewView,
       deleteView,
       moveView,
+      updateView,
     }
-  }, [createNewView, deleteView, moveView])
+  }, [createNewView, deleteView, moveView, updateView])
 
   return {
     actionsRef,
