@@ -62,7 +62,6 @@ export const ViewsManager = ({
       reset: resetDocsInSelection,
     },
   ] = useSet<string>(new Set())
-  const parentRef = useRef(parent)
 
   const currentDocumentsRef = useRef(
     new Map<string, SerializedDocWithSupplemental>(
@@ -74,20 +73,6 @@ export const ViewsManager = ({
       (folders || []).map((folder) => [folder.id, folder])
     )
   )
-
-  useEffect(() => {
-    if (
-      parent.type !== parentRef.current.type ||
-      parentRef.current.target.id !== parent.target.id
-    ) {
-      setSelectedViewId(
-        views.length > 0
-          ? sortByLexorankProperty(views, 'order')[0].id
-          : undefined
-      )
-      parentRef.current = parent
-    }
-  }, [parent, views])
 
   useEffect(() => {
     const newMap = new Map(docs.map((doc) => [doc.id, doc]))
@@ -110,11 +95,16 @@ export const ViewsManager = ({
   }, [folders, removeFolderInSelection])
 
   const currentView = useMemo(() => {
-    if (selectedViewId == null) {
+    if (selectedViewId == null || views.length === 0) {
       return undefined
     }
 
-    return views.find((view) => view.id === selectedViewId)
+    const index = views.findIndex((view) => view.id === selectedViewId)
+    if (index !== -1) {
+      return views[index]
+    }
+
+    return sortByLexorankProperty(views, 'order')[0]
   }, [selectedViewId, views])
 
   const toolbarColumns = useMemo(() => {
@@ -137,13 +127,13 @@ export const ViewsManager = ({
   const viewsSelector = useMemo(() => {
     return (
       <ViewsSelector
-        selectedViewId={selectedViewId}
+        selectedViewId={currentView != null ? currentView.id : undefined}
         setSelectedViewId={selectViewId}
         parent={parent}
         views={views}
       />
     )
-  }, [parent, views, selectedViewId, selectViewId])
+  }, [parent, views, currentView, selectViewId])
 
   return (
     <Container>
