@@ -1,5 +1,6 @@
 import { callApi } from '../../../lib/client'
 import { SerializedView, SupportedViewTypes } from '../../../interfaces/db/view'
+import { ViewMoveType } from '../../../lib/views'
 
 export type ListViewsRequestBody =
   | {
@@ -41,8 +42,8 @@ export async function createView(body: CreateViewRequestBody) {
 }
 
 export interface UpdateViewRequestBody {
-  data: Object
-  before?: string
+  data?: Object
+  move?: ViewMoveType
 }
 
 export interface UpdateViewResponseBody {

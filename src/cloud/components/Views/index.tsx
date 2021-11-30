@@ -4,7 +4,6 @@ import { difference } from 'lodash'
 import styled from '../../../design/lib/styled'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
-import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import ContentManagerToolbar from '../ContentManager/ContentManagerToolbar'
 import ViewsSelector from './ViewsSelector'
 import { sortTableViewColumns } from '../../lib/views/table'
@@ -14,6 +13,7 @@ import { SerializedTeam } from '../../interfaces/db/team'
 import TableView from './Table/TableView'
 import ViewsFolderList from './FolderList/ViewsFolderList'
 import Scroller from '../../../design/components/atoms/Scroller'
+import { sortByLexorankProperty } from '../../lib/utils/string'
 
 type ViewsManagerProps = {
   views: SerializedView[]
@@ -39,10 +39,9 @@ export const ViewsManager = ({
   workspacesMap,
 }: ViewsManagerProps) => {
   const [selectedViewId, setSelectedViewId] = useState<number | undefined>(() =>
-    views.length > 0 ? views[0].id : undefined
+    views.length > 0 ? sortByLexorankProperty(views, 'order')[0].id : undefined
   )
   const [updating, setUpdating] = useState<string[]>([])
-  const { createViewApi } = useCloudApi()
   const [
     selectedFolderSet,
     {
@@ -81,7 +80,11 @@ export const ViewsManager = ({
       parent.type !== parentRef.current.type ||
       parentRef.current.target.id !== parent.target.id
     ) {
-      setSelectedViewId(views.length > 0 ? views[0].id : undefined)
+      setSelectedViewId(
+        views.length > 0
+          ? sortByLexorankProperty(views, 'order')[0].id
+          : undefined
+      )
       parentRef.current = parent
     }
   }, [parent, views])
@@ -136,12 +139,11 @@ export const ViewsManager = ({
       <ViewsSelector
         selectedViewId={selectedViewId}
         setSelectedViewId={selectViewId}
-        createViewApi={createViewApi}
         parent={parent}
         views={views}
       />
     )
-  }, [createViewApi, parent, views, selectedViewId, selectViewId])
+  }, [parent, views, selectedViewId, selectViewId])
 
   return (
     <Container>
