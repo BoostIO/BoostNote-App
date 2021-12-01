@@ -11,28 +11,28 @@ import {
 } from '@mdi/js'
 import Portal from '../../../../design/components/atoms/Portal'
 
-interface DueDateSelectProps {
+interface DatePropPickerProps {
   className?: string
   sending?: boolean
   emptyLabel?: string
   isReadOnly: boolean
-  dueDate?: string | null
+  date?: string | null
   onDueDateChange: (newDueDate: Date | null) => void
   disabled?: boolean
   shortenedLabel?: boolean
   portalId?: string
 }
 
-const DueDateSelect = ({
+const DatePropPicker = ({
   className,
   sending,
   disabled,
   isReadOnly,
   emptyLabel,
-  dueDate: dueDateString,
+  date: dueDateString,
   onDueDateChange,
   portalId,
-}: DueDateSelectProps) => {
+}: DatePropPickerProps) => {
   const [dueDate, setDueDate] = useState(() => {
     const date = dueDateString != null ? new Date(dueDateString) : null
     return date == null || !isValid(date) ? null : date
@@ -138,4 +138,4 @@ const Container = styled.div`
   }
 `
 
-export default DueDateSelect
+export default DatePropPicker

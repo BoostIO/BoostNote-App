@@ -3,7 +3,7 @@ import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedPropData, PropData, Props } from '../../interfaces/db/props'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import AssigneeSelect from './Pickers/AssigneeSelect'
-import DueDateSelect from './Pickers/DueDateSelect'
+import DatePropPicker from './Pickers/DatePropPicker'
 import { format as formatDate } from 'date-fns'
 import StatusSelect from './Pickers/StatusSelect'
 import TimePeriodPicker from './Pickers/TimePeriodPicker'
@@ -100,12 +100,12 @@ const PropPicker = ({
       )
     case 'date':
       return (
-        <DueDateSelect
+        <DatePropPicker
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
           sending={sendingMap.get(parent.target.id) === propName}
           isReadOnly={readOnly}
           portalId={portalId}
-          dueDate={propData.data == null ? null : propData.data.toString()}
+          date={propData.data == null ? null : propData.data.toString()}
           onDueDateChange={(newDate: Date | null) =>
             updateProp(
               newDate != null
