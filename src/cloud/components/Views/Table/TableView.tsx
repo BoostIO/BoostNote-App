@@ -9,7 +9,6 @@ import {
 } from '../../../lib/views/table'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { useTableView } from '../../../lib/hooks/views/tableView'
-import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { buildSmartViewQueryCheck } from '../../../lib/smartViews'
 import { docToDataTransferItem, getDocTitle } from '../../../lib/utils/patterns'
 import {
@@ -53,7 +52,6 @@ import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 type TableViewProps = {
   view: SerializedView
   docs: SerializedDocWithSupplemental[]
-  folders?: SerializedFolderWithBookmark[]
   team: SerializedTeam
   currentUserIsCoreMember: boolean
   currentWorkspaceId?: string
