@@ -17,9 +17,9 @@ import {
   isPropCol,
   makeTablePropColId,
 } from '../../../lib/views/table'
-import PropsAddForm, {
+import PropsAddModal, {
   getPropsAddFormUniqueName,
-} from '../../Props/PropsAddForm'
+} from '../../Props/PropAddModal'
 
 interface TableAddPropertyContextProps {
   view: SerializedView
@@ -129,7 +129,7 @@ const TableAddPropertyContext = ({
   }, [columns, columnName])
 
   return (
-    <PropsAddForm
+    <PropsAddModal
       columnName={columnName}
       setColumnName={setColumnName}
       fetchPropertySuggestions={fetchSuggestions}
