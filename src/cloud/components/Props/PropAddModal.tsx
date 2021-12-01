@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { useEffectOnce } from 'react-use'
 import Button from '../../../design/components/atoms/Button'
 import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
+import SuggestionSelect from '../../../design/components/molecules/SuggestionSelect'
 import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { focusFirstChildFromElement } from '../../../design/lib/dom'
@@ -19,7 +20,6 @@ import {
   getIconPathOfPropType,
   getLabelOfPropType,
 } from '../../lib/props'
-import PropsAddForm, { Suggestion } from './PropsAddForm'
 
 type PropsAddFormProps = {
   isColumnNameInvalid: boolean
@@ -103,10 +103,7 @@ const PropsAddModal = ({
     })
   }, [suggestions, columnName, allocatedNames])
 
-  const filteredDefaultSuggestions: Record<
-    string,
-    Suggestion<PropertySuggestion>[]
-  > = useMemo(() => {
+  const filteredDefaultSuggestions = useMemo(() => {
     let staticSuggestions = showDocPageForm
       ? []
       : getDefaultStaticSuggestionsPerType()
@@ -310,7 +307,7 @@ const PropsAddModal = ({
           />
         </MetadataContainer>
       ) : (
-        <PropsAddForm
+        <SuggestionSelect
           suggestions={filteredDefaultSuggestions}
           value={columnName}
           onChange={setColumnName}
