@@ -14,6 +14,7 @@ import TableView from './Table/TableView'
 import ViewsFolderList from './FolderList/ViewsFolderList'
 import Scroller from '../../../design/components/atoms/Scroller'
 import { sortByLexorankProperty } from '../../lib/utils/string'
+import CalendarView from './Calendar/CalendarView'
 
 type ViewsManagerProps = {
   views: SerializedView[]
@@ -155,6 +156,16 @@ export const ViewsManager = ({
                 hasDocInSelection={hasDocInSelection}
                 toggleDocInSelection={toggleDocInSelection}
                 resetDocsInSelection={resetDocsInSelection}
+              />
+            ) : currentView.type === 'calendar' ? (
+              <CalendarView
+                view={currentView}
+                viewsSelector={viewsSelector}
+                docs={docs}
+                team={team}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+                currentFolderId={currentFolderId}
+                currentWorkspaceId={currentWorkspaceId}
               />
             ) : null}
           </>
