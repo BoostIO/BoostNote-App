@@ -8,7 +8,7 @@ import {
 } from '../../interfaces/db/props'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import { getInitialPropDataOfPropType } from '../../lib/props'
-import PropsAddForm, { getPropsAddFormUniqueName } from './PropsAddForm'
+import PropsAddModal, { getPropsAddFormUniqueName } from './PropAddModal'
 
 interface PropSelectorModalProps {
   doc: SerializedDocWithSupplemental
@@ -68,7 +68,7 @@ const PropSelectorModal = ({
   }, [disallowedNames, propName])
 
   return (
-    <PropsAddForm
+    <PropsAddModal
       allocatedNames={Array.from(disallowedNamesSet)}
       columnName={propName}
       setColumnName={setPropName}
