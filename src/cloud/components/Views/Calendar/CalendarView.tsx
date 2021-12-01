@@ -34,7 +34,7 @@ const CalendarView = ({ view, docs, viewsSelector }: CalendarViewProps) => {
     preferences.folderSortingOrder
   )
 
-  const {} = useCalendarView({
+  const { watchedProp } = useCalendarView({
     view,
   })
 
@@ -65,7 +65,7 @@ const CalendarView = ({ view, docs, viewsSelector }: CalendarViewProps) => {
   )
 
   return (
-    <Container className='view view--table'>
+    <Container className='view view--calendar'>
       <StyledContentManagerList>
         <Flexbox justifyContent='space-between' alignItems='center'>
           {viewsSelector}

@@ -1,5 +1,5 @@
 import { SerializedPropData } from '../../interfaces/db/props'
 
-export interface ViewTableData {
+export interface ViewCalendarData {
   watchedProp?: SerializedPropData
 }
