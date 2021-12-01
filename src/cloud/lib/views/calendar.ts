@@ -1,4 +1,5 @@
-import { SerializedPropData } from '../../interfaces/db/props'
+import { PropType } from '../../interfaces/db/props'
+
 export interface ViewCalendarData {
-  watchedProp?: SerializedPropData
+  watchedProp?: { type: PropType; name: string }
 }

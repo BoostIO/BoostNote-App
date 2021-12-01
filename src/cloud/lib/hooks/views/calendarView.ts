@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
-import { SerializedPropData } from '../../../interfaces/db/props'
+import { PropType } from '../../../interfaces/db/props'
 import { SerializedView } from '../../../interfaces/db/view'
 import { ViewCalendarData } from '../../views/calendar'
 import { useCloudApi } from '../useCloudApi'
@@ -10,17 +10,18 @@ interface CalendarViewStoreProps {
 }
 
 export type CalendarViewActionsRef = React.MutableRefObject<{
-  updateWatchedProp: (
-    newProp: SerializedPropData
-  ) => Promise<BulkApiActionRes | undefined>
+  updateWatchedProp: (newProp: {
+    type: PropType
+    name: string
+  }) => Promise<BulkApiActionRes | undefined>
 }>
 
 export function useCalendarView({ view }: CalendarViewStoreProps) {
   const { sendingMap, updateViewApi, updateDocPropsApi } = useCloudApi()
 
   const updateWatchedProp = useCallback(
-    async (newProp: SerializedPropData) => {
-      if (newProp.type !== 'status') {
+    async (newProp: { type: PropType; name: string }) => {
+      if (newProp.type !== 'date') {
         return
       }
 
@@ -46,8 +47,8 @@ export function useCalendarView({ view }: CalendarViewStoreProps) {
     viewSendingState: sendingMap.get(view.id.toString()),
     sendingMap,
     watchedProp: (view.data as ViewCalendarData).watchedProp || {
-      type: 'status',
-      name: 'Status',
+      type: 'date',
+      name: 'Date',
     },
   }
 }

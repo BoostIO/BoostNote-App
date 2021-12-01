@@ -17,6 +17,11 @@ import Flexbox from '../../../../design/components/atoms/Flexbox'
 import Button from '../../../../design/components/atoms/Button'
 import { useCalendarView } from '../../../lib/hooks/views/calendarView'
 import Calendar from '../../../../design/components/organisms/Calendar'
+import CalendarEventItem from './CalendarEventItem'
+import { useRouter } from '../../../lib/router'
+import { EventSourceInput } from '@fullcalendar/react'
+import { isArray } from 'lodash'
+import { filterIter } from '../../../lib/utils/iterator'
 
 type CalendarViewProps = {
   view: SerializedView
@@ -28,7 +33,14 @@ type CalendarViewProps = {
   viewsSelector: React.ReactNode
 }
 
-const CalendarView = ({ view, docs, viewsSelector }: CalendarViewProps) => {
+const CalendarView = ({
+  view,
+  team,
+  docs,
+  viewsSelector,
+  currentUserIsCoreMember,
+}: CalendarViewProps) => {
+  const { push } = useRouter()
   const { preferences, setPreferences } = usePreferences()
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
     preferences.folderSortingOrder
@@ -56,6 +68,51 @@ const CalendarView = ({ view, docs, viewsSelector }: CalendarViewProps) => {
     }
   }, [order, docs])
 
+  const docEvents: EventSourceInput = useMemo(() => {
+    return orderedDocs.map((doc) => {
+      const dateProps = (doc.props || {})[watchedProp.name]
+
+      const props = {
+        start: undefined,
+        end: undefined,
+        date: undefined,
+      }
+      if (
+        dateProps != null &&
+        dateProps.type === watchedProp.type &&
+        dateProps.data != null
+      ) {
+        if (!isArray(dateProps.data)) {
+          props.start = dateProps.data
+        } else {
+          if (dateProps.data.length === 2) {
+            props.start = dateProps.data[0]
+            props.end = dateProps.data[1]
+          }
+        }
+      }
+      return {
+        title: getDocTitle(doc, 'Untitled'),
+        ...props,
+        extendedProps: {
+          doc,
+          team,
+          push,
+        },
+      }
+    })
+  }, [orderedDocs, push, team, watchedProp])
+
+  const noDateDocs = useMemo(() => {
+    return filterIter(
+      (doc) =>
+        (doc.props || {})[watchedProp.name] == null ||
+        (doc.props || {})[watchedProp.name].data == null ||
+        (doc.props || {})[watchedProp.name].type !== watchedProp.type,
+      orderedDocs
+    )
+  }, [watchedProp, orderedDocs])
+
   const onChangeOrder = useCallback(
     (val: FormSelectOption) => {
       setOrder(val.value)
@@ -76,12 +133,16 @@ const CalendarView = ({ view, docs, viewsSelector }: CalendarViewProps) => {
         </Flexbox>
       </Flexbox>
       <Calendar
+        dayHeaderFormat={{ weekday: 'long' }}
+        selectable={currentUserIsCoreMember}
+        editable={currentUserIsCoreMember}
+        eventContent={CalendarEventItem}
+        events={docEvents}
         headerToolbar={{
           start: undefined,
           center: 'prev,title,next',
           end: 'today',
         }}
-        dayHeaderFormat={{ weekday: 'long' }}
       />
     </Container>
   )
