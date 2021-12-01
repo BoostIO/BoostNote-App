@@ -1,10 +1,10 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useEffectOnce } from 'react-use'
-import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
-import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
-import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
-import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import { useUpDownNavigationListener } from '../../lib/keyboard'
+import ColoredBlock from '../atoms/ColoredBlock'
+import FormInput from '../molecules/Form/atoms/FormInput'
+import MetadataContainer from '../organisms/MetadataContainer'
+import MetadataContainerRow from '../organisms/MetadataContainer/molecules/MetadataContainerRow'
+import { useUpDownNavigationListener } from '../../../cloud/lib/keyboard'
 
 export interface Suggestion<T> {
   name: string
@@ -12,7 +12,7 @@ export interface Suggestion<T> {
   value: T
 }
 
-type PropsAddFormProps<T> = {
+type SuggestionSelectProps<T> = {
   value: string
   sending?: string
   suggestions: Record<string, Suggestion<T>[]>
@@ -23,7 +23,7 @@ type PropsAddFormProps<T> = {
   error?: string
 }
 
-const PropsAddForm = <T extends any>({
+const SuggestionSelect = <T extends any>({
   value,
   sending,
   suggestions,
@@ -32,7 +32,7 @@ const PropsAddForm = <T extends any>({
   onSelect,
   disabled,
   error,
-}: PropsAddFormProps<T>) => {
+}: SuggestionSelectProps<T>) => {
   const menuRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -127,4 +127,4 @@ const PropsAddForm = <T extends any>({
     </MetadataContainer>
   )
 }
-export default PropsAddForm
+export default SuggestionSelect
