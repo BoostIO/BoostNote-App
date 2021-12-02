@@ -36,6 +36,7 @@ import { mdiCalendarMonthOutline, mdiFileDocumentOutline } from '@mdi/js'
 import CalendarWatchedPropContext from './CalendarWatchedPropContext'
 import { getDocLinkHref } from '../../Link/DocLink'
 import { useRouter } from '../../../lib/router'
+import CalendarNoDateContext from './CalendarNoDateContext'
 
 type CalendarViewProps = {
   view: SerializedView
@@ -62,7 +63,7 @@ const CalendarView = ({
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
     preferences.folderSortingOrder
   )
-  const { openContextModal } = useModal()
+  const { openContextModal, closeAllModals } = useModal()
 
   const { watchedProp, actionsRef } = useCalendarView({
     view,
@@ -224,6 +225,7 @@ const CalendarView = ({
 
   const handleEventChange = useCallback(
     async (resize: { event: EventApi }) => {
+      console.log('change')
       if (
         resize.event.start == null ||
         resize.event.extendedProps.doc == null
@@ -249,6 +251,23 @@ const CalendarView = ({
       )
     },
     [actionsRef]
+  )
+
+  const handleEventReceive = useCallback(
+    async (received: { event: EventApi }) => {
+      if (
+        received.event.start == null ||
+        received.event.extendedProps.doc == null
+      ) {
+        return
+      }
+      await actionsRef.current.updateDocDate(
+        received.event.extendedProps.doc as any,
+        [cleanupDateProp(received.event.start)]
+      )
+      closeAllModals()
+    },
+    [actionsRef, closeAllModals]
   )
 
   return (
@@ -290,6 +309,21 @@ const CalendarView = ({
             variant='transparent'
             disabled={noDateDocs.length === 0}
             iconPath={mdiFileDocumentOutline}
+            onClick={(event) =>
+              openContextModal(
+                event,
+                <CalendarNoDateContext
+                  team={team}
+                  docs={noDateDocs}
+                  currentUserIsCoreMember={currentUserIsCoreMember}
+                />,
+                {
+                  width: 250,
+                  removePadding: true,
+                  onBlur: true,
+                }
+              )
+            }
           >
             No Date ({noDateDocs.length})
           </Button>
@@ -312,6 +346,8 @@ const CalendarView = ({
         select={handleNewDateSelection}
         eventChange={handleEventChange}
         eventClick={handleEventClick}
+        eventReceive={handleEventReceive}
+        droppable={false}
         headerToolbar={{
           start: undefined,
           center: 'prev,title,next',

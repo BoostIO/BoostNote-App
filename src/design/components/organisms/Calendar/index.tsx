@@ -1,5 +1,6 @@
 import React from 'react'
 import FullCalendar, {
+  AllowFunc,
   CustomContentGenerator,
   DateFormatter,
   DateSelectArg,
@@ -25,6 +26,8 @@ interface CalendarProps {
   selectable?: boolean
   editable?: boolean
   events?: EventSourceInput
+  dropAccept?: string
+  droppable?: boolean
   select?: (arg: DateSelectArg) => void
   eventClick?: (arg: EventClickArg) => void
   eventResize?: (arg: {
@@ -34,6 +37,8 @@ interface CalendarProps {
   }) => void
   eventChange?: (arg: EventChangeArg) => void
   eventsSet?: (events: EventApi[]) => void
+  eventReceive?: (arg: any) => void
+  eventAllow?: AllowFunc
 }
 
 const Calendar = ({
@@ -45,11 +50,15 @@ const Calendar = ({
   selectable,
   eventContent,
   events,
+  droppable,
+  dropAccept,
   select,
   eventClick,
   eventChange,
   eventResize,
   eventsSet,
+  eventReceive,
+  eventAllow,
 }: CalendarProps) => {
   return (
     <FullCalendar
@@ -71,6 +80,10 @@ const Calendar = ({
       eventChange={eventChange}
       eventsSet={eventsSet}
       defaultAllDay={true}
+      droppable={droppable}
+      dropAccept={dropAccept}
+      eventAllow={eventAllow}
+      eventReceive={eventReceive}
     />
   )
 }
