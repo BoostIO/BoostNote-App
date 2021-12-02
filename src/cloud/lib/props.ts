@@ -5,6 +5,7 @@ import {
   mdiClockOutline,
   mdiContentSaveOutline,
   mdiLabelOutline,
+  mdiMusicAccidentalSharp,
   mdiTimerOutline,
 } from '@mdi/js'
 import { capitalize, isNumber, isObject } from 'lodash'
@@ -25,6 +26,7 @@ export const supportedPropTypes: {
   { type: 'json', subType: 'timeperiod' },
   { type: 'status' },
   { type: 'user' },
+  { type: 'number' },
 ]
 
 export function getLabelOfPropType(
@@ -100,6 +102,8 @@ export function getIconPathOfPropType(
       return mdiLabelOutline
     case 'status':
       return mdiArrowDownDropCircleOutline
+    case 'number':
+      return mdiMusicAccidentalSharp
     default:
       return
   }
@@ -123,6 +127,12 @@ export function getInitialPropDataOfPropType(
       return {
         type: 'status',
         data: undefined,
+        createdAt: new Date().toString(),
+      }
+    case 'number':
+      return {
+        type: 'number',
+        data: 0,
         createdAt: new Date().toString(),
       }
     case 'string':
@@ -193,5 +203,6 @@ export function getDefaultColumnSuggestionsPerType(): {
     { type: 'status', name: 'Status' },
     { type: 'date', name: 'Due Date' },
     { type: 'date', name: 'Start Date' },
+    { type: 'number', name: 'Story Point' },
   ]
 }

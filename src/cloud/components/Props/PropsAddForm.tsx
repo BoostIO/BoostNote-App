@@ -468,6 +468,19 @@ const PropsAddForm = ({
                 },
               }}
             />
+            <MetadataContainerRow
+              row={{
+                type: 'button',
+                props: {
+                  id: 'new-number-col',
+                  label: getLabelOfPropType('number'),
+                  iconPath: getIconPathOfPropType('number'),
+                  disabled: isColumnNameInvalid || sending != null,
+                  spinning: sending === 'number',
+                  onClick: () => addNewPropCol(columnName, 'number'),
+                },
+              }}
+            />
           </>
         )}
       </MetadataContainer>
