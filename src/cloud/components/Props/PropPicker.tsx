@@ -4,7 +4,6 @@ import { SerializedPropData, PropData, Props } from '../../interfaces/db/props'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import AssigneeSelect from './Pickers/AssigneeSelect'
 import DatePropPicker from './Pickers/DatePropPicker'
-import { format as formatDate } from 'date-fns'
 import StatusSelect from './Pickers/StatusSelect'
 import TimePeriodPicker from './Pickers/TimePeriodPicker'
 import { mdiAlertOutline } from '@mdi/js'
@@ -12,6 +11,7 @@ import PropertyValueButton from './Pickers/PropertyValueButton'
 import WithTooltip from '../../../design/components/atoms/WithTooltip'
 import { trackEvent } from '../../api/track'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
+import { cleanupDateProp } from '../../lib/props'
 
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
@@ -109,15 +109,8 @@ const PropPicker = ({
                 ? {
                     type: 'date',
                     data: Array.isArray(newDate)
-                      ? newDate.map(
-                          (date) =>
-                            new Date(
-                              formatDate(date, 'yyyy-MM-dd') + 'T00:00:00.000Z'
-                            )
-                        )
-                      : new Date(
-                          formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z'
-                        ),
+                      ? newDate.map((date) => cleanupDateProp(date))
+                      : cleanupDateProp(newDate),
                   }
                 : {
                     type: 'date',

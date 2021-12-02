@@ -1,8 +1,4 @@
-import {
-  mdiFileDocumentOutline,
-  mdiFolderOutline,
-  mdiPaletteOutline,
-} from '@mdi/js'
+import { mdiFileDocumentOutline, mdiFolderOutline } from '@mdi/js'
 import React, { useCallback } from 'react'
 import { FormRowProps } from '../../../design/components/molecules/Form/templates/FormRow'
 import EmojiInputForm from '../../../design/components/organisms/EmojiInputForm'
@@ -13,6 +9,7 @@ import { removeCachedPageProps } from '../../../lib/routing/pagePropCache'
 import WorkspaceModalForm from '../../components/Modal/contents/Workspace/WorkspaceModalForm'
 import { SerializedDoc } from '../../interfaces/db/doc'
 import { SerializedFolder } from '../../interfaces/db/folder'
+import { PropData } from '../../interfaces/db/props'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { lngKeys } from '../i18n/types'
@@ -183,7 +180,7 @@ export function useCloudResourceModals() {
     ) => {
       openModal(
         <EmojiInputForm
-          defaultIcon={body.blocks ? mdiPaletteOutline : mdiFileDocumentOutline}
+          defaultIcon={mdiFileDocumentOutline}
           placeholder={translate(lngKeys.DocTitlePlaceholder)}
           submitButtonProps={{
             label: translate(lngKeys.GeneralCreate),
@@ -204,7 +201,7 @@ export function useCloudResourceModals() {
                 parentFolderId: body.parentFolderId,
                 title: inputValue,
                 emoji,
-                blocks: body.blocks,
+                props: body.props,
               },
               {
                 skipRedirect: options?.skipRedirect,
@@ -218,9 +215,7 @@ export function useCloudResourceModals() {
         />,
         {
           showCloseIcon: true,
-          title: body.blocks
-            ? translate(lngKeys.CreateNewCanvas)
-            : translate(lngKeys.ModalsCreateNewDocument),
+          title: translate(lngKeys.ModalsCreateNewDocument),
         }
       )
     },
@@ -399,7 +394,7 @@ export interface CloudNewResourceRequestBody {
   team?: SerializedTeam
   workspaceId?: string
   parentFolderId?: string
-  blocks?: boolean
+  props?: [string, PropData | null][]
 }
 
 export type UIFormOptions = SubmissionWrappers & {

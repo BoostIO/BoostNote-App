@@ -22,7 +22,7 @@ export interface CreateDocRequestBody {
   template?: string
   title?: string
   emoji?: string
-  blocks?: boolean
+  props?: [string, PropData | null][]
 }
 
 export interface CreateDocResponseBody {
@@ -33,10 +33,18 @@ export async function createDoc(
   team: { id: string },
   body: CreateDocRequestBody
 ) {
+  const parsedBody = Object.assign({}, body) as any
+  if (body.props != null) {
+    parsedBody.props = {} as Record<string, PropData | null>
+    ;(body.props || []).forEach((prop) => {
+      parsedBody.props[prop[0]] = prop[1]
+    })
+  }
+
   const data = await callApi<CreateDocResponseBody>(
     `api/teams/${team.id}/docs`,
     {
-      json: body,
+      json: parsedBody,
       method: 'post',
     }
   )

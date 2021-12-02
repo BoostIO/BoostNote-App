@@ -150,6 +150,7 @@
   },
   "dependencies": {
     "@fullcalendar/daygrid": "^5.10.1",
+    "@fullcalendar/interaction": "^5.10.1",
     "@fullcalendar/react": "^5.10.1",
     "@mdi/js": "^5.9.55",
     "@mdi/react": "^1.2.1",

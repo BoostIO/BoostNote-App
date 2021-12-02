@@ -19,11 +19,14 @@ import { useCalendarView } from '../../../lib/hooks/views/calendarView'
 import Calendar from '../../../../design/components/organisms/Calendar'
 import CalendarEventItem from './CalendarEventItem'
 import { useRouter } from '../../../lib/router'
-import { EventSourceInput } from '@fullcalendar/react'
+import { DateSelectArg, EventSourceInput } from '@fullcalendar/react'
 import { isArray } from 'lodash'
 import { filterIter } from '../../../lib/utils/iterator'
 import { useModal } from '../../../../design/lib/stores/modal'
 import CalendarEventItemContextMenu from './CalendarEventItemContextMenu'
+import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
+import { intervalToDuration, format as formatDate } from 'date-fns'
+import { cleanupDateProp } from '../../../lib/props'
 
 type CalendarViewProps = {
   view: SerializedView
@@ -41,8 +44,11 @@ const CalendarView = ({
   docs,
   viewsSelector,
   currentUserIsCoreMember,
+  currentWorkspaceId,
+  currentFolderId,
 }: CalendarViewProps) => {
   const { push } = useRouter()
+  const { openNewDocForm } = useCloudResourceModals()
   const { preferences, setPreferences } = usePreferences()
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
     preferences.folderSortingOrder
@@ -132,8 +138,6 @@ const CalendarView = ({
     )
   }, [watchedProp, orderedDocs])
 
-  const createDocument = useCallback(() => {}, [])
-
   const onChangeOrder = useCallback(
     (val: FormSelectOption) => {
       setOrder(val.value)
@@ -142,7 +146,57 @@ const CalendarView = ({
     [setPreferences]
   )
 
-  console.log(docEvents)
+  const handleNewDateSelection = useCallback(
+    (val: DateSelectArg) => {
+      const dates = [val.start]
+      if (intervalToDuration({ start: val.start, end: val.end }).days !== 1) {
+        const endDate = val.end
+        endDate.setDate(endDate.getDate() - 1)
+        dates.push(endDate)
+      }
+
+      const cleanedDateProp = dates.map((date) => cleanupDateProp(date))
+      return openNewDocForm(
+        {
+          team: team,
+          workspaceId: currentWorkspaceId,
+          parentFolderId: currentFolderId,
+          props: [
+            [
+              watchedProp.name,
+              {
+                type: 'date',
+                data: dates.length === 1 ? cleanedDateProp[0] : cleanedDateProp,
+              },
+            ],
+          ],
+        },
+        {
+          precedingRows: [
+            {
+              description: `${watchedProp.name}: ${
+                cleanedDateProp.length > 1
+                  ? `${formatDate(
+                      cleanedDateProp[0],
+                      'MMM dd, yyyy'
+                    )} -> ${formatDate(cleanedDateProp[1], 'MMM dd, yyyy')}`
+                  : formatDate(cleanedDateProp[0], 'MMM dd, yyyy')
+              }`,
+            },
+          ],
+          skipRedirect: true,
+        }
+      )
+    },
+    [
+      currentFolderId,
+      currentWorkspaceId,
+      openNewDocForm,
+      watchedProp.name,
+      team,
+    ]
+  )
+
   return (
     <Container className='view view--calendar'>
       <Flexbox justifyContent='space-between' alignItems='center'>
@@ -160,6 +214,7 @@ const CalendarView = ({
         editable={currentUserIsCoreMember}
         eventContent={CalendarEventItem}
         events={docEvents}
+        select={handleNewDateSelection}
         headerToolbar={{
           start: undefined,
           center: 'prev,title,next',
@@ -177,6 +232,10 @@ const Container = styled.div`
 
   .sorting-options__select .form__select__single-value {
     display: flex;
+  }
+
+  .fc .fc-highlight {
+    background: ${({ theme }) => theme.colors.background.quaternary};
   }
 
   .fc-header-toolbar {

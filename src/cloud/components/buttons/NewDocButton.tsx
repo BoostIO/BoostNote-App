@@ -21,35 +21,31 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
   const { openModal } = useModal()
   const { translate } = useI18n()
 
-  const openNewDocModal = useCallback(
-    (isCanvas?: boolean) => {
-      openNewDocForm(
-        {
-          team,
-          parentFolderId: currentParentFolderId,
-          workspaceId: currentWorkspaceId,
-          blocks: isCanvas ? true : undefined,
-        },
-        {
-          precedingRows: [
-            {
-              description: `${
-                workspacesMap.get(currentWorkspaceId || '')?.name
-              }${currentPath}`,
-            },
-          ],
-        }
-      )
-    },
-    [
-      openNewDocForm,
-      workspacesMap,
-      currentWorkspaceId,
-      team,
-      currentParentFolderId,
-      currentPath,
-    ]
-  )
+  const openNewDocModal = useCallback(() => {
+    openNewDocForm(
+      {
+        team,
+        parentFolderId: currentParentFolderId,
+        workspaceId: currentWorkspaceId,
+      },
+      {
+        precedingRows: [
+          {
+            description: `${
+              workspacesMap.get(currentWorkspaceId || '')?.name
+            }${currentPath}`,
+          },
+        ],
+      }
+    )
+  }, [
+    openNewDocForm,
+    workspacesMap,
+    currentWorkspaceId,
+    team,
+    currentParentFolderId,
+    currentPath,
+  ])
 
   return (
     <SidebarButton
