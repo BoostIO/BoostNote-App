@@ -10,6 +10,7 @@ export type ListPropertySuggestionsRequestBody = {
   workspace?: string
   doc?: string
   folder?: string
+  smartView?: string
   propertyType?: string
   jsonPropertyType?: string
 }

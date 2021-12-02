@@ -25,7 +25,10 @@ import { useModal } from '../../../../design/lib/stores/modal'
 import CalendarEventItemContextMenu from './CalendarEventItemContextMenu'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { intervalToDuration, format as formatDate } from 'date-fns'
-import { cleanupDateProp } from '../../../lib/props'
+import { cleanupDateProp, getIconPathOfPropType } from '../../../lib/props'
+import Icon from '../../../../design/components/atoms/Icon'
+import { mdiCalendarMonthOutline } from '@mdi/js'
+import CalendarWatchedPropContext from './CalendarWatchedPropContext'
 
 type CalendarViewProps = {
   view: SerializedView
@@ -230,6 +233,36 @@ const CalendarView = ({
       <Flexbox justifyContent='space-between' alignItems='center'>
         {viewsSelector}
         <Flexbox flex='0 0 auto'>
+          <Button
+            variant='transparent'
+            className='view--calendar__watched'
+            onClick={(event) =>
+              openContextModal(
+                event,
+                <CalendarWatchedPropContext
+                  view={view}
+                  teamId={team.id}
+                  watchedProp={watchedProp}
+                  updateWatchedProp={actionsRef.current.updateWatchedProp}
+                />,
+                {
+                  width: 250,
+                  removePadding: true,
+                }
+              )
+            }
+          >
+            <Flexbox>
+              <span>By</span>
+              <Icon
+                path={
+                  getIconPathOfPropType(watchedProp.type) ||
+                  mdiCalendarMonthOutline
+                }
+              />
+              <span>{watchedProp.name}</span>
+            </Flexbox>
+          </Button>
           <SortingOption
             value={order}
             onChange={onChangeOrder}
@@ -262,6 +295,13 @@ const Container = styled.div`
   display: block;
   width: 100%;
   position: relative;
+
+  .view--calendar__watched {
+    .icon {
+      margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+      margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    }
+  }
 
   .sorting-options__select .form__select__single-value {
     display: flex;
