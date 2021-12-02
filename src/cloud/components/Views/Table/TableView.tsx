@@ -339,7 +339,6 @@ const TableView = ({
                             !currentUserIsCoreMember || !isPropDataAccurate
                           }
                           isErrored={!isPropDataAccurate}
-                          portalId={`portal-anchor-${view.id}`}
                         />
                       ),
                     }

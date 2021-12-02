@@ -22,6 +22,8 @@ import { useRouter } from '../../../lib/router'
 import { EventSourceInput } from '@fullcalendar/react'
 import { isArray } from 'lodash'
 import { filterIter } from '../../../lib/utils/iterator'
+import { useModal } from '../../../../design/lib/stores/modal'
+import CalendarEventItemContextMenu from './CalendarEventItemContextMenu'
 
 type CalendarViewProps = {
   view: SerializedView
@@ -45,6 +47,7 @@ const CalendarView = ({
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
     preferences.folderSortingOrder
   )
+  const { openContextModal } = useModal()
 
   const { watchedProp } = useCalendarView({
     view,
@@ -85,9 +88,16 @@ const CalendarView = ({
         if (!isArray(dateProps.data)) {
           props.start = dateProps.data
         } else {
+          const orderedDates = dateProps.data.sort((a, b) => {
+            if (a < b) {
+              return -1
+            } else {
+              return 1
+            }
+          })
           if (dateProps.data.length === 2) {
-            props.start = dateProps.data[0]
-            props.end = dateProps.data[1]
+            props.start = orderedDates[0]
+            props.end = orderedDates[1]
           }
         }
       }
@@ -98,10 +108,19 @@ const CalendarView = ({
           doc,
           team,
           push,
+          onContextClick: (event: React.MouseEvent) =>
+            openContextModal(
+              event,
+              <CalendarEventItemContextMenu doc={doc} team={team} />,
+              {
+                removePadding: true,
+                width: 200,
+              }
+            ),
         },
       }
     })
-  }, [orderedDocs, push, team, watchedProp])
+  }, [orderedDocs, push, team, watchedProp, openContextModal])
 
   const noDateDocs = useMemo(() => {
     return filterIter(
@@ -113,6 +132,8 @@ const CalendarView = ({
     )
   }, [watchedProp, orderedDocs])
 
+  const createDocument = useCallback(() => {}, [])
+
   const onChangeOrder = useCallback(
     (val: FormSelectOption) => {
       setOrder(val.value)
@@ -121,6 +142,7 @@ const CalendarView = ({
     [setPreferences]
   )
 
+  console.log(docEvents)
   return (
     <Container className='view view--calendar'>
       <Flexbox justifyContent='space-between' alignItems='center'>
@@ -195,6 +217,10 @@ const Container = styled.div`
       font-weight: 400;
       font-size: ${({ theme }) => theme.sizes.fonts.md}px;
     }
+  }
+
+  .fc-h-event {
+    border-color: ${({ theme }) => theme.colors.border.main};
   }
 
   .fc .fc-button-primary {

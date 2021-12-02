@@ -27,7 +27,6 @@ interface DatePropPickerProps {
   date?: Date | Date[] | null
   onDueDateChange: (newDueDate: Date | Date[] | null) => void
   disabled?: boolean
-  portalId?: string
 }
 
 const DatePropPicker = ({
@@ -38,7 +37,6 @@ const DatePropPicker = ({
   emptyLabel,
   date: propDate,
   onDueDateChange,
-  portalId,
 }: DatePropPickerProps) => {
   const [date, setDate] = useState<Date | Date[] | null>(getValidDate(propDate))
   const { openContextModal } = useModal()

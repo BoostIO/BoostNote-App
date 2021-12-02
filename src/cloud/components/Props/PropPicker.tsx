@@ -20,7 +20,6 @@ interface PropPickerProps {
   readOnly?: boolean
   isErrored?: boolean
   onUpdate?: (newProps: Props) => void
-  portalId?: string
 }
 
 const PropPicker = ({
@@ -30,7 +29,6 @@ const PropPicker = ({
   onUpdate,
   readOnly = false,
   isErrored,
-  portalId,
 }: PropPickerProps) => {
   const { sendingMap, updateDocPropsApi } = useCloudApi()
 
@@ -104,7 +102,6 @@ const PropPicker = ({
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
           sending={sendingMap.get(parent.target.id) === propName}
           isReadOnly={readOnly}
-          portalId={portalId}
           date={propData.data == null ? null : (propData.data as any)}
           onDueDateChange={(newDate: Date | Date[] | null) =>
             updateProp(

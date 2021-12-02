@@ -16,6 +16,7 @@ type DocEventExtendedProps = EventApi & {
     doc: SerializedDocWithSupplemental
     team: SerializedTeam
     push: (href: string) => void
+    onContextClick: (event: React.MouseEvent) => void
   }
 }
 
@@ -43,7 +44,12 @@ const CalendarEventItem = ({ event }: CalendarEventItemProps) => {
             ? { type: 'emoji', path: event.extendedProps.doc.emoji }
             : { type: 'icon', path: mdiFileDocumentOutline }
         }
-        controls={[{ icon: mdiDotsHorizontal, onClick: (e) => {} }]}
+        controls={[
+          {
+            icon: mdiDotsHorizontal,
+            onClick: event.extendedProps.onContextClick,
+          },
+        ]}
       />
     </Container>
   )
@@ -53,7 +59,8 @@ function isDocEvent(event: EventApi): event is DocEventExtendedProps {
   if (
     event.extendedProps.doc == null ||
     event.extendedProps.team == null ||
-    event.extendedProps.push == null
+    event.extendedProps.push == null ||
+    event.extendedProps.onContextClick == null
   ) {
     return false
   }
