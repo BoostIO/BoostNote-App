@@ -18,7 +18,7 @@ import Button from '../../../../design/components/atoms/Button'
 import { useCalendarView } from '../../../lib/hooks/views/calendarView'
 import Calendar from '../../../../design/components/organisms/Calendar'
 import CalendarEventItem from './CalendarEventItem'
-import { DateSelectArg, EventSourceInput } from '@fullcalendar/react'
+import { DateSelectArg, EventApi, EventSourceInput } from '@fullcalendar/react'
 import { isArray } from 'lodash'
 import { filterIter } from '../../../lib/utils/iterator'
 import { useModal } from '../../../../design/lib/stores/modal'
@@ -53,7 +53,7 @@ const CalendarView = ({
   )
   const { openContextModal } = useModal()
 
-  const { watchedProp } = useCalendarView({
+  const { watchedProp, actionsRef } = useCalendarView({
     view,
   })
 
@@ -79,10 +79,11 @@ const CalendarView = ({
     return orderedDocs.map((doc) => {
       const dateProps = (doc.props || {})[watchedProp.name]
 
-      const props = {
+      const props: any = {
         start: undefined,
         end: undefined,
         date: undefined,
+        allDay: true,
       }
       if (
         dateProps != null &&
@@ -101,7 +102,9 @@ const CalendarView = ({
           })
           if (dateProps.data.length === 2) {
             props.start = orderedDates[0]
-            props.end = orderedDates[1]
+            const endDate = new Date(orderedDates[1])
+            endDate.setDate(endDate.getDate() + 1)
+            props.end = endDate
           }
         }
       }
@@ -193,6 +196,35 @@ const CalendarView = ({
     ]
   )
 
+  const handleEventResizing = useCallback(
+    async (resize: { event: EventApi; endDelta: Duration }) => {
+      if (
+        resize.event.end == null ||
+        resize.event.start == null ||
+        resize.event.extendedProps.doc == null
+      ) {
+        return
+      }
+
+      const dates = [resize.event.start]
+      if (
+        intervalToDuration({ start: resize.event.start, end: resize.event.end })
+          .days !== 1
+      ) {
+        const endDate = resize.event.end
+        endDate.setDate(endDate.getDate() - 1)
+        dates.push(endDate)
+      }
+
+      const cleanedDateProp = dates.map((date) => cleanupDateProp(date))
+      await actionsRef.current.updateDocDate(
+        resize.event.extendedProps.doc as any,
+        cleanedDateProp
+      )
+    },
+    [actionsRef]
+  )
+
   return (
     <Container className='view view--calendar'>
       <Flexbox justifyContent='space-between' alignItems='center'>
@@ -211,6 +243,7 @@ const CalendarView = ({
         eventContent={CalendarEventItem}
         events={docEvents}
         select={handleNewDateSelection}
+        eventResize={handleEventResizing}
         headerToolbar={{
           start: undefined,
           center: 'prev,title,next',
@@ -231,7 +264,8 @@ const Container = styled.div`
   }
 
   .fc .fc-highlight {
-    background: ${({ theme }) => theme.colors.background.quaternary};
+    background: ${({ theme }) => theme.colors.background.tertiary};
+    opacity: 0.2;
   }
 
   .fc-header-toolbar {

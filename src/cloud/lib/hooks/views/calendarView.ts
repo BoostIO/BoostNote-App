@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
+import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { PropType } from '../../../interfaces/db/props'
 import { SerializedView } from '../../../interfaces/db/view'
 import { ViewCalendarData } from '../../views/calendar'
@@ -14,6 +15,10 @@ export type CalendarViewActionsRef = React.MutableRefObject<{
     type: PropType
     name: string
   }) => Promise<BulkApiActionRes | undefined>
+  updateDocDate: (
+    doc: SerializedDocWithSupplemental,
+    dateRange: Date[]
+  ) => Promise<BulkApiActionRes | undefined>
 }>
 
 export function useCalendarView({ view }: CalendarViewStoreProps) {
@@ -32,15 +37,39 @@ export function useCalendarView({ view }: CalendarViewStoreProps) {
     [view, updateViewApi]
   )
 
+  const updateDocDate = useCallback(
+    async (doc: SerializedDocWithSupplemental, dateRange: Date[]) => {
+      if (dateRange.length > 2) {
+        return
+      }
+
+      const prop = (view.data as ViewCalendarData).watchedProp || {
+        type: 'date',
+        name: 'Date',
+      }
+
+      return updateDocPropsApi(doc, [
+        prop.name,
+        {
+          type: 'date',
+          data: dateRange.length === 1 ? dateRange[0] : dateRange,
+        },
+      ])
+    },
+    [view, updateDocPropsApi]
+  )
+
   const actionsRef: CalendarViewActionsRef = useRef({
     updateWatchedProp,
+    updateDocDate,
   })
 
   useEffect(() => {
     actionsRef.current = {
       updateWatchedProp,
+      updateDocDate,
     }
-  }, [updateWatchedProp])
+  }, [updateWatchedProp, updateDocDate])
 
   return {
     actionsRef,

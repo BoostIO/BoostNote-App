@@ -4,6 +4,8 @@ import FullCalendar, {
   DateFormatter,
   DateSelectArg,
   DayCellContentArg,
+  Duration,
+  EventApi,
   EventClickArg,
   EventContentArg,
   EventSourceInput,
@@ -24,6 +26,12 @@ interface CalendarProps {
   events?: EventSourceInput
   select?: (arg: DateSelectArg) => void
   eventClick?: (arg: EventClickArg) => void
+  eventResize?: (arg: {
+    event: EventApi
+    endDelta: Duration
+    startDelta: Duration
+  }) => void
+  eventsSet?: (events: EventApi[]) => void
 }
 
 const Calendar = ({
@@ -37,6 +45,8 @@ const Calendar = ({
   events,
   select,
   eventClick,
+  eventResize,
+  eventsSet,
 }: CalendarProps) => {
   return (
     <FullCalendar
@@ -54,6 +64,9 @@ const Calendar = ({
       eventContent={eventContent}
       select={select}
       eventClick={eventClick}
+      eventResize={eventResize}
+      eventsSet={eventsSet}
+      defaultAllDay={true}
     />
   )
 }
