@@ -174,55 +174,50 @@ const Router = () => {
     }
 
     const abortController = new AbortController()
-    if (pageSpec.getInitialProps != null) {
-      Promise.all([
-        initialized ? null : getGlobalData(),
-        pageSpec.getInitialProps({
-          pathname,
-          search,
-          signal: abortController.signal,
-        }),
-      ])
-        .then(([globalData, pageData]) => {
-          if (globalData != null) {
-            initGlobalData(globalData)
+
+    Promise.all([
+      initialized ? null : getGlobalData(),
+      pageSpec.getInitialProps != null
+        ? pageSpec.getInitialProps({
+            pathname,
+            search,
+            signal: abortController.signal,
+          })
+        : {},
+    ])
+      .then(([globalData, pageData]) => {
+        if (globalData != null) {
+          initGlobalData(globalData)
+        }
+        setPageInfo({
+          Component: pageSpec.Component,
+          pageProps: pageData,
+        })
+        nProgress.done()
+      })
+      .catch((error: Error) => {
+        if (error.name === 'AbortError') {
+          console.warn('Navigation aborted')
+          console.warn(error)
+        } else {
+          console.error(error)
+          if (!initialized) {
+            initGlobalData({
+              teams: [],
+              invites: [],
+            })
           }
+
           setPageInfo({
-            Component: pageSpec.Component,
-            pageProps: pageData,
+            isError: true,
+            Component: ErrorPage,
+            pageProps: {
+              error,
+            },
           })
           nProgress.done()
-        })
-        .catch((error: Error) => {
-          if (error.name === 'AbortError') {
-            console.warn('Navigation aborted')
-            console.warn(error)
-          } else {
-            console.error(error)
-            if (!initialized) {
-              initGlobalData({
-                teams: [],
-                invites: [],
-              })
-            }
-
-            setPageInfo({
-              isError: true,
-              Component: ErrorPage,
-              pageProps: {
-                error,
-              },
-            })
-            nProgress.done()
-          }
-        })
-    } else {
-      setPageInfo({
-        Component: pageSpec.Component,
-        pageProps: {},
+        }
       })
-      nProgress.done()
-    }
 
     intercom.update()
 
