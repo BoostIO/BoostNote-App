@@ -230,7 +230,11 @@ const CalendarView = ({
       <Flexbox justifyContent='space-between' alignItems='center'>
         {viewsSelector}
         <Flexbox flex='0 0 auto'>
-          <SortingOption value={order} onChange={onChangeOrder} />
+          <SortingOption
+            value={order}
+            onChange={onChangeOrder}
+            isDisabled={true}
+          />
           <Button variant='transparent' disabled={true}>
             Columns
           </Button>
