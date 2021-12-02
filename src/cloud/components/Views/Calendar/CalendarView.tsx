@@ -18,7 +18,6 @@ import Button from '../../../../design/components/atoms/Button'
 import { useCalendarView } from '../../../lib/hooks/views/calendarView'
 import Calendar from '../../../../design/components/organisms/Calendar'
 import CalendarEventItem from './CalendarEventItem'
-import { useRouter } from '../../../lib/router'
 import { DateSelectArg, EventSourceInput } from '@fullcalendar/react'
 import { isArray } from 'lodash'
 import { filterIter } from '../../../lib/utils/iterator'
@@ -47,7 +46,6 @@ const CalendarView = ({
   currentWorkspaceId,
   currentFolderId,
 }: CalendarViewProps) => {
-  const { push } = useRouter()
   const { openNewDocForm } = useCloudResourceModals()
   const { preferences, setPreferences } = usePreferences()
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
@@ -112,8 +110,6 @@ const CalendarView = ({
         ...props,
         extendedProps: {
           doc,
-          team,
-          push,
           onContextClick: (event: React.MouseEvent) =>
             openContextModal(
               event,
@@ -126,7 +122,7 @@ const CalendarView = ({
         },
       }
     })
-  }, [orderedDocs, push, team, watchedProp, openContextModal])
+  }, [orderedDocs, team, watchedProp, openContextModal])
 
   const noDateDocs = useMemo(() => {
     return filterIter(
@@ -256,6 +252,17 @@ const Container = styled.div`
 
   .fc .fc-daygrid-day.fc-day-today {
     background: ${({ theme }) => theme.colors.background.secondary};
+  }
+
+  .fc .fc-daygrid-day {
+    position: relative;
+  }
+  .fc .fc-daygrid-day:hover::before {
+    content: '+';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    color: ${({ theme }) => theme.colors.text.subtle};
   }
 
   .fc-theme-standard td,

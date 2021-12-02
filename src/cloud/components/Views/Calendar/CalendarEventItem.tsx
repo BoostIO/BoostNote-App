@@ -5,17 +5,13 @@ import React from 'react'
 import NavigationItem from '../../../../design/components/molecules/Navigation/NavigationItem'
 import styled from '../../../../design/lib/styled'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
-import { SerializedTeam } from '../../../interfaces/db/team'
 import { getDocTitle } from '../../../lib/utils/patterns'
-import { getDocLinkHref } from '../../Link/DocLink'
 
 type CalendarEventItemProps = {} & EventContentArg
 
 type DocEventExtendedProps = EventApi & {
   extendedProps: {
     doc: SerializedDocWithSupplemental
-    team: SerializedTeam
-    push: (href: string) => void
     onContextClick: (event: React.MouseEvent) => void
   }
 }
@@ -26,18 +22,10 @@ const CalendarEventItem = ({ event }: CalendarEventItemProps) => {
     return null
   }
 
-  const docLink = getDocLinkHref(
-    event.extendedProps.doc,
-    event.extendedProps.team,
-    'index'
-  )
-
   return (
     <Container className='event__item'>
       <NavigationItem
         className='event__item__nav'
-        labelHref={docLink}
-        labelClick={() => event.extendedProps.push(docLink)}
         label={getDocTitle(event.extendedProps.doc, 'Untitled')}
         icon={
           event.extendedProps.doc.emoji != null
@@ -58,8 +46,6 @@ const CalendarEventItem = ({ event }: CalendarEventItemProps) => {
 function isDocEvent(event: EventApi): event is DocEventExtendedProps {
   if (
     event.extendedProps.doc == null ||
-    event.extendedProps.team == null ||
-    event.extendedProps.push == null ||
     event.extendedProps.onContextClick == null
   ) {
     return false
