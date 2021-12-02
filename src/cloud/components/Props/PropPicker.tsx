@@ -105,15 +105,22 @@ const PropPicker = ({
           sending={sendingMap.get(parent.target.id) === propName}
           isReadOnly={readOnly}
           portalId={portalId}
-          date={propData.data == null ? null : propData.data.toString()}
-          onDueDateChange={(newDate: Date | null) =>
+          date={propData.data == null ? null : (propData.data as any)}
+          onDueDateChange={(newDate: Date | Date[] | null) =>
             updateProp(
               newDate != null
                 ? {
                     type: 'date',
-                    data: new Date(
-                      formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z'
-                    ),
+                    data: Array.isArray(newDate)
+                      ? newDate.map(
+                          (date) =>
+                            new Date(
+                              formatDate(date, 'yyyy-MM-dd') + 'T00:00:00.000Z'
+                            )
+                        )
+                      : new Date(
+                          formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z'
+                        ),
                   }
                 : {
                     type: 'date',

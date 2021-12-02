@@ -563,8 +563,7 @@ const ContentManagerToolbar = ({
                   }
                   isReadOnly={selectedDocsAreUpdating}
                   sending={sending === propColumn.name}
-                  shortenedLabel={true}
-                  onDueDateChange={(newDate: Date | null) => {
+                  onDueDateChange={(newDate) => {
                     updateProp([
                       propColumn.name,
                       {
