@@ -196,10 +196,9 @@ const CalendarView = ({
     ]
   )
 
-  const handleEventResizing = useCallback(
-    async (resize: { event: EventApi; endDelta: Duration }) => {
+  const handleEventChange = useCallback(
+    async (resize: { event: EventApi }) => {
       if (
-        resize.event.end == null ||
         resize.event.start == null ||
         resize.event.extendedProps.doc == null
       ) {
@@ -208,6 +207,7 @@ const CalendarView = ({
 
       const dates = [resize.event.start]
       if (
+        resize.event.end != null &&
         intervalToDuration({ start: resize.event.start, end: resize.event.end })
           .days !== 1
       ) {
@@ -243,7 +243,7 @@ const CalendarView = ({
         eventContent={CalendarEventItem}
         events={docEvents}
         select={handleNewDateSelection}
-        eventResize={handleEventResizing}
+        eventChange={handleEventChange}
         headerToolbar={{
           start: undefined,
           center: 'prev,title,next',
