@@ -12,6 +12,7 @@ import PropertyValueButton from './Pickers/PropertyValueButton'
 import WithTooltip from '../../../design/components/atoms/WithTooltip'
 import { trackEvent } from '../../api/track'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
+import NumberSelect from './Pickers/NumberSelect'
 
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
@@ -140,6 +141,24 @@ const PropPicker = ({
           }
         />
       )
+    case 'number':
+      return (
+        <NumberSelect
+          number={
+            Array.isArray(propData.data) ? propData.data[0] : propData.data
+          }
+          sending={sendingMap.get(parent.target.id) === 'number'}
+          disabled={sendingMap.get(parent.target.id) != null || readOnly}
+          isReadOnly={readOnly}
+          onNumberChange={(val) =>
+            updateProp({
+              type: 'number',
+              data: val,
+            })
+          }
+        />
+      )
+
     case 'json':
       if (
         propData.data != null &&

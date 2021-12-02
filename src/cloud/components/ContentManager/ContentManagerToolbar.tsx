@@ -323,6 +323,7 @@ const ContentManagerToolbar = ({
                 : docProp.data,
           }
           break
+        case 'number':
         case 'date':
         case 'string':
           values[key] = {
@@ -403,6 +404,7 @@ const ContentManagerToolbar = ({
               }
             }
             break
+          case 'number':
           case 'date':
           case 'string':
             if (docProp.data !== values[key]['value']) {
