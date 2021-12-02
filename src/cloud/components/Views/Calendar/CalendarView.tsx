@@ -18,7 +18,12 @@ import Button from '../../../../design/components/atoms/Button'
 import { useCalendarView } from '../../../lib/hooks/views/calendarView'
 import Calendar from '../../../../design/components/organisms/Calendar'
 import CalendarEventItem from './CalendarEventItem'
-import { DateSelectArg, EventApi, EventSourceInput } from '@fullcalendar/react'
+import {
+  DateSelectArg,
+  EventApi,
+  EventClickArg,
+  EventSourceInput,
+} from '@fullcalendar/react'
 import { isArray } from 'lodash'
 import { filterIter } from '../../../lib/utils/iterator'
 import { useModal } from '../../../../design/lib/stores/modal'
@@ -27,8 +32,10 @@ import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModal
 import { intervalToDuration, format as formatDate } from 'date-fns'
 import { cleanupDateProp, getIconPathOfPropType } from '../../../lib/props'
 import Icon from '../../../../design/components/atoms/Icon'
-import { mdiCalendarMonthOutline } from '@mdi/js'
+import { mdiCalendarMonthOutline, mdiFileDocumentOutline } from '@mdi/js'
 import CalendarWatchedPropContext from './CalendarWatchedPropContext'
+import { getDocLinkHref } from '../../Link/DocLink'
+import { useRouter } from '../../../lib/router'
 
 type CalendarViewProps = {
   view: SerializedView
@@ -49,6 +56,7 @@ const CalendarView = ({
   currentWorkspaceId,
   currentFolderId,
 }: CalendarViewProps) => {
+  const { push } = useRouter()
   const { openNewDocForm } = useCloudResourceModals()
   const { preferences, setPreferences } = usePreferences()
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
@@ -199,6 +207,21 @@ const CalendarView = ({
     ]
   )
 
+  const handleEventClick = useCallback(
+    ({ event }: EventClickArg) => {
+      if (event.extendedProps.doc != null) {
+        push(
+          getDocLinkHref(
+            event.extendedProps.doc as SerializedDocWithSupplemental,
+            team,
+            'index'
+          )
+        )
+      }
+    },
+    [team, push]
+  )
+
   const handleEventChange = useCallback(
     async (resize: { event: EventApi }) => {
       if (
@@ -263,6 +286,13 @@ const CalendarView = ({
               <span>{watchedProp.name}</span>
             </Flexbox>
           </Button>
+          <Button
+            variant='transparent'
+            disabled={noDateDocs.length === 0}
+            iconPath={mdiFileDocumentOutline}
+          >
+            No Date ({noDateDocs.length})
+          </Button>
           <SortingOption
             value={order}
             onChange={onChangeOrder}
@@ -281,6 +311,7 @@ const CalendarView = ({
         events={docEvents}
         select={handleNewDateSelection}
         eventChange={handleEventChange}
+        eventClick={handleEventClick}
         headerToolbar={{
           start: undefined,
           center: 'prev,title,next',

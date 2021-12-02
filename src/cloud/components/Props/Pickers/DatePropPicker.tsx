@@ -230,7 +230,6 @@ const DatePropPickerModal = ({
 function getValidDate(
   value: Date | Date[] | string | string[] | null | undefined
 ): Date | Date[] | null {
-  console.log(value)
   if (value == null) {
     return null
   }
