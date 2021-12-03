@@ -437,14 +437,40 @@ const Editor = ({
         setShortcodeConvertMenu(null)
       },
       formatter: (pasted) => {
-        const githubRegex = /https:\/\/github.com\/([^\/\s]+)\/([^\/\s]+)\/(pull|issues)\/(\d+)/
-        const githubMatch = githubRegex.exec(pasted)
-        if (githubMatch == null) {
-          return null
+        if (pasted.length === 1) {
+          const githubRegex = /https:\/\/github.com\/([^\/\s]+)\/([^\/\s]+)\/(pull|issues)\/(\d+)/
+          const githubMatch = githubRegex.exec(pasted[0])
+
+          if (githubMatch !== null) {
+            const [, org, repo, type, num] = githubMatch
+            const entityType = type === 'pull' ? 'github.pr' : 'github.issue'
+            return {
+              replacement: `[[ ${entityType} id="${org}/${repo}#${num}" ]]`,
+              promptMenu: true,
+            }
+          }
         }
-        const [, org, repo, type, num] = githubMatch
-        const entityType = type === 'pull' ? 'github.pr' : 'github.issue'
-        return `[[ ${entityType} id="${org}/${repo}#${num}" ]]`
+
+        if (pasted.length > 1) {
+          const tableRegex = /\t/
+          const tableMatch = tableRegex.test(pasted[0])
+
+          if (tableMatch) {
+            const linesInCols = pasted.map((line) => line.split('\t'))
+            const cols = Math.max(...linesInCols.map((line) => line.length))
+
+            linesInCols.splice(1, 0, new Array(cols).fill('-'))
+
+            return {
+              replacement: linesInCols
+                .map((cols) => '| ' + cols.join(' | ') + ' |')
+                .join('\n'),
+              promptMenu: false,
+            }
+          }
+        }
+
+        return { replacement: null, promptMenu: false }
       },
     })
     editor.on('change', (instance) => {
