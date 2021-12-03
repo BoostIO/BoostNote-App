@@ -1,18 +1,9 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import styled from '../../../../design/lib/styled'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedView } from '../../../interfaces/db/view'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { getDocTitle } from '../../../lib/utils/patterns'
-import {
-  sortByAttributeAsc,
-  sortByAttributeDesc,
-} from '../../../../design/lib/utils/array'
-import { usePreferences } from '../../../lib/stores/preferences'
-import SortingOption, {
-  sortingOrders,
-} from '../../ContentManager/SortingOption'
-import { FormSelectOption } from '../../../../design/components/molecules/Form/atoms/FormSelect'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import Button from '../../../../design/components/atoms/Button'
 import { useCalendarView } from '../../../lib/hooks/views/calendarView'
@@ -54,36 +45,14 @@ const CalendarView = ({
 }: CalendarViewProps) => {
   const { push } = useRouter()
   const { openNewDocForm } = useCloudResourceModals()
-  const { preferences, setPreferences } = usePreferences()
-  const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
-    preferences.folderSortingOrder
-  )
   const { openContextModal, closeAllModals } = useModal()
 
   const { watchedProp, actionsRef } = useCalendarView({
     view,
   })
 
-  const orderedDocs = useMemo(() => {
-    const docsWithTitle = docs.map((doc) => {
-      return {
-        ...doc,
-        title: getDocTitle(doc, 'untitled'),
-      }
-    })
-    switch (order) {
-      case 'Title A-Z':
-        return sortByAttributeAsc('title', docsWithTitle)
-      case 'Title Z-A':
-        return sortByAttributeDesc('title', docsWithTitle)
-      case 'Latest Updated':
-      default:
-        return sortByAttributeDesc('updatedAt', docsWithTitle)
-    }
-  }, [order, docs])
-
   const docEvents: EventSourceInput = useMemo(() => {
-    return orderedDocs.map((doc) => {
+    return docs.map((doc) => {
       const dateProps = (doc.props || {})[watchedProp.name]
 
       const props: any = {
@@ -133,7 +102,7 @@ const CalendarView = ({
         },
       }
     })
-  }, [orderedDocs, team, watchedProp, push, openContextModal])
+  }, [docs, team, watchedProp, push, openContextModal])
 
   const noDateDocs = useMemo(() => {
     return filterIter(
@@ -141,17 +110,9 @@ const CalendarView = ({
         (doc.props || {})[watchedProp.name] == null ||
         (doc.props || {})[watchedProp.name].data == null ||
         (doc.props || {})[watchedProp.name].type !== watchedProp.type,
-      orderedDocs
+      docs
     )
-  }, [watchedProp, orderedDocs])
-
-  const onChangeOrder = useCallback(
-    (val: FormSelectOption) => {
-      setOrder(val.value)
-      setPreferences({ folderSortingOrder: val.value as any })
-    },
-    [setPreferences]
-  )
+  }, [watchedProp, docs])
 
   const handleNewDateSelection = useCallback(
     (val: DateSelectArg) => {
@@ -307,11 +268,6 @@ const CalendarView = ({
           >
             No Date ({noDateDocs.length})
           </Button>
-          <SortingOption
-            value={order}
-            onChange={onChangeOrder}
-            isDisabled={true}
-          />
           <Button variant='transparent' disabled={true}>
             Columns
           </Button>
