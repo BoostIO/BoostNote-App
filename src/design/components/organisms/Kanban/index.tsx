@@ -1,5 +1,5 @@
 import { capitalize } from 'lodash'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { DndContext } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import styled from '../../../lib/styled'
@@ -10,7 +10,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import cc from 'classcat'
-import useMultiContainerDragDrop from './hook'
+import useMultiContainerDragDrop, { Move } from './hook'
 import { AppComponent } from '../../../lib/types'
 
 interface Identifyable {
@@ -24,8 +24,9 @@ interface KanbanList<T extends Identifyable> extends Identifyable {
 interface KanbanProps<T extends Identifyable> {
   className?: string
   lists: KanbanList<T>[]
-  onItemMove: (targetList: KanbanList<T>, item: T) => void
-  onListMove: (list: KanbanList<T>, before: KanbanList<T> | null) => void
+  onItemSort: (item: T, after?: T) => void
+  onItemMove: (targetList: KanbanList<T>, item: T, after?: T) => void
+  onListMove: (list: KanbanList<T>, after?: KanbanList<T> | null) => void
   onItemCreate: (list: KanbanList<T>, text: string) => void
   renderItem: (item: T) => React.ReactNode
   renderHeader?: (list: KanbanList<T>) => React.ReactNode
@@ -35,17 +36,36 @@ interface KanbanProps<T extends Identifyable> {
 const Kanban = <T extends Identifyable>({
   className,
   lists,
+  onItemSort,
+  onItemMove,
+  onListMove,
   renderHeader,
   renderItem,
 }: KanbanProps<T>) => {
-  const { containers, ...dndProps } = useMultiContainerDragDrop(
-    lists,
-    console.log
+  const onMove = useCallback(
+    (move: Move<T>) => {
+      switch (move.type) {
+        case 'container': {
+          onListMove(move.container, move.after)
+          break
+        }
+        case 'in-container': {
+          onItemSort(move.item, move.after)
+          break
+        }
+        case 'cross-container': {
+          onItemMove(move.new, move.item, move.after)
+        }
+      }
+    },
+    [onItemSort, onItemMove, onListMove]
   )
+
+  const { containers, ...dndProps } = useMultiContainerDragDrop(lists, onMove)
 
   return (
     <DndContext {...dndProps}>
-      <div className={cc(['kanban__container', className])}>
+      <Container className={cc(['kanban__container', className])}>
         <SortableContext items={lists} strategy={horizontalListSortingStrategy}>
           {containers.map((list) => {
             return (
@@ -73,7 +93,7 @@ const Kanban = <T extends Identifyable>({
             )
           })}
         </SortableContext>
-      </div>
+      </Container>
     </DndContext>
   )
 }
@@ -115,7 +135,7 @@ const Sortable: AppComponent<React.PropsWithChildren<Identifyable>> = ({
   )
 }
 
-const StyledKanban = styled(Kanban)`
+const Container = styled.div`
   display: inline-grid;
   box-sizing: border-box;
   grid-auto-flow: column;
@@ -130,4 +150,4 @@ const StyledKanban = styled(Kanban)`
   }
 `
 
-export default StyledKanban
+export default Kanban

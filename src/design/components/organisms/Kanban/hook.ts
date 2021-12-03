@@ -16,11 +16,11 @@ import {
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-interface Identifyable {
+export interface Identifyable {
   id: UniqueIdentifier
 }
 
-interface Container<T extends Identifyable> extends Identifyable {
+export interface Container<T extends Identifyable> extends Identifyable {
   items: T[]
 }
 
@@ -28,7 +28,7 @@ type Helpers<T extends Identifyable> = Partial<DndContextProps> & {
   containers: Container<T>[]
 }
 
-type Move<T extends Identifyable> =
+export type Move<T extends Identifyable> =
   | { type: 'in-container'; item: T; after?: T }
   | {
       type: 'cross-container'
@@ -189,7 +189,7 @@ function useMultiContainerDragDrop<T extends Identifyable>(
       const overItemIndex = overContainer.items.findIndex(
         (item) => item.id === overId
       )
-      if (activeItemIndex === -1 && overItemIndex === -1) {
+      if (activeItemIndex === -1) {
         setActiveId(null)
         setCloned(null)
         return
@@ -205,28 +205,33 @@ function useMultiContainerDragDrop<T extends Identifyable>(
       }
 
       if (realContainer.id === overContainer.id) {
-        onMove({
-          type: 'in-container',
-          item: activeContainer.items[activeItemIndex],
-          after:
-            overContainer.items[
-              activeItemIndex > overItemIndex
-                ? overItemIndex - 1
-                : overItemIndex
-            ],
-        })
+        if (overItemIndex !== -1) {
+          onMove({
+            type: 'in-container',
+            item: activeContainer.items[activeItemIndex],
+            after:
+              overContainer.items[
+                activeItemIndex > overItemIndex
+                  ? overItemIndex - 1
+                  : overItemIndex
+              ],
+          })
+        }
       } else {
+        // if -1 overItem -> items.length - 1
+        // else
+        const afterIndex =
+          overItemIndex === -1
+            ? overContainer.items.length - 1
+            : activeItemIndex > overItemIndex
+            ? overItemIndex - 1
+            : overItemIndex
         onMove({
           type: 'cross-container',
           previous: realContainer,
           new: overContainer,
           item: activeContainer.items[activeItemIndex],
-          after:
-            overContainer.items[
-              activeItemIndex > overItemIndex
-                ? overItemIndex - 1
-                : overItemIndex
-            ],
+          after: overContainer.items[afterIndex],
         })
       }
 

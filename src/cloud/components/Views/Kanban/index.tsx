@@ -29,6 +29,7 @@ const KanbanView = ({ docs }: KanbanViewProps) => {
       onItemMove={console.log}
       onListMove={console.log}
       onItemCreate={console.log}
+      onItemSort={console.log}
     />
   )
 }
