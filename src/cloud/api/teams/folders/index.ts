@@ -68,6 +68,31 @@ export async function updateFolder(
   )
   return data
 }
+export interface UpdateFolderEmojiResponseBody {
+  folder: SerializedFolderWithBookmark
+}
+
+export interface UpdateFolderResponseBody {
+  folders: SerializedFolderWithBookmark[]
+  docs: SerializedDocWithSupplemental[]
+  workspaces?: SerializedWorkspace[]
+}
+
+export async function updateFolderPageOrder(
+  folder: SerializedFolder,
+  moveAheadOf: string
+) {
+  const data = await callApi<UpdateFolderResponseBody>(
+    `api/teams/${folder.teamId}/folders/${folder.id}/page-order`,
+    {
+      json: {
+        moveAheadOf,
+      },
+      method: 'put',
+    }
+  )
+  return data
+}
 
 export interface DestroyFolderResponseBody {
   parentFolder?: SerializedFolderWithBookmark

@@ -17,6 +17,7 @@ export interface SerializableFolderProps {
   childDocsIds: string[]
   childFoldersIds: string[]
   workspaceId: string
+  pageOrder?: string
 }
 
 export interface SerializedUnserializableFolderProps {
