@@ -154,6 +154,7 @@
     "@fullcalendar/react": "^5.10.1",
     "@dnd-kit/core": "^4.0.3",
     "@dnd-kit/sortable": "^5.1.0",
+    "@dnd-kit/utilities": "^3.0.1",
     "@mdi/js": "^5.9.55",
     "@mdi/react": "^1.2.1",
     "@stripe/react-stripe-js": "^1.2.0",

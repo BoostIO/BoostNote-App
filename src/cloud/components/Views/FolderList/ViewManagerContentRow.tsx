@@ -1,13 +1,16 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback } from 'react'
 import cc from 'classcat'
-import { onDragLeaveCb } from '../../../../design/lib/dnd'
 import styled from '../../../../design/lib/styled'
 import { AppComponent } from '../../../../design/lib/types'
 import EmojiIcon from '../../EmojiIcon'
 import Checkbox from '../../../../design/components/molecules/Form/atoms/FormCheckbox'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import Icon from '../../../../design/components/atoms/Icon'
+import { mdiDragVertical } from '@mdi/js'
 
 interface ViewManagerContentRowProps {
-  type?: 'header' | 'row'
+  id: string
   checked?: boolean
   onSelect: (val: boolean) => void
   label: string | React.ReactNode
@@ -22,7 +25,7 @@ interface ViewManagerContentRowProps {
 }
 
 const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
-  type = 'row',
+  id,
   className,
   children,
   checked,
@@ -33,14 +36,27 @@ const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
   defaultIcon,
   showCheckbox,
   onSelect,
-  onDragStart,
-  onDragEnd,
-  onDrop,
+  // onDragStart,
+  // onDragEnd,
+  // onDrop,
 }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id })
+  const style = { transform: CSS.Transform.toString(transform), transition }
+
   const LabelTag = labelHref != null || labelOnclick != null ? 'a' : 'div'
 
   const navigate: React.MouseEventHandler = useCallback(
     (e) => {
+      if (isDragging) {
+        return
+      }
       e.preventDefault()
 
       if (labelOnclick == null) {
@@ -49,49 +65,22 @@ const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
 
       return labelOnclick()
     },
-    [labelOnclick]
+    [labelOnclick, isDragging]
   )
 
-  const [draggedOver, setDraggedOver] = useState(false)
-  const dragRef = useRef<HTMLDivElement>(null)
+  // const [draggedOver, setDraggedOver] = useState(false)
+  // const dragRef = useRef<HTMLDivElement>(null)
 
   return (
     <StyledContentManagerRow
       className={cc([
         'cm__row',
-        `cm__row--${type}`,
         className,
-        draggedOver && 'content__manager__row--draggedOver',
+        // draggedOver && 'content__manager__row--draggedOver',
       ])}
-      draggable={true}
-      onDrop={(event: any) => {
-        event.stopPropagation()
-        if (onDrop != null) {
-          onDrop(event)
-        }
-        setDraggedOver(false)
-      }}
-      onDragStart={(event: any) => {
-        event.stopPropagation()
-        if (onDragStart != null) {
-          onDragStart(event)
-        }
-      }}
-      onDragOver={(event: any) => {
-        event.preventDefault()
-        event.stopPropagation()
-        setDraggedOver(true)
-      }}
-      onDragLeave={(event: any) => {
-        onDragLeaveCb(event, dragRef, () => {
-          setDraggedOver(false)
-        })
-      }}
-      onDragEnd={(event: any) => {
-        if (onDragEnd != null) {
-          onDragEnd(event)
-        }
-      }}
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
     >
       {showCheckbox && (
         <Checkbox
@@ -100,6 +89,9 @@ const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
           toggle={() => onSelect(!checked)}
         />
       )}
+      <div {...listeners}>
+        <Icon path={mdiDragVertical} />
+      </div>
       <LabelTag
         draggable={true}
         className='cm__row__label'
@@ -148,15 +140,8 @@ const StyledContentManagerRow = styled.div`
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 
-  &.cm__row--header .cm__row__label {
-    color: ${({ theme }) => theme.colors.text.subtle};
-    border-bottom-color: transparent;
-  }
-
   &:hover {
-    &:not(.cm__row--header) {
-      background: rgba(0, 0, 0, 0.1);
-    }
+    background: rgba(0, 0, 0, 0.1);
     .custom-check::before {
       border-color: ${({ theme }) => theme.colors.text.secondary};
     }

@@ -34,6 +34,7 @@ import {
   UpdateFolderRequestBody,
   UpdateFolderResponseBody,
   updateFolderEmoji,
+  updateFolderPageOrder,
 } from '../../api/teams/folders'
 import {
   createFolderBookmark,
@@ -627,6 +628,22 @@ export function useCloudApi() {
     [pageFolder, updateFoldersMap, setPartialPageData, send]
   )
 
+  const updateFolderPageOrderApi = useCallback(
+    async (target: SerializedFolder, moveAheadOf: string) => {
+      await send(target.id, 'pageOrder', {
+        api: () => updateFolderPageOrder(target, moveAheadOf),
+        cb: ({ folder }: UpdateFolderEmojiResponseBody) => {
+          updateFoldersMap([folder.id, folder])
+
+          if (pageFolder != null && folder.id === pageFolder.id) {
+            setPartialPageData({ pageFolder: folder })
+          }
+        },
+      })
+    },
+    [pageFolder, updateFoldersMap, setPartialPageData, send]
+  )
+
   const deleteWorkspaceApi = useCallback(
     async (workspace: { id: string; teamId: string; default: boolean }) => {
       await send(workspace.id, 'delete', {
@@ -896,6 +913,7 @@ export function useCloudApi() {
     updateDoc: updateDocApi,
     updateDocEmoji: updateDocEmojiApi,
     updateFolderEmoji: updateFolderEmojiApi,
+    updateFolderPageOrder: updateFolderPageOrderApi,
     deleteWorkspaceApi,
     deleteFolderApi,
     deleteDocApi,
