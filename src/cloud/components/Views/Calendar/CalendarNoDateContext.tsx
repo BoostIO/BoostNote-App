@@ -33,7 +33,6 @@ const CalendarNoDateContext = ({
   const menuRef = useRef<HTMLDivElement>(null)
 
   const onBlurHandler = (event: any) => {
-    console.log(event)
     if (
       event.relatedTarget == null ||
       !menuRef.current!.contains(event.relatedTarget)
