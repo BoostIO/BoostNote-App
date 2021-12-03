@@ -13,6 +13,7 @@ type DocEventExtendedProps = EventApi & {
   extendedProps: {
     doc: SerializedDocWithSupplemental
     onContextClick: (event: React.MouseEvent) => void
+    onClick?: () => void
   }
 }
 
@@ -27,6 +28,7 @@ const CalendarEventItem = ({ event }: CalendarEventItemProps) => {
       <NavigationItem
         className='event__item__nav'
         label={getDocTitle(event.extendedProps.doc, 'Untitled')}
+        labelClick={event.extendedProps.onClick}
         icon={
           event.extendedProps.doc.emoji != null
             ? { type: 'emoji', path: event.extendedProps.doc.emoji }

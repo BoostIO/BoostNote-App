@@ -18,12 +18,7 @@ import Button from '../../../../design/components/atoms/Button'
 import { useCalendarView } from '../../../lib/hooks/views/calendarView'
 import Calendar from '../../../../design/components/organisms/Calendar'
 import CalendarEventItem from './CalendarEventItem'
-import {
-  DateSelectArg,
-  EventApi,
-  EventClickArg,
-  EventSourceInput,
-} from '@fullcalendar/react'
+import { DateSelectArg, EventApi, EventSourceInput } from '@fullcalendar/react'
 import { isArray } from 'lodash'
 import { filterIter } from '../../../lib/utils/iterator'
 import { useModal } from '../../../../design/lib/stores/modal'
@@ -34,9 +29,9 @@ import { cleanupDateProp, getIconPathOfPropType } from '../../../lib/props'
 import Icon from '../../../../design/components/atoms/Icon'
 import { mdiCalendarMonthOutline, mdiFileDocumentOutline } from '@mdi/js'
 import CalendarWatchedPropContext from './CalendarWatchedPropContext'
-import { getDocLinkHref } from '../../Link/DocLink'
 import { useRouter } from '../../../lib/router'
 import CalendarNoDateContext from './CalendarNoDateContext'
+import { getDocLinkHref } from '../../Link/DocLink'
 
 type CalendarViewProps = {
   view: SerializedView
@@ -125,6 +120,7 @@ const CalendarView = ({
         ...props,
         extendedProps: {
           doc,
+          onClick: () => push(getDocLinkHref(doc, team, 'index')),
           onContextClick: (event: React.MouseEvent) =>
             openContextModal(
               event,
@@ -137,7 +133,7 @@ const CalendarView = ({
         },
       }
     })
-  }, [orderedDocs, team, watchedProp, openContextModal])
+  }, [orderedDocs, team, watchedProp, push, openContextModal])
 
   const noDateDocs = useMemo(() => {
     return filterIter(
@@ -208,24 +204,8 @@ const CalendarView = ({
     ]
   )
 
-  const handleEventClick = useCallback(
-    ({ event }: EventClickArg) => {
-      if (event.extendedProps.doc != null) {
-        push(
-          getDocLinkHref(
-            event.extendedProps.doc as SerializedDocWithSupplemental,
-            team,
-            'index'
-          )
-        )
-      }
-    },
-    [team, push]
-  )
-
   const handleEventChange = useCallback(
     async (resize: { event: EventApi }) => {
-      console.log('change')
       if (
         resize.event.start == null ||
         resize.event.extendedProps.doc == null
@@ -345,7 +325,6 @@ const CalendarView = ({
         events={docEvents}
         select={handleNewDateSelection}
         eventChange={handleEventChange}
-        eventClick={handleEventClick}
         eventReceive={handleEventReceive}
         droppable={false}
         headerToolbar={{
