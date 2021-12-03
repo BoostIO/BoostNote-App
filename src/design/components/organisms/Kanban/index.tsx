@@ -1,6 +1,6 @@
 import { capitalize } from 'lodash'
 import React, { useCallback } from 'react'
-import { DndContext } from '@dnd-kit/core'
+import { DndContext, DragOverlay } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
 import styled from '../../../lib/styled'
 import {
@@ -60,8 +60,10 @@ const Kanban = <T extends Identifyable>({
     },
     [onItemSort, onItemMove, onListMove]
   )
-
-  const { containers, ...dndProps } = useMultiContainerDragDrop(lists, onMove)
+  const { containers, active, ...dndProps } = useMultiContainerDragDrop(
+    lists,
+    onMove
+  )
 
   return (
     <DndContext {...dndProps}>
@@ -94,6 +96,7 @@ const Kanban = <T extends Identifyable>({
           })}
         </SortableContext>
       </Container>
+      <DragOverlay>{active != null && renderItem(active)}</DragOverlay>
     </DndContext>
   )
 }

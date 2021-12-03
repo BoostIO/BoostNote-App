@@ -26,6 +26,7 @@ export interface Container<T extends Identifyable> extends Identifyable {
 
 type Helpers<T extends Identifyable> = Partial<DndContextProps> & {
   containers: Container<T>[]
+  active: T | null
 }
 
 export type Move<T extends Identifyable> =
@@ -43,10 +44,9 @@ function useMultiContainerDragDrop<T extends Identifyable>(
   containers: Container<T>[],
   onMove: (move: Move<T>) => void
 ): Helpers<T> {
-  const [activeId, setActiveId] = useState<string | null>(null)
+  const [active, setActive] = useState<T | null>(null)
   const lastOverId = useRef<string | null>(null)
   const recentlyMovedToNewContainer = useRef(false)
-  //const isSortingContainer = activeId ? containers.includes(activeId) : false
   const [cloned, setCloned] = useState<Container<T>[] | null>(null)
 
   const workingData = useMemo(() => {
@@ -57,7 +57,10 @@ function useMultiContainerDragDrop<T extends Identifyable>(
     (args) => {
       let overId = rectIntersection(args)
 
-      if (activeId && activeId in containers) {
+      if (
+        active != null &&
+        containers.some((container) => container.id === active.id)
+      ) {
         return closestCenter({
           ...args,
           droppableContainers: args.droppableContainers.filter(
@@ -91,13 +94,19 @@ function useMultiContainerDragDrop<T extends Identifyable>(
       // to the id of the draggable item that was moved to the new container, otherwise
       // the previous `overId` will be returned which can cause items to incorrectly shift positions
       if (recentlyMovedToNewContainer.current) {
-        lastOverId.current = activeId
+        lastOverId.current = active?.id || null
       }
 
       return lastOverId.current
     },
-    [activeId, containers]
+    [active, containers]
   )
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      recentlyMovedToNewContainer.current = false
+    })
+  }, [workingData])
 
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -123,13 +132,17 @@ function useMultiContainerDragDrop<T extends Identifyable>(
   )
 
   const onDragCancel = useCallback(() => {
-    setActiveId(null)
+    setActive(null)
     setCloned(null)
   }, [])
 
   const onDragStart: DndContextProps['onDragStart'] = useCallback(
     ({ active }) => {
-      setActiveId(active.id)
+      const item = containers
+        .map((container) => container.items)
+        .flat()
+        .find((item) => item.id === active.id)
+      setActive(item || null)
       setCloned(containers)
     },
     [containers]
@@ -139,7 +152,7 @@ function useMultiContainerDragDrop<T extends Identifyable>(
     ({ active, over }) => {
       const overId = over?.id
       if (overId == null) {
-        setActiveId(null)
+        setActive(null)
         setCloned(null)
         return
       }
@@ -163,7 +176,7 @@ function useMultiContainerDragDrop<T extends Identifyable>(
               ],
           })
         }
-        setActiveId(null)
+        setActive(null)
         setCloned(null)
         return
       }
@@ -171,7 +184,7 @@ function useMultiContainerDragDrop<T extends Identifyable>(
       const activeContainer = findContainer(active.id)
       const overContainer = findContainer(overId)
       if (activeContainer == null || overContainer == null) {
-        setActiveId(null)
+        setActive(null)
         setCloned(null)
         return
       }
@@ -183,7 +196,7 @@ function useMultiContainerDragDrop<T extends Identifyable>(
         (item) => item.id === overId
       )
       if (activeItemIndex === -1) {
-        setActiveId(null)
+        setActive(null)
         setCloned(null)
         return
       }
@@ -192,7 +205,7 @@ function useMultiContainerDragDrop<T extends Identifyable>(
         container.items.some((item) => item.id === active.id)
       )
       if (realContainer == null) {
-        setActiveId(null)
+        setActive(null)
         setCloned(null)
         return
       }
@@ -226,17 +239,11 @@ function useMultiContainerDragDrop<T extends Identifyable>(
         })
       }
 
-      setActiveId(null)
+      setActive(null)
       setCloned(null)
     },
     [workingData, onMove, findContainer, containers]
   )
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      recentlyMovedToNewContainer.current = false
-    })
-  }, [workingData])
 
   const onDragOver: DndContextProps['onDragOver'] = useCallback(
     ({ active, over }) => {
@@ -319,6 +326,7 @@ function useMultiContainerDragDrop<T extends Identifyable>(
     onDragOver,
     onDragCancel,
     onDragEnd,
+    active,
   }
 }
 
