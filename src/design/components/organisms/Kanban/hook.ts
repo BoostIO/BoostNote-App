@@ -198,7 +198,7 @@ function useMultiContainerDragDrop<T extends Identifyable>(
       }
 
       if (realContainer.id === overContainer.id) {
-        if (overItemIndex !== -1) {
+        if (overItemIndex !== -1 && overItemIndex !== activeItemIndex) {
           onMove({
             type: 'in-container',
             item: activeContainer.items[activeItemIndex],
