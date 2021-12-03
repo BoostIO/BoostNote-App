@@ -13,6 +13,8 @@ import { useRouter } from '../../../lib/router'
 import { getDocTitle } from '../../../lib/utils/patterns'
 import { getDocLinkHref } from '../../Link/DocLink'
 import { Draggable } from '@fullcalendar/interaction'
+import { useRef } from 'react'
+import { useEffectOnce } from 'react-use'
 
 interface CalendarNoDateContext {
   docs: SerializedDocWithSupplemental[]
@@ -28,6 +30,23 @@ const CalendarNoDateContext = ({
 }: CalendarNoDateContext) => {
   const { push } = useRouter()
   const { closeAllModals } = useModal()
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  const onBlurHandler = (event: any) => {
+    console.log(event)
+    if (
+      event.relatedTarget == null ||
+      !menuRef.current!.contains(event.relatedTarget)
+    ) {
+      closeAllModals()
+    }
+  }
+
+  useEffectOnce(() => {
+    if (menuRef.current != null) {
+      menuRef.current.focus()
+    }
+  })
 
   useEffect(() => {
     if (document.getElementById('fc-events') != null) {
@@ -49,7 +68,7 @@ const CalendarNoDateContext = ({
   }, [])
 
   return (
-    <div id='fc-events'>
+    <div id='fc-events' ref={menuRef} onBlur={onBlurHandler}>
       <Container>
         {docs.map((doc) => {
           const href = `${process.env.BOOST_HUB_BASE_URL}${getDocLinkHref(
