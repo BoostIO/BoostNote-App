@@ -11,10 +11,15 @@ export interface PositionRange {
 
 export type Callback = (convert: boolean) => void
 
+type FormatterResult = {
+  replacement: string | null
+  promptMenu: boolean
+}
+
 interface Config {
   openMenu: (position: PositionRange, callback: Callback) => void
   closeMenu: () => void
-  formatter: (pasted: string) => string | null
+  formatter: (pasted: string[]) => FormatterResult
 }
 
 export const pasteFormatPlugin = (
@@ -48,17 +53,24 @@ export const pasteFormatPlugin = (
       return
     }
 
-    if (change.text.length !== 1) {
-      return
-    }
+    const { replacement, promptMenu } = formatter(change.text)
 
-    const replacement = formatter(change.text[0])
     if (replacement === null) {
       return
     }
 
     const to = editorInstance.getCursor()
 
+    // do replacement without menu
+    if (promptMenu === false) {
+      editorInstance.replaceRange(replacement, change.from, to)
+      return
+    }
+
+    const posRange = {
+      from: editorInstance.charCoords(change.from, 'local'),
+      to: editorInstance.cursorCoords(true, 'local'),
+    }
     const callback: Callback = (convert) => {
       if (convert) {
         editorInstance.replaceRange(replacement, change.from, to)
@@ -66,10 +78,6 @@ export const pasteFormatPlugin = (
       close()
     }
 
-    const posRange = {
-      from: editorInstance.charCoords(change.from, 'local'),
-      to: editorInstance.cursorCoords(true, 'local'),
-    }
     openMenu(posRange, callback)
     open = true
   })
