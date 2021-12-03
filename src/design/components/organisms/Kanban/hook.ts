@@ -39,10 +39,6 @@ export type Move<T extends Identifyable> =
     }
   | { type: 'container'; container: Container<T>; after: Container<T> }
 
-// make list map on liveLists
-// try delta approach
-// extract to hook
-
 function useMultiContainerDragDrop<T extends Identifyable>(
   containers: Container<T>[],
   onMove: (move: Move<T>) => void
@@ -139,17 +135,15 @@ function useMultiContainerDragDrop<T extends Identifyable>(
     [containers]
   )
 
-  // manage before / afters
   const onDragEnd: DndContextProps['onDragEnd'] = useCallback(
     ({ active, over }) => {
-      // if not over anything -> end
       const overId = over?.id
       if (overId == null) {
         setActiveId(null)
         setCloned(null)
         return
       }
-      // if container and over other container -> container move
+
       const containerIndex = workingData.findIndex(
         (list) => list.id === active.id
       )
@@ -173,7 +167,7 @@ function useMultiContainerDragDrop<T extends Identifyable>(
         setCloned(null)
         return
       }
-      // if active id not in container -> end
+
       const activeContainer = findContainer(active.id)
       const overContainer = findContainer(overId)
       if (activeContainer == null || overContainer == null) {
@@ -182,7 +176,6 @@ function useMultiContainerDragDrop<T extends Identifyable>(
         return
       }
 
-      //   - get over item
       const activeItemIndex = activeContainer.items.findIndex(
         (item) => item.id === active.id
       )
@@ -218,8 +211,6 @@ function useMultiContainerDragDrop<T extends Identifyable>(
           })
         }
       } else {
-        // if -1 overItem -> items.length - 1
-        // else
         const afterIndex =
           overItemIndex === -1
             ? overContainer.items.length - 1
@@ -235,8 +226,6 @@ function useMultiContainerDragDrop<T extends Identifyable>(
         })
       }
 
-      //   - if container is active container -> in-container move
-      //   - else -> cross-container move
       setActiveId(null)
       setCloned(null)
     },
@@ -276,7 +265,7 @@ function useMultiContainerDragDrop<T extends Identifyable>(
             (item) => item.id === active.id
           )
 
-          if (activeItem === null) {
+          if (activeItem == null) {
             return containers
           }
 
@@ -313,9 +302,8 @@ function useMultiContainerDragDrop<T extends Identifyable>(
                 ],
               }
             }
-
             return list
-          }) as any
+          })
         })
       }
     },
