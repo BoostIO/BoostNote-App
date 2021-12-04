@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from '../../../../design/lib/styled'
 import PropertyValueButton from './PropertyValueButton'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
