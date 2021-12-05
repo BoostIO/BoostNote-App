@@ -373,6 +373,8 @@ const frTranslation: TranslationSource = {
   [lngKeys.CreatedBy]: 'Créé par',
   [lngKeys.UpdatedBy]: 'Mis à jour par',
   [lngKeys.Contributors]: 'Contributeurs',
+  [lngKeys.WordCount]: 'Word Count',
+  [lngKeys.CharacterCount]: 'Character Count',
   [lngKeys.History]: 'Historique',
   [lngKeys.Share]: 'Partager',
   [lngKeys.PublicSharing]: 'Partage publique',
