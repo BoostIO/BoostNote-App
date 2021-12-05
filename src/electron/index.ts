@@ -20,12 +20,12 @@ let ready = false
 const singleInstance = app.requestSingleInstanceLock()
 
 export const keymap = new Map<string, string>([
-  ['toggleGlobalSearch', 'CmdOrCtrl + P'],
+  ['toggleGlobalSearch', 'CmdOrCtrl + p'],
   ['toggleSplitEditMode', 'CmdOrCtrl + \\'],
-  ['togglePreviewMode', 'CmdOrCtrl + E'],
-  ['editorSaveAs', 'CmdOrCtrl + S'],
-  ['createNewDoc', 'CmdOrCtrl + N'],
-  ['createNewFolder', 'CmdOrCtrl + Shift + N'],
+  ['togglePreviewMode', 'CmdOrCtrl + e'],
+  ['editorSaveAs', 'CmdOrCtrl + s'],
+  ['createNewDoc', 'CmdOrCtrl + n'],
+  // ['createNewFolder', 'CmdOrCtrl + Shift + N'],
   ['resetZoom', 'CmdOrCtrl + 0'],
   ['zoomOut', 'CmdOrCtrl + -'],
   ['zoomIn', 'CmdOrCtrl + Plus'],

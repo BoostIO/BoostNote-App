@@ -272,10 +272,6 @@ const useElectronStore = (): ElectronStore => {
         event.preventDefault()
         toggleSettingsEventEmitter.dispatch()
         return
-      case 'p':
-        event.preventDefault()
-        searchEventEmitter.dispatch()
-        return
       case '0':
         if (event.shiftKey) {
           event.preventDefault()

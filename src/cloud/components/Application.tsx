@@ -142,9 +142,7 @@ const Application = ({
 
   useEffect(() => {
     const handler = () => {
-      if (usingElectron) {
-        setShowFuzzyNavigation((prev) => !prev)
-      }
+      setShowFuzzyNavigation((prev) => !prev)
     }
     searchEventEmitter.listen(handler)
     return () => {

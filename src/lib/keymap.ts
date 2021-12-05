@@ -18,6 +18,7 @@ export interface KeymapItem {
   shortcutSecondStroke?: KeymapItemEditableProps
   description: string
   isMenuType?: boolean
+  desktopOnly?: boolean
 }
 
 export const defaultKeymap = new Map<string, KeymapItem>([
@@ -25,7 +26,7 @@ export const defaultKeymap = new Map<string, KeymapItem>([
     'createNewDoc',
     {
       shortcutMainStroke: {
-        key: 'N',
+        key: 'n',
         keycode: 78,
         modifiers:
           osName === 'macos'
@@ -36,26 +37,29 @@ export const defaultKeymap = new Map<string, KeymapItem>([
       },
       description: 'Create new document',
       isMenuType: true,
+      desktopOnly: true,
     },
   ],
-  [
-    'createNewFolder',
-    {
-      shortcutMainStroke: {
-        key: 'N',
-        keycode: 78,
-        modifiers:
-          osName === 'macos'
-            ? { meta: true, shift: true }
-            : {
-                ctrl: true,
-                shift: true,
-              },
-      },
-      description: 'Create new folder',
-      isMenuType: true,
-    },
-  ],
+  // todo: [komediruzecki-2021-12-5] Enable when available
+  // [
+  //   'createNewFolder',
+  //   {
+  //     shortcutMainStroke: {
+  //       key: 'N',
+  //       keycode: 78,
+  //       modifiers:
+  //         osName === 'macos'
+  //           ? { meta: true, shift: true }
+  //           : {
+  //               ctrl: true,
+  //               shift: true,
+  //             },
+  //     },
+  //     description: 'Create new folder',
+  //     isMenuType: true,
+  //     desktopOnly: true,
+  //   },
+  // ],
   [
     'toggleSideNav',
     {
@@ -77,7 +81,7 @@ export const defaultKeymap = new Map<string, KeymapItem>([
     'toggleGlobalSearch',
     {
       shortcutMainStroke: {
-        key: 'P',
+        key: 'p',
         keycode: 80,
         modifiers:
           osName === 'macos'
@@ -105,6 +109,7 @@ export const defaultKeymap = new Map<string, KeymapItem>([
               },
       },
       description: 'Toggle in-page search modal dialog',
+      desktopOnly: true,
     },
   ],
   // todo: [komediruzecki-2021-11-7] enable once implemented
@@ -163,7 +168,7 @@ export const defaultKeymap = new Map<string, KeymapItem>([
     'togglePreviewMode',
     {
       shortcutMainStroke: {
-        key: 'E',
+        key: 'e',
         keycode: 69,
         modifiers:
           osName === 'macos'
@@ -208,6 +213,7 @@ export const defaultKeymap = new Map<string, KeymapItem>([
       },
       description: 'Zoom in window',
       isMenuType: true,
+      desktopOnly: true,
     },
   ],
   [
@@ -225,6 +231,7 @@ export const defaultKeymap = new Map<string, KeymapItem>([
       },
       description: 'Zoom out window',
       isMenuType: true,
+      desktopOnly: true,
     },
   ],
   [
@@ -242,6 +249,7 @@ export const defaultKeymap = new Map<string, KeymapItem>([
       },
       description: 'Reset window zoom',
       isMenuType: true,
+      desktopOnly: true,
     },
   ],
   // todo: [komediruzecki-2021-11-7] Enable once implemented

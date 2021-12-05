@@ -22,7 +22,7 @@ export function getTemplateFromKeymap(
   }
 
   menu.push(getFileMenu(keymap))
-  menu.push(getEditMenu())
+  menu.push(getEditMenu(keymap))
   menu.push(getViewMenu(keymap))
   menu.push(getWindowMenu())
   menu.push(getCommunityMenu())
@@ -154,7 +154,7 @@ function getFileMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
   }
 }
 
-function getEditMenu(): MenuItemConstructorOptions {
+function getEditMenu(keymap: Map<string, string>): MenuItemConstructorOptions {
   const submenuItems: MenuItemConstructorOptions[] = [
     { role: 'undo' },
     { role: 'redo' },
@@ -167,7 +167,7 @@ function getEditMenu(): MenuItemConstructorOptions {
       type: 'normal',
       label: 'Search',
       click: createEmitIpcMenuItemHandler('search'),
-      accelerator: mac ? 'Cmd + P' : 'Ctrl + P',
+      accelerator: keymap.get('toggleGlobalSearch'),
     },
     { type: 'separator' },
     { role: 'delete' },

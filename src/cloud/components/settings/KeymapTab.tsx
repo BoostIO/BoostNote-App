@@ -57,6 +57,11 @@ const KeymapTab = () => {
                               description={keymapEntry[1].description}
                               updateKeymap={updateKeymap}
                               removeKeymap={removeKeymap}
+                              desktopOnly={
+                                keymapEntry[1].desktopOnly == null
+                                  ? false
+                                  : keymapEntry[1].desktopOnly
+                              }
                             />
                           )
                         })}

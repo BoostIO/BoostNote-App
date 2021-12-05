@@ -14,6 +14,7 @@ import styled from '../../../design/lib/styled'
 import { inputStyle } from '../../../design/lib/styled/styleFunctions'
 import cc from 'classcat'
 import { useToast } from '../../../design/lib/stores/toast'
+import { useElectron } from '../../lib/stores/electron'
 
 const invalidShortcutInputs = [' ']
 const rejectedShortcutInputs = [' ', 'control', 'alt', 'shift', 'meta']
@@ -28,6 +29,7 @@ interface KeymapItemSectionProps {
   ) => Promise<void>
   removeKeymap: (key: string) => void
   description: string
+  desktopOnly: boolean
 }
 
 const KeymapItemSection = ({
@@ -36,6 +38,7 @@ const KeymapItemSection = ({
   updateKeymap,
   removeKeymap,
   description,
+  desktopOnly,
 }: KeymapItemSectionProps) => {
   const [inputError, setInputError] = useState<boolean>(false)
   const [shortcutInputValue, setShortcutInputValue] = useState<string>('')
@@ -53,6 +56,7 @@ const KeymapItemSection = ({
   const shortcutInputRef = useRef<HTMLInputElement>(null)
 
   const { pushMessage } = useToast()
+  const { usingElectron } = useElectron()
 
   const fetchInputShortcuts: KeyboardEventHandler<HTMLInputElement> = (
     event
@@ -137,6 +141,9 @@ const KeymapItemSection = ({
       ? getGenericShortcutString(currentKeymapItem)
       : ''
   }, [currentKeymapItem, currentShortcut])
+
+  const isEditableKeymap = !desktopOnly || (desktopOnly && usingElectron)
+
   return (
     <KeymapItemSectionContainer>
       <div>{description}</div>
@@ -155,18 +162,22 @@ const KeymapItemSection = ({
             onKeyDown={fetchInputShortcuts}
           />
         )}
-        <Button variant={'primary'} onClick={toggleChangingShortcut}>
-          {currentShortcut == null
-            ? 'Assign'
-            : changingShortcut
-            ? 'Apply'
-            : 'Change'}
-        </Button>
-        {changingShortcut && (
+        {!isEditableKeymap ? (
+          <div>Desktop App Only</div>
+        ) : (
+          <Button variant={'primary'} onClick={toggleChangingShortcut}>
+            {currentShortcut == null
+              ? 'Assign'
+              : changingShortcut
+              ? 'Apply'
+              : 'Change'}
+          </Button>
+        )}
+        {isEditableKeymap && changingShortcut && (
           <Button onClick={handleCancelKeymapChange}>Cancel</Button>
         )}
 
-        {currentShortcut != null && !changingShortcut && (
+        {isEditableKeymap && currentShortcut != null && !changingShortcut && (
           <Button onClick={handleRemoveKeymap}>Un-assign</Button>
         )}
       </KeymapItemInputSection>
