@@ -122,6 +122,7 @@ const NumberSelector = ({
         value={numberValue}
         onChange={inputOnChangeEvent}
         autoComplete={'off'}
+        onBlur={(e) => validateAndUpdateNumber(e.target.value)}
       />
       <Button
         className={'save--button'}
