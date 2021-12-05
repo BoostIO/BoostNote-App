@@ -324,6 +324,8 @@ const zhTranslation: TranslationSource = {
   [lngKeys.CreatedBy]: '创建人',
   [lngKeys.UpdatedBy]: '更新人',
   [lngKeys.Contributors]: '贡献者',
+  [lngKeys.WordCount]: 'Word Count',
+  [lngKeys.CharacterCount]: 'Character Count',
   [lngKeys.History]: '历史',
   [lngKeys.Share]: '共享',
   [lngKeys.PublicSharing]: '公共共享',

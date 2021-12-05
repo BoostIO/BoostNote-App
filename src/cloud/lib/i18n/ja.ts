@@ -346,6 +346,8 @@ const jpTranslation: TranslationSource = {
   [lngKeys.CreatedBy]: '作成者',
   [lngKeys.UpdatedBy]: '最新編集者',
   [lngKeys.Contributors]: '編集者',
+  [lngKeys.WordCount]: '単語数',
+  [lngKeys.CharacterCount]: '文字数',
   [lngKeys.History]: '履歴',
   [lngKeys.Share]: 'シェア',
   [lngKeys.PublicSharing]: 'パブリックシェア',

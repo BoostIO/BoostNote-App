@@ -327,6 +327,9 @@ const Container = styled.div`
 
   span.doc__page__header__property__label {
     padding: 0 8px;
+
+    max-width: 600px;
+    ${overflowEllipsis};
   }
 
   .doc__page__header__property__label {
@@ -344,6 +347,8 @@ const Container = styled.div`
     .form__select__control {
       width: 90px !important;
     }
+    max-width: 600px;
+    ${overflowEllipsis};
   }
 
   .icon.doc__tags__icon {

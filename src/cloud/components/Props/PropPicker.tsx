@@ -13,6 +13,7 @@ import WithTooltip from '../../../design/components/atoms/WithTooltip'
 import { trackEvent } from '../../api/track'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 import NumberSelect from './Pickers/NumberSelect'
+import TextSelect from './Pickers/TextSelect'
 
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
@@ -158,7 +159,27 @@ const PropPicker = ({
           }
         />
       )
-
+    case 'string':
+      return (
+        <TextSelect
+          initialText={
+            Array.isArray(propData.data)
+              ? propData.data[0]
+              : propData.data == null
+              ? ''
+              : propData.data
+          }
+          sending={sendingMap.get(parent.target.id) === 'string'}
+          disabled={sendingMap.get(parent.target.id) != null || readOnly}
+          isReadOnly={readOnly}
+          onTextChange={(val) =>
+            updateProp({
+              type: 'string',
+              data: val,
+            })
+          }
+        />
+      )
     case 'json':
       if (
         propData.data != null &&

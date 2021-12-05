@@ -4,6 +4,7 @@ import {
   mdiCalendarMonthOutline,
   mdiClockOutline,
   mdiContentSaveOutline,
+  mdiFormatText,
   mdiLabelOutline,
   mdiMusicAccidentalSharp,
   mdiTimerOutline,
@@ -27,6 +28,7 @@ export const supportedPropTypes: {
   { type: 'status' },
   { type: 'user' },
   { type: 'number' },
+  { type: 'string' },
 ]
 
 export function getLabelOfPropType(
@@ -41,6 +43,8 @@ export function getLabelOfPropType(
       return 'Creation Date'
     case 'update_date':
       return 'Update Date'
+    case 'string':
+      return 'Text'
     default:
       return capitalize(propType)
   }
@@ -104,6 +108,8 @@ export function getIconPathOfPropType(
       return mdiArrowDownDropCircleOutline
     case 'number':
       return mdiMusicAccidentalSharp
+    case 'string':
+      return mdiFormatText
     default:
       return
   }
@@ -139,7 +145,7 @@ export function getInitialPropDataOfPropType(
     default:
       return {
         type: 'string',
-        data: undefined,
+        data: '',
         createdAt: new Date().toString(),
       }
   }
@@ -204,5 +210,6 @@ export function getDefaultColumnSuggestionsPerType(): {
     { type: 'date', name: 'Due Date' },
     { type: 'date', name: 'Start Date' },
     { type: 'number', name: 'Story Point' },
+    { type: 'string', name: 'Text' },
   ]
 }
