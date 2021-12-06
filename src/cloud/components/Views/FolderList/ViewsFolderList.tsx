@@ -28,7 +28,6 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import FolderListHeader from './FolderListHeader'
-import { updateFolderPageOrder } from '../../../api/teams/folders'
 
 interface ViewsFolderListProps {
   folders?: SerializedFolderWithBookmark[]
@@ -57,7 +56,7 @@ export const ViewsFolderList = ({
 }: ViewsFolderListProps) => {
   const { translate } = useI18n()
   const { push } = useRouter()
-  const { createFolder } = useCloudApi()
+  const { createFolder, updateFolderPageOrder } = useCloudApi()
 
   const {
     dropInDocOrFolder,
