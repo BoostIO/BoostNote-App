@@ -12,7 +12,7 @@ import { useRouter } from '../../../lib/router'
 import { folderToDataTransferItem } from '../../../lib/utils/patterns'
 import { sortByLexorankProperty } from '../../../lib/utils/string'
 import { getFolderHref } from '../../Link/FolderLink'
-import ViewManagerContentRow from './ViewManagerContentRow'
+import FolderListItem from './FolderListItem'
 import {
   closestCenter,
   DndContext,
@@ -29,7 +29,7 @@ import {
 } from '@dnd-kit/sortable'
 import FolderListHeader from './FolderListHeader'
 
-interface ViewsFolderListProps {
+interface FolderListProps {
   folders?: SerializedFolderWithBookmark[]
   currentUserIsCoreMember: boolean
   team: SerializedTeam
@@ -43,7 +43,7 @@ interface ViewsFolderListProps {
   resetFoldersInSelection: () => void
 }
 
-export const ViewsFolderList = ({
+export const FolderList = ({
   folders,
   team,
   currentUserIsCoreMember,
@@ -53,7 +53,7 @@ export const ViewsFolderList = ({
   hasFolderInSelection,
   toggleFolderInSelection,
   resetFoldersInSelection,
-}: ViewsFolderListProps) => {
+}: FolderListProps) => {
   const { translate } = useI18n()
   const { push } = useRouter()
   const { createFolder, updateFolderPageOrder } = useCloudApi()
@@ -166,7 +166,7 @@ export const ViewsFolderList = ({
             const { id } = folder
             const href = getFolderHref(folder, team, 'index')
             return (
-              <ViewManagerContentRow
+              <FolderListItem
                 key={id}
                 id={id}
                 checked={hasFolderInSelection(folder.id)}
@@ -210,4 +210,4 @@ export const ViewsFolderList = ({
   )
 }
 
-export default ViewsFolderList
+export default FolderList

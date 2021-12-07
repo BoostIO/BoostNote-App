@@ -10,7 +10,7 @@ import Icon from '../../../../design/components/atoms/Icon'
 import { mdiDragVertical } from '@mdi/js'
 import { onDragLeaveCb } from '../../../../design/lib/dnd'
 
-interface ViewManagerContentRowProps {
+interface FolderListItemProps {
   id: string
   checked?: boolean
   onSelect: (val: boolean) => void
@@ -25,7 +25,7 @@ interface ViewManagerContentRowProps {
   onDrop?: (event: any) => void
 }
 
-const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
+const FolderListItem: AppComponent<FolderListItemProps> = ({
   id,
   className,
   children,
@@ -72,11 +72,11 @@ const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
   )
 
   return (
-    <StyledContentManagerRow
+    <StyledContainer
       className={cc([
-        'cm__row',
+        'folder-list-item',
         className,
-        draggedOver && 'content__manager__row--draggedOver',
+        draggedOver && 'folder-list-item--dragged-over',
       ])}
       ref={setNodeRef}
       style={style}
@@ -113,21 +113,24 @@ const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
     >
       {showCheckbox && (
         <Checkbox
-          className={cc(['row__checkbox', checked && 'row__checkbox--checked'])}
+          className={cc([
+            'folder-list-item__checkbox',
+            checked && 'folder-list-item__checkbox--checked',
+          ])}
           checked={checked}
           toggle={() => onSelect(!checked)}
         />
       )}
-      <div className='cm__row__orderingHandle' {...listeners}>
+      <div className='folder-list-item__ordering-handle' {...listeners}>
         <Icon path={mdiDragVertical} />
       </div>
       <LabelTag
         draggable={true}
-        className='cm__row__label'
+        className='folder-list-item__label'
         onClick={navigate}
         href={labelHref}
       >
-        <div className='cm__row__emoji'>
+        <div className='folder-list-item__label__emoji'>
           <EmojiIcon
             className='emoji-icon'
             defaultIcon={defaultIcon}
@@ -136,20 +139,22 @@ const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
           />
         </div>
         {typeof label === 'string' ? (
-          <span className='cm__row__label--line'>{label}</span>
+          <span className='folder-list-item__label__line'>{label}</span>
         ) : (
-          <div className='cm__row__label--col'>{label}</div>
+          <div className='folder-list-item__label__col'>{label}</div>
         )}
       </LabelTag>
-      {children != null && <div className='cm__row__content'>{children}</div>}
-    </StyledContentManagerRow>
+      {children != null && (
+        <div className='folder-list-item__content'>{children}</div>
+      )}
+    </StyledContainer>
   )
 }
 
-export default ViewManagerContentRow
+export default FolderListItem
 
 const rowHeight = 40
-const StyledContentManagerRow = styled.div`
+const StyledContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
@@ -160,12 +165,12 @@ const StyledContentManagerRow = styled.div`
   font-size: 13px;
   padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
 
-  .cm__row__orderingHandle {
+  .folder-list-item__ordering-handle {
     opacity: 0;
   }
 
-  .cm__row__status,
-  .cm__row__emoji {
+  .folder-list-item__status,
+  .folder-list-item__emoji {
     height: 100%;
     display: flex;
     flex: 0 0 auto;
@@ -175,31 +180,30 @@ const StyledContentManagerRow = styled.div`
 
   &:hover {
     background: rgba(0, 0, 0, 0.1);
-    .custom-check::before {
-      border-color: ${({ theme }) => theme.colors.text.secondary};
-    }
 
-    .row__checkbox {
-      opacity: 1;
-    }
-    .cm__row__orderingHandle {
+    .folder-list-item__ordering-handle {
       opacity: 1;
       cursor: grab;
       &:active {
         cursor: grabbing;
       }
     }
+
+    .folder-list-item__checkbox {
+      opacity: 1;
+    }
   }
 
-  .cm__row__emoji {
+  .folder-list-item__label__emoji {
     flex: 0 0 auto;
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
-  }
-  .emoji-icon {
-    color: ${({ theme }) => theme.colors.text.subtle};
+
+    .emoji-icon {
+      color: ${({ theme }) => theme.colors.text.subtle};
+    }
   }
 
-  .cm__row__label {
+  .folder-list-item__label {
     width: 100%;
     display: flex;
     flex: 1 1 auto;
@@ -209,16 +213,16 @@ const StyledContentManagerRow = styled.div`
     min-height: ${rowHeight}px;
   }
 
-  .row__checkbox {
+  .folder-list-item__checkbox {
     opacity: 0;
     margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
 
-    &.row__checkbox--checked {
+    &.folder-list-item__checkbox--checked {
       opacity: 1;
     }
   }
 
-  &.content__manager__row--draggedOver {
+  &.folder-list-item--dragged-over {
     background: ${({ theme }) => theme.colors.background.quaternary};
   }
 `
