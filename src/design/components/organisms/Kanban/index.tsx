@@ -10,47 +10,41 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import cc from 'classcat'
-import useMultiContainerDragDrop, { Move } from './hook'
+import useMultiContainerDragDrop, {
+  Container,
+  Identifyable,
+  Move,
+} from './hook'
 import { AppComponent } from '../../../lib/types'
 
-interface Identifyable {
-  id: string
-}
-
-interface KanbanList<T extends Identifyable> extends Identifyable {
-  items: T[]
-}
-
-interface KanbanProps<T extends Identifyable> {
+export interface KanbanProps<T extends Identifyable, U extends Container<T>> {
   className?: string
-  lists: KanbanList<T>[]
-  onItemSort: (item: T, after?: T) => void
-  onItemMove: (targetList: KanbanList<T>, item: T, after?: T) => void
-  onListMove: (list: KanbanList<T>, after?: KanbanList<T> | null) => void
-  onItemCreate: (list: KanbanList<T>, text: string) => void
+  lists: U[]
+  onItemMove: (targetList: U, item: T, after?: T) => void
+  onListMove: (list: U, after?: U) => void
+  onItemCreate: (list: U, text: string) => void
   renderItem: (item: T) => React.ReactNode
-  renderHeader?: (list: KanbanList<T>) => React.ReactNode
+  renderHeader?: (list: U) => React.ReactNode
 }
 
 // test with external updates to lists
-const Kanban = <T extends Identifyable>({
+const Kanban = <T extends Identifyable, U extends Container<T>>({
   className,
   lists,
-  onItemSort,
   onItemMove,
   onListMove,
   renderHeader,
   renderItem,
-}: KanbanProps<T>) => {
+}: KanbanProps<T, U>) => {
   const onMove = useCallback(
-    (move: Move<T>) => {
+    (move: Move<T, U>) => {
       switch (move.type) {
         case 'container': {
           onListMove(move.container, move.after)
           break
         }
         case 'in-container': {
-          onItemSort(move.item, move.after)
+          onItemMove(move.container, move.item, move.after)
           break
         }
         case 'cross-container': {
@@ -58,7 +52,7 @@ const Kanban = <T extends Identifyable>({
         }
       }
     },
-    [onItemSort, onItemMove, onListMove]
+    [onItemMove, onListMove]
   )
   const { containers, active, ...dndProps } = useMultiContainerDragDrop(
     lists,

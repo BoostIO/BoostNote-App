@@ -11,7 +11,10 @@ module.exports = (env, argv) => {
     entry: ['./src/cloud/index.tsx'],
 
     output: {
-      filename: '[name].[hash].js',
+      filename:
+        process.env.NODE_ENV === 'development'
+          ? '[name].js'
+          : '[name].[hash].js',
       path: path.resolve(__dirname, 'compiled-cloud'),
     },
 

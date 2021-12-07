@@ -24,30 +24,32 @@ export interface Container<T extends Identifyable> extends Identifyable {
   items: T[]
 }
 
-type Helpers<T extends Identifyable> = Partial<DndContextProps> & {
-  containers: Container<T>[]
+type Helpers<T extends Identifyable, U extends Container<T>> = Partial<
+  DndContextProps
+> & {
+  containers: U[]
   active: T | null
 }
 
-export type Move<T extends Identifyable> =
-  | { type: 'in-container'; item: T; after?: T }
+export type Move<T extends Identifyable, U extends Container<T>> =
+  | { type: 'in-container'; container: U; item: T; after?: T }
   | {
       type: 'cross-container'
       item: T
       after?: T
-      previous: Container<T>
-      new: Container<T>
+      previous: U
+      new: U
     }
-  | { type: 'container'; container: Container<T>; after: Container<T> }
+  | { type: 'container'; container: U; after: U }
 
-function useMultiContainerDragDrop<T extends Identifyable>(
-  containers: Container<T>[],
-  onMove: (move: Move<T>) => void
-): Helpers<T> {
+function useMultiContainerDragDrop<
+  T extends Identifyable,
+  U extends Container<T>
+>(containers: U[], onMove: (move: Move<T, U>) => void): Helpers<T, U> {
   const [active, setActive] = useState<T | null>(null)
   const lastOverId = useRef<string | null>(null)
   const recentlyMovedToNewContainer = useRef(false)
-  const [cloned, setCloned] = useState<Container<T>[] | null>(null)
+  const [cloned, setCloned] = useState<U[] | null>(null)
 
   const workingData = useMemo(() => {
     return cloned || containers
@@ -214,6 +216,7 @@ function useMultiContainerDragDrop<T extends Identifyable>(
         if (overItemIndex !== -1 && overItemIndex !== activeItemIndex) {
           onMove({
             type: 'in-container',
+            container: activeContainer,
             item: activeContainer.items[activeItemIndex],
             after:
               overContainer.items[
@@ -235,7 +238,12 @@ function useMultiContainerDragDrop<T extends Identifyable>(
           previous: realContainer,
           new: overContainer,
           item: activeContainer.items[activeItemIndex],
-          after: overContainer.items[afterIndex],
+          after:
+            overContainer.items[afterIndex] == null ||
+            overContainer.items[afterIndex].id ===
+              activeContainer.items[activeItemIndex].id
+              ? undefined
+              : overContainer.items[afterIndex],
         })
       }
 

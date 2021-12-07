@@ -1,35 +1,44 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import Kanban from '../../../../design/components/organisms/Kanban'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
+import { useKanbanView } from '../../../lib/hooks/views/kanbanView'
 import { getDocTitle } from '../../../lib/utils/patterns'
 
 interface KanbanViewProps {
   docs: SerializedDocWithSupplemental[]
 }
 
+const view: any = {
+  id: 1,
+  name: 'kanban',
+  type: 'kanban' as const,
+  data: {
+    statusProp: 'Status',
+    lists: [
+      { id: '1', order: '', ordering: {} },
+      { id: '2', order: '', ordering: {} },
+      { id: '3', order: '', ordering: {} },
+      { id: '4', order: '', ordering: {} },
+    ],
+  },
+  order: '',
+}
+
+// kanban lib, kanban hook
 const KanbanView = ({ docs }: KanbanViewProps) => {
-  const [lists, setLists] = useState(() => {
-    return [
-      {
-        id: 'a',
-        items: docs.slice(0, Math.floor(Math.max(1, docs.length) / 2)),
-      },
-      { id: 'b', items: docs.slice(Math.floor(Math.max(1, docs.length) / 2)) },
-    ]
-  })
+  const { lists, onItemMove, onListMove } = useKanbanView({ view, docs })
 
   return (
     <Kanban
       lists={lists}
+      onItemMove={onItemMove}
+      onListMove={onListMove}
+      onItemCreate={console.log}
       renderItem={(doc) => (
         <div>
-          <p>{getDocTitle(doc)}</p>
+          <p style={{ margin: 0 }}>{getDocTitle(doc)}</p>
         </div>
       )}
-      onItemMove={console.log}
-      onListMove={console.log}
-      onItemCreate={console.log}
-      onItemSort={console.log}
     />
   )
 }

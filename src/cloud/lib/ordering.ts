@@ -1,5 +1,5 @@
 import { LexoRank } from 'lexorank'
-import { defaultTo, last, splitWhen, zip } from 'ramda'
+import { defaultTo, prop, sortBy, splitWhen, zip } from 'ramda'
 import { sortByAttributeAsc } from '../../design/lib/utils/array'
 
 interface Orderable {
@@ -7,23 +7,21 @@ interface Orderable {
 }
 
 export function getOrdering<T extends Orderable>(
-  comp: (a: T, b: T) => boolean,
   list: T[],
-  after?: T
+  after?: (item: T) => boolean
 ): string {
-  if (list.length === 0) {
+  const sorted = sortBy(prop('order'), list).filter((item) =>
+    isValidOrderString(item.order)
+  )
+  if (sorted.length === 0) {
     return LexoRank.middle().toString()
   }
-  const sorted = sortByAttributeAsc('order', list)
 
   if (after == null) {
     return LexoRank.min().between(LexoRank.parse(sorted[0].order)).toString()
   }
 
-  const [betweenA, betweenB] = defaultTo(
-    [],
-    last(splitWhen((item: T) => comp(item, after), sorted))
-  )
+  const [betweenA, betweenB] = defaultTo([], splitWhen(after, sorted)[1])
 
   if (betweenA == null) {
     return LexoRank.max()
@@ -48,6 +46,15 @@ export function rebalance<T extends Orderable>(list: T[]): T[] {
     ...item,
     order: order.toString(),
   }))
+}
+
+function isValidOrderString(str: string): boolean {
+  try {
+    LexoRank.parse(str)
+    return true
+  } catch {
+    return false
+  }
 }
 
 function evenSpread(

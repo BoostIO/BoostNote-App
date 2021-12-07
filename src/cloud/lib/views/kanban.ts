@@ -1,12 +1,13 @@
-import { getOrdering, rebalance } from '../ordering'
+import { omit } from 'ramda'
+import { getOrdering } from '../ordering'
 
-interface KanbanList {
-  status: number
+export interface KanbanList {
+  id: string
   ordering: Record<string, string>
   order: string
 }
 
-interface KanbanViewData {
+export interface KanbanViewData {
   lists: KanbanList[]
   statusProp: string
   ordering: 'drag-drop' | 'title:asc' | 'title:desc'
@@ -19,15 +20,13 @@ export function makeFromData(data: any): KanbanViewData {
     statusProp: data.statusProp || 'Status',
     ordering: data.ordering || 'drag-drop',
     lists: Array.isArray(data.lists)
-      ? data.lists
-          .filter((list: any) => typeof list.status === 'number')
-          .map((list: any) => {
-            return {
-              status: list.status,
-              ordering: list.ordering || {},
-              order: list.order || '',
-            }
-          })
+      ? data.lists.map((list: any) => {
+          return {
+            id: list.id,
+            ordering: list.ordering || {},
+            order: list.order || '',
+          }
+        })
       : [],
   }
 }
@@ -42,8 +41,8 @@ export function setOrdering(
   return (kanban) => ({ ...kanban, ordering })
 }
 
-export function makeList(status: number) {
-  return { status, ordering: {}, order: '' }
+export function makeList(id: string): KanbanList {
+  return { id, ordering: {}, order: '' }
 }
 
 export function insertList(
@@ -51,9 +50,12 @@ export function insertList(
   after?: KanbanList
 ): KanbanUpdate {
   return (kanban) => {
-    const lists = kanban.lists.filter((list) => list.status !== newList.status)
-    const order = getOrdering((a, b) => a.status === b.status, lists, after)
-    return { ...kanban, lists: kanban.lists.concat([{ ...newList, order }]) }
+    const lists = kanban.lists.filter((list) => list.id !== newList.id)
+    const order = getOrdering(
+      lists,
+      after != null ? (a) => a.id === after.id : undefined
+    )
+    return { ...kanban, lists: lists.concat([{ ...newList, order }]) }
   }
 }
 
@@ -63,23 +65,49 @@ export function removeList(
 ): KanbanViewData {
   return {
     ...kanban,
-    lists: kanban.lists.filter((list) => list.status !== toDelete.status),
+    lists: kanban.lists.filter((list) => list.id !== toDelete.id),
   }
 }
 
-export function setListItemOrder(
+export function insertItem(
   list: KanbanList,
-  order: { id: string; order: string }[]
+  item: string,
+  after?: string
 ): KanbanUpdate {
   return (kanban) => {
-    const ordering = Object.fromEntries(
-      rebalance(order).map((item) => [item.id, item.order])
+    return { ...kanban, lists: kanban.lists.map(doItemMove(list, item, after)) }
+  }
+}
+
+function doItemMove(insertList: KanbanList, item: string, after?: string) {
+  return (list: KanbanList) => {
+    if (list.id !== insertList.id) {
+      return list.ordering[item] != null
+        ? {
+            id: list.id,
+            order: list.order,
+            ordering: omit([item], list.ordering),
+          }
+        : list
+    }
+
+    const order = getOrdering(
+      toOrdering(omit([item], list.ordering)),
+      after != null ? (a) => a.id === after : undefined
     )
+
+    if (order === list.ordering[item]) {
+      return list
+    }
+
     return {
-      ...kanban,
-      lists: kanban.lists.map((lst) =>
-        lst.status === list.status ? { ...list, ordering } : lst
-      ),
+      id: list.id,
+      order: list.order,
+      ordering: { ...list.ordering, [item]: order },
     }
   }
+}
+
+function toOrdering(ordering: KanbanList['ordering']) {
+  return Object.entries(ordering).map(([id, order]) => ({ id, order }))
 }
