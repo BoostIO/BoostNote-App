@@ -19,6 +19,7 @@ export interface ViewTableData {
   columns: Record<string, Column>
   sort?: ViewTableSortingOptions
   filter?: SerializedQuery
+  titleColumnWidth?: number
 }
 
 export interface ViewTableColumnSortingOption {
@@ -73,6 +74,7 @@ export type Column = {
   id: string
   name: string
   order: string
+  width?: number
 } & (PropCol | StaticPropCol)
 
 export function isColumn(item: any): item is Column {

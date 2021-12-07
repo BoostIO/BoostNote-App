@@ -1,4 +1,4 @@
-import React, { useMemo, CSSProperties } from 'react'
+import React, { useMemo, CSSProperties, useCallback, useState } from 'react'
 import styled from '../../../../lib/styled'
 import { TableColProps } from '../tableInterfaces'
 import TableSlider from './TableSlider'
@@ -11,19 +11,26 @@ interface InternalTableColProps extends TableColProps {
 const TableCol = ({
   children: name,
   width = 80,
+  onWidthChange,
   onClick,
   onContextMenu,
   onDragStart,
   onDragEnd,
   onDrop,
 }: InternalTableColProps) => {
+  const [colWidth, setColWidth] = useState<number>(width)
+
   const style = useMemo(() => {
     const style: CSSProperties = {}
 
-    style.width = `${width}px`
+    style.width = `${colWidth}px`
 
     return style
-  }, [width])
+  }, [colWidth])
+
+  const onWidthChangeProgress = useCallback((newWidth) => {
+    setColWidth(newWidth)
+  }, [])
 
   return (
     <>
@@ -41,7 +48,13 @@ const TableCol = ({
       >
         {name}
       </Container>
-      <TableSlider />
+      <TableSlider
+        defaultWidth={width}
+        minWidth={80}
+        maxWidth={1600}
+        onWidthChange={onWidthChangeProgress}
+        onResizeEnd={onWidthChange}
+      />
     </>
   )
 }

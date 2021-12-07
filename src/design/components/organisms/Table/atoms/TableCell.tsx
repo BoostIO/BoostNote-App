@@ -1,8 +1,8 @@
 import React, { CSSProperties, useMemo } from 'react'
 import styled from '../../../../lib/styled'
 import { TableCellProps } from '../tableInterfaces'
-import TableSlider from './TableSlider'
 import cc from 'classcat'
+import TableBorderLine from './TableBorderLine'
 
 interface InternalTableCellProps extends TableCellProps {
   width?: number
@@ -41,7 +41,7 @@ const TableCell = ({
       >
         {children}
       </Container>
-      <TableSlider />
+      <TableBorderLine />
     </>
   )
 }
