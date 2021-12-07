@@ -35,10 +35,13 @@ export async function createDoc(
 ) {
   const parsedBody = Object.assign({}, body) as any
   if (body.props != null) {
-    parsedBody.props = {} as Record<string, PropData | null>
-    ;(body.props || []).forEach((prop) => {
-      parsedBody.props[prop[0]] = prop[1]
-    })
+    parsedBody.props = (body.props || []).reduce(
+      (acc, [propName, propValue]) => {
+        acc[propName] = propValue
+        return acc
+      },
+      {} as Record<string, PropData | null>
+    )
   }
 
   const data = await callApi<CreateDocResponseBody>(
@@ -127,10 +130,11 @@ export async function updateUnsignedDocProps(
   docId: string,
   props: [string, PropData | null][]
 ) {
-  const body = {}
-  props.forEach((prop) => {
-    body[prop[0]] = prop[1]
-  })
+  const body = (props || []).reduce((acc, [propName, propValue]) => {
+    acc[propName] = propValue
+    return acc
+  }, {} as Record<string, PropData | null>)
+
   return callApi<UpdateDocPropsResponseBody>(`api/docs/${docId}/props`, {
     method: 'patch',
     json: body,

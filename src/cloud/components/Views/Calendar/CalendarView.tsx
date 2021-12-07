@@ -106,24 +106,17 @@ const CalendarView = ({
 
   const noDateDocs = useMemo(() => {
     return filterIter(
-      (doc) =>
-        (doc.props || {})[watchedProp.name] == null ||
-        (doc.props || {})[watchedProp.name].data == null ||
-        (doc.props || {})[watchedProp.name].type !== watchedProp.type,
+      ({ props = {} }) =>
+        props[watchedProp.name] == null ||
+        props[watchedProp.name].data == null ||
+        props[watchedProp.name].type !== watchedProp.type,
       docs
     )
   }, [watchedProp, docs])
 
   const handleNewDateSelection = useCallback(
     (val: DateSelectArg) => {
-      const dates = [val.start]
-      if (intervalToDuration({ start: val.start, end: val.end }).days !== 1) {
-        const endDate = val.end
-        endDate.setDate(endDate.getDate() - 1)
-        dates.push(endDate)
-      }
-
-      const cleanedDateProp = dates.map((date) => cleanupDateProp(date))
+      const cleanedDateProp = getCleanedDatesWithDuration(val.start, val.end)
       return openNewDocForm(
         {
           team: team,
@@ -134,7 +127,10 @@ const CalendarView = ({
               watchedProp.name,
               {
                 type: 'date',
-                data: dates.length === 1 ? cleanedDateProp[0] : cleanedDateProp,
+                data:
+                  cleanedDateProp.length === 1
+                    ? cleanedDateProp[0]
+                    : cleanedDateProp,
               },
             ],
           ],
@@ -174,21 +170,9 @@ const CalendarView = ({
         return
       }
 
-      const dates = [resize.event.start]
-      if (
-        resize.event.end != null &&
-        intervalToDuration({ start: resize.event.start, end: resize.event.end })
-          .days !== 1
-      ) {
-        const endDate = resize.event.end
-        endDate.setDate(endDate.getDate() - 1)
-        dates.push(endDate)
-      }
-
-      const cleanedDateProp = dates.map((date) => cleanupDateProp(date))
       await actionsRef.current.updateDocDate(
         resize.event.extendedProps.doc as any,
-        cleanedDateProp
+        getCleanedDatesWithDuration(resize.event.start, resize.event.end)
       )
     },
     [actionsRef]
@@ -291,6 +275,20 @@ const CalendarView = ({
       />
     </Container>
   )
+}
+
+function getCleanedDatesWithDuration(start: Date, end?: Date | null) {
+  const dates = [start]
+  if (
+    end != null &&
+    intervalToDuration({ start: start, end: end }).days !== 1
+  ) {
+    const endDate = end
+    endDate.setDate(endDate.getDate() - 1)
+    dates.push(endDate)
+  }
+
+  return dates.map((date) => cleanupDateProp(date))
 }
 
 const Container = styled.div`

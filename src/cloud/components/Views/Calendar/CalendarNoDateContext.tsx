@@ -22,7 +22,7 @@ interface CalendarNoDateContext {
   currentUserIsCoreMember?: boolean
 }
 
-export const calendarDroppable = 'droppable-event-item'
+export const calendarDroppableClassName = 'droppable-event-item'
 const CalendarNoDateContext = ({
   docs,
   team,
@@ -50,7 +50,7 @@ const CalendarNoDateContext = ({
   useEffect(() => {
     if (document.getElementById('fc-events') != null) {
       new Draggable(document.getElementById('fc-events')!, {
-        itemSelector: `.droppable-event-item`,
+        itemSelector: '.' + calendarDroppableClassName,
         eventData: function (eventEl) {
           const data = JSON.parse(eventEl.getAttribute('data') || '{}')
           return {
@@ -84,7 +84,7 @@ const CalendarNoDateContext = ({
                 content: (
                   <Flexbox
                     draggable={true}
-                    className={'droppable-event-item'}
+                    className={calendarDroppableClassName}
                     data={JSON.stringify({ title, extendedProps: { doc } })}
                   >
                     {currentUserIsCoreMember && (

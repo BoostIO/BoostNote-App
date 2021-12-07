@@ -19,13 +19,11 @@ import { isUUIDArray } from './utils/array'
 import { format as formatDate } from 'date-fns'
 
 export function isPropType(x: any): x is PropType {
-  if (
-    typeof x === 'string' &&
-    supportedPropTypes.map((val) => val.type).includes(x as any)
-  ) {
-    return true
+  if (typeof x !== 'string') {
+    return false
   }
-  return false
+
+  return supportedPropTypes.some(({ type }) => (type as string) === x)
 }
 
 export const supportedPropTypes: {
