@@ -11,7 +11,7 @@ import PropertyValueButton from './Pickers/PropertyValueButton'
 import WithTooltip from '../../../design/components/atoms/WithTooltip'
 import { trackEvent } from '../../api/track'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
-import { cleanupDateProp } from '../../lib/props'
+import { getISODateFromLocalTime } from '../../lib/date'
 
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
@@ -109,8 +109,8 @@ const PropPicker = ({
                 ? {
                     type: 'date',
                     data: Array.isArray(newDate)
-                      ? newDate.map((date) => cleanupDateProp(date))
-                      : cleanupDateProp(newDate),
+                      ? newDate.map((date) => getISODateFromLocalTime(date))
+                      : getISODateFromLocalTime(newDate),
                   }
                 : {
                     type: 'date',

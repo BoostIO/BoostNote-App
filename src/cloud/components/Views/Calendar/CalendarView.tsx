@@ -16,13 +16,14 @@ import { useModal } from '../../../../design/lib/stores/modal'
 import CalendarEventItemContextMenu from './CalendarEventItemContextMenu'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { intervalToDuration, format as formatDate } from 'date-fns'
-import { cleanupDateProp, getIconPathOfPropType } from '../../../lib/props'
+import { getIconPathOfPropType } from '../../../lib/props'
 import Icon from '../../../../design/components/atoms/Icon'
 import { mdiCalendarMonthOutline, mdiFileDocumentOutline } from '@mdi/js'
 import CalendarWatchedPropContext from './CalendarWatchedPropContext'
 import { useRouter } from '../../../lib/router'
 import CalendarNoDateContext from './CalendarNoDateContext'
 import { getDocLinkHref } from '../../Link/DocLink'
+import { getISODateFromLocalTime } from '../../../lib/date'
 
 type CalendarViewProps = {
   view: SerializedView
@@ -188,7 +189,7 @@ const CalendarView = ({
       }
       await actionsRef.current.updateDocDate(
         received.event.extendedProps.doc as any,
-        [cleanupDateProp(received.event.start)]
+        [getISODateFromLocalTime(received.event.start)]
       )
       closeAllModals()
     },
@@ -288,7 +289,7 @@ function getCleanedDatesWithDuration(start: Date, end?: Date | null) {
     dates.push(endDate)
   }
 
-  return dates.map((date) => cleanupDateProp(date))
+  return dates.map((date) => getISODateFromLocalTime(date))
 }
 
 const Container = styled.div`

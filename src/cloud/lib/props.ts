@@ -16,7 +16,6 @@ import {
   StaticPropType,
 } from '../interfaces/db/props'
 import { isUUIDArray } from './utils/array'
-import { format as formatDate } from 'date-fns'
 
 export function isPropType(x: any): x is PropType {
   if (typeof x !== 'string') {
@@ -203,8 +202,4 @@ export function getDefaultColumnSuggestionsPerType(): {
     { type: 'date', name: 'Due Date' },
     { type: 'date', name: 'Start Date' },
   ]
-}
-
-export function cleanupDateProp(date: Date) {
-  return new Date(formatDate(date, 'yyyy-MM-dd') + 'T00:00:00.000Z')
 }
