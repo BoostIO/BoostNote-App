@@ -11,7 +11,7 @@ import { SerializedView, ViewParent } from '../../interfaces/db/view'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { SerializedTeam } from '../../interfaces/db/team'
 import TableView from './Table/TableView'
-import ViewsFolderList from './FolderList/ViewsFolderList'
+import FolderList from './FolderList/FolderList'
 import Scroller from '../../../design/components/atoms/Scroller'
 import { sortByLexorankProperty } from '../../lib/utils/string'
 import CalendarView from './Calendar/CalendarView'
@@ -181,7 +181,7 @@ export const ViewsManager = ({
           </>
         )}
 
-        <ViewsFolderList
+        <FolderList
           folders={folders}
           team={team}
           currentUserIsCoreMember={currentUserIsCoreMember}
