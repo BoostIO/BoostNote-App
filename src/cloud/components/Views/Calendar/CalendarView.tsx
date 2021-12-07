@@ -117,24 +117,24 @@ const CalendarView = ({
 
   const handleNewDateSelection = useCallback(
     (val: DateSelectArg) => {
-      const cleanedDateProp = getCleanedDatesWithDuration(val.start, val.end)
+      const cleanedDateProp = extractDatesWithCorrectDuration(
+        val.start,
+        val.end
+      )
       return openNewDocForm(
         {
           team: team,
           workspaceId: currentWorkspaceId,
           parentFolderId: currentFolderId,
-          props: [
-            [
-              watchedProp.name,
-              {
-                type: 'date',
-                data:
-                  cleanedDateProp.length === 1
-                    ? cleanedDateProp[0]
-                    : cleanedDateProp,
-              },
-            ],
-          ],
+          props: {
+            [watchedProp.name]: {
+              type: 'date',
+              data:
+                cleanedDateProp.length === 1
+                  ? cleanedDateProp[0]
+                  : cleanedDateProp,
+            },
+          },
         },
         {
           precedingRows: [
@@ -173,7 +173,7 @@ const CalendarView = ({
 
       await actionsRef.current.updateDocDate(
         resize.event.extendedProps.doc as any,
-        getCleanedDatesWithDuration(resize.event.start, resize.event.end)
+        extractDatesWithCorrectDuration(resize.event.start, resize.event.end)
       )
     },
     [actionsRef]
@@ -278,7 +278,7 @@ const CalendarView = ({
   )
 }
 
-function getCleanedDatesWithDuration(start: Date, end?: Date | null) {
+function extractDatesWithCorrectDuration(start: Date, end?: Date | null) {
   const dates = [start]
   if (
     end != null &&

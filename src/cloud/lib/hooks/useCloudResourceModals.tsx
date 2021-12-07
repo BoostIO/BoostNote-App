@@ -394,7 +394,7 @@ export interface CloudNewResourceRequestBody {
   team?: SerializedTeam
   workspaceId?: string
   parentFolderId?: string
-  props?: [string, PropData | null][]
+  props?: Record<string, PropData | null>
 }
 
 export type UIFormOptions = SubmissionWrappers & {

@@ -22,7 +22,7 @@ export interface CreateDocRequestBody {
   template?: string
   title?: string
   emoji?: string
-  props?: [string, PropData | null][]
+  props?: Record<string, PropData | null>
 }
 
 export interface CreateDocResponseBody {
@@ -33,21 +33,10 @@ export async function createDoc(
   team: { id: string },
   body: CreateDocRequestBody
 ) {
-  const parsedBody = Object.assign({}, body) as any
-  if (body.props != null) {
-    parsedBody.props = (body.props || []).reduce(
-      (acc, [propName, propValue]) => {
-        acc[propName] = propValue
-        return acc
-      },
-      {} as Record<string, PropData | null>
-    )
-  }
-
   const data = await callApi<CreateDocResponseBody>(
     `api/teams/${team.id}/docs`,
     {
-      json: parsedBody,
+      json: body,
       method: 'post',
     }
   )
@@ -128,16 +117,11 @@ export async function updateDocDueDate(docId: string, dueDate: Date | null) {
 
 export async function updateUnsignedDocProps(
   docId: string,
-  props: [string, PropData | null][]
+  props: Record<string, PropData | null>
 ) {
-  const body = (props || []).reduce((acc, [propName, propValue]) => {
-    acc[propName] = propValue
-    return acc
-  }, {} as Record<string, PropData | null>)
-
   return callApi<UpdateDocPropsResponseBody>(`api/docs/${docId}/props`, {
     method: 'patch',
-    json: body,
+    json: props,
   })
 }
 
