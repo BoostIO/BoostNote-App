@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import cc from 'classcat'
 import styled from '../../../../design/lib/styled'
 import { AppComponent } from '../../../../design/lib/types'
@@ -8,6 +8,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import Icon from '../../../../design/components/atoms/Icon'
 import { mdiDragVertical } from '@mdi/js'
+import { onDragLeaveCb } from '../../../../design/lib/dnd'
 
 interface ViewManagerContentRowProps {
   id: string
@@ -36,9 +37,9 @@ const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
   defaultIcon,
   showCheckbox,
   onSelect,
-  // onDragStart,
-  // onDragEnd,
-  // onDrop,
+  onDragStart,
+  onDragEnd,
+  onDrop,
 }) => {
   const {
     attributes,
@@ -50,6 +51,8 @@ const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
   } = useSortable({ id })
   const style = { transform: CSS.Transform.toString(transform), transition }
 
+  const [draggedOver, setDraggedOver] = useState(false)
+  const dragRef = useRef<HTMLDivElement>(null)
   const LabelTag = labelHref != null || labelOnclick != null ? 'a' : 'div'
 
   const navigate: React.MouseEventHandler = useCallback(
@@ -68,19 +71,45 @@ const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
     [labelOnclick, isDragging]
   )
 
-  // const [draggedOver, setDraggedOver] = useState(false)
-  // const dragRef = useRef<HTMLDivElement>(null)
-
   return (
     <StyledContentManagerRow
       className={cc([
         'cm__row',
         className,
-        // draggedOver && 'content__manager__row--draggedOver',
+        draggedOver && 'content__manager__row--draggedOver',
       ])}
       ref={setNodeRef}
       style={style}
       {...attributes}
+      draggable={true}
+      onDrop={(event: any) => {
+        event.stopPropagation()
+        if (onDrop != null) {
+          onDrop(event)
+        }
+        setDraggedOver(false)
+      }}
+      onDragStart={(event: any) => {
+        event.stopPropagation()
+        if (onDragStart != null) {
+          onDragStart(event)
+        }
+      }}
+      onDragOver={(event: any) => {
+        event.preventDefault()
+        event.stopPropagation()
+        setDraggedOver(true)
+      }}
+      onDragLeave={(event: any) => {
+        onDragLeaveCb(event, dragRef, () => {
+          setDraggedOver(false)
+        })
+      }}
+      onDragEnd={(event: any) => {
+        if (onDragEnd != null) {
+          onDragEnd(event)
+        }
+      }}
     >
       {showCheckbox && (
         <Checkbox
@@ -89,7 +118,7 @@ const ViewManagerContentRow: AppComponent<ViewManagerContentRowProps> = ({
           toggle={() => onSelect(!checked)}
         />
       )}
-      <div {...listeners}>
+      <div className='cm__row__orderingHandle' {...listeners}>
         <Icon path={mdiDragVertical} />
       </div>
       <LabelTag
@@ -131,6 +160,10 @@ const StyledContentManagerRow = styled.div`
   font-size: 13px;
   padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
 
+  .cm__row__orderingHandle {
+    opacity: 0;
+  }
+
   .cm__row__status,
   .cm__row__emoji {
     height: 100%;
@@ -148,6 +181,13 @@ const StyledContentManagerRow = styled.div`
 
     .row__checkbox {
       opacity: 1;
+    }
+    .cm__row__orderingHandle {
+      opacity: 1;
+      cursor: grab;
+      &:active {
+        cursor: grabbing;
+      }
     }
   }
 
