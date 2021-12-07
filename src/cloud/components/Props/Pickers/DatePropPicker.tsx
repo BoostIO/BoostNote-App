@@ -5,6 +5,7 @@ import { format as formatDate, isValid } from 'date-fns'
 import styled from '../../../../design/lib/styled'
 import Button from '../../../../design/components/atoms/Button'
 import {
+  mdiArrowRight,
   mdiCalendarMonthOutline,
   mdiCalendarRemoveOutline,
   mdiClose,
@@ -18,6 +19,7 @@ import MetadataContainer from '../../../../design/components/organisms/MetadataC
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import MetadataContainerBreak from '../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import { filterIter } from '../../../lib/utils/iterator'
+import Icon from '../../../../design/components/atoms/Icon'
 
 interface DatePropPickerProps {
   className?: string
@@ -83,16 +85,25 @@ const DatePropPicker = ({
           )
         }
       >
-        {date != null
-          ? Array.isArray(date)
-            ? `${formatDate(date[0], 'MMM dd, yyyy')} -> ${formatDate(
-                date[1],
-                'MMM dd, yyyy'
-              )}`
-            : formatDate(date, 'MMM dd, yyyy')
-          : emptyLabel != null
-          ? emptyLabel
-          : 'Add Date'}
+        {date != null ? (
+          Array.isArray(date) ? (
+            <>
+              {formatDate(date[0], 'MMM dd, yyyy')}
+              <Icon
+                path={mdiArrowRight}
+                className='date-prop__duration-arrow'
+                size={12}
+              />
+              {formatDate(date[1], 'MMM dd, yyyy')}
+            </>
+          ) : (
+            formatDate(date, 'MMM dd, yyyy')
+          )
+        ) : emptyLabel != null ? (
+          emptyLabel
+        ) : (
+          'Add Date'
+        )}
       </PropertyValueButton>
       {date != null && (
         <Button
@@ -382,6 +393,11 @@ const Container = styled.div`
     .due__date__clear {
       display: block;
     }
+  }
+
+  .date-prop__duration-arrow {
+    flex: 0 0 auto;
+    margin: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 `
 
