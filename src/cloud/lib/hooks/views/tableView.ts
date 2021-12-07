@@ -32,6 +32,13 @@ export type TableViewActionsRef = React.MutableRefObject<{
     column: Column,
     move: ColumnMoveType
   ) => Promise<BulkApiActionRes> | undefined
+  updateColumnWidth: (
+    column: Column,
+    newWidth: number
+  ) => Promise<BulkApiActionRes> | undefined
+  updateTitleColumnWidth: (
+    newWidth: number
+  ) => Promise<BulkApiActionRes> | undefined
 }>
 
 export function useTableView({
@@ -153,12 +160,44 @@ export function useTableView({
     [state, saveView, view]
   )
 
+  const updateColumnWidth = useCallback(
+    (column: Column, newWidth: number) => {
+      const newState = {
+        ...state,
+        columns: {
+          ...state.columns,
+          [column.id]: {
+            ...column,
+            width: newWidth,
+          },
+        },
+      }
+      return saveView(view, newState)
+    },
+    [state, saveView, view]
+  )
+
+  const updateTitleColumnWidth = useCallback(
+    (newWidth: number) => {
+      const newState = {
+        ...state,
+        titleColumnWidth: newWidth,
+      }
+
+      console.log('Updating view', newWidth, state.titleColumnWidth)
+      return saveView(view, newState)
+    },
+    [state, saveView, view]
+  )
+
   const actionsRef: TableViewActionsRef = useRef({
     addColumn,
     removeColumn,
     moveColumn,
     updateTableSort,
     setColumns,
+    updateColumnWidth,
+    updateTitleColumnWidth,
   })
 
   useEffect(() => {
@@ -168,8 +207,10 @@ export function useTableView({
       removeColumn: removeColumn,
       updateTableSort: updateTableSort,
       setColumns,
+      updateColumnWidth: updateColumnWidth,
+      updateTitleColumnWidth: updateTitleColumnWidth,
     }
-  }, [removeColumn, addColumn, moveColumn, updateTableSort, setColumns])
+  }, [removeColumn, addColumn, moveColumn, updateTableSort, setColumns, updateColumnWidth, updateTitleColumnWidth])
 
   return {
     actionsRef,

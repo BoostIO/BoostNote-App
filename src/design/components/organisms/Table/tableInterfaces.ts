@@ -21,12 +21,14 @@ export type TableCellProps = React.PropsWithChildren<{
   onClick?: MouseEventHandler
   onContextMenu?: MouseEventHandler
   onDrop?: DragEventHandler
+  onWidthChange?: (newWidth: number) => void
 }>
 
 export interface TableColProps {
   id?: string
   children: React.ReactNode
   width?: number
+  onWidthChange?: (newWidth: number) => void
   onClick?: MouseEventHandler
   onContextMenu?: MouseEventHandler
   onDragStart?: DragEventHandler

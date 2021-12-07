@@ -197,7 +197,10 @@ const TableView = ({
             {
               id: 'doc-title',
               children: <Flexbox style={{ height: '100%' }}>Documents</Flexbox>,
-              width: 300,
+              width: view.data.titleColumnWidth ?? 300,
+              onWidthChange: (newWidth) => {
+                actionsRef.current.updateTitleColumnWidth(newWidth)
+              },
               onClick: (ev: any) =>
                 openContextModal(
                   ev,
@@ -225,7 +228,10 @@ const TableView = ({
                     <span>{col.name}</span>
                   </Flexbox>
                 ),
-                width: 200,
+                width: col.width ?? 200,
+                onWidthChange: (newWidth: number) => {
+                  actionsRef.current.updateColumnWidth(col, newWidth)
+                },
                 onClick: (ev: any) =>
                   openContextModal(
                     ev,
