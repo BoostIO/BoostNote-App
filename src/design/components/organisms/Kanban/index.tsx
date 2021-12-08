@@ -29,7 +29,7 @@ export interface KanbanProps<
   renderItem: (item: T) => React.ReactNode
   renderHeader?: (list: U) => React.ReactNode
   afterLists?: React.ReactNode
-  afterItems?: React.ReactNode
+  afterItems?: (list: U) => React.ReactNode
   disabled?: boolean
 }
 
@@ -101,7 +101,7 @@ const Kanban = <T extends Identifyable, U extends KanbanContainer<T>>({
                         {renderItem(item)}
                       </Sortable>
                     ))}
-                    {afterItems && afterItems}
+                    {afterItems && afterItems(list)}
                   </SortableContext>
                 </SortableContainer>
               )
