@@ -7,13 +7,14 @@ import { getDocTitle } from '../../../lib/utils/patterns'
 
 interface ItemProps {
   doc: SerializedDocWithSupplemental
+  onClick?: (doc: SerializedDocWithSupplemental) => void
 }
 
-const Item = ({ doc }: ItemProps) => {
+const Item = ({ doc, onClick }: ItemProps) => {
   return (
     <Container>
       <Icon path={mdiFileDocumentOutline} />
-      <span>{getDocTitle(doc)}</span>
+      <span onClick={() => onClick && onClick(doc)}>{getDocTitle(doc)}</span>
     </Container>
   )
 }
@@ -27,6 +28,7 @@ const Container = styled.div`
 
   & > span {
     margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+    cursor: pointer;
   }
 `
 

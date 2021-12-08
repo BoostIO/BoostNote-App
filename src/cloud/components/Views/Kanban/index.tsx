@@ -15,7 +15,9 @@ import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedView } from '../../../interfaces/db/view'
 import { useKanbanView } from '../../../lib/hooks/views/kanbanView'
+import { useRouter } from '../../../lib/router'
 import { useStatuses } from '../../../lib/stores/status'
+import { getDocLinkHref } from '../../Link/DocLink'
 import { StatusSelector } from '../../Props/Pickers/StatusSelect'
 import Item from './Item'
 import KanbanWatchedPropSetter from './KanbanWatchedPropSetter'
@@ -52,6 +54,7 @@ const KanbanView = ({
     docs,
   })
   const { openContextModal, closeLastModal } = useModal()
+  const { push } = useRouter()
 
   const addListRef = useRef(addList)
   useEffect(() => {
@@ -123,9 +126,17 @@ const KanbanView = ({
     [statuses, openContextModal, closeLastModal]
   )
 
-  const renderItem = useCallback((doc: SerializedDocWithSupplemental) => {
-    return <Item doc={doc} />
-  }, [])
+  const renderItem = useCallback(
+    (doc: SerializedDocWithSupplemental) => {
+      return (
+        <Item
+          onClick={() => push(getDocLinkHref(doc, team, 'index'))}
+          doc={doc}
+        />
+      )
+    },
+    [team, push]
+  )
 
   const setPropRef = useRef(setProp)
   useEffect(() => {
