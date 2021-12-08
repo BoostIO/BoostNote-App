@@ -68,7 +68,7 @@ const KanbanWatchedPropSetter = ({
 
   return (
     <SuggestionSelect
-      sending={fetching != null ? 'fetching' : undefined}
+      sending={fetching ? 'fetching' : undefined}
       value={value}
       onChange={setValue}
       onCreate={setProp}
