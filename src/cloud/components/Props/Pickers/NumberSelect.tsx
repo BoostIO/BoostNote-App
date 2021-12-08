@@ -1,11 +1,10 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import styled from '../../../../design/lib/styled'
 import PropertyValueButton from './PropertyValueButton'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import { mdiArrowDownDropCircleOutline } from '@mdi/js'
 import { useModal } from '../../../../design/lib/stores/modal'
-import Button from '../../../../design/components/atoms/Button'
-import ErrorBlock from '../../ErrorBlock'
+import { useEffectOnce } from 'react-use'
 
 interface NumberSelectProps {
   sending?: boolean
@@ -20,151 +19,122 @@ interface NumberSelectProps {
 }
 
 const NumberSelect = ({
-  number = 0,
+  number,
   sending,
   disabled,
-  emptyLabel,
   isReadOnly,
   showIcon,
   popupAlignment = 'bottom-left',
   onNumberChange,
-  onClick,
 }: NumberSelectProps) => {
   const { openContextModal, closeLastModal } = useModal()
-  const onNumberChangeCallback = useCallback(
-    (number: number) => {
-      onNumberChange(number)
-    },
-    [onNumberChange]
-  )
 
   const openSelector: React.MouseEventHandler = useCallback(
-    (ev) => {
+    (event) => {
       openContextModal(
-        ev,
-        <NumberSelector
-          number={number}
-          onSelect={(number) => {
-            onNumberChangeCallback(number)
+        event,
+        <NumberInputContextModal
+          initialValue={number}
+          onSelect={(newValue) => {
+            const parsedNewValue = parseFloat(newValue)
+            if (!Number.isNaN(parsedNewValue)) {
+              onNumberChange(parsedNewValue)
+            }
+
             closeLastModal()
           }}
         />,
         { alignment: popupAlignment, width: 191, removePadding: true }
       )
     },
-    [
-      openContextModal,
-      number,
-      popupAlignment,
-      onNumberChangeCallback,
-      closeLastModal,
-    ]
+    [openContextModal, number, popupAlignment, closeLastModal, onNumberChange]
   )
 
   return (
-    <div>
+    <NumberSelectContainer>
       <PropertyValueButton
         sending={sending}
         isReadOnly={isReadOnly}
         disabled={disabled}
-        onClick={(e) => (onClick != null ? onClick(e) : openSelector(e))}
+        onClick={openSelector}
         iconPath={showIcon ? mdiArrowDownDropCircleOutline : undefined}
       >
-        {number != null ? (
-          <NumberView name={number + ''} />
-        ) : emptyLabel != null ? (
-          emptyLabel
-        ) : (
-          <NumberView name='Click to set' />
-        )}
+        <div className='number-select__label'>{number}</div>
       </PropertyValueButton>
-    </div>
+    </NumberSelectContainer>
   )
 }
 
 export default NumberSelect
 
-const NumberSelector = ({
-  number,
+const NumberSelectContainer = styled.div`
+  .number-select__label {
+    padding: 0.25em 0.5em;
+    border-radius: 4px;
+    color: white;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+`
+
+interface NumberInputContextModalProps {
+  initialValue?: number
+  onSelect: (value: string) => void
+}
+
+const NumberInputContextModal = ({
+  initialValue,
   onSelect,
-}: {
-  number: number
-  onSelect: (number: number) => void
-}) => {
-  const [numberValue, setNumberValue] = useState<string>(number + '')
-  const [error, setError] = useState<string | null>(null)
+}: NumberInputContextModalProps) => {
+  const [value, setValue] = useState<string>(
+    initialValue != null ? initialValue.toString() : ''
+  )
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const inputOnChangeEvent = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       event.preventDefault()
-      setNumberValue(event.target.value)
+      setValue(event.target.value)
     },
     []
   )
 
-  const validateAndUpdateNumber = useCallback(
-    (newValue: string) => {
-      const number = parseInt(newValue)
-      if (isNaN(number)) {
-        setError('Not a number')
-      } else {
-        onSelect(number)
-      }
-    },
-    [onSelect]
-  )
+  const updateNumber = useCallback(() => {
+    onSelect(value)
+  }, [onSelect, value])
+
+  useEffectOnce(() => {
+    if (inputRef.current != null) {
+      inputRef.current.focus()
+    }
+  })
 
   return (
-    <Container>
+    <NumberInputContextModalContainer>
       <FormInput
-        className={'form--input'}
+        ref={inputRef}
+        className={'form__input'}
         type='number'
-        value={numberValue}
+        value={value}
         onChange={inputOnChangeEvent}
         autoComplete={'off'}
-        onBlur={(e) => validateAndUpdateNumber(e.target.value)}
+        onBlur={updateNumber}
       />
-      <Button
-        className={'save--button'}
-        onClick={() => validateAndUpdateNumber(numberValue)}
-        variant={'primary'}
-      >
-        Save
-      </Button>
-      {error != null && <ErrorBlock error={error} />}
-    </Container>
+    </NumberInputContextModalContainer>
   )
 }
 
-const Container = styled.div`
+const NumberInputContextModalContainer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: row;
   flex-wrap: wrap;
   margin-left: 4px;
 
-  .form--input {
-    width: 50%;
+  .form__input {
+    display: block;
+    width: 100%;
     margin: 5px;
   }
-
-  .save--button {
-    margin: 5px;
-  }
-`
-export const NumberView = ({
-  name,
-  backgroundColor,
-}: {
-  name: string
-  backgroundColor?: string
-}) => {
-  return <StyledStatus style={{ backgroundColor }}>{name}</StyledStatus>
-}
-
-const StyledStatus = styled.span`
-  display: inline-block;
-  padding: 0.25em 0.5em;
-  border-radius: 4px;
-  color: white;
 `
