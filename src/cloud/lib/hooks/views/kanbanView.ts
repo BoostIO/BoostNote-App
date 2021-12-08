@@ -21,24 +21,24 @@ interface KanbanViewProps {
   docs: SerializedDocWithSupplemental[]
 }
 
-interface KanbanViewList extends KanbanList {
+export interface KanbanViewList extends KanbanList {
   items: SerializedDocWithSupplemental[]
 }
 
 type State = Pick<
   KanbanProps<SerializedDocWithSupplemental, KanbanViewList>,
-  'lists' | 'onItemMove' | 'onListMove'
+  'lists' | 'onItemMove'
 > & {
+  onListMove: (
+    list: KanbanViewList,
+    move?: KanbanViewList | 'left' | 'right'
+  ) => void
   prop: string
   addList: (id: string) => void
   setProp: (prop: string) => void
   removeList: (list: KanbanViewList) => void
 }
 
-// list overlay
-// status picker & saving
-// styling
-// list creation / deletion
 export function useKanbanView({ view, docs }: KanbanViewProps): State {
   const { updateDocPropsApi, updateViewApi } = useCloudApi()
   const [viewData, setViewData] = useState(() => makeFromData(view.data))

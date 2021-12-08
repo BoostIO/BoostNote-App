@@ -19,6 +19,7 @@ import { useStatuses } from '../../../lib/stores/status'
 import { StatusSelector } from '../../Props/Pickers/StatusSelect'
 import Item from './Item'
 import KanbanWatchedPropSetter from './KanbanWatchedPropSetter'
+import ListSettings from './ListSettings'
 
 interface KanbanViewProps {
   view: SerializedView
@@ -43,6 +44,7 @@ const KanbanView = ({
     lists,
     onItemMove,
     onListMove,
+    removeList,
     addList,
     setProp,
   } = useKanbanView({
@@ -71,6 +73,16 @@ const KanbanView = ({
     [openContextModal, closeLastModal]
   )
 
+  const removeListRef = useRef(removeList)
+  useEffect(() => {
+    removeListRef.current = removeList
+  })
+
+  const onListMoveRef = useRef(onListMove)
+  useEffect(() => {
+    onListMoveRef.current = onListMove
+  })
+
   const renderHeader = useCallback(
     (list: typeof lists[number]) => {
       const id = Number(list.id)
@@ -81,11 +93,34 @@ const KanbanView = ({
             name={status?.name || 'No Status'}
             backgroundColor={status?.backgroundColor}
           />
-          <Button iconPath={mdiDotsHorizontal} variant='icon'></Button>
+          <Button
+            onClick={(event) => {
+              openContextModal(
+                event,
+                <ListSettings
+                  list={list}
+                  remove={(list) => {
+                    removeListRef.current(list)
+                    closeLastModal()
+                  }}
+                  move={(list, move) => {
+                    onListMoveRef.current(list, move)
+                    closeLastModal()
+                  }}
+                />,
+                {
+                  width: 250,
+                  removePadding: true,
+                }
+              )
+            }}
+            iconPath={mdiDotsHorizontal}
+            variant='icon'
+          ></Button>
         </Flexbox>
       )
     },
-    [statuses]
+    [statuses, openContextModal, closeLastModal]
   )
 
   const renderItem = useCallback((doc: SerializedDocWithSupplemental) => {
@@ -113,7 +148,10 @@ const KanbanView = ({
                   prop={prop}
                   teamId={team.id}
                   view={view}
-                  setProp={(str) => setPropRef.current(str)}
+                  setProp={(str) => {
+                    setPropRef.current(str)
+                    closeLastModal()
+                  }}
                 />,
                 {
                   width: 250,
@@ -142,16 +180,14 @@ const KanbanView = ({
         renderHeader={renderHeader}
         renderItem={renderItem}
         afterLists={
-          <div>
-            <Button
-              disabled={!currentUserIsCoreMember}
-              onClick={openSelector}
-              iconPath={mdiPlus}
-              variant='transparent'
-            >
-              Add Status
-            </Button>
-          </div>
+          <Button
+            disabled={!currentUserIsCoreMember}
+            onClick={openSelector}
+            iconPath={mdiPlus}
+            variant='transparent'
+          >
+            Add Status
+          </Button>
         }
       />
     </Container>

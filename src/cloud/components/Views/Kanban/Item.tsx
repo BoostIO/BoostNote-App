@@ -24,6 +24,10 @@ const Container = styled.div`
   font-size: ${({ theme }) => theme.sizes.fonts.md}px;
   padding: ${({ theme }) => theme.sizes.spaces.sm}px;
   background-color: ${({ theme }) => theme.colors.background.secondary};
+
+  & > span {
+    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
 `
 
 export default Item

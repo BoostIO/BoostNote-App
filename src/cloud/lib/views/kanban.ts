@@ -1,4 +1,4 @@
-import { omit } from 'ramda'
+import { omit, prop, sortBy } from 'ramda'
 import { getOrdering } from '../ordering'
 
 export interface KanbanList {
@@ -47,13 +47,15 @@ export function makeList(id: string): KanbanList {
 
 export function insertList(
   newList: KanbanList,
-  after?: KanbanList
+  after?: KanbanList | 'left' | 'right'
 ): KanbanUpdate {
   return (kanban) => {
+    const afterItem =
+      typeof after === 'string' ? getMoveAfter(after, newList, kanban) : after
     const lists = kanban.lists.filter((list) => list.id !== newList.id)
     const order = getOrdering(
       lists,
-      after != null ? (a) => a.id === after.id : undefined
+      afterItem != null ? (a) => a.id === afterItem.id : undefined
     )
     return {
       ...kanban,
@@ -79,6 +81,21 @@ export function insertItem(
   return (kanban) => {
     return { ...kanban, lists: kanban.lists.map(doItemMove(list, item, after)) }
   }
+}
+
+function getMoveAfter(
+  move: 'right' | 'left',
+  list: KanbanList,
+  data: KanbanViewData
+) {
+  const sorted = sortBy(prop('order'), data.lists)
+  const index = sorted.findIndex((lst) => lst.id === list.id)
+  if (index === -1) {
+    return sorted[sorted.length - 1]
+  }
+  const offset = move === 'right' ? 1 : -2
+  const insertIndex = Math.min(index + offset, sorted.length - 1)
+  return sorted[insertIndex]
 }
 
 function doItemMove(insertList: KanbanList, item: string, after?: string) {
