@@ -141,8 +141,8 @@ const FuzzyNavigation = ({
                 : `Recent items`}
             </span>
             <ResultContainer>
-              <Scroller className={cc(['fuzzy__scroller'])}>
-                <SearchResults>
+              <SearchResults>
+                <Scroller className={cc(['fuzzy__scroller'])}>
                   {recentItems.map((item, i) => (
                     <FuzzyNavigationItem
                       onMouseEnter={() => setMarkdownPreviewForItem(item)}
@@ -152,24 +152,24 @@ const FuzzyNavigation = ({
                       key={`fuzzy-recent-${i}`}
                     />
                   ))}
-                </SearchResults>
-              </Scroller>
-              <Scroller className={cc(['fuzzy__scroller'])}>
-                {!loadingDocContent &&
-                  showMarkdownPreview &&
-                  markdownPreviewContent != null && (
-                    <MarkdownPreviewContainer>
+                </Scroller>
+              </SearchResults>
+              {!loadingDocContent &&
+                showMarkdownPreview &&
+                markdownPreviewContent != null && (
+                  <MarkdownPreviewContainer>
+                    <Scroller className={cc(['fuzzy__scroller'])}>
                       <CustomizedMarkdownPreviewer
                         content={markdownPreviewContent}
                       />
-                    </MarkdownPreviewContainer>
-                  )}
-                {loadingDocContent && (
-                  <MarkdownPreviewContainer>
-                    <Spinner variant={'primary'} />
+                    </Scroller>
                   </MarkdownPreviewContainer>
                 )}
-              </Scroller>
+              {loadingDocContent && (
+                <MarkdownPreviewContainer>
+                  <Spinner variant={'primary'} />
+                </MarkdownPreviewContainer>
+              )}
             </ResultContainer>
           </>
         ) : (
@@ -180,8 +180,8 @@ const FuzzyNavigation = ({
 
             {filteredItems.length !== 0 && (
               <ResultContainer>
-                <Scroller className={cc(['fuzzy__scroller'])}>
-                  <SearchResults>
+                <SearchResults>
+                  <Scroller className={cc(['fuzzy__scroller'])}>
                     {filteredItems.map((item, i) => (
                       <HighlightedFuzzyNavigationitem
                         onMouseEnter={() => setMarkdownPreviewForItem(item)}
@@ -194,24 +194,24 @@ const FuzzyNavigation = ({
                         pathMatches={item.pathMatches}
                       />
                     ))}
-                  </SearchResults>
-                </Scroller>
-                <Scroller className={cc(['fuzzy__scroller'])}>
-                  {!loadingDocContent &&
-                    showMarkdownPreview &&
-                    markdownPreviewContent != null && (
-                      <MarkdownPreviewContainer>
+                  </Scroller>
+                </SearchResults>
+                {!loadingDocContent &&
+                  showMarkdownPreview &&
+                  markdownPreviewContent != null && (
+                    <MarkdownPreviewContainer>
+                      <Scroller className={cc(['fuzzy__scroller'])}>
                         <CustomizedMarkdownPreviewer
                           content={markdownPreviewContent}
                         />
-                      </MarkdownPreviewContainer>
-                    )}
-                  {loadingDocContent && (
-                    <MarkdownPreviewContainer>
-                      <Spinner variant={'primary'} />
+                      </Scroller>
                     </MarkdownPreviewContainer>
                   )}
-                </Scroller>
+                {loadingDocContent && (
+                  <MarkdownPreviewContainer>
+                    <Spinner variant={'primary'} />
+                  </MarkdownPreviewContainer>
+                )}
               </ResultContainer>
             )}
           </>
@@ -225,12 +225,15 @@ const MarkdownPreviewContainer = styled.div`
   display: flex;
   height: 100%;
   max-width: 100%;
+  overflow-x: hidden;
+  flex: 1;
 
   z-index: 9999;
 `
 
 const SearchResults = styled.div`
   min-height: 100%;
+  flex: 1;
 `
 
 const ResultContainer = styled.div`
