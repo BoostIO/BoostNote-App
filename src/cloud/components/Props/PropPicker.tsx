@@ -162,7 +162,7 @@ const PropPicker = ({
     case 'string':
       return (
         <TextSelect
-          initialText={
+          value={
             Array.isArray(propData.data)
               ? propData.data[0]
               : propData.data == null
