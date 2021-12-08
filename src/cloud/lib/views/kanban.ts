@@ -20,7 +20,13 @@ export function makeFromData(data: any): KanbanViewData {
     statusProp: data.statusProp || 'Status',
     ordering: data.ordering || 'drag-drop',
     lists: Array.isArray(data.lists)
-      ? data.lists.filter(isKanbanList)
+      ? data.lists
+          .filter(isKanbanList)
+          .map(({ id, ordering, order }: KanbanList) => ({
+            id,
+            ordering,
+            order,
+          }))
       : [{ id: 'none', order: '0|', ordering: {} }],
   }
 }
@@ -49,18 +55,20 @@ export function insertList(
       lists,
       after != null ? (a) => a.id === after.id : undefined
     )
-    return { ...kanban, lists: lists.concat([{ ...newList, order }]) }
+    return {
+      ...kanban,
+      lists: lists.concat([
+        { id: newList.id, ordering: newList.ordering, order },
+      ]),
+    }
   }
 }
 
-export function removeList(
-  toDelete: KanbanList,
-  kanban: KanbanViewData
-): KanbanViewData {
-  return {
+export function removeList(toDelete: KanbanList): KanbanUpdate {
+  return (kanban) => ({
     ...kanban,
     lists: kanban.lists.filter((list) => list.id !== toDelete.id),
-  }
+  })
 }
 
 export function insertItem(

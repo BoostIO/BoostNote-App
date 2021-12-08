@@ -18,6 +18,7 @@ import { useKanbanView } from '../../../lib/hooks/views/kanbanView'
 import { useStatuses } from '../../../lib/stores/status'
 import { StatusSelector } from '../../Props/Pickers/StatusSelect'
 import Item from './Item'
+import KanbanWatchedPropSetter from './KanbanWatchedPropSetter'
 
 interface KanbanViewProps {
   view: SerializedView
@@ -37,7 +38,14 @@ const KanbanView = ({
   const {
     state: { statuses },
   } = useStatuses(team.id)
-  const { prop, lists, onItemMove, onListMove, addList } = useKanbanView({
+  const {
+    prop,
+    lists,
+    onItemMove,
+    onListMove,
+    addList,
+    setProp,
+  } = useKanbanView({
     view,
     docs,
   })
@@ -84,6 +92,11 @@ const KanbanView = ({
     return <Item doc={doc} />
   }, [])
 
+  const setPropRef = useRef(setProp)
+  useEffect(() => {
+    setPropRef.current = setProp
+  }, [setProp])
+
   return (
     <Container className='view view--kanban'>
       <Flexbox justifyContent='space-between' alignItems='center'>
@@ -94,10 +107,19 @@ const KanbanView = ({
             variant='transparent'
             className='view--kanban__prop'
             onClick={(event) =>
-              openContextModal(event, <div></div>, {
-                width: 250,
-                removePadding: true,
-              })
+              openContextModal(
+                event,
+                <KanbanWatchedPropSetter
+                  prop={prop}
+                  teamId={team.id}
+                  view={view}
+                  setProp={(str) => setPropRef.current(str)}
+                />,
+                {
+                  width: 250,
+                  removePadding: true,
+                }
+              )
             }
           >
             <Flexbox>

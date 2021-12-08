@@ -9,6 +9,7 @@ import {
   insertItem,
   KanbanViewData,
   makeList,
+  removeList,
 } from '../../views/kanban'
 import { aperture, last, sortBy } from 'ramda'
 import { prop } from '../../realtime/lib/functional'
@@ -30,6 +31,8 @@ type State = Pick<
 > & {
   prop: string
   addList: (id: string) => void
+  setProp: (prop: string) => void
+  removeList: (list: KanbanViewList) => void
 }
 
 // list overlay
@@ -125,10 +128,21 @@ export function useKanbanView({ view, docs }: KanbanViewProps): State {
     lists,
     onItemMove,
     onListMove,
-    addList: (id: string) => {
+    addList: (id) => {
       saveViewData((curr) => {
         return insertList(makeList(id), last(curr.lists))(curr)
       })
+    },
+    setProp: (prop) => {
+      saveViewData((curr) => {
+        if (curr.statusProp === prop) {
+          return curr
+        }
+        return { ...curr, statusProp: prop }
+      })
+    },
+    removeList: (list) => {
+      saveViewData(removeList(list))
     },
   }
 }
