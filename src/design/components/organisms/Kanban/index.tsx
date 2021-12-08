@@ -1,26 +1,26 @@
 import { capitalize } from 'lodash'
 import React, { useCallback } from 'react'
 import { DndContext, DragOverlay } from '@dnd-kit/core'
-import { CSS } from '@dnd-kit/utilities'
 import styled from '../../../lib/styled'
 import {
   horizontalListSortingStrategy,
   SortableContext,
-  useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import cc from 'classcat'
 import useMultiContainerDragDrop, {
-  Container,
+  KanbanContainer,
   Identifyable,
   Move,
 } from './hook'
-import { AppComponent } from '../../../lib/types'
-import Button from '../../atoms/Button'
-import { mdiDrag } from '@mdi/js'
-import Flexbox from '../../atoms/Flexbox'
+import Sortable from './Sortable'
+import SortableContainer from './SortableContainer'
+import ContainerComponent from './Container'
 
-export interface KanbanProps<T extends Identifyable, U extends Container<T>> {
+export interface KanbanProps<
+  T extends Identifyable,
+  U extends KanbanContainer<T>
+> {
   className?: string
   lists: U[]
   onItemMove: (targetList: U, item: T, after?: T) => void
@@ -32,7 +32,7 @@ export interface KanbanProps<T extends Identifyable, U extends Container<T>> {
   disabled?: boolean
 }
 
-const Kanban = <T extends Identifyable, U extends Container<T>>({
+const Kanban = <T extends Identifyable, U extends KanbanContainer<T>>({
   className,
   lists,
   onItemMove,
@@ -68,87 +68,88 @@ const Kanban = <T extends Identifyable, U extends Container<T>>({
 
   return (
     <DndContext {...dndProps}>
-      <Container className={cc(['kanban__container', className])}>
+      <KanbanContainer className={cc(['kanban__container', className])}>
         <SortableContext items={lists} strategy={horizontalListSortingStrategy}>
           {containers.map((list) => {
             return (
-              <Sortable disabled={disabled} key={list.id} id={list.id}>
-                <div className='kanban__list'>
-                  <Flexbox>
-                    <div style={{ flex: '1 0 auto' }}>
-                      {renderHeader != null
-                        ? renderHeader(list)
-                        : capitalize(list.id.toString())}
-                    </div>
-                    <Button
-                      variant='icon-secondary'
-                      iconPath={mdiDrag}
-                    ></Button>
-                  </Flexbox>
-                  <SortableContext
-                    items={list.items}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    {list.items.map((item) => (
-                      <Sortable
-                        disabled={disabled}
-                        className='kanban__item'
-                        key={item.id}
-                        id={item.id}
-                      >
-                        {renderItem(item)}
-                      </Sortable>
-                    ))}
-                    {afterItems && afterItems}
-                  </SortableContext>
-                </div>
-              </Sortable>
+              <SortableContainer
+                header={
+                  renderHeader != null
+                    ? renderHeader(list)
+                    : capitalize(list.id.toString())
+                }
+                disabled={disabled}
+                key={list.id}
+                id={list.id}
+              >
+                <SortableContext
+                  items={list.items}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {list.items.map((item) => (
+                    <Sortable
+                      disabled={disabled}
+                      className='kanban__item'
+                      key={item.id}
+                      id={item.id}
+                    >
+                      {renderItem(item)}
+                    </Sortable>
+                  ))}
+                  {afterItems && afterItems}
+                </SortableContext>
+              </SortableContainer>
             )
           })}
         </SortableContext>
         {afterLists && afterLists}
-      </Container>
-      <DragOverlay>{active != null && renderItem(active)}</DragOverlay>
+      </KanbanContainer>
+      <DragOverlay>
+        {active != null && (
+          <Overlay
+            active={active}
+            renderItem={renderItem}
+            renderHeader={renderHeader}
+          />
+        )}
+      </DragOverlay>
     </DndContext>
   )
 }
 
-const Sortable: AppComponent<React.PropsWithChildren<
-  Identifyable & { disabled: boolean }
->> = ({ id, children, className, disabled }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isSorting,
-    isDragging,
-  } = useSortable({ id, disabled })
+interface OverlayProps {
+  active: ReturnType<typeof useMultiContainerDragDrop>['active']
+  renderHeader: KanbanProps<any, any>['renderHeader']
+  renderItem: KanbanProps<any, any>['renderItem']
+}
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
+const Overlay = ({ active, renderHeader, renderItem }: OverlayProps) => {
+  if (active == null) {
+    return null
+  }
+
+  if (active.type === 'item') {
+    return <>{renderItem(active.item)}</>
   }
 
   return (
-    <div
-      className={cc([
-        className,
-        isSorting && 'sorting',
-        isDragging && 'dragging',
-      ])}
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
+    <ContainerComponent
+      header={
+        renderHeader != null
+          ? renderHeader(active.item)
+          : capitalize(active.item.id.toString())
+      }
     >
-      {children}
-    </div>
+      {active.item.items.map((item) => (
+        <div key={item.id} className='kanban__item'>
+          {renderItem(item)}
+        </div>
+      ))}
+    </ContainerComponent>
   )
 }
 
-const Container = styled.div`
+const KanbanContainer = styled.div`
   display: inline-grid;
   box-sizing: border-box;
   grid-auto-flow: column;
@@ -157,10 +158,6 @@ const Container = styled.div`
   overflow-x: auto;
   background-color: ${({ theme }) => theme.colors.background.primary};
   padding-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
-
-  & .kanban__list {
-    width: 250px;
-  }
 
   & .kanban__item {
     cursor: grab;

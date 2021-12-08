@@ -20,18 +20,18 @@ export interface Identifyable {
   id: UniqueIdentifier
 }
 
-export interface Container<T extends Identifyable> extends Identifyable {
+export interface KanbanContainer<T extends Identifyable> extends Identifyable {
   items: T[]
 }
 
-type Helpers<T extends Identifyable, U extends Container<T>> = Partial<
+type Helpers<T extends Identifyable, U extends KanbanContainer<T>> = Partial<
   DndContextProps
 > & {
   containers: U[]
-  active: T | null
+  active: { type: 'item'; item: T } | { type: 'container'; item: U } | null
 }
 
-export type Move<T extends Identifyable, U extends Container<T>> =
+export type Move<T extends Identifyable, U extends KanbanContainer<T>> =
   | { type: 'in-container'; container: U; item: T; after?: T }
   | {
       type: 'cross-container'
@@ -44,9 +44,9 @@ export type Move<T extends Identifyable, U extends Container<T>> =
 
 function useMultiContainerDragDrop<
   T extends Identifyable,
-  U extends Container<T>
+  U extends KanbanContainer<T>
 >(containers: U[], onMove: (move: Move<T, U>) => void): Helpers<T, U> {
-  const [active, setActive] = useState<T | null>(null)
+  const [active, setActive] = useState<Helpers<T, U>['active']>(null)
   const lastOverId = useRef<string | null>(null)
   const recentlyMovedToNewContainer = useRef(false)
   const [cloned, setCloned] = useState<U[] | null>(null)
@@ -59,14 +59,11 @@ function useMultiContainerDragDrop<
     (args) => {
       let overId = rectIntersection(args)
 
-      if (
-        active != null &&
-        containers.some((container) => container.id === active.id)
-      ) {
+      if (active != null && active.type === 'container') {
         return closestCenter({
           ...args,
-          droppableContainers: args.droppableContainers.filter(
-            (container) => container.id in containers
+          droppableContainers: args.droppableContainers.filter((container) =>
+            containers.some((cnt) => cnt.id === container.id)
           ),
         })
       }
@@ -96,7 +93,7 @@ function useMultiContainerDragDrop<
       // to the id of the draggable item that was moved to the new container, otherwise
       // the previous `overId` will be returned which can cause items to incorrectly shift positions
       if (recentlyMovedToNewContainer.current) {
-        lastOverId.current = active?.id || null
+        lastOverId.current = active?.item.id || null
       }
 
       return lastOverId.current
@@ -140,14 +137,18 @@ function useMultiContainerDragDrop<
 
   const onDragStart: DndContextProps['onDragStart'] = useCallback(
     ({ active }) => {
-      const item = containers
-        .map((container) => container.items)
-        .flat()
-        .find((item) => item.id === active.id)
-      setActive(item || null)
+      const container = findContainer(active.id)
+      if (container == null) {
+        setActive(null)
+      } else if (container.id === active.id) {
+        setActive({ type: 'container', item: container })
+      } else {
+        const item = container.items.find((item) => item.id === active.id)
+        setActive(item != null ? { type: 'item', item } : null)
+      }
       setCloned(containers)
     },
-    [containers]
+    [findContainer, containers]
   )
 
   const onDragEnd: DndContextProps['onDragEnd'] = useCallback(
