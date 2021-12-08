@@ -36,7 +36,7 @@ const KanbanWatchedPropSetter = ({
     const fetchSuggestions = async () => {
       const body: ListPropertySuggestionsRequestBody = {
         team: teamId,
-        propertyType: 'date',
+        propertyType: 'status',
       }
       if (view.folderId != null) {
         body.folder = view.folderId
