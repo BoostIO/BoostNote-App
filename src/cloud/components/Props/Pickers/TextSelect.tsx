@@ -113,6 +113,16 @@ const TextInputContextModal = ({
     }
   })
 
+  const handleKeyPress = useCallback(
+    (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault()
+        onSelect(textValue)
+      }
+    },
+    [onSelect, textValue]
+  )
+
   return (
     <TextInputContextModalContainer>
       <FormTextArea
@@ -124,6 +134,7 @@ const TextInputContextModal = ({
         autoComplete={'off'}
         placeholder={'Type anything...'}
         onBlur={updateValue}
+        onKeyPress={handleKeyPress}
       />
     </TextInputContextModalContainer>
   )

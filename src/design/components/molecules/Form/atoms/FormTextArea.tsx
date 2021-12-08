@@ -32,6 +32,7 @@ export interface FormTextareaProps {
   onContextMenu?: MouseEventHandler<HTMLTextAreaElement>
   onFocus?: FocusEventHandler<HTMLTextAreaElement>
   onKeyDown?: KeyboardEventHandler<HTMLTextAreaElement>
+  onKeyPress?: KeyboardEventHandler<HTMLTextAreaElement>
 }
 
 const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaProps>(
@@ -61,6 +62,7 @@ const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaProps>(
       onContextMenu,
       onFocus,
       onKeyDown,
+      onKeyPress,
     },
     ref
   ) => {
@@ -91,6 +93,7 @@ const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaProps>(
         onContextMenu={onContextMenu}
         onFocus={onFocus}
         onKeyDown={onKeyDown}
+        onKeyPress={onKeyPress}
       />
     )
   }
