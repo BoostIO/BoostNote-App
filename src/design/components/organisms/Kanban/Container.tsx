@@ -47,6 +47,8 @@ const Container = React.forwardRef<
 const StyledContainer = styled.div`
   width: 250px;
   background-color: ${({ theme }) => theme.colors.background.primary};
+  padding: ${({ theme }) => theme.sizes.spaces.sm}px;
+
   & .kanban__list__header {
     display: flex;
     align-items: center;
