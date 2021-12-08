@@ -390,7 +390,7 @@ export function useCloudApi() {
       prop: [string, PropData | null]
     ) => {
       return send(target.id, prop[0], {
-        api: () => updateUnsignedDocProps(target.id, [prop]),
+        api: () => updateUnsignedDocProps(target.id, { [prop[0]]: prop[1] }),
         cb: ({ data }: UpdateDocPropsResponseBody) => {
           const props = Object.assign({}, data)
           const newDoc = {
@@ -414,7 +414,14 @@ export function useCloudApi() {
       props: [string, PropData | null][]
     ) => {
       return send(target.id, `props`, {
-        api: () => updateUnsignedDocProps(target.id, props),
+        api: () =>
+          updateUnsignedDocProps(
+            target.id,
+            (props || []).reduce((acc, [propName, propValue]) => {
+              acc[propName] = propValue
+              return acc
+            }, {} as Record<string, PropData | null>)
+          ),
         cb: ({ data }: UpdateDocPropsResponseBody) => {
           const props = Object.assign({}, data)
           const newDoc = {

@@ -24,7 +24,7 @@ import { LoadingButton } from '../../../design/components/atoms/Button'
 import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
-import DocDueDateSelect from '../Props/Pickers/DueDateSelect'
+import DocDueDateSelect from '../Props/Pickers/DatePropPicker'
 import DocAssigneeSelect from '../Props/Pickers/AssigneeSelect'
 import DocLabelSelectionModal from '../Props/Pickers/DocLabelSelectionModal'
 import BulkActionProgress, {
@@ -556,15 +556,14 @@ const ContentManagerToolbar = ({
                 <DocDueDateSelect
                   key={`cm__toolbar--${propColumn.id}`}
                   emptyLabel={propColumn.name}
-                  dueDate={
+                  date={
                     selectedDocumentsCommonValues[propColumn.name] != null
                       ? selectedDocumentsCommonValues[propColumn.name].value
                       : undefined
                   }
                   isReadOnly={selectedDocsAreUpdating}
                   sending={sending === propColumn.name}
-                  shortenedLabel={true}
-                  onDueDateChange={(newDate: Date | null) => {
+                  onDueDateChange={(newDate) => {
                     updateProp([
                       propColumn.name,
                       {
