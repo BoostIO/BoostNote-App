@@ -78,9 +78,10 @@ export const sortingOrders: (FormSelectOption & { icon: React.ReactNode })[] = [
 interface SortingOptionProps {
   value: typeof sortingOrders[number]['value']
   onChange: (value: FormSelectOption) => void
+  isDisabled?: boolean
 }
 
-const SortingOption = ({ value, onChange }: SortingOptionProps) => {
+const SortingOption = ({ value, onChange, isDisabled }: SortingOptionProps) => {
   const val = sortingOrders.find((ORDER) => ORDER.value === value)
   return (
     <StyledSortingOption>
@@ -91,6 +92,7 @@ const SortingOption = ({ value, onChange }: SortingOptionProps) => {
         className='sorting-options__select'
         isSearchable={false}
         isMulti={false}
+        isDisabled={isDisabled}
       />
     </StyledSortingOption>
   )

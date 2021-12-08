@@ -10,7 +10,7 @@ import Button, { ButtonProps } from '../../../atoms/Button'
 export type MetadataContainerRowProps = (
   | {
       type: 'button'
-      props: ButtonProps & { spinning?: boolean; label: string }
+      props: ButtonProps & { spinning?: boolean; label: React.ReactNode }
     }
   | {
       type: 'content'

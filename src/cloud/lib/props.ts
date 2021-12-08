@@ -19,6 +19,14 @@ import {
 } from '../interfaces/db/props'
 import { isUUIDArray } from './utils/array'
 
+export function isPropType(x: any): x is PropType {
+  if (typeof x !== 'string') {
+    return false
+  }
+
+  return supportedPropTypes.some(({ type }) => (type as string) === x)
+}
+
 export const supportedPropTypes: {
   type: PropType
   subType?: PropSubType

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { DragEventHandler } from 'react'
 import cc from 'classcat'
 import { AppComponent } from '../../lib/types'
 import styled from '../../lib/styled'
@@ -35,6 +35,12 @@ interface FlexboxProps {
   className?: string
   style?: React.CSSProperties
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void
+  draggable?: boolean
+  onDragStart?: DragEventHandler
+  onDrop?: DragEventHandler
+  onDragOver?: DragEventHandler
+  data?: any
+  dataEvent?: any
 }
 
 const Flexbox: AppComponent<FlexboxProps> = ({
@@ -48,11 +54,23 @@ const Flexbox: AppComponent<FlexboxProps> = ({
   className,
   style,
   onClick,
+  draggable,
+  onDrop,
+  onDragStart,
+  onDragOver,
+  data,
+  dataEvent,
 }) => (
   <Container
     style={style}
     flex={flex}
     onClick={onClick}
+    draggable={draggable}
+    onDragStart={onDragStart}
+    onDragOver={onDragOver}
+    onDrop={onDrop}
+    data={data}
+    data-event={dataEvent}
     className={cc([
       className,
       'flexbox',

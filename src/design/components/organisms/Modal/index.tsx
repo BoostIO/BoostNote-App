@@ -146,6 +146,32 @@ const ContextModalItem = ({
     }
   })
 
+  if (modal.onBlur != null) {
+    return (
+      <>
+        <div className='modal__window__anchor' />
+        <Scroller
+          ref={contentScrollerRef}
+          className={cc([
+            'modal__window',
+            `modal__window__width--${modal.width}`,
+            modal.position != null && `modal__window--context`,
+            modal.hideBackground && 'modal__window--no-bg',
+            modal.removePadding && 'modal__window--no-padding',
+          ])}
+          style={style}
+        >
+          <div className='modal__wrapper'>
+            {modal.title != null && (
+              <h3 className='modal__title'>{modal.title}</h3>
+            )}
+            <div className='modal__content'>{modal.content}</div>
+          </div>
+        </Scroller>
+      </>
+    )
+  }
+
   return (
     <>
       <div className='modal__window__scroller'>

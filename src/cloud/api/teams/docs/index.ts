@@ -22,7 +22,7 @@ export interface CreateDocRequestBody {
   template?: string
   title?: string
   emoji?: string
-  blocks?: boolean
+  props?: Record<string, PropData | null>
 }
 
 export interface CreateDocResponseBody {
@@ -117,15 +117,11 @@ export async function updateDocDueDate(docId: string, dueDate: Date | null) {
 
 export async function updateUnsignedDocProps(
   docId: string,
-  props: [string, PropData | null][]
+  props: Record<string, PropData | null>
 ) {
-  const body = {}
-  props.forEach((prop) => {
-    body[prop[0]] = prop[1]
-  })
   return callApi<UpdateDocPropsResponseBody>(`api/docs/${docId}/props`, {
     method: 'patch',
-    json: body,
+    json: props,
   })
 }
 

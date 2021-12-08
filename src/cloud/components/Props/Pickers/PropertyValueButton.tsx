@@ -1,7 +1,10 @@
 import React, { forwardRef } from 'react'
 import styled from '../../../../design/lib/styled'
 import Spinner from '../../../../design/components/atoms/Spinner'
-import { contextMenuFormItem } from '../../../../design/lib/styled/styleFunctions'
+import {
+  contextMenuFormItem,
+  overflowEllipsis,
+} from '../../../../design/lib/styled/styleFunctions'
 import cc from 'classcat'
 import Icon from '../../../../design/components/atoms/Icon'
 
@@ -99,6 +102,12 @@ const ButtonContainer = styled.button`
   .item__property__button__icon {
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
     color: ${({ theme }) => theme.colors.text.subtle};
+    flex-shrink: 0;
+  }
+
+  .item__property__button__label {
+    text-align: left;
+    ${overflowEllipsis()}
   }
 
   &.item__property__button--readOnly {
