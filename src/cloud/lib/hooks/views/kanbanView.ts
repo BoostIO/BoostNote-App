@@ -8,8 +8,9 @@ import {
   makeFromData,
   insertItem,
   KanbanViewData,
+  makeList,
 } from '../../views/kanban'
-import { aperture, sortBy } from 'ramda'
+import { aperture, last, sortBy } from 'ramda'
 import { prop } from '../../realtime/lib/functional'
 import { useCloudApi } from '../useCloudApi'
 import { SerializedPropData } from '../../../interfaces/db/props'
@@ -26,7 +27,10 @@ interface KanbanViewList extends KanbanList {
 type State = Pick<
   KanbanProps<SerializedDocWithSupplemental, KanbanViewList>,
   'lists' | 'onItemMove' | 'onListMove'
->
+> & {
+  prop: string
+  addList: (id: string) => void
+}
 
 // list overlay
 // status picker & saving
@@ -117,9 +121,15 @@ export function useKanbanView({ view, docs }: KanbanViewProps): State {
   )
 
   return {
+    prop: viewData.statusProp,
     lists,
     onItemMove,
     onListMove,
+    addList: (id: string) => {
+      saveViewData((curr) => {
+        return insertList(makeList(id), last(curr.lists))(curr)
+      })
+    },
   }
 }
 
@@ -151,6 +161,10 @@ function partitionByStatus(
       const arr = map.get(statusId.toString()) || []
       arr.push(doc)
       map.set(statusId.toString(), arr)
+    } else {
+      const arr = map.get('none') || []
+      arr.push(doc)
+      map.set('none', arr)
     }
   }
   return map

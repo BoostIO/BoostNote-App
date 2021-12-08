@@ -143,8 +143,9 @@ export const ViewsManager = ({
         {currentView != null && (
           <>
             {currentView.type === 'table' ? (
-                <TableView
+              <TableView
                 viewsSelector={viewsSelector}
+                folders={folders}
                 team={team}
                 currentWorkspaceId={currentWorkspaceId}
                 currentFolderId={currentFolderId}
@@ -157,6 +158,14 @@ export const ViewsManager = ({
                 toggleDocInSelection={toggleDocInSelection}
                 resetDocsInSelection={resetDocsInSelection}
               />
+            ) : currentView.type === 'kanban' ? (
+              <KanbanView
+                viewsSelector={viewsSelector}
+                team={team}
+                view={currentView}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+                docs={docs}
+              />
             ) : currentView.type === 'calendar' ? (
               <CalendarView
                 view={currentView}
@@ -167,7 +176,6 @@ export const ViewsManager = ({
                 currentFolderId={currentFolderId}
                 currentWorkspaceId={currentWorkspaceId}
               />
-                
             ) : null}
           </>
         )}

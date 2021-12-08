@@ -20,14 +20,8 @@ export function makeFromData(data: any): KanbanViewData {
     statusProp: data.statusProp || 'Status',
     ordering: data.ordering || 'drag-drop',
     lists: Array.isArray(data.lists)
-      ? data.lists.map((list: any) => {
-          return {
-            id: list.id,
-            ordering: list.ordering || {},
-            order: list.order || '',
-          }
-        })
-      : [],
+      ? data.lists.filter(isKanbanList)
+      : [{ id: 'none', order: '0|', ordering: {} }],
   }
 }
 
@@ -106,6 +100,15 @@ function doItemMove(insertList: KanbanList, item: string, after?: string) {
       ordering: { ...list.ordering, [item]: order },
     }
   }
+}
+
+function isKanbanList(data: any): data is KanbanList {
+  return (
+    data != null &&
+    typeof data.id === 'string' &&
+    typeof data.order === 'string' &&
+    data.ordering != null
+  )
 }
 
 function toOrdering(ordering: KanbanList['ordering']) {

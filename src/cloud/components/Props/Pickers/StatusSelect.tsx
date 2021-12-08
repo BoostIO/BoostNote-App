@@ -79,7 +79,7 @@ const StatusSelect = ({
 
 export default StatusSelect
 
-const StatusSelector = ({
+export const StatusSelector = ({
   onSelect,
 }: {
   onSelect: (status: SerializedStatus | null) => void
