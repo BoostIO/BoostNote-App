@@ -167,7 +167,10 @@ function useMultiContainerDragDrop<
         const overContainerIndex = workingData.findIndex(
           (list) => list.id === overId
         )
-        if (overContainerIndex !== -1) {
+        if (
+          overContainerIndex !== -1 &&
+          overContainerIndex !== containerIndex
+        ) {
           onMove({
             type: 'container',
             container: workingData[containerIndex],
