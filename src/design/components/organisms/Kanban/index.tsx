@@ -16,6 +16,7 @@ import useMultiContainerDragDrop, {
 import Sortable from './Sortable'
 import SortableContainer from './SortableContainer'
 import ContainerComponent from './Container'
+import Scroller from '../../atoms/Scroller'
 
 export interface KanbanProps<
   T extends Identifyable,
@@ -67,53 +68,58 @@ const Kanban = <T extends Identifyable, U extends KanbanContainer<T>>({
   )
 
   return (
-    <DndContext {...dndProps}>
-      <KanbanContainer className={cc(['kanban__container', className])}>
-        <SortableContext items={lists} strategy={horizontalListSortingStrategy}>
-          {containers.map((list) => {
-            return (
-              <SortableContainer
-                header={
-                  renderHeader != null
-                    ? renderHeader(list)
-                    : capitalize(list.id.toString())
-                }
-                disabled={disabled}
-                key={list.id}
-                id={list.id}
-              >
-                <SortableContext
-                  items={list.items}
-                  strategy={verticalListSortingStrategy}
+    <Scroller>
+      <DndContext {...dndProps}>
+        <KanbanContainer className={cc(['kanban__container', className])}>
+          <SortableContext
+            items={lists}
+            strategy={horizontalListSortingStrategy}
+          >
+            {containers.map((list) => {
+              return (
+                <SortableContainer
+                  header={
+                    renderHeader != null
+                      ? renderHeader(list)
+                      : capitalize(list.id.toString())
+                  }
+                  disabled={disabled}
+                  key={list.id}
+                  id={list.id}
                 >
-                  {list.items.map((item) => (
-                    <Sortable
-                      disabled={disabled}
-                      className='kanban__item'
-                      key={item.id}
-                      id={item.id}
-                    >
-                      {renderItem(item)}
-                    </Sortable>
-                  ))}
-                  {afterItems && afterItems}
-                </SortableContext>
-              </SortableContainer>
-            )
-          })}
-        </SortableContext>
-        {afterLists && afterLists}
-      </KanbanContainer>
-      <DragOverlay>
-        {active != null && (
-          <Overlay
-            active={active}
-            renderItem={renderItem}
-            renderHeader={renderHeader}
-          />
-        )}
-      </DragOverlay>
-    </DndContext>
+                  <SortableContext
+                    items={list.items}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {list.items.map((item) => (
+                      <Sortable
+                        disabled={disabled}
+                        className='kanban__item'
+                        key={item.id}
+                        id={item.id}
+                      >
+                        {renderItem(item)}
+                      </Sortable>
+                    ))}
+                    {afterItems && afterItems}
+                  </SortableContext>
+                </SortableContainer>
+              )
+            })}
+          </SortableContext>
+          {afterLists && afterLists}
+        </KanbanContainer>
+        <DragOverlay>
+          {active != null && (
+            <Overlay
+              active={active}
+              renderItem={renderItem}
+              renderHeader={renderHeader}
+            />
+          )}
+        </DragOverlay>
+      </DndContext>
+    </Scroller>
   )
 }
 
@@ -154,8 +160,7 @@ const KanbanContainer = styled.div`
   box-sizing: border-box;
   grid-auto-flow: column;
   gap: 20px;
-  width: 100%;
-  overflow-x: auto;
+  min-height: 250px;
   background-color: ${({ theme }) => theme.colors.background.primary};
   padding-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
 
