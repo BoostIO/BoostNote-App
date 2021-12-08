@@ -15,6 +15,7 @@ export interface ModalElement {
   }
   hideBackground?: boolean
   removePadding?: boolean
+  onBlur?: boolean
   onClose?: () => void
 }
 
@@ -36,6 +37,7 @@ export type ContextModalOpeningOptions = ModalOpeningOptions & {
   alignment?: ContextModalAlignment
   hideBackground?: boolean
   removePadding?: boolean
+  onBlur?: boolean
   maxHeight?: number
   height?: number
   minHeight?: number

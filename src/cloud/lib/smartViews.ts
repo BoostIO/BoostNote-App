@@ -117,7 +117,10 @@ const validators: Validators = {
 
     switch (condition.value.type) {
       case 'date':
-        return validateDateValue(nonNullableVal, condition.value.value)
+        return validateDateValue(
+          Array.isArray(nonNullableVal) ? nonNullableVal[0] : nonNullableVal,
+          condition.value.value
+        )
       case 'json':
         return false
       case 'user':

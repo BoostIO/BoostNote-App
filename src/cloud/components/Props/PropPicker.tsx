@@ -3,8 +3,7 @@ import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedPropData, PropData, Props } from '../../interfaces/db/props'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import AssigneeSelect from './Pickers/AssigneeSelect'
-import DueDateSelect from './Pickers/DueDateSelect'
-import { format as formatDate } from 'date-fns'
+import DatePropPicker from './Pickers/DatePropPicker'
 import StatusSelect from './Pickers/StatusSelect'
 import TimePeriodPicker from './Pickers/TimePeriodPicker'
 import { mdiAlertOutline } from '@mdi/js'
@@ -14,6 +13,7 @@ import { trackEvent } from '../../api/track'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 import NumberSelect from './Pickers/NumberSelect'
 import TextSelect from './Pickers/TextSelect'
+import { getISODateFromLocalTime } from '../../lib/date'
 
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
@@ -22,7 +22,6 @@ interface PropPickerProps {
   readOnly?: boolean
   isErrored?: boolean
   onUpdate?: (newProps: Props) => void
-  portalId?: string
 }
 
 const PropPicker = ({
@@ -32,7 +31,6 @@ const PropPicker = ({
   onUpdate,
   readOnly = false,
   isErrored,
-  portalId,
 }: PropPickerProps) => {
   const { sendingMap, updateDocPropsApi } = useCloudApi()
 
@@ -102,20 +100,19 @@ const PropPicker = ({
       )
     case 'date':
       return (
-        <DueDateSelect
+        <DatePropPicker
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
           sending={sendingMap.get(parent.target.id) === propName}
           isReadOnly={readOnly}
-          portalId={portalId}
-          dueDate={propData.data == null ? null : propData.data.toString()}
-          onDueDateChange={(newDate: Date | null) =>
+          date={propData.data == null ? null : (propData.data as any)}
+          onDueDateChange={(newDate: Date | Date[] | null) =>
             updateProp(
               newDate != null
                 ? {
                     type: 'date',
-                    data: new Date(
-                      formatDate(newDate, 'yyyy-MM-dd') + 'T00:00:00.000Z'
-                    ),
+                    data: Array.isArray(newDate)
+                      ? newDate.map((date) => getISODateFromLocalTime(date))
+                      : getISODateFromLocalTime(newDate),
                   }
                 : {
                     type: 'date',
