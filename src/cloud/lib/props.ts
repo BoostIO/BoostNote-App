@@ -138,7 +138,7 @@ export function getInitialPropDataOfPropType(
     case 'number':
       return {
         type: 'number',
-        data: 0,
+        data: undefined,
         createdAt: new Date().toString(),
       }
     case 'string':
