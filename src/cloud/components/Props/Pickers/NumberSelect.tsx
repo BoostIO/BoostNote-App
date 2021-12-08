@@ -109,6 +109,15 @@ const NumberInputContextModal = ({
       inputRef.current.focus()
     }
   })
+  const handleKeyPress = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        event.preventDefault()
+        onSelect(value)
+      }
+    },
+    [onSelect, value]
+  )
 
   return (
     <NumberInputContextModalContainer>
@@ -120,6 +129,7 @@ const NumberInputContextModal = ({
         onChange={inputOnChangeEvent}
         autoComplete={'off'}
         onBlur={updateNumber}
+        onKeyPress={handleKeyPress}
       />
     </NumberInputContextModalContainer>
   )
