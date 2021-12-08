@@ -145,7 +145,6 @@ export const ViewsManager = ({
             {currentView.type === 'table' ? (
               <TableView
                 viewsSelector={viewsSelector}
-                folders={folders}
                 team={team}
                 currentWorkspaceId={currentWorkspaceId}
                 currentFolderId={currentFolderId}
