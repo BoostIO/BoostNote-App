@@ -15,6 +15,7 @@ interface FuzzyNavigationItemProps {
     href?: string
     onClick: () => void
   }
+  active?: boolean
   id: string
   className?: string
   onMouseEnter?: () => void
@@ -36,6 +37,7 @@ const FuzzyNavigationItem = ({
   className,
   item,
   onMouseEnter,
+  active,
 }: FuzzyNavigationItemProps) => {
   const Tag = item.href == null ? 'button' : 'a'
 
@@ -50,7 +52,10 @@ const FuzzyNavigationItem = ({
     >
       <Tag
         id={id}
-        className='fuzzy__navigation__item'
+        className={cc([
+          'fuzzy__navigation__item',
+          active && 'fuzzy__navigation__item--active',
+        ])}
         onClick={(e: React.MouseEvent) => {
           e.preventDefault()
           item.onClick()
@@ -80,6 +85,7 @@ type HighlightedFuzzyNavigationItemProps = {
   id: string
   className?: string
   query: string
+  active?: boolean
   labelMatches?: readonly [number, number][]
   pathMatches?: readonly [number, number][]
   onMouseEnter?: () => void
@@ -90,6 +96,7 @@ export const HighlightedFuzzyNavigationitem = ({
   query,
   labelMatches = [],
   pathMatches = [],
+  active,
   ...rest
 }: HighlightedFuzzyNavigationItemProps) => {
   const highlighted = useMemo(() => {
@@ -101,6 +108,7 @@ export const HighlightedFuzzyNavigationitem = ({
 
   return (
     <FuzzyNavigationItem
+      active={active}
       item={{ ...item, label: highlighted.label, path: highlighted.path }}
       {...rest}
     />
@@ -124,7 +132,8 @@ const Container = styled.div`
       ${({ theme }) => theme.sizes.spaces.xsm}px
       ${({ theme }) => theme.sizes.spaces.md}px;
 
-    &:hover {
+    &:hover,
+    &.fuzzy__navigation__item--active {
       background-color: ${({ theme }) => theme.colors.background.quaternary};
     }
 

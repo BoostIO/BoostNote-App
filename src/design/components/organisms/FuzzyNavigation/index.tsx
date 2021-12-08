@@ -31,6 +31,7 @@ const FuzzyNavigation = ({
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
   const [loadingDocContent, setLoadingDocContent] = useState<boolean>(false)
+  const [activeId, setActiveId] = useState<string | null>(null)
 
   const { team } = usePage()
 
@@ -87,6 +88,7 @@ const FuzzyNavigation = ({
       setLoadingDocContent(false)
       setMarkdownPreviewContent(null)
       setShowMarkdownPreview(false)
+      setActiveId(item != null && item.id != null ? item.id : null)
       if (item && item.content) {
         setMarkdownPreviewContent(item.content)
         setShowMarkdownPreview(true)
@@ -98,7 +100,7 @@ const FuzzyNavigation = ({
         const promise = getDoc(item.id, team.id).then((data) => data.doc)
         const doc = await promise
         setLoadingDocContent(false)
-        console.log('Got doc', doc)
+
         if (doc != null && doc.head != null && doc.head.content) {
           setMarkdownPreviewContent(doc.head.content)
           setShowMarkdownPreview(true)
@@ -130,25 +132,29 @@ const FuzzyNavigation = ({
             }}
           />
         </CloseButtonWrapper>
-        <Scroller className={cc(['fuzzy__scroller'])}>
-          {query === '' ? (
-            <>
-              <span className='fuzzy__label'>
-                {recentItems.length === 0
-                  ? `No recently visited items`
-                  : `Recent items`}
-              </span>
-              <ResultContainer>
+
+        {query === '' ? (
+          <>
+            <span className='fuzzy__label'>
+              {recentItems.length === 0
+                ? `No recently visited items`
+                : `Recent items`}
+            </span>
+            <ResultContainer>
+              <Scroller className={cc(['fuzzy__scroller'])}>
                 <SearchResults>
                   {recentItems.map((item, i) => (
                     <FuzzyNavigationItem
                       onMouseEnter={() => setMarkdownPreviewForItem(item)}
                       item={item}
+                      active={activeId != null && activeId === item.id}
                       id={`fuzzy-recent-${i}`}
                       key={`fuzzy-recent-${i}`}
                     />
                   ))}
                 </SearchResults>
+              </Scroller>
+              <Scroller className={cc(['fuzzy__scroller'])}>
                 {!loadingDocContent &&
                   showMarkdownPreview &&
                   markdownPreviewContent != null && (
@@ -163,21 +169,24 @@ const FuzzyNavigation = ({
                     <Spinner variant={'primary'} />
                   </MarkdownPreviewContainer>
                 )}
-              </ResultContainer>
-            </>
-          ) : (
-            <>
-              {filteredItems.length === 0 && (
-                <span className='fuzzy__label'>No matching results</span>
-              )}
+              </Scroller>
+            </ResultContainer>
+          </>
+        ) : (
+          <>
+            {filteredItems.length === 0 && (
+              <span className='fuzzy__label'>No matching results</span>
+            )}
 
-              {filteredItems.length !== 0 && (
-                <ResultContainer>
+            {filteredItems.length !== 0 && (
+              <ResultContainer>
+                <Scroller className={cc(['fuzzy__scroller'])}>
                   <SearchResults>
                     {filteredItems.map((item, i) => (
                       <HighlightedFuzzyNavigationitem
                         onMouseEnter={() => setMarkdownPreviewForItem(item)}
                         item={item}
+                        active={activeId != null && activeId === item.id}
                         id={`fuzzy-filtered-${i}`}
                         key={`fuzzy-filtered-${i}`}
                         query={query.trim().toLocaleLowerCase()}
@@ -186,6 +195,8 @@ const FuzzyNavigation = ({
                       />
                     ))}
                   </SearchResults>
+                </Scroller>
+                <Scroller className={cc(['fuzzy__scroller'])}>
                   {!loadingDocContent &&
                     showMarkdownPreview &&
                     markdownPreviewContent != null && (
@@ -200,18 +211,17 @@ const FuzzyNavigation = ({
                       <Spinner variant={'primary'} />
                     </MarkdownPreviewContainer>
                   )}
-                </ResultContainer>
-              )}
-            </>
-          )}
-        </Scroller>
+                </Scroller>
+              </ResultContainer>
+            )}
+          </>
+        )}
       </UpDownList>
     </Container>
   )
 }
 
 const MarkdownPreviewContainer = styled.div`
-  flex: 0 1 50%;
   display: flex;
   height: 100%;
   max-width: 100%;
@@ -220,9 +230,7 @@ const MarkdownPreviewContainer = styled.div`
 `
 
 const SearchResults = styled.div`
-  flex: 0 1 50%;
   min-height: 100%;
-  max-width: 50%;
 `
 
 const ResultContainer = styled.div`
