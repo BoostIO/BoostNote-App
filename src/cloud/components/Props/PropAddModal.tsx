@@ -3,10 +3,7 @@ import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { useEffectOnce } from 'react-use'
 import Button from '../../../design/components/atoms/Button'
 import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
-<<<<<<< HEAD
 import SuggestionSelect from '../../../design/components/molecules/SuggestionSelect'
-=======
->>>>>>> extract prop suggestion selector
 import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { focusFirstChildFromElement } from '../../../design/lib/dom'
