@@ -115,7 +115,17 @@ export enum MixpanelActionTrackTypes {
   TableColAdd = 'table.cols.add',
   TableColDelete = 'table.cols.delete',
   TableColUpdateOrder = 'table.cols.update.order',
+  ViewCreate = 'view.create',
+  ViewEdit = 'view.edit',
+  ViewDelete = 'view.delete',
+  ViewOpen = 'view.open',
 }
+
+export type MixpanelViewEvent =
+  | MixpanelActionTrackTypes.ViewCreate
+  | MixpanelActionTrackTypes.ViewEdit
+  | MixpanelActionTrackTypes.ViewDelete
+  | MixpanelActionTrackTypes.ViewOpen
 
 export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.RevisionHistoryOpen
@@ -159,6 +169,7 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.TableColAdd
   | MixpanelActionTrackTypes.TableColDelete
   | MixpanelActionTrackTypes.TableColUpdateOrder
+  | MixpanelViewEvent
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 

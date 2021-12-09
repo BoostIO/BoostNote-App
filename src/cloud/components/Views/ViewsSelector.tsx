@@ -18,6 +18,8 @@ import MetadataContainerBreak from '../../../design/components/organisms/Metadat
 import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
+import { trackEvent } from '../../api/track'
+import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 import {
   SerializedView,
   SupportedViewTypes,
@@ -52,6 +54,17 @@ const ViewsSelector = ({
     [closeLastModal, actionsRef]
   )
 
+  const selectView = useCallback(
+    (view: SerializedView) => {
+      trackEvent(MixpanelActionTrackTypes.ViewOpen, {
+        trueEventName: `view.${view.type}.open`,
+        view: view.id,
+      })
+      setSelectedViewId(view.id)
+    },
+    [setSelectedViewId]
+  )
+
   return (
     <Container className='views__selector'>
       {orderedViews.map((view) => (
@@ -61,7 +74,7 @@ const ViewsSelector = ({
             variant='icon'
             iconPath={getIconPathOfViewType(view.type)}
             iconSize={20}
-            onClick={() => setSelectedViewId(view.id)}
+            onClick={() => selectView(view)}
             active={selectedViewId === view.id}
             size='sm'
             className='view__item'
