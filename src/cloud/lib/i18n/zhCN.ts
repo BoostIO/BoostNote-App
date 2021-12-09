@@ -33,6 +33,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SettingsTeamInfo]: '设置',
   [lngKeys.SettingsTitle]: '设置',
   [lngKeys.SettingsPersonalInfo]: '设置',
+  [lngKeys.SettingsKeymap]: '键盘映射',
   [lngKeys.SettingsPreferences]: '首选项',
   [lngKeys.SettingsMarkdownPreview]: '降价',
   [lngKeys.SettingsMarkdownPreviewShowcase]: 'Markdown 样式预览',

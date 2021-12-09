@@ -18,6 +18,20 @@ const mac = process.platform === 'darwin'
 let ready = false
 
 const singleInstance = app.requestSingleInstanceLock()
+
+export const keymap = new Map<string, string>([
+  ['toggleGlobalSearch', 'CmdOrCtrl + p'],
+  ['toggleSplitEditMode', 'CmdOrCtrl + \\'],
+  ['togglePreviewMode', 'CmdOrCtrl + e'],
+  ['editorSaveAs', 'CmdOrCtrl + s'],
+  ['createNewDoc', 'CmdOrCtrl + n'],
+  // ['createNewFolder', 'CmdOrCtrl + Shift + N'],
+  ['resetZoom', 'CmdOrCtrl + 0'],
+  ['zoomOut', 'CmdOrCtrl + -'],
+  ['zoomIn', 'CmdOrCtrl + Plus'],
+  ['openPreferences', 'CmdOrCtrl + ,'],
+])
+
 if (!singleInstance) {
   app.quit()
 } else {
@@ -82,7 +96,7 @@ app.on('ready', () => {
     )}`
   )
 
-  applyMenuTemplate(getTemplateFromKeymap())
+  applyMenuTemplate(getTemplateFromKeymap(keymap))
 
   // multiple windows support
   ipcMain.on('new-window-event', (args: any) => {
@@ -120,5 +134,16 @@ app.on('ready', () => {
     getWindows().forEach((window) => {
       window.webContents.send('open-boostnote-url', url)
     })
+  })
+
+  ipcMain.on('menuAcceleratorChanged', (_, args) => {
+    if (args.length != 2) {
+      return
+    }
+    const menuItemId = args[0]
+    const newAcceleratorShortcut = args[1] == null ? undefined : args[1]
+
+    keymap.set(menuItemId, newAcceleratorShortcut)
+    applyMenuTemplate(getTemplateFromKeymap(keymap))
   })
 })

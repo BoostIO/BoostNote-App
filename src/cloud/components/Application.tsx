@@ -9,7 +9,6 @@ import {
 import { isActiveElementAnInput, InputableDomElement } from '../lib/dom'
 import { useEffectOnce } from 'react-use'
 import { useSettings } from '../lib/stores/settings'
-import { isPageSearchShortcut, isSidebarToggleShortcut } from '../lib/shortcuts'
 import { useSearch } from '../lib/stores/search'
 import AnnouncementAlert from './AnnouncementAlert'
 import {
@@ -20,6 +19,8 @@ import {
   newDocEventEmitter,
   switchSpaceEventEmitter,
   SwitchSpaceEventDetails,
+  togglePreviewModeEventEmitter,
+  toggleSplitEditModeEventEmitter,
 } from '../lib/utils/events'
 import { usePathnameChangeEffect, useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
@@ -76,6 +77,7 @@ import {
 } from './molecules/PageSearch/InPageSearchPortal'
 import SidebarToggleButton from './SidebarToggleButton'
 import { getTeamURL } from '../lib/utils/patterns'
+import { compareEventKeyWithKeymap } from '../../lib/keymap'
 
 interface ApplicationProps {
   className?: string
@@ -229,11 +231,47 @@ const Application = ({
         return
       }
 
-      if (isSidebarToggleShortcut(event)) {
-        preventKeyboardEventPropagation(event)
-        setPreferences((prev) => {
-          return { sidebarIsHidden: !prev.sidebarIsHidden }
-        })
+      const keymap = preferences['keymap']
+      if (keymap != null) {
+        const sidenavToggleShortcut = keymap.get('toggleSideNav')
+        if (compareEventKeyWithKeymap(sidenavToggleShortcut, event)) {
+          preventKeyboardEventPropagation(event)
+          setPreferences((prev) => {
+            return { sidebarIsHidden: !prev.sidebarIsHidden }
+          })
+        }
+      }
+
+      if (!usingElectron && keymap != null) {
+        const toggleGlobalSearchShortcut = keymap.get('toggleGlobalSearch')
+        if (compareEventKeyWithKeymap(toggleGlobalSearchShortcut, event)) {
+          preventKeyboardEventPropagation(event)
+          searchEventEmitter.dispatch()
+        }
+      }
+
+      if (!usingElectron && keymap != null) {
+        const openPreferencesShortcut = keymap.get('openPreferences')
+        if (compareEventKeyWithKeymap(openPreferencesShortcut, event)) {
+          preventKeyboardEventPropagation(event)
+          openSettingsTab('preferences')
+        }
+      }
+
+      if (!usingElectron && keymap != null) {
+        const togglePreviewModeShortcut = keymap.get('togglePreviewMode')
+        if (compareEventKeyWithKeymap(togglePreviewModeShortcut, event)) {
+          preventKeyboardEventPropagation(event)
+          togglePreviewModeEventEmitter.dispatch()
+        }
+      }
+
+      if (!usingElectron && keymap != null) {
+        const toggleSplitEditModeShortcut = keymap.get('toggleSplitEditMode')
+        if (compareEventKeyWithKeymap(toggleSplitEditModeShortcut, event)) {
+          preventKeyboardEventPropagation(event)
+          toggleSplitEditModeEventEmitter.dispatch()
+        }
       }
 
       if (isSingleKeyEvent(event, 'escape') && isActiveElementAnInput()) {
@@ -244,17 +282,20 @@ const Application = ({
         ;(document.activeElement as InputableDomElement).blur()
       }
 
-      if (usingElectron && isPageSearchShortcut(event)) {
-        preventKeyboardEventPropagation(event)
-        if (showInPageSearch) {
-          setShowInPageSearch(false)
-          setShowInPageSearch(true)
-        } else {
-          setShowInPageSearch(true)
+      if (usingElectron && keymap != null) {
+        const inPageSearchShortcut = keymap.get('toggleInPageSearch')
+        if (compareEventKeyWithKeymap(inPageSearchShortcut, event)) {
+          preventKeyboardEventPropagation(event)
+          if (showInPageSearch) {
+            setShowInPageSearch(false)
+            setShowInPageSearch(true)
+          } else {
+            setShowInPageSearch(true)
+          }
         }
       }
     },
-    [team, setPreferences, showInPageSearch]
+    [team, preferences, setPreferences, openSettingsTab, showInPageSearch]
   )
   useGlobalKeyDownHandler(overrideBrowserCtrlsHandler)
 

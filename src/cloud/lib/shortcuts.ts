@@ -32,13 +32,6 @@ export function isFocusLeftSideShortcut(event: KeyboardEvent) {
   )
 }
 
-export function isPageSearchShortcut(event: KeyboardEvent) {
-  return (
-    isWithGeneralCtrlKey(event) &&
-    event.key.toLowerCase() === shortcuts.pageSearch
-  )
-}
-
 export function isFocusRightSideShortcut(event: KeyboardEvent) {
   // cmd + shift + arrowRight
   return (
@@ -52,12 +45,6 @@ export function isFocusRightSideShortcut(event: KeyboardEvent) {
 export function isShowHelpShortcut(event: KeyboardEvent) {
   return (
     isWithGeneralCtrlKey(event) && event.key.toLowerCase() === shortcuts.help
-  )
-}
-
-export function isGlobalSearchShortcut(event: KeyboardEvent) {
-  return (
-    event.key.toLowerCase() === shortcuts.search && isWithGeneralCtrlKey(event)
   )
 }
 
@@ -108,8 +95,4 @@ export function isFolderDeleteShortcut(event: KeyboardEvent) {
 }
 export function isFolderBookmarkShortcut(event: KeyboardEvent) {
   return isSingleKeyEventOutsideOfInput(event, shortcuts.bookmarkFolder)
-}
-
-export function isSidebarToggleShortcut(event: KeyboardEvent) {
-  return event.key === '0' && event.shiftKey && isWithGeneralCtrlKey(event)
 }

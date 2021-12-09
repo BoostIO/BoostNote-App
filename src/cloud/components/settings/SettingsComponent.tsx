@@ -45,6 +45,7 @@ import AttachmentsTab from './AttachmentsTab'
 import ImportTab from './ImportTab'
 import TeamSubLimit from './TeamSubLimit'
 import { ExternalLink } from '../../../design/components/atoms/Link'
+import KeymapTab from './KeymapTab'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -107,6 +108,8 @@ const SettingsComponent = () => {
         return <PersonalInfoTab />
       case 'preferences':
         return <PreferencesTab />
+      case 'keymap':
+        return <KeymapTab />
       case 'teamInfo':
         return <TeamInfoTab />
       case 'teamMembers':
@@ -209,6 +212,12 @@ const SettingsComponent = () => {
             active={settingsTab === 'personalInfo'}
             id='settings-personalInfoTab-btn'
             onClick={() => openSettingsTab('personalInfo')}
+          />
+          <SettingNavButtonItem
+            label={t(lngKeys.SettingsKeymap)}
+            active={settingsTab === 'keymap'}
+            id='settings-keymap-btn'
+            onClick={() => openSettingsTab('keymap')}
           />
           <SettingNavButtonItem
             label={t(lngKeys.SettingsPreferences)}

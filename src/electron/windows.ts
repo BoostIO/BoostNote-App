@@ -9,6 +9,7 @@ import {
 import path from 'path'
 import { dev } from './consts'
 import { getTemplateFromKeymap } from './menu'
+import { keymap } from './index'
 
 const windows = new Set<BrowserWindow>()
 
@@ -54,7 +55,7 @@ export function createAWindow(
     window.show()
   })
 
-  applyMenuTemplate(getTemplateFromKeymap())
+  applyMenuTemplate(getTemplateFromKeymap(keymap))
 
   if (MAC) {
     window.on('close', (event) => {

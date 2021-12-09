@@ -33,6 +33,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SettingsTeamInfo]: '設定',
   [lngKeys.SettingsTitle]: '設定',
   [lngKeys.SettingsPersonalInfo]: '設定',
+  [lngKeys.SettingsKeymap]: 'キーマップ',
   [lngKeys.SettingsMarkdownPreview]: 'マークダウン',
   [lngKeys.SettingsMarkdownPreviewShowcase]: 'マークダウンスタイルのプレビュー',
   [lngKeys.SettingsMarkdownPreviewCodeBlockTheme]: 'コードブロックのテーマ',
