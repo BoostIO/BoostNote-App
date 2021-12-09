@@ -1,3 +1,4 @@
+import { LexoRank } from 'lexorank'
 import { omit, prop, sortBy } from 'ramda'
 import { getOrdering } from '../ordering'
 
@@ -27,7 +28,13 @@ export function makeFromData(data: any): KanbanViewData {
             ordering,
             order,
           }))
-      : [{ id: 'none', order: '0|', ordering: {} }],
+      : [
+          {
+            id: 'none',
+            order: LexoRank.middle().toString(),
+            ordering: {},
+          },
+        ],
   }
 }
 
