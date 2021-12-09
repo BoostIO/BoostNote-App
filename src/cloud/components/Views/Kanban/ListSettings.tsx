@@ -1,4 +1,4 @@
-import { mdiArrowLeft, mdiArrowRight, mdiTrashCanOutline } from '@mdi/js'
+import { mdiArrowLeft, mdiArrowRight, mdiEyeOffOutline } from '@mdi/js'
 import React from 'react'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
@@ -42,7 +42,7 @@ const ListSettings = ({ list, move, remove, sending }: ListSettingsProps) => {
         row={{
           type: 'button',
           props: {
-            iconPath: mdiTrashCanOutline,
+            iconPath: mdiEyeOffOutline,
             label: 'Hide',
             spinning: sending === 'delete',
             onClick: () => remove(list),
