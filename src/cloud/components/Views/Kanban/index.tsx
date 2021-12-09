@@ -8,17 +8,20 @@ import Button from '../../../../design/components/atoms/Button'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import Icon from '../../../../design/components/atoms/Icon'
 import { Label } from '../../../../design/components/atoms/Label'
+import FormToggableInput from '../../../../design/components/molecules/Form/atoms/FormToggableInput'
 import Kanban from '../../../../design/components/organisms/Kanban'
 import { useModal } from '../../../../design/lib/stores/modal'
 import styled from '../../../../design/lib/styled'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedView } from '../../../interfaces/db/view'
-import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
+import { useCloudApi } from '../../../lib/hooks/useCloudApi'
+import { useI18n } from '../../../lib/hooks/useI18n'
 import {
   KanbanViewList,
   useKanbanView,
 } from '../../../lib/hooks/views/kanbanView'
+import { lngKeys } from '../../../lib/i18n/types'
 import { useRouter } from '../../../lib/router'
 import { useStatuses } from '../../../lib/stores/status'
 import { getDocLinkHref } from '../../Link/DocLink'
@@ -63,7 +66,8 @@ const KanbanView = ({
   })
   const { openContextModal, closeLastModal } = useModal()
   const { push } = useRouter()
-  const { openNewDocForm } = useCloudResourceModals()
+  const { createDoc } = useCloudApi()
+  const { translate } = useI18n()
 
   const addListRef = useRef(addList)
   useEffect(() => {
@@ -159,13 +163,16 @@ const KanbanView = ({
           ? statuses.find((status) => status.id === parseInt(list.id))
           : undefined
       return (
-        <Button
-          variant='bordered'
+        <FormToggableInput
+          className='kanban__list__footer'
           iconPath={mdiPlus}
-          onClick={() =>
-            openNewDocForm(
+          variant='bordered'
+          label={translate(lngKeys.ModalsCreateNewDocument)}
+          submit={(val: string) =>
+            createDoc(
+              team,
               {
-                team: team,
+                title: val,
                 workspaceId: currentWorkspaceId,
                 parentFolderId: currentFolderId,
                 props:
@@ -178,23 +185,21 @@ const KanbanView = ({
                       }
                     : undefined,
               },
-              {
-                precedingRows: [
-                  {
-                    description:
-                      status != null ? `${prop}: ${status.name}` : undefined,
-                  },
-                ],
-                skipRedirect: true,
-              }
+              { skipRedirect: true }
             )
           }
-        >
-          Add
-        </Button>
+        />
       )
     },
-    [openNewDocForm, prop, statuses, team, currentFolderId, currentWorkspaceId]
+    [
+      createDoc,
+      translate,
+      prop,
+      statuses,
+      team,
+      currentFolderId,
+      currentWorkspaceId,
+    ]
   )
 
   const setPropRef = useRef(setProp)
@@ -284,5 +289,11 @@ const Container = styled.div`
 
   .kanban__item--header > span:hover {
     cursor: grab;
+  }
+
+  .kanban__list__footer > button,
+  .kanban__list__footer > input {
+    width: 100%;
+    justify-content: flex-start;
   }
 `
