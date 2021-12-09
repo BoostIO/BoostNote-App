@@ -32,7 +32,7 @@ export function useCloudDnd() {
     setCurrentPath,
   } = useNav()
   const { pageDoc, pageFolder } = usePage()
-  const { pushApiErrorMessage, pushMessage } = useToast()
+  const { pushApiErrorMessage } = useToast()
 
   const dropInWorkspace = useCallback(
     async (
@@ -49,14 +49,6 @@ export function useCloudDnd() {
     ) => {
       const draggedResource = getDraggedResource(event)
       if (draggedResource === null) {
-        return
-      }
-
-      if (draggedResource.resource.workspaceId === workspaceId) {
-        pushMessage({
-          title: 'Oops',
-          description: 'Resource is already present in this space',
-        })
         return
       }
 
@@ -77,7 +69,7 @@ export function useCloudDnd() {
         })
       }
     },
-    [pushMessage]
+    []
   )
 
   const dropInDocOrFolder = useCallback(
