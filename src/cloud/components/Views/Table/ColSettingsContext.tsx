@@ -77,7 +77,7 @@ const ColumnSettingsContext = ({
           type: 'button',
           props: {
             iconPath: mdiTrashCanOutline,
-            label: 'Delete',
+            label: 'Hide',
             spinning: sending === 'delete',
             onClick: () => action('delete'),
             disabled: sending != null,
