@@ -60,6 +60,7 @@ const KanbanView = ({
   useEffect(() => {
     addListRef.current = addList
   }, [addList])
+
   const openSelector: React.MouseEventHandler = useCallback(
     (ev) => {
       openContextModal(
@@ -219,5 +220,6 @@ const Container = styled.div`
   .view--kanban--board__add-btn {
     flex-wrap: nowrap;
     margin: ${({ theme }) => theme.sizes.spaces.sm}px;
+    white-space: nowrap;
   }
 `
