@@ -11,8 +11,8 @@ import styled from '../../lib/styled'
 import MetadataContainerRow from '../organisms/MetadataContainer/molecules/MetadataContainerRow'
 import FormColorSelect from './Form/atoms/FormColorSelect'
 import MetadataContainer from '../organisms/MetadataContainer'
-import { useUpDownNavigationListener } from '../../../cloud/lib/keyboard'
 import { Label } from '../atoms/Label'
+import { useUpDownNavigationListener } from '../../../cloud/lib/keyboard'
 
 export interface LabelLike {
   name: string
@@ -44,6 +44,12 @@ const LabelManager = <T extends LabelLike>({
   const containerRef = useRef<HTMLDivElement>(null)
   const [labelName, setLabelName] = useState<string>('')
   const { openContextModal, closeLastModal } = useModal()
+
+  useEffectOnce(() => {
+    if (inputRef.current != null) {
+      inputRef.current.focus()
+    }
+  })
 
   const createStatusHandler = useCallback(
     async (name: string) => {
@@ -130,6 +136,7 @@ const LabelManager = <T extends LabelLike>({
           <a
             className='autocomplete__option'
             key={`option-autocomplete=create`}
+            id={`option-autocomplete-create`}
             href='#'
             onClick={() => createStatusHandler(labelName)}
           >
@@ -140,6 +147,7 @@ const LabelManager = <T extends LabelLike>({
           <a
             className='autocomplete__option'
             key={`option-autocomplete=none`}
+            id={`option-autocomplete-none`}
             href='#'
             onClick={() => onSelect(null)}
           >
@@ -152,6 +160,7 @@ const LabelManager = <T extends LabelLike>({
             key={`option-autocomplete=${label.name}`}
             href='#'
             onClick={() => onSelect(label)}
+            id={`option-autocomplete-${label.name}`}
           >
             <Flexbox justifyContent='space-between'>
               <Label
