@@ -284,13 +284,21 @@ const Editor = ({
       },
       formatter: (pasted) => {
         const githubRegex = /https:\/\/github.com\/([^\/\s]+)\/([^\/\s]+)\/(pull|issues)\/(\d+)/
-        const githubMatch = githubRegex.exec(pasted)
+        const githubMatch = githubRegex.exec(
+          Array.isArray(pasted) ? pasted.join('') : pasted
+        )
         if (githubMatch == null) {
-          return null
+          return {
+            replacement: null,
+            promptMenu: false,
+          }
         }
         const [, org, repo, type, num] = githubMatch
         const entityType = type === 'pull' ? 'github.pr' : 'github.issue'
-        return `[[ ${entityType} id="${org}/${repo}#${num}" ]]`
+        return {
+          replacement: `[[ ${entityType} id="${org}/${repo}#${num}" ]]`,
+          promptMenu: false,
+        }
       },
     })
     editor.on('change', (instance) => {
