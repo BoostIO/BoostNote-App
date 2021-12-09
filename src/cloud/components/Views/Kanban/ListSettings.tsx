@@ -43,7 +43,7 @@ const ListSettings = ({ list, move, remove, sending }: ListSettingsProps) => {
           type: 'button',
           props: {
             iconPath: mdiTrashCanOutline,
-            label: 'Delete',
+            label: 'Hide',
             spinning: sending === 'delete',
             onClick: () => remove(list),
             disabled: sending != null,
