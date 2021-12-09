@@ -333,12 +333,19 @@ const Container = styled.div`
   .fc .fc-daygrid-day {
     position: relative;
   }
+
   .fc .fc-daygrid-day:hover::before {
     content: '+';
+    font-size: 18px;
+    border-radius: ${({ theme }) => theme.borders.radius}px;
     position: absolute;
-    top: 2px;
-    left: 2px;
-    color: ${({ theme }) => theme.colors.text.subtle};
+    top: 4px;
+    left: 4px;
+    color: ${({ theme }) => theme.colors.text.primary};
+    background-color: ${({ theme }) => theme.colors.background.tertiary};
+    padding: 1px 7px;
+    display: flex;
+    align-items: center;
   }
 
   .fc-theme-standard td,
