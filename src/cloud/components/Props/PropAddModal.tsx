@@ -311,6 +311,33 @@ const PropsAddModal = ({
               },
             }}
           />
+
+          <MetadataContainerRow
+            row={{
+              type: 'button',
+              props: {
+                id: 'new-number-col',
+                label: getLabelOfPropType('number'),
+                iconPath: getIconPathOfPropType('number'),
+                disabled: isColumnNameInvalid || sending != null,
+                spinning: sending === 'number',
+                onClick: () => addNewPropCol(columnName, 'number'),
+              },
+            }}
+          />
+          <MetadataContainerRow
+            row={{
+              type: 'button',
+              props: {
+                id: 'new-text-col',
+                label: getLabelOfPropType('string'),
+                iconPath: getIconPathOfPropType('string'),
+                disabled: isColumnNameInvalid || sending != null,
+                spinning: sending === 'string',
+                onClick: () => addNewPropCol(columnName, 'string'),
+              },
+            }}
+          />
         </MetadataContainer>
       ) : (
         <SuggestionSelect
