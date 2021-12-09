@@ -115,7 +115,7 @@ const Container = styled.div`
   flex: 1 1 auto;
   align-items: center;
   flex-wrap: wrap;
-  padding-top: ${({ theme }) => theme.sizes.spaces.df}px;
+  padding-top: ${({ theme }) => theme.sizes.spaces.sm}px;
   padding-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
   padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
 
