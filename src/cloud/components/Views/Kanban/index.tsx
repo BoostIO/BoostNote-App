@@ -14,7 +14,11 @@ import styled from '../../../../design/lib/styled'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedView } from '../../../interfaces/db/view'
-import { useKanbanView } from '../../../lib/hooks/views/kanbanView'
+import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
+import {
+  KanbanViewList,
+  useKanbanView,
+} from '../../../lib/hooks/views/kanbanView'
 import { useRouter } from '../../../lib/router'
 import { useStatuses } from '../../../lib/stores/status'
 import { getDocLinkHref } from '../../Link/DocLink'
@@ -29,6 +33,8 @@ interface KanbanViewProps {
   currentUserIsCoreMember: boolean
   team: SerializedTeam
   viewsSelector: React.ReactNode
+  currentWorkspaceId?: string
+  currentFolderId?: string
 }
 
 const KanbanView = ({
@@ -37,6 +43,8 @@ const KanbanView = ({
   currentUserIsCoreMember,
   team,
   viewsSelector,
+  currentWorkspaceId,
+  currentFolderId,
 }: KanbanViewProps) => {
   const {
     state: { statuses },
@@ -53,9 +61,9 @@ const KanbanView = ({
     view,
     docs,
   })
-  console.log(lists)
   const { openContextModal, closeLastModal } = useModal()
   const { push } = useRouter()
+  const { openNewDocForm } = useCloudResourceModals()
 
   const addListRef = useRef(addList)
   useEffect(() => {
@@ -141,6 +149,51 @@ const KanbanView = ({
     [team, push]
   )
 
+  const renderListFooter = useCallback(
+    (list: KanbanViewList) => {
+      const status =
+        list.id !== 'none'
+          ? statuses.find((status) => status.id === parseInt(list.id))
+          : undefined
+      return (
+        <Button
+          variant='bordered'
+          iconPath={mdiPlus}
+          onClick={() =>
+            openNewDocForm(
+              {
+                team: team,
+                workspaceId: currentWorkspaceId,
+                parentFolderId: currentFolderId,
+                props:
+                  status != null
+                    ? {
+                        [prop]: {
+                          type: 'status',
+                          data: status.id,
+                        },
+                      }
+                    : undefined,
+              },
+              {
+                precedingRows: [
+                  {
+                    description:
+                      status != null ? `${prop}: ${status.name}` : undefined,
+                  },
+                ],
+                skipRedirect: true,
+              }
+            )
+          }
+        >
+          Add
+        </Button>
+      )
+    },
+    [openNewDocForm, prop, statuses, team, currentFolderId, currentWorkspaceId]
+  )
+
   const setPropRef = useRef(setProp)
   useEffect(() => {
     setPropRef.current = setProp
@@ -191,6 +244,7 @@ const KanbanView = ({
           onListMove={onListMove}
           renderHeader={renderHeader}
           renderItem={renderItem}
+          afterItems={renderListFooter}
           afterLists={
             <Button
               disabled={!currentUserIsCoreMember}
