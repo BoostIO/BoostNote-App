@@ -16,6 +16,8 @@ import { filterIter } from '../../utils/iterator'
 import { useNav } from '../../stores/nav'
 import { ViewMoveType } from '../../views'
 import { sortByLexorankProperty } from '../../utils/string'
+import { trackEvent } from '../../../api/track'
+import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 
 interface ViewHandlerStoreProps {
   parent: ViewParent
@@ -88,7 +90,12 @@ export function useViewHandler({
           : { smartView: parent.target.id, type, name }
       )
       if (!res.err) {
-        selectNewView((res.data as CreateViewResponseBody).data.id)
+        const view = (res.data as CreateViewResponseBody).data
+        trackEvent(MixpanelActionTrackTypes.ViewCreate, {
+          trueEventName: `view.${view.type}.create`,
+          view: view.id,
+        })
+        selectNewView(view.id)
       }
       return res
     },
@@ -99,6 +106,10 @@ export function useViewHandler({
     async (view: SerializedView) => {
       const res = await deleteViewApi(view)
       if (!res.err) {
+        trackEvent(MixpanelActionTrackTypes.ViewDelete, {
+          trueEventName: `view.${view.type}.delete`,
+          view: view.id,
+        })
         const children = filterIter((v) => v.id !== view.id, childrenViews)
         selectNewView(
           children.length !== 0
@@ -113,6 +124,10 @@ export function useViewHandler({
 
   const updateView = useCallback(
     async (view: SerializedView, body: Omit<UpdateViewRequestBody, 'move'>) => {
+      trackEvent(MixpanelActionTrackTypes.ViewEdit, {
+        trueEventName: `view.${view.type}.edit`,
+        view: view.id,
+      })
       return updateViewApi(view, body)
     },
     [updateViewApi]
