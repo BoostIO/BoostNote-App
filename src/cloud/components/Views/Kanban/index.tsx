@@ -291,9 +291,12 @@ const Container = styled.div`
     cursor: grab;
   }
 
+  .kanban__list__footer,
   .kanban__list__footer > button,
   .kanban__list__footer > input {
     width: 100%;
     justify-content: flex-start;
+    height: 26px;
+    min-height: 26px;
   }
 `
