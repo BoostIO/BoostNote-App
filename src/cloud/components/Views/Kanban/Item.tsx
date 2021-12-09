@@ -25,13 +25,8 @@ const Item = ({ doc, onClick }: ItemProps) => {
 }
 
 const Container = styled(NavigationItem)`
-  padding: ${({ theme }) => theme.sizes.spaces.sm}px !important;
+  min-height: 25px;
   background-color: ${({ theme }) => theme.colors.background.secondary};
-  height: 32px !important;
-
-  .navigation__item__label {
-    font-size: ${({ theme }) => theme.sizes.fonts.md}px !important;
-  }
 `
 
 export default Item
