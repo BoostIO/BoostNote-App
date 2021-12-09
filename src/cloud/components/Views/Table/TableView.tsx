@@ -26,8 +26,6 @@ import { DraggedTo } from '../../../../design/lib/dnd'
 import { FormSelectOption } from '../../../../design/components/molecules/Form/atoms/FormSelect'
 import { StyledContentManagerList } from '../../ContentManager/styled'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
-import Button from '../../../../design/components/atoms/Button'
-import TablePropertiesContext from './TablePropertiesContext'
 import ColumnSettingsContext from './ColSettingsContext'
 import { getDocLinkHref } from '../../Link/DocLink'
 import NavigationItem from '../../../../design/components/molecules/Navigation/NavigationItem'
@@ -196,27 +194,6 @@ const TableView = ({
           {viewsSelector}
           <Flexbox flex='0 0 auto'>
             <SortingOption value={order} onChange={onChangeOrder} />
-            <Button
-              variant='transparent'
-              disabled={Object.keys(columns).length === 0}
-              onClick={(ev) =>
-                openContextModal(
-                  ev,
-                  <TablePropertiesContext
-                    columns={columns}
-                    tableActionsRef={actionsRef}
-                  />,
-                  {
-                    width: 250,
-                    hideBackground: true,
-                    removePadding: true,
-                    alignment: 'bottom-right',
-                  }
-                )
-              }
-            >
-              Properties
-            </Button>
           </Flexbox>
         </Flexbox>
         <Table
