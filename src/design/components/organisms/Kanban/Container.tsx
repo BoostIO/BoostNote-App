@@ -1,8 +1,6 @@
-import { mdiDrag } from '@mdi/js'
 import cc from 'classcat'
 import React from 'react'
 import styled from '../../../lib/styled'
-import Button from '../../atoms/Button'
 
 interface ContainerProps {
   style?: React.CSSProperties
@@ -33,9 +31,8 @@ const Container = React.forwardRef<
         ref={ref}
       >
         <div className='kanban__list__header'>
-          <div className='kanban__list__header__title'>{header}</div>
-          <div {...handleProps} className='kanban__list__handle'>
-            <Button variant='icon-secondary' iconPath={mdiDrag}></Button>
+          <div className='kanban__list__header__title' {...handleProps}>
+            {header}
           </div>
         </div>
         <div>{children}</div>
@@ -58,11 +55,6 @@ const StyledContainer = styled.div`
     & .kanban__list__handle > button {
       cursor: grab;
     }
-  }
-
-  & .kanban__item {
-    cursor: grab;
-    margin: ${({ theme }) => theme.sizes.spaces.df}px 0;
   }
 `
 
