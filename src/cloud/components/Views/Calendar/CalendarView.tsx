@@ -366,7 +366,7 @@ const Container = styled.div`
   }
 
   .fc .fc-button-primary {
-    background-color: ${({ theme }) => theme.colors.variants.primary.base};
+    background: none !important;
     color: ${({ theme }) => theme.colors.variants.primary.text};
     border: 0 !important;
     outline: 0 !important;
@@ -382,16 +382,13 @@ const Container = styled.div`
 
     &:not(:disabled) {
       &.focus {
-        background-color: ${({ theme }) => theme.colors.variants.primary.base};
         filter: brightness(103%);
       }
       &:hover {
-        background-color: ${({ theme }) => theme.colors.variants.primary.base};
         filter: brightness(106%);
       }
       &:active,
       &.button__state--active {
-        background-color: ${({ theme }) => theme.colors.variants.primary.base};
         filter: brightness(112%);
       }
     }
