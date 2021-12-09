@@ -64,6 +64,7 @@ const ViewsSelector = ({
             onClick={() => setSelectedViewId(view.id)}
             active={selectedViewId === view.id}
             size='sm'
+            className='view__item'
           >
             {view.name}
           </Button>
@@ -121,6 +122,12 @@ const Container = styled.div`
     display: inline-flex;
     button {
       padding: 0;
+    }
+
+    .view__item {
+      &:focus {
+        box-shadow: none !important;
+      }
     }
 
     .views__item__menu {
