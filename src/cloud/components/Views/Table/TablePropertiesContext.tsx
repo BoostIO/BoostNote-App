@@ -1,4 +1,4 @@
-import { mdiTrashCanOutline } from '@mdi/js'
+import { mdiEyeOffOutline } from '@mdi/js'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { LoadingButton } from '../../../../design/components/atoms/Button'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
@@ -68,7 +68,7 @@ const TablePropertiesContext = ({
                       variant='icon'
                       disabled={sending != null}
                       spinning={sending === `${col.id}-delete`}
-                      iconPath={mdiTrashCanOutline}
+                      iconPath={mdiEyeOffOutline}
                       onClick={() => removeCol(col)}
                       id={`prop-active-${col.id.split(':')[1]}-${i}`}
                       size='sm'

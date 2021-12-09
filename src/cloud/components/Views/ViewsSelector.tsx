@@ -103,7 +103,9 @@ const ViewsSelector = ({
             width: 300,
           })
         }
-      />
+      >
+        Add view
+      </LoadingButton>
     </Container>
   )
 }
