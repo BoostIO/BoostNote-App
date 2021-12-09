@@ -177,9 +177,6 @@ const KanbanView = ({
               <span>{prop}</span>
             </Flexbox>
           </Button>
-          <Button variant='transparent' disabled={true}>
-            Columns
-          </Button>
         </Flexbox>
       </Flexbox>
       <Kanban
