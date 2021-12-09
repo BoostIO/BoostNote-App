@@ -139,18 +139,24 @@ const PropsAddModal = ({
     const key = `From ${!showDocPageForm ? 'Child Docs' : 'Parent Folder'}`
     return {
       [key]: allowedSuggestions.map((suggestion) => {
-        return { name: suggestion.name, value: suggestion }
+        return {
+          name: suggestion.name,
+          value: suggestion,
+          icon: getIconPathOfPropType(suggestion.subType || suggestion.type),
+        }
       }),
       'Static Suggestion': staticSuggestions.map((suggestion) => {
         return {
           name: suggestion.name,
           value: suggestion,
+          icon: getIconPathOfPropType(suggestion.type),
         }
       }),
       Suggestions: propSuggestions.map((suggestion) => {
         return {
           name: suggestion.name,
           value: suggestion,
+          icon: getIconPathOfPropType(suggestion.subType || suggestion.type),
         }
       }),
     }
