@@ -194,6 +194,7 @@ const KanbanView = ({
               onClick={openSelector}
               iconPath={mdiPlus}
               variant='transparent'
+              className='view--kanban--board__add-btn'
             >
               Add Status
             </Button>
@@ -213,5 +214,10 @@ const Container = styled.div`
 
   .view--kanban__wrapper {
     padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
+  }
+
+  .view--kanban--board__add-btn {
+    flex-wrap: nowrap;
+    margin: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 `
