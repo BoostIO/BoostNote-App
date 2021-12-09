@@ -53,6 +53,7 @@ const KanbanView = ({
     view,
     docs,
   })
+  console.log(lists)
   const { openContextModal, closeLastModal } = useModal()
   const { push } = useRouter()
 
@@ -66,6 +67,7 @@ const KanbanView = ({
       openContextModal(
         ev,
         <StatusSelector
+          ignoredStatuses={lists.map((list) => list.id)}
           onSelect={(status) => {
             addListRef.current(status?.id.toString() || 'none')
             closeLastModal()
@@ -74,7 +76,7 @@ const KanbanView = ({
         { width: 200, removePadding: true }
       )
     },
-    [openContextModal, closeLastModal]
+    [openContextModal, closeLastModal, lists]
   )
 
   const removeListRef = useRef(removeList)
@@ -120,7 +122,7 @@ const KanbanView = ({
             }}
             iconPath={mdiDotsHorizontal}
             variant='icon'
-          ></Button>
+          />
         </Flexbox>
       )
     },
