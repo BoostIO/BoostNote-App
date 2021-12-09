@@ -164,6 +164,8 @@ export const ViewsManager = ({
                 view={currentView}
                 currentUserIsCoreMember={currentUserIsCoreMember}
                 docs={docs}
+                currentFolderId={currentFolderId}
+                currentWorkspaceId={currentWorkspaceId}
               />
             ) : currentView.type === 'calendar' ? (
               <CalendarView
