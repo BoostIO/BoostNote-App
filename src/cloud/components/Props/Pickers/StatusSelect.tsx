@@ -81,7 +81,9 @@ export default StatusSelect
 
 export const StatusSelector = ({
   onSelect,
+  ignoredStatuses = [],
 }: {
+  ignoredStatuses?: string[]
   onSelect: (status: SerializedStatus | null) => void
 }) => {
   const { team } = usePage()
@@ -102,13 +104,20 @@ export const StatusSelector = ({
 
   return (
     <LabelManager
-      labels={state.statuses}
+      labels={state.statuses.map((status) => {
+        return {
+          ...status,
+          hide: ignoredStatuses.includes(status.id.toString()),
+        }
+      })}
       onSelect={onSelect}
       onCreate={createStatus}
       onUpdate={editStatus}
       onDelete={removeStatus}
       type='Status'
-      allowEmpty={true}
+      allowEmpty={
+        ignoredStatuses == null ? true : !ignoredStatuses.includes('none')
+      }
     />
   )
 }
