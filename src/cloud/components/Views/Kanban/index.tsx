@@ -179,25 +179,27 @@ const KanbanView = ({
           </Button>
         </Flexbox>
       </Flexbox>
-      <Kanban
-        disabled={!currentUserIsCoreMember}
-        className='view--kanban--board'
-        lists={lists}
-        onItemMove={onItemMove}
-        onListMove={onListMove}
-        renderHeader={renderHeader}
-        renderItem={renderItem}
-        afterLists={
-          <Button
-            disabled={!currentUserIsCoreMember}
-            onClick={openSelector}
-            iconPath={mdiPlus}
-            variant='transparent'
-          >
-            Add Status
-          </Button>
-        }
-      />
+      <div className='view--kanban__wrapper'>
+        <Kanban
+          disabled={!currentUserIsCoreMember}
+          className='view--kanban--board'
+          lists={lists}
+          onItemMove={onItemMove}
+          onListMove={onListMove}
+          renderHeader={renderHeader}
+          renderItem={renderItem}
+          afterLists={
+            <Button
+              disabled={!currentUserIsCoreMember}
+              onClick={openSelector}
+              iconPath={mdiPlus}
+              variant='transparent'
+            >
+              Add Status
+            </Button>
+          }
+        />
+      </div>
     </Container>
   )
 }
@@ -208,5 +210,8 @@ const Container = styled.div`
   display: block;
   width: 100%;
   position: relative;
-  padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
+
+  .view--kanban__wrapper {
+    padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
+  }
 `
