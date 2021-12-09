@@ -17,6 +17,7 @@ import { useUpDownNavigationListener } from '../../../cloud/lib/keyboard'
 export interface LabelLike {
   name: string
   backgroundColor?: string
+  hide?: boolean
 }
 
 interface LabelManagerProps<T extends LabelLike> {
@@ -95,7 +96,9 @@ const LabelManager = <T extends LabelLike>({
   )
 
   const options = useMemo(() => {
-    return labels.filter((label) => label.name.startsWith(labelName))
+    return labels.filter(
+      (label) => label.name.startsWith(labelName) && !label.hide
+    )
   }, [labels, labelName])
 
   const showCreate = useMemo(() => {
