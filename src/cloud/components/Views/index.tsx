@@ -244,8 +244,12 @@ const Container = styled.div`
     align-items: center;
     padding: 0 ${({ theme }) => theme.sizes.spaces.xl}px;
     color: ${({ theme }) => theme.colors.text.subtle};
-    border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
+
     width: 100%;
+
+    &:not(.content__manager__add-row--folder) {
+      border-bottom: 1px solid ${({ theme }) => theme.colors.border.second};
+    }
 
     button {
       padding: 0;
