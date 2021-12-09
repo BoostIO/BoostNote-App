@@ -107,7 +107,7 @@ const SuggestionSelect = <T extends any>({
                 content: sectionName,
               }}
             />
-            {sectionSuggestions.map((propSuggestion) => (
+            {sectionSuggestions.map((propSuggestion, i) => (
               <MetadataContainerRow
                 key={propSuggestion.name}
                 row={{
@@ -117,6 +117,7 @@ const SuggestionSelect = <T extends any>({
                     iconPath: propSuggestion.icon,
                     disabled: error != null || sending != null,
                     onClick: () => onSelect(propSuggestion.value),
+                    id: `${sectionName}-${i}`,
                   },
                 }}
               />
