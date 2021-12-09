@@ -15,6 +15,7 @@ import ViewsFolderList from './FolderList/ViewsFolderList'
 import Scroller from '../../../design/components/atoms/Scroller'
 import { sortByLexorankProperty } from '../../lib/utils/string'
 import CalendarView from './Calendar/CalendarView'
+import KanbanView from './Kanban'
 
 type ViewsManagerProps = {
   views: SerializedView[]
@@ -155,6 +156,14 @@ export const ViewsManager = ({
                 hasDocInSelection={hasDocInSelection}
                 toggleDocInSelection={toggleDocInSelection}
                 resetDocsInSelection={resetDocsInSelection}
+              />
+            ) : currentView.type === 'kanban' ? (
+              <KanbanView
+                viewsSelector={viewsSelector}
+                team={team}
+                view={currentView}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+                docs={docs}
               />
             ) : currentView.type === 'calendar' ? (
               <CalendarView
