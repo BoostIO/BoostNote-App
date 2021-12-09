@@ -27,6 +27,12 @@ const Item = ({ doc, onClick }: ItemProps) => {
 const Container = styled(NavigationItem)`
   min-height: 25px;
   background-color: ${({ theme }) => theme.colors.background.secondary};
+
+  &:focus,
+  &.navigation__item--focused {
+    background-color: ${({ theme }) =>
+      theme.colors.background.secondary} !important;
+  }
 `
 
 export default Item
