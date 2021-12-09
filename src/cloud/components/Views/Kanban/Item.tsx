@@ -25,9 +25,8 @@ const Item = ({ doc, onClick }: ItemProps) => {
 }
 
 const Container = styled(NavigationItem)`
-  min-height: 25px;
   background-color: ${({ theme }) => theme.colors.background.secondary};
-
+  cursor: grab;
   &:focus,
   &.navigation__item--focused {
     background-color: ${({ theme }) =>

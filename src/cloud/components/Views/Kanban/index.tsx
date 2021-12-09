@@ -296,12 +296,19 @@ const Container = styled.div`
   .kanban__list__footer > input {
     width: 100%;
     justify-content: flex-start;
-    height: 26px;
-    min-height: 26px;
   }
 
-  .kanban__item {
-    cursor: grab;
+  .kanban__item,
+  .kanban__item .navigation__item,
+  .kanban__list__footer,
+  .kanban__list__footer > button,
+  .kanban__list__footer > input {
+    height: 32px;
+    min-height: 32px;
+  }
+
+  .kanban__item,
+  .kanban__list__footer {
     margin: ${({ theme }) => theme.sizes.spaces.df}px 0;
   }
 `
