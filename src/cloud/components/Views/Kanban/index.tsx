@@ -299,4 +299,9 @@ const Container = styled.div`
     height: 26px;
     min-height: 26px;
   }
+
+  .kanban__item {
+    cursor: grab;
+    margin: ${({ theme }) => theme.sizes.spaces.df}px 0;
+  }
 `
