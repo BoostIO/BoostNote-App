@@ -102,7 +102,10 @@ const KanbanView = ({
       const id = Number(list.id)
       const status = statuses.find((status) => status.id === id)
       return (
-        <Flexbox justifyContent='space-between'>
+        <Flexbox
+          justifyContent='space-between'
+          className='kanban__item--header'
+        >
           <Label
             name={status?.name || 'No Status'}
             backgroundColor={status?.backgroundColor}
@@ -277,5 +280,9 @@ const Container = styled.div`
     flex-wrap: nowrap;
     margin: ${({ theme }) => theme.sizes.spaces.sm}px;
     white-space: nowrap;
+  }
+
+  .kanban__item--header > span:hover {
+    cursor: grab;
   }
 `
