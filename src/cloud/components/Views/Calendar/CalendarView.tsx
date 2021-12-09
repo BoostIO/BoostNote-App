@@ -253,9 +253,6 @@ const CalendarView = ({
           >
             No Date ({noDateDocs.length})
           </Button>
-          <Button variant='transparent' disabled={true}>
-            Columns
-          </Button>
         </Flexbox>
       </Flexbox>
       <Calendar
