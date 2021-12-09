@@ -215,7 +215,7 @@ const TableView = ({
                 )
               }
             >
-              Columns
+              Properties
             </Button>
           </Flexbox>
         </Flexbox>
