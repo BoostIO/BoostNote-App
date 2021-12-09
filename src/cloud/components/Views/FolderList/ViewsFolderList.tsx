@@ -125,7 +125,7 @@ export const ViewsFolderList = ({
       })}
 
       {currentWorkspaceId != null && (
-        <div className='content__manager__add-row'>
+        <div className='content__manager__add-row content__manager__add-row--folder'>
           <FormToggableInput
             iconPath={mdiPlus}
             variant='transparent'
