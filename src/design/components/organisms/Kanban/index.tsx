@@ -163,11 +163,6 @@ const KanbanContainer = styled.div`
   min-height: 250px;
   background-color: ${({ theme }) => theme.colors.background.primary};
   padding-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
-
-  & .kanban__item {
-    cursor: grab;
-    margin: ${({ theme }) => theme.sizes.spaces.df}px 0;
-  }
 `
 
 export default Kanban
