@@ -185,7 +185,9 @@ const KanbanView = ({
                       }
                     : undefined,
               },
-              { skipRedirect: true }
+              {
+                skipRedirect: true,
+              }
             )
           }
         />
