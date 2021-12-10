@@ -173,7 +173,7 @@ export function useCloudApi() {
       body: CreateDocRequestBody,
       options?: {
         skipRedirect?: boolean
-        afterSuccess?: (doc: SerializedDoc) => void
+        afterSuccess?: (doc: SerializedDocWithSupplemental) => void
       }
     ) => {
       await send(shortid.generate(), 'create', {

@@ -203,15 +203,15 @@ function sortWithOrdering(ordering: KanbanList['ordering']) {
     const aRank = ordering[a.id]
     const bRank = ordering[b.id]
     if (aRank == null && bRank == null) {
-      return a.title.localeCompare(b.title)
+      return a.createdAt.localeCompare(b.createdAt)
     }
 
     if (aRank == null) {
-      return -1
+      return 1
     }
 
     if (bRank == null) {
-      return 1
+      return -1
     }
 
     if (aRank === bRank) {
