@@ -311,6 +311,6 @@ const Container = styled.div`
 
   .kanban__item,
   .kanban__list__footer {
-    margin: ${({ theme }) => theme.sizes.spaces.df}px 0;
+    margin: ${({ theme }) => theme.sizes.spaces.sm}px 0;
   }
 `
