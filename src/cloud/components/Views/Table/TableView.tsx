@@ -17,13 +17,8 @@ import {
 } from '../../../../design/lib/utils/array'
 import { useModal } from '../../../../design/lib/stores/modal'
 import { useRouter } from '../../../lib/router'
-import { usePreferences } from '../../../lib/stores/preferences'
-import SortingOption, {
-  sortingOrders,
-} from '../../ContentManager/SortingOption'
 import { useCloudDnd } from '../../../lib/hooks/sidebar/useCloudDnd'
 import { DraggedTo } from '../../../../design/lib/dnd'
-import { FormSelectOption } from '../../../../design/components/molecules/Form/atoms/FormSelect'
 import { StyledContentManagerList } from '../../ContentManager/styled'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import ColumnSettingsContext from './ColSettingsContext'
@@ -86,10 +81,6 @@ const TableView = ({
   const { createDoc } = useCloudApi()
   const { openContextModal, closeAllModals } = useModal()
   const { push } = useRouter()
-  const { preferences, setPreferences } = usePreferences()
-  const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
-    preferences.folderSortingOrder
-  )
 
   const {
     dropInDocOrFolder,
@@ -126,16 +117,68 @@ const TableView = ({
         title: getDocTitle(doc, 'untitled'),
       }
     })
-    switch (order) {
-      case 'Title A-Z':
-        return sortByAttributeAsc('title', docs)
-      case 'Title Z-A':
-        return sortByAttributeDesc('title', docs)
-      case 'Latest Updated':
+    switch (state.sort?.type) {
+      case 'column':
+        const sort = state.sort as {
+          type: 'column'
+          columnName: string
+          direction: 'asc' | 'desc'
+        }
+        const ordered = docs.slice().sort((docA, docB): number => {
+          let propA = docA.props[sort.columnName]?.data
+          let propB = docB.props[sort.columnName]?.data
+
+          if (
+            propA == null ||
+            (typeof propA === 'string' && propA.trim().length === 0)
+          ) {
+            propA = null
+          }
+          if (
+            propB == null ||
+            (typeof propB === 'string' && propB.trim().length === 0)
+          ) {
+            propB = null
+          }
+
+          if (propA != null && propB != null) {
+            if (typeof propA === 'number' && typeof propB === 'number') {
+              return propA - propB
+            }
+            if (typeof propA === 'string' && typeof propB === 'number') {
+              return 1
+            } else if (typeof propA === 'number' && typeof propB === 'string') {
+              return -1
+            }
+
+            return propA
+              .toString()
+              .trim()
+              .localeCompare(propB.toString().trim())
+          } else if (propA == null && propB != null) {
+            return 1
+          } else if (propA != null && propB == null) {
+            return -1
+          }
+          return docA.createdAt.localeCompare(docB.createdAt)
+        })
+        if (sort.direction === 'desc') {
+          ordered.reverse()
+        }
+        return ordered
+      case 'static':
       default:
-        return sortByAttributeDesc('updatedAt', docs)
+        switch (state.sort?.sort) {
+          case 'title_az':
+            return sortByAttributeAsc('title', docs)
+          case 'title_za':
+            return sortByAttributeDesc('title', docs)
+          case 'creation_date':
+          default:
+            return sortByAttributeDesc('createdAt', docs)
+        }
     }
-  }, [order, filteredDocs])
+  }, [filteredDocs, state.sort])
 
   const selectingAllDocs = useMemo(() => {
     return (
@@ -172,14 +215,6 @@ const TableView = ({
     [clearDragTransferData]
   )
 
-  const onChangeOrder = useCallback(
-    (val: FormSelectOption) => {
-      setOrder(val.value)
-      setPreferences({ folderSortingOrder: val.value as any })
-    },
-    [setPreferences]
-  )
-
   useEffect(() => {
     currentStateRef.current = Object.assign({}, view.data)
   }, [view.data])
@@ -195,7 +230,6 @@ const TableView = ({
         <Flexbox justifyContent='space-between' alignItems='center'>
           {viewsSelector}
           <Flexbox flex='0 0 auto'>
-            <SortingOption value={order} onChange={onChangeOrder} />
             <Button
               variant='transparent'
               onClick={(event) =>
@@ -249,6 +283,7 @@ const TableView = ({
                     ev,
                     <ColumnSettingsContext
                       column={col}
+                      updateTableSort={actionsRef.current.updateTableSort}
                       removeColumn={actionsRef.current.removeColumn}
                       moveColumn={(type) =>
                         actionsRef.current.moveColumn(col, type)
