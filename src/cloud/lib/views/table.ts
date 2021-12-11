@@ -24,7 +24,8 @@ export type ViewTableSortingOptions =
     }
   | {
       type: 'column'
-      columnId: string
+      columnName: string
+      direction: 'asc' | 'desc'
     }
 
 export function makeTablePropColId(
