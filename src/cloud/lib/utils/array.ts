@@ -110,3 +110,7 @@ export function getArrayFromRecord<K>(
 ): K[] {
   return Object.entries(source).map(([, val]) => val)
 }
+
+export function getPropertyFromArray<T>(attribute: keyof T, array: T[]) {
+  return array.map((val) => prop(attribute, val))
+}
