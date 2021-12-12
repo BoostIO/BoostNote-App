@@ -8,7 +8,7 @@ export type BulkApiActionRes =
 export type BulkApiAction = (
   id: string,
   act: string,
-  body: { api: (args: any) => Promise<any>; cb?: (res: any) => any }
+  body: { api: () => Promise<any>; cb?: (res: any) => any }
 ) => Promise<BulkApiActionRes>
 
 interface UseBulkApiRes {
@@ -20,11 +20,14 @@ const useBulkApi = () => {
   const [sendingMap, setSendingMap] = useState<Map<string, string>>(new Map())
   const { pushApiErrorMessage } = useToast()
 
-  const send = useCallback(
+  const send: BulkApiAction = useCallback(
     async (id: string, act: string, { api, cb }) => {
-      const res = { err: false, error: undefined, data: undefined }
+      let res: BulkApiActionRes = { err: false, data: undefined }
       if (sendingMap.get(id)) {
-        return
+        return {
+          err: true,
+          error: 'Resource occupied',
+        } as BulkApiActionRes
       }
 
       setSendingMap((prev) => {
@@ -40,8 +43,10 @@ const useBulkApi = () => {
           cb(data)
         }
       } catch (error) {
-        res.err = true
-        res.error = error
+        res = {
+          err: true,
+          error: error,
+        }
         console.error(error)
         pushApiErrorMessage(error)
       }
