@@ -194,7 +194,7 @@ const ViewContextModal = ({
   const deleteView = useCallback(
     async (view: SerializedView) => {
       const res = await actionsRef.current.deleteView(view)
-      if (!res.err) {
+      if (res != null && !res.err) {
         closeLastModal()
       }
     },
@@ -206,7 +206,7 @@ const ViewContextModal = ({
       setSending(move)
       const res = await actionsRef.current.moveView(view, move)
       setSending(undefined)
-      if (!res.err) {
+      if (res != null && !res.err) {
         closeLastModal()
       }
     },
@@ -218,7 +218,7 @@ const ViewContextModal = ({
       setSending('name')
       const res = await actionsRef.current.updateView(view, { name: newName })
       setSending(undefined)
-      if (!res.err) {
+      if (res != null && !res.err) {
         closeLastModal()
       }
     },

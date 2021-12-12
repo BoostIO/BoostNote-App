@@ -33,7 +33,7 @@ const PropSelectorModal = ({
       team: doc.teamId,
       doc: doc.id,
     })
-    if (!res.err) {
+    if (res != null && !res.err) {
       return (res.data as ListPropertySuggestionsResponseBody).data
     } else {
       return []

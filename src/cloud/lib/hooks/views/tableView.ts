@@ -24,13 +24,15 @@ interface TableViewStoreProps {
 }
 
 export type TableViewActionsRef = React.MutableRefObject<{
-  updateTableSort: (sort: ViewTableSortingOptions) => Promise<BulkApiActionRes>
-  addColumn: (col: Column) => Promise<BulkApiActionRes> | undefined
-  removeColumn: (col: Column) => Promise<BulkApiActionRes>
+  updateTableSort: (
+    sort: ViewTableSortingOptions
+  ) => Promise<BulkApiActionRes | undefined>
+  addColumn: (col: Column) => Promise<BulkApiActionRes | undefined> | undefined
+  removeColumn: (col: Column) => Promise<BulkApiActionRes | undefined>
   moveColumn: (
     column: Column,
     move: ColumnMoveType
-  ) => Promise<BulkApiActionRes> | undefined
+  ) => Promise<BulkApiActionRes | undefined> | undefined
 }>
 
 export function useTableView({
@@ -55,7 +57,7 @@ export function useTableView({
             { data: newState }
           )
         )
-        if (!res.err) {
+        if (res != null && !res.err) {
           selectNewView((res.data as CreateViewResponseBody).data.id)
         }
         return res

@@ -44,7 +44,7 @@ const PropPicker = ({
         })
       }
 
-      if (!res.err && onUpdate != null) {
+      if (res != null && !res.err && onUpdate != null) {
         const props = res.data as {
           data: Props
         }

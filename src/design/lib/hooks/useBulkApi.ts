@@ -9,7 +9,7 @@ export type BulkApiAction = (
   id: string,
   act: string,
   body: { api: (args: any) => Promise<any>; cb?: (res: any) => any }
-) => Promise<BulkApiActionRes>
+) => Promise<BulkApiActionRes | undefined>
 
 interface UseBulkApiRes {
   sendingMap: Map<string, string>

@@ -25,7 +25,7 @@ interface TableAddPropertyContextProps {
   view: SerializedView
   teamId: string
   columns: Record<string, Column>
-  addColumn: (col: Column) => Promise<BulkApiActionRes> | undefined
+  addColumn: (col: Column) => Promise<BulkApiActionRes | undefined> | undefined
   close: () => void
 }
 
@@ -55,7 +55,7 @@ const TableAddPropertyContext = ({
     }
 
     const res = await fetchPropertySuggestionsApi(body)
-    if (!res.err) {
+    if (res != null && !res.err) {
       return (res.data as ListPropertySuggestionsResponseBody).data
     } else {
       return []

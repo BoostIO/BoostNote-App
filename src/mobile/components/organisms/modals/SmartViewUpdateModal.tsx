@@ -38,7 +38,7 @@ const SmartViewUpdateModal = ({
 
       const res = await updateSmartViewApi(smartView, body)
 
-      if (!res.err) {
+      if (res != null && !res.err) {
         closeModal()
         if (onUpdate != null) {
           return onUpdate((res.data as UpdateSmartViewResponseBody).data)

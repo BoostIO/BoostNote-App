@@ -101,7 +101,7 @@ const PropConditionValueControl = ({
   const fetchProperties = useCallback(
     async (body: ListPropertySuggestionsRequestBody) => {
       const res = await fetchPropertySuggestionsApi(body)
-      if (!res.err) {
+      if (res != null && !res.err) {
         setSuggestions(
           (res.data as ListPropertySuggestionsResponseBody).data
             .filter((property) => property.type === body.propertyType)

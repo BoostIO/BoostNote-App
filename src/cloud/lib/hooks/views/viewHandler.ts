@@ -25,16 +25,18 @@ interface ViewHandlerStoreProps {
 }
 
 export type ViewHandlerActionsRef = React.MutableRefObject<{
-  createNewView: (type: SupportedViewTypes) => Promise<BulkApiActionRes>
+  createNewView: (
+    type: SupportedViewTypes
+  ) => Promise<BulkApiActionRes | undefined>
   updateView: (
     view: SerializedView,
     body: Omit<UpdateViewRequestBody, 'move'>
-  ) => Promise<BulkApiActionRes>
-  deleteView: (view: SerializedView) => Promise<BulkApiActionRes>
+  ) => Promise<BulkApiActionRes | undefined>
+  deleteView: (view: SerializedView) => Promise<BulkApiActionRes | undefined>
   moveView: (
     view: SerializedView,
     move: ViewMoveType
-  ) => Promise<BulkApiActionRes>
+  ) => Promise<BulkApiActionRes | undefined>
 }>
 
 export function useViewHandler({
@@ -89,7 +91,7 @@ export function useViewHandler({
           ? { workspace: parent.target.id, type, name }
           : { smartView: parent.target.id, type, name }
       )
-      if (!res.err) {
+      if (res != null && !res.err) {
         const view = (res.data as CreateViewResponseBody).data
         trackEvent(MixpanelActionTrackTypes.ViewCreate, {
           trueEventName: `view.${view.type}.create`,
@@ -105,7 +107,7 @@ export function useViewHandler({
   const deleteView = useCallback(
     async (view: SerializedView) => {
       const res = await deleteViewApi(view)
-      if (!res.err) {
+      if (res != null && !res.err) {
         trackEvent(MixpanelActionTrackTypes.ViewDelete, {
           trueEventName: `view.${view.type}.delete`,
           view: view.id,

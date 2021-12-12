@@ -27,7 +27,7 @@ const CreateSmartViewModal = ({ onCreate }: CreateSmartViewModalProps) => {
       setSending(true)
       const res = await createSmartViewApi(team.id, body)
 
-      if (!res.err) {
+      if (res != null && !res.err) {
         const { data: smartView } = res.data as CreateSmartViewResponseBody
         closeModal()
         if (onCreate != null) {

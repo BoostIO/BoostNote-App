@@ -36,7 +36,7 @@ const TablePropertiesContext = ({
 
       setSending(`${col.id}-delete`)
       const res = await tableActionsRef.current.removeColumn(col)
-      if (!res.err) {
+      if (res != null && !res.err) {
         setActiveColumns((prev) => {
           return prev.slice().filter((elem) => elem.id !== col.id)
         })

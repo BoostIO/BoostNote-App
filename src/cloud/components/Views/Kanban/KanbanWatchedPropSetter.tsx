@@ -65,7 +65,7 @@ const KanbanWatchedPropSetter = ({
       }
 
       const res = await fetchPropertySuggestionsApi(body)
-      if (!res.err) {
+      if (res != null && !res.err) {
         setSuggestions(
           filterIter(
             (val) => isPropType(val.type),
