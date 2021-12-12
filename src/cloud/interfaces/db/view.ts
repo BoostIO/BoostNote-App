@@ -1,7 +1,6 @@
 import { SerializedSmartView } from './smartView'
 import { SerializedFolder, SerializedFolderWithBookmark } from './folder'
 import { SerializedWorkspace } from './workspace'
-import { ViewTableData } from '../../lib/views/table'
 
 export type SupportedViewTypes = 'table' | 'calendar' | 'kanban'
 
@@ -9,14 +8,14 @@ export interface ViewState {
   integrations: string[]
 }
 
-export interface SerializableViewProps {
+export interface SerializableViewProps<T> {
   id: number
   name: string
   folderId?: string
   smartViewId?: string
   workspaceId?: string
   type: SupportedViewTypes
-  data: ViewTableData
+  data: T
   order: string
 }
 
@@ -26,8 +25,8 @@ export interface SerializedUnserializableViewProps {
   workspace?: SerializedWorkspace
 }
 
-export type SerializedView = SerializedUnserializableViewProps &
-  SerializableViewProps
+export type SerializedView<T = any> = SerializedUnserializableViewProps &
+  SerializableViewProps<T>
 
 export type ViewParent =
   | { type: 'workspace'; target: SerializedWorkspace }

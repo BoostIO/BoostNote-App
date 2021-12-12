@@ -19,7 +19,7 @@ import { capitalize } from 'lodash'
 
 interface TableViewStoreProps {
   state: ViewTableData
-  view: SerializedView
+  view: SerializedView<ViewTableData>
   selectNewView: (id: number) => void
 }
 
