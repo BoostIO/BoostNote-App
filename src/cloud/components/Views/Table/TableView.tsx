@@ -48,7 +48,7 @@ import { useI18n } from '../../../lib/hooks/useI18n'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 
 type TableViewProps = {
-  view: SerializedView
+  view: SerializedView<ViewTableData>
   docs: SerializedDocWithSupplemental[]
   team: SerializedTeam
   currentUserIsCoreMember: boolean

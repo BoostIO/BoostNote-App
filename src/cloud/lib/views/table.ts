@@ -165,7 +165,9 @@ export function sortTableViewColumns(
   return sortByAttributeAsc('order', getArrayFromRecord(columns))
 }
 
-export function getDefaultTableView(parent: ViewParent): SerializedView {
+export function getDefaultTableView(
+  parent: ViewParent
+): SerializedView<ViewTableData> {
   const labelColId = makeTablePropColId('Label', 'label')
   return {
     id: -1,
@@ -188,9 +190,9 @@ export function getDefaultTableView(parent: ViewParent): SerializedView {
       },
       sort: { type: 'static', sort: 'creation_date' },
     },
-  } as SerializedView
+  } as SerializedView<ViewTableData>
 }
 
-export function isDefaultView(view: SerializedView) {
+export function isDefaultView(view: SerializedView<any>) {
   return view.id === -1
 }

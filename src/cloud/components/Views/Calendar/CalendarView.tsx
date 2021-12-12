@@ -24,9 +24,13 @@ import { useRouter } from '../../../lib/router'
 import CalendarNoDateContext from './CalendarNoDateContext'
 import { getDocLinkHref } from '../../Link/DocLink'
 import { getISODateFromLocalTime } from '../../../lib/date'
+import {
+  sortCalendarViewProps,
+  ViewCalendarData,
+} from '../../../lib/views/calendar'
 
 type CalendarViewProps = {
-  view: SerializedView
+  view: SerializedView<ViewCalendarData>
   docs: SerializedDocWithSupplemental[]
   currentUserIsCoreMember: boolean
   team: SerializedTeam
@@ -53,6 +57,7 @@ const CalendarView = ({
   })
 
   const docEvents: EventSourceInput = useMemo(() => {
+    const displayedProps = sortCalendarViewProps(view.data.props)
     return docs.map((doc) => {
       const dateProps = (doc.props || {})[watchedProp.name]
 
@@ -90,6 +95,7 @@ const CalendarView = ({
         ...props,
         extendedProps: {
           doc,
+          displayedProps,
           onClick: () => push(getDocLinkHref(doc, team, 'index')),
           onContextClick: (event: React.MouseEvent) =>
             openContextModal(
@@ -103,7 +109,7 @@ const CalendarView = ({
         },
       }
     })
-  }, [docs, team, watchedProp, push, openContextModal])
+  }, [docs, team, view.data.props, watchedProp, push, openContextModal])
 
   const noDateDocs = useMemo(() => {
     return filterIter(
