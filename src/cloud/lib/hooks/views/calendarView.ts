@@ -3,11 +3,12 @@ import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { PropType } from '../../../interfaces/db/props'
 import { SerializedView } from '../../../interfaces/db/view'
-import { ViewCalendarData } from '../../views/calendar'
+import { getArrayFromRecord } from '../../utils/array'
+import { CalendarViewProp, ViewCalendarData } from '../../views/calendar'
 import { useCloudApi } from '../useCloudApi'
 
 interface CalendarViewStoreProps {
-  view: SerializedView
+  view: SerializedView<ViewCalendarData>
 }
 
 export type CalendarViewActionsRef = React.MutableRefObject<{
@@ -18,6 +19,13 @@ export type CalendarViewActionsRef = React.MutableRefObject<{
   updateDocDate: (
     doc: SerializedDocWithSupplemental,
     dateRange: Date[]
+  ) => Promise<BulkApiActionRes | undefined>
+  addProperty: (
+    newProp: CalendarViewProp
+  ) => Promise<BulkApiActionRes | undefined>
+  removeProperty: (id: string) => Promise<BulkApiActionRes | undefined>
+  setViewProperties: (
+    props: Record<string, CalendarViewProp>
   ) => Promise<BulkApiActionRes | undefined>
 }>
 
@@ -32,6 +40,48 @@ export function useCalendarView({ view }: CalendarViewStoreProps) {
 
       return updateViewApi(view, {
         data: { ...view.data, watchedProp: newProp },
+      })
+    },
+    [view, updateViewApi]
+  )
+
+  const setViewProperties = useCallback(
+    async (props: Record<string, CalendarViewProp>) => {
+      return updateViewApi(view, {
+        data: { ...view.data, props },
+      })
+    },
+    [view, updateViewApi]
+  )
+
+  const addProperty = useCallback(
+    async (newProp: CalendarViewProp) => {
+      const properties = view.data.props || {}
+      if (
+        getArrayFromRecord(properties).some((val) => val.name === newProp.name)
+      ) {
+        return
+      }
+
+      return updateViewApi(view, {
+        data: { ...view.data, props: { ...properties, [newProp.id]: newProp } },
+      })
+    },
+    [view, updateViewApi]
+  )
+
+  const removeProperty = useCallback(
+    async (id: string) => {
+      const properties = view.data.props || {}
+      if (!getArrayFromRecord(properties).some((val) => val.id === id)) {
+        return
+      }
+
+      const newProps = { ...properties }
+      delete newProps[id]
+
+      return updateViewApi(view, {
+        data: { ...view.data, props: newProps },
       })
     },
     [view, updateViewApi]
@@ -62,14 +112,26 @@ export function useCalendarView({ view }: CalendarViewStoreProps) {
   const actionsRef: CalendarViewActionsRef = useRef({
     updateWatchedProp,
     updateDocDate,
+    addProperty,
+    removeProperty,
+    setViewProperties,
   })
 
   useEffect(() => {
     actionsRef.current = {
       updateWatchedProp,
       updateDocDate,
+      addProperty,
+      removeProperty,
+      setViewProperties,
     }
-  }, [updateWatchedProp, updateDocDate])
+  }, [
+    updateWatchedProp,
+    updateDocDate,
+    addProperty,
+    removeProperty,
+    setViewProperties,
+  ])
 
   return {
     actionsRef,
