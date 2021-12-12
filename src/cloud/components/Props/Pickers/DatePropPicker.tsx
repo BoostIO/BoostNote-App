@@ -105,7 +105,7 @@ const DatePropPicker = ({
           'Add Date'
         )}
       </PropertyValueButton>
-      {date != null && (
+      {date != null && !isReadOnly && (
         <Button
           variant='icon'
           iconPath={mdiClose}
