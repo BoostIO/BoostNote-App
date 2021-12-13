@@ -229,7 +229,10 @@ const TableView = ({
                 ) {
                   return -1
                 } else {
-                  return firstTagTextOfDocA!.localeCompare(firstTagTextOfDocB!)
+                  const result = firstTagTextOfDocA!.localeCompare(
+                    firstTagTextOfDocB!
+                  )
+                  return direction === 'asc' ? result : -result
                 }
               }
             )
