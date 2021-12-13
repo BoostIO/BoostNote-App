@@ -118,15 +118,9 @@ const TableView = ({
         title: getDocTitle(doc, 'untitled'),
       }
     })
-    switch (state.sort?.type) {
+    const sort = state.sort
+    switch (sort?.type) {
       case 'column':
-        const sort = state.sort as {
-          type: 'column'
-          columnType: string
-          columnName: string
-          direction: 'asc' | 'desc'
-        }
-
         const ordered = docs.slice().sort((docA, docB): number => {
           const propA = docA.props[sort.columnName]
           const propB = docB.props[sort.columnName]
@@ -196,16 +190,59 @@ const TableView = ({
         })
 
         return ordered
-      case 'static':
+      case 'static-prop':
       default:
-        switch (state.sort?.sort) {
-          case 'title_az':
-            return sortByAttributeAsc('title', docs)
-          case 'title_za':
-            return sortByAttributeDesc('title', docs)
+        const direction = sort?.direction != null ? sort?.direction : 'asc'
+        switch (sort?.propertyName) {
+          case 'title':
+            return direction === 'asc'
+              ? sortByAttributeAsc('title', docs)
+              : sortByAttributeDesc('title', docs)
+          case 'label':
+            const docFirstTagTupleList = docs.map((doc) => {
+              const tagArray = doc.tags.slice().sort((tagA, tagB) => {
+                return tagA.text.trim().localeCompare(tagB.text.trim())
+              })
+              return [doc, tagArray[0]?.text.trim()] as [
+                SerializedDocWithSupplemental,
+                string | undefined
+              ]
+            })
+            docFirstTagTupleList.sort(
+              ([docA, firstTagTextOfDocA], [docB, firstTagTextOfDocB]) => {
+                const firstTagTextOfDocAIsEmpty =
+                  firstTagTextOfDocA == null || firstTagTextOfDocA.length === 0
+                const firstTagTextOfDocBIsEmpty =
+                  firstTagTextOfDocB == null || firstTagTextOfDocB.length === 0
+
+                if (firstTagTextOfDocAIsEmpty && firstTagTextOfDocBIsEmpty) {
+                  return docA.createdAt.localeCompare(docB.createdAt)
+                } else if (
+                  firstTagTextOfDocAIsEmpty &&
+                  !firstTagTextOfDocBIsEmpty
+                ) {
+                  return 1
+                } else if (
+                  !firstTagTextOfDocAIsEmpty &&
+                  firstTagTextOfDocBIsEmpty
+                ) {
+                  return -1
+                } else {
+                  return firstTagTextOfDocA!.localeCompare(firstTagTextOfDocB!)
+                }
+              }
+            )
+
+            return docFirstTagTupleList.map(([doc]) => doc)
+          case 'update_date':
+            return direction === 'asc'
+              ? sortByAttributeAsc('updatedAt', docs)
+              : sortByAttributeDesc('updatedAt', docs)
           case 'creation_date':
           default:
-            return sortByAttributeDesc('createdAt', docs)
+            return direction === 'asc'
+              ? sortByAttributeAsc('createdAt', docs)
+              : sortByAttributeDesc('createdAt', docs)
         }
     }
   }, [filteredDocs, state.sort])
