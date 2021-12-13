@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import {
   ListPropertySuggestionsRequestBody,
@@ -17,9 +17,7 @@ import {
   isPropCol,
   makeTablePropColId,
 } from '../../../lib/views/table'
-import PropsAddModal, {
-  getPropsAddFormUniqueName,
-} from '../../Props/PropAddModal'
+import PropRegisterModal from '../../Props/PropRegisterModal'
 
 interface TableAddPropertyContextProps {
   view: SerializedView
@@ -37,7 +35,6 @@ const TableAddPropertyContext = ({
   close,
 }: TableAddPropertyContextProps) => {
   const [sending, setSending] = useState<string>()
-  const [columnName, setColumnName] = useState('')
   const { fetchPropertySuggestionsApi } = useCloudApi()
 
   const fetchSuggestions = useCallback(async () => {
@@ -89,7 +86,15 @@ const TableAddPropertyContext = ({
   )
 
   const addNewPropCol = useCallback(
-    (name: string, type: PropType, subType?: PropSubType) => {
+    ({
+      name,
+      type,
+      subType,
+    }: {
+      name: string
+      type: PropType
+      subType?: PropSubType
+    }) => {
       addCol({
         id: makeTablePropColId(name, type, subType),
         name: name,
@@ -102,7 +107,7 @@ const TableAddPropertyContext = ({
   )
 
   const addNewStaticCol = useCallback(
-    (name: string, prop: StaticPropType) => {
+    ({ name, prop }: { name: string; prop: StaticPropType }) => {
       addCol({
         id: makeTablePropColId(name, prop),
         name: name,
@@ -113,34 +118,35 @@ const TableAddPropertyContext = ({
     [addCol, columns]
   )
 
-  const isColumnNameInvalid = useMemo(() => {
-    const value = columnName.trim()
+  const isColumnNameInvalid = useCallback(
+    (columnName: string) => {
+      const value = columnName.trim()
 
-    if (value === '') {
-      return false
-    }
-
-    return Object.values(columns).reduce((acc, val) => {
-      if (value === val.name) {
-        acc = true
+      if (value === '') {
+        return false
       }
-      return acc
-    }, false)
-  }, [columns, columnName])
+
+      return !Object.values(columns).some((prop) => prop.name === value)
+    },
+    [columns]
+  )
 
   return (
-    <PropsAddModal
-      columnName={columnName}
-      setColumnName={setColumnName}
+    <PropRegisterModal
+      registerProp={addNewPropCol}
+      registerStaticProp={addNewStaticCol}
       fetchPropertySuggestions={fetchSuggestions}
-      isColumnNameInvalid={isColumnNameInvalid}
-      allocatedNames={Object.values(columns).map((col) => col.name)}
-      addNewStaticCol={addNewStaticCol}
-      addNewPropCol={addNewPropCol}
-      sending={sending}
-      showDocPageForm={false}
+      isNameValid={isColumnNameInvalid}
     />
   )
+}
+
+function getPropsAddFormUniqueName(
+  name: string,
+  type: string,
+  subType?: string
+) {
+  return `${name}-${type}-${subType || ''}`
 }
 
 export default TableAddPropertyContext

@@ -68,18 +68,6 @@ const PropRegisterForm = ({
     [registerProp]
   )
 
-  const onStaticPropCreate = useCallback(
-    (prop: StaticPropBody) => {
-      if (registerStaticProp == null) {
-        return undefined
-      }
-
-      setSending(true)
-      return registerStaticProp(prop)
-    },
-    [registerStaticProp]
-  )
-
   return (
     <>
       <MetadataContainerRow
@@ -118,7 +106,14 @@ const PropRegisterForm = ({
             ) : (
               <PropRegisterSuggestionsList
                 onPropCreate={onPropCreate}
-                onStaticPropCreate={onStaticPropCreate}
+                onStaticPropCreate={
+                  registerStaticProp != null
+                    ? (prop) => {
+                        setSending(true)
+                        return registerStaticProp(prop)
+                      }
+                    : undefined
+                }
                 isNameValid={isNameValid}
                 suggestions={suggestions}
                 suggestionsHeader={suggestionsHeader}

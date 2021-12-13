@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { ListPropertySuggestionsResponseBody } from '../../api/teams/props'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import {
@@ -8,7 +8,7 @@ import {
 } from '../../interfaces/db/props'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import { getInitialPropDataOfPropType } from '../../lib/props'
-import PropsAddModal, { getPropsAddFormUniqueName } from './PropAddModal'
+import PropRegisterModal from './PropRegisterModal'
 
 interface PropSelectorModalProps {
   doc: SerializedDocWithSupplemental
@@ -21,10 +21,6 @@ const PropSelectorModal = ({
   doc,
   addProp,
 }: PropSelectorModalProps) => {
-  const [propName, setPropName] = useState('')
-  const disallowedNamesSet = useMemo(() => new Set(disallowedNames), [
-    disallowedNames,
-  ])
   const [sending, setSending] = useState<string>()
   const { fetchPropertySuggestionsApi } = useCloudApi()
 
@@ -41,7 +37,15 @@ const PropSelectorModal = ({
   }, [fetchPropertySuggestionsApi, doc.teamId, doc.id])
 
   const addNewProp = useCallback(
-    (name: string, type: PropType, subType?: PropSubType) => {
+    ({
+      name,
+      type,
+      subType,
+    }: {
+      name: string
+      type: PropType
+      subType?: PropSubType
+    }) => {
       if (sending != null) {
         return
       }
@@ -52,34 +56,34 @@ const PropSelectorModal = ({
     [addProp, sending]
   )
 
-  const isColumnNameInvalid = useMemo(() => {
-    const value = propName.trim()
-
-    if (value === '') {
-      return false
-    }
-
-    return disallowedNames.reduce((acc, val) => {
-      if (value === val) {
-        acc = true
+  const isNameValid = useCallback(
+    (propName: string) => {
+      const value = propName.trim()
+      if (value === '') {
+        return false
       }
-      return acc
-    }, false)
-  }, [disallowedNames, propName])
+
+      return !disallowedNames.some((prop) => prop === value)
+    },
+    [disallowedNames]
+  )
 
   return (
-    <PropsAddModal
-      allocatedNames={Array.from(disallowedNamesSet)}
-      columnName={propName}
-      setColumnName={setPropName}
-      showDocPageForm={true}
-      sending={sending}
+    <PropRegisterModal
+      suggestionsHeader='From Parent Folder'
+      registerProp={addNewProp}
       fetchPropertySuggestions={fetchSuggestions}
-      addNewPropCol={addNewProp}
-      isColumnNameInvalid={isColumnNameInvalid}
-      addNewStaticCol={undefined}
+      isNameValid={isNameValid}
     />
   )
+}
+
+function getPropsAddFormUniqueName(
+  name: string,
+  type: string,
+  subType?: string
+) {
+  return `${name}-${type}-${subType || ''}`
 }
 
 export default PropSelectorModal

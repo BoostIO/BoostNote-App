@@ -44,7 +44,7 @@ const PropRegisterSuggestionsList = ({
 }: PropRegisterSuggestionsListProps) => {
   const suggestionsBySection = useMemo(() => {
     let staticSuggestions: any[] =
-      onStaticPropCreate != null
+      onStaticPropCreate == null
         ? getDefaultColumnSuggestionsPerType()
         : [
             ...getDefaultColumnSuggestionsPerType(),
@@ -112,28 +112,35 @@ const PropRegisterSuggestionsList = ({
     <>
       {suggestionsBySection.map(([sectionName, sectionSuggestions], j) => (
         <>
-          <MetadataContainerRow
-            row={{
-              type: 'header',
-              content: sectionName,
-            }}
-          />
-          {sectionSuggestions.map((propSuggestion, i) => (
-            <MetadataContainerRow
-              key={propSuggestion.name}
-              row={{
-                type: 'button',
-                props: {
-                  label: propSuggestion.name,
-                  iconPath: propSuggestion.icon,
-                  disabled,
-                  onClick: () => onSelect(propSuggestion.value),
-                  id: `${sectionName}-${i}`,
-                },
-              }}
-            />
-          ))}
-          {j !== suggestionsBySection.length - 1 && <MetadataContainerBreak />}
+          {sectionSuggestions.length > 0 && (
+            <>
+              <MetadataContainerRow
+                row={{
+                  type: 'header',
+                  content: sectionName,
+                }}
+              />
+              {sectionSuggestions.map((propSuggestion, i) => (
+                <MetadataContainerRow
+                  key={propSuggestion.name}
+                  row={{
+                    type: 'button',
+                    props: {
+                      label: propSuggestion.name,
+                      iconPath: propSuggestion.icon,
+                      disabled,
+                      onClick: () => onSelect(propSuggestion.value),
+                      id: `${sectionName}-${i}`,
+                    },
+                  }}
+                />
+              ))}
+              {j !== suggestionsBySection.length - 1 &&
+                suggestionsBySection[j + 1][1].length > 0 && (
+                  <MetadataContainerBreak />
+                )}
+            </>
+          )}
         </>
       ))}
     </>

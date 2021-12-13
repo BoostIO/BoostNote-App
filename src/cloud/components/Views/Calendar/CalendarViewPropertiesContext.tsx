@@ -140,6 +140,7 @@ const CalendarViewPropertiesContext = ({
       <PropRegisterModal
         goBack={() => setFormState('list')}
         registerProp={addPropertyCallback}
+        registerStaticProp={addPropertyCallback}
         fetchPropertySuggestions={fetchSuggestions}
         isNameValid={isNameValid}
       />
