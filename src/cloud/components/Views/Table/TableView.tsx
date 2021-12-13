@@ -44,6 +44,7 @@ import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import Button from '../../../../design/components/atoms/Button'
 import TableViewPropertiesContext from './TableViewPropertiesContext'
 import { isArray } from 'lodash'
+import TitleColumnSettingsContext from './TitleColumnSettingsContext'
 
 type TableViewProps = {
   view: SerializedView<ViewTableData>
@@ -331,6 +332,20 @@ const TableView = ({
               id: 'doc-title',
               children: <Flexbox style={{ height: '100%' }}>Documents</Flexbox>,
               width: 300,
+              onClick: (ev: any) =>
+                openContextModal(
+                  ev,
+                  <TitleColumnSettingsContext
+                    updateTableSort={actionsRef.current.updateTableSort}
+                    close={closeAllModals}
+                  />,
+                  {
+                    width: 250,
+                    hideBackground: true,
+                    removePadding: true,
+                    alignment: 'bottom-left',
+                  }
+                ),
             },
             ...orderedColumns.map((col) => {
               const icon = getIconPathOfPropType(col.id.split(':').pop() as any)
