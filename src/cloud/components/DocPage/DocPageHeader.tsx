@@ -23,7 +23,7 @@ import Flexbox from '../../../design/components/atoms/Flexbox'
 import PropPicker from '../Props/PropPicker'
 import { useProps } from '../../lib/hooks/props'
 import { useModal } from '../../../design/lib/stores/modal'
-import PropSelectorModal from '../Props/PropSelectorModal'
+import DocPagePropsAddContext from '../Props/DocPagePropsAddContext'
 import DocTagsList from './DocTagsList'
 import { getIconPathOfPropType } from '../../lib/props'
 import PropConfig from '../Props/PropConfig'
@@ -192,7 +192,7 @@ const DocPageHeader = ({
                     onClick={(event) => {
                       openContextModal(
                         event,
-                        <PropSelectorModal
+                        <DocPagePropsAddContext
                           doc={doc}
                           disallowedNames={existingPropNames}
                           addProp={(propName, propData) => {

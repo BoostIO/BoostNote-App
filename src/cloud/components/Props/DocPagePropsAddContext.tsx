@@ -10,17 +10,17 @@ import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import { getInitialPropDataOfPropType } from '../../lib/props'
 import PropRegisterModal from './PropRegisterModal'
 
-interface PropSelectorModalProps {
+interface DocPagePropsAddContextProps {
   doc: SerializedDocWithSupplemental
   disallowedNames?: string[]
   addProp: (propName: string, propData: SerializedPropData) => void
 }
 
-const PropSelectorModal = ({
+const DocPagePropsAddContext = ({
   disallowedNames = [],
   doc,
   addProp,
-}: PropSelectorModalProps) => {
+}: DocPagePropsAddContextProps) => {
   const [sending, setSending] = useState<string>()
   const { fetchPropertySuggestionsApi } = useCloudApi()
 
@@ -86,4 +86,4 @@ function getPropsAddFormUniqueName(
   return `${name}-${type}-${subType || ''}`
 }
 
-export default PropSelectorModal
+export default DocPagePropsAddContext
