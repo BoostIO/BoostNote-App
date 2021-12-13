@@ -158,26 +158,39 @@ const TableView = ({
           } else if (!propAIsInvalid && propBIsInvalid) {
             return -1
           } else {
-            switch (sort.columnType) {
-              case 'number': {
-                const compareResult = propA.data - propB.data
-                return sort.direction === 'asc' ? compareResult : -compareResult
-              }
-              case 'status': {
-                const compareResult = propA.data.name
-                  .trim()
-                  .localeCompare(propB.data.name)
-                return sort.direction === 'asc' ? compareResult : -compareResult
-              }
-              case 'string':
-              default: {
-                const compareResult = propA.data
-                  .toString()
-                  .trim()
-                  .localeCompare(propB.data.toString().trim())
+            try {
+              switch (sort.columnType) {
+                case 'number': {
+                  const compareResult = propA.data - propB.data
+                  return sort.direction === 'asc'
+                    ? compareResult
+                    : -compareResult
+                }
+                case 'status': {
+                  const compareResult = propA.data.name
+                    .trim()
+                    .localeCompare(propB.data.name)
+                  return sort.direction === 'asc'
+                    ? compareResult
+                    : -compareResult
+                }
+                case 'string':
+                default: {
+                  const compareResult = propA.data
+                    .toString()
+                    .trim()
+                    .localeCompare(propB.data.toString().trim())
 
-                return sort.direction === 'asc' ? compareResult : -compareResult
+                  return sort.direction === 'asc'
+                    ? compareResult
+                    : -compareResult
+                }
               }
+            } catch (error) {
+              console.warn('Failed to sort', sort, propA, propB)
+              console.warn(error)
+
+              return docA.createdAt.localeCompare(docB.createdAt)
             }
           }
         })
