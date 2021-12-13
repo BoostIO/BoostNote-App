@@ -1,11 +1,15 @@
 import {
-  mdiArrowDown,
   mdiArrowLeft,
   mdiArrowRight,
-  mdiArrowUp,
   mdiEyeOffOutline,
+  mdiSortAlphabeticalAscending,
+  mdiSortAlphabeticalDescending,
+  mdiSortCalendarAscending,
+  mdiSortCalendarDescending,
+  mdiSortNumericAscending,
+  mdiSortNumericDescending,
 } from '@mdi/js'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerBreak from '../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
@@ -33,6 +37,11 @@ const ColumnSettingsContext = ({
 }: ColumnSettingsContextProps) => {
   const [sending, setSending] = useState<string>()
 
+  const [columnName, columnType] = useMemo(() => {
+    const [, columnName, columnType] = column.id.split(':')
+    return [columnName, columnType]
+  }, [column.id])
+
   const action = useCallback(
     async (
       type: 'sort-asc' | 'sort-desc' | 'move-left' | 'move-right' | 'delete'
@@ -42,7 +51,6 @@ const ColumnSettingsContext = ({
       }
 
       setSending(type)
-      const [, columnName, columnType] = column.id.split(':')
 
       switch (type) {
         case 'sort-asc':
@@ -104,7 +112,16 @@ const ColumnSettingsContext = ({
       setSending(undefined)
       close()
     },
-    [sending, close, updateTableSort, column, moveColumn, removeColumn]
+    [
+      sending,
+      close,
+      column,
+      moveColumn,
+      removeColumn,
+      updateTableSort,
+      columnType,
+      columnName,
+    ]
   )
 
   return (
@@ -113,7 +130,14 @@ const ColumnSettingsContext = ({
         row={{
           type: 'button',
           props: {
-            iconPath: mdiArrowUp,
+            iconPath:
+              columnType === 'number'
+                ? mdiSortNumericAscending
+                : columnType === 'date' ||
+                  columnType === 'creation_date' ||
+                  columnType === 'update_date'
+                ? mdiSortCalendarAscending
+                : mdiSortAlphabeticalAscending,
             label: 'Sort Ascending',
             spinning: sending === 'sort-asc',
             onClick: () => action('sort-asc'),
@@ -125,7 +149,14 @@ const ColumnSettingsContext = ({
         row={{
           type: 'button',
           props: {
-            iconPath: mdiArrowDown,
+            iconPath:
+              columnType === 'number'
+                ? mdiSortNumericDescending
+                : columnType === 'date' ||
+                  columnType === 'creation_date' ||
+                  columnType === 'update_date'
+                ? mdiSortCalendarDescending
+                : mdiSortAlphabeticalDescending,
             label: 'Sort Decending',
             spinning: sending === 'sort-desc',
             onClick: () => action('sort-desc'),
