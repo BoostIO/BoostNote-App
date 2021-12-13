@@ -24,6 +24,7 @@ export type ViewTableSortingOptions =
     }
   | {
       type: 'column'
+      columnType: string
       columnName: string
       direction: 'asc' | 'desc'
     }

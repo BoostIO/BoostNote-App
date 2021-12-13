@@ -43,6 +43,7 @@ import { useI18n } from '../../../lib/hooks/useI18n'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import Button from '../../../../design/components/atoms/Button'
 import TableViewPropertiesContext from './TableViewPropertiesContext'
+import { isArray } from 'lodash'
 
 type TableViewProps = {
   view: SerializedView<ViewTableData>
@@ -121,50 +122,66 @@ const TableView = ({
       case 'column':
         const sort = state.sort as {
           type: 'column'
+          columnType: string
           columnName: string
           direction: 'asc' | 'desc'
         }
+
         const ordered = docs.slice().sort((docA, docB): number => {
-          let propA = docA.props[sort.columnName]?.data
-          let propB = docB.props[sort.columnName]?.data
+          const propA = docA.props[sort.columnName]
+          const propB = docB.props[sort.columnName]
 
-          if (
+          const propAIsEmpty =
             propA == null ||
-            (typeof propA === 'string' && propA.trim().length === 0)
-          ) {
-            propA = null
-          }
-          if (
-            propB == null ||
-            (typeof propB === 'string' && propB.trim().length === 0)
-          ) {
-            propB = null
-          }
+            propA.data == null ||
+            (typeof propA.data === 'string' && propA.data.length === 0) ||
+            (isArray(propA) && propA.length === 0)
+          const propAIsInvalid = propAIsEmpty || propA.type !== sort.columnType
 
-          if (propA != null && propB != null) {
-            if (typeof propA === 'number' && typeof propB === 'number') {
-              return propA - propB
-            }
-            if (typeof propA === 'string' && typeof propB === 'number') {
+          const propBIsEmpty =
+            propB == null ||
+            propB.data == null ||
+            (typeof propB.data === 'string' && propB.data.length === 0) ||
+            (isArray(propB) && propB.length === 0)
+          const propBIsInvalid = propBIsEmpty || propB.type !== sort.columnType
+
+          if (propAIsInvalid && propBIsInvalid) {
+            if (propAIsEmpty && !propBIsEmpty) {
               return 1
-            } else if (typeof propA === 'number' && typeof propB === 'string') {
+            } else if (!propAIsEmpty && propBIsEmpty) {
               return -1
             }
 
-            return propA
-              .toString()
-              .trim()
-              .localeCompare(propB.toString().trim())
-          } else if (propA == null && propB != null) {
+            return docA.createdAt.localeCompare(docB.createdAt)
+          } else if (propAIsInvalid && !propBIsInvalid) {
             return 1
-          } else if (propA != null && propB == null) {
+          } else if (!propAIsInvalid && propBIsInvalid) {
             return -1
+          } else {
+            switch (sort.columnType) {
+              case 'number': {
+                const compareResult = propA.data - propB.data
+                return sort.direction === 'asc' ? compareResult : -compareResult
+              }
+              case 'status': {
+                const compareResult = propA.data.name
+                  .trim()
+                  .localeCompare(propB.data.name)
+                return sort.direction === 'asc' ? compareResult : -compareResult
+              }
+              case 'string':
+              default: {
+                const compareResult = propA.data
+                  .toString()
+                  .trim()
+                  .localeCompare(propB.data.toString().trim())
+
+                return sort.direction === 'asc' ? compareResult : -compareResult
+              }
+            }
           }
-          return docA.createdAt.localeCompare(docB.createdAt)
         })
-        if (sort.direction === 'desc') {
-          ordered.reverse()
-        }
+
         return ordered
       case 'static':
       default:
