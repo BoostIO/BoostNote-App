@@ -42,19 +42,22 @@ const ColumnSettingsContext = ({
       }
 
       setSending(type)
+      const [, columnName, columnType] = column.id.split(':')
 
       switch (type) {
         case 'sort-asc':
           await updateTableSort({
             type: 'column',
-            columnName: column.name,
+            columnType,
+            columnName,
             direction: 'asc',
           })
           break
         case 'sort-desc':
           await updateTableSort({
             type: 'column',
-            columnName: column.name,
+            columnType,
+            columnName,
             direction: 'desc',
           })
           break
@@ -78,36 +81,31 @@ const ColumnSettingsContext = ({
 
   return (
     <MetadataContainer>
-      {(column.id.split(':')[2] === 'string' ||
-        column.id.split(':')[2] === 'number') && (
-        <>
-          <MetadataContainerRow
-            row={{
-              type: 'button',
-              props: {
-                iconPath: mdiArrowUp,
-                label: 'Sort Ascending',
-                spinning: sending === 'sort-asc',
-                onClick: () => action('sort-asc'),
-                disabled: sending != null,
-              },
-            }}
-          />
-          <MetadataContainerRow
-            row={{
-              type: 'button',
-              props: {
-                iconPath: mdiArrowDown,
-                label: 'Sort Decending',
-                spinning: sending === 'sort-desc',
-                onClick: () => action('sort-desc'),
-                disabled: sending != null,
-              },
-            }}
-          />
-          <MetadataContainerBreak />
-        </>
-      )}
+      <MetadataContainerRow
+        row={{
+          type: 'button',
+          props: {
+            iconPath: mdiArrowUp,
+            label: 'Sort Ascending',
+            spinning: sending === 'sort-asc',
+            onClick: () => action('sort-asc'),
+            disabled: sending != null,
+          },
+        }}
+      />
+      <MetadataContainerRow
+        row={{
+          type: 'button',
+          props: {
+            iconPath: mdiArrowDown,
+            label: 'Sort Decending',
+            spinning: sending === 'sort-desc',
+            onClick: () => action('sort-desc'),
+            disabled: sending != null,
+          },
+        }}
+      />
+      <MetadataContainerBreak />
       <MetadataContainerRow
         row={{
           type: 'button',
