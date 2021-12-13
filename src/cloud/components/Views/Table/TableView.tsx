@@ -5,16 +5,16 @@ import { SerializedView } from '../../../interfaces/db/view'
 import {
   isStaticPropCol,
   sortTableViewColumns,
+  ViewTableColumnSortingOption,
   ViewTableData,
+  ViewTableSortingOptions,
+  ViewTableStaticPropSortingoption,
+  ViewTableStaticPropSortingoption as ViewTableStaticPropSortingOption,
 } from '../../../lib/views/table'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { useTableView } from '../../../lib/hooks/views/tableView'
 import { buildSmartViewQueryCheck } from '../../../lib/smartViews'
 import { docToDataTransferItem, getDocTitle } from '../../../lib/utils/patterns'
-import {
-  sortByAttributeAsc,
-  sortByAttributeDesc,
-} from '../../../../design/lib/utils/array'
 import { useModal } from '../../../../design/lib/stores/modal'
 import { useRouter } from '../../../lib/router'
 import { useCloudDnd } from '../../../lib/hooks/sidebar/useCloudDnd'
@@ -46,6 +46,9 @@ import TableViewPropertiesContext from './TableViewPropertiesContext'
 import { isArray } from 'lodash'
 import TitleColumnSettingsContext from './TitleColumnSettingsContext'
 import { usePage } from '../../../lib/stores/pageStore'
+import { isValid as isValidDate } from 'date-fns'
+import { SerializedUserTeamPermissions } from '../../../interfaces/db/userTeamPermissions'
+import { SerializedStatus } from '../../../interfaces/db/status'
 
 type TableViewProps = {
   view: SerializedView<ViewTableData>
@@ -115,164 +118,288 @@ const TableView = ({
   }, [columns])
 
   const orderedDocs = useMemo(() => {
-    const docs = filteredDocs.map((doc) => {
-      return {
-        ...doc,
-        title: getDocTitle(doc, 'untitled'),
-      }
+    const sort = normalizeSort(state.sort)
+    const comparator = selectComparator(sort)
+
+    const comparableList = filteredDocs.map((doc) => {
+      return mapComparableList(sort, doc)
     })
-    const sort = state.sort
-    switch (sort?.type) {
-      case 'column':
-        const ordered = docs.slice().sort((docA, docB): number => {
-          const propA = docA.props[sort.columnName]
-          const propB = docB.props[sort.columnName]
-          const propAData = isArray(propA?.data) ? propA.data[0] : propA?.data
-          const propBData = isArray(propB?.data) ? propB.data[0] : propB?.data
 
-          const propAIsEmpty =
-            propA == null ||
-            propAData == null ||
-            (typeof propAData === 'string' && propAData.length === 0) ||
-            (isArray(propA) && propA.length === 0)
-          const propAIsInvalid = propAIsEmpty || propA.type !== sort.columnType
+    return sortByComparator(comparableList, comparator)
 
-          const propBIsEmpty =
-            propB == null ||
-            propBData == null ||
-            (typeof propBData === 'string' && propBData.length === 0) ||
-            (isArray(propB) && propB.length === 0)
-          const propBIsInvalid = propBIsEmpty || propB.type !== sort.columnType
+    interface ComprableItem {
+      doc: SerializedDocWithSupplemental
+      compareValue: string | number | Date | null // null means invalid
+    }
 
-          if (propAIsInvalid && propBIsInvalid) {
-            if (propAIsEmpty && !propBIsEmpty) {
-              return 1
-            } else if (!propAIsEmpty && propBIsEmpty) {
-              return -1
-            }
+    function getNullIfEmptyString(value: string) {
+      const trimmed = value.trim()
+      return trimmed.length > 0 ? trimmed : null
+    }
 
-            return docA.createdAt.localeCompare(docB.createdAt)
-          } else if (propAIsInvalid && !propBIsInvalid) {
-            return 1
-          } else if (!propAIsInvalid && propBIsInvalid) {
-            return -1
-          } else {
-            try {
-              switch (sort.columnType) {
-                case 'number': {
-                  const compareResult = propAData - propBData
-                  return sort.direction === 'asc'
-                    ? compareResult
-                    : -compareResult
-                }
-                case 'status': {
-                  const compareResult = propAData.name
-                    .trim()
-                    .localeCompare(propBData.name)
-                  return sort.direction === 'asc'
-                    ? compareResult
-                    : -compareResult
-                }
-                case 'user':
-                  const userAName =
-                    permissions.find(
-                      (permission) => permission.id === propAData.id
-                    )?.user.displayName || ''
-                  const userBName =
-                    permissions.find(
-                      (permission) => permission.id === propBData.id
-                    )?.user.displayName || ''
-                  const compareResult = userAName.localeCompare(userBName)
-
-                  return sort.direction === 'asc'
-                    ? compareResult
-                    : -compareResult
-                case 'string':
-                default: {
-                  const compareResult = propAData
-                    .toString()
-                    .trim()
-                    .localeCompare(propBData.toString().trim())
-
-                  return sort.direction === 'asc'
-                    ? compareResult
-                    : -compareResult
-                }
+    function mapComparableList(
+      sort: ViewTableSortingOptions,
+      doc: SerializedDocWithSupplemental
+    ): ComprableItem {
+      switch (sort.type) {
+        case 'static-prop':
+          switch (sort.propertyName) {
+            case 'title':
+              return {
+                doc,
+                compareValue: getNullIfEmptyString(doc.title),
               }
-            } catch (error) {
-              console.warn('Failed to sort', sort, propA, propB)
-              console.warn(error)
+            case 'label':
+              const tags = doc.tags.slice().sort((tagA, tagB) => {
+                const tagCompareResult = tagA.text.localeCompare(tagB.text)
+                return sort.direction === 'asc'
+                  ? tagCompareResult
+                  : -tagCompareResult
+              })
 
-              return docA.createdAt.localeCompare(docB.createdAt)
+              return {
+                doc,
+                compareValue:
+                  tags[0] != null ? getNullIfEmptyString(tags[0].text) : null,
+              }
+            case 'update_date':
+              const updatedAt = new Date(doc.updatedAt)
+              return {
+                doc,
+                compareValue: isValidDate(updatedAt) ? updatedAt : null,
+              }
+            default:
+            case 'creation_date':
+              const createdAt = new Date(doc.createdAt)
+              return {
+                doc,
+                compareValue: isValidDate(createdAt) ? createdAt : null,
+              }
+          }
+        case 'column':
+          const docProp = doc.props[sort.columnName]
+          if (docProp == null) {
+            return {
+              doc,
+              compareValue: null,
             }
           }
-        })
-
-        return ordered
-      case 'static-prop':
-      default:
-        const direction = sort?.direction != null ? sort?.direction : 'asc'
-        switch (sort?.propertyName) {
-          case 'title':
-            return direction === 'asc'
-              ? sortByAttributeAsc('title', docs)
-              : sortByAttributeDesc('title', docs)
-          case 'label':
-            const docFirstTagTupleList = docs.map((doc) => {
-              const tagArray = doc.tags.slice().sort((tagA, tagB) => {
-                const compareResult = tagA.text
-                  .trim()
-                  .localeCompare(tagB.text.trim())
-
-                return direction === 'asc' ? compareResult : -compareResult
-              })
-              return [doc, tagArray[0]?.text.trim()] as [
-                SerializedDocWithSupplemental,
-                string | undefined
-              ]
-            })
-            docFirstTagTupleList.sort(
-              ([docA, firstTagTextOfDocA], [docB, firstTagTextOfDocB]) => {
-                const firstTagTextOfDocAIsEmpty =
-                  firstTagTextOfDocA == null || firstTagTextOfDocA.length === 0
-                const firstTagTextOfDocBIsEmpty =
-                  firstTagTextOfDocB == null || firstTagTextOfDocB.length === 0
-
-                if (firstTagTextOfDocAIsEmpty && firstTagTextOfDocBIsEmpty) {
-                  return docA.createdAt.localeCompare(docB.createdAt)
-                } else if (
-                  firstTagTextOfDocAIsEmpty &&
-                  !firstTagTextOfDocBIsEmpty
-                ) {
-                  return 1
-                } else if (
-                  !firstTagTextOfDocAIsEmpty &&
-                  firstTagTextOfDocBIsEmpty
-                ) {
-                  return -1
-                } else {
-                  const result = firstTagTextOfDocA!.localeCompare(
-                    firstTagTextOfDocB!
-                  )
-                  if (result === 0) {
-                    return docA.tags.length - docB.tags.length
-                  }
-                  return direction === 'asc' ? result : -result
+          switch (sort.columnType) {
+            case 'string': {
+              const compareValue = isArray(docProp.data)
+                ? docProp.data[0]
+                : docProp.data
+              return {
+                doc,
+                compareValue:
+                  typeof compareValue === 'string'
+                    ? getNullIfEmptyString(compareValue)
+                    : null,
+              }
+            }
+            case 'date': {
+              const rawCompareValue = isArray(docProp.data)
+                ? docProp.data[0]
+                : docProp.data
+              if (rawCompareValue == null) {
+                return {
+                  doc,
+                  compareValue: null,
                 }
               }
-            )
+              const compareValue = new Date(rawCompareValue)
+              return {
+                doc,
+                compareValue: isValidDate(compareValue) ? compareValue : null,
+              }
+            }
+            case 'json':
+              return {
+                doc,
+                compareValue:
+                  docProp.data != null ? JSON.stringify(docProp.data) : null,
+              }
+            case 'number': {
+              const compareValue = isArray(docProp.data)
+                ? docProp.data[0]
+                : docProp.data
+              return {
+                doc,
+                compareValue:
+                  typeof compareValue === 'number' ? compareValue : null,
+              }
+            }
+            case 'user':
+              let compareValue = null
+              if (isArray(docProp.data)) {
+                const validPermissions = docProp.data
+                  .map((assignedPermission) => {
+                    return permissions.find(
+                      (permission) =>
+                        permission.userId ===
+                        (assignedPermission as any)?.userId
+                    )
+                  })
+                  .filter(
+                    (permission): permission is SerializedUserTeamPermissions =>
+                      permission != null
+                  )
+                validPermissions.sort((permissionA, permissionB) => {
+                  const userADisplayName = permissionA.user.displayName.trim()
+                  const userBDisplayName = permissionB.user.displayName.trim()
+                  return userADisplayName.localeCompare(userBDisplayName)
+                })
+                if (sort.direction === 'desc') {
+                  validPermissions.reverse()
+                }
+                compareValue =
+                  validPermissions[0] != null
+                    ? validPermissions[0].user.displayName
+                    : null
+              } else {
+                const targetPermission = permissions.find(
+                  (permission) => permission.userId === docProp.data?.userId
+                )
 
-            return docFirstTagTupleList.map(([doc]) => doc)
-          case 'update_date':
-            return direction === 'asc'
-              ? sortByAttributeAsc('updatedAt', docs)
-              : sortByAttributeDesc('updatedAt', docs)
-          case 'creation_date':
-          default:
-            return direction === 'asc'
-              ? sortByAttributeAsc('createdAt', docs)
-              : sortByAttributeDesc('createdAt', docs)
+                compareValue =
+                  targetPermission != null
+                    ? targetPermission.user.displayName
+                    : null
+              }
+
+              return {
+                doc,
+                compareValue,
+              }
+            case 'status': {
+              let compareValue = null
+              if (isArray(docProp.data)) {
+                const statusNames = docProp.data
+                  .map((mayBeStatus) => {
+                    return (mayBeStatus as SerializedStatus)?.name
+                  })
+                  .filter((name): name is string => typeof name === 'string')
+
+                statusNames.sort((nameA, nameB) => {
+                  return nameA.trim().localeCompare(nameB.trim())
+                })
+
+                if (sort.direction === 'desc') {
+                  statusNames.reverse()
+                }
+
+                compareValue =
+                  statusNames[0] != null
+                    ? getNullIfEmptyString(statusNames[0])
+                    : null
+              } else {
+                compareValue =
+                  typeof docProp.data?.name === 'string'
+                    ? getNullIfEmptyString(docProp.data?.name)
+                    : null
+              }
+
+              return {
+                doc,
+                compareValue,
+              }
+            }
+          }
+
+          const createdAt = new Date(doc.createdAt)
+          return {
+            doc,
+            compareValue: isValidDate(createdAt) ? createdAt : null,
+          }
+      }
+    }
+
+    /**
+     * Valid data(ASC/DESC) -> Invalid data(sorted by createdAt / Always ASC)
+     */
+    function sortByComparator(
+      list: ComprableItem[],
+      comparator: (a: any, b: any) => number
+    ): SerializedDocWithSupplemental[] {
+      return list
+        .slice()
+        .sort((a, b) => {
+          if (a.compareValue == null && b.compareValue == null) {
+            return a.doc.createdAt.localeCompare(b.doc.createdAt)
+          } else if (a.compareValue == null && b.compareValue != null) {
+            return 1
+          } else if (a.compareValue != null && b.compareValue == null) {
+            return -1
+          }
+          return comparator(a.compareValue, b.compareValue)
+        })
+        .map((comparableItem) => comparableItem.doc)
+    }
+
+    function selectComparator(
+      sort: ViewTableSortingOptions
+    ): (a: any, b: any) => number {
+      if (
+        (sort.type === 'column' &&
+          (sort.columnType === 'number' || sort.columnType === 'date')) ||
+        (sort.type === 'static-prop' &&
+          (sort.propertyName === 'creation_date' ||
+            sort.propertyName === 'update_date'))
+      ) {
+        return (a: any, b: any) => (sort.direction === 'desc' ? b - a : a - b)
+      } else {
+        return (a: string, b: string) => {
+          const compareResult = a.localeCompare(b)
+
+          return sort.direction === 'desc' ? -compareResult : compareResult
         }
+      }
+    }
+
+    function normalizeSort(sort: unknown) {
+      const defaultSort: ViewTableStaticPropSortingOption = {
+        type: 'static-prop',
+        propertyName: 'creation_date',
+        direction: 'asc',
+      }
+
+      if (sort == null) {
+        return defaultSort
+      }
+      switch ((sort as ViewTableSortingOptions).type) {
+        case 'static-prop':
+          const staticPropSort = sort as ViewTableStaticPropSortingOption
+          switch (staticPropSort.propertyName) {
+            case 'title':
+            case 'label':
+            case 'creation_date':
+            case 'update_date':
+              const direction =
+                staticPropSort.direction !== 'desc' ? 'asc' : 'desc'
+
+              return {
+                type: 'static-prop',
+                propertyName: staticPropSort.propertyName,
+                direction,
+              } as ViewTableStaticPropSortingoption
+            default:
+              return defaultSort
+          }
+        case 'column':
+          const columnSort = sort as ViewTableColumnSortingOption
+          const direction = columnSort.direction !== 'desc' ? 'asc' : 'desc'
+          if (columnSort.columnType == null || columnSort.columnName == null) {
+            return defaultSort
+          }
+          return {
+            type: 'column',
+            direction,
+            columnName: columnSort.columnName,
+            columnType: columnSort.columnType,
+          } as ViewTableColumnSortingOption
+        default:
+          return defaultSort
+      }
     }
   }, [filteredDocs, permissions, state.sort])
 
