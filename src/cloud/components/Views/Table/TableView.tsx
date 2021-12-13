@@ -45,6 +45,7 @@ import Button from '../../../../design/components/atoms/Button'
 import TableViewPropertiesContext from './TableViewPropertiesContext'
 import { isArray } from 'lodash'
 import TitleColumnSettingsContext from './TitleColumnSettingsContext'
+import { usePage } from '../../../lib/stores/pageStore'
 
 type TableViewProps = {
   view: SerializedView<ViewTableData>
@@ -83,6 +84,7 @@ const TableView = ({
   const { createDoc } = useCloudApi()
   const { openContextModal, closeAllModals } = useModal()
   const { push } = useRouter()
+  const { permissions = [] } = usePage()
 
   const {
     dropInDocOrFolder,
@@ -125,18 +127,20 @@ const TableView = ({
         const ordered = docs.slice().sort((docA, docB): number => {
           const propA = docA.props[sort.columnName]
           const propB = docB.props[sort.columnName]
+          const propAData = isArray(propA?.data) ? propA.data[0] : propA?.data
+          const propBData = isArray(propB?.data) ? propB.data[0] : propB?.data
 
           const propAIsEmpty =
             propA == null ||
-            propA.data == null ||
-            (typeof propA.data === 'string' && propA.data.length === 0) ||
+            propAData == null ||
+            (typeof propAData === 'string' && propAData.length === 0) ||
             (isArray(propA) && propA.length === 0)
           const propAIsInvalid = propAIsEmpty || propA.type !== sort.columnType
 
           const propBIsEmpty =
             propB == null ||
-            propB.data == null ||
-            (typeof propB.data === 'string' && propB.data.length === 0) ||
+            propBData == null ||
+            (typeof propBData === 'string' && propBData.length === 0) ||
             (isArray(propB) && propB.length === 0)
           const propBIsInvalid = propBIsEmpty || propB.type !== sort.columnType
 
@@ -156,25 +160,39 @@ const TableView = ({
             try {
               switch (sort.columnType) {
                 case 'number': {
-                  const compareResult = propA.data - propB.data
+                  const compareResult = propAData - propBData
                   return sort.direction === 'asc'
                     ? compareResult
                     : -compareResult
                 }
                 case 'status': {
-                  const compareResult = propA.data.name
+                  const compareResult = propAData.name
                     .trim()
-                    .localeCompare(propB.data.name)
+                    .localeCompare(propBData.name)
                   return sort.direction === 'asc'
                     ? compareResult
                     : -compareResult
                 }
+                case 'user':
+                  const userAName =
+                    permissions.find(
+                      (permission) => permission.id === propAData.id
+                    )?.user.displayName || ''
+                  const userBName =
+                    permissions.find(
+                      (permission) => permission.id === propBData.id
+                    )?.user.displayName || ''
+                  const compareResult = userAName.localeCompare(userBName)
+
+                  return sort.direction === 'asc'
+                    ? compareResult
+                    : -compareResult
                 case 'string':
                 default: {
-                  const compareResult = propA.data
+                  const compareResult = propAData
                     .toString()
                     .trim()
-                    .localeCompare(propB.data.toString().trim())
+                    .localeCompare(propBData.toString().trim())
 
                   return sort.direction === 'asc'
                     ? compareResult
@@ -202,7 +220,11 @@ const TableView = ({
           case 'label':
             const docFirstTagTupleList = docs.map((doc) => {
               const tagArray = doc.tags.slice().sort((tagA, tagB) => {
-                return tagA.text.trim().localeCompare(tagB.text.trim())
+                const compareResult = tagA.text
+                  .trim()
+                  .localeCompare(tagB.text.trim())
+
+                return direction === 'asc' ? compareResult : -compareResult
               })
               return [doc, tagArray[0]?.text.trim()] as [
                 SerializedDocWithSupplemental,
@@ -232,6 +254,9 @@ const TableView = ({
                   const result = firstTagTextOfDocA!.localeCompare(
                     firstTagTextOfDocB!
                   )
+                  if (result === 0) {
+                    return docA.tags.length - docB.tags.length
+                  }
                   return direction === 'asc' ? result : -result
                 }
               }
@@ -249,7 +274,7 @@ const TableView = ({
               : sortByAttributeDesc('createdAt', docs)
         }
     }
-  }, [filteredDocs, state.sort])
+  }, [filteredDocs, permissions, state.sort])
 
   const selectingAllDocs = useMemo(() => {
     return (
