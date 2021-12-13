@@ -331,7 +331,11 @@ const TableView = ({
           } else if (a.compareValue != null && b.compareValue == null) {
             return -1
           }
-          return comparator(a.compareValue, b.compareValue)
+          const compareResult = comparator(a.compareValue, b.compareValue)
+          if (compareResult === 0) {
+            return a.doc.createdAt.localeCompare(b.doc.createdAt)
+          }
+          return compareResult
         })
         .map((comparableItem) => comparableItem.doc)
     }
