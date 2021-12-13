@@ -46,21 +46,49 @@ const ColumnSettingsContext = ({
 
       switch (type) {
         case 'sort-asc':
-          await updateTableSort({
-            type: 'column',
-            columnType,
-            columnName,
-            direction: 'asc',
-          })
+          switch ((column as any).prop) {
+            case 'creation_date':
+            case 'update_date':
+            case 'label':
+              await updateTableSort({
+                type: 'static-prop',
+                propertyName: (column as any).prop,
+                direction: 'asc',
+              })
+              break
+            default:
+              await updateTableSort({
+                type: 'column',
+                columnType,
+                columnName,
+                direction: 'asc',
+              })
+              break
+          }
           break
+
         case 'sort-desc':
-          await updateTableSort({
-            type: 'column',
-            columnType,
-            columnName,
-            direction: 'desc',
-          })
+          switch ((column as any).prop) {
+            case 'creation_date':
+            case 'update_date':
+            case 'label':
+              await updateTableSort({
+                type: 'static-prop',
+                propertyName: (column as any).prop,
+                direction: 'desc',
+              })
+              break
+            default:
+              await updateTableSort({
+                type: 'column',
+                columnType,
+                columnName,
+                direction: 'desc',
+              })
+              break
+          }
           break
+
         case 'move-left':
           await moveColumn('before')
           break

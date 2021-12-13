@@ -17,17 +17,22 @@ export interface ViewTableData {
   filter?: SerializedQuery
 }
 
+export interface ViewTableColumnSortingOption {
+  type: 'column'
+  columnType: string
+  columnName: string
+  direction: 'asc' | 'desc'
+}
+
+export interface ViewTableStaticPropSortingoption {
+  type: 'static-prop'
+  propertyName: 'creation_date' | 'update_date' | 'label' | 'title'
+  direction: 'asc' | 'desc'
+}
+
 export type ViewTableSortingOptions =
-  | {
-      type: 'static'
-      sort: 'creation_date' | 'title_az' | 'title_za'
-    }
-  | {
-      type: 'column'
-      columnType: string
-      columnName: string
-      direction: 'asc' | 'desc'
-    }
+  | ViewTableStaticPropSortingoption
+  | ViewTableColumnSortingOption
 
 export function makeTablePropColId(
   name: string,
@@ -190,7 +195,11 @@ export function getDefaultTableView(
           order: LexoRank.min().between(LexoRank.middle()).toString(),
         },
       },
-      sort: { type: 'static', sort: 'creation_date' },
+      sort: {
+        type: 'static-prop',
+        propertyName: 'creation_date',
+        direction: 'asc',
+      },
     },
   } as SerializedView<ViewTableData>
 }
