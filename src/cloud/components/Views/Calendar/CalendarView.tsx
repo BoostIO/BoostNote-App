@@ -28,6 +28,7 @@ import {
   sortCalendarViewProps,
   ViewCalendarData,
 } from '../../../lib/views/calendar'
+import CalendarViewPropertiesContext from './CalendarViewPropertiesContext'
 
 type CalendarViewProps = {
   view: SerializedView<ViewCalendarData>
@@ -258,6 +259,29 @@ const CalendarView = ({
             }
           >
             No Date ({noDateDocs.length})
+          </Button>
+          <Button
+            variant='transparent'
+            disabled={noDateDocs.length === 0}
+            iconPath={mdiFileDocumentOutline}
+            onClick={(event) =>
+              openContextModal(
+                event,
+                <CalendarViewPropertiesContext
+                  view={view}
+                  teamId={team.id}
+                  properties={view.data.props}
+                  currentUserIsCoreMember={currentUserIsCoreMember}
+                  setProperties={actionsRef.current.setViewProperties}
+                />,
+                {
+                  width: 250,
+                  removePadding: true,
+                }
+              )
+            }
+          >
+            Properties
           </Button>
         </Flexbox>
       </Flexbox>

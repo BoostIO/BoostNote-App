@@ -73,7 +73,7 @@ export function useCalendarView({ view }: CalendarViewStoreProps) {
   const removeProperty = useCallback(
     async (id: string) => {
       const properties = view.data.props || {}
-      if (!getArrayFromRecord(properties).some((val) => val.id === id)) {
+      if (!Object.keys(properties).some((propertyId) => propertyId === id)) {
         return
       }
 
