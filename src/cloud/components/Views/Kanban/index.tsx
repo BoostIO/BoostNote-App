@@ -340,6 +340,10 @@ const Container = styled.div`
     min-height: 32px !important;
   }
 
+  .kanban__item .navigation__item {
+    padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
+  }
+
   .kanban__item__wrapper {
     height: 100%;
     background: ${({ theme }) => theme.colors.background.secondary} !important;
