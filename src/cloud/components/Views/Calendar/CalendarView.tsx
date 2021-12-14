@@ -263,7 +263,6 @@ const CalendarView = ({
           <Button
             variant='transparent'
             disabled={noDateDocs.length === 0}
-            iconPath={mdiFileDocumentOutline}
             onClick={(event) =>
               openContextModal(
                 event,
