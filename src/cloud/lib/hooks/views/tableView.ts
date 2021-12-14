@@ -27,6 +27,7 @@ export type TableViewActionsRef = React.MutableRefObject<{
   updateTableSort: (sort: ViewTableSortingOptions) => Promise<BulkApiActionRes>
   addColumn: (col: Column) => Promise<BulkApiActionRes> | undefined
   removeColumn: (col: Column) => Promise<BulkApiActionRes>
+  setColumns: (cols: Record<string, Column>) => Promise<BulkApiActionRes>
   moveColumn: (
     column: Column,
     move: ColumnMoveType
@@ -118,6 +119,15 @@ export function useTableView({
     [state, saveView, view]
   )
 
+  const setColumns = useCallback(
+    async (columns: Record<string, Column>) => {
+      return updateViewApi(view, {
+        data: { ...view.data, columns },
+      })
+    },
+    [view, updateViewApi]
+  )
+
   const moveColumn = useCallback(
     (column: Column, move: ColumnMoveType) => {
       const columnState = state.columns || {}
@@ -148,6 +158,7 @@ export function useTableView({
     removeColumn,
     moveColumn,
     updateTableSort,
+    setColumns,
   })
 
   useEffect(() => {
@@ -156,8 +167,9 @@ export function useTableView({
       addColumn: addColumn,
       removeColumn: removeColumn,
       updateTableSort: updateTableSort,
+      setColumns,
     }
-  }, [removeColumn, addColumn, moveColumn, updateTableSort])
+  }, [removeColumn, addColumn, moveColumn, updateTableSort, setColumns])
 
   return {
     actionsRef,

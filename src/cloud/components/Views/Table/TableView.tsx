@@ -46,6 +46,8 @@ import FormToggableInput from '../../../../design/components/molecules/Form/atom
 import { lngKeys } from '../../../lib/i18n/types'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
+import Button from '../../../../design/components/atoms/Button'
+import TableViewPropertiesContext from './TableViewPropertiesContext'
 
 type TableViewProps = {
   view: SerializedView<ViewTableData>
@@ -194,6 +196,28 @@ const TableView = ({
           {viewsSelector}
           <Flexbox flex='0 0 auto'>
             <SortingOption value={order} onChange={onChangeOrder} />
+            <Button
+              variant='transparent'
+              disabled={Object.keys(view.data.columns).length === 0}
+              onClick={(event) =>
+                openContextModal(
+                  event,
+                  <TableViewPropertiesContext
+                    view={view}
+                    teamId={team.id}
+                    columns={view.data.columns}
+                    currentUserIsCoreMember={currentUserIsCoreMember}
+                    setColumns={actionsRef.current.setColumns}
+                  />,
+                  {
+                    width: 250,
+                    removePadding: true,
+                  }
+                )
+              }
+            >
+              Properties
+            </Button>
           </Flexbox>
         </Flexbox>
         <Table

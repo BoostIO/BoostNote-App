@@ -55,7 +55,7 @@ export interface StaticPropCol {
 
 export interface PropCol {
   type: PropType
-  subType?: string
+  subType?: PropSubType
 }
 
 export type Column = {
