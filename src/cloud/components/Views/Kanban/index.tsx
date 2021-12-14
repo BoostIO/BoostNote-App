@@ -337,6 +337,7 @@ const Container = styled.div`
   .kanban__item,
   .kanban__item .navigation__item {
     height: auto !important;
+    min-height: 32px !important;
   }
 
   .kanban__item__wrapper {
