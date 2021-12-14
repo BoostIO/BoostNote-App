@@ -71,7 +71,7 @@ const CalendarEventItem = ({ event }: CalendarEventItemProps) => {
                     propName={prop.name}
                     propData={docProp}
                     readOnly={true}
-                    showIconPath={true}
+                    showIcon={true}
                   />
                 </div>
               )

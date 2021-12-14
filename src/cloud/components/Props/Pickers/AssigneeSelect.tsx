@@ -16,7 +16,7 @@ interface AssigneeSelectProps {
   update: (value: string[]) => void
   isLoading: boolean
   readOnly: boolean
-  showIconPath?: boolean
+  showIcon?: boolean
   emptyLabel?: string
   popupAlignment?: 'bottom-left' | 'top-left'
 }
@@ -25,7 +25,7 @@ const AssigneeSelect = ({
   disabled = false,
   defaultValue,
   isLoading,
-  showIconPath,
+  showIcon: showIcon,
   emptyLabel,
   readOnly,
   update,
@@ -67,7 +67,7 @@ const AssigneeSelect = ({
         empty={defaultValue.length === 0 && emptyLabel == null}
         isReadOnly={readOnly}
         iconPath={
-          showIconPath || defaultValue.length === 0
+          showIcon || defaultValue.length === 0
             ? mdiAccountCircleOutline
             : undefined
         }

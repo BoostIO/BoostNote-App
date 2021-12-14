@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import styled from '../../../../design/lib/styled'
 import PropertyValueButton from './PropertyValueButton'
-import { mdiArrowDownDropCircleOutline } from '@mdi/js'
+import { mdiFormatText } from '@mdi/js'
 import { useModal } from '../../../../design/lib/stores/modal'
 import FormTextArea from '../../../../design/components/molecules/Form/atoms/FormTextArea'
 import { useRef } from 'react'
@@ -65,7 +65,7 @@ const TextSelect = ({
         isReadOnly={isReadOnly}
         disabled={disabled}
         onClick={openSelector}
-        iconPath={showIcon ? mdiArrowDownDropCircleOutline : undefined}
+        iconPath={showIcon ? mdiFormatText : undefined}
       >
         <div className='text-select__label'>{value}</div>
       </PropertyValueButton>

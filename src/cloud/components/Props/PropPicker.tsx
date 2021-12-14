@@ -21,7 +21,7 @@ interface PropPickerProps {
   propData: SerializedPropData
   readOnly?: boolean
   isErrored?: boolean
-  showIconPath?: boolean
+  showIcon?: boolean
   onUpdate?: (newProps: Props) => void
 }
 
@@ -32,7 +32,7 @@ const PropPicker = ({
   onUpdate,
   readOnly = false,
   isErrored,
-  showIconPath,
+  showIcon,
 }: PropPickerProps) => {
   const { sendingMap, updateDocPropsApi } = useCloudApi()
 
@@ -88,7 +88,7 @@ const PropPicker = ({
                 : [propData.data.userId]
               : []
           }
-          showIconPath={showIconPath}
+          showIcon={showIcon}
           update={(val) =>
             updateProp(
               val.length === 0 || val == null
@@ -151,6 +151,7 @@ const PropPicker = ({
           sending={sendingMap.get(parent.target.id) === 'number'}
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
           isReadOnly={readOnly}
+          showIcon={showIcon}
           onNumberChange={(val) =>
             updateProp({
               type: 'number',
@@ -172,6 +173,7 @@ const PropPicker = ({
           sending={sendingMap.get(parent.target.id) === 'string'}
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
           isReadOnly={readOnly}
+          showIcon={showIcon}
           onTextChange={(val) =>
             updateProp({
               type: 'string',
