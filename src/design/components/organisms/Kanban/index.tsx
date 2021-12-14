@@ -135,7 +135,9 @@ const Overlay = ({ active, renderHeader, renderItem }: OverlayProps) => {
   }
 
   if (active.type === 'item') {
-    return <>{renderItem(active.item)}</>
+    return (
+      <div className='kanban__item__wrapper'>{renderItem(active.item)}</div>
+    )
   }
 
   return (
@@ -147,7 +149,11 @@ const Overlay = ({ active, renderHeader, renderItem }: OverlayProps) => {
       }
     >
       {active.item.items.map((item) => (
-        <div key={item.id} className='kanban__item'>
+        <div
+          key={item.id}
+          className='kanban__item'
+          style={{ background: 'green', height: 70 }}
+        >
           {renderItem(item)}
         </div>
       ))}

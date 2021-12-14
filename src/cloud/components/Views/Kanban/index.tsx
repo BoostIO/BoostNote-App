@@ -24,14 +24,16 @@ import {
 import { lngKeys } from '../../../lib/i18n/types'
 import { useRouter } from '../../../lib/router'
 import { useStatuses } from '../../../lib/stores/status'
+import { KanbanViewData } from '../../../lib/views/kanban'
 import { getDocLinkHref } from '../../Link/DocLink'
 import { StatusSelector } from '../../Props/Pickers/StatusSelect'
 import Item from './Item'
+import KanbanViewPropertiesContext from './KanbanViewPropertiesContext'
 import KanbanWatchedPropSetter from './KanbanWatchedPropSetter'
 import ListSettings from './ListSettings'
 
 interface KanbanViewProps {
-  view: SerializedView
+  view: SerializedView<KanbanViewData>
   docs: SerializedDocWithSupplemental[]
   currentUserIsCoreMember: boolean
   team: SerializedTeam
@@ -60,6 +62,7 @@ const KanbanView = ({
     removeList,
     addList,
     setProp,
+    setProperties,
   } = useKanbanView({
     view,
     docs,
@@ -150,10 +153,11 @@ const KanbanView = ({
         <Item
           onClick={() => push(getDocLinkHref(doc, team, 'index'))}
           doc={doc}
+          displayedProps={view.data.props || {}}
         />
       )
     },
-    [team, push]
+    [team, push, view.data.props]
   )
 
   const renderListFooter = useCallback(
@@ -243,6 +247,28 @@ const KanbanView = ({
               <span>{prop}</span>
             </Flexbox>
           </Button>
+
+          <Button
+            variant='transparent'
+            onClick={(event) =>
+              openContextModal(
+                event,
+                <KanbanViewPropertiesContext
+                  view={view}
+                  teamId={team.id}
+                  properties={view.data.props}
+                  currentUserIsCoreMember={currentUserIsCoreMember}
+                  setProperties={setProperties}
+                />,
+                {
+                  width: 250,
+                  removePadding: true,
+                }
+              )
+            }
+          >
+            Properties
+          </Button>
         </Flexbox>
       </Flexbox>
       <div className='view--kanban__wrapper'>
@@ -301,12 +327,21 @@ const Container = styled.div`
   }
 
   .kanban__item,
-  .kanban__item .navigation__item,
   .kanban__list__footer,
   .kanban__list__footer > button,
   .kanban__list__footer > input {
     height: 32px;
     min-height: 32px;
+  }
+
+  .kanban__item,
+  .kanban__item .navigation__item {
+    height: auto !important;
+  }
+
+  .kanban__item__wrapper {
+    height: 100%;
+    background: ${({ theme }) => theme.colors.background.secondary} !important;
   }
 
   .kanban__item,

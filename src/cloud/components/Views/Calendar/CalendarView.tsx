@@ -262,7 +262,6 @@ const CalendarView = ({
           </Button>
           <Button
             variant='transparent'
-            disabled={noDateDocs.length === 0}
             onClick={(event) =>
               openContextModal(
                 event,

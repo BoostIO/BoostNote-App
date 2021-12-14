@@ -198,7 +198,6 @@ const TableView = ({
             <SortingOption value={order} onChange={onChangeOrder} />
             <Button
               variant='transparent'
-              disabled={Object.keys(view.data.columns).length === 0}
               onClick={(event) =>
                 openContextModal(
                   event,

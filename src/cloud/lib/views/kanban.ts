@@ -1,6 +1,14 @@
 import { LexoRank } from 'lexorank'
 import { omit, prop, sortBy } from 'ramda'
+import { generate } from 'shortid'
+import { sortByAttributeAsc } from '../../../design/lib/utils/array'
+import {
+  PropSubType,
+  PropType,
+  StaticPropType,
+} from '../../interfaces/db/props'
 import { getOrdering } from '../ordering'
+import { getArrayFromRecord } from '../utils/array'
 
 export interface KanbanList {
   id: string
@@ -12,6 +20,46 @@ export interface KanbanViewData {
   lists: KanbanList[]
   statusProp: string
   ordering: 'drag-drop' | 'title:asc' | 'title:desc'
+  props?: Record<string, KanbanViewProp>
+}
+
+export interface KanbanStaticProp {
+  prop: StaticPropType
+}
+
+export interface KanbanProp {
+  type: PropType
+  subType?: PropSubType
+}
+
+export type KanbanViewProp = {
+  id: string
+  name: string
+  order: string
+} & (KanbanStaticProp | KanbanProp)
+
+export function isKanbanProperty(item: any): item is KanbanViewProp {
+  return isKanbanStaticProp(item) || isKanbanProp(item)
+}
+
+export function isKanbanProp(item: any): item is KanbanProp {
+  return item != null && typeof item.type === 'string'
+}
+
+export function isKanbanStaticProp(item: any): item is KanbanStaticProp {
+  return item != null && typeof item.prop === 'string'
+}
+
+export function getInsertionOrderForProperty(
+  properties: Record<string, KanbanViewProp> = {}
+) {
+  const sortedValues = sortKanbanViewProps(properties)
+  if (sortedValues.length === 0) {
+    return LexoRank.middle().toString()
+  }
+  return LexoRank.max()
+    .between(LexoRank.parse(sortedValues[sortedValues.length - 1].order))
+    .toString()
 }
 
 type KanbanUpdate = (kanban: KanbanViewData) => KanbanViewData
@@ -20,6 +68,7 @@ export function makeFromData(data: any): KanbanViewData {
   return {
     statusProp: data.statusProp || 'Status',
     ordering: data.ordering || 'drag-drop',
+    props: data.props || {},
     lists: Array.isArray(data.lists)
       ? data.lists
           .filter(isKanbanList)
@@ -64,6 +113,7 @@ export function insertList(
       lists,
       afterItem != null ? (a) => a.id === afterItem.id : undefined
     )
+
     return {
       ...kanban,
       lists: lists.concat([
@@ -145,4 +195,42 @@ function isKanbanList(data: any): data is KanbanList {
 
 function toOrdering(ordering: KanbanList['ordering']) {
   return Object.entries(ordering).map(([id, order]) => ({ id, order }))
+}
+
+export function sortKanbanViewProps(
+  properties: Record<string, KanbanViewProp> = {}
+): KanbanViewProp[] {
+  if (Object.keys(properties).length === 0) {
+    return []
+  }
+
+  Object.keys(properties).forEach((key) => {
+    if (properties[key].order == null) {
+      properties[key].order = LexoRank.middle().toString()
+    }
+  })
+
+  return sortByAttributeAsc('order', getArrayFromRecord(properties))
+}
+
+export function makeKanbanPropId(
+  name: string,
+  type: PropType | StaticPropType,
+  subType?: PropSubType
+) {
+  return (
+    generate() +
+    ':' +
+    name +
+    ':' +
+    `${type}${subType != null ? `:${subType}` : ''}`
+  )
+}
+
+export function getGeneratedIdFromKanbanPropId(colId: string) {
+  return colId.split(':').shift()
+}
+
+export function getPropTypeFromKanbanId(colId: string) {
+  return colId.split(':').pop() as PropSubType | PropType
 }
