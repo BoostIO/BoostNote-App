@@ -45,7 +45,7 @@ const CalendarViewPropertiesContext = ({
   currentUserIsCoreMember,
   setProperties,
 }: CalendarViewPropertiesContextProps) => {
-  const [formState, setFormState] = useState<'list' | 'add'>('add')
+  const [formState, setFormState] = useState<'list' | 'add'>('list')
   const [props, setProps] = useState<Record<string, CalendarViewProp>>(
     properties
   )
