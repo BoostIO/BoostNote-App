@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from 'react'
 import styled from '../../../../design/lib/styled'
 import PropertyValueButton from './PropertyValueButton'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
-import { mdiArrowDownDropCircleOutline } from '@mdi/js'
+import { mdiMusicAccidentalSharp } from '@mdi/js'
 import { useModal } from '../../../../design/lib/stores/modal'
 import { useEffectOnce } from 'react-use'
 
@@ -57,7 +57,7 @@ const NumberSelect = ({
         isReadOnly={isReadOnly}
         disabled={disabled}
         onClick={openSelector}
-        iconPath={showIcon ? mdiArrowDownDropCircleOutline : undefined}
+        iconPath={showIcon ? mdiMusicAccidentalSharp : undefined}
       >
         <div className='number-select__label'>{number}</div>
       </PropertyValueButton>

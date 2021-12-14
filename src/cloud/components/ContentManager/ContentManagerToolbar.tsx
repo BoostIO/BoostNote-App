@@ -540,7 +540,7 @@ const ContentManagerToolbar = ({
                       : []
                   }
                   readOnly={selectedDocsAreUpdating}
-                  showIconPath={true}
+                  showIcon={true}
                   popupAlignment='top-left'
                   update={(val: string[]) => {
                     updateProp([
