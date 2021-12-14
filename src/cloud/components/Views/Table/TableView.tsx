@@ -159,8 +159,9 @@ const TableView = ({
 
               return {
                 doc,
-                compareValue:
-                  tags[0] != null ? getNullIfEmptyString(tags[0].text) : null,
+                compareValue: getNullIfEmptyString(
+                  tags.map((tag) => tag.text).join(' ')
+                ),
               }
             case 'update_date':
               const updatedAt = new Date(doc.updatedAt)
@@ -249,13 +250,15 @@ const TableView = ({
                   const userBDisplayName = permissionB.user.displayName.trim()
                   return userADisplayName.localeCompare(userBDisplayName)
                 })
+
                 if (sort.direction === 'desc') {
                   validPermissions.reverse()
                 }
-                compareValue =
-                  validPermissions[0] != null
-                    ? validPermissions[0].user.displayName
-                    : null
+                compareValue = getNullIfEmptyString(
+                  validPermissions
+                    .map((permission) => permission.user.displayName.trim())
+                    .join(' ')
+                )
               } else {
                 const targetPermission = permissions.find(
                   (permission) => permission.userId === docProp.data?.userId
@@ -263,7 +266,7 @@ const TableView = ({
 
                 compareValue =
                   targetPermission != null
-                    ? targetPermission.user.displayName
+                    ? targetPermission.user.displayName.trim()
                     : null
               }
 
@@ -288,10 +291,7 @@ const TableView = ({
                   statusNames.reverse()
                 }
 
-                compareValue =
-                  statusNames[0] != null
-                    ? getNullIfEmptyString(statusNames[0])
-                    : null
+                compareValue = getNullIfEmptyString(statusNames.join(' '))
               } else {
                 compareValue =
                   typeof docProp.data?.name === 'string'
