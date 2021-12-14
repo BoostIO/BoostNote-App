@@ -1,4 +1,4 @@
-import { mdiClockOutline } from '@mdi/js'
+import { mdiTimerOutline } from '@mdi/js'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useModal } from '../../../../design/lib/stores/modal'
 import styled from '../../../../design/lib/styled'
@@ -72,7 +72,7 @@ const TimePeriodPicker = ({
         disabled={disabled}
         empty={parsedValue == null && emptyLabel == null}
         isReadOnly={isReadOnly}
-        iconPath={mdiClockOutline}
+        iconPath={mdiTimerOutline}
         sending={sending}
         onClick={(e) =>
           openContextModal(
