@@ -160,7 +160,7 @@ const TableView = ({
               return {
                 doc,
                 compareValue: getNullIfEmptyString(
-                  tags.map((tag) => tag.text).join(' ')
+                  tags.map((tag) => tag.text.trim()).join(' ')
                 ),
               }
             case 'update_date':
@@ -291,11 +291,13 @@ const TableView = ({
                   statusNames.reverse()
                 }
 
-                compareValue = getNullIfEmptyString(statusNames.join(' '))
+                compareValue = getNullIfEmptyString(
+                  statusNames.map((name) => name.trim()).join(' ')
+                )
               } else {
                 compareValue =
                   typeof docProp.data?.name === 'string'
-                    ? getNullIfEmptyString(docProp.data?.name)
+                    ? getNullIfEmptyString(docProp.data?.name.trim())
                     : null
               }
 
