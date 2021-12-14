@@ -134,6 +134,7 @@ const PropPicker = ({
           sending={sendingMap.get(parent.target.id) === 'status'}
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
           isReadOnly={readOnly}
+          showIcon={showIcon}
           onStatusChange={(val) =>
             updateProp({
               type: 'status',
