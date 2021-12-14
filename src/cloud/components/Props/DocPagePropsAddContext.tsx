@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { ListPropertySuggestionsResponseBody } from '../../api/teams/props'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import {
@@ -21,7 +21,6 @@ const DocPagePropsAddContext = ({
   doc,
   addProp,
 }: DocPagePropsAddContextProps) => {
-  const [sending, setSending] = useState<string>()
   const { fetchPropertySuggestionsApi } = useCloudApi()
 
   const fetchSuggestions = useCallback(async () => {
@@ -46,14 +45,9 @@ const DocPagePropsAddContext = ({
       type: PropType
       subType?: PropSubType
     }) => {
-      if (sending != null) {
-        return
-      }
-
-      setSending(getPropsAddFormUniqueName(name, type, subType))
       addProp(name, getInitialPropDataOfPropType(subType || type))
     },
-    [addProp, sending]
+    [addProp]
   )
 
   const isNameValid = useCallback(
@@ -76,14 +70,6 @@ const DocPagePropsAddContext = ({
       isNameValid={isNameValid}
     />
   )
-}
-
-function getPropsAddFormUniqueName(
-  name: string,
-  type: string,
-  subType?: string
-) {
-  return `${name}-${type}-${subType || ''}`
 }
 
 export default DocPagePropsAddContext

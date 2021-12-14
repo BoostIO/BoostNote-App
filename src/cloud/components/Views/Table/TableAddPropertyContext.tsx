@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import {
   ListPropertySuggestionsRequestBody,
@@ -14,7 +14,6 @@ import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import {
   Column,
   getInsertedColumnOrder,
-  isPropCol,
   makeTablePropColId,
 } from '../../../lib/views/table'
 import PropRegisterModal from '../../Props/PropRegisterModal'
@@ -34,7 +33,6 @@ const TableAddPropertyContext = ({
   addColumn,
   close,
 }: TableAddPropertyContextProps) => {
-  const [sending, setSending] = useState<string>()
   const { fetchPropertySuggestionsApi } = useCloudApi()
 
   const fetchSuggestions = useCallback(async () => {
@@ -67,22 +65,12 @@ const TableAddPropertyContext = ({
 
   const addCol = useCallback(
     async (col: Column) => {
-      if (sending != null) {
-        return
-      }
-
-      setSending(
-        !isPropCol(col)
-          ? getPropsAddFormUniqueName(col.name, col.prop)
-          : getPropsAddFormUniqueName(col.name, col.type, col.subType)
-      )
       const res = await addColumn(col)
-      setSending(undefined)
       if (res != null && !res.err) {
         close()
       }
     },
-    [addColumn, close, sending]
+    [addColumn, close]
   )
 
   const addNewPropCol = useCallback(
@@ -139,14 +127,6 @@ const TableAddPropertyContext = ({
       isNameValid={isColumnNameInvalid}
     />
   )
-}
-
-function getPropsAddFormUniqueName(
-  name: string,
-  type: string,
-  subType?: string
-) {
-  return `${name}-${type}-${subType || ''}`
 }
 
 export default TableAddPropertyContext
