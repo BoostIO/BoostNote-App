@@ -18,54 +18,52 @@ import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { getIconPathOfPropType } from '../../../lib/props'
 import { getArrayFromRecord } from '../../../lib/utils/array'
 import {
-  CalendarViewProp,
-  getGeneratedIdFromCalendarPropId,
+  KanbanViewProp,
+  getGeneratedIdFromKanbanPropId,
   getInsertionOrderForProperty,
-  isCalendarProp,
-  isCalendarProperty,
-  makeCalendarPropId,
-  ViewCalendarData,
-} from '../../../lib/views/calendar'
+  isKanbanProp,
+  isKanbanProperty,
+  makeKanbanPropId,
+  KanbanViewData,
+} from '../../../lib/views/kanban'
 import PropRegisterModal from '../../Props/PropRegisterModal'
 
-interface CalendarViewPropertiesContextProps {
-  view: SerializedView<ViewCalendarData>
+interface KanbanViewPropertiesContextProps {
+  view: SerializedView<KanbanViewData>
   teamId: string
-  properties?: Record<string, CalendarViewProp>
+  properties?: Record<string, KanbanViewProp>
   currentUserIsCoreMember?: boolean
   setProperties: (
-    props: Record<string, CalendarViewProp>
+    props: Record<string, KanbanViewProp>
   ) => Promise<BulkApiActionRes | undefined>
 }
 
-const CalendarViewPropertiesContext = ({
+const KanbanViewPropertiesContext = ({
   view,
   teamId,
   properties = {},
   currentUserIsCoreMember,
   setProperties,
-}: CalendarViewPropertiesContextProps) => {
+}: KanbanViewPropertiesContextProps) => {
   const [formState, setFormState] = useState<'list' | 'add'>('list')
-  const [props, setProps] = useState<Record<string, CalendarViewProp>>(
-    properties
-  )
+  const [props, setProps] = useState<Record<string, KanbanViewProp>>(properties)
   const [sending, setSending] = useState<string>()
   const { fetchPropertySuggestionsApi } = useCloudApi()
 
   const addPropertyCallback = useCallback(
-    async (prop: Omit<CalendarViewProp, 'id' | 'order'>) => {
-      if (!isCalendarProperty(prop)) {
+    async (prop: Omit<KanbanViewProp, 'id' | 'order'>) => {
+      if (!isKanbanProperty(prop)) {
         return
       }
 
-      const calendarGeneratedProps = {
-        id: isCalendarProp(prop)
-          ? makeCalendarPropId(prop.name, prop.type, prop.subType)
-          : makeCalendarPropId(prop.name, prop.prop),
+      const kanbanGeneratedProps = {
+        id: isKanbanProp(prop)
+          ? makeKanbanPropId(prop.name, prop.type, prop.subType)
+          : makeKanbanPropId(prop.name, prop.prop),
         order: getInsertionOrderForProperty(props),
       }
 
-      const newProp = Object.assign({}, prop, calendarGeneratedProps)
+      const newProp = Object.assign({}, prop, kanbanGeneratedProps)
       setSending(`${newProp.id}-add`)
       const newProps = Object.assign({}, props, { [newProp.id]: newProp })
       const res = await setProperties(newProps)
@@ -168,7 +166,7 @@ const CalendarViewPropertiesContext = ({
                       spinning={sending === `${col.id}-delete`}
                       iconPath={mdiEyeOffOutline}
                       onClick={() => removePropertyCallback(col.id)}
-                      id={`prop-active-${getGeneratedIdFromCalendarPropId(
+                      id={`prop-active-${getGeneratedIdFromKanbanPropId(
                         col.id
                       )}`}
                       size='sm'
@@ -187,7 +185,7 @@ const CalendarViewPropertiesContext = ({
             row={{
               type: 'button',
               props: {
-                id: 'calendar-props-add',
+                id: 'kanban-props-add',
                 variant: 'transparent',
                 iconPath: mdiPlus,
                 label: 'New property',
@@ -203,4 +201,4 @@ const CalendarViewPropertiesContext = ({
 
 const Container = styled(MetadataContainer)``
 
-export default CalendarViewPropertiesContext
+export default KanbanViewPropertiesContext

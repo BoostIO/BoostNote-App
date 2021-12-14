@@ -10,11 +10,13 @@ import {
   KanbanViewData,
   makeList,
   removeList,
+  KanbanViewProp,
 } from '../../views/kanban'
 import { aperture, last, sortBy } from 'ramda'
 import { prop } from '../../realtime/lib/functional'
 import { useCloudApi } from '../useCloudApi'
 import { SerializedPropData } from '../../../interfaces/db/props'
+import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 
 interface KanbanViewProps {
   view: SerializedView
@@ -36,6 +38,9 @@ type State = Pick<
   prop: string
   addList: (id: string) => void
   setProp: (prop: string) => void
+  setProperties: (
+    props: Record<string, KanbanViewProp>
+  ) => Promise<BulkApiActionRes>
   removeList: (list: KanbanViewList) => void
 }
 
@@ -128,6 +133,11 @@ export function useKanbanView({ view, docs }: KanbanViewProps): State {
     lists,
     onItemMove,
     onListMove,
+    setProperties: (props) => {
+      return updateViewApi(view, {
+        data: { ...view.data, props },
+      })
+    },
     addList: (id) => {
       saveViewData((curr) => {
         return insertList(makeList(id), last(curr.lists))(curr)
