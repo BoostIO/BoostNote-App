@@ -2,6 +2,7 @@ import { mdiEyeOffOutline, mdiPlus } from '@mdi/js'
 import React, { useMemo, useState } from 'react'
 import { useCallback } from 'react'
 import { LoadingButton } from '../../../../design/components/atoms/Button'
+import EllipsisText from '../../../../design/components/atoms/EllipsisText'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerBreak from '../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
@@ -157,7 +158,7 @@ const KanbanViewPropertiesContext = ({
               row={{
                 type: 'content',
                 icon: getIconPathOfPropType(col.id.split(':').pop() as any),
-                label: col.name,
+                label: <EllipsisText>{col.name}</EllipsisText>,
                 content: currentUserIsCoreMember ? (
                   <Flexbox justifyContent='flex-end'>
                     <LoadingButton
@@ -199,6 +200,13 @@ const KanbanViewPropertiesContext = ({
   )
 }
 
-const Container = styled(MetadataContainer)``
+const Container = styled(MetadataContainer)`
+  .metadata__label {
+    flex: 1 1 auto;
+  }
+  .metadata__content {
+    flex: 0 0 auto;
+  }
+`
 
 export default KanbanViewPropertiesContext

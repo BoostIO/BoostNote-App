@@ -93,35 +93,36 @@ const PropRegisterForm = ({
           ),
         }}
       />
-      <MetadataContainerRow
-        row={{
-          type: 'content',
-          content:
-            formState === 'creation' ? (
+      {formState === 'creation' ? (
+        <MetadataContainerRow
+          row={{
+            type: 'content',
+            content: (
               <PropRegisterCreationForm
                 onPropCreate={onPropCreate}
                 isNameValid={isNameValid}
                 disabled={sending}
               />
-            ) : (
-              <PropRegisterSuggestionsList
-                onPropCreate={onPropCreate}
-                onStaticPropCreate={
-                  registerStaticProp != null
-                    ? (prop) => {
-                        setSending(true)
-                        return registerStaticProp(prop)
-                      }
-                    : undefined
-                }
-                isNameValid={isNameValid}
-                suggestions={suggestions}
-                suggestionsHeader={suggestionsHeader}
-                disabled={sending}
-              />
             ),
-        }}
-      />
+          }}
+        />
+      ) : (
+        <PropRegisterSuggestionsList
+          onPropCreate={onPropCreate}
+          onStaticPropCreate={
+            registerStaticProp != null
+              ? (prop) => {
+                  setSending(true)
+                  return registerStaticProp(prop)
+                }
+              : undefined
+          }
+          isNameValid={isNameValid}
+          suggestions={suggestions}
+          suggestionsHeader={suggestionsHeader}
+          disabled={sending}
+        />
+      )}
     </>
   )
 }

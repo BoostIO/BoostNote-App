@@ -6,6 +6,7 @@ import cc from 'classcat'
 import styled from '../../../../lib/styled'
 import MetadataContainerBreak from '../atoms/MetadataContainerBreak'
 import Button, { ButtonProps } from '../../../atoms/Button'
+import EllipsisText from '../../../atoms/EllipsisText'
 
 export type MetadataContainerRowProps = (
   | {
@@ -17,7 +18,7 @@ export type MetadataContainerRowProps = (
       direction?: 'row' | 'column'
       content?: React.ReactNode
       icon?: string
-      label?: string
+      label?: React.ReactNode
     }
   | { type: 'header'; content: React.ReactNode }
 ) & {
@@ -59,7 +60,7 @@ const MetadataContainerRow: AppComponent<MetadataRowProps> = ({
                     className='metadata__icon'
                   />
                 )}
-                {row.props.label}
+                <EllipsisText>{row.props.label}</EllipsisText>
               </>
             )}
           </Button>
@@ -162,6 +163,10 @@ const Container = styled.div`
     line-height: inherit;
     justify-content: flex-start;
     height: 30px;
+
+    .button__label {
+      overflow: hidden;
+    }
 
     &.metadata__button--spinning {
       justify-content: center;
