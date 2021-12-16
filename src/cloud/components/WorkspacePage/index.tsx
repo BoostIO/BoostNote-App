@@ -12,7 +12,7 @@ import ApplicationPage from '../ApplicationPage'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationContent from '../ApplicationContent'
-import { getDefaultTableView } from '../../lib/views/table'
+import { getDefaultListView } from '../../lib/views/list'
 import { getMapValues } from '../../../design/lib/utils/array'
 import { ViewsManager } from '../Views'
 
@@ -93,7 +93,7 @@ const WorkspacePage = ({ workspace }: { workspace: SerializedWorkspace }) => {
       (view) => view.workspaceId === workspace.id
     )
     if (filteredViews.length === 0) {
-      return [getDefaultTableView({ type: 'workspace', target: workspace })]
+      return [getDefaultListView({ type: 'workspace', target: workspace })]
     }
 
     return filteredViews

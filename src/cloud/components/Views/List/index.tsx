@@ -9,7 +9,6 @@ import { useCloudDnd } from '../../../lib/hooks/sidebar/useCloudDnd'
 import { StyledContentManagerList } from '../../ContentManager/styled'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import { mdiFileDocumentOutline, mdiPlus } from '@mdi/js'
-import EmptyRow from '../../ContentManager/Rows/EmptyRow'
 import FormToggableInput from '../../../../design/components/molecules/Form/atoms/FormToggableInput'
 import { lngKeys } from '../../../lib/i18n/types'
 import { useI18n } from '../../../lib/hooks/useI18n'
@@ -36,6 +35,8 @@ import { getFolderHref } from '../../Link/FolderLink'
 import { DraggedTo } from '../../../lib/dnd'
 import ListViewItem from './ListViewItem'
 import { getDocLinkHref } from '../../Link/DocLink'
+import ListViewPropertiesContext from './ListViewPropertiesContext'
+import { useListView } from '../../../lib/hooks/views/listView'
 
 type ListViewProps = {
   view: SerializedView<ViewListData>
@@ -68,6 +69,7 @@ const ListView = ({
   currentFolderId,
   team,
   viewsSelector,
+  selectViewId,
   addDocInSelection,
   hasDocInSelection,
   toggleDocInSelection,
@@ -83,8 +85,13 @@ const ListView = ({
   )
   const { translate } = useI18n()
   const { createDoc, createFolder } = useCloudApi()
-  const { openContextModal, closeAllModals } = useModal()
+  const { openContextModal } = useModal()
   const { push } = useRouter()
+
+  const { actionsRef } = useListView({
+    view,
+    selectNewView: selectViewId,
+  })
 
   const {
     dropInDocOrFolder,
@@ -190,10 +197,20 @@ const ListView = ({
             <Button
               variant='transparent'
               onClick={(event) =>
-                openContextModal(event, <></>, {
-                  width: 250,
-                  removePadding: true,
-                })
+                openContextModal(
+                  event,
+                  <ListViewPropertiesContext
+                    view={view}
+                    teamId={team.id}
+                    properties={view.data.props}
+                    currentUserIsCoreMember={currentUserIsCoreMember}
+                    setProperties={actionsRef.current.setProperties}
+                  />,
+                  {
+                    width: 250,
+                    removePadding: true,
+                  }
+                )
               }
             >
               Properties
@@ -228,7 +245,6 @@ const ListView = ({
             />
           )
         })}
-        {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
         {currentWorkspaceId != null && (
           <div className='content__manager__add-row'>
             <FormToggableInput
