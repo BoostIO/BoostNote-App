@@ -4,7 +4,7 @@ import {
   mdiTable,
   mdiViewWeek,
 } from '@mdi/js'
-import { SupportedViewTypes } from '../../interfaces/db/view'
+import { SerializedView, SupportedViewTypes } from '../../interfaces/db/view'
 
 export type ViewMoveType =
   | 'before'
@@ -26,4 +26,8 @@ export function getIconPathOfViewType(type: SupportedViewTypes) {
     default:
       return mdiFormatListBulleted
   }
+}
+
+export function isDefaultView(view: SerializedView<any>) {
+  return view.id === -1
 }

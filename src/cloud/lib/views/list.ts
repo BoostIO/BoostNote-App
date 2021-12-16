@@ -11,10 +11,10 @@ import { getArrayFromRecord } from '../utils/array'
 import { SerializedView, ViewParent } from '../../interfaces/db/view'
 
 export interface ViewListData {
-  props?: Record<string, Props>
+  props?: Record<string, ListViewProp>
 }
 
-export function makeListPropId(
+export function makeListViewPropId(
   name: string,
   type: PropType | StaticPropType,
   subType?: PropSubType
@@ -28,12 +28,12 @@ export function makeListPropId(
   )
 }
 
-export function getGeneratedIdFromPropId(colId: string) {
-  return colId.split(':').shift()
+export function getGeneratedIdFromListViewPropId(propId: string) {
+  return propId.split(':').shift()
 }
 
-export function getPropTypeFromPropId(colId: string) {
-  return colId.split(':').pop() as PropSubType | PropType
+export function getPropTypeFromListViewPropId(propId: string) {
+  return propId.split(':').pop() as PropSubType | PropType
 }
 
 export interface StaticProp {
@@ -45,21 +45,21 @@ export interface Prop {
   subType?: PropSubType
 }
 
-export type Props = {
+export type ListViewProp = {
   id: string
   name: string
   order: string
 } & (Prop | StaticProp)
 
-export function isProps(item: any): item is Props {
-  return isStaticProp(item) || isProp(item)
+export function isListViewProperty(item: any): item is ListViewProp {
+  return isListViewStaticProp(item) || isListViewProp(item)
 }
 
-export function isProp(item: any): item is Prop {
+export function isListViewProp(item: any): item is Prop {
   return item != null && typeof item.type === 'string'
 }
 
-export function isStaticProp(item: any): item is StaticProp {
+export function isListViewStaticProp(item: any): item is StaticProp {
   return item != null && typeof item.prop === 'string'
 }
 
@@ -67,40 +67,42 @@ export function isViewListData(data: any): data is ViewListData {
   return data.props != null && Object.values(data.props).every(isString)
 }
 
-export function getInsertedPropsOrder(columns: Record<string, Props> = {}) {
-  const colValues =
-    Object.keys(columns).length === 0
+export function getInsertionOrderForListViewProp(
+  propumns: Record<string, ListViewProp> = {}
+) {
+  const propValues =
+    Object.keys(propumns).length === 0
       ? []
-      : sortByAttributeAsc('order', Object.values(columns))
-  if (colValues.length === 0) {
+      : sortByAttributeAsc('order', Object.values(propumns))
+  if (propValues.length === 0) {
     return LexoRank.middle().toString()
   } else {
     return LexoRank.max()
-      .between(LexoRank.parse(colValues[colValues.length - 1].order))
+      .between(LexoRank.parse(propValues[propValues.length - 1].order))
       .toString()
   }
 }
 
-export function sortListViewPropss(
-  columns: Record<string, Props> = {}
-): Props[] {
-  if (Object.keys(columns).length === 0) {
+export function sortListViewProps(
+  propumns: Record<string, ListViewProp> = {}
+): ListViewProp[] {
+  if (Object.keys(propumns).length === 0) {
     return []
   }
 
-  Object.keys(columns).forEach((key) => {
-    if (columns[key].order == null) {
-      columns[key].order = LexoRank.middle().toString()
+  Object.keys(propumns).forEach((key) => {
+    if (propumns[key].order == null) {
+      propumns[key].order = LexoRank.middle().toString()
     }
   })
 
-  return sortByAttributeAsc('order', getArrayFromRecord(columns))
+  return sortByAttributeAsc('order', getArrayFromRecord(propumns))
 }
 
 export function getDefaultListView(
   parent: ViewParent
 ): SerializedView<ViewListData> {
-  const labelPropId = makeListPropId('Label', 'label')
+  const labelPropId = makeListViewPropId('Label', 'label')
   return {
     id: -1,
     workspace: parent.type === 'workspace' ? parent.target : undefined,

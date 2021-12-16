@@ -28,7 +28,7 @@ import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationContent from '../ApplicationContent'
 import Spinner from '../../../design/components/atoms/Spinner'
 import { getMapValues } from '../../../design/lib/utils/array'
-import { getDefaultTableView } from '../../lib/views/table'
+import { getDefaultListView } from '../../lib/views/list'
 import { filterIter } from '../../lib/utils/iterator'
 import { ViewsManager } from '../Views'
 
@@ -158,7 +158,7 @@ const FolderPage = () => {
       (view) => view.folderId === currentFolder.id
     )
     if (filteredViews.length === 0) {
-      return [getDefaultTableView({ type: 'folder', target: currentFolder })]
+      return [getDefaultListView({ type: 'folder', target: currentFolder })]
     }
 
     return filteredViews

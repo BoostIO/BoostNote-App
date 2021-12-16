@@ -208,10 +208,6 @@ export function getDefaultTableView(
   } as SerializedView<ViewTableData>
 }
 
-export function isDefaultView(view: SerializedView<any>) {
-  return view.id === -1
-}
-
 export function sortDocsBySortOption(
   sort: unknown,
   permissions: SerializedUserTeamPermissions[],

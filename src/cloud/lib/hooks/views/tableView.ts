@@ -7,7 +7,6 @@ import {
   Column,
   ColumnMoveType,
   getColumnOrderAfterMove,
-  isDefaultView,
   isPropCol,
   ViewTableData,
   ViewTableSortingOptions,
@@ -16,6 +15,7 @@ import { CreateViewResponseBody } from '../../../api/teams/views'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 import { capitalize } from 'lodash'
+import { isDefaultView } from '../../views'
 
 interface TableViewStoreProps {
   state: ViewTableData
