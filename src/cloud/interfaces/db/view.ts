@@ -2,7 +2,7 @@ import { SerializedSmartView } from './smartView'
 import { SerializedFolder, SerializedFolderWithBookmark } from './folder'
 import { SerializedWorkspace } from './workspace'
 
-export type SupportedViewTypes = 'table' | 'calendar' | 'kanban'
+export type SupportedViewTypes = 'table' | 'calendar' | 'kanban' | 'list'
 
 export interface ViewState {
   integrations: string[]

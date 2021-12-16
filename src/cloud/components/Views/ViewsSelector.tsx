@@ -329,6 +329,13 @@ const ViewModal = ({
   return (
     <UpDownList>
       <NavigationItem
+        id={`view__modal--list`}
+        borderRadius={true}
+        icon={{ type: 'icon', path: getIconPathOfViewType('list') }}
+        label={'List'}
+        labelClick={() => createNewView('list')}
+      />
+      <NavigationItem
         id={`view__modal--table`}
         borderRadius={true}
         icon={{ type: 'icon', path: getIconPathOfViewType('table') }}

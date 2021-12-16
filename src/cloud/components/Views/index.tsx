@@ -11,11 +11,12 @@ import { SerializedView, ViewParent } from '../../interfaces/db/view'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { SerializedTeam } from '../../interfaces/db/team'
 import TableView from './Table/TableView'
-import FolderList from './FolderList/FolderList'
+import FolderList from './FolderList'
 import Scroller from '../../../design/components/atoms/Scroller'
 import { sortByLexorankProperty } from '../../lib/utils/string'
 import CalendarView from './Calendar/CalendarView'
 import KanbanView from './Kanban'
+import ListView from './List'
 
 type ViewsManagerProps = {
   views: SerializedView[]
@@ -142,7 +143,29 @@ export const ViewsManager = ({
       <Scroller className='view__scroller'>
         {currentView != null && (
           <>
-            {currentView.type === 'table' ? (
+            {currentView.type === 'list' ? (
+              <ListView
+                viewsSelector={viewsSelector}
+                team={team}
+                currentWorkspaceId={currentWorkspaceId}
+                currentFolderId={currentFolderId}
+                view={currentView}
+                docs={docs}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+                selectViewId={setSelectedViewId}
+                addDocInSelection={addDocinSelection}
+                hasDocInSelection={hasDocInSelection}
+                toggleDocInSelection={toggleDocInSelection}
+                resetDocsInSelection={resetDocsInSelection}
+                addFolderInSelection={addFolderInSelection}
+                hasFolderInSelection={hasFolderInSelection}
+                toggleFolderInSelection={toggleFolderInSelection}
+                folders={folders}
+                updating={updating}
+                setUpdating={setUpdating}
+                resetFoldersInSelection={resetFoldersInSelection}
+              />
+            ) : currentView.type === 'table' ? (
               <TableView
                 viewsSelector={viewsSelector}
                 team={team}
@@ -181,19 +204,21 @@ export const ViewsManager = ({
           </>
         )}
 
-        <FolderList
-          folders={folders}
-          team={team}
-          currentUserIsCoreMember={currentUserIsCoreMember}
-          updating={updating}
-          setUpdating={setUpdating}
-          currentWorkspaceId={currentWorkspaceId}
-          currentFolderId={currentFolderId}
-          addFolderInSelection={addFolderInSelection}
-          hasFolderInSelection={hasFolderInSelection}
-          toggleFolderInSelection={toggleFolderInSelection}
-          resetFoldersInSelection={resetFoldersInSelection}
-        />
+        {currentView != null && currentView.type !== 'list' && (
+          <FolderList
+            folders={folders}
+            team={team}
+            currentUserIsCoreMember={currentUserIsCoreMember}
+            updating={updating}
+            setUpdating={setUpdating}
+            currentWorkspaceId={currentWorkspaceId}
+            currentFolderId={currentFolderId}
+            addFolderInSelection={addFolderInSelection}
+            hasFolderInSelection={hasFolderInSelection}
+            toggleFolderInSelection={toggleFolderInSelection}
+            resetFoldersInSelection={resetFoldersInSelection}
+          />
+        )}
         <div className='views__placeholder' />
       </Scroller>
 

@@ -23,9 +23,10 @@ interface FolderListItemProps {
   onDragStart?: (event: any) => void
   onDragEnd?: (event: any) => void
   onDrop?: (event: any) => void
+  hideOrderingHandle?: boolean
 }
 
-const FolderListItem: AppComponent<FolderListItemProps> = ({
+const ListViewItem: AppComponent<FolderListItemProps> = ({
   id,
   className,
   children,
@@ -36,6 +37,7 @@ const FolderListItem: AppComponent<FolderListItemProps> = ({
   emoji,
   defaultIcon,
   showCheckbox,
+  hideOrderingHandle,
   onSelect,
   onDragStart,
   onDragEnd,
@@ -74,9 +76,9 @@ const FolderListItem: AppComponent<FolderListItemProps> = ({
   return (
     <StyledContainer
       className={cc([
-        'folder-list-item',
+        'list-view-item',
         className,
-        draggedOver && 'folder-list-item--dragged-over',
+        draggedOver && 'list-view-item--dragged-over',
       ])}
       ref={setNodeRef}
       style={style}
@@ -114,23 +116,25 @@ const FolderListItem: AppComponent<FolderListItemProps> = ({
       {showCheckbox && (
         <Checkbox
           className={cc([
-            'folder-list-item__checkbox',
-            checked && 'folder-list-item__checkbox--checked',
+            'list-view-item__checkbox',
+            checked && 'list-view-item__checkbox--checked',
           ])}
           checked={checked}
           toggle={() => onSelect(!checked)}
         />
       )}
-      <div className='folder-list-item__ordering-handle' {...listeners}>
-        <Icon path={mdiDragVertical} />
-      </div>
+      {!hideOrderingHandle && (
+        <div className='list-view-item__ordering-handle' {...listeners}>
+          <Icon path={mdiDragVertical} />
+        </div>
+      )}
       <LabelTag
         draggable={true}
-        className='folder-list-item__label'
+        className='list-view-item__label'
         onClick={navigate}
         href={labelHref}
       >
-        <div className='folder-list-item__label__emoji'>
+        <div className='list-view-item__label__emoji'>
           <EmojiIcon
             className='emoji-icon'
             defaultIcon={defaultIcon}
@@ -139,19 +143,19 @@ const FolderListItem: AppComponent<FolderListItemProps> = ({
           />
         </div>
         {typeof label === 'string' ? (
-          <span className='folder-list-item__label__line'>{label}</span>
+          <span className='list-view-item__label__line'>{label}</span>
         ) : (
-          <div className='folder-list-item__label__col'>{label}</div>
+          <div className='list-view-item__label__col'>{label}</div>
         )}
       </LabelTag>
       {children != null && (
-        <div className='folder-list-item__content'>{children}</div>
+        <div className='list-view-item__content'>{children}</div>
       )}
     </StyledContainer>
   )
 }
 
-export default FolderListItem
+export default ListViewItem
 
 const rowHeight = 40
 const StyledContainer = styled.div`
@@ -165,12 +169,12 @@ const StyledContainer = styled.div`
   font-size: 13px;
   padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
 
-  .folder-list-item__ordering-handle {
+  .list-view-item__ordering-handle {
     opacity: 0;
   }
 
-  .folder-list-item__status,
-  .folder-list-item__emoji {
+  .list-view-item__status,
+  .list-view-item__emoji {
     height: 100%;
     display: flex;
     flex: 0 0 auto;
@@ -181,7 +185,7 @@ const StyledContainer = styled.div`
   &:hover {
     background: rgba(0, 0, 0, 0.1);
 
-    .folder-list-item__ordering-handle {
+    .list-view-item__ordering-handle {
       opacity: 1;
       cursor: grab;
       &:active {
@@ -189,12 +193,12 @@ const StyledContainer = styled.div`
       }
     }
 
-    .folder-list-item__checkbox {
+    .list-view-item__checkbox {
       opacity: 1;
     }
   }
 
-  .folder-list-item__label__emoji {
+  .list-view-item__label__emoji {
     flex: 0 0 auto;
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
 
@@ -203,7 +207,7 @@ const StyledContainer = styled.div`
     }
   }
 
-  .folder-list-item__label {
+  .list-view-item__label {
     width: 100%;
     display: flex;
     flex: 1 1 auto;
@@ -213,16 +217,16 @@ const StyledContainer = styled.div`
     min-height: ${rowHeight}px;
   }
 
-  .folder-list-item__checkbox {
+  .list-view-item__checkbox {
     opacity: 0;
     margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
 
-    &.folder-list-item__checkbox--checked {
+    &.list-view-item__checkbox--checked {
       opacity: 1;
     }
   }
 
-  &.folder-list-item--dragged-over {
+  &.list-view-item--dragged-over {
     background: ${({ theme }) => theme.colors.background.quaternary};
   }
 `

@@ -1,4 +1,9 @@
-import { mdiCalendarMonthOutline, mdiTable, mdiViewWeek } from '@mdi/js'
+import {
+  mdiCalendarMonthOutline,
+  mdiFormatListBulleted,
+  mdiTable,
+  mdiViewWeek,
+} from '@mdi/js'
 import { SupportedViewTypes } from '../../interfaces/db/view'
 
 export type ViewMoveType =
@@ -15,8 +20,10 @@ export function getIconPathOfViewType(type: SupportedViewTypes) {
       return mdiCalendarMonthOutline
     case 'kanban':
       return mdiViewWeek
-    default:
     case 'table':
       return mdiTable
+    case 'list':
+    default:
+      return mdiFormatListBulleted
   }
 }
