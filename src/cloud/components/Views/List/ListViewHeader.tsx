@@ -12,7 +12,7 @@ interface ViewManagerContentRowProps {
   className?: string
 }
 
-const FolderListHeader: AppComponent<ViewManagerContentRowProps> = ({
+const ListViewHeader: AppComponent<ViewManagerContentRowProps> = ({
   className,
   children,
   checked,
@@ -37,7 +37,7 @@ const FolderListHeader: AppComponent<ViewManagerContentRowProps> = ({
   )
 }
 
-export default FolderListHeader
+export default ListViewHeader
 
 const rowHeight = 40
 const StyledContentManagerRow = styled.div`

@@ -1,18 +1,18 @@
 import { mdiPlus } from '@mdi/js'
 import React, { useCallback, useMemo } from 'react'
-import FormToggableInput from '../../../../design/components/molecules/Form/atoms/FormToggableInput'
-import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
-import { SerializedTeam } from '../../../interfaces/db/team'
-import { DraggedTo } from '../../../lib/dnd'
-import { useCloudDnd } from '../../../lib/hooks/sidebar/useCloudDnd'
-import { useCloudApi } from '../../../lib/hooks/useCloudApi'
-import { useI18n } from '../../../lib/hooks/useI18n'
-import { lngKeys } from '../../../lib/i18n/types'
-import { useRouter } from '../../../lib/router'
-import { folderToDataTransferItem } from '../../../lib/utils/patterns'
-import { sortByLexorankProperty } from '../../../lib/utils/string'
-import { getFolderHref } from '../../Link/FolderLink'
-import FolderListItem from './FolderListItem'
+import FormToggableInput from '../../../design/components/molecules/Form/atoms/FormToggableInput'
+import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
+import { SerializedTeam } from '../../interfaces/db/team'
+import { DraggedTo } from '../../lib/dnd'
+import { useCloudDnd } from '../../lib/hooks/sidebar/useCloudDnd'
+import { useCloudApi } from '../../lib/hooks/useCloudApi'
+import { useI18n } from '../../lib/hooks/useI18n'
+import { lngKeys } from '../../lib/i18n/types'
+import { useRouter } from '../../lib/router'
+import { folderToDataTransferItem } from '../../lib/utils/patterns'
+import { sortByLexorankProperty } from '../../lib/utils/string'
+import { getFolderHref } from '../Link/FolderLink'
+import ListViewItem from './List/ListViewItem'
 import {
   closestCenter,
   DndContext,
@@ -27,7 +27,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import FolderListHeader from './FolderListHeader'
+import ListViewHeader from './List/ListViewHeader'
 
 interface FolderListProps {
   folders?: SerializedFolderWithBookmark[]
@@ -143,7 +143,7 @@ export const FolderList = ({
 
   return (
     <>
-      <FolderListHeader
+      <ListViewHeader
         label={translate(lngKeys.GeneralFolders)}
         checked={selectingAllFolders}
         onSelect={
@@ -166,7 +166,7 @@ export const FolderList = ({
             const { id } = folder
             const href = getFolderHref(folder, team, 'index')
             return (
-              <FolderListItem
+              <ListViewItem
                 key={id}
                 id={id}
                 checked={hasFolderInSelection(folder.id)}

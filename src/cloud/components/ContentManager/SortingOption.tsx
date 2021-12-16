@@ -21,7 +21,7 @@ export const sortingOrders: (FormSelectOption & { icon: React.ReactNode })[] = [
           size={16}
           className='select__option__icon'
         />{' '}
-        <span className='select__option__label'>Creation Date</span>
+        <span className='select__option__label'>Latest Updated</span>
       </Flexbox>
     ),
     icon: (
@@ -31,7 +31,7 @@ export const sortingOrders: (FormSelectOption & { icon: React.ReactNode })[] = [
         className='select__option__icon'
       />
     ),
-    value: 'creation_date',
+    value: 'Latest Updated',
   },
   {
     label: (
@@ -51,7 +51,7 @@ export const sortingOrders: (FormSelectOption & { icon: React.ReactNode })[] = [
         className='select__option__icon'
       />
     ),
-    value: 'title_az',
+    value: 'Title A-Z',
   },
   {
     label: (
@@ -71,7 +71,7 @@ export const sortingOrders: (FormSelectOption & { icon: React.ReactNode })[] = [
         className='select__option__icon'
       />
     ),
-    value: 'title',
+    value: 'Title Z-A',
   },
 ]
 
