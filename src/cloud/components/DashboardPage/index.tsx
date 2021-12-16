@@ -23,7 +23,7 @@ import {
   getSmartViewListPageData,
   SmartViewListPageResponseBody,
 } from '../../api/pages/teams/smartViews/list'
-import { getDefaultTableView } from '../../lib/views/table'
+import { getDefaultListView } from '../../lib/views/list'
 import { trackEvent } from '../../api/track'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 import { ViewsManager } from '../Views'
@@ -74,7 +74,7 @@ const SmartViewPage = ({
 
     if (views.length === 0) {
       return [
-        getDefaultTableView({ target: selectedSmartView, type: 'smartView' }),
+        getDefaultListView({ target: selectedSmartView, type: 'smartView' }),
       ]
     }
 
