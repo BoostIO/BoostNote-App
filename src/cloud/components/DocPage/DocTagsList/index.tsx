@@ -16,11 +16,19 @@ interface DocTagsListProps {
   doc: SerializedDocWithSupplemental
   team: SerializedTeam
   readOnly: boolean
+  showIcon?: boolean
+  emptyLabel?: string
 }
 
 const maxTagsDisplayed = 4
 
-const DocTagsList = ({ doc, team, readOnly }: DocTagsListProps) => {
+const DocTagsList = ({
+  doc,
+  team,
+  readOnly,
+  showIcon,
+  emptyLabel = 'Empty',
+}: DocTagsListProps) => {
   const [sending, setSending] = useState<boolean>(false)
   const { pushApiErrorMessage } = useToast()
   const { updateDocsMap } = useNav()
@@ -86,7 +94,7 @@ const DocTagsList = ({ doc, team, readOnly }: DocTagsListProps) => {
             : 'doc__tags__wrapper--full',
         ])}
       >
-        {(doc.tags || []).length !== 0 && (
+        {(showIcon || (doc.tags || []).length !== 0) && (
           <Icon path={mdiLabelOutline} size={16} className='doc__tags__icon' />
         )}
         {listContent}{' '}
@@ -108,7 +116,13 @@ const DocTagsList = ({ doc, team, readOnly }: DocTagsListProps) => {
             )}
           </button>
         )}
-        {!readOnly && <TagsAutoCompleteInput team={team} doc={doc} />}
+        {!readOnly && (
+          <TagsAutoCompleteInput
+            emptyLabel={emptyLabel}
+            team={team}
+            doc={doc}
+          />
+        )}
       </div>
     </ListContainer>
   )
