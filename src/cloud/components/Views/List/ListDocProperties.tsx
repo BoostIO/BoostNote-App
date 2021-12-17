@@ -53,6 +53,8 @@ const ListDocProperties = ({
                     team={team}
                     readOnly={!currentUserIsCoreMember}
                     key={`${doc.id}-label`}
+                    emptyLabel={'Labels'}
+                    showIcon={true}
                   />
                 )
             }
