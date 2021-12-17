@@ -229,4 +229,8 @@ const StyledContainer = styled.div`
   &.list-view-item--dragged-over {
     background: ${({ theme }) => theme.colors.background.quaternary};
   }
+
+  .list-view-item__content {
+    flex: 0 1 auto;
+  }
 `

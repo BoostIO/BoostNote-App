@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import { SerializedView } from '../../../interfaces/db/view'
 import { useCloudApi } from '../useCloudApi'
-import { ListViewProp, ViewListData } from '../../views/list'
+import { ListViewProp, sortListViewProps, ViewListData } from '../../views/list'
 import { CreateViewResponseBody } from '../../../api/teams/views'
 import { capitalize } from 'lodash'
 import { isDefaultView } from '../../views'
@@ -19,7 +19,7 @@ export type ListViewActionsRef = React.MutableRefObject<{
   ) => Promise<BulkApiActionRes>
 }>
 
-export function useListView({ selectNewView }: ListViewStoreProps) {
+export function useListView({ view, selectNewView }: ListViewStoreProps) {
   const { updateViewApi, createViewApi } = useCloudApi()
 
   const saveView = useCallback(
@@ -50,6 +50,10 @@ export function useListView({ selectNewView }: ListViewStoreProps) {
     [createViewApi, updateViewApi, selectNewView]
   )
 
+  const props = useMemo(() => {
+    return sortListViewProps(view.data.props || {})
+  }, [view])
+
   const setProperties = useCallback(
     async (view: SerializedView, props: Record<string, ListViewProp>) => {
       return saveView(view, { ...view.data, props })
@@ -68,6 +72,7 @@ export function useListView({ selectNewView }: ListViewStoreProps) {
   }, [setProperties])
 
   return {
+    props,
     actionsRef,
   }
 }

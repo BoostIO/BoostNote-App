@@ -37,6 +37,7 @@ import ListViewItem from './ListViewItem'
 import { getDocLinkHref } from '../../Link/DocLink'
 import ListViewPropertiesContext from './ListViewPropertiesContext'
 import { useListView } from '../../../lib/hooks/views/listView'
+import ListDocProperties from './ListDocProperties'
 
 type ListViewProps = {
   view: SerializedView<ViewListData>
@@ -88,7 +89,7 @@ const ListView = ({
   const { openContextModal } = useModal()
   const { push } = useRouter()
 
-  const { actionsRef } = useListView({
+  const { actionsRef, props: orderedViewProps } = useListView({
     view,
     selectNewView: selectViewId,
   })
@@ -242,7 +243,14 @@ const ListView = ({
               onDragEnd={(event: any) => clearDragTransferData(event)}
               onDrop={(event: any) => onDropDoc(event, doc)}
               hideOrderingHandle={true}
-            />
+            >
+              <ListDocProperties
+                doc={doc}
+                props={orderedViewProps}
+                team={team}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+              />
+            </ListViewItem>
           )
         })}
         {currentWorkspaceId != null && (
@@ -330,37 +338,6 @@ const Container = styled.div`
 
   .content__manager__list__header--margin {
     margin-top: ${({ theme }) => theme.sizes.spaces.l}px !important;
-  }
-
-  .item__property__button.item__property__button--empty
-    .item__property__button__label {
-    display: none;
-  }
-
-  .property--errored {
-    justify-content: center;
-  }
-
-  .react-datepicker-popper {
-    z-index: 2;
-  }
-
-  .navigation__item {
-    height: 100%;
-  }
-
-  .static__dates {
-    height: 100%;
-    justify-content: center;
-    color: ${({ theme }) => theme.colors.text.subtle};
-  }
-
-  .doc__tags__icon {
-    display: none;
-  }
-
-  .sorting-options__select .form__select__single-value {
-    display: flex;
   }
 `
 

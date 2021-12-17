@@ -17,6 +17,7 @@ import { sortByLexorankProperty } from '../../lib/utils/string'
 import CalendarView from './Calendar/CalendarView'
 import KanbanView from './Kanban'
 import ListView from './List'
+import { sortListViewProps } from '../../lib/views/list'
 
 type ViewsManagerProps = {
   views: SerializedView[]
@@ -111,11 +112,18 @@ export const ViewsManager = ({
   }, [selectedViewId, views])
 
   const toolbarColumns = useMemo(() => {
-    if (currentView == null || currentView.type !== 'table') {
+    if (
+      currentView == null ||
+      !(currentView.type === 'table' || currentView.type === 'list')
+    ) {
       return []
     }
 
-    return sortTableViewColumns(currentView.data.columns || {})
+    if (currentView.type === 'table') {
+      return sortTableViewColumns(currentView.data.columns || {})
+    }
+
+    return sortListViewProps(currentView.data.props)
   }, [currentView])
 
   const selectViewId = useCallback(
