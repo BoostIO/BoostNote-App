@@ -8,8 +8,6 @@ import { useUpDownNavigationListener } from '../../../lib/keyboard'
 import { useToast } from '../../../../design/lib/stores/toast'
 import styled from '../../../../design/lib/styled'
 import cc from 'classcat'
-import { lngKeys } from '../../../lib/i18n/types'
-import { useI18n } from '../../../lib/hooks/useI18n'
 import DocPropertyValueButton from '../../Props/Pickers/PropertyValueButton'
 import Icon from '../../../../design/components/atoms/Icon'
 import { useModal } from '../../../../design/lib/stores/modal'
@@ -25,10 +23,14 @@ import { getColorFromString } from '../../../lib/utils/string'
 interface TagsAutoCompleteInputProps {
   doc: SerializedDocWithSupplemental
   team: SerializedTeam
+  emptyLabel: string
 }
 
-const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
-  const { translate } = useI18n()
+const TagsAutoCompleteInput = ({
+  team,
+  doc,
+  emptyLabel,
+}: TagsAutoCompleteInputProps) => {
   const { openContextModal } = useModal()
   const activateAndFocus = useCallback(
     (ev) => {
@@ -54,11 +56,11 @@ const TagsAutoCompleteInput = ({ team, doc }: TagsAutoCompleteInputProps) => {
         <DocPropertyValueButton
           iconPath={mdiLabelOutline}
           id='tag__add__btn'
-          empty={true}
+          empty={emptyLabel === 'Empty'}
           onClick={activateAndFocus}
           isReadOnly={false}
         >
-          {translate(lngKeys.AddALabel)}
+          {emptyLabel}
         </DocPropertyValueButton>
       ) : (
         <button
