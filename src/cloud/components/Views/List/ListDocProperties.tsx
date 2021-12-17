@@ -88,6 +88,8 @@ const ListDocProperties = ({
 
 const Container = styled(Scroller)`
   max-width: 100%;
+  overflow: hidden;
+
   .list-view__doc__properties {
     white-space: nowrap;
   }

@@ -339,6 +339,10 @@ const Container = styled.div`
   .content__manager__list__header--margin {
     margin-top: ${({ theme }) => theme.sizes.spaces.l}px !important;
   }
+
+  .content__manager__add-row {
+    border-bottom: 0 !important;
+  }
 `
 
 export default ListView
