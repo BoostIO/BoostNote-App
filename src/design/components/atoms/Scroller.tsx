@@ -8,6 +8,7 @@ interface ScrollerProps {
   className?: string
   id?: string
   ref?: React.LegacyRef<OverlayScrollbarsComponent>
+  autoHide?: OverlayScrollbars.AutoHideBehavior
   overflowBehavior?: {
     x?: OverlayScrollbars.OverflowBehavior
     y?: OverlayScrollbars.OverflowBehavior
@@ -16,26 +17,39 @@ interface ScrollerProps {
 const Scroller = React.forwardRef<
   OverlayScrollbarsComponent,
   PropsWithChildren<ScrollerProps>
->(({ style, children, className, overflowBehavior, id, onClick }, ref) => {
-  return (
-    <OverlayScrollbarsComponent
-      className={cc(['vertical__scroller', className])}
-      options={{
-        scrollbars: {
-          autoHide: 'scroll',
-          autoHideDelay: 300,
-        },
-        overflowBehavior,
-        clipAlways: false,
-      }}
-      id={id}
-      onClick={onClick}
-      style={style}
-      ref={ref}
-    >
-      {children}
-    </OverlayScrollbarsComponent>
-  )
-})
+>(
+  (
+    {
+      style,
+      children,
+      className,
+      overflowBehavior,
+      autoHide = 'scroll',
+      id,
+      onClick,
+    },
+    ref
+  ) => {
+    return (
+      <OverlayScrollbarsComponent
+        className={cc(['vertical__scroller', className])}
+        options={{
+          scrollbars: {
+            autoHide,
+            autoHideDelay: 300,
+          },
+          overflowBehavior,
+          clipAlways: false,
+        }}
+        id={id}
+        onClick={onClick}
+        style={style}
+        ref={ref}
+      >
+        {children}
+      </OverlayScrollbarsComponent>
+    )
+  }
+)
 
 export default React.memo(Scroller)
