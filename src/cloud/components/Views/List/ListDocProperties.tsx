@@ -32,7 +32,10 @@ const ListDocProperties = ({
               case 'creation_date':
               case 'update_date':
                 return (
-                  <Flexbox className='static__dates'>
+                  <Flexbox
+                    className='static__dates'
+                    key={`${doc.id}-${prop.prop}`}
+                  >
                     {getFormattedBoosthubDateTime(
                       doc[
                         prop.prop === 'creation_date'
@@ -49,6 +52,7 @@ const ListDocProperties = ({
                     doc={doc}
                     team={team}
                     readOnly={!currentUserIsCoreMember}
+                    key={`${doc.id}-label`}
                   />
                 )
             }
@@ -71,6 +75,7 @@ const ListDocProperties = ({
                 isErrored={!isPropDataAccurate}
                 showIcon={true}
                 emptyLabel={propName}
+                key={`${doc.id}-${prop.type}-${prop.name}`}
               />
             )
           }
