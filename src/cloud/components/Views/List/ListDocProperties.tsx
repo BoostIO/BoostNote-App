@@ -24,7 +24,7 @@ const ListDocProperties = ({
   currentUserIsCoreMember,
 }: ListDocPropertiesProps) => {
   return (
-    <Container>
+    <Container autoHide={'never'}>
       <Flexbox className='list-view__doc__properties'>
         {props.map((prop) => {
           if (isListViewStaticProp(prop)) {
