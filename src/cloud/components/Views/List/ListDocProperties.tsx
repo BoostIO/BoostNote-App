@@ -54,7 +54,6 @@ const ListDocProperties = ({
                     readOnly={!currentUserIsCoreMember}
                     key={`${doc.id}-label`}
                     emptyLabel={'Labels'}
-                    showIcon={true}
                   />
                 )
             }
@@ -91,6 +90,10 @@ const ListDocProperties = ({
 const Container = styled(Scroller)`
   max-width: 100%;
   overflow: hidden;
+
+  .doc__tags {
+    flex-grow: 0;
+  }
 
   .list-view__doc__properties {
     white-space: nowrap;
