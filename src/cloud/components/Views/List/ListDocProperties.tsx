@@ -93,6 +93,7 @@ const Container = styled(Scroller)`
 
   .doc__tags {
     flex-grow: 0;
+    flex: 0 0 auto;
   }
 
   .list-view__doc__properties {
