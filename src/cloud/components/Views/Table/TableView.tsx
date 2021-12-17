@@ -285,13 +285,15 @@ const TableView = ({
                         return {
                           children: (
                             <Flexbox className='static__dates'>
-                              {getFormattedBoosthubDateTime(
-                                doc[
-                                  col.prop === 'creation_date'
-                                    ? 'createdAt'
-                                    : 'updatedAt'
-                                ]
-                              )}
+                              <span>
+                                {getFormattedBoosthubDateTime(
+                                  doc[
+                                    col.prop === 'creation_date'
+                                      ? 'createdAt'
+                                      : 'updatedAt'
+                                  ]
+                                )}
+                              </span>
                             </Flexbox>
                           ),
                         }
@@ -430,6 +432,11 @@ const Container = styled.div`
     height: 100%;
     justify-content: center;
     color: ${({ theme }) => theme.colors.text.subtle};
+    span {
+      ${overflowEllipsis()}
+      text-align: center;
+      padding: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
   }
 
   .table__row__cell > *,
