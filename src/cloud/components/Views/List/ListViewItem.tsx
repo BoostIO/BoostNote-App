@@ -9,6 +9,7 @@ import { CSS } from '@dnd-kit/utilities'
 import Icon from '../../../../design/components/atoms/Icon'
 import { mdiDragVertical } from '@mdi/js'
 import { onDragLeaveCb } from '../../../../design/lib/dnd'
+import { overflowEllipsis } from '../../../../design/lib/styled/styleFunctions'
 
 interface FolderListItemProps {
   id: string
@@ -208,13 +209,18 @@ const StyledContainer = styled.div`
   }
 
   .list-view-item__label {
+    white-space: nowrap;
     width: 100%;
     display: flex;
-    flex: 1 1 auto;
+    flex: 1 2 auto;
     align-items: center;
     color: ${({ theme }) => theme.colors.text.secondary};
     text-decoration: none;
     min-height: ${rowHeight}px;
+  }
+
+  .item__label__line {
+    ${overflowEllipsis()}
   }
 
   .list-view-item__checkbox {
@@ -231,6 +237,7 @@ const StyledContainer = styled.div`
   }
 
   .list-view-item__content {
-    flex: 1 2 auto;
+    flex: 2 1 auto;
+    overflow: hidden;
   }
 `
