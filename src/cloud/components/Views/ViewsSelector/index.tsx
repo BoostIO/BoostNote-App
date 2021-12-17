@@ -7,26 +7,28 @@ import {
 } from '@mdi/js'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useEffectOnce } from 'react-use'
-import Button, { LoadingButton } from '../../../design/components/atoms/Button'
-import ButtonGroup from '../../../design/components/atoms/ButtonGroup'
-import Spinner from '../../../design/components/atoms/Spinner'
-import UpDownList from '../../../design/components/atoms/UpDownList'
-import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
-import NavigationItem from '../../../design/components/molecules/Navigation/NavigationItem'
-import MetadataContainer from '../../../design/components/organisms/MetadataContainer'
-import MetadataContainerBreak from '../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
-import MetadataContainerRow from '../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import { useModal } from '../../../design/lib/stores/modal'
-import styled from '../../../design/lib/styled'
-import { trackEvent } from '../../api/track'
-import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
+import Button, {
+  LoadingButton,
+} from '../../../../design/components/atoms/Button'
+import ButtonGroup from '../../../../design/components/atoms/ButtonGroup'
+import Spinner from '../../../../design/components/atoms/Spinner'
+import UpDownList from '../../../../design/components/atoms/UpDownList'
+import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
+import NavigationItem from '../../../../design/components/molecules/Navigation/NavigationItem'
+import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
+import MetadataContainerBreak from '../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
+import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import { useModal } from '../../../../design/lib/stores/modal'
+import styled from '../../../../design/lib/styled'
+import { trackEvent } from '../../../api/track'
+import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 import {
   SerializedView,
   SupportedViewTypes,
   ViewParent,
-} from '../../interfaces/db/view'
-import { useViewHandler } from '../../lib/hooks/views/viewHandler'
-import { getIconPathOfViewType } from '../../lib/views'
+} from '../../../interfaces/db/view'
+import { useViewHandler } from '../../../lib/hooks/views/viewHandler'
+import { getIconPathOfViewType } from '../../../lib/views'
 
 export interface ViewsSelectorProps {
   selectedViewId: number | undefined
@@ -272,32 +274,36 @@ const ViewContextModal = ({
         }}
       />
       <MetadataContainerBreak />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            id: 'metadata-move-left',
-            label: 'Move left',
-            iconPath: mdiArrowLeft,
-            spinning: sending === 'before',
-            disabled: position.isFirst || sendingMap.has(view.id.toString()),
-            onClick: () => moveView(view, 'before'),
-          },
-        }}
-      />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            id: 'metadata-move-right',
-            label: 'Move right',
-            iconPath: mdiArrowRight,
-            spinning: sending === 'after',
-            disabled: position.isLast || sendingMap.has(view.id.toString()),
-            onClick: () => moveView(view, 'after'),
-          },
-        }}
-      />
+      {!position.isFirst && (
+        <MetadataContainerRow
+          row={{
+            type: 'button',
+            props: {
+              id: 'metadata-move-left',
+              label: 'Move left',
+              iconPath: mdiArrowLeft,
+              spinning: sending === 'before',
+              disabled: sendingMap.has(view.id.toString()),
+              onClick: () => moveView(view, 'before'),
+            },
+          }}
+        />
+      )}
+      {!position.isLast && (
+        <MetadataContainerRow
+          row={{
+            type: 'button',
+            props: {
+              id: 'metadata-move-right',
+              label: 'Move right',
+              iconPath: mdiArrowRight,
+              spinning: sending === 'after',
+              disabled: sendingMap.has(view.id.toString()),
+              onClick: () => moveView(view, 'after'),
+            },
+          }}
+        />
+      )}
       <MetadataContainerRow
         row={{
           type: 'button',
