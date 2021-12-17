@@ -184,7 +184,6 @@ export function useTableView({
         titleColumnWidth: newWidth,
       }
 
-      console.log('Updating view', newWidth, state.titleColumnWidth)
       return saveView(view, newState)
     },
     [state, saveView, view]
@@ -210,7 +209,15 @@ export function useTableView({
       updateColumnWidth: updateColumnWidth,
       updateTitleColumnWidth: updateTitleColumnWidth,
     }
-  }, [removeColumn, addColumn, moveColumn, updateTableSort, setColumns, updateColumnWidth, updateTitleColumnWidth])
+  }, [
+    removeColumn,
+    addColumn,
+    moveColumn,
+    updateTableSort,
+    setColumns,
+    updateColumnWidth,
+    updateTitleColumnWidth,
+  ])
 
   return {
     actionsRef,
