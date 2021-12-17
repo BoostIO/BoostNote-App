@@ -68,12 +68,12 @@ export function isViewListData(data: any): data is ViewListData {
 }
 
 export function getInsertionOrderForListViewProp(
-  propumns: Record<string, ListViewProp> = {}
+  props: Record<string, ListViewProp> = {}
 ) {
   const propValues =
-    Object.keys(propumns).length === 0
+    Object.keys(props).length === 0
       ? []
-      : sortByAttributeAsc('order', Object.values(propumns))
+      : sortByAttributeAsc('order', Object.values(props))
   if (propValues.length === 0) {
     return LexoRank.middle().toString()
   } else {
@@ -84,19 +84,19 @@ export function getInsertionOrderForListViewProp(
 }
 
 export function sortListViewProps(
-  propumns: Record<string, ListViewProp> = {}
+  props: Record<string, ListViewProp> = {}
 ): ListViewProp[] {
-  if (Object.keys(propumns).length === 0) {
+  if (Object.keys(props).length === 0) {
     return []
   }
 
-  Object.keys(propumns).forEach((key) => {
-    if (propumns[key].order == null) {
-      propumns[key].order = LexoRank.middle().toString()
+  Object.keys(props).forEach((key) => {
+    if (props[key].order == null) {
+      props[key].order = LexoRank.middle().toString()
     }
   })
 
-  return sortByAttributeAsc('order', getArrayFromRecord(propumns))
+  return sortByAttributeAsc('order', getArrayFromRecord(props))
 }
 
 export function getDefaultListView(

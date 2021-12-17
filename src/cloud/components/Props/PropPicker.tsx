@@ -22,6 +22,7 @@ interface PropPickerProps {
   readOnly?: boolean
   isErrored?: boolean
   showIcon?: boolean
+  emptyLabel?: string
   onUpdate?: (newProps: Props) => void
 }
 
@@ -33,6 +34,7 @@ const PropPicker = ({
   readOnly = false,
   isErrored,
   showIcon,
+  emptyLabel,
 }: PropPickerProps) => {
   const { sendingMap, updateDocPropsApi } = useCloudApi()
 
@@ -79,6 +81,7 @@ const PropPicker = ({
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
           isLoading={sendingMap.get(parent.target.id) === propName}
           readOnly={readOnly}
+          emptyLabel={emptyLabel}
           defaultValue={
             propData.data != null
               ? Array.isArray(propData.data)
@@ -107,6 +110,7 @@ const PropPicker = ({
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
           sending={sendingMap.get(parent.target.id) === propName}
           isReadOnly={readOnly}
+          emptyLabel={emptyLabel}
           date={propData.data == null ? null : (propData.data as any)}
           onDueDateChange={(newDate: Date | Date[] | null) =>
             updateProp(
@@ -133,6 +137,7 @@ const PropPicker = ({
           }
           sending={sendingMap.get(parent.target.id) === 'status'}
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
+          emptyLabel={emptyLabel}
           isReadOnly={readOnly}
           showIcon={showIcon}
           onStatusChange={(val) =>
@@ -151,6 +156,7 @@ const PropPicker = ({
           }
           sending={sendingMap.get(parent.target.id) === 'number'}
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
+          emptyLabel={emptyLabel}
           isReadOnly={readOnly}
           showIcon={showIcon}
           onNumberChange={(val) =>
@@ -193,6 +199,7 @@ const PropPicker = ({
           <TimePeriodPicker
             modalLabel={propName}
             isReadOnly={readOnly}
+            emptyLabel={emptyLabel}
             sending={sendingMap.get(parent.target.id) === propName}
             disabled={sendingMap.get(parent.target.id) != null || readOnly}
             value={propData.data.data}

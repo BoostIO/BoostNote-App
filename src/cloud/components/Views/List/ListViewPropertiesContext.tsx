@@ -9,7 +9,6 @@ import MetadataContainerBreak from '../../../../design/components/organisms/Meta
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import styled from '../../../../design/lib/styled'
-import { sortByAttributeAsc } from '../../../../design/lib/utils/array'
 import {
   ListPropertySuggestionsRequestBody,
   ListPropertySuggestionsResponseBody,
@@ -18,7 +17,6 @@ import { UpdateViewResponseBody } from '../../../api/teams/views'
 import { SerializedView } from '../../../interfaces/db/view'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { getIconPathOfPropType } from '../../../lib/props'
-import { getArrayFromRecord } from '../../../lib/utils/array'
 import {
   ListViewProp,
   getGeneratedIdFromListViewPropId,
@@ -27,6 +25,7 @@ import {
   isListViewProperty,
   makeListViewPropId,
   ViewListData,
+  sortListViewProps,
 } from '../../../lib/views/list'
 import PropRegisterModal from '../../Props/PropRegisterModal'
 
@@ -96,7 +95,7 @@ const ListViewPropertiesContext = ({
   )
 
   const orderedProps = useMemo(() => {
-    return sortByAttributeAsc('name', getArrayFromRecord(props))
+    return sortListViewProps(props)
   }, [props])
 
   const fetchSuggestions = useCallback(async () => {
@@ -143,6 +142,7 @@ const ListViewPropertiesContext = ({
       <PropRegisterModal
         goBack={() => setFormState('list')}
         registerProp={addPropertyCallback}
+        registerStaticProp={addPropertyCallback}
         fetchPropertySuggestions={fetchSuggestions}
         isNameValid={isNameValid}
       />
