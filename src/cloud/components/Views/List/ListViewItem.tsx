@@ -231,6 +231,6 @@ const StyledContainer = styled.div`
   }
 
   .list-view-item__content {
-    flex: 0 1 auto;
+    flex: 1 2 auto;
   }
 `
