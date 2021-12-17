@@ -3,32 +3,27 @@ import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedFolderWithBookmark } from '../../interfaces/db/folder'
 import { useSet } from 'react-use'
 import { sortByAttributeAsc, sortByAttributeDesc } from '../../lib/utils/array'
-import {
-  docToDataTransferItem,
-  folderToDataTransferItem,
-  getDocId,
-  getDocTitle,
-  getFolderId,
-} from '../../lib/utils/patterns'
+import { docToDataTransferItem, getDocTitle } from '../../lib/utils/patterns'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { StyledContentManagerList } from './styled'
 import { SerializedTeam } from '../../interfaces/db/team'
 import SortingOption, { sortingOrders } from './SortingOption'
-import ContentManagerDocRow from './Rows/ContentManagerDocRow'
-import ContentmanagerFolderRow from './Rows/ContentManagerFolderRow'
 import { difference } from 'ramda'
 import ContentManagerToolbar from './ContentManagerToolbar'
 import styled from '../../../design/lib/styled'
 import { usePreferences } from '../../lib/stores/preferences'
 import EmptyRow from './Rows/EmptyRow'
-import cc from 'classcat'
-import ContentManagerRow from './Rows/ContentManagerRow'
 import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { useCloudDnd } from '../../lib/hooks/sidebar/useCloudDnd'
 import { DraggedTo } from '../../../design/lib/dnd'
 import Scroller from '../../../design/components/atoms/Scroller'
 import { FormSelectOption } from '../../../design/components/molecules/Form/atoms/FormSelect'
+import ListViewItem from '../Views/List/ListViewItem'
+import { mdiFileDocumentOutline } from '@mdi/js'
+import { getDocLinkHref } from '../Link/DocLink'
+import { useRouter } from '../../lib/router'
+import ListViewHeader from '../Views/List/ListViewHeader'
 
 interface ContentManagerProps {
   team: SerializedTeam
@@ -45,7 +40,6 @@ const ContentManager = ({
   team,
   documents,
   folders,
-  page,
   workspacesMap,
   currentUserIsCoreMember,
 }: ContentManagerProps) => {
@@ -54,17 +48,8 @@ const ContentManager = ({
     preferences.folderSortingOrder
   )
   const { translate } = useI18n()
+  const { push } = useRouter()
 
-  const [
-    selectedFolderSet,
-    {
-      add: addFolder,
-      has: hasFolder,
-      toggle: toggleFolder,
-      reset: resetFolders,
-      remove: removeFolder,
-    },
-  ] = useSet<string>(new Set())
   const [
     selectedDocSet,
     {
@@ -98,16 +83,6 @@ const ContentManager = ({
     currentDocumentsRef.current = newMap
   }, [documents, removeDoc])
 
-  useEffect(() => {
-    const newMap = new Map((folders || []).map((folder) => [folder.id, folder]))
-    const idsToClean: string[] = difference(
-      [...currentFoldersRef.current.keys()],
-      [...newMap.keys()]
-    )
-    idsToClean.forEach(removeFolder)
-    currentFoldersRef.current = newMap
-  }, [folders, removeFolder])
-
   const orderedDocs = useMemo(() => {
     const filteredDocs = documents.map((doc) => {
       return {
@@ -126,40 +101,13 @@ const ContentManager = ({
     }
   }, [order, documents])
 
-  const orderedFolders = useMemo(() => {
-    if (folders == null) {
-      return []
-    }
-
-    switch (order) {
-      case 'Title A-Z':
-        return sortByAttributeAsc('name', folders)
-      case 'Title Z-A':
-        return sortByAttributeDesc('name', folders)
-      case 'Latest Updated':
-      default:
-        return sortByAttributeDesc('updatedAt', folders)
-    }
-  }, [order, folders])
-
   const selectingAllDocs = useMemo(() => {
     return orderedDocs.length > 0 && orderedDocs.every((doc) => hasDoc(doc.id))
   }, [orderedDocs, hasDoc])
 
-  const selectingAllFolders = useMemo(() => {
-    return (
-      orderedFolders.length > 0 &&
-      orderedFolders.every((folder) => hasFolder(folder.id))
-    )
-  }, [orderedFolders, hasFolder])
-
   const selectAllDocs = useCallback(() => {
     orderedDocs.forEach((doc) => addDoc(doc.id))
   }, [orderedDocs, addDoc])
-
-  const selectAllFolders = useCallback(() => {
-    orderedFolders.forEach((folder) => addFolder(folder.id))
-  }, [orderedFolders, addFolder])
 
   const onChangeOrder = useCallback(
     (val: FormSelectOption) => {
@@ -171,27 +119,9 @@ const ContentManager = ({
 
   const {
     dropInDocOrFolder,
-    saveFolderTransferData,
     saveDocTransferData,
     clearDragTransferData,
   } = useCloudDnd()
-
-  const onDragStartFolder = useCallback(
-    (event: any, folder: SerializedFolderWithBookmark) => {
-      saveFolderTransferData(event, folder)
-    },
-    [saveFolderTransferData]
-  )
-
-  const onDropFolder = useCallback(
-    (event, folder: SerializedFolderWithBookmark) =>
-      dropInDocOrFolder(
-        event,
-        { type: 'folder', resource: folderToDataTransferItem(folder) },
-        DraggedTo.insideFolder
-      ),
-    [dropInDocOrFolder]
-  )
 
   const onDragStartDoc = useCallback(
     (event: any, doc: SerializedDocWithSupplemental) => {
@@ -227,64 +157,35 @@ const ContentManager = ({
           </div>
         </StyledContentManagerHeader>
         <StyledContentManagerList>
-          <ContentManagerRow
+          <ListViewHeader
             label={translate(lngKeys.GeneralDocuments)}
             checked={selectingAllDocs}
             onSelect={selectingAllDocs ? resetDocs : selectAllDocs}
             showCheckbox={currentUserIsCoreMember}
-            type='header'
           />
-          {orderedDocs.map((doc) => (
-            <ContentManagerDocRow
-              doc={doc}
-              key={doc.id}
-              workspace={workspacesMap.get(doc.workspaceId)}
-              team={team}
-              updating={updating.includes(getDocId(doc))}
-              setUpdating={setUpdating}
-              checked={hasDoc(doc.id)}
-              onSelect={() => toggleDoc(doc.id)}
-              showPath={page != null}
-              currentUserIsCoreMember={currentUserIsCoreMember}
-              onDrop={onDropDoc}
-              onDragEnd={onDragEnd}
-              onDragStart={onDragStartDoc}
-            />
-          ))}
-          {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
-          {folders != null && (
-            <>
-              <ContentManagerRow
-                label={translate(lngKeys.GeneralFolders)}
-                checked={selectingAllFolders}
-                onSelect={selectingAllFolders ? resetFolders : selectAllFolders}
+          {orderedDocs.map((doc) => {
+            const { id } = doc
+            const href = getDocLinkHref(doc, team, 'index')
+            return (
+              <ListViewItem
+                id={id}
+                key={doc.id}
+                checked={hasDoc(doc.id)}
+                onSelect={() => toggleDoc(doc.id)}
                 showCheckbox={currentUserIsCoreMember}
-                type='header'
-                className={cc([
-                  orderedDocs.length > 0 &&
-                    'content__manager__list__header--margin',
-                ])}
+                label={doc.title}
+                defaultIcon={mdiFileDocumentOutline}
+                emoji={doc.emoji}
+                labelHref={href}
+                labelOnclick={() => push(href)}
+                onDrop={(ev) => onDropDoc(ev, doc)}
+                onDragEnd={onDragEnd}
+                onDragStart={(ev) => onDragStartDoc(ev, doc)}
+                hideOrderingHandle={true}
               />
-
-              {orderedFolders.map((folder) => (
-                <ContentmanagerFolderRow
-                  folder={folder}
-                  key={folder.id}
-                  team={team}
-                  updating={updating.includes(getFolderId(folder))}
-                  setUpdating={setUpdating}
-                  checked={hasFolder(folder.id)}
-                  onSelect={() => toggleFolder(folder.id)}
-                  currentUserIsCoreMember={currentUserIsCoreMember}
-                  onDrop={onDropFolder}
-                  onDragEnd={onDragEnd}
-                  onDragStart={onDragStartFolder}
-                />
-              ))}
-
-              {orderedFolders.length === 0 && <EmptyRow label='No Folders' />}
-            </>
-          )}
+            )
+          })}
+          {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
         </StyledContentManagerList>
       </Scroller>
 
@@ -292,7 +193,7 @@ const ContentManager = ({
         <ContentManagerToolbar
           propsColumns={[]}
           selectedDocs={selectedDocSet}
-          selectedFolders={selectedFolderSet}
+          selectedFolders={new Set()}
           documentsMap={currentDocumentsRef.current}
           foldersMap={currentFoldersRef.current}
           workspacesMap={workspacesMap}
