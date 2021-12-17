@@ -15,7 +15,7 @@ export interface TopbarBreadcrumbItemProps {
   emoji?: string
   active?: boolean
   href: string
-  onDoubleClick: () => void
+  onDoubleClick: React.MouseEventHandler
   onClick: (props: { bottom: number; left: number }) => void
   onContextMenu: React.MouseEventHandler
 }
@@ -41,7 +41,7 @@ const TopbarBreadcrumb = ({
     if (timeoutRef.current != null) {
       clearTimeout(timeoutRef.current)
       timeoutRef.current = null
-      onDoubleClick()
+      onDoubleClick(event)
       return
     }
 

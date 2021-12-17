@@ -5,7 +5,6 @@ import Button, { ButtonProps, ButtonVariant } from '../../atoms/Button'
 import Icon from '../../atoms/Icon'
 import TopbarBreadcrumb from './molecules/TopbarBreadcrumb'
 import { BreadCrumbTreeItem } from '../../../lib/mappers/types'
-import { MenuTypes, useContextMenu } from '../../../lib/stores/contextMenu'
 import TopbarNavigationContext from './molecules/TopbarNavigationContext'
 import cc from 'classcat'
 import { scrollbarOverlay } from '../../../lib/styled/styleFunctions'
@@ -65,7 +64,6 @@ const Topbar: AppComponent<TopbarProps> = ({
   navigation,
   tree,
 }) => {
-  const { popup } = useContextMenu()
   const [treeState, setTreeState] = useState<{
     bottom: number
     left: number
@@ -152,28 +150,28 @@ const Topbar: AppComponent<TopbarProps> = ({
                 onContextMenu={(event: React.MouseEvent) => {
                   event.preventDefault()
                   event.stopPropagation()
-                  if (breadcrumb.controls == null) {
-                    return
-                  }
-                  popup(
-                    event,
-                    breadcrumb.controls.map((control) => {
-                      return {
-                        icon: control.icon,
-                        type: MenuTypes.Normal,
-                        label: control.label,
-                        onClick: control.onClick,
-                      }
-                    })
-                  )
-                }}
-                onClick={(props) =>
-                  openNavTree(breadcrumb.parentId, {
-                    ...props,
+                  const {
+                    bottom,
+                    left,
+                  } = event.currentTarget.getBoundingClientRect()
+                  return openNavTree(breadcrumb.parentId, {
+                    bottom,
+                    left,
                     actions: breadcrumb.controls,
                   })
-                }
-                onDoubleClick={breadcrumb.link.navigateTo}
+                }}
+                onClick={breadcrumb.link.navigateTo}
+                onDoubleClick={(event: React.MouseEvent) => {
+                  const {
+                    bottom,
+                    left,
+                  } = event.currentTarget.getBoundingClientRect()
+                  return openNavTree(breadcrumb.parentId, {
+                    bottom,
+                    left,
+                    actions: breadcrumb.controls,
+                  })
+                }}
               />
               {i !== breadcrumbs.length - 1 && (
                 <Icon
