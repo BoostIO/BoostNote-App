@@ -58,7 +58,7 @@ const ListDocProperties = ({
                 )
             }
           } else {
-            const propType = prop.type
+            const propType = prop.subType || prop.type
             const propName = prop.name
             const propData =
               (doc.props || {})[propName] ||
