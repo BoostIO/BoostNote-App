@@ -16,7 +16,6 @@ interface DocTagsListProps {
   doc: SerializedDocWithSupplemental
   team: SerializedTeam
   readOnly: boolean
-  showIcon?: boolean
   emptyLabel?: string
 }
 
@@ -26,7 +25,6 @@ const DocTagsList = ({
   doc,
   team,
   readOnly,
-  showIcon,
   emptyLabel = 'Empty',
 }: DocTagsListProps) => {
   const [sending, setSending] = useState<boolean>(false)
@@ -94,7 +92,7 @@ const DocTagsList = ({
             : 'doc__tags__wrapper--full',
         ])}
       >
-        {(showIcon || (doc.tags || []).length !== 0) && (
+        {(doc.tags || []).length !== 0 && (
           <Icon path={mdiLabelOutline} size={16} className='doc__tags__icon' />
         )}
         {listContent}{' '}

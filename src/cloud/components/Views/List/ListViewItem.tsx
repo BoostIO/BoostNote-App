@@ -210,7 +210,6 @@ const StyledContainer = styled.div`
 
   .list-view-item__label {
     white-space: nowrap;
-    width: 100%;
     display: flex;
     flex: 1 2 auto;
     align-items: center;
@@ -237,7 +236,9 @@ const StyledContainer = styled.div`
   }
 
   .list-view-item__content {
-    flex: 2 1 auto;
+    flex: 0 1 auto;
     overflow: hidden;
+    width: min-content;
+    margin-left: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 `
