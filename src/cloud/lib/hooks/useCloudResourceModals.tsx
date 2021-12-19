@@ -6,8 +6,12 @@ import { DialogIconTypes, useDialog } from '../../../design/lib/stores/dialog'
 import { useModal } from '../../../design/lib/stores/modal'
 import { SubmissionWrappers } from '../../../design/lib/types'
 import { removeCachedPageProps } from '../../../lib/routing/pagePropCache'
+import DocPreviewModal from '../../components/DocPreview'
 import WorkspaceModalForm from '../../components/Modal/contents/Workspace/WorkspaceModalForm'
-import { SerializedDoc } from '../../interfaces/db/doc'
+import {
+  SerializedDoc,
+  SerializedDocWithSupplemental,
+} from '../../interfaces/db/doc'
 import { SerializedFolder } from '../../interfaces/db/folder'
 import { PropData } from '../../interfaces/db/props'
 import { SerializedTeam } from '../../interfaces/db/team'
@@ -377,11 +381,22 @@ export function useCloudResourceModals() {
     [messageBox, deleteDocApi, translate, team, workspacesMap, foldersMap]
   )
 
+  const openDocPreview = useCallback(
+    (doc: SerializedDocWithSupplemental, team: SerializedTeam) => {
+      return openModal(<DocPreviewModal doc={doc} team={team} />, {
+        showCloseIcon: false,
+        removePadding: true,
+      })
+    },
+    [openModal]
+  )
+
   return {
     openWorkspaceCreateForm,
     openWorkspaceEditForm,
     openNewDocForm,
     openNewFolderForm,
+    openDocPreview,
     openRenameFolderForm,
     openRenameDocForm,
     deleteFolder,

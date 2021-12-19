@@ -81,6 +81,7 @@ const DatePropPicker = ({
             {
               width: 300,
               removePadding: true,
+              keepAll: true,
             }
           )
         }

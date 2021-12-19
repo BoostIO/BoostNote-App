@@ -30,6 +30,10 @@ export function getDocTitle(doc: SerializedDoc, fallback = '') {
   return doc.title != '' ? doc.title : fallback
 }
 
+export function getDocContent(doc: SerializedDoc, fallback = '') {
+  return doc.head != null ? doc.head.content : fallback
+}
+
 export function getTeamURL(team: SerializedTeam) {
   if (team.domain != null && team.domain !== '') {
     return `/${team.domain}`

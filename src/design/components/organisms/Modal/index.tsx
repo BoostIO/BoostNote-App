@@ -235,6 +235,7 @@ const ModalItem = ({
           `modal__window__width--${modal.width}`,
           modal.hideBackground && 'modal__window--no-bg',
           modal.position != null && `modal__window--context`,
+          modal.removePadding && 'modal__window--no-padding',
         ])}
       >
         {modal.showCloseIcon && (
@@ -277,8 +278,8 @@ const Container = styled.div`
     background: none !important;
   }
 
-  .modal__window--context.modal__window--no-padding,
-  .modal__window--context.modal__window--no-padding .modal__wrapper {
+  .modal__window--no-padding,
+  .modal__window--no-padding .modal__wrapper {
     padding: 0 !important;
   }
 

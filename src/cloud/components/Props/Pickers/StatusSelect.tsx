@@ -50,7 +50,12 @@ const StatusSelect = ({
             closeLastModal()
           }}
         />,
-        { alignment: popupAlignment, width: 200, removePadding: true }
+        {
+          alignment: popupAlignment,
+          width: 200,
+          removePadding: true,
+          keepAll: true,
+        }
       )
     },
     [openContextModal, closeLastModal, popupAlignment]
