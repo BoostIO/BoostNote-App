@@ -35,7 +35,7 @@ const TimePeriodPicker = ({
   emptyLabel,
   onPeriodChange,
 }: TimePeriodPickerProps) => {
-  const { openContextModal, closeAllModals } = useModal()
+  const { openContextModal, closeLastModal } = useModal()
 
   const parsedValue:
     | {
@@ -82,11 +82,12 @@ const TimePeriodPicker = ({
               defaultValue={parsedValue?.value}
               defaultReason={parsedValue?.reason}
               submitUpdate={onPeriodChange}
-              closeModal={closeAllModals}
+              closeModal={closeLastModal}
             />,
             {
               alignment: popupAlignment,
               minHeight: 56,
+              keepAll: true,
             }
           )
         }

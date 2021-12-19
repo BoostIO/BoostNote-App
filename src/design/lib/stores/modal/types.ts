@@ -24,7 +24,9 @@ export type ContextModalAlignment =
   | 'bottom-right'
   | 'top-left'
   | 'right'
+
 export type ModalOpeningOptions = {
+  removePadding?: boolean
   showCloseIcon?: boolean
   keepAll?: boolean
   width?: 'large' | 'default' | 'small' | 'full' | number

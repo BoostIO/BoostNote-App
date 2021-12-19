@@ -44,7 +44,12 @@ const NumberSelect = ({
             closeLastModal()
           }}
         />,
-        { alignment: popupAlignment, width: 191, removePadding: true }
+        {
+          alignment: popupAlignment,
+          width: 191,
+          removePadding: true,
+          keepAll: true,
+        }
       )
     },
     [openContextModal, number, popupAlignment, closeLastModal, onNumberChange]

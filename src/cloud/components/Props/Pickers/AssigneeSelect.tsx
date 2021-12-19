@@ -32,15 +32,15 @@ const AssigneeSelect = ({
   popupAlignment = 'bottom-left',
 }: AssigneeSelectProps) => {
   const { translate } = useI18n()
-  const { openContextModal, closeAllModals } = useModal()
+  const { openContextModal, closeLastModal } = useModal()
   const { permissions = [] } = usePage()
 
   const updateAssignees = useCallback(
     (selectedUserIds: string[]) => {
       update(selectedUserIds)
-      closeAllModals()
+      closeLastModal()
     },
-    [update, closeAllModals]
+    [update, closeLastModal]
   )
 
   const selectedUsers = useMemo(() => {
@@ -77,11 +77,12 @@ const AssigneeSelect = ({
             <AssigneeModal
               selectedUsers={defaultValue}
               submitUpdate={updateAssignees}
-              closeModal={closeAllModals}
+              closeModal={closeLastModal}
             />,
             {
               alignment: popupAlignment,
               width: 300,
+              keepAll: true,
             }
           )
         }

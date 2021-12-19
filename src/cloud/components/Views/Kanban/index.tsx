@@ -16,16 +16,15 @@ import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedView } from '../../../interfaces/db/view'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
+import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import {
   KanbanViewList,
   useKanbanView,
 } from '../../../lib/hooks/views/kanbanView'
 import { lngKeys } from '../../../lib/i18n/types'
-import { useRouter } from '../../../lib/router'
 import { useStatuses } from '../../../lib/stores/status'
 import { KanbanViewData } from '../../../lib/views/kanban'
-import { getDocLinkHref } from '../../Link/DocLink'
 import { StatusSelector } from '../../Props/Pickers/StatusSelect'
 import Item from './Item'
 import KanbanViewPropertiesContext from './KanbanViewPropertiesContext'
@@ -68,9 +67,9 @@ const KanbanView = ({
     docs,
   })
   const { openContextModal, closeLastModal } = useModal()
-  const { push } = useRouter()
   const { createDoc } = useCloudApi()
   const { translate } = useI18n()
+  const { openDocPreview } = useCloudResourceModals()
 
   const addListRef = useRef(addList)
   useEffect(() => {
@@ -151,13 +150,13 @@ const KanbanView = ({
     (doc: SerializedDocWithSupplemental) => {
       return (
         <Item
-          onClick={() => push(getDocLinkHref(doc, team, 'index'))}
+          onClick={() => openDocPreview(doc, team)}
           doc={doc}
           displayedProps={view.data.props || {}}
         />
       )
     },
-    [team, push, view.data.props]
+    [team, openDocPreview, view.data.props]
   )
 
   const renderListFooter = useCallback(
