@@ -13,7 +13,6 @@ import { useTableView } from '../../../lib/hooks/views/tableView'
 import { buildSmartViewQueryCheck } from '../../../lib/smartViews'
 import { docToDataTransferItem, getDocTitle } from '../../../lib/utils/patterns'
 import { useModal } from '../../../../design/lib/stores/modal'
-import { useRouter } from '../../../lib/router'
 import { useCloudDnd } from '../../../lib/hooks/sidebar/useCloudDnd'
 import { DraggedTo } from '../../../../design/lib/dnd'
 import { StyledContentManagerList } from '../../ContentManager/styled'
@@ -42,6 +41,7 @@ import Button from '../../../../design/components/atoms/Button'
 import TableViewPropertiesContext from './TableViewPropertiesContext'
 import TitleColumnSettingsContext from './TitleColumnSettingsContext'
 import { usePage } from '../../../lib/stores/pageStore'
+import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 
 type TableViewProps = {
   view: SerializedView<ViewTableData>
@@ -79,7 +79,7 @@ const TableView = ({
   const { translate } = useI18n()
   const { createDoc } = useCloudApi()
   const { openContextModal, closeAllModals } = useModal()
-  const { push } = useRouter()
+  const { openDocPreview } = useCloudResourceModals()
   const { permissions = [] } = usePage()
 
   const {
@@ -267,7 +267,7 @@ const TableView = ({
                   children: (
                     <NavigationItem
                       labelHref={docLink}
-                      labelClick={() => push(docLink)}
+                      labelClick={() => openDocPreview(doc, team)}
                       label={getDocTitle(doc, 'Untitled')}
                       icon={
                         doc.emoji != null

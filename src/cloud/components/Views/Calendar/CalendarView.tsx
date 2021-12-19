@@ -20,9 +20,7 @@ import { getIconPathOfPropType } from '../../../lib/props'
 import Icon from '../../../../design/components/atoms/Icon'
 import { mdiCalendarMonthOutline, mdiFileDocumentOutline } from '@mdi/js'
 import CalendarWatchedPropContext from './CalendarWatchedPropContext'
-import { useRouter } from '../../../lib/router'
 import CalendarNoDateContext from './CalendarNoDateContext'
-import { getDocLinkHref } from '../../Link/DocLink'
 import { getISODateFromLocalTime } from '../../../lib/date'
 import {
   sortCalendarViewProps,
@@ -49,9 +47,9 @@ const CalendarView = ({
   currentWorkspaceId,
   currentFolderId,
 }: CalendarViewProps) => {
-  const { push } = useRouter()
   const { openNewDocForm } = useCloudResourceModals()
   const { openContextModal, closeAllModals } = useModal()
+  const { openDocPreview } = useCloudResourceModals()
 
   const { watchedProp, actionsRef } = useCalendarView({
     view,
@@ -97,7 +95,7 @@ const CalendarView = ({
         extendedProps: {
           doc,
           displayedProps,
-          onClick: () => push(getDocLinkHref(doc, team, 'index')),
+          onClick: () => openDocPreview(doc, team),
           onContextClick: (event: React.MouseEvent) =>
             openContextModal(
               event,
@@ -110,7 +108,14 @@ const CalendarView = ({
         },
       }
     })
-  }, [docs, team, view.data.props, watchedProp, push, openContextModal])
+  }, [
+    docs,
+    team,
+    view.data.props,
+    watchedProp,
+    openDocPreview,
+    openContextModal,
+  ])
 
   const noDateDocs = useMemo(() => {
     return filterIter(
