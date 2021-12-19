@@ -70,6 +70,7 @@ import WorkflowPage from '../pages/workflows/[workflowId]'
 import WorkflowCreatePage from '../pages/workflows/create'
 import AutomationCreatePage from '../pages/automations/create'
 import AutomationPage from '../pages/automations/[automationId]'
+import GithubSourceCallbackPage from './sources/GithubSourceCallbackPage'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -357,9 +358,14 @@ function isApplicationPagePathname(pathname: string) {
       splittedPathnames[1] === 'delete') ||
     (splittedPathnames.length >= 2 && splittedPathnames[1] === 'invite') ||
     (splittedPathnames.length >= 1 &&
-      ['account', 'cooperate', 'settings', 'shared', 'invite'].includes(
-        splittedPathnames[0]
-      ))
+      [
+        'account',
+        'cooperate',
+        'settings',
+        'shared',
+        'invite',
+        'sources',
+      ].includes(splittedPathnames[0]))
   ) {
     return false
   }
@@ -381,6 +387,15 @@ function getPageComponent(pathname: string): PageSpec | null {
 
   if (splittedPathnames.length >= 1) {
     switch (splittedPathnames[0]) {
+      case 'sources':
+        if (
+          splittedPathnames[1] === 'github' &&
+          splittedPathnames[2] === 'callback'
+        ) {
+          return {
+            Component: GithubSourceCallbackPage,
+          }
+        }
       case 'cooperate':
         return {
           Component: CooperatePage,
