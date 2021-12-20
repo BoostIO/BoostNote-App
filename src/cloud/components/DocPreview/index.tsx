@@ -1,22 +1,27 @@
 import { mdiArrowExpand, mdiClose, mdiPencil } from '@mdi/js'
 import React from 'react'
+import { useState } from 'react'
 import { useCallback } from 'react'
 import { useMemo } from 'react'
+import { useEffectOnce } from 'react-use'
 import Button from '../../../design/components/atoms/Button'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Flexbox from '../../../design/components/atoms/Flexbox'
+import Spinner from '../../../design/components/atoms/Spinner'
 import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
 import { overflowEllipsis } from '../../../design/lib/styled/styleFunctions'
+import { getDocCollaborationToken } from '../../api/docs/token'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { useRouter } from '../../lib/router'
+import { useGlobalData } from '../../lib/stores/globalData'
 import { useNav } from '../../lib/stores/nav'
 import { usePage } from '../../lib/stores/pageStore'
-import { getDocContent, getDocTitle } from '../../lib/utils/patterns'
+import { getDocTitle } from '../../lib/utils/patterns'
 import DocProperties from '../DocProperties'
 import { getDocLinkHref } from '../Link/DocLink'
-import CustomizedMarkdownPreviewer from '../MarkdownView/CustomizedMarkdownPreviewer'
+import DocPreviewRealtime from './DocPreviewRealtime'
 
 interface DocPreviewModalProps {
   doc: SerializedDocWithSupplemental
@@ -28,6 +33,30 @@ const DocPreviewModal = ({ doc, team }: DocPreviewModalProps) => {
   const { docsMap } = useNav()
   const { push } = useRouter()
   const { currentUserIsCoreMember } = usePage()
+  const [fetching, setFetching] = useState(true)
+  const [collabToken, setCollabToken] = useState(
+    doc.collaborationToken || doc.id
+  )
+
+  const {
+    globalData: { currentUser },
+  } = useGlobalData()
+
+  useEffectOnce(() => {
+    fetchDocCollaborationToken()
+  })
+
+  const fetchDocCollaborationToken = useCallback(async () => {
+    setFetching(true)
+    try {
+      const res = await getDocCollaborationToken(doc.id)
+      setCollabToken(res.data)
+    } catch (err) {
+      setCollabToken(doc.collaborationToken || doc.id)
+    }
+
+    setFetching(false)
+  }, [doc])
 
   const currentDoc = useMemo(() => {
     return docsMap.get(doc.id)
@@ -98,10 +127,17 @@ const DocPreviewModal = ({ doc, team }: DocPreviewModalProps) => {
           currentUserIsCoreMember={currentUserIsCoreMember}
           className='doc-props__properties'
         />
-        <CustomizedMarkdownPreviewer
-          content={getDocContent(currentDoc)}
-          className='doc-preview__content__scroller'
-        />
+        {fetching ? (
+          <Flexbox>
+            <Spinner />
+          </Flexbox>
+        ) : (
+          <DocPreviewRealtime
+            doc={currentDoc}
+            token={collabToken}
+            user={currentUser}
+          />
+        )}
       </div>
     </Container>
   )
