@@ -3,6 +3,7 @@ import React from 'react'
 import { useCallback } from 'react'
 import { useMemo } from 'react'
 import Button from '../../../design/components/atoms/Button'
+import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
@@ -47,6 +48,11 @@ const DocPreviewModal = ({ doc, team }: DocPreviewModalProps) => {
             onClick={() => closeLastModal()}
           />
         </Flexbox>
+        <div className='doc-preview__content'>
+          <ColoredBlock variant='danger'>
+            The document has been deleted
+          </ColoredBlock>
+        </div>
       </Flexbox>
     )
   }
