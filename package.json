@@ -149,12 +149,12 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "@fullcalendar/daygrid": "^5.10.1",
-    "@fullcalendar/interaction": "^5.10.1",
-    "@fullcalendar/react": "^5.10.1",
     "@dnd-kit/core": "^4.0.3",
     "@dnd-kit/sortable": "^5.1.0",
     "@dnd-kit/utilities": "^3.0.1",
+    "@fullcalendar/daygrid": "^5.10.1",
+    "@fullcalendar/interaction": "^5.10.1",
+    "@fullcalendar/react": "^5.10.1",
     "@mdi/js": "^5.9.55",
     "@mdi/react": "^1.2.1",
     "@stripe/react-stripe-js": "^1.2.0",
@@ -213,6 +213,7 @@
     "react-datepicker": "^3.8.0",
     "react-dom": "^16.9.0",
     "react-google-login": "^5.2.2",
+    "react-grid-layout": "^1.3.0",
     "react-helmet": "^6.1.0",
     "react-i18next": "^11.0.1",
     "react-responsive": "^8.2.0",
