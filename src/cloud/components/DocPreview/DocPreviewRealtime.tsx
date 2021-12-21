@@ -36,7 +36,7 @@ const DocPreviewRealtime = ({ doc, token, user }: DocPreviewRealtimeProps) => {
     }
   }, [user])
 
-  const [realtime, connState, ..._connectedUsers] = useRealtime({
+  const [realtime, connState] = useRealtime({
     token,
     id: doc.id,
     userInfo,
