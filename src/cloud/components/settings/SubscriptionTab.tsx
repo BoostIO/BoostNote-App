@@ -14,6 +14,7 @@ import UpdateBillingPromoForm from '../SubscriptionForm/UpdateBillingPromo'
 import SettingTabContent from '../../../design/components/organisms/Settings/atoms/SettingTabContent'
 import styled from '../../../design/lib/styled'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
+import { ExternalLink } from '../../../design/components/atoms/Link'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
@@ -81,6 +82,13 @@ const SubscriptionTab = () => {
       title={t('settings.teamSubscription')}
       body={
         <section>
+          <p>
+            ⚠️ We are rolling out{' '}
+            <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/5821514-plan-changes-at-january-17th-2022'>
+              new plans and pricing
+            </ExternalLink>{' '}
+            on 17th January, 2022
+          </p>
           <div className='text--small'>
             {formtab == null ? (
               <SubscriptionManagement
