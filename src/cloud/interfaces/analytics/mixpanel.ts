@@ -1,12 +1,6 @@
 export enum MixpanelActionTrackTypes {
   AccountCreate = 'account.create',
   AccountDelete = 'account.delete',
-  BlockCreate = 'block.create',
-  BlockEdit = 'block.edit',
-  BlockDelete = 'block.delete',
-  BlockPropCreate = 'block.prop.add',
-  BlockPropEdit = 'block.prop.edit',
-  BlockPropDelete = 'block.prop.delete',
   DiscountSidebar = 'discount.sidebar',
   DocArchive = 'doc.archive',
   DocBookmarkCreate = 'doc.bookmark.create',
@@ -55,9 +49,10 @@ export enum MixpanelActionTrackTypes {
   PersonalCreate = 'personal.create',
   RevisionHistoryOpen = 'revision.history.open',
   SearchOpen = 'search.open',
-  DashboardCreate = 'dashboard.create',
-  DashboardUpdate = 'dashboard.update',
-  DashboardDestroy = 'dashboard.destroy',
+  SmartViewCreate = 'dashboard.smart-views.create',
+  SmartViewUpdateName = 'dashboard.smart-views.update',
+  SmartViewUpdateFilter = 'dashboard.smart-views.filter',
+  SmartViewDestroy = 'dashboard.smart-views.delete',
   SubscriptionStart = 'subscription.start',
   SubscriptionCancel = 'subscription.cancel',
   SubscriptionTrialStart = 'subscription.trial.sart',
@@ -106,6 +101,7 @@ export enum MixpanelActionTrackTypes {
   InviteFromFolderPage = 'invite.folder',
   InviteFromSidenav = 'invite.sidenav',
   SendEditRequest = 'send.editrequest',
+  DocPropsUpdated = 'doc.props.update',
   DashboardOpen = 'dashboard.open',
   DocPropAdd = 'doc.props.add',
   DocPropUpdateName = 'doc.props.update.name',
@@ -119,6 +115,9 @@ export enum MixpanelActionTrackTypes {
   ViewEdit = 'view.edit',
   ViewDelete = 'view.delete',
   ViewOpen = 'view.open',
+  DashboardCreate = 'dashboard.create',
+  DashboardEdit = 'dashboard.edit',
+  DashboardDelete = 'dashboard.delete',
 }
 
 export type MixpanelViewEvent =
@@ -157,9 +156,6 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.InviteFromSidenav
   | MixpanelActionTrackTypes.DiscountSidebar
   | MixpanelActionTrackTypes.SendEditRequest
-  | MixpanelActionTrackTypes.BlockPropCreate
-  | MixpanelActionTrackTypes.BlockPropEdit
-  | MixpanelActionTrackTypes.BlockPropDelete
   | MixpanelActionTrackTypes.DashboardOpen
   | MixpanelActionTrackTypes.DocPropAdd
   | MixpanelActionTrackTypes.DocPropUpdateName
@@ -207,6 +203,7 @@ export type MixpanelDocEvent =
   | MixpanelActionTrackTypes.DocStatusArchived
   | MixpanelActionTrackTypes.DocAssigneesAdd
   | MixpanelActionTrackTypes.DocAssigneesRemove
+  | MixpanelActionTrackTypes.DocPropsUpdated
 
 export type MixpanelInviteEvent =
   | MixpanelActionTrackTypes.InviteCreate
@@ -251,11 +248,13 @@ export type MixpanelUserProfile = {
   $created?: string
   $email?: string
 }
+export type MixpanelSmartViewEvent =
+  | MixpanelActionTrackTypes.SmartViewCreate
+  | MixpanelActionTrackTypes.SmartViewUpdateName
+  | MixpanelActionTrackTypes.SmartViewUpdateFilter
+  | MixpanelActionTrackTypes.SmartViewDestroy
+
 export type MixpanelDashboardEvent =
   | MixpanelActionTrackTypes.DashboardCreate
-  | MixpanelActionTrackTypes.DashboardDestroy
-
-export type MixpanelBlockEvent =
-  | MixpanelActionTrackTypes.BlockCreate
-  | MixpanelActionTrackTypes.BlockEdit
-  | MixpanelActionTrackTypes.BlockDelete
+  | MixpanelActionTrackTypes.DashboardEdit
+  | MixpanelActionTrackTypes.DashboardDelete
