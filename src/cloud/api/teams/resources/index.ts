@@ -7,6 +7,7 @@ import { callApi } from '../../../lib/client'
 import { SerializedSmartView } from '../../../interfaces/db/smartView'
 import { SerializedAppEvent } from '../../../interfaces/db/appEvents'
 import { SerializedView, SupportedViewTypes } from '../../../interfaces/db/view'
+import { SerializedDashboard } from '../../../interfaces/db/dashboard'
 
 export interface MoveResourceRequestBody {
   targetedResourceId: string
@@ -45,6 +46,7 @@ export interface GetResourcesResponseBody {
   smartViews?: SerializedSmartView[]
   appEvents?: SerializedAppEvent[]
   views?: SerializedView<SupportedViewTypes>[]
+  dashboards?: SerializedDashboard[]
 }
 
 export async function getResources(

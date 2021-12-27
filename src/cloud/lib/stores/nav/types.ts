@@ -22,6 +22,7 @@ import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedTemplate } from '../../../interfaces/db/template'
 import { SerializedSmartView } from '../../../interfaces/db/smartView'
 import { SerializedView } from '../../../interfaces/db/view'
+import { SerializedDashboard } from '../../../interfaces/db/dashboard'
 
 export interface NavContext {
   initialLoadDone: boolean
@@ -34,6 +35,9 @@ export interface NavContext {
   currentParentFolder?: SerializedFolderWithBookmark
   tagsMap: Map<string, SerializedTag>
   templatesMap: Map<string, SerializedTemplate>
+  dashboardsMap: Map<string, SerializedDashboard>
+  updateDashboardsMap: (...dashboards: [string, SerializedDashboard][]) => void
+  removeFromDashboardsMap: (...ids: string[]) => void
   viewsMap: Map<number, SerializedView>
   updateViewsMap: (...newViews: [number, SerializedView][]) => void
   removeFromViewsMap: (...ids: number[]) => void

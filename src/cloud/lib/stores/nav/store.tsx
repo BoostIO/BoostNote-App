@@ -61,6 +61,7 @@ import { getAllTemplates } from '../../../api/teams/docs/templates'
 import { useToast } from '../../../../design/lib/stores/toast'
 import { SerializedSmartView } from '../../../interfaces/db/smartView'
 import { SerializedView } from '../../../interfaces/db/view'
+import { SerializedDashboard } from '../../../interfaces/db/dashboard'
 export * from './types'
 
 function useNavStore(): NavContext {
@@ -115,6 +116,30 @@ function useNavStore(): NavContext {
   const [appEventsMap, setAppEventsMap] = useState<
     Map<string, SerializedAppEvent>
   >(new Map())
+  const [dashboardsMap, setDashboardsMap] = useState<
+    Map<string, SerializedDashboard>
+  >(new Map())
+
+  const updateDashboardsMap = useCallback(
+    (...mappedDashboards: [string, SerializedDashboard][]) => {
+      setDashboardsMap((prevMap) => {
+        return new Map([...prevMap, ...mappedDashboards])
+      })
+    },
+    []
+  )
+
+  const removeFromDashboardsMap = useCallback(
+    (...ids: string[]) =>
+      setDashboardsMap((prevMap) => {
+        const newMap = new Map(prevMap)
+        ids.forEach((tagId) => {
+          newMap.delete(tagId)
+        })
+        return newMap
+      }),
+    []
+  )
 
   const updateViewsMap = useCallback(
     (...mappedEvents: [number, SerializedView][]) => {
@@ -245,6 +270,7 @@ function useNavStore(): NavContext {
         setTagsMap(new Map())
         setWorkspacesMap(new Map())
         setViewsMap(new Map())
+        setDashboardsMap(new Map())
         return
       }
       if (team.id !== prevTeamId.current) {
@@ -255,6 +281,7 @@ function useNavStore(): NavContext {
           setWorkspacesMap(new Map())
           setTemplatesMap(new Map())
           setViewsMap(new Map())
+          setDashboardsMap(new Map())
         }
 
         setInitialLoadDone(false)
@@ -275,6 +302,7 @@ function useNavStore(): NavContext {
             smartViews = [],
             appEvents = [],
             views = [],
+            dashboards = [],
           },
           { templates = [] },
         ] = await Promise.all([
@@ -297,6 +325,7 @@ function useNavStore(): NavContext {
           smartViews,
           appEvents,
           views,
+          dashboards,
         })
         setFoldersMap(maps.foldersData)
         setDocsMap(maps.docsData)
@@ -306,6 +335,7 @@ function useNavStore(): NavContext {
         setSmartViewsMap(maps.smartViewsData)
         setAppEventsMap(maps.appEventsData)
         setViewsMap(maps.viewsData)
+        setDashboardsMap(maps.dashboardsData)
         setInitialLoadDone(true)
       }
     }
@@ -946,6 +976,9 @@ function useNavStore(): NavContext {
     updateViewsMap,
     removeFromViewsMap,
     updateParentWorkspaceOfDoc,
+    dashboardsMap,
+    updateDashboardsMap,
+    removeFromDashboardsMap,
   }
 }
 
@@ -991,6 +1024,7 @@ interface CreateMapsFromPagePropsProps {
   smartViewsData: Map<string, SerializedSmartView>
   appEventsData: Map<string, SerializedAppEvent>
   viewsData: Map<number, SerializedView>
+  dashboardsData: Map<string, SerializedDashboard>
 }
 
 function getTagsFoldersDocsMapsFromProps(
@@ -1006,6 +1040,7 @@ function getTagsFoldersDocsMapsFromProps(
       smartViewsData: new Map(),
       appEventsData: new Map(),
       viewsData: new Map(),
+      dashboardsData: new Map(),
     }
   }
 
@@ -1018,6 +1053,7 @@ function getTagsFoldersDocsMapsFromProps(
     smartViews = [],
     appEvents = [],
     views = [],
+    dashboards = [],
   } = pageProps
 
   const foldersData = getMapFromEntityArray(
@@ -1036,6 +1072,9 @@ function getTagsFoldersDocsMapsFromProps(
   )
   const appEventsData = getMapFromEntityArray(appEvents as SerializedAppEvent[])
   const viewsData = getMapFromEntityArray(views as SerializedView[])
+  const dashboardsData = getMapFromEntityArray(
+    dashboards as SerializedDashboard[]
+  )
 
   return {
     foldersData,
@@ -1046,5 +1085,6 @@ function getTagsFoldersDocsMapsFromProps(
     smartViewsData,
     appEventsData,
     viewsData,
+    dashboardsData,
   }
 }
