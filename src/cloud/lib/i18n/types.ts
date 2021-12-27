@@ -47,7 +47,7 @@ export enum lngKeys {
   GeneralNext = 'general.Next',
   GeneralContinueVerb = 'general.Continueverb',
   GeneralShared = 'general.Shared',
-  GeneralSmartViews = 'general.Smart.Folders',
+  GeneralDashboards = 'general.dashboards',
   GeneralBookmarks = 'general.Bookmarks',
   GeneralUnbookmarkVerb = 'general.Unbookmarkverb',
   GeneralBookmarkVerb = 'general.Bookmarkverb',

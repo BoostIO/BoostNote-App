@@ -393,7 +393,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.GeneralBookmarks]: 'ブックマーク',
   [lngKeys.GeneralUnbookmarkVerb]: 'ブックマーク削除',
   [lngKeys.GeneralBookmarkVerb]: 'ブックマークする',
-  [lngKeys.GeneralSmartViews]: 'スマートフォルダー',
+  [lngKeys.GeneralDashboards]: 'Dashboards',
   [lngKeys.GeneralWorkspaces]: 'フォルダー',
   [lngKeys.GeneralPrivate]: 'プライベート',
   [lngKeys.GeneralLabels]: 'ラベル',

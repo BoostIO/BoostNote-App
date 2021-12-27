@@ -405,7 +405,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.GeneralBookmarks]: 'Bookmarks',
   [lngKeys.GeneralUnbookmarkVerb]: 'Remove from Bookmarks',
   [lngKeys.GeneralBookmarkVerb]: 'Add to bookmarks',
-  [lngKeys.GeneralSmartViews]: 'Smart Views',
+  [lngKeys.GeneralDashboards]: 'Dashboards',
   [lngKeys.GeneralWorkspaces]: 'Workspaces',
   [lngKeys.GeneralPrivate]: 'Private',
   [lngKeys.GeneralLabels]: 'Labels',
