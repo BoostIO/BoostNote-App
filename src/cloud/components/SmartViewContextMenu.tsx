@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import {
-  mdiAccountCircleOutline,
-  mdiAccountMultiple,
   mdiClockOutline,
   mdiContentCopy,
   mdiContentSaveOutline,
@@ -10,20 +8,16 @@ import {
   mdiTrashCanOutline,
 } from '@mdi/js'
 import React, { useCallback, useMemo, useState } from 'react'
-import Flexbox from '../../design/components/atoms/Flexbox'
 import MetadataContainer from '../../design/components/organisms/MetadataContainer'
 import MetadataContainerBreak from '../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import MetadataContainerRow from '../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
-import { getMapValues } from '../../design/lib/utils/array'
 import { SerializedSmartView } from '../interfaces/db/smartView'
 import { SerializedTeam } from '../interfaces/db/team'
-import { SerializedUser } from '../interfaces/db/user'
 import { boostHubBaseUrl } from '../lib/consts'
 import { getFormattedDateTime } from '../lib/date'
 import { useI18n } from '../lib/hooks/useI18n'
 import { lngKeys } from '../lib/i18n/types'
 import { usePage } from '../lib/stores/pageStore'
-import UserIcon from './UserIcon'
 import copy from 'copy-to-clipboard'
 import { usingElectron, sendToHost } from '../lib/stores/electron'
 import UpdateSmartViewModal from './Modal/contents/SmartView/UpdateSmartViewModal'
@@ -42,7 +36,7 @@ const SmartViewContextMenu = ({
   smartView,
 }: SmartViewContextMenuProps) => {
   const { translate } = useI18n()
-  const { permissions = [], currentUserIsCoreMember } = usePage()
+  const { currentUserIsCoreMember } = usePage()
   const [copied, setCopied] = useState(false)
   const { openModal, closeAllModals } = useModal()
   const { sendingMap, deleteSmartViewApi } = useCloudApi()
@@ -62,18 +56,6 @@ const SmartViewContextMenu = ({
       setCopied(false)
     }, 200)
   }, [docUrl])
-
-  const usersMap = useMemo(() => {
-    const users = permissions.reduce((acc, val) => {
-      acc.set(val.user.id, val.user)
-      return acc
-    }, new Map<string, SerializedUser>())
-
-    return users
-  }, [permissions])
-
-  const creator =
-    smartView.userId != null ? usersMap.get(smartView.userId) : undefined
 
   return (
     <MetadataContainer>
@@ -95,20 +77,6 @@ const SmartViewContextMenu = ({
           ),
         }}
       />
-      {creator != null && (
-        <MetadataContainerRow
-          row={{
-            label: translate(lngKeys.CreatedBy),
-            type: 'content',
-            icon: mdiAccountCircleOutline,
-            content: (
-              <Flexbox wrap='wrap'>
-                <UserIcon key={creator.id} user={creator} className='subtle' />
-              </Flexbox>
-            ),
-          }}
-        />
-      )}
       <MetadataContainerRow
         row={{
           label: translate(lngKeys.UpdateDate),
@@ -118,22 +86,6 @@ const SmartViewContextMenu = ({
             smartView.updatedAt,
             undefined,
             'MMM dd, yyyy, HH:mm'
-          ),
-        }}
-      />
-      <MetadataContainerRow
-        row={{
-          label: translate(lngKeys.ModalsWorkspaceAccess),
-          type: 'content',
-          icon: mdiAccountMultiple,
-          content: smartView.private ? (
-            translate(lngKeys.GeneralPrivate)
-          ) : (
-            <Flexbox wrap='wrap'>
-              {[...getMapValues(usersMap)].map((user) => (
-                <UserIcon key={user.id} user={user} className='subtle' />
-              ))}
-            </Flexbox>
           ),
         }}
       />

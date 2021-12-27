@@ -62,14 +62,14 @@ const UpdateSmartViewModal = ({
 
   return (
     <SmartViewForm
-      teamId={smartView.teamId}
+      teamId={team.id}
       action='Update'
       onCancel={closeModal}
       onSubmit={submit}
       showOnlyConditions={showOnlyConditions}
       buttonsAreDisabled={sending}
       defaultName={smartView.name}
-      defaultPrivate={smartView.private}
+      defaultPrivate={true}
       defaultConditions={
         Array.isArray(smartView.condition)
           ? (smartView.condition as EditableQuery)

@@ -817,7 +817,7 @@ export function useCloudApi() {
   )
 
   const deleteSmartViewApi = useCallback(
-    async (target: { id: string; teamId: string }) => {
+    async (target: { id: string }) => {
       return send(target.id, 'delete', {
         api: () => deleteSmartView({ id: target.id }),
         cb: () => {
