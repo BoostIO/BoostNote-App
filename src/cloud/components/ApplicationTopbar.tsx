@@ -146,7 +146,7 @@ const ApplicationTopbar = ({
     if (splittedPathnames.length >= 2 && splittedPathnames[1] === 'dashboard') {
       return [
         {
-          label: translate(lngKeys.GeneralSmartViews),
+          label: translate(lngKeys.GeneralDashboards),
           active: true,
           parentId: topParentId,
           icon: mdiViewDashboard,
