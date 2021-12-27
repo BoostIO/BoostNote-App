@@ -109,6 +109,16 @@ import {
   ListPropertySuggestionsRequestBody,
   ListPropertySuggestionsResponseBody,
 } from '../../api/teams/props'
+import {
+  createDashboard,
+  CreateDashboardRequestBody,
+  CreateDashboardResponseBody,
+  deleteDashboard,
+  updateDashboard,
+  UpdateDashboardRequestBody,
+  UpdateDashboardResponseBody,
+} from '../../api/teams/dashboards'
+import { SerializedDashboard } from '../../interfaces/db/dashboard'
 
 export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
@@ -130,6 +140,8 @@ export function useCloudApi() {
     updateViewsMap,
     removeFromViewsMap,
     updateParentWorkspaceOfDoc,
+    updateDashboardsMap,
+    removeFromDashboardsMap,
   } = useNav()
   const { push } = useRouter()
 
@@ -901,9 +913,67 @@ export function useCloudApi() {
     [send]
   )
 
+  const createDashboardApi = useCallback(
+    async (
+      body: CreateDashboardRequestBody,
+      options?: {
+        afterSuccess?: (dashboard: SerializedDashboard) => void
+      }
+    ) => {
+      return send(shortid.generate(), 'create', {
+        api: () => createDashboard(body),
+        cb: ({ data: dashboard }: CreateDashboardResponseBody) => {
+          updateDashboardsMap([dashboard.id, dashboard])
+
+          if (options?.afterSuccess != null) {
+            options.afterSuccess(dashboard)
+          }
+        },
+      })
+    },
+    [updateDashboardsMap, send]
+  )
+
+  const updateDashboardApi = useCallback(
+    async (
+      target: SerializedDashboard,
+      body: UpdateDashboardRequestBody,
+      options?: {
+        afterSuccess?: (dashboard: SerializedDashboard) => void
+      }
+    ) => {
+      return send(shortid.generate(), 'create', {
+        api: () => updateDashboard(target, body),
+        cb: ({ data: dashboard }: UpdateDashboardResponseBody) => {
+          updateDashboardsMap([dashboard.id, dashboard])
+
+          if (options?.afterSuccess != null) {
+            options.afterSuccess(dashboard)
+          }
+        },
+      })
+    },
+    [updateDashboardsMap, send]
+  )
+
+  const deleteDashboardApi = useCallback(
+    async (target: SerializedDashboard) => {
+      return send(target.id, 'delete', {
+        api: () => deleteDashboard(target),
+        cb: ({}) => {
+          removeFromDashboardsMap(target.id)
+        },
+      })
+    },
+    [send, removeFromDashboardsMap]
+  )
+
   return {
     send,
     sendingMap,
+    createDashboard: createDashboardApi,
+    updateDashboard: updateDashboardApi,
+    deleteDashboard: deleteDashboardApi,
     createWorkspace: createWorkspaceApi,
     createDoc: createDocApi,
     createFolder: createFolderApi,
