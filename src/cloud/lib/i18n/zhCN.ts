@@ -369,7 +369,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.GeneralBookmarks]: '书签',
   [lngKeys.GeneralUnbookmarkVerb]: '移除书签',
   [lngKeys.GeneralBookmarkVerb]: 'A添加书签',
-  [lngKeys.GeneralSmartViews]: '智能文件夹',
+  [lngKeys.GeneralDashboards]: 'Dashboards',
   [lngKeys.GeneralWorkspaces]: '工作区',
   [lngKeys.GeneralPrivate]: '私有',
   [lngKeys.GeneralLabels]: '标签',
