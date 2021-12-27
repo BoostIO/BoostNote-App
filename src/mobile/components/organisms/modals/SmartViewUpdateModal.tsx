@@ -62,12 +62,12 @@ const SmartViewUpdateModal = ({
   return (
     <ModalContainer title='Edit a SmartView'>
       <SmartViewForm
-        teamId={smartView.teamId}
+        teamId={team.id}
         action='Update'
         onSubmit={submit}
         buttonsAreDisabled={sending}
         defaultName={smartView.name}
-        defaultPrivate={smartView.private}
+        defaultPrivate={true}
         defaultConditions={
           Array.isArray(smartView.condition)
             ? (smartView.condition as EditableQuery)

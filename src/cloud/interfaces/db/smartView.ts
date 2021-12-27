@@ -1,19 +1,16 @@
-import { SerializedTeam } from './team'
-import { SerializedUser } from './user'
+import { SerializedDashboard } from './dashboard'
 import { SerializedView } from './view'
 
 interface SerializableSmartViewProps {
   id: string
   name: string
-  private: boolean
-  teamId: string
-  userId: string
+  dashboardId: string
+  data: any
 }
 
 interface SerializedUnserializableSmartViewProps {
   condition: SerializedQuery
-  team?: SerializedTeam
-  user?: SerializedUser
+  dashboard?: SerializedDashboard
   createdAt: string
   updatedAt: string
   views?: SerializedView[]
