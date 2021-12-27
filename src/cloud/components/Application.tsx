@@ -36,7 +36,6 @@ import {
   mdiMagnify,
   mdiPlusCircleOutline,
   mdiWeb,
-  mdiViewDashboard,
 } from '@mdi/js'
 import { buildIconUrl } from '../api/files'
 import { useElectron, usingElectron } from '../lib/stores/electron'
@@ -75,7 +74,6 @@ import {
   InPageSearchContainer,
 } from './molecules/PageSearch/InPageSearchPortal'
 import SidebarToggleButton from './SidebarToggleButton'
-import { getTeamURL } from '../lib/utils/patterns'
 
 interface ApplicationProps {
   className?: string
@@ -364,8 +362,6 @@ const Application = ({
         />
       )
     }
-    const teamUrl = getTeamURL(team)
-    const teamDashboardUrl = getTeamLinkHref(team, 'dashboard')
 
     return (
       <>
@@ -387,15 +383,6 @@ const Application = ({
               labelClick: () => setShowSearchScreen((prev) => !prev),
               id: 'sidebar__button__search',
               active: showSearchScreen,
-            },
-            {
-              label: translate(lngKeys.GeneralSmartViews),
-              icon: mdiViewDashboard,
-              variant: 'transparent',
-              labelHref: teamUrl,
-              labelClick: () => push(teamDashboardUrl),
-              id: 'sidebar__button__inbox',
-              active: pathname === teamDashboardUrl,
             },
             {
               label: translate(lngKeys.GeneralInbox),
@@ -431,8 +418,6 @@ const Application = ({
     team,
     translate,
     showSearchScreen,
-    push,
-    pathname,
   ])
 
   const sidebarFooter = useMemo(() => {
