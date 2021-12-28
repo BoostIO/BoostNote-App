@@ -9,6 +9,8 @@ import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { getDocId, getDocTitle, getFolderId } from '../utils/patterns'
 import { getMapValues } from '../../../design/lib/utils/array'
 import { BreadCrumbTreeItem } from '../../../design/lib/mappers/types'
+import { getDashboardHref } from '../../components/Link/DashboardLink'
+import { SerializedDashboard } from '../../interfaces/db/dashboard'
 
 export const topParentId = 'root'
 
@@ -112,6 +114,47 @@ export function mapTopbarTree(
       })
       items.set(parentId, parentArray)
     })
+
+  return items
+}
+
+export function mapTopbarDashboardTree(
+  team: SerializedTeam,
+  initialLoadDone: boolean,
+  dashboardsMap: Map<string, SerializedDashboard>,
+  push: (url: string) => void
+) {
+  if (!initialLoadDone) {
+    return undefined
+  }
+
+  const items = new Map<string, BreadCrumbTreeItem[]>()
+
+  const dashboards = getMapValues(dashboardsMap)
+
+  items.set(
+    topParentId,
+    dashboards.reduce((acc, dashboard) => {
+      const href = `${process.env.BOOST_HUB_BASE_URL}${getDashboardHref(
+        dashboard,
+        team,
+        'index'
+      )}`
+
+      acc.push({
+        id: dashboard.id,
+        label: dashboard.name,
+        parentId: topParentId,
+        defaultIcon: undefined,
+        link: {
+          href,
+          navigateTo: () => push(href),
+        },
+      })
+
+      return acc
+    }, [] as BreadCrumbTreeItem[])
+  )
 
   return items
 }

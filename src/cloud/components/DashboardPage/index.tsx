@@ -38,6 +38,12 @@ const DashboardPage = ({
         controls={[
           {
             type: 'button',
+            variant: 'primary',
+            label: 'Add smart view',
+            onClick: () => {},
+          },
+          {
+            type: 'button',
             variant: 'icon',
             iconPath: mdiDotsHorizontal,
             onClick: (_event) => {},
