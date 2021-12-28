@@ -8,6 +8,7 @@ import { SerializedRevision } from '../../../interfaces/db/revision'
 import { SerializedTag } from '../../../interfaces/db/tag'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedOpenInvite } from '../../../interfaces/db/openInvite'
+import { SerializedDashboard } from '../../../interfaces/db/dashboard'
 
 export interface PageDataContext<D> {
   pageData: D
@@ -28,6 +29,7 @@ export interface PageDataContext<D> {
   pageDoc?: SerializedDocWithSupplemental
   pageTag?: SerializedTag
   pageWorkspace?: SerializedWorkspace
+  pageDashboard?: SerializedDashboard
   revisions?: SerializedRevision[]
   type?: 'doc' | 'folder'
   currentSubInfo?: SubscriptionInfo

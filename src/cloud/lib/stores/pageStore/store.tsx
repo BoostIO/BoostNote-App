@@ -203,6 +203,7 @@ function usePageDataStore(pageProps: any) {
     pageFolder: pageData.pageFolder,
     pageDoc: pageData.pageDoc,
     pageTag: pageData.pageTag,
+    pageDashboard: pageData.dashboard,
     revisions: pageData.revisions,
     pageWorkspace: pageData.pageWorkspace,
     workspaces: pageData.workspaces,

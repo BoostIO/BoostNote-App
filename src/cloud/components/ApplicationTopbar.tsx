@@ -13,10 +13,15 @@ import {
   mapTopbarBreadcrumbs,
   mapWorkspaceBreadcrumb,
 } from '../lib/mappers/topbarBreadcrumbs'
-import { mapTopbarTree, topParentId } from '../lib/mappers/topbarTree'
+import {
+  mapTopbarDashboardTree,
+  mapTopbarTree,
+  topParentId,
+} from '../lib/mappers/topbarTree'
 import { useRouter } from '../lib/router'
 import { useNav } from '../lib/stores/nav'
 import { usePage } from '../lib/stores/pageStore'
+import { getDashboardHref } from './Link/DashboardLink'
 import { getTeamLinkHref } from './Link/TeamLink'
 
 interface ApplicationTopbarProps {
@@ -35,6 +40,7 @@ const ApplicationTopbar = ({
     pageFolder,
     currentUserIsCoreMember,
     pageTag,
+    pageDashboard,
   } = usePage()
   const {
     openNewDocForm,
@@ -52,6 +58,7 @@ const ApplicationTopbar = ({
     foldersMap,
     workspacesMap,
     tagsMap,
+    dashboardsMap,
   } = useNav()
 
   const { translate } = useI18n()
@@ -59,6 +66,10 @@ const ApplicationTopbar = ({
   const topbarTree = useMemo(() => {
     if (team == null) {
       return undefined
+    }
+
+    if (pageDashboard != null) {
+      return mapTopbarDashboardTree(team, initialLoadDone, dashboardsMap, push)
     }
 
     return mapTopbarTree(
@@ -69,7 +80,16 @@ const ApplicationTopbar = ({
       workspacesMap,
       push
     )
-  }, [team, initialLoadDone, docsMap, foldersMap, workspacesMap, push])
+  }, [
+    dashboardsMap,
+    team,
+    initialLoadDone,
+    docsMap,
+    foldersMap,
+    workspacesMap,
+    pageDashboard,
+    push,
+  ])
 
   const tag = useMemo(() => {
     if (pageTag == null) return undefined
@@ -143,16 +163,44 @@ const ApplicationTopbar = ({
       ]
     }
 
-    if (splittedPathnames.length >= 2 && splittedPathnames[1] === 'dashboard') {
+    if (
+      splittedPathnames.length >= 2 &&
+      splittedPathnames[1] === 'dashboards'
+    ) {
+      if (pageDashboard == null) {
+        return [
+          {
+            label: translate(lngKeys.GeneralDashboards),
+            parentId: topParentId,
+            active: true,
+            icon: mdiViewDashboard,
+            link: {
+              href: getTeamLinkHref(team, 'index'),
+              navigateTo: () => push(getTeamLinkHref(team, 'index')),
+            },
+          },
+        ]
+      }
+
       return [
         {
           label: translate(lngKeys.GeneralDashboards),
+          parentId: topParentId,
+          icon: mdiViewDashboard,
+          link: {
+            href: getTeamLinkHref(team, 'index'),
+            navigateTo: () => push(getTeamLinkHref(team, 'index')),
+          },
+        },
+        {
+          label: pageDashboard.name,
           active: true,
           parentId: topParentId,
           icon: mdiViewDashboard,
           link: {
-            href: getTeamLinkHref(team, 'dashboard'),
-            navigateTo: () => push(getTeamLinkHref(team, 'dashboard')),
+            href: getDashboardHref(pageDashboard, team, 'index'),
+            navigateTo: () =>
+              push(getDashboardHref(pageDashboard, team, 'index')),
           },
         },
       ]
@@ -244,6 +292,7 @@ const ApplicationTopbar = ({
     openRenameFolderForm,
     pathname,
     tag,
+    pageDashboard,
   ])
 
   return (
