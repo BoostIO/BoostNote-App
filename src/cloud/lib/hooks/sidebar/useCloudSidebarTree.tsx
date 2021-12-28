@@ -12,6 +12,7 @@ import {
   mdiTag,
   mdiTrashCanOutline,
   mdiCog,
+  mdiViewDashboard,
 } from '@mdi/js'
 import { FoldingProps } from '../../../../design/components/atoms/FoldingWrapper'
 import { SidebarDragState } from '../../../../design/lib/dnd'
@@ -67,6 +68,7 @@ import { CATEGORY_DRAG_TRANSFER_DATA_JSON } from '../../../interfaces/resources'
 import LabelsManagementModal from '../../../components/Modal/contents/LabelsManagementModal'
 import { useElectron } from '../../stores/electron'
 import { isString } from '../../utils/string'
+import { getDashboardHref } from '../../../components/Link/DashboardLink'
 
 export function useCloudSidebarTree() {
   const { team, currentUserIsCoreMember } = usePage()
@@ -83,6 +85,7 @@ export function useCloudSidebarTree() {
     foldersMap,
     workspacesMap,
     tagsMap,
+    dashboardsMap,
   } = useNav()
 
   const {
@@ -111,6 +114,7 @@ export function useCloudSidebarTree() {
     toggleFolderBookmark,
     updateDoc,
     updateFolder,
+    createDashboard,
   } = useCloudApi()
 
   const {
@@ -150,6 +154,12 @@ export function useCloudSidebarTree() {
           label: translate(lngKeys.GeneralBookmarks),
           checked: !sideBarOpenedLinksIdsSet.has('hide-bookmarks'),
           onClick: () => toggleItem('links', 'hide-bookmarks'),
+        },
+        {
+          type: 'check',
+          label: translate(lngKeys.GeneralDashboards),
+          checked: !sideBarOpenedLinksIdsSet.has('hide-dashboards'),
+          onClick: () => toggleItem('links', 'hide-dashboards'),
         },
         {
           type: 'check',
@@ -615,6 +625,51 @@ export function useCloudSidebarTree() {
     }
 
     tree.push({
+      label: 'Dashboards',
+      title: translate(lngKeys.GeneralDashboards),
+      rows: sortByAttributeDesc('name', getMapValues(dashboardsMap)).reduce(
+        (acc, val) => {
+          const href = `${process.env.BOOST_HUB_BASE_URL}${getDashboardHref(
+            val,
+            team,
+            'index'
+          )}`
+          acc.push({
+            id: val.id,
+            depth: 0,
+            label: val.name,
+            defaultIcon: mdiViewDashboard,
+            href,
+            active: !showSearchScreen && href === currentPathWithDomain,
+            navigateTo: (event?: any) => {
+              if (event && event.shiftKey && usingElectron) {
+                sendToElectron('new-window', href)
+                return
+              }
+              push(href)
+            },
+          })
+          return acc
+        },
+        [] as SidebarTreeChildRow[]
+      ),
+      controls: currentUserIsCoreMember
+        ? [
+            {
+              icon: mdiPlus,
+              onClick: undefined,
+              placeholder: translate(lngKeys.GeneralName),
+              create: (name: string) =>
+                createDashboard({
+                  teamId: team.id,
+                  name,
+                }),
+            },
+          ]
+        : undefined,
+    })
+
+    tree.push({
       label: 'Folders',
       title: translate(lngKeys.GeneralFolders),
       rows: navTree,
@@ -751,6 +806,8 @@ export function useCloudSidebarTree() {
     return tree as SidebarNavCategory[]
   }, [
     initialLoadDone,
+    createDashboard,
+    dashboardsMap,
     team,
     pathname,
     preferences.sidebarTreeSortingOrder,
