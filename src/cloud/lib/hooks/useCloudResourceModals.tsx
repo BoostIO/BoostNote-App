@@ -2,12 +2,14 @@ import { mdiFileDocumentOutline, mdiFolderOutline } from '@mdi/js'
 import React, { useCallback } from 'react'
 import { FormRowProps } from '../../../design/components/molecules/Form/templates/FormRow'
 import EmojiInputForm from '../../../design/components/organisms/EmojiInputForm'
+import InputForm from '../../../design/components/organisms/InputForm'
 import { DialogIconTypes, useDialog } from '../../../design/lib/stores/dialog'
 import { useModal } from '../../../design/lib/stores/modal'
 import { SubmissionWrappers } from '../../../design/lib/types'
 import { removeCachedPageProps } from '../../../lib/routing/pagePropCache'
 import DocPreviewModal from '../../components/DocPreview'
 import WorkspaceModalForm from '../../components/Modal/contents/Workspace/WorkspaceModalForm'
+import { SerializedDashboard } from '../../interfaces/db/dashboard'
 import {
   SerializedDoc,
   SerializedDocWithSupplemental,
@@ -41,6 +43,7 @@ export function useCloudResourceModals() {
     deleteWorkspaceApi,
     deleteFolderApi,
     deleteDocApi,
+    updateDashboard,
   } = useCloudApi()
   const { translate } = useI18n()
   const { team } = usePage()
@@ -226,6 +229,33 @@ export function useCloudResourceModals() {
     [openModal, closeLastModal, createDoc, translate]
   )
 
+  const openRenameDashboardForm = useCallback(
+    (dashboard: SerializedDashboard) => {
+      openModal(
+        <InputForm
+          defaultInputValue={dashboard.name}
+          placeholder={translate(lngKeys.DocTitlePlaceholder)}
+          onSubmit={async (inputValue: string) => {
+            await updateDashboard(dashboard, {
+              name: inputValue,
+            })
+            closeLastModal()
+          }}
+          onBlur={async (inputValue: string) => {
+            await updateDashboard(dashboard, {
+              name: inputValue,
+            })
+          }}
+        />,
+        {
+          showCloseIcon: false,
+          width: 'small',
+        }
+      )
+    },
+    [closeLastModal, openModal, translate, updateDashboard]
+  )
+
   const deleteWorkspace = useCallback(
     async (workspace: { id: string; teamId: string; default: boolean }) => {
       if (workspace.default) {
@@ -402,6 +432,7 @@ export function useCloudResourceModals() {
     deleteFolder,
     deleteWorkspace,
     deleteDoc,
+    openRenameDashboardForm,
   }
 }
 

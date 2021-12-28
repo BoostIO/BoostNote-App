@@ -115,6 +115,7 @@ export function useCloudSidebarTree() {
     updateDoc,
     updateFolder,
     createDashboard,
+    deleteDashboard,
   } = useCloudApi()
 
   const {
@@ -125,6 +126,7 @@ export function useCloudSidebarTree() {
     openRenameDocForm,
     openWorkspaceEditForm,
     openWorkspaceCreateForm,
+    openRenameDashboardForm,
   } = useCloudResourceModals()
 
   const getFoldEvents = useCallback(
@@ -627,7 +629,7 @@ export function useCloudSidebarTree() {
     tree.push({
       label: 'Dashboards',
       title: translate(lngKeys.GeneralDashboards),
-      rows: sortByAttributeDesc('name', getMapValues(dashboardsMap)).reduce(
+      rows: sortByAttributeAsc('name', getMapValues(dashboardsMap)).reduce(
         (acc, val) => {
           const href = `${process.env.BOOST_HUB_BASE_URL}${getDashboardHref(
             val,
@@ -648,6 +650,20 @@ export function useCloudSidebarTree() {
               }
               push(href)
             },
+            contextControls: [
+              {
+                type: MenuTypes.Normal,
+                icon: mdiPencil,
+                label: translate(lngKeys.GeneralRenameVerb),
+                onClick: () => openRenameDashboardForm(val),
+              },
+              {
+                type: MenuTypes.Normal,
+                icon: mdiTrashCanOutline,
+                label: translate(lngKeys.GeneralDelete),
+                onClick: () => deleteDashboard(val),
+              },
+            ],
           })
           return acc
         },
@@ -847,6 +863,8 @@ export function useCloudSidebarTree() {
     createWorkspace,
     sideBarOpenedLinksIdsSet,
     toggleItem,
+    openRenameDashboardForm,
+    deleteDashboard,
   ])
 
   const treeWithOrderedCategories = useMemo(() => {

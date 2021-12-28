@@ -449,11 +449,12 @@ function getPageComponent(pathname: string): PageSpec | null {
           Component: TagsShowPage,
           getInitialProps: TagsShowPage.getInitialProps,
         }
-      case 'dashboard':
+      case 'dashboards': {
         return {
           Component: DashboardPage,
           getInitialProps: DashboardPage.getInitialProps,
         }
+      }
       case 'workspaces':
         return {
           Component: WorkspaceShowPage,
