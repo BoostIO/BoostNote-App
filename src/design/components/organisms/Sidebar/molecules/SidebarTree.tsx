@@ -71,7 +71,7 @@ export type SidebarNavControls =
       icon: string
       onClick: undefined
       placeholder: string
-      create: (title: string) => Promise<void>
+      create: (title: string) => Promise<any>
     }
 
 const SidebarTree = ({ tree, topRows }: SidebarTreeProps) => {
