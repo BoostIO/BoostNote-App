@@ -18,3 +18,4 @@ export const newSpaceCouponId = process.env.COUPONS_NEW_SPACE
 export const mobileBaseUrl =
   process.env.MOBILE_BASE_URL || 'http://localhost:3005'
 export const mockBackend = process.env.MOCK_BACKEND === 'true'
+export const githubAppUrl = process.env.GITHUB_APP_URL || 'elidid'
