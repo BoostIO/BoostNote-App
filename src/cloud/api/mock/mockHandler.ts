@@ -86,7 +86,7 @@ const routes: MockRoute[] = [
     },
   },
   {
-    pathname: 'api/pages/teams/show',
+    pathname: 'api/pages/teams',
     handler: ({ search }): TeamIndexPageResponseBody => {
       const { teamId: domain } = search
       if (typeof domain !== 'string') {
