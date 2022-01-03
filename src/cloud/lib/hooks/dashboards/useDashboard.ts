@@ -57,11 +57,8 @@ export function useDashboard({
 
   const updateDashboardLayout = useCallback(
     (layouts: Layout[]) => {
-      console.log('---update called')
       const cleanedLayouts = cleanupLayouts(layouts)
-
       if (!isEqual(dashboardData.itemsLayouts, cleanedLayouts)) {
-        console.log('---update api called')
         const newData = { ...dashboardData, itemsLayouts: cleanedLayouts }
         setDashboardData(newData)
         updateDashboard(initialDashboard, {

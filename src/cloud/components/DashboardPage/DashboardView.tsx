@@ -79,7 +79,7 @@ export const DashboardView = ({
           <>
             {currentView.type === 'list' ? (
               <ListView
-                viewsSelector={null}
+                viewsSelector={<div />}
                 team={team}
                 view={currentView}
                 docs={docs}
@@ -98,7 +98,7 @@ export const DashboardView = ({
               />
             ) : currentView.type === 'table' ? (
               <TableView
-                viewsSelector={null}
+                viewsSelector={<div />}
                 team={team}
                 view={currentView}
                 docs={docs}
@@ -111,7 +111,7 @@ export const DashboardView = ({
               />
             ) : currentView.type === 'kanban' ? (
               <KanbanView
-                viewsSelector={null}
+                viewsSelector={<div />}
                 team={team}
                 view={currentView}
                 currentUserIsCoreMember={currentUserIsCoreMember}
@@ -120,7 +120,7 @@ export const DashboardView = ({
             ) : currentView.type === 'calendar' ? (
               <CalendarView
                 view={currentView}
-                viewsSelector={null}
+                viewsSelector={<div />}
                 docs={docs}
                 team={team}
                 currentUserIsCoreMember={currentUserIsCoreMember}

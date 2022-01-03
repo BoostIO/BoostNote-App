@@ -10,7 +10,7 @@ import { buildSmartViewQueryCheck } from '../../lib/smartViews'
 import { useNav } from '../../lib/stores/nav'
 import { getMapValues } from '../../../design/lib/utils/array'
 import Button, { LoadingButton } from '../../../design/components/atoms/Button'
-import { mdiArrowExpand, mdiCog, mdiTrashCan } from '@mdi/js'
+import { mdiArrowExpand, mdiClose, mdiCog, mdiTrashCan } from '@mdi/js'
 
 interface SmartViewGridItemProps {
   className?: string
@@ -96,6 +96,40 @@ export const SmartViewGridItemControls = ({
   )
 }
 
+export const SmartViewModalItemControls = ({
+  state,
+  onClose,
+  onEdit,
+  onDelete,
+}: {
+  state?: string
+  onClose: () => void
+  onEdit: () => void
+  onDelete: () => void
+}) => {
+  return (
+    <>
+      <LoadingButton
+        variant='icon'
+        size='sm'
+        iconPath={mdiCog}
+        disabled={state != null}
+        spinning={state === 'update'}
+        onClick={onEdit}
+      />
+      <LoadingButton
+        variant='icon'
+        size='sm'
+        iconPath={mdiTrashCan}
+        disabled={state != null}
+        spinning={state === 'delete'}
+        onClick={onDelete}
+      />
+      <Button variant='icon' size='sm' iconPath={mdiClose} onClick={onClose} />
+    </>
+  )
+}
+
 const Container = styled.div`
   width: 100%;
   height: 100%;
@@ -152,8 +186,8 @@ const Container = styled.div`
   }
 
   .sv__item__content__wrapper {
-    width: 90vw;
-    height: 90vh;
+    width: 100%;
+    height: 100%;
   }
 `
 
