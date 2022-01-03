@@ -20,6 +20,7 @@ import GridLayout from '../../../design/components/organisms/GridLayout'
 import { SerializedSmartView } from '../../interfaces/db/smartView'
 import SmartViewGridItem, {
   SmartViewGridItemControls,
+  SmartViewModalItemControls,
 } from './SmartViewGridItem'
 import { usePage } from '../../lib/stores/pageStore'
 
@@ -29,7 +30,7 @@ const DashboardPage = ({
   team: propsTeam,
 }: DashboardShowPageResponseBody) => {
   const dashboardRef = useRef<string | undefined>(undefined)
-  const { openContextModal, openModal } = useModal()
+  const { openContextModal, openModal, closeAllModals } = useModal()
   const {
     dashboard,
     actionsRef,
@@ -63,7 +64,31 @@ const DashboardPage = ({
             <SmartViewGridItemControls
               state={sendingMap.get(smartview.id)}
               onEdit={() => {}}
-              onExpand={() => {}}
+              onExpand={() =>
+                openModal(
+                  <SmartViewGridItem
+                    team={propsTeam}
+                    smartview={smartview}
+                    currentUserIsCoreMember={currentUserIsCoreMember}
+                    controls={
+                      <SmartViewModalItemControls
+                        state={sendingMap.get(smartview.id)}
+                        onDelete={() => {
+                          actionsRef.current
+                            .removeSmartView(smartview)
+                            .then(closeAllModals)
+                        }}
+                        onClose={closeAllModals}
+                        onEdit={() => {}}
+                      />
+                    }
+                  />,
+                  {
+                    showCloseIcon: false,
+                    width: 'full',
+                  }
+                )
+              }
               onDelete={() => actionsRef.current.removeSmartView(smartview)}
             />
           }

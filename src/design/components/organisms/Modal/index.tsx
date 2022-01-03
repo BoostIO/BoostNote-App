@@ -346,7 +346,7 @@ const Container = styled.div`
     }
 
     &.modal__window__width--full {
-      width: 100%;
+      width: 96%;
     }
   }
 

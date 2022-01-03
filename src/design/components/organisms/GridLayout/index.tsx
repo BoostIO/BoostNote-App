@@ -17,6 +17,7 @@ interface GridLayoutProps<T extends { id: string }> {
   rows?: number
   cols?: number
   defaultGridItemProperties?: Partial<Layout>
+  resizeHandle?: React.ReactNode | ((resizeHandle: string) => React.ReactNode)
   renderItem: (item: T) => React.ReactNode
   updateLayout: (layouts: Layout[]) => void
 }
@@ -28,6 +29,7 @@ const GridLayout = <T extends { id: string }>({
   rows = defaultGridRows,
   cols = defaultGridCols,
   items,
+  resizeHandle,
   renderItem,
   updateLayout,
 }: GridLayoutProps<T>) => {
@@ -68,6 +70,8 @@ const GridLayout = <T extends { id: string }>({
       rows={rows}
       cols={cols}
       rowHeight={rowHeight}
+      useCSSTransforms={false}
+      resizeHandle={resizeHandle}
     >
       {generateDOM()}
     </StyledReactGridLayout>
