@@ -18,6 +18,7 @@ import CalendarView from './Calendar/CalendarView'
 import KanbanView from './Kanban'
 import ListView from './List'
 import { sortListViewProps } from '../../lib/views/list'
+import { useRouter } from '../../lib/router'
 
 type ViewsManagerProps = {
   views: SerializedView[]
@@ -67,6 +68,8 @@ export const ViewsManager = ({
     },
   ] = useSet<string>(new Set())
 
+  const { query } = useRouter()
+
   const currentDocumentsRef = useRef(
     new Map<string, SerializedDocWithSupplemental>(
       docs.map((doc) => [doc.id, doc])
@@ -77,6 +80,22 @@ export const ViewsManager = ({
       (folders || []).map((folder) => [folder.id, folder])
     )
   )
+
+  useEffect(() => {
+    if (!query || typeof query.view !== 'string') {
+      return
+    }
+
+    try {
+      const viewId: number = parseInt(query.view)
+      const viewToLoad = views.find((view) => view.id === viewId)
+      if (viewToLoad != null) {
+        setSelectedViewId(viewToLoad.id)
+      }
+    } catch (_) {
+      // leave selected view as is
+    }
+  }, [query, query.view, query.viewId, views])
 
   useEffect(() => {
     const newMap = new Map(docs.map((doc) => [doc.id, doc]))
