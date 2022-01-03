@@ -3,6 +3,7 @@ import RGL, { WidthProvider, Layout } from 'react-grid-layout'
 import _ from 'lodash'
 import { useCallback } from 'react'
 import styled from '../../../lib/styled'
+import Scroller from '../../atoms/Scroller'
 
 const ReactGridLayout = WidthProvider(RGL)
 
@@ -57,21 +58,23 @@ const GridLayout = <T extends { id: string }>({
   }, [items, renderItem, layout])
 
   return (
-    <StyledReactGridLayout
-      style={{ height: '100%' }}
-      className={className}
-      onLayoutChange={onLayoutChange}
-      isDraggable={true}
-      isDroppable={false}
-      isResizable={true}
-      rows={rows}
-      cols={cols}
-      rowHeight={rowHeight}
-      useCSSTransforms={false}
-      resizeHandle={resizeHandle}
-    >
-      {generateDOM()}
-    </StyledReactGridLayout>
+    <Scroller style={{ height: '100%' }}>
+      <StyledReactGridLayout
+        style={{ minHeight: '100%' }}
+        className={className}
+        onLayoutChange={onLayoutChange}
+        isDraggable={true}
+        isDroppable={false}
+        isResizable={true}
+        rows={rows}
+        cols={cols}
+        rowHeight={rowHeight}
+        useCSSTransforms={false}
+        resizeHandle={resizeHandle}
+      >
+        {generateDOM()}
+      </StyledReactGridLayout>
+    </Scroller>
   )
 }
 
