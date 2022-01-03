@@ -134,6 +134,7 @@ const KanbanView = ({
                 {
                   width: 250,
                   removePadding: true,
+                  keepAll: true,
                 }
               )
             }}
@@ -236,6 +237,7 @@ const KanbanView = ({
                 {
                   width: 250,
                   removePadding: true,
+                  keepAll: true,
                 }
               )
             }
@@ -262,6 +264,7 @@ const KanbanView = ({
                 {
                   width: 250,
                   removePadding: true,
+                  keepAll: true,
                 }
               )
             }

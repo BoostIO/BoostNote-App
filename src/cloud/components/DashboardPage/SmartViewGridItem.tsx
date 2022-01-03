@@ -11,6 +11,8 @@ import { useNav } from '../../lib/stores/nav'
 import { getMapValues } from '../../../design/lib/utils/array'
 import Button, { LoadingButton } from '../../../design/components/atoms/Button'
 import { mdiArrowExpand, mdiClose, mdiCog, mdiTrashCan } from '@mdi/js'
+import Icon from '../../../design/components/atoms/Icon'
+import { getIconPathOfViewType } from '../../lib/views'
 
 interface SmartViewGridItemProps {
   className?: string
@@ -18,6 +20,7 @@ interface SmartViewGridItemProps {
   currentUserIsCoreMember: boolean
   team: SerializedTeam
   controls?: React.ReactNode
+  showControls?: boolean
 }
 
 const SmartViewGridItem = ({
@@ -26,6 +29,7 @@ const SmartViewGridItem = ({
   currentUserIsCoreMember,
   team,
   controls,
+  showControls,
 }: SmartViewGridItemProps) => {
   const { docsMap } = useNav()
 
@@ -36,8 +40,18 @@ const SmartViewGridItem = ({
   }, [docsMap, smartview.condition])
 
   return (
-    <Container className={cc(['sv__item', className])}>
+    <Container
+      className={cc([
+        'sv__item',
+        showControls && 'sv__item--controlled',
+        className,
+      ])}
+    >
       <div className='sv__item__header'>
+        <Icon
+          className='sv__item__icon'
+          path={getIconPathOfViewType(smartview.view.type)}
+        />
         <span className='sv__item__title'>{smartview.name}</span>
         {controls != null && (
           <div className='sv__item__controls'>{controls}</div>
@@ -138,6 +152,7 @@ const Container = styled.div`
   overflow: hidden;
   border: 1px solid ${({ theme }) => theme.colors.border.main};
   border-radius: ${({ theme }) => theme.borders.radius}px;
+  background: ${({ theme }) => theme.colors.background.primary};
 
   &.sv__item--fullscreen {
     position: fixed;
@@ -145,10 +160,9 @@ const Container = styled.div`
     height: 90vh !important;
   }
 
-  &:hover {
-    .sv__item__controls {
-      display: flex;
-    }
+  &:hover .sv__item__controls,
+  &.sv__item--controlled .sv__item__controls {
+    display: flex;
   }
 
   .sv__item__header {
@@ -169,7 +183,7 @@ const Container = styled.div`
   }
 
   .sv__item__controls {
-    display: flex;
+    display: none;
     flex: 0 0 auto;
     align-items: center;
     margin: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
@@ -188,6 +202,11 @@ const Container = styled.div`
   .sv__item__content__wrapper {
     width: 100%;
     height: 100%;
+  }
+
+  .sv__item__icon {
+    flex: 0 0 auto;
+    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 `
 

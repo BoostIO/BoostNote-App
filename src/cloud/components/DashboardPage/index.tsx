@@ -85,6 +85,7 @@ const DashboardPage = ({
                     team={propsTeam}
                     smartview={smartview}
                     currentUserIsCoreMember={currentUserIsCoreMember}
+                    showControls={true}
                     controls={
                       <SmartViewModalItemControls
                         state={sendingMap.get(smartview.id)}
@@ -208,6 +209,10 @@ const Container = styled.div`
   flex-direction: column;
   flex: 1 1 auto;
   height: 100%;
+
+  .dashboard__grid {
+    background: ${({ theme }) => theme.colors.background.secondary};
+  }
 `
 
 DashboardPage.getInitialProps = async (params: GetInitialPropsParameters) => {

@@ -183,7 +183,7 @@ export function useCloudResourceModals() {
   const openNewDocForm = useCallback(
     (
       body: CloudNewResourceRequestBody,
-      options?: UIFormOptions & { skipRedirect?: boolean }
+      options?: UIFormOptions & { skipRedirect?: boolean; keepAll?: boolean }
     ) => {
       openModal(
         <EmojiInputForm
@@ -223,6 +223,7 @@ export function useCloudResourceModals() {
         {
           showCloseIcon: true,
           title: translate(lngKeys.ModalsCreateNewDocument),
+          keepAll: options?.keepAll,
         }
       )
     },
