@@ -35,7 +35,6 @@ const GridLayout = <T extends { id: string }>({
 }: GridLayoutProps<T>) => {
   const onLayoutChange = useCallback(
     (currentLayout: Layout[]) => {
-      console.log(currentLayout)
       updateLayout(currentLayout)
     },
     [updateLayout]
@@ -46,8 +45,6 @@ const GridLayout = <T extends { id: string }>({
       acc.set(val.i, val)
       return acc
     }, new Map<string, Layout>())
-
-    console.log(layoutMap)
     return items.map((item) => {
       const dataGrid = layoutMap.get(item.id)
       console.log(dataGrid)

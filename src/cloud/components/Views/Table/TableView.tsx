@@ -179,6 +179,7 @@ const TableView = ({
                   {
                     width: 250,
                     removePadding: true,
+                    keepAll: true,
                   }
                 )
               }
@@ -213,6 +214,7 @@ const TableView = ({
                     hideBackground: true,
                     removePadding: true,
                     alignment: 'bottom-left',
+                    keepAll: true,
                   }
                 ),
             },
@@ -249,6 +251,7 @@ const TableView = ({
                       hideBackground: true,
                       removePadding: true,
                       alignment: 'bottom-left',
+                      keepAll: true,
                     }
                   ),
               }

@@ -103,6 +103,7 @@ const CalendarView = ({
               {
                 removePadding: true,
                 width: 200,
+                keepAll: true,
               }
             ),
         },
@@ -162,6 +163,7 @@ const CalendarView = ({
             },
           ],
           skipRedirect: true,
+          keepAll: true,
         }
       )
     },
@@ -228,6 +230,7 @@ const CalendarView = ({
                 {
                   width: 250,
                   removePadding: true,
+                  keepAll: true,
                 }
               )
             }
@@ -259,6 +262,7 @@ const CalendarView = ({
                   width: 250,
                   removePadding: true,
                   onBlur: true,
+                  keepAll: true,
                 }
               )
             }
@@ -280,6 +284,7 @@ const CalendarView = ({
                 {
                   width: 250,
                   removePadding: true,
+                  keepAll: true,
                 }
               )
             }

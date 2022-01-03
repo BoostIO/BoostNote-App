@@ -210,6 +210,7 @@ const ListView = ({
                   {
                     width: 250,
                     removePadding: true,
+                    keepAll: true,
                   }
                 )
               }
@@ -273,58 +274,60 @@ const ListView = ({
             />
           </div>
         )}
-        <ListViewHeader
-          label={translate(lngKeys.GeneralFolders)}
-          checked={selectingAllFolders}
-          onSelect={
-            selectingAllFolders ? resetFoldersInSelection : selectAllFolders
-          }
-          showCheckbox={currentUserIsCoreMember}
-          className='content__manager__list__header--margin'
-        />
-        {orderedFolders.map((folder) => {
-          const { id } = folder
-          const href = getFolderHref(folder, team, 'index')
-          return (
-            <ListViewItem
-              key={id}
-              id={id}
-              checked={hasFolderInSelection(folder.id)}
-              onSelect={() => toggleFolderInSelection(folder.id)}
-              showCheckbox={currentUserIsCoreMember}
-              label={folder.name}
-              emoji={folder.emoji}
-              labelHref={href}
-              labelOnclick={() => push(href)}
-              onDragStart={(event: any) =>
-                saveFolderTransferData(event, folder)
-              }
-              onDragEnd={(event: any) => clearDragTransferData(event)}
-              onDrop={(event: any) => onDropFolder(event, folder)}
-              hideOrderingHandle={true}
-            />
-          )
-        })}
         {currentWorkspaceId != null && (
-          <div className='content__manager__add-row'>
-            <FormToggableInput
-              iconPath={mdiPlus}
-              variant='transparent'
-              label={translate(lngKeys.ModalsCreateNewFolder)}
-              submit={(val: string) =>
-                createFolder(
-                  team,
-                  {
-                    folderName: val,
-                    description: '',
-                    workspaceId: currentWorkspaceId,
-                    parentFolderId: currentFolderId,
-                  },
-                  { skipRedirect: true }
-                )
+          <>
+            <ListViewHeader
+              label={translate(lngKeys.GeneralFolders)}
+              checked={selectingAllFolders}
+              onSelect={
+                selectingAllFolders ? resetFoldersInSelection : selectAllFolders
               }
+              showCheckbox={currentUserIsCoreMember}
+              className='content__manager__list__header--margin'
             />
-          </div>
+            {orderedFolders.map((folder) => {
+              const { id } = folder
+              const href = getFolderHref(folder, team, 'index')
+              return (
+                <ListViewItem
+                  key={id}
+                  id={id}
+                  checked={hasFolderInSelection(folder.id)}
+                  onSelect={() => toggleFolderInSelection(folder.id)}
+                  showCheckbox={currentUserIsCoreMember}
+                  label={folder.name}
+                  emoji={folder.emoji}
+                  labelHref={href}
+                  labelOnclick={() => push(href)}
+                  onDragStart={(event: any) =>
+                    saveFolderTransferData(event, folder)
+                  }
+                  onDragEnd={(event: any) => clearDragTransferData(event)}
+                  onDrop={(event: any) => onDropFolder(event, folder)}
+                  hideOrderingHandle={true}
+                />
+              )
+            })}
+            <div className='content__manager__add-row'>
+              <FormToggableInput
+                iconPath={mdiPlus}
+                variant='transparent'
+                label={translate(lngKeys.ModalsCreateNewFolder)}
+                submit={(val: string) =>
+                  createFolder(
+                    team,
+                    {
+                      folderName: val,
+                      description: '',
+                      workspaceId: currentWorkspaceId,
+                      parentFolderId: currentFolderId,
+                    },
+                    { skipRedirect: true }
+                  )
+                }
+              />
+            </div>
+          </>
         )}
       </StyledContentManagerList>
     </Container>
