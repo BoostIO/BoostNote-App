@@ -60,7 +60,7 @@ const SmartViewConditionRows = ({
             type: 'button',
             props: {
               iconPath: mdiPlus,
-              variant: 'transparent',
+              variant: 'link',
               label: 'Add a filter',
               onClick: () =>
                 setConditions((prev) => [

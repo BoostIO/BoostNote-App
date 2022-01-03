@@ -1,11 +1,12 @@
 import { SerializedUserTeamPermissions } from './userTeamPermissions'
 import { SerializedSmartView } from './smartView'
+import { Layout } from 'react-grid-layout'
 
 interface SerializableDashboardProps {
   id: string
   name: string
   ownerId: string
-  data: object
+  data: DashboardData
 }
 
 interface SerializedUnserializableDashboardProps {
@@ -16,3 +17,7 @@ interface SerializedUnserializableDashboardProps {
 
 export type SerializedDashboard = SerializableDashboardProps &
   SerializedUnserializableDashboardProps
+
+export type DashboardData = {
+  itemsLayouts: Layout[]
+}

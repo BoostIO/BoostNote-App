@@ -5,6 +5,7 @@ interface SerializableSmartViewProps {
   id: string
   name: string
   dashboardId: string
+  viewId: number
   data: any
 }
 
@@ -13,7 +14,7 @@ interface SerializedUnserializableSmartViewProps {
   dashboard?: SerializedDashboard
   createdAt: string
   updatedAt: string
-  views?: SerializedView[]
+  view: SerializedView
 }
 
 export type SerializedSmartView = SerializableSmartViewProps &

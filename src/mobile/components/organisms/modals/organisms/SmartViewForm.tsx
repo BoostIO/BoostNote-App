@@ -1,7 +1,6 @@
 import { mdiPlus } from '@mdi/js'
 import React, { useCallback, useState } from 'react'
 import { LoadingButton } from '../../../../../design/components/atoms/Button'
-import Switch from '../../../../../design/components/atoms/Switch'
 import Form from '../../../../../design/components/molecules/Form'
 import FormRow from '../../../../../design/components/molecules/Form/templates/FormRow'
 import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
@@ -36,14 +35,12 @@ interface SmartViewFormProps {
 const SmartViewForm = ({
   action,
   defaultName = '',
-  defaultPrivate = true,
   defaultConditions,
   buttonsAreDisabled,
   teamId,
   onSubmit,
 }: SmartViewFormProps) => {
   const [name, setName] = useState(defaultName)
-  const [makingPrivate, setMakingPrivate] = useState(defaultPrivate)
   const { translate } = useI18n()
 
   const [secondaryConditions, setSecondaryConditions] = useState<EditableQuery>(
@@ -82,10 +79,9 @@ const SmartViewForm = ({
       onSubmit({
         name,
         condition: secondaryConditions as SerializedQuery,
-        private: makingPrivate,
       })
     },
-    [onSubmit, makingPrivate, name, secondaryConditions]
+    [onSubmit, name, secondaryConditions]
   )
 
   return (
@@ -99,7 +95,7 @@ const SmartViewForm = ({
         <FormRow
           fullWidth={true}
           row={{
-            title: translate(lngKeys.GeneralName),
+            title: translate(lngKeys.GeneralTitle),
             items: [
               { type: 'input', props: { value: name, onChange: updateName } },
             ],
@@ -120,7 +116,7 @@ const SmartViewForm = ({
                 type: 'button',
                 props: {
                   iconPath: mdiPlus,
-                  variant: 'secondary',
+                  variant: 'link',
                   label: '',
                   onClick: () =>
                     insertSecondaryConditionByIndex(
@@ -167,34 +163,6 @@ const SmartViewForm = ({
           }}
         />
 
-        <FormRow fullWidth={true} className='privacy-row'>
-          <FormRowItem>
-            <div>
-              <h3 className='privacy-row__label'>
-                {translate(lngKeys.ModalsWorkspaceMakePrivate)}
-              </h3>
-              <p>
-                {makingPrivate ? (
-                  <>{translate(lngKeys.ModalsSmartViewPrivateDisclaimer)}</>
-                ) : (
-                  <>{translate(lngKeys.ModalsSmartViewPublicDisclaimer)}</>
-                )}
-              </p>
-            </div>
-          </FormRowItem>
-          <FormRowItem className='form__row__item--shrink'>
-            <Switch
-              id='shared-custom-switch'
-              checked={makingPrivate}
-              onChange={(checked) => {
-                setMakingPrivate(checked)
-              }}
-              height={20}
-              width={30}
-              handleSize={14}
-            />
-          </FormRowItem>
-        </FormRow>
         <MobileFormControl>
           <LoadingButton
             spinning={buttonsAreDisabled}
@@ -237,17 +205,6 @@ const Container = styled.div`
 
   .form__select__control {
     min-width: 150px !important;
-  }
-
-  .privacy-row {
-    margin-top: 0 !important;
-    .form__row__items {
-      align-items: center !important;
-    }
-  }
-
-  .privacy-row__label {
-    margin-top: 0;
   }
 `
 

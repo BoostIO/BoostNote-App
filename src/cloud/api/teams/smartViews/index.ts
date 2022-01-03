@@ -3,11 +3,14 @@ import {
   SerializedSmartView,
   SerializedQuery,
 } from '../../../interfaces/db/smartView'
+import { SupportedViewTypes } from '../../../interfaces/db/view'
 
 export interface CreateSmartViewRequestBody {
   name: string
   condition: SerializedQuery
-  private: boolean
+  teamId: string
+  dashboardId: string
+  view: SupportedViewTypes
 }
 
 export interface CreateSmartViewResponseBody {
@@ -28,7 +31,6 @@ export async function createSmartView(
 export interface UpdateSmartViewRequestBody {
   name: string
   condition: SerializedQuery
-  private: boolean
 }
 
 export interface UpdateSmartViewResponseBody {
@@ -37,7 +39,7 @@ export interface UpdateSmartViewResponseBody {
 
 export async function updateSmartView(
   smartView: SerializedSmartView,
-  body: CreateSmartViewRequestBody
+  body: UpdateSmartViewRequestBody
 ) {
   const data = await callApi<CreateSmartViewResponseBody>(
     `/api/smart-views/${smartView.id}`,
