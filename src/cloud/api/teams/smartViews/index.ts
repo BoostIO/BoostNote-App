@@ -31,6 +31,7 @@ export async function createSmartView(
 export interface UpdateSmartViewRequestBody {
   name: string
   condition: SerializedQuery
+  view?: SupportedViewTypes
 }
 
 export interface UpdateSmartViewResponseBody {

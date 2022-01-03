@@ -12,6 +12,10 @@ import {
 import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import { Layout } from 'react-grid-layout'
 import { isEqual, pick } from 'lodash'
+import {
+  UpdateSmartViewRequestBody,
+  UpdateSmartViewResponseBody,
+} from '../../../api/teams/smartViews'
 
 interface DashboardStoreProps {
   dashboard: SerializedDashboard
@@ -25,6 +29,10 @@ export type DashboardActionsRef = React.MutableRefObject<{
     condition: SerializedQuery
     view: SupportedViewTypes
   }) => Promise<BulkApiActionRes>
+  updateSmartView: (
+    smartView: SerializedSmartView,
+    body: UpdateSmartViewRequestBody
+  ) => Promise<BulkApiActionRes>
   removeSmartView: (smartView: SerializedSmartView) => Promise<BulkApiActionRes>
   removeDashboard: () => Promise<BulkApiActionRes>
   updateDashboardLayout: (layouts: Layout[]) => void
@@ -46,6 +54,7 @@ export function useDashboard({
     deleteDashboard,
     deleteSmartViewApi,
     updateDashboard,
+    updateSmartViewApi,
     sendingMap,
   } = useCloudApi()
 
@@ -128,6 +137,32 @@ export function useDashboard({
     [deleteSmartViewApi]
   )
 
+  const updateSmartView = useCallback(
+    async (
+      smartView: SerializedSmartView,
+      body: UpdateSmartViewRequestBody
+    ) => {
+      const res = await updateSmartViewApi(smartView, body)
+
+      if (!res.err) {
+        const updatedSmartviewData = res.data as UpdateSmartViewResponseBody
+        setSmartViews((prev) =>
+          prev.reduce((acc, val) => {
+            if (val.id === updatedSmartviewData.data.id) {
+              acc.push(updatedSmartviewData.data)
+            } else {
+              acc.push(val)
+            }
+            return acc
+          }, [] as SerializedSmartView[])
+        )
+      }
+
+      return res
+    },
+    [updateSmartViewApi]
+  )
+
   const removeDashboard = useCallback(async () => {
     const res = await deleteDashboard(initialDashboard)
 
@@ -143,6 +178,7 @@ export function useDashboard({
     removeSmartView,
     removeDashboard,
     updateDashboardLayout,
+    updateSmartView,
   })
 
   useEffect(() => {
@@ -151,8 +187,15 @@ export function useDashboard({
       removeSmartView,
       removeDashboard,
       updateDashboardLayout,
+      updateSmartView,
     }
-  }, [addSmartView, removeSmartView, removeDashboard, updateDashboardLayout])
+  }, [
+    addSmartView,
+    removeSmartView,
+    removeDashboard,
+    updateDashboardLayout,
+    updateSmartView,
+  ])
 
   return {
     sendingMap,
