@@ -23,6 +23,7 @@ import SmartViewGridItem, {
   SmartViewModalItemControls,
 } from './SmartViewGridItem'
 import { usePage } from '../../lib/stores/pageStore'
+import UpdateSmartViewModal from './UpdateSmartViewModal'
 
 const DashboardPage = ({
   dashboard: propsDashboard,
@@ -63,7 +64,21 @@ const DashboardPage = ({
           controls={
             <SmartViewGridItemControls
               state={sendingMap.get(smartview.id)}
-              onEdit={() => {}}
+              onEdit={() =>
+                openModal(
+                  <UpdateSmartViewModal
+                    teamId={propsTeam.id}
+                    smartView={smartview}
+                    save={(body) =>
+                      actionsRef.current.updateSmartView(smartview, body)
+                    }
+                  />,
+                  {
+                    showCloseIcon: false,
+                    width: 'full',
+                  }
+                )
+              }
               onExpand={() =>
                 openModal(
                   <SmartViewGridItem
@@ -79,7 +94,24 @@ const DashboardPage = ({
                             .then(closeAllModals)
                         }}
                         onClose={closeAllModals}
-                        onEdit={() => {}}
+                        onEdit={() =>
+                          openModal(
+                            <UpdateSmartViewModal
+                              teamId={propsTeam.id}
+                              smartView={smartview}
+                              save={(body) =>
+                                actionsRef.current.updateSmartView(
+                                  smartview,
+                                  body
+                                )
+                              }
+                            />,
+                            {
+                              showCloseIcon: false,
+                              width: 'full',
+                            }
+                          )
+                        }
                       />
                     }
                   />,
@@ -95,7 +127,14 @@ const DashboardPage = ({
         />
       )
     },
-    [currentUserIsCoreMember, propsTeam, sendingMap, actionsRef]
+    [
+      currentUserIsCoreMember,
+      propsTeam,
+      sendingMap,
+      actionsRef,
+      closeAllModals,
+      openModal,
+    ]
   )
 
   if (dashboard == null) {
