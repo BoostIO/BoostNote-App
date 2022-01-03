@@ -1,5 +1,8 @@
 import { callApi } from '../../../lib/client'
-import { SerializedDashboard } from '../../../interfaces/db/dashboard'
+import {
+  DashboardData,
+  SerializedDashboard,
+} from '../../../interfaces/db/dashboard'
 
 export interface CreateDashboardRequestBody {
   name: string
@@ -20,7 +23,8 @@ export async function createDashboard(body: CreateDashboardRequestBody) {
 }
 
 export interface UpdateDashboardRequestBody {
-  name: string
+  name?: string
+  data?: DashboardData
 }
 
 export interface UpdateDashboardResponseBody {

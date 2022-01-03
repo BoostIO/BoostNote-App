@@ -4,16 +4,9 @@ import Button, {
   LoadingButton,
 } from '../../../../../design/components/atoms/Button'
 import ButtonGroup from '../../../../../design/components/atoms/ButtonGroup'
-import Flexbox from '../../../../../design/components/atoms/Flexbox'
-import Switch from '../../../../../design/components/atoms/Switch'
 import Form from '../../../../../design/components/molecules/Form'
 import FormRow from '../../../../../design/components/molecules/Form/templates/FormRow'
-import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
 import styled from '../../../../../design/lib/styled'
-import {
-  UpdateSmartViewRequestBody,
-  CreateSmartViewRequestBody,
-} from '../../../../api/teams/smartViews'
 import { SerializedQuery } from '../../../../interfaces/db/smartView'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
@@ -26,9 +19,7 @@ interface SmmartViewFormProps {
   defaultName?: string
   defaultPrivate?: boolean
   defaultConditions: EditableQuery
-  onSubmit: (
-    body: CreateSmartViewRequestBody | UpdateSmartViewRequestBody
-  ) => void
+  onSubmit: (body: { name: string; condition: SerializedQuery }) => void
   onCancel?: () => void
   buttonsAreDisabled?: boolean
   showOnlyConditions?: boolean
@@ -37,7 +28,6 @@ interface SmmartViewFormProps {
 const SmartViewForm = ({
   action,
   defaultName = '',
-  defaultPrivate = true,
   defaultConditions,
   buttonsAreDisabled,
   showOnlyConditions,
@@ -46,7 +36,6 @@ const SmartViewForm = ({
   onSubmit,
 }: SmmartViewFormProps) => {
   const [name, setName] = useState(defaultName)
-  const [makingPrivate, setMakingPrivate] = useState(defaultPrivate)
   const { translate } = useI18n()
 
   const [conditions, setConditions] = useState<EditableQuery>(defaultConditions)
@@ -64,10 +53,9 @@ const SmartViewForm = ({
       onSubmit({
         name,
         condition: removeNullConditions(conditions),
-        private: makingPrivate,
       })
     },
-    [onSubmit, makingPrivate, name, conditions]
+    [onSubmit, name, conditions]
   )
 
   return (
@@ -103,40 +91,6 @@ const SmartViewForm = ({
             items: [{ type: 'node', element: <BorderSeparator /> }],
           }}
         />
-        {!showOnlyConditions && (
-          <>
-            <FormRow fullWidth={true} className='privacy-row'>
-              <FormRowItem>
-                <div>
-                  <h3 className='privacy-row__label'>
-                    {translate(lngKeys.ModalsWorkspaceMakePrivate)}
-                  </h3>
-                  <p>
-                    {makingPrivate ? (
-                      <>{translate(lngKeys.ModalsSmartViewPrivateDisclaimer)}</>
-                    ) : (
-                      <>{translate(lngKeys.ModalsSmartViewPublicDisclaimer)}</>
-                    )}
-                  </p>
-                </div>
-              </FormRowItem>
-              <FormRowItem className='form__row__item--shrink'>
-                <Flexbox justifyContent='flex-end'>
-                  <Switch
-                    id='shared-custom-switch'
-                    checked={makingPrivate}
-                    onChange={(checked) => {
-                      setMakingPrivate(checked)
-                    }}
-                    height={20}
-                    width={30}
-                    handleSize={14}
-                  />
-                </Flexbox>
-              </FormRowItem>
-            </FormRow>
-          </>
-        )}
         <FormRow>
           <ButtonGroup layout='spread'>
             {onCancel != null && (

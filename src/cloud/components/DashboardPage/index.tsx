@@ -1,9 +1,8 @@
 import { mdiDotsHorizontal } from '@mdi/js'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
-import { usePage } from '../../lib/stores/pageStore'
 import ApplicationContent from '../ApplicationContent'
 import ApplicationPage from '../ApplicationPage'
 import ApplicationTopbar from '../ApplicationTopbar'
@@ -13,15 +12,36 @@ import {
 } from '../../api/pages/teams/dashboards/show'
 import { trackEvent } from '../../api/track'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
+import DashboardContextMenu from './DashboardContextMenu'
+import AddSmartViewModal from './AddSmartViewModal'
+import { useDashboard } from '../../lib/hooks/dashboards/useDashboard'
+import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
+import GridLayout from '../../../design/components/organisms/GridLayout'
+import { SerializedSmartView } from '../../interfaces/db/smartView'
+import SmartViewGridItem, {
+  SmartViewGridItemControls,
+} from './SmartViewGridItem'
+import { usePage } from '../../lib/stores/pageStore'
 
 const DashboardPage = ({
   dashboard: propsDashboard,
-  smartViews: PropsSmartViews,
+  smartViews: propsSmartViews,
   team: propsTeam,
 }: DashboardShowPageResponseBody) => {
   const dashboardRef = useRef<string | undefined>(undefined)
-  const { openContextModal } = useModal()
-  const { team } = usePage()
+  const { openContextModal, openModal } = useModal()
+  const {
+    dashboard,
+    actionsRef,
+    smartViews,
+    sendingMap,
+    dashboardData,
+  } = useDashboard({
+    dashboard: propsDashboard,
+    smartViews: propsSmartViews,
+    team: propsTeam,
+  })
+  const { currentUserIsCoreMember } = usePage()
 
   useEffect(() => {
     if (dashboardRef.current === propsDashboard.id) {
@@ -32,6 +52,39 @@ const DashboardPage = ({
     trackEvent(MixpanelActionTrackTypes.DashboardOpen)
   }, [propsDashboard.id])
 
+  const renderSmartview = useCallback(
+    (smartview: SerializedSmartView) => {
+      return (
+        <SmartViewGridItem
+          team={propsTeam}
+          smartview={smartview}
+          currentUserIsCoreMember={currentUserIsCoreMember}
+          controls={
+            <SmartViewGridItemControls
+              state={sendingMap.get(smartview.id)}
+              onEdit={() => {}}
+              onExpand={() => {}}
+              onDelete={() => actionsRef.current.removeSmartView(smartview)}
+            />
+          }
+        />
+      )
+    },
+    [currentUserIsCoreMember, propsTeam, sendingMap, actionsRef]
+  )
+
+  if (dashboard == null) {
+    return (
+      <ApplicationPage showingTopbarPlaceholder={true}>
+        <ApplicationContent reduced={true}>
+          <ColoredBlock variant='danger'>
+            {'Dashboard has been removed'}
+          </ColoredBlock>
+        </ApplicationContent>
+      </ApplicationPage>
+    )
+  }
+
   return (
     <ApplicationPage>
       <ApplicationTopbar
@@ -40,18 +93,47 @@ const DashboardPage = ({
             type: 'button',
             variant: 'primary',
             label: 'Add smart view',
-            onClick: () => {},
+            onClick: () =>
+              openModal(
+                <AddSmartViewModal
+                  teamId={propsTeam.id}
+                  addSmartView={actionsRef.current.addSmartView}
+                />
+              ),
           },
           {
             type: 'button',
             variant: 'icon',
             iconPath: mdiDotsHorizontal,
-            onClick: (_event) => {},
+            onClick: (event) =>
+              openContextModal(
+                event,
+                <DashboardContextMenu team={propsTeam} dashboard={dashboard} />,
+                {
+                  alignment: 'bottom-right',
+                  removePadding: true,
+                  hideBackground: true,
+                }
+              ),
           },
         ]}
       />
       <ApplicationContent>
-        <Container>in dashboard page</Container>
+        <Container className='dashboard__grid__wrapper'>
+          <GridLayout
+            className='dashboard__grid'
+            items={smartViews}
+            renderItem={renderSmartview}
+            layout={dashboardData.itemsLayouts}
+            updateLayout={actionsRef.current.updateDashboardLayout}
+            defaultGridItemProperties={{
+              isResizable: true,
+              isDraggable: true,
+              isBounded: true,
+              resizeHandles: ['se'],
+            }}
+          />
+        </Container>
       </ApplicationContent>
     </ApplicationPage>
   )
@@ -62,26 +144,6 @@ const Container = styled.div`
   flex-direction: column;
   flex: 1 1 auto;
   height: 100%;
-
-  .smartView__control {
-    margin: ${({ theme }) => theme.sizes.spaces.df}px
-      ${({ theme }) => theme.sizes.spaces.sm}px;
-    font-size: ${({ theme }) => theme.sizes.fonts.xl}px;
-
-    span {
-      padding-right: ${({ theme }) => theme.sizes.spaces.sm}px;
-      color: ${({ theme }) => theme.colors.text.primary};
-    }
-  }
-
-  .views__list {
-    flex: 1 1 auto;
-    height: 100%;
-  }
-
-  .smartView__filters {
-    padding-left: ${({ theme }) => theme.sizes.spaces.df}px;
-  }
 `
 
 DashboardPage.getInitialProps = async (params: GetInitialPropsParameters) => {
