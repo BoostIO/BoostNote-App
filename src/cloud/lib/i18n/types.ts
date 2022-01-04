@@ -233,6 +233,8 @@ export enum lngKeys {
   PlanTrial = 'plan.trial',
   PlanInTrial = 'plan.in.trial',
   PlanSizePerUpload = 'plan.upload.size',
+  PlanDashboardPerUser = 'plan.dashboard.user',
+  PlanSmartviewPerDashboard = 'plan.smartview.dashboard',
   UpgradeSubtitle = 'plan.upgrade.subtitle',
   Viewers = 'viewers',
   Month = 'month',

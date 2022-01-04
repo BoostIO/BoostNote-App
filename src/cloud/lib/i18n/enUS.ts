@@ -183,6 +183,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.PlanTrial]: '{{days}} days free trial',
   [lngKeys.PlanInTrial]: 'In free trial ({{remaining}} left)',
   [lngKeys.PlanSizePerUpload]: '{{size}}Mb per upload',
+  [lngKeys.PlanDashboardPerUser]: '{{size}} dashboards per user',
+  [lngKeys.PlanSmartviewPerDashboard]: '{{size}} smart views per dashboard',
   [lngKeys.UpgradeSubtitle]: 'Confirm and enter your payment information',
   [lngKeys.Viewers]: 'viewers',
   [lngKeys.Month]: 'month',

@@ -472,6 +472,8 @@ const jpTranslation: TranslationSource = {
     'Viewer権限とMember権限の違いにつきましては、',
   [lngKeys.PlanViewersMembersLink]: 'こちらの記事をご覧ください。',
   [lngKeys.PlanSizePerUpload]: '{{size}}Mb per upload',
+  [lngKeys.PlanDashboardPerUser]: '{{size}} dashboards per user',
+  [lngKeys.PlanSmartviewPerDashboard]: '{{size}} smart views per dashboard',
   [lngKeys.SeeRoleDetails]: '各権限を確認する。',
   [lngKeys.ViewerDisclaimerIntro]: 'このドキュメントを編集できるように',
   [lngKeys.ViewerDisclaimerOutro]:
