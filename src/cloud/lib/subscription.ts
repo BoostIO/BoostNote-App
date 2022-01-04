@@ -16,6 +16,10 @@ export const freePlanMembersLimit = 3
 
 export const freePlanUploadSizeMb = 10
 export const paidPlanUploadSizeMb = 200
+
+export const freePlanSmartViewPerDashboardLimit = 4
+export const freePlanDashboardPerUserPerTeamLimit = 1
+
 export function isTimeEligibleForDiscount(team: { createdAt: string }) {
   if (
     differenceInDays(Date.now(), new Date(team.createdAt)) <=

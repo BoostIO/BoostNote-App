@@ -11,6 +11,7 @@ export const defaultGridRows = 5
 export const defaultGridCols = 8
 
 interface GridLayoutProps<T extends { id: string }> {
+  disabled?: boolean
   className?: string
   layout?: Layout[]
   rowHeight?: number
@@ -26,6 +27,7 @@ interface GridLayoutProps<T extends { id: string }> {
 
 const GridLayout = <T extends { id: string }>({
   className,
+  disabled,
   layout = [],
   rowHeight = 20,
   rows = defaultGridRows,
@@ -64,9 +66,9 @@ const GridLayout = <T extends { id: string }>({
         style={{ minHeight: '100%' }}
         className={className}
         onLayoutChange={onLayoutChange}
-        isDraggable={true}
+        isDraggable={!disabled}
         isDroppable={false}
-        isResizable={true}
+        isResizable={!disabled}
         rows={rows}
         cols={cols}
         rowHeight={rowHeight}

@@ -69,9 +69,10 @@ import LabelsManagementModal from '../../../components/Modal/contents/LabelsMana
 import { useElectron } from '../../stores/electron'
 import { isString } from '../../utils/string'
 import { getDashboardHref } from '../../../components/Link/DashboardLink'
+import UnlockDashboardModal from '../../../components/Modal/contents/Subscription/UnlockDashboardModal'
 
 export function useCloudSidebarTree() {
-  const { team, currentUserIsCoreMember } = usePage()
+  const { team, currentUserIsCoreMember, subscription } = usePage()
   const { push, pathname } = useRouter()
   const { openModal } = useModal()
   const { preferences, setPreferences } = usePreferences()
@@ -670,18 +671,29 @@ export function useCloudSidebarTree() {
         [] as SidebarTreeChildRow[]
       ),
       controls: currentUserIsCoreMember
-        ? [
-            {
-              icon: mdiPlus,
-              onClick: undefined,
-              placeholder: translate(lngKeys.GeneralName),
-              create: (name: string) =>
-                createDashboard({
-                  teamId: team.id,
-                  name,
-                }),
-            },
-          ]
+        ? subscription == null && dashboardsMap.size !== 0
+          ? [
+              {
+                icon: mdiPlus,
+                onClick: () =>
+                  openModal(<UnlockDashboardModal />, {
+                    showCloseIcon: false,
+                    width: 'small',
+                  }),
+              },
+            ]
+          : [
+              {
+                icon: mdiPlus,
+                onClick: undefined,
+                placeholder: translate(lngKeys.GeneralName),
+                create: (name: string) =>
+                  createDashboard({
+                    teamId: team.id,
+                    name,
+                  }),
+              },
+            ]
         : undefined,
     })
 
@@ -845,6 +857,7 @@ export function useCloudSidebarTree() {
     openWorkspaceEditForm,
     deleteWorkspace,
     push,
+    subscription,
     treeSendingMap,
     sideBarOpenedFolderIdsSet,
     dropInDocOrFolder,

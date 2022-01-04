@@ -502,6 +502,16 @@ const jpTranslation: TranslationSource = {
 
   [lngKeys.GeneralYes]: 'はい',
   [lngKeys.GeneralNo]: 'いいえ',
+
+  [lngKeys.ModalUnlockDashboardsTitle]: 'Unlock Dashboards',
+  [lngKeys.ModalUnlockDashboardsDescription]:
+    'Create unlimited dashboards to organize your docs, tasks.. in order to guide your workflow in your own way! Display the information the way you want to see it.',
+  [lngKeys.ModalUnlockSmartviewsTitle]: 'Unlock Smart Views',
+  [lngKeys.ModalUnlockSmartviewsDescription]:
+    'Add unlimited smart views to your dashboard in order to customize even more your own experience. More smart views will allow you to be even more specific when it comes to what you want to see and how you want to see it!',
+  [lngKeys.ModalUnlockCheckDetails]:
+    'Check the details of the Standard and Pro plans and learn what you can do with it!',
+  [lngKeys.OverlimitDashboards]: `Your dashboards exceed the limit of your current plan. Consider upgrading your plan or deleting other dashboards in order to continue using this feature with your current plan.`,
 }
 
 export default {
