@@ -207,7 +207,6 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     min-width: 700px;
-    min-height: 400px;
   }
 
   .sv__item__icon {
