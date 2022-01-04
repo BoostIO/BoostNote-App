@@ -78,7 +78,7 @@ const TableView = ({
   )
   const { translate } = useI18n()
   const { createDoc } = useCloudApi()
-  const { openContextModal, closeAllModals } = useModal()
+  const { openContextModal, closeLastModal } = useModal()
   const { openDocPreview } = useCloudResourceModals()
   const { permissions = [] } = usePage()
 
@@ -207,7 +207,7 @@ const TableView = ({
                   ev,
                   <TitleColumnSettingsContext
                     updateTableSort={actionsRef.current.updateTableSort}
-                    close={closeAllModals}
+                    close={closeLastModal}
                   />,
                   {
                     width: 250,
@@ -244,7 +244,7 @@ const TableView = ({
                       moveColumn={(type) =>
                         actionsRef.current.moveColumn(col, type)
                       }
-                      close={closeAllModals}
+                      close={closeLastModal}
                     />,
                     {
                       width: 250,
@@ -349,13 +349,14 @@ const TableView = ({
                 view={view}
                 columns={columns}
                 addColumn={actionsRef.current.addColumn}
-                close={closeAllModals}
+                close={closeLastModal}
               />,
               {
                 width: 250,
                 hideBackground: true,
                 removePadding: true,
                 alignment: 'bottom-left',
+                keepAll: true,
               }
             )
           }
