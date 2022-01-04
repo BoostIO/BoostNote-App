@@ -191,6 +191,7 @@ const DashboardPage = ({
             renderItem={renderSmartview}
             layout={dashboardData.itemsLayouts}
             updateLayout={actionsRef.current.updateDashboardLayout}
+            draggableCancel={'.sv__item__content'}
             defaultGridItemProperties={{
               isResizable: true,
               isDraggable: true,

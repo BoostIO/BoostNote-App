@@ -18,6 +18,7 @@ interface GridLayoutProps<T extends { id: string }> {
   rows?: number
   cols?: number
   defaultGridItemProperties?: Partial<Layout>
+  draggableCancel?: string
   resizeHandle?: React.ReactNode | ((resizeHandle: string) => React.ReactNode)
   renderItem: (item: T) => React.ReactNode
   updateLayout: (layouts: Layout[]) => void
@@ -31,6 +32,7 @@ const GridLayout = <T extends { id: string }>({
   cols = defaultGridCols,
   items,
   resizeHandle,
+  draggableCancel,
   renderItem,
   updateLayout,
 }: GridLayoutProps<T>) => {
@@ -48,7 +50,6 @@ const GridLayout = <T extends { id: string }>({
     }, new Map<string, Layout>())
     return items.map((item) => {
       const dataGrid = layoutMap.get(item.id)
-      console.log(dataGrid)
       return (
         <GridItem key={item.id} className='grid__item' data-grid={dataGrid}>
           {renderItem(item)}
@@ -70,6 +71,8 @@ const GridLayout = <T extends { id: string }>({
         cols={cols}
         rowHeight={rowHeight}
         resizeHandle={resizeHandle}
+        draggableCancel={draggableCancel}
+        useCSSTransforms={false}
       >
         {generateDOM()}
       </StyledReactGridLayout>

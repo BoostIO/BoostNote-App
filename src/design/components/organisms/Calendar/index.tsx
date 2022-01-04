@@ -18,6 +18,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
 interface CalendarProps {
+  className?: string
   headerToolbar?: ToolbarInput
   weekends?: boolean
   dayHeaderFormat?: FormatterInput | DateFormatter
@@ -42,6 +43,7 @@ interface CalendarProps {
 }
 
 const Calendar = ({
+  className,
   headerToolbar,
   dayHeaderFormat,
   dayCellContent,
@@ -68,6 +70,7 @@ const Calendar = ({
       firstDay={1}
       weekends={weekends}
       events={events}
+      viewClassNames={className}
       dayHeaderFormat={dayHeaderFormat}
       dayCellContent={dayCellContent}
       selectable={selectable}
