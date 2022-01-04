@@ -31,7 +31,11 @@ const SmartViewGridItem = ({
   controls,
   showControls,
 }: SmartViewGridItemProps) => {
-  const { docsMap } = useNav()
+  const { viewsMap, docsMap } = useNav()
+
+  const view = useMemo(() => {
+    return viewsMap.get(smartview.view.id) || smartview.view
+  }, [viewsMap, smartview.view])
 
   const smartViewDocs = useMemo(() => {
     return getMapValues(docsMap).filter(
@@ -60,7 +64,7 @@ const SmartViewGridItem = ({
       <div className='sv__item__content'>
         <div className='sv__item__content__wrapper'>
           <DashboardView
-            view={smartview.view}
+            view={view}
             currentUserIsCoreMember={currentUserIsCoreMember}
             team={team}
             docs={smartViewDocs}
