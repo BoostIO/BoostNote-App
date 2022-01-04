@@ -162,6 +162,10 @@ const KanbanView = ({
 
   const renderListFooter = useCallback(
     (list: KanbanViewList) => {
+      if (currentWorkspaceId == null) {
+        return null
+      }
+
       const status =
         list.id !== 'none'
           ? statuses.find((status) => status.id === parseInt(list.id))
