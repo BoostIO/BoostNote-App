@@ -120,7 +120,7 @@ const GithubSourceItem = ({
   const [deleting, setDeleting] = useState(false)
   return (
     <li key={source.id}>
-      {source.identifier}
+      {source.name}
       {source.invalidated && '(Invalidated)'}
       <a
         href={`https://github.com/settings/installations/${githubInstallationId}`}
