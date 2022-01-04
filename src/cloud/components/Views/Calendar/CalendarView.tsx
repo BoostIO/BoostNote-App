@@ -27,6 +27,7 @@ import {
   ViewCalendarData,
 } from '../../../lib/views/calendar'
 import CalendarViewPropertiesContext from './CalendarViewPropertiesContext'
+import cc from 'classcat'
 
 type CalendarViewProps = {
   view: SerializedView<ViewCalendarData>
@@ -295,11 +296,16 @@ const CalendarView = ({
       </Flexbox>
       <Calendar
         dayHeaderFormat={{ weekday: 'long' }}
-        selectable={currentUserIsCoreMember}
+        className={cc([
+          currentUserIsCoreMember &&
+            currentWorkspaceId != null &&
+            'fc--selectable',
+        ])}
+        selectable={currentUserIsCoreMember && currentWorkspaceId != null}
         editable={currentUserIsCoreMember}
         eventContent={CalendarEventItem}
         events={docEvents}
-        select={handleNewDateSelection}
+        select={currentWorkspaceId != null ? handleNewDateSelection : undefined}
         eventChange={handleEventChange}
         eventReceive={handleEventReceive}
         droppable={false}
@@ -362,6 +368,10 @@ const Container = styled.div`
         margin: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
       }
     }
+  }
+
+  &:not(.fc--selectable) .fc-daygrid-day::before {
+    display: none !important;
   }
 
   .fc .fc-daygrid-day.fc-day-today {
