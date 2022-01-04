@@ -179,6 +179,9 @@ const frTranslation: TranslationSource = {
   [lngKeys.PlanTrial]: 'Essai gratuit de {{days}} jours',
   [lngKeys.PlanInTrial]: 'En essai gratuit ({{remaining}} left)',
   [lngKeys.PlanSizePerUpload]: '{{size}}Mb par upload',
+  [lngKeys.PlanDashboardPerUser]: '{{size}} dashboards par member',
+  [lngKeys.PlanSmartviewPerDashboard]:
+    '{{size}} vues intelligentes par dashboard',
   [lngKeys.UpgradeSubtitle]: 'Entrez et confirmez vos informations de paiement',
   [lngKeys.Viewers]: 'observateurs',
   [lngKeys.Month]: 'mois',

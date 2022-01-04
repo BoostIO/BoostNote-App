@@ -10,6 +10,8 @@ import {
   UpgradePlans,
 } from '../../lib/stripe'
 import {
+  freePlanDashboardPerUserPerTeamLimit,
+  freePlanSmartViewPerDashboardLimit,
   freePlanStorageMb,
   freePlanUploadSizeMb,
   freeTrialPeriodDays,
@@ -128,6 +130,20 @@ const PlanTables = ({
               })}
             </span>
           </div>
+          <div className='plan__item__perk'>
+            <span>
+              {translate(lngKeys.PlanDashboardPerUser, {
+                size: freePlanDashboardPerUserPerTeamLimit,
+              })}
+            </span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>
+              {translate(lngKeys.PlanSmartviewPerDashboard, {
+                size: freePlanSmartViewPerDashboardLimit,
+              })}
+            </span>
+          </div>
         </div>
         <div className='plan__item__footer'>
           {selectedPlan === 'free' ? (
@@ -210,6 +226,20 @@ const PlanTables = ({
             <span>
               {translate(lngKeys.PlanSizePerUpload, {
                 size: paidPlanUploadSizeMb,
+              })}
+            </span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>
+              {translate(lngKeys.PlanDashboardPerUser, {
+                size: 'Unlimited',
+              })}
+            </span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>
+              {translate(lngKeys.PlanSmartviewPerDashboard, {
+                size: 'Unlimited',
               })}
             </span>
           </div>
