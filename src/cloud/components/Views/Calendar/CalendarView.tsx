@@ -49,7 +49,7 @@ const CalendarView = ({
   currentFolderId,
 }: CalendarViewProps) => {
   const { openNewDocForm } = useCloudResourceModals()
-  const { openContextModal, closeAllModals } = useModal()
+  const { openContextModal, closeLastModal } = useModal()
   const { openDocPreview } = useCloudResourceModals()
 
   const { watchedProp, actionsRef } = useCalendarView({
@@ -206,9 +206,9 @@ const CalendarView = ({
         received.event.extendedProps.doc as any,
         [getISODateFromLocalTime(received.event.start)]
       )
-      closeAllModals()
+      closeLastModal()
     },
-    [actionsRef, closeAllModals]
+    [actionsRef, closeLastModal]
   )
 
   return (
