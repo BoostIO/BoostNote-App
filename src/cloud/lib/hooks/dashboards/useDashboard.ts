@@ -43,11 +43,11 @@ export function useDashboard({
   smartViews: initialSmartViews,
   team,
 }: DashboardStoreProps) {
+  const dashboardRef = useRef(initialDashboard.id)
   const [smartViews, setSmartViews] = useState(initialSmartViews)
   const [dashboardData, setDashboardData] = useState(
     initialDashboard.data || {}
   )
-
   const { dashboardsMap } = useNav()
   const {
     createSmartViewApi,
@@ -57,6 +57,14 @@ export function useDashboard({
     updateSmartViewApi,
     sendingMap,
   } = useCloudApi()
+
+  useEffect(() => {
+    if (initialDashboard.id !== dashboardRef.current) {
+      dashboardRef.current = initialDashboard.id
+      setSmartViews(initialSmartViews)
+      setDashboardData(initialDashboard.data || {})
+    }
+  }, [initialDashboard, initialSmartViews])
 
   const dashboard = useMemo(() => {
     return getMapValues(dashboardsMap).find(
