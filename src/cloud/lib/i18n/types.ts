@@ -457,6 +457,13 @@ export enum lngKeys {
 
   GeneralYes = 'general.yes',
   GeneralNo = 'general.no',
+
+  ModalUnlockDashboardsTitle = 'modal.unlock.dashboard.title',
+  ModalUnlockDashboardsDescription = 'modal.unlock.dashboard.description',
+  ModalUnlockCheckDetails = 'modal.unlock.checj,details',
+  ModalUnlockSmartviewsTitle = 'modal.unlock.smartview.title',
+  ModalUnlockSmartviewsDescription = 'modal.unlock.smartview.description',
+  OverlimitDashboards = 'sub.limit.dashboards',
 }
 
 export type TranslationSource = {

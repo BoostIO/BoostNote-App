@@ -24,13 +24,22 @@ import SmartViewGridItem, {
 } from './SmartViewGridItem'
 import { usePage } from '../../lib/stores/pageStore'
 import UpdateSmartViewModal from './UpdateSmartViewModal'
+import {
+  freePlanDashboardPerUserPerTeamLimit,
+  freePlanSmartViewPerDashboardLimit,
+} from '../../lib/subscription'
+import UnlockDashboardModal from '../Modal/contents/Subscription/UnlockDashboardModal'
+import { useNav } from '../../lib/stores/nav'
+import DashboardSubscriptionBanner from './DashboardSubscriptionBanner'
 
 const DashboardPage = ({
   dashboard: propsDashboard,
   smartViews: propsSmartViews,
   team: propsTeam,
+  subscription: propsSubscription,
 }: DashboardShowPageResponseBody) => {
   const dashboardRef = useRef<string | undefined>(undefined)
+  const dashboardSubRef = useRef<string | undefined>(undefined)
   const { openContextModal, openModal, closeAllModals } = useModal()
   const {
     dashboard,
@@ -43,7 +52,8 @@ const DashboardPage = ({
     smartViews: propsSmartViews,
     team: propsTeam,
   })
-  const { currentUserIsCoreMember } = usePage()
+  const { dashboardsMap, initialLoadDone } = useNav()
+  const { currentUserIsCoreMember, subscription } = usePage()
 
   useEffect(() => {
     if (dashboardRef.current === propsDashboard.id) {
@@ -53,6 +63,30 @@ const DashboardPage = ({
     dashboardRef.current = propsDashboard.id
     trackEvent(MixpanelActionTrackTypes.DashboardOpen)
   }, [propsDashboard.id])
+
+  useEffect(() => {
+    if (!initialLoadDone || dashboardSubRef.current === propsDashboard.id) {
+      return
+    }
+
+    dashboardSubRef.current = propsDashboard.id
+    if (propsSubscription != null) {
+      return
+    }
+
+    if (dashboardsMap.size > freePlanDashboardPerUserPerTeamLimit) {
+      openModal(<UnlockDashboardModal />, {
+        showCloseIcon: false,
+        width: 'small',
+      })
+    }
+  }, [
+    initialLoadDone,
+    propsDashboard.id,
+    propsSubscription,
+    dashboardsMap.size,
+    openModal,
+  ])
 
   const renderSmartview = useCallback(
     (smartview: SerializedSmartView) => {
@@ -158,13 +192,24 @@ const DashboardPage = ({
             type: 'button',
             variant: 'primary',
             label: 'Add smart view',
-            onClick: () =>
-              openModal(
+            onClick: () => {
+              if (
+                subscription == null &&
+                smartViews.length >= freePlanSmartViewPerDashboardLimit
+              ) {
+                return openModal(<UnlockDashboardModal type='smartview' />, {
+                  showCloseIcon: false,
+                  width: 'small',
+                })
+              }
+
+              return openModal(
                 <AddSmartViewModal
                   teamId={propsTeam.id}
                   addSmartView={actionsRef.current.addSmartView}
                 />
-              ),
+              )
+            },
           },
           {
             type: 'button',
@@ -185,6 +230,12 @@ const DashboardPage = ({
       />
       <ApplicationContent>
         <Container className='dashboard__grid__wrapper'>
+          <DashboardSubscriptionBanner
+            overLimit={
+              subscription == null &&
+              dashboardsMap.size > freePlanDashboardPerUserPerTeamLimit
+            }
+          />
           <GridLayout
             className='dashboard__grid'
             items={smartViews}
@@ -192,6 +243,10 @@ const DashboardPage = ({
             layout={dashboardData.itemsLayouts}
             updateLayout={actionsRef.current.updateDashboardLayout}
             draggableCancel={'.sv__item__content'}
+            disabled={
+              subscription == null &&
+              dashboardsMap.size > freePlanDashboardPerUserPerTeamLimit
+            }
             defaultGridItemProperties={{
               isResizable: true,
               isDraggable: true,
