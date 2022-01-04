@@ -4,4 +4,5 @@ export interface SerializedSource {
   inputStreamId: string
   createdAt: string
   invalidated: boolean
+  name: string
 }
