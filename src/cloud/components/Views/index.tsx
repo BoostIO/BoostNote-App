@@ -68,7 +68,7 @@ export const ViewsManager = ({
     },
   ] = useSet<string>(new Set())
 
-  const { query } = useRouter()
+  const { query, push, pathname } = useRouter()
 
   const currentDocumentsRef = useRef(
     new Map<string, SerializedDocWithSupplemental>(
@@ -85,17 +85,15 @@ export const ViewsManager = ({
     if (!query || typeof query.view !== 'string') {
       return
     }
-
-    try {
-      const viewId: number = parseInt(query.view)
-      const viewToLoad = views.find((view) => view.id === viewId)
-      if (viewToLoad != null) {
-        setSelectedViewId(viewToLoad.id)
-      }
-    } catch (_) {
-      // leave selected view as is
+    if (Number.isNaN(query.view)) {
+      return
     }
-  }, [query, query.view, query.viewId, views])
+    const viewId = parseInt(query.view)
+    const viewToLoad = views.find((view) => view.id === viewId)
+    if (viewToLoad != null) {
+      setSelectedViewId(viewToLoad.id)
+    }
+  }, [query, views])
 
   useEffect(() => {
     const newMap = new Map(docs.map((doc) => [doc.id, doc]))
@@ -147,11 +145,13 @@ export const ViewsManager = ({
 
   const selectViewId = useCallback(
     (id: number) => {
+      push(`${pathname}?view=${id}`)
+
       setSelectedViewId(id)
       resetDocsInSelection()
       resetFoldersInSelection()
     },
-    [resetDocsInSelection, resetFoldersInSelection]
+    [pathname, push, resetDocsInSelection, resetFoldersInSelection]
   )
 
   const viewsSelector = useMemo(() => {
