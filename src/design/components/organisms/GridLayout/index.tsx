@@ -69,7 +69,6 @@ const GridLayout = <T extends { id: string }>({
         rows={rows}
         cols={cols}
         rowHeight={rowHeight}
-        useCSSTransforms={false}
         resizeHandle={resizeHandle}
       >
         {generateDOM()}
@@ -110,8 +109,8 @@ const StyledReactGridLayout = styled(ReactGridLayout)`
   }
 
   .react-grid-item.react-grid-placeholder {
-    background: red;
-    opacity: 0.2;
+    background: ${({ theme }) => theme.colors.variants.danger.base};
+    opacity: 0.1;
     transition-duration: 100ms;
     z-index: 2;
     -webkit-user-select: none;
