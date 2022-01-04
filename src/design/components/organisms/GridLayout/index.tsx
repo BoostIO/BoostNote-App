@@ -127,6 +127,11 @@ const StyledReactGridLayout = styled(ReactGridLayout)`
     position: absolute;
     width: 20px;
     height: 20px;
+    opacity: 0;
+  }
+
+  .react-grid-item:hover > .react-resizable-handle {
+    opacity: 1;
   }
 
   .react-grid-item > .react-resizable-handle::after {
@@ -134,10 +139,17 @@ const StyledReactGridLayout = styled(ReactGridLayout)`
     position: absolute;
     right: 3px;
     bottom: 3px;
-    width: 5px;
-    height: 5px;
-    border-right: 2px solid rgba(0, 0, 0, 0.4);
-    border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0 0 10px 10px;
+    border-color: transparent transparent
+      ${({ theme }) => theme.colors.icon.default} transparent;
+  }
+
+  .react-grid-item > .react-resizable-handle:hover::after {
+    border-color: transparent transparent
+      ${({ theme }) => theme.colors.variants.primary.base} transparent;
   }
 
   .react-resizable-hide > .react-resizable-handle {
@@ -153,7 +165,7 @@ const StyledReactGridLayout = styled(ReactGridLayout)`
   .react-grid-item > .react-resizable-handle.react-resizable-handle-se {
     bottom: 0;
     right: 0;
-    cursor: se-resize;
+    cursor: nwse-resize;
   }
   .react-grid-item > .react-resizable-handle.react-resizable-handle-nw {
     top: 0;
