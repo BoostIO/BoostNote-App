@@ -121,6 +121,7 @@ const GithubSourceItem = ({
   return (
     <li key={source.id}>
       {source.identifier}
+      {source.invalidated && '(Invalidated)'}
       <a
         href={`https://github.com/settings/installations/${githubInstallationId}`}
         target='_blank'
