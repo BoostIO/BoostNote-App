@@ -48,7 +48,7 @@ export function useDashboard({
   const [dashboardData, setDashboardData] = useState(
     initialDashboard.data || {}
   )
-  const { dashboardsMap } = useNav()
+  const { dashboardsMap, updateViewsMap } = useNav()
   const {
     createSmartViewApi,
     deleteDashboard,
@@ -117,11 +117,12 @@ export function useDashboard({
           }
         })
         setSmartViews((prev) => [...prev, res.data.data])
+        updateViewsMap([res.data.data.viewId, res.data.data.view])
       }
 
       return res
     },
-    [initialDashboard.id, team.id, createSmartViewApi]
+    [initialDashboard.id, team.id, createSmartViewApi, updateViewsMap]
   )
 
   const removeSmartView = useCallback(
@@ -164,11 +165,15 @@ export function useDashboard({
             return acc
           }, [] as SerializedSmartView[])
         )
+        updateViewsMap([
+          updatedSmartviewData.data.viewId,
+          updatedSmartviewData.data.view,
+        ])
       }
 
       return res
     },
-    [updateSmartViewApi]
+    [updateSmartViewApi, updateViewsMap]
   )
 
   const removeDashboard = useCallback(async () => {
