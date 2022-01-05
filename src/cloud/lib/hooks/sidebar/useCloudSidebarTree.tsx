@@ -688,7 +688,7 @@ export function useCloudSidebarTree() {
                 onClick: undefined,
                 placeholder: translate(lngKeys.GeneralName),
                 create: (name: string) =>
-                  createDashboard({
+                  createDashboard(team, {
                     teamId: team.id,
                     name,
                   }),
