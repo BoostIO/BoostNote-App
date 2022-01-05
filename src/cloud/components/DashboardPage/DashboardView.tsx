@@ -58,18 +58,14 @@ export const DashboardView = ({
   }, [docs, removeDocInSelection])
 
   const toolbarColumns = useMemo(() => {
-    if (
-      currentView == null ||
-      !(currentView.type === 'table' || currentView.type === 'list')
-    ) {
-      return []
+    switch (currentView?.type) {
+      case 'table':
+        return sortTableViewColumns(currentView.data.columns || {})
+      case 'list':
+        return sortListViewProps(currentView.data.props)
+      default:
+        return []
     }
-
-    if (currentView.type === 'table') {
-      return sortTableViewColumns(currentView.data.columns || {})
-    }
-
-    return sortListViewProps(currentView.data.props)
   }, [currentView])
 
   return (
