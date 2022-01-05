@@ -22,7 +22,7 @@ import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import { sendToHost, usingElectron } from '../../lib/stores/electron'
 import { usePage } from '../../lib/stores/pageStore'
-import { getTeamLinkHref } from '../Link/TeamLink'
+import { getDashboardHref } from '../Link/DashboardLink'
 
 interface DashboardContextMenuProps {
   dashboard: SerializedDashboard
@@ -42,10 +42,7 @@ const DashboardContextMenu = ({
   const { openRenameDashboardForm } = useCloudResourceModals()
 
   const dashboardUrl = useMemo(() => {
-    return (
-      boostHubBaseUrl +
-      getTeamLinkHref(team, 'dashboard', { dashboard: dashboard.id })
-    )
+    return boostHubBaseUrl + getDashboardHref(dashboard, team, 'index')
   }, [team, dashboard])
 
   const copyButtonHandler = useCallback(() => {
