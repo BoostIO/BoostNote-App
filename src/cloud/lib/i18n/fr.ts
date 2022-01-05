@@ -514,7 +514,7 @@ const frTranslation: TranslationSource = {
 
   [lngKeys.ModalUnlockDashboardsTitle]: 'Unlock Dashboards',
   [lngKeys.ModalUnlockDashboardsDescription]:
-    'Create unlimited dashboards to organize your docs, tasks.. in order to guide your workflow in your own way! Display the information the way you want to see it.',
+    'Create unlimited dashboards to organize your docs, tasks, etc., in order to guide your workflow in your own way! Display the information the way you want to see it.',
   [lngKeys.ModalUnlockSmartviewsTitle]: 'Unlock Smart Views',
   [lngKeys.ModalUnlockSmartviewsDescription]:
     'Add unlimited smart views to your dashboard in order to customize even more your own experience. More smart views will allow you to be even more specific when it comes to what you want to see and how you want to see it!',
