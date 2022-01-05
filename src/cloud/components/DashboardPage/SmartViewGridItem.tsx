@@ -13,6 +13,7 @@ import Button, { LoadingButton } from '../../../design/components/atoms/Button'
 import { mdiArrowExpand, mdiClose, mdiCog, mdiTrashCan } from '@mdi/js'
 import Icon from '../../../design/components/atoms/Icon'
 import { getIconPathOfViewType } from '../../lib/views'
+import Scroller from '../../../design/components/atoms/Scroller'
 
 interface SmartViewGridItemProps {
   className?: string
@@ -61,7 +62,7 @@ const SmartViewGridItem = ({
           <div className='sv__item__controls'>{controls}</div>
         )}
       </div>
-      <div className='sv__item__content'>
+      <Scroller className='sv__item__content'>
         <div className='sv__item__content__wrapper'>
           <DashboardView
             view={view}
@@ -70,7 +71,7 @@ const SmartViewGridItem = ({
             docs={smartViewDocs}
           />
         </div>
-      </div>
+      </Scroller>
     </Container>
   )
 }
@@ -200,7 +201,7 @@ const Container = styled.div`
   .sv__item__content {
     width: 100%;
     flex: 1 1 auto;
-    overflow: hidden;
+    overflow: auto;
   }
 
   .sv__item__content__wrapper {
