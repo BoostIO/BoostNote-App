@@ -129,7 +129,7 @@ const ViewTypeSelectorContainer = styled.div`
     display: block;
     width: 80%;
     text-align: center;
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    font-size: ${({ theme }) => theme.sizes.fonts.df}px;
     color: ${({ theme }) => theme.colors.text.subtle};
     margin-left: auto;
     margin-right: auto;
