@@ -29,6 +29,7 @@ import copy from 'copy-to-clipboard'
 import { sendToHost, usingElectron } from '../../lib/stores/electron'
 import MoveItemModal from '../Modal/contents/Forms/MoveItemModal'
 import { getMapValues } from '../../../design/lib/utils/array'
+import { useRouter } from '../../lib/router'
 
 interface FolderContextMenuProps {
   currentFolder: SerializedFolderWithBookmark
@@ -46,6 +47,7 @@ const FolderContextMenu = ({
   const { foldersMap, docsMap } = useNav()
   const [copied, setCopied] = useState(false)
   const { team } = usePage()
+  const { query } = useRouter()
 
   const currentFolder = useMemo(() => {
     return foldersMap.get(folder.id)
@@ -55,8 +57,14 @@ const FolderContextMenu = ({
     if (currentFolder == null || team == null) {
       return ''
     }
-    return boostHubBaseUrl + getFolderHref(currentFolder, team, 'index')
-  }, [team, currentFolder])
+
+    let folderUrl =
+      boostHubBaseUrl + getFolderHref(currentFolder, team, 'index')
+    if (query && query.view) {
+      folderUrl += `?view=${query.view}`
+    }
+    return folderUrl
+  }, [currentFolder, team, query])
 
   const children = useMemo(() => {
     if (currentFolder == null) {
