@@ -87,7 +87,7 @@ const KanbanView = ({
             closeLastModal()
           }}
         />,
-        { width: 200, removePadding: true }
+        { width: 200, removePadding: true, keepAll: true }
       )
     },
     [openContextModal, closeLastModal, lists]
