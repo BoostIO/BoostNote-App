@@ -25,6 +25,7 @@ import { sendToHost, usingElectron } from '../../lib/stores/electron'
 import { getMapValues } from '../../../design/lib/utils/array'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { getWorkspaceHref } from '../Link/WorkspaceLink'
+import { useRouter } from '../../lib/router'
 
 interface WorkspaceContextMenuProps {
   currentWorkspace: SerializedWorkspace
@@ -42,7 +43,7 @@ const WorkspaceContextMenu = ({
   const { foldersMap, docsMap, workspacesMap } = useNav()
   const [copied, setCopied] = useState(false)
   const { team } = usePage()
-
+  const { query } = useRouter()
   const currentWorkspace = useMemo(() => {
     return workspacesMap.get(workspace.id)
   }, [workspacesMap, workspace])
@@ -51,8 +52,14 @@ const WorkspaceContextMenu = ({
     if (currentWorkspace == null || team == null) {
       return ''
     }
-    return boostHubBaseUrl + getWorkspaceHref(currentWorkspace, team, 'index')
-  }, [team, currentWorkspace])
+
+    let workspaceUrl =
+      boostHubBaseUrl + getWorkspaceHref(currentWorkspace, team, 'index')
+    if (query && query.view) {
+      workspaceUrl += `?view=${query.view}`
+    }
+    return workspaceUrl
+  }, [currentWorkspace, team, query])
 
   const children = useMemo(() => {
     if (currentWorkspace == null) {
