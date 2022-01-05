@@ -119,6 +119,7 @@ import {
   UpdateDashboardResponseBody,
 } from '../../api/teams/dashboards'
 import { SerializedDashboard } from '../../interfaces/db/dashboard'
+import { getDashboardHref } from '../../components/Link/DashboardLink'
 
 export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
@@ -915,8 +916,10 @@ export function useCloudApi() {
 
   const createDashboardApi = useCallback(
     async (
+      team: SerializedTeam,
       body: CreateDashboardRequestBody,
       options?: {
+        skipRedirect?: boolean
         afterSuccess?: (dashboard: SerializedDashboard) => void
       }
     ) => {
@@ -925,13 +928,16 @@ export function useCloudApi() {
         cb: ({ data: dashboard }: CreateDashboardResponseBody) => {
           updateDashboardsMap([dashboard.id, dashboard])
 
+          if (!options?.skipRedirect) {
+            push(`${getDashboardHref(dashboard, team, 'index')}`)
+          }
           if (options?.afterSuccess != null) {
             options.afterSuccess(dashboard)
           }
         },
       })
     },
-    [updateDashboardsMap, send]
+    [updateDashboardsMap, send, push]
   )
 
   const updateDashboardApi = useCallback(
