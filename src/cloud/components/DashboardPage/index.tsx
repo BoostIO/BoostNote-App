@@ -94,6 +94,7 @@ const DashboardPage = ({
         <SmartViewGridItem
           team={propsTeam}
           smartview={smartview}
+          useScroller={true}
           currentUserIsCoreMember={currentUserIsCoreMember}
           controls={
             <SmartViewGridItemControls

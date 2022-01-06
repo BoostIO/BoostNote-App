@@ -22,6 +22,7 @@ interface SmartViewGridItemProps {
   team: SerializedTeam
   controls?: React.ReactNode
   showControls?: boolean
+  useScroller?: boolean
 }
 
 const SmartViewGridItem = ({
@@ -31,6 +32,7 @@ const SmartViewGridItem = ({
   team,
   controls,
   showControls,
+  useScroller,
 }: SmartViewGridItemProps) => {
   const { viewsMap, docsMap } = useNav()
 
@@ -44,6 +46,7 @@ const SmartViewGridItem = ({
     )
   }, [docsMap, smartview.condition])
 
+  const Tag = useScroller ? Scroller : 'div'
   return (
     <Container
       className={cc([
@@ -62,7 +65,12 @@ const SmartViewGridItem = ({
           <div className='sv__item__controls'>{controls}</div>
         )}
       </div>
-      <Scroller className='sv__item__content'>
+      <Tag
+        className={cc([
+          'sv__item__content',
+          useScroller && 'sv__item__content--scrollable',
+        ])}
+      >
         <div className='sv__item__content__wrapper'>
           <DashboardView
             view={view}
@@ -71,7 +79,7 @@ const SmartViewGridItem = ({
             docs={smartViewDocs}
           />
         </div>
-      </Scroller>
+      </Tag>
     </Container>
   )
 }
@@ -204,9 +212,12 @@ const Container = styled.div`
     overflow: auto;
   }
 
+  .sv__item__content--scrollable .sv__item__content__wrapper {
+    height: 100%;
+  }
+
   .sv__item__content__wrapper {
     width: 100%;
-    height: 100%;
     min-width: 700px;
   }
 
