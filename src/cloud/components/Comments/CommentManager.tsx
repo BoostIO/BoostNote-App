@@ -1,22 +1,17 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { Thread, Comment } from '../../interfaces/db/comments'
 import Spinner from '../../../design/components/atoms/Spinner'
-import { mdiPlusBoxOutline, mdiArrowLeft } from '@mdi/js'
+import { mdiArrowLeft } from '@mdi/js'
 import Icon from '../../../design/components/atoms/Icon'
 import CommentList from './CommentList'
 import styled from '../../../design/lib/styled'
 import CommentInput from './CommentInput'
-import ThreadActionButton from './ThreadActionButton'
-import Button from '../../../design/components/atoms/Button'
 import { CreateThreadRequestBody } from '../../api/comments/thread'
 import { SerializedUser } from '../../interfaces/db/user'
 import ThreadList from './ThreadList'
-import ThreadStatusFilterControl, {
-  StatusFilter,
-} from '../ThreadStatusFilterControl'
-import { partitionOnStatus } from '../../../design/lib/utils/comments'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
+import Button from '../../../design/components/atoms/Button'
 
 export type State =
   | { mode: 'list_loading'; thread?: { id: string } }
@@ -43,8 +38,6 @@ export interface Actions {
   createThread: (
     data: Omit<CreateThreadRequestBody, 'doc'>
   ) => Promise<Thread | Error>
-  reopenThread: (thread: Thread) => Promise<Thread | Error>
-  closeThread: (thread: Thread) => Promise<Thread | Error>
   deleteThread: (thread: Thread) => Promise<void | Error>
   threadOutdated: (thread: Thread) => Promise<Thread | Error>
   createComment: (thread: Thread, message: string) => Promise<void | Error>
@@ -62,8 +55,6 @@ function CommentManager({
   state,
   setMode,
   createThread,
-  reopenThread,
-  closeThread,
   deleteThread,
   createComment,
   updateComment,
@@ -72,20 +63,6 @@ function CommentManager({
   users,
 }: CommentManagerProps) {
   const { translate } = useI18n()
-  const [statusFilter, setStatusFitler] = useState<StatusFilter>('open')
-  const partitioned = useMemo(() => {
-    return partitionOnStatus(state.mode === 'list_loading' ? [] : state.threads)
-  }, [state])
-
-  const counts = useMemo(() => {
-    return {
-      all: state.mode === 'list_loading' ? 0 : state.threads.length,
-      open: partitioned.open.length,
-      closed: partitioned.closed.length,
-      outdated: partitioned.outdated.length,
-    }
-  }, [partitioned, state])
-
   const usersOrEmpty = useMemo(() => {
     return users != null ? users : []
   }, [users])
@@ -100,59 +77,59 @@ function CommentManager({
           </div>
         )
       case 'list': {
-        const stateThreads =
-          statusFilter === 'all' ? state.threads : partitioned[statusFilter]
-        const threads =
-          state.filter != null
-            ? stateThreads.filter(state.filter)
-            : stateThreads
         return (
-          <>
+          <div className={'thread__list__container'}>
             <ThreadList
-              threads={threads}
+              threads={state.threads}
               onSelect={(thread) => setMode({ mode: 'thread', thread })}
-              onOpen={reopenThread}
-              onClose={closeThread}
               onDelete={deleteThread}
+              users={usersOrEmpty}
+              updateComment={updateComment}
             />
-            <div
-              className='thread__create'
-              onClick={() => setMode({ mode: 'new_thread' })}
-            >
-              <Icon path={mdiPlusBoxOutline} />{' '}
-              <span>{translate(lngKeys.ThreadCreate)}</span>
+            <div className={'thread__list__container__create__thread'}>
+              <CommentInput
+                placeholder={'Comment...'}
+                onSubmit={async (comment) => {
+                  await createThread({ comment })
+                }}
+                autoFocus={true}
+                users={usersOrEmpty}
+              />
             </div>
-          </>
+          </div>
         )
       }
       case 'thread': {
         return (
           <div className='thread__content'>
             <div>
+              <Button
+                onClick={() => setMode({ mode: 'list' })}
+                variant={'secondary'}
+                className={'thread__content__back_button'}
+              >
+                <div className='icon__wrapper'>
+                  <Icon size={16} path={mdiArrowLeft} />
+                </div>
+                <span>Back</span>
+              </Button>
+
               <div className='thread__context'>{state.thread.context}</div>
               <CommentList
                 comments={state.comments}
                 className='comment__list'
+                commentItemClassName={'comment__list__comment__item'}
                 updateComment={updateComment}
                 deleteComment={deleteComment}
                 user={user}
                 users={usersOrEmpty}
               />
-              {state.thread.status.type === 'open' && (
-                <CommentInput
-                  onSubmit={(message) => createComment(state.thread, message)}
-                  autoFocus={true}
-                  users={usersOrEmpty}
-                />
-              )}
-              {state.thread.status.type === 'closed' && (
-                <Button
-                  onClick={() => reopenThread(state.thread)}
-                  variant='secondary'
-                >
-                  {translate(lngKeys.ThreadReopen)}
-                </Button>
-              )}
+              <CommentInput
+                placeholder={'Reply...'}
+                onSubmit={(message) => createComment(state.thread, message)}
+                autoFocus={true}
+                users={usersOrEmpty}
+              />
             </div>
           </div>
         )
@@ -160,8 +137,9 @@ function CommentManager({
       case 'new_thread': {
         return (
           <div className='thread__new'>
-            <div className='thread__context'>{state.data.context}</div>
+            {/*<div className='thread__context'>{state.data.context}</div>*/}
             <CommentInput
+              placeholder={'Comment...'}
               onSubmit={async (comment) => {
                 await createThread({ ...state.data, comment })
               }}
@@ -173,11 +151,8 @@ function CommentManager({
       }
     }
   }, [
-    translate,
     state,
     createThread,
-    reopenThread,
-    closeThread,
     deleteThread,
     createComment,
     updateComment,
@@ -185,37 +160,12 @@ function CommentManager({
     setMode,
     user,
     usersOrEmpty,
-    statusFilter,
-    partitioned,
   ])
 
   return (
     <Container>
       <div className='header'>
-        {(state.mode !== 'list' || state.filter != null) && (
-          <div
-            className='icon__wrapper'
-            onClick={() => setMode({ mode: 'list' })}
-          >
-            <Icon size={20} path={mdiArrowLeft} />
-          </div>
-        )}
         <h4>{translate(lngKeys.ThreadsTitle)}</h4>
-        {state.mode === 'list' && (
-          <ThreadStatusFilterControl
-            value={statusFilter}
-            onChange={setStatusFitler}
-            counts={counts}
-          />
-        )}
-        {state.mode === 'thread' && (
-          <ThreadActionButton
-            thread={state.thread}
-            onClose={closeThread}
-            onOpen={reopenThread}
-            onDelete={deleteThread}
-          />
-        )}
       </div>
       {content}
     </Container>
@@ -225,12 +175,12 @@ function CommentManager({
 const Container = styled.div`
   margin: auto;
   height: 100vh;
-  width: 350px;
+  width: 480px;
   display: flex;
   flex-direction: column;
   border-left: 1px solid ${({ theme }) => theme.colors.border.main};
-  border-radius: 0px;
-  background-color: ${({ theme }) => theme.colors.background.secondary};
+  border-radius: 0;
+  background-color: ${({ theme }) => theme.colors.background.primary};
   color: ${({ theme }) => theme.colors.text.primary};
   font-size: ${({ theme }) => theme.sizes.fonts.md}px;
   position: relative;
@@ -240,7 +190,7 @@ const Container = styled.div`
   }
 
   .header {
-    padding: 0px ${({ theme }) => theme.sizes.spaces.df}px;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
     & h4 {
       margin: 0;
     }
@@ -269,11 +219,18 @@ const Container = styled.div`
     display: flex;
     flex-direction: column-reverse;
     scrollbar-width: thin;
-    padding: 0px ${({ theme }) => theme.sizes.spaces.df}px;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
+
+    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+
     & .comment__list {
       & > div {
         margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
+      }
+
+      & .comment__list__comment__item:not(:first-child) {
+        margin-left: 35px;
       }
 
       &:hover {
@@ -315,6 +272,15 @@ const Container = styled.div`
     top: 50%;
     left: 50%;
     transform: translate3d(-50%, -50%, 0);
+  }
+
+  .thread__list__container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    .thread__list__container__create__thread {
+      margin-top: auto;
+    }
   }
 `
 

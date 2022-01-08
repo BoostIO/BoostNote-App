@@ -1,5 +1,5 @@
 import { useComments } from '../stores/comments'
-import { Thread, Comment } from '../../../cloud/interfaces/db/comments'
+import { Thread, Comment } from '../../interfaces/db/comments'
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import {
   State,
@@ -65,8 +65,6 @@ function useCommentManagerState(docId: string): [State, Actions] {
     return {
       setMode,
       createThread,
-      reopenThread: threadActions.reopen,
-      closeThread: threadActions.close,
       deleteThread: threadActions.delete,
       threadOutdated: threadActions.outdated,
       createComment: commentActions.create,

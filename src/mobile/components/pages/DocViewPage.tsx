@@ -3,14 +3,10 @@ import {
   SerializedDocWithSupplemental,
   SerializedDoc,
 } from '../../../cloud/interfaces/db/doc'
-import { usePreferences } from '../../lib/preferences'
 import { SerializedUser } from '../../../cloud/interfaces/db/user'
 import useRealtime from '../../../cloud/lib/editor/hooks/useRealtime'
 import { buildIconUrl } from '../../../cloud/api/files'
 import { getColorFromString } from '../../../cloud/lib/utils/string'
-import { createAbsolutePositionFromRelativePosition } from 'yjs'
-import useCommentManagerState from '../../../cloud/lib/hooks/useCommentManagerState'
-import { HighlightRange } from '../../../cloud/lib/rehypeHighlight'
 import Spinner from '../../../design/components/atoms/Spinner'
 import AppLayout from '../layouts/AppLayout'
 import NavigationBarButton from '../atoms/NavigationBarButton'
@@ -39,7 +35,6 @@ const ViewPage = ({
   contributors,
   backLinks,
 }: ViewPageProps) => {
-  const { setPreferences } = usePreferences()
   const { openModal } = useModal()
   const initialRenderDone = useRef(false)
   const previewRef = useRef<HTMLDivElement>(null)
@@ -72,53 +67,6 @@ const ViewPage = ({
     }
   })
 
-  const [commentState, commentActions] = useCommentManagerState(doc.id)
-
-  const [viewComments, setViewComments] = useState<HighlightRange[]>([])
-  const calculatePositions = useCallback(() => {
-    if (commentState.mode === 'list_loading' || realtime == null) {
-      return
-    }
-
-    const comments: HighlightRange[] = []
-    for (const thread of commentState.threads) {
-      if (thread.selection != null && thread.status.type !== 'outdated') {
-        const absoluteAnchor = createAbsolutePositionFromRelativePosition(
-          thread.selection.anchor,
-          realtime.doc
-        )
-        const absoluteHead = createAbsolutePositionFromRelativePosition(
-          thread.selection.head,
-          realtime.doc
-        )
-
-        if (
-          absoluteAnchor != null &&
-          absoluteHead != null &&
-          absoluteAnchor.index !== absoluteHead.index
-        ) {
-          if (thread.status.type === 'open') {
-            comments.push({
-              id: thread.id,
-              start: absoluteAnchor.index,
-              end: absoluteHead.index,
-              active:
-                commentState.mode === 'thread' &&
-                thread.id === commentState.thread.id,
-            })
-          }
-        } else if (connState === 'synced') {
-          commentActions.threadOutdated(thread)
-        }
-      }
-    }
-    setViewComments(comments)
-  }, [commentState, realtime, commentActions, connState])
-
-  useEffect(() => {
-    calculatePositions()
-  }, [calculatePositions])
-
   const updateContent = useCallback(() => {
     if (realtime == null) {
       return
@@ -133,31 +81,15 @@ const ViewPage = ({
   useEffect(() => {
     if (realtime != null) {
       realtime.doc.on('update', () => {
-        calculatePositions()
         updateContent()
       })
       return () =>
         realtime.doc.off('update', () => {
-          calculatePositions
           updateContent()
         })
     }
     return undefined
-  }, [realtime, calculatePositions, updateContent])
-
-  const commentClick = useCallback(
-    (ids: string[]) => {
-      if (commentState.mode !== 'list_loading') {
-        const idSet = new Set(ids)
-        setPreferences({ docContextMode: 'comment' })
-        commentActions.setMode({
-          mode: 'list',
-          filter: (thread) => idSet.has(thread.id),
-        })
-      }
-    },
-    [commentState, commentActions, setPreferences]
-  )
+  }, [realtime, updateContent])
 
   useEffect(() => {
     if (connState === 'synced' || connState === 'loaded') {
@@ -210,8 +142,6 @@ const ViewPage = ({
                 onRender={onRender.current}
                 className='scroller'
                 scrollerRef={previewRef}
-                comments={viewComments}
-                commentClick={commentClick}
               />
             ) : (
               <>
@@ -226,23 +156,6 @@ const ViewPage = ({
     </AppLayout>
   )
 }
-
-const StyledLoadingView = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  & span {
-    width: 100%;
-    height: 38px;
-    position: relative;
-  }
-`
-
-const StyledPlaceholderContent = styled.div`
-  color: ${({ theme }) => theme.colors.text.subtle};
-`
 
 const Container = styled.div`
   margin: 0;
@@ -270,23 +183,40 @@ const Container = styled.div`
         ${({ theme }) => theme.sizes.spaces.xl}px
     );
     font-size: 15px;
-    ${rightSidePageLayout}
+    ${rightSidePageLayout};
     margin: auto;
     padding: 0 ${({ theme }) => theme.sizes.spaces.xl}px;
   }
 
   .view__content {
     height: 100%;
-    width: 50%;
-    padding-top: ${({ theme }) => theme.sizes.spaces.sm}px;
-    margin: 0 auto;
     width: 100%;
+    padding-top: ${({ theme }) => theme.sizes.spaces.sm}px;
+
+    margin: 0 auto;
 
     & .inline-comment.active,
     .inline-comment.hv-active {
       background-color: rgba(112, 84, 0, 0.8);
     }
   }
+`
+
+const StyledLoadingView = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  & span {
+    width: 100%;
+    height: 38px;
+    position: relative;
+  }
+`
+
+const StyledPlaceholderContent = styled.div`
+  color: ${({ theme }) => theme.colors.text.subtle};
 `
 
 export default ViewPage
