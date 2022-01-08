@@ -20,6 +20,7 @@ interface CommentInputProps {
   value?: string
   autoFocus?: boolean
   users: SerializedUser[]
+  placeholder: string
 }
 
 const smallUserIconStyle = { width: '20px', height: '20px', lineHeight: '17px' }
@@ -28,8 +29,10 @@ export function CommentInput({
   value = '',
   autoFocus = false,
   users,
+  placeholder,
 }: CommentInputProps) {
   const [working, setWorking] = useState(false)
+  const [isInputEmpty, setIsInputEmpty] = useState(false)
   const inputRef = useRef<HTMLDivElement>(null)
   const { translate } = useI18n()
   const onSuggestionSelect = useRef((item: SerializedUser, hint: string) => {
@@ -76,7 +79,9 @@ export function CommentInput({
       if (value.length > 0) {
         inputRef.current.appendChild(toFragment(value))
       } else {
-        resetInitialContent(inputRef.current)
+        // todo: [komediruzecki-2022-01-8] see why this was done... - makes placeholder impossible with pseudo:class
+        // maybe we could leave this and add placeholder directly, but then we need to remove it on type start...
+        // resetInitialContent(inputRef.current)
       }
       if (autoFocus) {
         inputRef.current.focus()
@@ -99,11 +104,24 @@ export function CommentInput({
     }
   }, [onSubmit])
 
+  const onKeyUp = useCallback(() => {
+    const inputContent =
+      inputRef.current !== null ? fromNode(inputRef.current).trim() : ''
+    setIsInputEmpty(inputContent === '')
+  }, [])
+
   const onKeyDown: React.KeyboardEventHandler<HTMLDivElement> = useCallback(
     (ev) => {
       onKeyDownListener(ev)
 
-      if (ev.key === 'Enter' && (ev.ctrlKey || ev.metaKey)) {
+      const inputContent =
+        inputRef.current !== null ? fromNode(inputRef.current).trim() : ''
+      // setIsInputEmpty(inputContent === '')
+      if (
+        ev.key === 'Enter' &&
+        (ev.ctrlKey || ev.metaKey) &&
+        inputContent !== ''
+      ) {
         ev.preventDefault()
         ev.stopPropagation()
         submit()
@@ -150,19 +168,28 @@ export function CommentInput({
     }
   }, [])
 
+  const onCommentInput = useCallback(() => {
+    if (inputRef.current != null) {
+      setIsInputEmpty(fromNode(inputRef.current).trim() === '')
+    }
+  }, [])
+
   return (
     <InputContainer>
       <div
         className='comment__input__editable'
         ref={inputRef}
         onKeyDown={onKeyDown}
+        onKeyUp={onKeyUp}
         contentEditable={!working}
         onCompositionEnd={onCompositionEndListener}
         onClick={closeSuggestions}
         onBeforeInput={beforeInputHandler}
-      ></div>
+        onInput={onCommentInput}
+        data-placeholder={placeholder}
+      />
       <Flexbox justifyContent='flex-end'>
-        <Button disabled={working} onClick={submit}>
+        <Button disabled={working || isInputEmpty} onClick={submit}>
           {translate(lngKeys.ThreadPost)}
         </Button>
       </Flexbox>
@@ -207,6 +234,12 @@ const InputContainer = styled.div`
     color: ${({ theme }) => theme.colors.text.primary};
     padding: 5px 10px;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
+
+    border-radius: ${({ theme }) => theme.borders.radius}px;
+
+    &:empty:before {
+      content: attr(data-placeholder);
+    }
   }
 
   & .comment__input__suggestions {

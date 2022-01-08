@@ -2,7 +2,6 @@ import React from 'react'
 import MarkdownView, { SelectionState } from './index'
 import { usePreviewStyle } from '../../../lib/preview'
 import { EmbedDoc } from '../../lib/docEmbedPlugin'
-import { HighlightRange } from '../../lib/rehypeHighlight'
 import { useSettings } from '../../lib/stores/settings'
 
 interface CustomizedMarkdownViewProps {
@@ -20,8 +19,6 @@ interface CustomizedMarkdownViewProps {
   ) => Promise<EmbedDoc | undefined> | EmbedDoc | undefined
   scrollerRef?: React.RefObject<HTMLDivElement>
   SelectionMenu?: React.ComponentType<{ selection: SelectionState['context'] }>
-  comments?: HighlightRange[]
-  commentClick?: (id: string[]) => void
   codeFence?: boolean
   previewStyle?: string
 }
@@ -35,9 +32,6 @@ const CustomizedMarkdownPreviewer = ({
   className,
   getEmbed,
   scrollerRef,
-  SelectionMenu,
-  comments,
-  commentClick,
   codeFence = true,
 }: CustomizedMarkdownViewProps) => {
   const { previewStyle } = usePreviewStyle()
@@ -53,9 +47,6 @@ const CustomizedMarkdownPreviewer = ({
       className={className}
       getEmbed={getEmbed}
       scrollerRef={scrollerRef}
-      SelectionMenu={SelectionMenu}
-      comments={comments}
-      commentClick={commentClick}
       codeFence={codeFence}
       previewStyle={previewStyle}
       codeBlockTheme={settings['general.codeBlockTheme']}

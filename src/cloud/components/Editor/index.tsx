@@ -10,11 +10,7 @@ import attachFileHandlerToCodeMirrorEditor, {
   OnFileCallback,
 } from '../../lib/editor/plugins/fileHandler'
 import { uploadFile, buildTeamFileUrl } from '../../api/teams/files'
-import {
-  createRelativePositionFromTypeIndex,
-  createAbsolutePositionFromRelativePosition,
-  YEvent,
-} from 'yjs'
+import { YEvent } from 'yjs'
 import {
   useGlobalKeyDownHandler,
   preventKeyboardEventPropagation,
@@ -43,7 +39,6 @@ import {
   mdiPencil,
   mdiEyeOutline,
   mdiViewSplitVertical,
-  mdiCommentTextOutline,
   mdiDotsHorizontal,
   mdiCloudOffOutline,
   mdiCloudSyncOutline,
@@ -68,7 +63,6 @@ import {
 } from '../../lib/utils/events'
 import { ScrollSync, scrollSyncer } from '../../lib/editor/scrollSync'
 import CodeMirrorEditor from '../../lib/editor/components/CodeMirrorEditor'
-import { SelectionContext } from '../MarkdownView'
 import { usePage } from '../../lib/stores/pageStore'
 import { useToast } from '../../../design/lib/stores/toast'
 import { LoadingButton } from '../../../design/components/atoms/Button'
@@ -80,7 +74,6 @@ import PresenceIcons from '../Topbar/PresenceIcons'
 import { TopbarControlProps } from '../../../design/components/organisms/Topbar'
 import CommentManager from '../Comments/CommentManager'
 import useCommentManagerState from '../../lib/hooks/useCommentManagerState'
-import { HighlightRange } from '../../lib/rehypeHighlight'
 import { getDocLinkHref } from '../Link/DocLink'
 import throttle from 'lodash.throttle'
 import { useI18n } from '../../lib/hooks/useI18n'
@@ -233,7 +226,6 @@ const Editor = ({
   const previewRef = useRef<HTMLDivElement>(null)
   const syncScroll = useRef<ScrollSync>()
   const [scrollSync, setScrollSync] = useState(true)
-  const [viewComments, setViewComments] = useState<HighlightRange[]>([])
 
   const { settings } = useSettings()
   const fontSize = settings['general.editorFontSize']
@@ -316,81 +308,6 @@ const Editor = ({
       }
     }
   })
-
-  const newRangeThread = useCallback(
-    (selection: SelectionContext) => {
-      if (realtime == null) {
-        return
-      }
-      const text = realtime.doc.getText('content')
-      const anchor = createRelativePositionFromTypeIndex(text, selection.start)
-      const head = createRelativePositionFromTypeIndex(text, selection.end)
-      setPreferences({ docContextMode: 'comment' })
-      commentActions.setMode({
-        mode: 'new_thread',
-        context: selection.text,
-        selection: {
-          anchor,
-          head,
-        },
-      })
-    },
-    [realtime, commentActions, setPreferences]
-  )
-
-  const calculatePositions = useCallback(() => {
-    if (commentState.mode === 'list_loading' || realtime == null) {
-      return
-    }
-
-    const comments: HighlightRange[] = []
-    for (const thread of commentState.threads) {
-      if (thread.selection != null && thread.status.type !== 'outdated') {
-        const absoluteAnchor = createAbsolutePositionFromRelativePosition(
-          thread.selection.anchor,
-          realtime.doc
-        )
-        const absoluteHead = createAbsolutePositionFromRelativePosition(
-          thread.selection.head,
-          realtime.doc
-        )
-
-        if (
-          absoluteAnchor != null &&
-          absoluteHead != null &&
-          absoluteAnchor.index !== absoluteHead.index
-        ) {
-          if (thread.status.type === 'open') {
-            comments.push({
-              id: thread.id,
-              start: absoluteAnchor.index,
-              end: absoluteHead.index,
-              active:
-                commentState.mode === 'thread' &&
-                thread.id === commentState.thread.id,
-            })
-          }
-        } else if (connState === 'synced') {
-          commentActions.threadOutdated(thread)
-        }
-      }
-    }
-    setViewComments(comments)
-  }, [commentState, realtime, commentActions, connState])
-
-  const commentClick = useCallback(
-    (ids: string[]) => {
-      if (commentState.mode !== 'list_loading') {
-        const idSet = new Set(ids)
-        setPreferences({ docContextMode: 'comment' })
-        commentActions.setMode({
-          mode: 'list',
-          filter: (thread) => idSet.has(thread.id),
-        })
-      }
-    },
-    [commentState, commentActions, setPreferences]
-  )
 
   const changeEditorLayout = useCallback(
     (target: LayoutMode) => {
@@ -854,18 +771,6 @@ const Editor = ({
   }, [focusEditorHeading])
 
   useEffect(() => {
-    if (realtime != null) {
-      realtime.doc.on('update', calculatePositions)
-      return () => realtime.doc.off('update', calculatePositions)
-    }
-    return undefined
-  }, [realtime, calculatePositions])
-
-  useEffect(() => {
-    calculatePositions()
-  }, [calculatePositions])
-
-  useEffect(() => {
     if (!mountedRef.current) return
     if (docRef.current !== doc.id) {
       if (showViewPageRef.current) {
@@ -1141,15 +1046,6 @@ const Editor = ({
                   className='scroller'
                   getEmbed={getEmbed}
                   scrollerRef={previewRef}
-                  comments={viewComments}
-                  commentClick={commentClick}
-                  SelectionMenu={({ selection }) => (
-                    <StyledSelectionMenu>
-                      <div onClick={() => newRangeThread(selection)}>
-                        <Icon size={20} path={mdiCommentTextOutline} />
-                      </div>
-                    </StyledSelectionMenu>
-                  )}
                 />
               </StyledPreview>
             </StyledEditor>
@@ -1316,27 +1212,20 @@ const StyledPreview = styled.div`
   }
 `
 
-const StyledSelectionMenu = styled.div`
-  display: flex;
-  padding: 8px;
-  max-height: 37px;
-  cursor: pointer;
-`
-
 const StyledEditor = styled.div`
   display: flex;
   justify-content: center;
   flex-grow: 1;
   position: relative;
   top: 0;
-  bottom: 0px;
+  bottom: 0;
   width: 100%;
   height: auto;
   min-height: 0;
   font-size: 15px;
   &.preview,
   .preview {
-    ${rightSidePageLayout}
+    ${rightSidePageLayout};
     margin: auto;
   }
   & .CodeMirrorWrapper {

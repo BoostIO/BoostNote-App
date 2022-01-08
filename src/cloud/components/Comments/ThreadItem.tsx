@@ -1,79 +1,182 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { isToday, format, formatDistanceToNow } from 'date-fns'
-import { Thread } from '../../interfaces/db/comments'
-import {
-  mdiAlertCircleOutline,
-  mdiDotsVertical,
-  mdiAlertCircleCheckOutline,
-} from '@mdi/js'
+import { Thread, Comment } from '../../interfaces/db/comments'
 import UserIcon from '../UserIcon'
-import Icon from '../../../design/components/atoms/Icon'
 import styled from '../../../design/lib/styled'
-import useThreadActions, {
-  ThreadActionProps,
-} from '../../lib/hooks/useThreadMenuActions'
-import { useContextMenu } from '../../../design/lib/stores/contextMenu'
+import { ThreadActionProps } from '../../lib/hooks/useThreadMenuActions'
 import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
+import { listThreadComments } from '../../api/comments/comment'
+import { SerializedUser } from '../../interfaces/db/user'
+import {
+  mdiClose,
+  mdiMessageReplyTextOutline,
+  mdiPencil,
+  mdiTrashCanOutline,
+} from '@mdi/js'
+import Icon from '../../../design/components/atoms/Icon'
+import CommentInput from './CommentInput'
 
 export type ThreadListItemProps = ThreadActionProps & {
   onSelect: (thread: Thread) => void
+  users: SerializedUser[]
+  updateComment: (comment: Comment, message: string) => Promise<any>
 }
 
-const smallUserIconStyle = { width: '22px', height: '22px', lineHeight: '18px' }
-function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
-  const actions = useThreadActions({ thread, ...rest })
-  const { popup } = useContextMenu()
-  const { translate } = useI18n()
+const smallUserIconStyle = { width: '28px', height: '28px', lineHeight: '22px' }
+const smallerUserIconReplyStyle = {
+  width: '22px',
+  height: '22px',
+  lineHeight: '18px',
+}
 
-  const openActionMenu: React.MouseEventHandler<HTMLDivElement> = useCallback(
-    (event) => {
-      event.preventDefault()
-      event.stopPropagation()
-      popup(event, actions)
+function ThreadItem({
+  thread,
+  onSelect,
+  onDelete,
+  updateComment,
+  users,
+}: ThreadListItemProps) {
+  const { translate } = useI18n()
+  const [editing, setEditing] = useState(false)
+
+  const [threadComments, setThreadComments] = useState<Comment[] | null>(null)
+  const [showingContextMenu, setShowingContextMenu] = useState<boolean>(false)
+
+  const reloadComments = useCallback(() => {
+    listThreadComments({ id: thread.id }).then((comments) => {
+      setThreadComments(comments)
+    })
+  }, [thread.id])
+
+  useEffect(() => {
+    reloadComments()
+  }, [reloadComments, thread.id])
+
+  const showReplyForm = useCallback(() => {
+    if (threadComments == null || threadComments.length > 1) {
+      return
+    }
+
+    setShowingContextMenu(true)
+  }, [threadComments])
+
+  const hideReplyForm = useCallback(() => {
+    setShowingContextMenu(false)
+  }, [])
+
+  const submitComment = useCallback(
+    async (message: string) => {
+      if (threadComments == null || threadComments.length == 0) {
+        return
+      }
+      await updateComment(threadComments[0], message)
+      setEditing(false)
+      reloadComments()
     },
-    [actions, popup]
+    [reloadComments, threadComments, updateComment]
+  )
+
+  const onCommentDelete = useCallback(
+    (thread) => {
+      onDelete(thread)
+      reloadComments()
+    },
+    [onDelete, reloadComments]
   )
 
   return (
-    <StyledListItem onClick={() => onSelect(thread)}>
-      <div className='thread__row'>
-        <div className='thread__info__line'>
-          <Icon
-            size={20}
-            className={`thread__status thread__status--${thread.status.type}`}
-            path={
-              thread.status.type === 'open'
-                ? mdiAlertCircleOutline
-                : mdiAlertCircleCheckOutline
-            }
-          />
-          <div
-            className={`thread__item__context ${
-              thread.selection != null
-                ? 'thread__item__context--highlighted'
-                : ''
-            }`}
-          >
-            {thread.selection != null
-              ? thread.context
-              : translate(lngKeys.ThreadFullDocLabel)}
+    <StyledListItem>
+      <div
+        className={'thread'}
+        onMouseEnter={showReplyForm}
+        onMouseLeave={hideReplyForm}
+      >
+        <div className={'thread__info'}>
+          <div className='thread__info__line'>
+            {thread.contributors.map((user) => (
+              <UserIcon
+                className={'thread__info__line__icon'}
+                key={user.id}
+                style={smallUserIconStyle}
+                user={user}
+              />
+            ))}
           </div>
+          {threadComments && threadComments.length > 0 && (
+            <div className={'thread__comment__line'}>
+              <span>{thread.contributors[0].displayName}</span>
+              <span className='thread__comment__line__date'>
+                {formatDate(thread.lastCommentTime)}
+              </span>
+              {editing ? (
+                <CommentInput
+                  placeholder={'Reply'}
+                  autoFocus={true}
+                  onSubmit={submitComment}
+                  value={threadComments[0].message}
+                  users={users}
+                />
+              ) : (
+                <div className='thread__comment__line__first__comment'>
+                  <span>{threadComments[0].message}</span>
+                </div>
+              )}
+
+              {threadComments && threadComments.length > 1 && (
+                <div className={'thread__comment__line_more_replies_container'}>
+                  {thread.contributors.map((user) => (
+                    <UserIcon
+                      className={'thread__comment__line__icon'}
+                      key={user.id}
+                      style={smallerUserIconReplyStyle}
+                      user={user}
+                    />
+                  ))}
+                  <div
+                    onClick={() => onSelect(thread)}
+                    className={'thread__comment__line__replies__link'}
+                  >
+                    {translate(lngKeys.ThreadReplies, {
+                      count: thread.commentCount,
+                    })}
+                  </div>
+                  <span className='thread__comment__line__date'>
+                    {formatDate(thread.lastCommentTime)}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
-        <div onClick={openActionMenu} className='thread__action'>
-          <Icon size={20} path={mdiDotsVertical} />
-        </div>
-      </div>
-      <div>
-        <div className='thread__info__line'>
-          {thread.contributors.map((user) => (
-            <UserIcon key={user.id} style={smallUserIconStyle} user={user} />
-          ))}
-          {translate(lngKeys.ThreadReplies, { count: thread.commentCount })}
-          <span className='thread__info__line__date'>
-            {formatDate(thread.lastCommentTime)}
-          </span>
-        </div>
+        {editing ? (
+          <div onClick={() => setEditing(false)}>
+            <Icon path={mdiClose} />
+          </div>
+        ) : (
+          showingContextMenu && (
+            <div className={'comment__meta__actions'}>
+              <div
+                onClick={() => onSelect(thread)}
+                className='comment__meta__actions__comment'
+              >
+                <Icon size={20} path={mdiMessageReplyTextOutline} />
+              </div>
+              <div
+                onClick={() => setEditing(true)}
+                className='comment__meta__actions__edit'
+              >
+                <Icon size={20} path={mdiPencil} />
+              </div>
+              <div
+                onClick={() => onCommentDelete(thread)}
+                className='comment__meta__actions__remove'
+              >
+                <Icon size={20} path={mdiTrashCanOutline} />
+              </div>
+            </div>
+          )
+        )}
       </div>
     </StyledListItem>
   )
@@ -81,16 +184,19 @@ function ThreadItem({ thread, onSelect, ...rest }: ThreadListItemProps) {
 
 const StyledListItem = styled.div`
   padding: ${({ theme }) => theme.sizes.spaces.df}px 0;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border.main};
   cursor: default;
-  .thread__info__line__date {
-    color: ${({ theme }) => theme.colors.text.subtle};
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
-    padding-left: 4px;
+
+  .thread {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    position: relative;
   }
 
-  &:hover .thread__action {
-    opacity: 1;
+  .thread__info {
+    display: flex;
+    width: 100%;
   }
 
   & .thread__row {
@@ -102,44 +208,76 @@ const StyledListItem = styled.div`
 
   & .thread__info__line {
     display: flex;
-    align-items: baseline;
-    overflow: hidden;
-    & > * {
-      margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
-    }
-    & > .thread__item__context {
-      margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
 
-      &.thread__item__context--highlighted {
-        color: white;
-        background-color: #705400;
+    .thread__info__line__icon {
+      width: 39px;
+    }
+
+    & > * {
+      margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
+  }
+
+  & .thread__comment__line {
+    width: 100%;
+    align-items: center;
+
+    & .thread__comment__line__replies__link {
+      margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+      margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+      align-self: center;
+      color: #519aba;
+
+      &:hover {
+        color: #65afd0;
       }
     }
+
+    & .thread__comment__line__icon {
+      width: 39px;
+      margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    }
+
+    & .thread__comment__line__date {
+      align-self: center;
+      color: ${({ theme }) => theme.colors.text.subtle};
+      font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+      padding-left: 4px;
+      margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    }
+
+    & .thread__comment__line_more_replies_container {
+      display: flex;
+      align-items: center;
+    }
   }
 
-  & .thread__status {
-    flex-shrink: 0;
-    &.thread__status--open {
-      color: ${({ theme }) => theme.colors.variants.success.base};
-    }
+  .comment__meta__actions {
+    position: absolute;
+    right: 12px;
+    top: -8px;
+    display: flex;
+    flex-direction: row;
+    justify-self: flex-start;
+    align-self: center;
 
-    &.thread__status--closed {
-      color: ${({ theme }) => theme.colors.variants.danger.base};
-    }
+    gap: 4px;
+    border-radius: ${({ theme }) => theme.borders.radius}px;
 
-    &.thread__status--outdated {
-      color: ${({ theme }) => theme.colors.icon.default};
-    }
-  }
-  & .thread__action {
-    height: 20px;
-    opacity: 0;
-    color: ${({ theme }) => theme.colors.text.subtle};
-    &:hover {
-      color: ${({ theme }) => theme.colors.text.primary};
+    background-color: #1e2024;
+
+    .comment__meta__actions__comment,
+    .comment__meta__actions__edit,
+    .comment__meta__actions__remove {
+      height: 20px;
+      margin: 5px;
+
+      color: ${({ theme }) => theme.colors.text.subtle};
+
+      &:hover {
+        cursor: pointer;
+        color: ${({ theme }) => theme.colors.text.primary};
+      }
     }
   }
 `

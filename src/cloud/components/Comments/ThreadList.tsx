@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import ThreadItem, { ThreadListItemProps } from './ThreadItem'
-import { Thread } from '../../interfaces/db/comments'
+import { Comment, Thread } from '../../interfaces/db/comments'
 import { sortBy } from 'ramda'
 import {
   highlightComment,
@@ -10,14 +10,15 @@ import styled from '../../../design/lib/styled'
 
 interface ThreadListProps extends Omit<ThreadListItemProps, 'thread'> {
   threads: Thread[]
+  updateComment: (comment: Comment, message: string) => Promise<any>
 }
 
 function ThreadList({
   threads,
   onSelect,
-  onOpen,
-  onClose,
   onDelete,
+  users,
+  updateComment,
 }: ThreadListProps) {
   const sorted = useMemo(() => {
     return sortBy((thread) => thread.lastCommentTime, threads).reverse()
@@ -35,9 +36,9 @@ function ThreadList({
           <ThreadItem
             thread={thread}
             onSelect={onSelect}
-            onOpen={onOpen}
-            onClose={onClose}
             onDelete={onDelete}
+            users={users}
+            updateComment={updateComment}
           />
         </div>
       ))}
@@ -47,7 +48,7 @@ function ThreadList({
 
 const Container = styled.div`
   & > div {
-    padding: 0px ${({ theme }) => theme.sizes.spaces.df}px;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
     &:hover {
       background-color: ${({ theme }) => theme.colors.background.tertiary};
     }

@@ -35,11 +35,6 @@ import SelectionTooltip from './SelectionTooltip'
 import useSelectionLocation, {
   Rect,
 } from '../../lib/selection/useSelectionLocation'
-import rehypeHighlight, { HighlightRange } from '../../lib/rehypeHighlight'
-import rehypeGutters from '../../lib/rehypeGutters'
-import { Node as UnistNode } from 'unist'
-import { mdiCommentTextOutline } from '@mdi/js'
-import Icon from '../../../design/components/atoms/Icon'
 import styled from '../../../design/lib/styled'
 import throttle from 'lodash.throttle'
 import CodeFence from '../../../design/components/atoms/markdown/CodeFence'
@@ -118,8 +113,6 @@ interface MarkdownViewProps {
   ) => Promise<EmbedDoc | undefined> | EmbedDoc | undefined
   scrollerRef?: React.RefObject<HTMLDivElement>
   SelectionMenu?: React.ComponentType<{ selection: SelectionState['context'] }>
-  comments?: HighlightRange[]
-  commentClick?: (id: string[]) => void
   codeFence?: boolean
   previewStyle?: string
   codeBlockTheme?: CodeMirrorEditorTheme
@@ -135,8 +128,6 @@ const MarkdownView = ({
   getEmbed,
   scrollerRef,
   SelectionMenu,
-  comments,
-  commentClick,
   codeFence = true,
   previewStyle,
   codeBlockTheme = 'default',
@@ -251,19 +242,6 @@ const MarkdownView = ({
                 )
               }
             : shortcodeHandler,
-        comment_count: (props: any) => {
-          return props.count != null && props.comments != null ? (
-            <div
-              className='comment__count'
-              onClick={() =>
-                commentClick && commentClick(props.comments.split(' '))
-              }
-            >
-              <Icon path={mdiCommentTextOutline} />{' '}
-              <span className='comment__count__number'>{props.count}</span>
-            </div>
-          ) : null
-        },
       },
     }
 
@@ -305,8 +283,6 @@ const MarkdownView = ({
         theme: codeBlockTheme,
       })
       .use(rehypeMermaid)
-      .use(rehypeHighlight, comments || [])
-      .use(rehypeGutters, makeCommentGutters(comments || []))
       .use(rehypePosition)
       .use(rehypeReact, rehypeReactConfig)
 
@@ -317,10 +293,8 @@ const MarkdownView = ({
     headerLinks,
     getEmbed,
     codeBlockTheme,
-    comments,
     updateContent,
     content,
-    commentClick,
   ])
 
   const processorRef = useRef(markdownProcessor)
@@ -526,38 +500,5 @@ const StyledTooltipContent = styled.div`
   border-radius: ${({ theme }) => theme.borders.radius}px;
   max-height: 50px;
 `
-
-function makeCommentGutters(highlights: HighlightRange[]) {
-  return (node: UnistNode): UnistNode | null => {
-    // todo: [komediruzecki-2021-11-20] End known to be null
-    if (node.position?.end == null) {
-      return null
-    }
-    const posStart = node.position?.start.offset
-    const posEnd = node.position?.end.offset
-    if (posStart != null && posEnd != null) {
-      const allHighlights = highlights.filter(
-        (highlight) => highlight.start >= posStart && highlight.start <= posEnd
-      )
-      if (allHighlights.length > 0) {
-        return {
-          type: 'element',
-          tagName: 'div',
-          children: [
-            {
-              type: 'element',
-              tagName: 'comment_count',
-              properties: {
-                count: allHighlights.length,
-                comments: allHighlights.map(({ id }) => id),
-              },
-            },
-          ],
-        }
-      }
-    }
-    return null
-  }
-}
 
 export default MarkdownView

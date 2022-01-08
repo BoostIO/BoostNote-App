@@ -15,19 +15,12 @@ import Flexbox from '../../../design/components/atoms/Flexbox'
 
 interface ThreadActionButtonProps {
   thread: Thread
-  onClose: (thread: Thread) => any
-  onOpen: (thread: Thread) => any
   onDelete: (thread: Thread) => any
 }
 
-function ThreadActionButton({
-  thread,
-  onClose,
-  onOpen,
-  onDelete,
-}: ThreadActionButtonProps) {
+function ThreadActionButton({ thread, onDelete }: ThreadActionButtonProps) {
   const { popup } = useContextMenu()
-  const actions = useThreadActions({ thread, onClose, onOpen, onDelete })
+  const actions = useThreadActions({ thread, onDelete })
   const { getThreadStatusLabel } = useI18n()
 
   const openActionMenu: React.MouseEventHandler<HTMLButtonElement> = useCallback(

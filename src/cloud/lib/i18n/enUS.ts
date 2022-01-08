@@ -377,7 +377,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.ExpirationDate]: 'expiration date',
   [lngKeys.SeeFullHistory]: 'See full history',
   [lngKeys.SeeLimitedHistory]: 'See last {{days}} days',
-  [lngKeys.ThreadsTitle]: 'Threads',
+  [lngKeys.ThreadsTitle]: 'Comments',
   [lngKeys.ThreadPost]: 'Post',
   [lngKeys.ThreadFullDocLabel]: 'Full doc thread',
   [lngKeys.ThreadCreate]: 'Create a new thread',
