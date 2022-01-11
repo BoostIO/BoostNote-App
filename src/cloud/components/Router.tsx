@@ -64,6 +64,12 @@ import { BaseTheme } from '../../design/lib/styled/types'
 import { PreviewStyleProvider } from '../../lib/preview'
 import HomePage from '../pages/home'
 import DashboardPage from '../pages/[teamId]/dashboard'
+import WorkflowListPage from '../pages/workflows'
+import AutomationListPage from '../pages/automations'
+import WorkflowPage from '../pages/workflows/[workflowId]'
+import WorkflowCreatePage from '../pages/workflows/create'
+import AutomationCreatePage from '../pages/automations/create'
+import AutomationPage from '../pages/automations/[automationId]'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -459,6 +465,44 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: WorkspaceShowPage,
           getInitialProps: WorkspaceShowPage.getInitialProps,
+        }
+      case 'workflows':
+        if (splittedPathnames[2] == null) {
+          return {
+            Component: WorkflowListPage,
+            getInitialProps: WorkflowListPage.getInitialProps,
+          }
+        }
+
+        if (splittedPathnames[2] === 'create') {
+          return {
+            Component: WorkflowCreatePage,
+            getInitialProps: WorkflowCreatePage.getInitialProps,
+          }
+        }
+
+        return {
+          Component: WorkflowPage,
+          getInitialProps: WorkflowPage.getInitialProps,
+        }
+      case 'automations':
+        if (splittedPathnames[2] == null) {
+          return {
+            Component: AutomationListPage,
+            getInitialProps: AutomationListPage.getInitialProps,
+          }
+        }
+
+        if (splittedPathnames[2] === 'create') {
+          return {
+            Component: AutomationCreatePage,
+            getInitialProps: AutomationCreatePage.getInitialProps,
+          }
+        }
+
+        return {
+          Component: AutomationPage,
+          getInitialProps: AutomationPage.getInitialProps,
         }
       default:
         return {
