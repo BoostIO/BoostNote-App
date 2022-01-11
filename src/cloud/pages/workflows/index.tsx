@@ -1,31 +1,37 @@
 import React from 'react'
-import { getAutomations } from '../../api/automation/automation'
-import { SerializedAutomation } from '../../interfaces/db/automations'
+import { getWorkflows } from '../../api/automation/workflow'
+import { getTeamIndexPageData } from '../../api/pages/teams'
+import { SerializedWorkflow } from '../../interfaces/db/automations'
 import { GetInitialPropsParameters } from '../../interfaces/pages'
 
-const AutomationListPage = ({
-  automations,
+const WorkflowListPage = ({
+  workflows,
 }: {
-  automations: SerializedAutomation[]
+  workflows: SerializedWorkflow[]
 }) => {
   return (
     <div>
       <ul>
-        {automations.map((automation) => {
-          return <div key={automation.id}>{automation.name}</div>
+        {workflows.map((workflow) => {
+          return <div key={workflow.id}>{workflow.name}</div>
         })}
       </ul>
     </div>
   )
 }
 
-AutomationListPage.getInitialProps = async ({
-  pathname,
-}: GetInitialPropsParameters) => {
-  const [, team] = pathname.split('/')
+WorkflowListPage.getInitialProps = async (
+  params: GetInitialPropsParameters
+) => {
+  const [, team] = params.pathname.split('/')
+  const [teamData, workflows] = await Promise.all([
+    getTeamIndexPageData(params),
+    getWorkflows({ team }),
+  ])
   return {
-    workflows: await getAutomations({ team }),
+    ...teamData,
+    workflows,
   }
 }
 
-export default AutomationListPage
+export default WorkflowListPage
