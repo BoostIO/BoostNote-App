@@ -1,10 +1,17 @@
+import { stringify } from 'querystring'
 import {
   SerializedPipe,
   SerializedWorkflow,
 } from '../../interfaces/db/automations'
+import { callApi } from '../../lib/client'
 
 export interface GetWorkflowResponseBody {
   data: SerializedWorkflow
+}
+
+export async function getWorkflow(id: string) {
+  const { data } = await callApi<GetWorkflowResponseBody>(`api/workflows/${id}`)
+  return data
 }
 
 export interface ListWorkflowsQuery {
@@ -14,6 +21,13 @@ export interface ListWorkflowsQuery {
 
 export interface ListWorkflowsResponseBody {
   data: SerializedWorkflow[]
+}
+
+export async function getWorkflows(params: ListWorkflowsQuery) {
+  const { data } = await callApi<ListWorkflowsResponseBody>('api/workflows', {
+    search: stringify(params as any),
+  })
+  return data
 }
 
 export interface CreateWorkflowRequestBody {
@@ -27,6 +41,14 @@ export interface CreateWorkflowResponseBody {
   data: SerializedWorkflow
 }
 
+export async function createWorkflow(workflowData: CreateWorkflowRequestBody) {
+  const { data } = await callApi<CreateWorkflowResponseBody>(`api/workflows`, {
+    method: 'post',
+    json: workflowData,
+  })
+  return data
+}
+
 export interface UpdateWorkflowRequestBody {
   name: string
   description?: string
@@ -36,4 +58,22 @@ export interface UpdateWorkflowRequestBody {
 
 export interface UpdateWorkflowResponseBody {
   data: SerializedWorkflow
+}
+
+export async function updateWorkflow(
+  id: string,
+  workflowData: UpdateWorkflowRequestBody
+) {
+  const { data } = await callApi<UpdateWorkflowResponseBody>(
+    `api/workflows/${id}`,
+    {
+      method: 'put',
+      json: workflowData,
+    }
+  )
+  return data
+}
+
+export async function deleteWorkflow(id: string) {
+  await callApi(`api/workflows/${id}`, { method: 'delete' })
 }
