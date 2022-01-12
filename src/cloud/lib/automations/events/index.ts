@@ -1,7 +1,7 @@
 type JsonPrimitiveTypeTag = 'number' | 'string' | 'boolean'
 type JsonArrayTypeTag = `${JsonPrimitiveTypeTag}[]`
 
-type JsonTypeDef =
+export type JsonTypeDef =
   | JsonPrimitiveTypeTag
   | JsonArrayTypeTag
   | { [key: string]: JsonTypeDef }
