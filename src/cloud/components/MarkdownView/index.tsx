@@ -29,7 +29,7 @@ import LinkableHeader from './LinkableHeader'
 import { rehypePosition } from '../../lib/rehypePosition'
 import remarkDocEmbed, { EmbedDoc } from '../../lib/docEmbedPlugin'
 import { boostHubBaseUrl } from '../../lib/consts'
-import { usingElectron } from '../../lib/stores/electron'
+import { openInBrowser, usingElectron } from '../../lib/stores/electron'
 import { useRouter } from '../../lib/router'
 import SelectionTooltip from './SelectionTooltip'
 import useSelectionLocation, {
@@ -172,7 +172,6 @@ const MarkdownView = ({
                 href={href}
                 onClick={(event) => {
                   event.preventDefault()
-                  console.log(event, href)
                   sendPostMessage({
                     type: 'open-link',
                     url: href,
@@ -191,6 +190,19 @@ const MarkdownView = ({
               .startsWith((boostHubBaseUrl || '').toLocaleLowerCase())
           ) {
             return <a href={href}>{children}</a>
+          }
+          if (usingElectron) {
+            return (
+              <a
+                href={href}
+                onClick={(event) => {
+                  event.preventDefault()
+                  openInBrowser(href)
+                }}
+              >
+                {children}
+              </a>
+            )
           }
 
           return (
