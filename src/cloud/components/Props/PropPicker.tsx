@@ -87,12 +87,55 @@ const PropPicker = ({
       </WithTooltip>
     )
   }
+
+  return (
+    <PropPickerRaw
+      propName={propName}
+      propData={propData}
+      updateProp={updateProp}
+      readOnly={readOnly}
+      showIcon={showIcon}
+      emptyLabel={emptyLabel}
+      disabled={sendingMap.get(parent.target.id) != null || readOnly}
+      isLoading={sendingMap.get(parent.target.id) === propName}
+      sending={sendingMap.get(parent.target.id) === propName}
+      showPropName={showPropName}
+      iconSize={iconSize}
+    />
+  )
+}
+
+export default PropPicker
+
+type PropPickerRawProps = Omit<
+  PropPickerProps,
+  'parent' | 'onUpdate' | 'isErrored'
+> & {
+  sending?: boolean
+  disabled: boolean
+  isLoading: boolean
+  updateProp: (data: PropData | null) => void
+}
+
+export const PropPickerRaw = ({
+  propName,
+  propData,
+  updateProp,
+  readOnly = false,
+  showIcon,
+  emptyLabel,
+  disabled,
+  sending,
+  isLoading,
+  showPropName,
+  iconSize,
+}: PropPickerRawProps) => {
   switch (propData.type) {
     case 'user':
       return (
         <AssigneeSelect
-          disabled={sendingMap.get(parent.target.id) != null || readOnly}
-          isLoading={sendingMap.get(parent.target.id) === propName}
+          disabled={disabled || readOnly}
+          isLoading={isLoading}
           readOnly={readOnly}
           emptyLabel={emptyLabel}
           defaultValue={
@@ -120,8 +163,8 @@ const PropPicker = ({
     case 'date':
       return (
         <DatePropPicker
-          disabled={sendingMap.get(parent.target.id) != null || readOnly}
-          sending={sendingMap.get(parent.target.id) === propName}
+          sending={sending}
+          disabled={disabled || readOnly}
           isReadOnly={readOnly}
           emptyLabel={emptyLabel}
           date={propData.data == null ? null : (propData.data as any)}
@@ -149,8 +192,8 @@ const PropPicker = ({
             (Array.isArray(propData.data) ? propData.data[0] : propData.data) ||
             undefined
           }
-          sending={sendingMap.get(parent.target.id) === 'status'}
-          disabled={sendingMap.get(parent.target.id) != null || readOnly}
+          sending={sending}
+          disabled={disabled || readOnly}
           emptyLabel={emptyLabel}
           isReadOnly={readOnly}
           showIcon={showIcon}
@@ -254,8 +297,8 @@ const PropPicker = ({
                 ? propData.data[0]
                 : propData.data) || undefined
             }
-            sending={sendingMap.get(parent.target.id) === 'string'}
-            disabled={sendingMap.get(parent.target.id) != null || readOnly}
+            sending={sending}
+            disabled={sending || readOnly}
             isReadOnly={readOnly}
             showIcon={showIcon}
             onUrlChange={(val) =>
@@ -275,8 +318,8 @@ const PropPicker = ({
             (Array.isArray(propData.data) ? propData.data[0] : propData.data) ||
             undefined
           }
-          sending={sendingMap.get(parent.target.id) === 'string'}
-          disabled={sendingMap.get(parent.target.id) != null || readOnly}
+          sending={sending}
+          disabled={disabled || readOnly}
           isReadOnly={readOnly}
           showIcon={showIcon}
           onTextChange={(val) =>
@@ -291,8 +334,8 @@ const PropPicker = ({
       if (propData.subType === 'dependency') {
         return (
           <DocDependencySelect
-            disabled={sendingMap.get(parent.target.id) != null || readOnly}
-            isLoading={sendingMap.get(parent.target.id) === propName}
+            disabled={sending || readOnly}
+            isLoading={sending === true}
             readOnly={readOnly}
             emptyLabel={emptyLabel}
             defaultValue={
@@ -323,5 +366,3 @@ const PropPicker = ({
       return null
   }
 }
-
-export default PropPicker
