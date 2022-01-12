@@ -16,7 +16,7 @@ type PlaceholderPropData = Omit<PropData, 'data'> & {
   data: PropData['data'] | string
 }
 
-interface PropertySelectProps {
+export interface PropertySelectProps {
   value: Record<string, PlaceholderPropData>
   onChange: (props: Record<string, PlaceholderPropData>) => void
   eventDataOptions: string[]

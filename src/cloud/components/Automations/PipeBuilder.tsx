@@ -7,6 +7,7 @@ import FormRowItem from '../../../design/components/molecules/Form/templates/For
 import { SerializedPipe } from '../../interfaces/db/automations'
 import supportedEvents from '../../lib/automations/events'
 import CreateDocActionConfigurator from './actions/CreateDocActionConfigurator'
+import UpdateDocActionConfigurator from './actions/UpdateDocActionConfigurator'
 import EventInfo from './EventInfo'
 import FilterBuilder from './FilterBuilder'
 
@@ -86,7 +87,13 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
               eventType={currentEvent}
             />
           )}
-          {action.value === 'boost.doc.update' && <div>Todo</div>}
+          {action.value === 'boost.doc.update' && (
+            <UpdateDocActionConfigurator
+              configuration={pipe.configuration}
+              onChange={(configuration) => onChange({ ...pipe, configuration })}
+              eventType={currentEvent}
+            />
+          )}
         </FormRow>
       </div>
     </Form>
