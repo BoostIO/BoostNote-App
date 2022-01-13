@@ -74,6 +74,6 @@ export async function updateWorkflow(
   return data
 }
 
-export async function deleteWorkflow(id: string) {
+export async function deleteWorkflow(id: number) {
   await callApi(`api/workflows/${id}`, { method: 'delete' })
 }
