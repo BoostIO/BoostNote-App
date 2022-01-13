@@ -30,7 +30,12 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
     return supportedEvents[pipe.event]
   }, [pipe.event])
 
-  const [action, setAction] = useState(SUPPORTED_ACTION_OPTIONS[0])
+  const [action, setAction] = useState(() => {
+    return (
+      SUPPORTED_ACTION_OPTIONS.find(({ value }) => value === pipe.action) ||
+      SUPPORTED_ACTION_OPTIONS[0]
+    )
+  })
 
   return (
     <Form>
