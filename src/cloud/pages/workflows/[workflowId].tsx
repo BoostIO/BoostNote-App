@@ -15,7 +15,7 @@ import WorkflowBuilder, {
 type WorkflowPageProps = GeneralAppProps & { workflow: SerializedWorkflow }
 
 const WorkflowPage = ({ team, workflow: initial }: WorkflowPageProps) => {
-  const { pushApiErrorMessage } = useToast()
+  const { pushApiErrorMessage, pushMessage } = useToast()
   const [working, setWorking] = useState(false)
 
   const saveWorkflow = useCallback(
@@ -28,13 +28,18 @@ const WorkflowPage = ({ team, workflow: initial }: WorkflowPageProps) => {
           pipes: workflow.pipes,
           team: team.id,
         })
+        pushMessage({
+          title: 'Workflow Updated!',
+          description: `"${workflow.name}" has been successfully updated`,
+          type: 'success',
+        })
       } catch (err) {
         pushApiErrorMessage(err)
       } finally {
         setWorking(false)
       }
     },
-    [pushApiErrorMessage, team, initial.id]
+    [pushApiErrorMessage, pushMessage, team, initial.id]
   )
 
   return (
