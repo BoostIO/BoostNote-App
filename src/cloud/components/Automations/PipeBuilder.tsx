@@ -1,9 +1,12 @@
+import { mdiPlus } from '@mdi/js'
 import React, { useMemo, useState } from 'react'
+import Button from '../../../design/components/atoms/Button'
 import Form from '../../../design/components/molecules/Form'
 import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
 import FormSelect from '../../../design/components/molecules/Form/atoms/FormSelect'
 import FormRow from '../../../design/components/molecules/Form/templates/FormRow'
 import FormRowItem from '../../../design/components/molecules/Form/templates/FormRowItem'
+import styled from '../../../design/lib/styled'
 import { SerializedPipe } from '../../interfaces/db/automations'
 import supportedEvents from '../../lib/automations/events'
 import CreateDocActionConfigurator from './actions/CreateDocActionConfigurator'
@@ -38,7 +41,7 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
   })
 
   return (
-    <Form>
+    <Container>
       <FormRow>
         <FormRowItem>
           <FormInput
@@ -48,7 +51,8 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
         </FormRowItem>
       </FormRow>
 
-      <div>
+      <div className='section'>
+        <h4>Event</h4>
         <FormRow>
           <FormRowItem>
             <FormSelect
@@ -66,16 +70,27 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
           )}
         </FormRow>
       </div>
-      <div>
-        {pipe.filter != null && (
+
+      <div className='spacer'></div>
+      {pipe.filter != null ? (
+        <div className='section'>
+          <h4>Filter</h4>
           <FilterBuilder
             filter={pipe.filter}
             typeDef={currentEvent}
             onChange={(filter) => onChange({ ...pipe, filter })}
           />
-        )}
-      </div>
-      <div>
+        </div>
+      ) : (
+        <Button
+          onClick={() => onChange({ ...pipe, filter: {} })}
+          iconPath={mdiPlus}
+        ></Button>
+      )}
+      <div className='spacer'></div>
+
+      <div className='section'>
+        <h4>Action</h4>
         <FormRow>
           <FormRowItem>
             <FormSelect
@@ -102,8 +117,37 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
           )}
         </FormRow>
       </div>
-    </Form>
+    </Container>
   )
 }
 
 export default PipeBuilder
+
+const Container = styled(Form)`
+  display: flex;
+  flex-direction: column;
+
+  & .section {
+    border: 1px solid ${({ theme }) => theme.colors.border.main};
+    background-color: ${({ theme }) => theme.colors.background.primary};
+    padding: ${({ theme }) => theme.sizes.spaces.sm}px;
+
+    & h4 {
+      margin: ${({ theme }) => theme.sizes.spaces.sm}px 0;
+    }
+  }
+
+  & .spacer {
+    position: relative;
+    height: ${({ theme }) => theme.sizes.spaces.xl}px;
+    margin: 0;
+
+    &:before {
+      content: '';
+      height: 100%;
+      width: 50%;
+      border-right: 2px solid ${({ theme }) => theme.colors.border.main};
+      position: absolute;
+    }
+  }
+`
