@@ -1,5 +1,5 @@
 import { mdiPlus } from '@mdi/js'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import Button from '../../../design/components/atoms/Button'
 import Form from '../../../design/components/molecules/Form'
 import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
@@ -33,12 +33,12 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
     return supportedEvents[pipe.event]
   }, [pipe.event])
 
-  const [action, setAction] = useState(() => {
+  const action = useMemo(() => {
     return (
       SUPPORTED_ACTION_OPTIONS.find(({ value }) => value === pipe.action) ||
       SUPPORTED_ACTION_OPTIONS[0]
     )
-  })
+  }, [pipe.action])
 
   return (
     <Container>
@@ -96,7 +96,7 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
             <FormSelect
               options={SUPPORTED_ACTION_OPTIONS}
               value={action}
-              onChange={setAction}
+              onChange={({ value }) => onChange({ ...pipe, action: value })}
             />
           </FormRowItem>
         </FormRow>
