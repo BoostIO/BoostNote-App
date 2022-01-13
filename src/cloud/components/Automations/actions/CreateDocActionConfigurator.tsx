@@ -1,6 +1,5 @@
 import { mdiFileDocumentOutline } from '@mdi/js'
 import React, { useMemo } from 'react'
-import { FormLabel } from '../../../../components/atoms/form'
 import FormEmoji from '../../../../design/components/molecules/Form/atoms/FormEmoji'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import FormTextarea from '../../../../design/components/molecules/Form/atoms/FormTextArea'
@@ -80,7 +79,7 @@ const CreateDocActionConfigurator = ({
           }}
         />
       </FormRow>
-      <FormLabel>Props</FormLabel>
+      <FormRow row={{ title: 'Props' }}></FormRow>
       <PropertySelect
         value={configuration.props || {}}
         onChange={(props) => onChange({ ...configuration, props })}

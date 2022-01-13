@@ -7,7 +7,7 @@ export type JsonTypeDef =
   | { [key: string]: JsonTypeDef }
 
 const abstractGithubIssueEventDef: JsonTypeDef = {
-  action: 'string',
+  //action: 'string',
   issue: {
     id: 'number',
     number: 'number',
