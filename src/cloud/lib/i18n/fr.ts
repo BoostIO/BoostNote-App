@@ -142,6 +142,8 @@ const frTranslation: TranslationSource = {
   [lngKeys.CreateTokens]: 'Créer un nouveau jeton',
   [lngKeys.TokensName]: 'Nom du jeton...',
   [lngKeys.TokensDocumentation]: "documentation pour l'API de Boost Note",
+
+  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} documents utilisés',
   [lngKeys.SettingsSubLimitTrialTitle]: 'Upgrade pour accès illimité',
   [lngKeys.SettingsSubLimitTrialDate]:
     "Votre essai gratuit du plan pro est actif jusqu'à: {{date}}",
@@ -165,13 +167,14 @@ const frTranslation: TranslationSource = {
   [lngKeys.PlanPerMember]: 'par membre',
   [lngKeys.PlanPerMonth]: 'par mois',
   [lngKeys.PlanFreePerk1]: 'Observateurs illimités',
-  [lngKeys.PlanFreePerk2]: '3 Membres',
-  [lngKeys.PlanFreePerk3]: 'Documents illimités',
+  [lngKeys.PlanFreePerk2]: 'Membres illimités',
+  [lngKeys.PlanFreePerk3]: '{{docs}} Documents',
   [lngKeys.PlanStoragePerk]: '{{storageSize}} par membre',
   [lngKeys.PlanStandardPerk1]: 'Membres illimités',
   [lngKeys.PlanStandardPerk2]: 'Soutenir le dévelopement',
   [lngKeys.PlanStandardPerk3]:
     "Derniers {{days}} jours d'historique des révisions de vos documents",
+  [lngKeys.PlanStandardPerk4]: 'Documents illimités',
   [lngKeys.PlanProPerk3]: 'Prioritée lors de demande de support',
   [lngKeys.PlanProPerk1]: "Mot de passe et date d'expiration lors de partage",
   [lngKeys.PlanProPerk2]:

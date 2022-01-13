@@ -2,6 +2,7 @@ import { differenceInDays } from 'date-fns'
 import { SerializedSubscription } from '../interfaces/db/subscription'
 import { SerializedUserTeamPermissions } from '../interfaces/db/userTeamPermissions'
 
+export const freePlanDocLimit = 30
 export const freeTrialPeriodDays = 7
 
 export const freePlanStorageMb = 100
@@ -12,7 +13,7 @@ export const revisionHistoryFreeDays = 3
 export const revisionHistoryStandardDays = 7
 export const newTeamDiscountDays = 7
 
-export const freePlanMembersLimit = 3
+export const freePlanMembersLimit = 9999
 
 export const freePlanUploadSizeMb = 10
 export const paidPlanUploadSizeMb = 200

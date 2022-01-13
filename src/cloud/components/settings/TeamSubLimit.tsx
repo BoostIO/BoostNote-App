@@ -8,8 +8,10 @@ import { lngKeys } from '../../lib/i18n/types'
 
 const TeamSubLimit = ({
   padded = true,
+  inSidebar,
   onLimitClick,
 }: {
+  inSidebar?: boolean
   padded?: boolean
   onLimitClick?: () => void
 }) => {
@@ -25,13 +27,48 @@ const TeamSubLimit = ({
     return null
   }
 
-  if (!currentSubInfo.trialing) {
-    return null
+  if (currentSubInfo.trialing) {
+    return (
+      <Container
+        className={cc([
+          'sub__limit',
+          !padded && 'sub__limit--stripped',
+          inSidebar && 'sub__limit--reduced',
+        ])}
+      >
+        <a
+          className='upgrade-link'
+          href='#'
+          onClick={(e: any) => {
+            e.preventDefault()
+            if (onLimitClick != null) {
+              onLimitClick()
+              return
+            }
+            openSettingsTab('teamUpgrade')
+          }}
+        >
+          <h6>{translate(lngKeys.SettingsSubLimitTrialTitle)}</h6>
+          <p className='note-limit'>
+            {translate(lngKeys.SettingsSubLimitTrialDate, {
+              date: currentSubInfo.info.formattedEndDate,
+            })}
+          </p>
+          <p className='note-limit'>
+            {translate(lngKeys.SettingsSubLimitTrialUpgrade)}
+          </p>
+        </a>
+      </Container>
+    )
   }
 
   return (
     <Container
-      className={cc(['sub__limit', !padded && 'sub__limit--stripped'])}
+      className={cc([
+        'sub__limit',
+        !padded && 'sub__limit--stripped',
+        inSidebar && 'sub__limit--reduced',
+      ])}
     >
       <a
         className='upgrade-link'
@@ -45,15 +82,36 @@ const TeamSubLimit = ({
           openSettingsTab('teamUpgrade')
         }}
       >
-        <h6>{translate(lngKeys.SettingsSubLimitTrialTitle)}</h6>
         <p className='note-limit'>
-          {translate(lngKeys.SettingsSubLimitTrialDate, {
-            date: currentSubInfo.info.formattedEndDate,
+          {translate(lngKeys.SettingsSubLimitUsed, {
+            docsNb: currentSubInfo.info.progressLabel,
           })}
         </p>
-        <p className='note-limit'>
-          {translate(lngKeys.SettingsSubLimitTrialUpgrade)}
-        </p>
+        <div className='progress-sm'>
+          <div
+            className={cc([
+              'progress-bar',
+              currentSubInfo.info.overLimit && 'over-limit',
+            ])}
+            style={{ width: `${currentSubInfo.info.rate}%` }}
+          />
+        </div>
+        {currentSubInfo.info.docLimit != null && (
+          <p>
+            {translate(lngKeys.SettingsSubLimitUnderFreePlan, {
+              limit: currentSubInfo.info.docLimit,
+            })}
+          </p>
+        )}
+        {currentSubInfo.info.trialIsOver && (
+          <p>{translate(lngKeys.SettingsSubLimitTrialEnd)}</p>
+        )}
+        {currentSubInfo.info.overLimit && (
+          <p className='text-danger'>
+            Your number of documents exceeds the capacity of the free plan.
+            Upgrade or remove documents in order to edit again
+          </p>
+        )}
       </a>
     </Container>
   )
@@ -62,6 +120,10 @@ const TeamSubLimit = ({
 const Container = styled.nav`
   width: 100%;
   margin-top: ${({ theme }) => theme.sizes.spaces.l}px;
+
+  &.sub__limit--reduced {
+    width: 98%;
+  }
 
   &.sub__limit--stripped {
     margin: 0;
@@ -117,7 +179,7 @@ const Container = styled.nav`
     justify-content: center;
     height: 3px;
     max-width: 100%;
-    background-color: ${({ theme }) => theme.colors.background.primary};
+    background-color: ${({ theme }) => theme.colors.variants.danger.base};
     text-align: center;
     white-space: nowrap;
     transition: width 0.6s ease;

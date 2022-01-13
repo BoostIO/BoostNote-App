@@ -11,6 +11,7 @@ import {
 } from '../../lib/stripe'
 import {
   freePlanDashboardPerUserPerTeamLimit,
+  freePlanDocLimit,
   freePlanSmartViewPerDashboardLimit,
   freePlanStorageMb,
   freePlanUploadSizeMb,
@@ -112,6 +113,11 @@ const PlanTables = ({
           </div>
           <div className='plan__item__perk'>
             <span>
+              {translate(lngKeys.PlanFreePerk3, { docs: freePlanDocLimit })}
+            </span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>
               {translate(lngKeys.PlanStandardPerk3, {
                 days: revisionHistoryFreeDays,
               })}
@@ -204,6 +210,9 @@ const PlanTables = ({
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanStandardPerk1)}</span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>{translate(lngKeys.PlanStandardPerk4)}</span>
           </div>
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanStandardPerk2)}</span>

@@ -140,6 +140,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SendUsAMessage]: '给我们发个信息',
   [lngKeys.KeyboardShortcuts]: '键盘快捷键',
 
+  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}}使用的文档',
   [lngKeys.SettingsSubLimitTrialTitle]: '升级到unlimited',
   [lngKeys.SettingsSubLimitTrialDate]:
     '您的工作区对Pro计划的试用持续到{{date}}',
@@ -434,13 +435,14 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SpaceIntentPersonal]: 'For my personal use',
   [lngKeys.SpaceIntentTeam]: 'To collaborate with my team',
   [lngKeys.PlanFreePerk1]: 'Unlimited Viewers',
-  [lngKeys.PlanFreePerk2]: '3 Members',
-  [lngKeys.PlanFreePerk3]: 'Unlimited documents',
+  [lngKeys.PlanFreePerk2]: 'Unlimited Members',
+  [lngKeys.PlanFreePerk3]: '{{docs}} documents',
   [lngKeys.PlanStoragePerk]: '{{storageSize}} per member',
   [lngKeys.PlanStandardPerk1]: 'Unlimited members',
   [lngKeys.PlanStandardPerk2]: 'Support development',
   [lngKeys.PlanStandardPerk3]:
     "Last {{days}} days of your docs's revision history",
+  [lngKeys.PlanStandardPerk4]: 'Unlimited documents',
   [lngKeys.PlanProPerk3]: 'Priority Support',
   [lngKeys.PlanProPerk1]: 'Password and expiration date when sharing',
   [lngKeys.PlanProPerk2]: "Full access to your docs' revision history",

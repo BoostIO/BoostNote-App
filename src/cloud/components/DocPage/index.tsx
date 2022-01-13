@@ -21,7 +21,7 @@ import { useRouter } from '../../lib/router'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Editor from '../Editor'
 import ApplicationPage from '../ApplicationPage'
-import { freePlanMembersLimit } from '../../lib/subscription'
+import { freePlanDocLimit, freePlanMembersLimit } from '../../lib/subscription'
 import Spinner from '../../../design/components/atoms/Spinner'
 
 interface DocPageProps {
@@ -95,22 +95,29 @@ const DocPage = ({
 
     if (
       subscription == null &&
-      permissions.filter((p) => p.role !== 'viewer').length <=
+      team != null &&
+      team.creationsCounter > freePlanDocLimit
+    ) {
+      return false
+    }
+
+    if (
+      subscription == null &&
+      permissions.filter((p) => p.role !== 'viewer').length >
         freePlanMembersLimit
     ) {
-      return true
+      return false
     }
 
     if (
       subscription != null &&
-      subscription.seats >=
-        permissions.filter((p) => p.role !== 'viewer').length
+      subscription.seats < permissions.filter((p) => p.role !== 'viewer').length
     ) {
-      return true
+      return false
     }
 
-    return false
-  }, [subscription, permissions, currentUserPermissions])
+    return true
+  }, [subscription, permissions, currentUserPermissions, team])
 
   const docPageControlsKeyDownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {

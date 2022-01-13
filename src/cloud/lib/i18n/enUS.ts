@@ -146,6 +146,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.SendUsAMessage]: 'Send us a message',
   [lngKeys.KeyboardShortcuts]: 'Keyboard Shortcuts',
 
+  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} docs used',
   [lngKeys.SettingsSubLimitTrialTitle]: 'Upgrade to go unlimited',
   [lngKeys.SettingsSubLimitTrialDate]:
     "Your workspace's trial of the Pro plan lasts through {{date}}",
@@ -170,10 +171,11 @@ const enTranslation: TranslationSource = {
   [lngKeys.PlanPerMonth]: 'per month',
 
   [lngKeys.PlanFreePerk1]: 'Unlimited Viewers',
-  [lngKeys.PlanFreePerk2]: '3 Members',
-  [lngKeys.PlanFreePerk3]: 'Unlimited documents',
+  [lngKeys.PlanFreePerk2]: 'Unlimited Members',
+  [lngKeys.PlanFreePerk3]: '{{docs}} documents',
   [lngKeys.PlanStoragePerk]: '{{storageSize}} per member',
   [lngKeys.PlanStandardPerk1]: 'Unlimited members',
+  [lngKeys.PlanStandardPerk4]: 'Unlimited documents',
   [lngKeys.PlanStandardPerk2]: 'Support development',
   [lngKeys.PlanStandardPerk3]:
     "Last {{days}} days of your docs's revision history",

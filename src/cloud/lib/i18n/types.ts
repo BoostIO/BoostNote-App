@@ -205,6 +205,7 @@ export enum lngKeys {
   SendUsAMessage = 'send.us.a.message',
   KeyboardShortcuts = 'keyboard.shortcuts',
 
+  SettingsSubLimitUsed = 'settings.sub.limit.used',
   SettingsSubLimitTrialTitle = 'settings.sub.limit.trial.title',
   SettingsSubLimitTrialDate = 'settings.sub.limit.trial.date',
   SettingsSubLimitTrialUpgrade = 'settings.sub.limit.trial.upgrade',
@@ -227,6 +228,7 @@ export enum lngKeys {
   PlanStandardPerk1 = 'plan.standard.perk.1',
   PlanStandardPerk2 = 'plan.standard.perk.2',
   PlanStandardPerk3 = 'plan.standard.perk.3',
+  PlanStandardPerk4 = 'plan.standard.perk.4',
   PlanProPerk1 = 'plan.pro.perk.1',
   PlanProPerk2 = 'plan.pro.perk.2',
   PlanProPerk3 = 'plan.pro.perk.3',
