@@ -1,5 +1,5 @@
 import { mdiClose, mdiPlus } from '@mdi/js'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { remove } from 'ramda'
 import Button from '../../../design/components/atoms/Button'
 import { getTeamIndexPageData } from '../../api/pages/teams'
@@ -59,10 +59,6 @@ const WorkflowBuilder = ({
       }
     })
   }, [])
-
-  useEffect(() => {
-    console.log(workflow)
-  }, [workflow])
 
   return (
     <Container>
