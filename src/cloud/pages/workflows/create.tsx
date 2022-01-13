@@ -1,105 +1,60 @@
-import { mdiClose, mdiPlus } from '@mdi/js'
 import React, { useCallback, useState } from 'react'
-import { remove } from 'ramda'
-import Button from '../../../design/components/atoms/Button'
 import { getTeamIndexPageData } from '../../api/pages/teams'
 import ApplicationContent from '../../components/ApplicationContent'
 import ApplicationPage from '../../components/ApplicationPage'
-import PipeBuilder from '../../components/Automations/PipeBuilder'
-import {
-  SerializedPipe,
-  SerializedWorkflow,
-} from '../../interfaces/db/automations'
-import Flexbox from '../../../design/components/atoms/Flexbox'
-import Form from '../../../design/components/molecules/Form'
-import FormRow from '../../../design/components/molecules/Form/templates/FormRow'
-import FormRowItem from '../../../design/components/molecules/Form/templates/FormRowItem'
-import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
+import { SerializedWorkflow } from '../../interfaces/db/automations'
+import Topbar from '../../../design/components/organisms/Topbar'
+import { useToast } from '../../../design/lib/stores/toast'
+import { createWorkflow } from '../../api/automation/workflow'
+import { GeneralAppProps } from '../../interfaces/api'
+import WorkflowBuilder, {
+  NewWorkflow,
+} from '../../components/Automations/WorkflowBuilder'
+import { useRouter } from '../../lib/router'
+import { getTeamURL } from '../../lib/utils/patterns'
 
-type NewWorkflow = Omit<SerializedWorkflow, 'id' | 'createdAt' | 'updatedAt'>
-
-// better styling
-// saving
-// abstract
-// Workflow update page
-const WorkflowCreatePage = () => {
-  const [workflow, setWorkflow] = useState<NewWorkflow>({
+const WorkflowCreatePage = ({ team }: GeneralAppProps) => {
+  const { pushApiErrorMessage } = useToast()
+  const { push } = useRouter()
+  const [workflow] = useState<NewWorkflow | SerializedWorkflow>({
     name: 'New Workflow',
     description: '',
+    teamId: team.id,
     pipes: [defaultPipe],
   })
+  const [working, setWorking] = useState(false)
 
-  const setPipe = useCallback((pipe: SerializedPipe, index: number) => {
-    return setWorkflow((workflow) => {
-      return {
-        ...workflow,
-        pipes: workflow.pipes.map((item, i) => (i === index ? pipe : item)),
+  const saveWorkflow = useCallback(
+    async (workflow: NewWorkflow | SerializedWorkflow) => {
+      try {
+        setWorking(true)
+        const created = await createWorkflow({
+          name: workflow.name,
+          description: workflow.description,
+          pipes: workflow.pipes,
+          team: team.id,
+        })
+        push(`${getTeamURL(team)}/workflows/${created.id}`)
+      } catch (err) {
+        pushApiErrorMessage(err)
+      } finally {
+        setWorking(false)
       }
-    })
-  }, [])
-
-  const addPipe = useCallback(() => {
-    setWorkflow((workflow) => {
-      return {
-        ...workflow,
-        pipes: workflow.pipes.concat([defaultPipe]),
-      }
-    })
-  }, [])
-
-  const removePipe = useCallback((index: number) => {
-    setWorkflow((workflow) => {
-      return {
-        ...workflow,
-        pipes: remove(index, 1, workflow.pipes),
-      }
-    })
-  }, [])
+    },
+    [pushApiErrorMessage, team, push]
+  )
 
   return (
     <ApplicationPage>
+      <Topbar>
+        <h2>Workflows</h2>
+      </Topbar>
       <ApplicationContent>
-        <Form>
-          <FormRow row={{ title: 'Name' }}>
-            <FormRowItem>
-              <FormInput
-                value={workflow.name}
-                onChange={(ev) =>
-                  setWorkflow({ ...workflow, name: ev.target.name })
-                }
-              />
-            </FormRowItem>
-          </FormRow>
-          <FormRow row={{ title: 'Description' }}>
-            <FormRowItem>
-              <FormInput
-                value={workflow.description}
-                onChange={(ev) =>
-                  setWorkflow({ ...workflow, description: ev.target.name })
-                }
-              />
-            </FormRowItem>
-          </FormRow>
-        </Form>
-        <Flexbox wrap='nowrap' alignItems='flex-start'>
-          {workflow.pipes.map((pipe, i) => {
-            return (
-              <div key={i}>
-                <PipeBuilder
-                  pipe={pipe}
-                  onChange={(pipe) => setPipe(pipe, i)}
-                />
-                <Button
-                  onClick={() => removePipe(i)}
-                  iconPath={mdiClose}
-                ></Button>
-              </div>
-            )
-          })}
-          <Button onClick={addPipe} iconPath={mdiPlus}>
-            Add Pipeline
-          </Button>
-        </Flexbox>
+        <WorkflowBuilder
+          initialWorkflow={workflow}
+          onSubmit={saveWorkflow}
+          working={working}
+        />
       </ApplicationContent>
     </ApplicationPage>
   )
@@ -123,5 +78,4 @@ const defaultPipe = {
       },
     },
   },
-  filter: {},
 }
