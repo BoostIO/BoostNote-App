@@ -47,6 +47,7 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
         <FormRow>
           <FormRowItem>
             <FormSelect
+              value={{ label: pipe.event, value: pipe.event }}
               options={SUPPORTED_EVENT_NAMES}
               onChange={({ value }) => onChange({ ...pipe, event: value })}
             />
