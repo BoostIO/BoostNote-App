@@ -1,3 +1,4 @@
+import { mdiClose, mdiPlus } from '@mdi/js'
 import { assocPath, dissocPath } from 'ramda'
 import React, { useCallback, useMemo, useState } from 'react'
 import Button from '../../../design/components/atoms/Button'
@@ -49,9 +50,17 @@ const FilterBuilder = ({ typeDef, filter, onChange }: FilterBuilderProps) => {
     <div>
       {Object.entries(flattenedFilter).map(([key, val]) => {
         return (
-          <div key={key}>
-            {key}: {val} <Button onClick={() => removeFilter(key)}>-</Button>
-          </div>
+          <FormRow key={key}>
+            <FormRowItem>
+              <FormInput readOnly={true} value={`${key}: ${val}`} />
+            </FormRowItem>
+            <FormRowItem>
+              <Button
+                onClick={() => removeFilter(key)}
+                iconPath={mdiClose}
+              ></Button>
+            </FormRowItem>
+          </FormRow>
         )
       })}
       <FormRow>
@@ -68,10 +77,8 @@ const FilterBuilder = ({ typeDef, filter, onChange }: FilterBuilderProps) => {
             onChange={(ev) => setAddingValue(ev.target.value)}
           />
         </FormRowItem>
-      </FormRow>
-      <FormRow>
         <FormRowItem>
-          <Button onClick={addFilter}>Add Filter</Button>
+          <Button onClick={addFilter} iconPath={mdiPlus}></Button>
         </FormRowItem>
       </FormRow>
     </div>

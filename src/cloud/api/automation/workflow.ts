@@ -61,7 +61,7 @@ export interface UpdateWorkflowResponseBody {
 }
 
 export async function updateWorkflow(
-  id: string,
+  id: number,
   workflowData: UpdateWorkflowRequestBody
 ) {
   const { data } = await callApi<UpdateWorkflowResponseBody>(

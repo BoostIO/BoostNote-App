@@ -9,7 +9,7 @@ interface EventSelectProps {
 const EventInfo = ({ typeDef }: EventSelectProps) => {
   return (
     <div>
-      <pre>{JSON.stringify(typeDef, null, 2)}</pre>
+      <pre>{JSON.stringify(typeDef, null, 2).replaceAll('"', '')}</pre>
     </div>
   )
 }
