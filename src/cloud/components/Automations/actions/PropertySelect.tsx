@@ -1,5 +1,5 @@
 import { dissoc } from 'ramda'
-import { mdiPlus } from '@mdi/js'
+import { mdiClose, mdiPlus } from '@mdi/js'
 import React, { useMemo } from 'react'
 import Button from '../../../../design/components/atoms/Button'
 import FormRow from '../../../../design/components/molecules/Form/templates/FormRow'
@@ -82,9 +82,10 @@ const PropertySelect = ({
               />
             </FormRowItem>
             <FormRowItem>
-              <Button onClick={() => onChange(dissoc(propName, value))}>
-                -
-              </Button>
+              <Button
+                iconPath={mdiClose}
+                onClick={() => onChange(dissoc(propName, value))}
+              ></Button>
             </FormRowItem>
           </FormRow>
         )
