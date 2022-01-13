@@ -1,6 +1,5 @@
 import { mdiFileDocumentOutline } from '@mdi/js'
 import React, { useCallback, useMemo } from 'react'
-import { FormHeading, FormLabel } from '../../../../components/atoms/form'
 import FormEmoji from '../../../../design/components/molecules/Form/atoms/FormEmoji'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import FormTextarea from '../../../../design/components/molecules/Form/atoms/FormTextArea'
@@ -57,7 +56,7 @@ const UpdateDocActionConfigurator = ({
 
   return (
     <div>
-      <h3>Prop Query</h3>
+      <FormRow row={{ title: 'Prop Query' }} />
       <PropertySelect
         value={conditions}
         onChange={setConditions}
@@ -109,7 +108,7 @@ const UpdateDocActionConfigurator = ({
           }}
         />
       </FormRow>
-      <FormLabel>Props</FormLabel>
+      <FormRow row={{ title: 'Props' }} />
       <PropertySelect
         value={configuration.props || {}}
         onChange={(props) => onChange({ ...configuration, props })}
