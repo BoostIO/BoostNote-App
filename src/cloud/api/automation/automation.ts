@@ -81,6 +81,6 @@ export async function updateAutomation(
   return data
 }
 
-export async function deleteAutomation(id: string) {
+export async function deleteAutomation(id: number) {
   await callApi(`api/automations/${id}`, { method: 'delete' })
 }
