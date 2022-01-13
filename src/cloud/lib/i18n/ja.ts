@@ -145,7 +145,8 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SupportGuide]: 'サポートガイド',
   [lngKeys.SendUsAMessage]: 'メッセージを送る',
   [lngKeys.KeyboardShortcuts]: 'キーボードショートカット',
-
+  [lngKeys.SettingsSubLimitUsed]:
+    '{{docsNb}}個のドキュメントが利用されています',
   [lngKeys.SettingsSubLimitTrialTitle]: '無制限にアップグレードする',
   [lngKeys.SettingsSubLimitTrialDate]:
     'あなたのスペースのトライアルは{{date}}で終了します。',
@@ -459,12 +460,13 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SpaceIntentPersonal]: '個人利用',
   [lngKeys.SpaceIntentTeam]: 'チームとのコラボレーション',
   [lngKeys.PlanFreePerk1]: '無制限のViewers権限',
-  [lngKeys.PlanFreePerk2]: '3 Members権限',
-  [lngKeys.PlanFreePerk3]: '無制限ドキュメント',
+  [lngKeys.PlanFreePerk2]: '無制限のMembers権限',
+  [lngKeys.PlanFreePerk3]: '{{docs}}ドキュメント',
   [lngKeys.PlanStoragePerk]: 'ひとりあたり{{storageSize}}の容量',
   [lngKeys.PlanStandardPerk1]: '無制限Member権限',
   [lngKeys.PlanStandardPerk2]: '開発支援',
   [lngKeys.PlanStandardPerk3]: '直近{{days}}日間のドキュメント変更履歴',
+  [lngKeys.PlanStandardPerk4]: '無制限ドキュメント',
   [lngKeys.PlanProPerk3]: '優先サポート',
   [lngKeys.PlanProPerk1]: 'シェアドキュメントへ、パスワードと有効期限設定',
   [lngKeys.PlanProPerk2]: '全てのドキュメント変更履歴',

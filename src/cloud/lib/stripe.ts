@@ -1,7 +1,7 @@
-export const stripeProPlanUnit = 8
-export const stripeProJpyPlanUnit = 800
-export const stripeStandardPlanUnit = 3
-export const stripeStandardJpyPlanUnit = 300
+export const stripeProPlanUnit = 10
+export const stripeProJpyPlanUnit = 1000
+export const stripeStandardPlanUnit = 6
+export const stripeStandardJpyPlanUnit = 600
 
 export type UpgradePlans = 'standard' | 'pro'
 
