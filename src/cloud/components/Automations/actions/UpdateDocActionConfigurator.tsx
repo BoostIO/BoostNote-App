@@ -95,7 +95,7 @@ const UpdateDocActionConfigurator = ({
       </FormRow>
       <FormRow row={{ title: 'Content' }}>
         <ActionConfigurationInput
-          value={configuration.content}
+          value={configuration.content.content}
           onChange={(content) => onChange({ ...configuration, content })}
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
