@@ -10,12 +10,15 @@ import {
   SerializedPipe,
   SerializedWorkflow,
 } from '../../interfaces/db/automations'
+import Flexbox from '../../../design/components/atoms/Flexbox'
+import Form from '../../../design/components/molecules/Form'
+import FormRow from '../../../design/components/molecules/Form/templates/FormRow'
+import FormRowItem from '../../../design/components/molecules/Form/templates/FormRowItem'
+import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
 
 type NewWorkflow = Omit<SerializedWorkflow, 'id' | 'createdAt' | 'updatedAt'>
 
-// pipeline remove
 // better styling
-// workflow name + description
 // saving
 // abstract
 // Workflow update page
@@ -56,7 +59,29 @@ const WorkflowCreatePage = () => {
   return (
     <ApplicationPage>
       <ApplicationContent>
-        <div>
+        <Form>
+          <FormRow row={{ title: 'Name' }}>
+            <FormRowItem>
+              <FormInput
+                value={workflow.name}
+                onChange={(ev) =>
+                  setWorkflow({ ...workflow, name: ev.target.name })
+                }
+              />
+            </FormRowItem>
+          </FormRow>
+          <FormRow row={{ title: 'Description' }}>
+            <FormRowItem>
+              <FormInput
+                value={workflow.description}
+                onChange={(ev) =>
+                  setWorkflow({ ...workflow, description: ev.target.name })
+                }
+              />
+            </FormRowItem>
+          </FormRow>
+        </Form>
+        <Flexbox wrap='nowrap' alignItems='flex-start'>
           {workflow.pipes.map((pipe, i) => {
             return (
               <div key={i}>
@@ -74,7 +99,7 @@ const WorkflowCreatePage = () => {
           <Button onClick={addPipe} iconPath={mdiPlus}>
             Add Pipeline
           </Button>
-        </div>
+        </Flexbox>
       </ApplicationContent>
     </ApplicationPage>
   )
@@ -87,7 +112,16 @@ export default WorkflowCreatePage
 const defaultPipe = {
   name: 'New Pipeline',
   event: 'github.issues.opened',
-  action: 'boost.doc.update',
-  configuration: {},
+  action: 'boost.doc.create',
+  configuration: {
+    title: '$event.issue.title',
+    content: '$event.issue.body',
+    props: {
+      IssueID: {
+        type: 'number',
+        data: '$event.issue.id',
+      },
+    },
+  },
   filter: {},
 }
