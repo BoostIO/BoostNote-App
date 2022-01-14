@@ -56,12 +56,6 @@ const useRealtime = <T extends { id: string }>({
     return undefined
   }, [provider, cachePromise, id])
 
-  useEffectOnce(() => {
-    return () => {
-      cachePromise.then((cache) => cache.close())
-    }
-  })
-
   useEffect(() => {
     if (mockBackend) {
       return
@@ -145,6 +139,12 @@ const useRealtime = <T extends { id: string }>({
         .catch((error) => console.log(error))
     }
   }, [token, constructor, cachePromise, id])
+
+  useEffectOnce(() => {
+    return () => {
+      cachePromise.then((cache) => cache.close())
+    }
+  })
 
   useEffect(() => {
     if (provider != null && userInfo != null) {
