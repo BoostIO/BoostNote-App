@@ -24,19 +24,23 @@ import { lngKeys } from '../../../../lib/i18n/types'
 import FormRow from '../../../../../design/components/molecules/Form/templates/FormRow'
 import { useEffectOnce } from 'react-use'
 import ButtonGroup from '../../../../../design/components/atoms/ButtonGroup'
-import Flexbox from '../../../../../design/components/atoms/Flexbox'
+import { mdiAccountMultipleOutline, mdiLockOutline } from '@mdi/js'
+import { canCreatePrivateFolders } from '../../../../lib/subscription'
+import UnlockPrivateWorkspaceModal from '../Subscription/UnlockPrivateWorkspaceModal'
+import Icon from '../../../../../design/components/atoms/Icon'
+import styled from '../../../../../design/lib/styled'
 
 interface WorkspaceModalFormProps {
   workspace?: SerializedWorkspace
 }
 
 const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
-  const { team, permissions } = usePage()
+  const { team, permissions, subscription } = usePage()
   const {
     globalData: { currentUser },
   } = useGlobalData()
   const { pushMessage } = useToast()
-  const { closeLastModal } = useModal()
+  const { closeLastModal, openModal } = useModal()
   const { updateWorkspacesMap } = useNav()
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -220,36 +224,43 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
         />
       ) : (
         <FormRow
+          fullWidth={true}
           row={{
-            title: translate(lngKeys.ModalsWorkspaceMakePrivate),
             items: [
               {
                 type: 'node',
-                element: (
-                  <Flexbox alignItems='center'>
-                    {isPublic
-                      ? translate(lngKeys.ModalsWorkspacePublicDisclaimer)
-                      : `${translate(
-                          lngKeys.ModalsWorkspacePrivateDisclaimer
-                        )} ${
-                          isOwner != null
-                            ? translate(lngKeys.ModalsWorkspacePrivateOwner)
-                            : ''
-                        }`}
-                  </Flexbox>
+                element: isPublic ? (
+                  <Button
+                    variant='bordered'
+                    iconPath={mdiLockOutline}
+                    onClick={() => {
+                      if (canCreatePrivateFolders(subscription)) {
+                        return togglePrivate()
+                      }
+
+                      openModal(<UnlockPrivateWorkspaceModal />, {
+                        showCloseIcon: false,
+                        width: 'small',
+                      })
+                    }}
+                    className='privacy__button'
+                  >
+                    Make Private
+                  </Button>
+                ) : (
+                  <PrivateDisclaimerContainer>
+                    <Icon path={mdiLockOutline} />
+                    <span>Private {team != null && `to ${team.name}`}</span>
+                    <Button
+                      variant='bordered'
+                      onClick={togglePrivate}
+                      iconPath={mdiAccountMultipleOutline}
+                      size='sm'
+                    >
+                      Make public
+                    </Button>
+                  </PrivateDisclaimerContainer>
                 ),
-              },
-              {
-                type: 'switch',
-                props: {
-                  disabled:
-                    sending ||
-                    (workspace != null && workspace.default) ||
-                    !isOwner,
-                  id: 'make-private-switch',
-                  onChange: togglePrivate,
-                  checked: !isPublic,
-                },
               },
             ],
           }}
@@ -301,5 +312,15 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
     </Form>
   )
 }
+
+const PrivateDisclaimerContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  span {
+    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+    margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
+  }
+`
 
 export default WorkspaceModalForm
