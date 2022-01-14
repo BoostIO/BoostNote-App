@@ -446,6 +446,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.PlanProPerk3]: 'Priority Support',
   [lngKeys.PlanProPerk1]: 'Password and expiration date when sharing',
   [lngKeys.PlanProPerk2]: "Full access to your docs' revision history",
+  [lngKeys.PlanProPerk4]: 'Private folders',
   [lngKeys.PlanViewersMembersIntro]:
     "What's the difference between viewers and members? Please take a look at",
   [lngKeys.PlanViewersMembersLink]: 'this article',

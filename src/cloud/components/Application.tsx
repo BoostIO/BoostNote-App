@@ -74,7 +74,7 @@ import {
   InPageSearchContainer,
 } from './molecules/PageSearch/InPageSearchPortal'
 import SidebarToggleButton from './SidebarToggleButton'
-import TeamSubLimit from './settings/TeamSubLimit'
+import SidebarSubscriptionCTA from './Subscription/SidebarSubscriptionCTA'
 
 interface ApplicationProps {
   className?: string
@@ -464,7 +464,7 @@ const Application = ({
             />
           ) : null}
         </SidebarButtonList>
-        <TeamSubLimit inSidebar={true} />
+        <SidebarSubscriptionCTA />
       </>
     )
   }, [team, translate, pathname, subscription, push, sendToElectron, openModal])

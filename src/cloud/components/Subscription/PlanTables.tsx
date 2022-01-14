@@ -320,6 +320,9 @@ const PlanTables = ({
             <span>{translate(lngKeys.PlanProPerk3)}</span>
           </div>
           <div className='plan__item__perk'>
+            <span>{translate(lngKeys.PlanProPerk4)}</span>
+          </div>
+          <div className='plan__item__perk'>
             <span>
               {translate(lngKeys.PlanStoragePerk, {
                 storageSize: `${proPlanStorageMb / 1000}GB`,

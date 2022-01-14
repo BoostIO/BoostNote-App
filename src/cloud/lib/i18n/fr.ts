@@ -179,6 +179,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.PlanProPerk1]: "Mot de passe et date d'expiration lors de partage",
   [lngKeys.PlanProPerk2]:
     "Accès complet à l'historique des revisions de vos documents",
+  [lngKeys.PlanProPerk4]: 'Dossiers privés',
   [lngKeys.PlanTrial]: 'Essai gratuit de {{days}} jours',
   [lngKeys.PlanInTrial]: 'En essai gratuit ({{remaining}} left)',
   [lngKeys.PlanSizePerUpload]: '{{size}}Mb par upload',

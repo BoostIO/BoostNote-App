@@ -182,6 +182,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.PlanProPerk3]: 'Priority Support',
   [lngKeys.PlanProPerk1]: 'Password and expiration date when sharing',
   [lngKeys.PlanProPerk2]: "Full access to your docs' revision history",
+  [lngKeys.PlanProPerk4]: 'Private folders',
   [lngKeys.PlanTrial]: '{{days}} days free trial',
   [lngKeys.PlanInTrial]: 'In free trial ({{remaining}} left)',
   [lngKeys.PlanSizePerUpload]: '{{size}}Mb per upload',
