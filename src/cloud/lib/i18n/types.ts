@@ -232,6 +232,7 @@ export enum lngKeys {
   PlanProPerk1 = 'plan.pro.perk.1',
   PlanProPerk2 = 'plan.pro.perk.2',
   PlanProPerk3 = 'plan.pro.perk.3',
+  PlanProPerk4 = 'plan.pro.perk.4',
   PlanTrial = 'plan.trial',
   PlanInTrial = 'plan.in.trial',
   PlanSizePerUpload = 'plan.upload.size',

@@ -8,10 +8,8 @@ import { lngKeys } from '../../lib/i18n/types'
 
 const TeamSubLimit = ({
   padded = true,
-  inSidebar,
   onLimitClick,
 }: {
-  inSidebar?: boolean
   padded?: boolean
   onLimitClick?: () => void
 }) => {
@@ -30,11 +28,7 @@ const TeamSubLimit = ({
   if (currentSubInfo.trialing) {
     return (
       <Container
-        className={cc([
-          'sub__limit',
-          !padded && 'sub__limit--stripped',
-          inSidebar && 'sub__limit--reduced',
-        ])}
+        className={cc(['sub__limit', !padded && 'sub__limit--stripped'])}
       >
         <a
           className='upgrade-link'
@@ -64,11 +58,7 @@ const TeamSubLimit = ({
 
   return (
     <Container
-      className={cc([
-        'sub__limit',
-        !padded && 'sub__limit--stripped',
-        inSidebar && 'sub__limit--reduced',
-      ])}
+      className={cc(['sub__limit', !padded && 'sub__limit--stripped'])}
     >
       <a
         className='upgrade-link'

@@ -49,3 +49,9 @@ export function didTeamReachPlanLimit(
 
   return false
 }
+
+export function canCreatePrivateFolders(
+  subscription?: SerializedSubscription
+): boolean {
+  return subscription != null && subscription.plan === 'pro'
+}
