@@ -17,13 +17,11 @@ import {
   newTeamDiscountDays,
 } from '../../lib/subscription'
 import Banner from '../../../design/components/atoms/Banner'
-import { mdiGift, mdiStar } from '@mdi/js'
+import { mdiGift } from '@mdi/js'
 import { format } from 'date-fns'
 import { useElectron } from '../../lib/stores/electron'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
-import Icon from '../../../design/components/atoms/Icon'
-import Flexbox from '../../../design/components/atoms/Flexbox'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 
 const stripePromise = loadStripe(stripePublishableKey)
@@ -126,22 +124,6 @@ const UpgradeTab = ({
                 onTrialCallback={() => setShowTrialPopup(true)}
                 discounted={teamIsEligibleForDiscount}
               />
-
-              <Flexbox justifyContent='flex-start'>
-                <Icon className='icon' size={20} path={mdiStar} />
-                {translate(lngKeys.PlanViewersMembersIntro)}
-                <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'>
-                  {translate(lngKeys.PlanViewersMembersLink)}
-                </ExternalLink>
-                !
-              </Flexbox>
-              <p>
-                * {translate(lngKeys.PlanBusinessIntro)}{' '}
-                <ExternalLink href='https://forms.gle/LqzQ2Tcfd6noWH6b9'>
-                  {translate(lngKeys.PlanBusinessLink)}
-                </ExternalLink>
-                .
-              </p>
             </section>
           </>
         }
