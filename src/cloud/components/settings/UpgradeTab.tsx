@@ -110,7 +110,7 @@ const UpgradeTab = ({
             )}
             <section>
               {teamIsEligibleForDiscount && (
-                <Banner variant='warning' iconPath={mdiGift}>
+                <Banner variant='warning' iconPath={mdiGift} rounded={true}>
                   {translate(lngKeys.PlanDiscountUntil)}{' '}
                   <strong>{format(eligibilityEnd, 'H:m, dd MMM yyyy')}</strong>
                 </Banner>

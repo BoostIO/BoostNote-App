@@ -184,7 +184,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.PlanProPerk4]: 'Private folders',
   [lngKeys.PlanTrial]: '{{days}} days free trial',
   [lngKeys.PlanInTrial]: 'In free trial ({{remaining}} left)',
-  [lngKeys.PlanSizePerUpload]: '{{size}}Mb per upload',
+  [lngKeys.PlanSizePerUpload]: '{{size}}MB per upload',
   [lngKeys.PlanDashboardPerUser]: '{{size}} dashboards',
   [lngKeys.PlanSmartviewPerDashboard]: '{{size}} smart views per dashboard',
   [lngKeys.UpgradeSubtitle]: 'Confirm and enter your payment information',
