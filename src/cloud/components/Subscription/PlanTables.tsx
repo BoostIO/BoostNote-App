@@ -10,9 +10,6 @@ import {
   UpgradePlans,
 } from '../../lib/stripe'
 import {
-  freePlanDashboardPerUserPerTeamLimit,
-  freePlanDocLimit,
-  freePlanSmartViewPerDashboardLimit,
   freePlanStorageMb,
   freePlanUploadSizeMb,
   freeTrialPeriodDays,
@@ -27,6 +24,8 @@ import Button from '../../../design/components/atoms/Button'
 import styled from '../../../design/lib/styled'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
+import { ExternalLink } from '../../../design/components/atoms/Link'
+import Pastille from '../../../design/components/atoms/Pastille'
 
 interface PlanTablesProps {
   team: SerializedTeam
@@ -106,15 +105,10 @@ const PlanTables = ({
         </div>
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
-            <span>{translate(lngKeys.PlanFreePerk1)}</span>
-          </div>
-          <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanFreePerk2)}</span>
           </div>
           <div className='plan__item__perk'>
-            <span>
-              {translate(lngKeys.PlanFreePerk3, { docs: freePlanDocLimit })}
-            </span>
+            <span>{translate(lngKeys.PlanFreePerk1)}</span>
           </div>
           <div className='plan__item__perk'>
             <span>
@@ -124,29 +118,12 @@ const PlanTables = ({
             </span>
           </div>
           <div className='plan__item__perk'>
-            <span>{translate(lngKeys.PlanFreePerk3)}</span>
-          </div>
-          <div className='plan__item__perk'>
             <span>{freePlanStorageMb}MB storage</span>
           </div>
           <div className='plan__item__perk'>
             <span>
               {translate(lngKeys.PlanSizePerUpload, {
                 size: freePlanUploadSizeMb,
-              })}
-            </span>
-          </div>
-          <div className='plan__item__perk'>
-            <span>
-              {translate(lngKeys.PlanDashboardPerUser, {
-                size: freePlanDashboardPerUserPerTeamLimit,
-              })}
-            </span>
-          </div>
-          <div className='plan__item__perk'>
-            <span>
-              {translate(lngKeys.PlanSmartviewPerDashboard, {
-                size: freePlanSmartViewPerDashboardLimit,
               })}
             </span>
           </div>
@@ -208,14 +185,14 @@ const PlanTables = ({
           </div>
         )}
         <div className='plan__item__perks'>
-          <div className='plan__item__perk'>
-            <span>{translate(lngKeys.PlanStandardPerk1)}</span>
+          <div className='plan__item__perks__viewers-description'>
+            <span>$0 per Viewer per month</span>
+            <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'>
+              <Pastille variant='secondary'>?</Pastille>
+            </ExternalLink>
           </div>
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanStandardPerk4)}</span>
-          </div>
-          <div className='plan__item__perk'>
-            <span>{translate(lngKeys.PlanStandardPerk2)}</span>
           </div>
           <div className='plan__item__perk'>
             <span>
@@ -223,6 +200,9 @@ const PlanTables = ({
                 days: revisionHistoryStandardDays,
               })}
             </span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>PDF Exporting</span>
           </div>
           <div className='plan__item__perk'>
             <span>
@@ -246,11 +226,7 @@ const PlanTables = ({
             </span>
           </div>
           <div className='plan__item__perk'>
-            <span>
-              {translate(lngKeys.PlanSmartviewPerDashboard, {
-                size: 'Unlimited',
-              })}
-            </span>
+            <span>{translate(lngKeys.PlanStandardPerk2)}</span>
           </div>
         </div>
         <div className='plan__item__footer'>
@@ -310,14 +286,18 @@ const PlanTables = ({
           </div>
         )}
         <div className='plan__item__perks'>
+          <div className='plan__item__perks__viewers-description'>
+            <span>$0 per Viewer per month</span>
+            <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'>
+              <Pastille variant='secondary'>?</Pastille>
+            </ExternalLink>
+          </div>
+          <strong>For full access to all features</strong>
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanProPerk1)}</span>
           </div>
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanProPerk2)}</span>
-          </div>
-          <div className='plan__item__perk'>
-            <span>{translate(lngKeys.PlanProPerk3)}</span>
           </div>
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanProPerk4)}</span>
@@ -328,6 +308,12 @@ const PlanTables = ({
                 storageSize: `${proPlanStorageMb / 1000}GB`,
               })}
             </span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>{translate(lngKeys.PlanProPerk3)}</span>
+          </div>
+          <div className='plan__item__perk'>
+            <span>{translate(lngKeys.PlanStandardPerk2)}</span>
           </div>
         </div>
         <div className='plan__item__footer'>
@@ -384,8 +370,20 @@ const Container = styled.div`
     }
   }
 
-  .plan__item__perks {
+  .plan__item__perks__viewers-description {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .plan__item__perks__viewers-description,
+  .plan__item__perks,
+  .plan__item__perks strong {
     margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  .plan__item__perks strong {
+    display: block;
   }
 
   .plan__item__perk {

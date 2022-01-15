@@ -171,19 +171,19 @@ const frTranslation: TranslationSource = {
   [lngKeys.PlanFreePerk3]: '{{docs}} Documents',
   [lngKeys.PlanStoragePerk]: '{{storageSize}} par membre',
   [lngKeys.PlanStandardPerk1]: 'Membres illimités',
-  [lngKeys.PlanStandardPerk2]: 'Soutenir le dévelopement',
+  [lngKeys.PlanStandardPerk2]: "Supporter l'équipe Boost Note",
   [lngKeys.PlanStandardPerk3]:
     "Derniers {{days}} jours d'historique des révisions de vos documents",
   [lngKeys.PlanStandardPerk4]: 'Documents illimités',
   [lngKeys.PlanProPerk3]: 'Prioritée lors de demande de support',
-  [lngKeys.PlanProPerk1]: "Mot de passe et date d'expiration lors de partage",
+  [lngKeys.PlanProPerk1]: 'Partage Avancé',
   [lngKeys.PlanProPerk2]:
     "Accès complet à l'historique des revisions de vos documents",
   [lngKeys.PlanProPerk4]: 'Dossiers privés',
   [lngKeys.PlanTrial]: 'Essai gratuit de {{days}} jours',
   [lngKeys.PlanInTrial]: 'En essai gratuit ({{remaining}} left)',
   [lngKeys.PlanSizePerUpload]: '{{size}}Mb par upload',
-  [lngKeys.PlanDashboardPerUser]: '{{size}} dashboards par member',
+  [lngKeys.PlanDashboardPerUser]: '{{size}} dashboards',
   [lngKeys.PlanSmartviewPerDashboard]:
     '{{size}} vues intelligentes par dashboard',
   [lngKeys.UpgradeSubtitle]: 'Entrez et confirmez vos informations de paiement',
