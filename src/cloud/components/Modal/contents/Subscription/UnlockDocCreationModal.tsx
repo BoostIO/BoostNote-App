@@ -6,8 +6,10 @@ import { usePage } from '../../../../lib/stores/pageStore'
 import { useI18n } from '../../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../../lib/i18n/types'
 import Button from '../../../../../design/components/atoms/Button'
+import { freePlanDocLimit } from '../../../../lib/subscription'
+import plur from 'plur'
 
-const UnlockPrivateWorkspaceModal = () => {
+const UnlockDocCreationModal = () => {
   const { openSettingsTab } = useSettings()
   const { closeAllModals } = useModal()
   const { team, subscription } = usePage()
@@ -26,15 +28,20 @@ const UnlockPrivateWorkspaceModal = () => {
   return (
     <Container className='sub__modal'>
       <header className='sub__modal__header'>
-        <div className='sub__modal__title'>Unlock Private Folders</div>
+        <div className='sub__modal__title'>Unlock doc creation!</div>
         <img
-          src='/app/static/images/private_folders.png'
+          src='/app/static/images/unlimited_documents.png'
           className='sub__img'
         />
         <div className='sub__modal__description'>
           <p>
-            Create unlimited private folders to organize your docs, tasks, etc.,
-            and share them with specific team members of your own choosing.
+            Sadly, the free plan is limited to {freePlanDocLimit}{' '}
+            {plur('document', freePlanDocLimit)}.
+          </p>
+          <p>
+            We encourage you to either delete some of your existing documents or
+            subscribe to one of our plans. Once subscribed, you will be able to
+            create unlimited documents and organize your space as you wish.
           </p>
         </div>
       </header>
@@ -42,10 +49,7 @@ const UnlockPrivateWorkspaceModal = () => {
         variant='primary'
         className='sub__modal__button'
         onClick={() => {
-          openSettingsTab('teamUpgrade', {
-            initialPlan: 'pro',
-            tabState: 'form',
-          })
+          openSettingsTab('teamUpgrade')
           closeAllModals()
         }}
       >
@@ -92,4 +96,4 @@ const Container = styled.div`
   }
 `
 
-export default UnlockPrivateWorkspaceModal
+export default UnlockDocCreationModal

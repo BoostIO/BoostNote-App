@@ -9,9 +9,14 @@ import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import { useNav } from '../../lib/stores/nav'
 import TemplatesModal from '../Modal/contents/TemplatesModal'
+import { usePage } from '../../lib/stores/pageStore'
+import { canCreateDoc } from '../../lib/subscription'
+import { getMapValues } from '../../../design/lib/utils/array'
+import UnlockDocCreationModal from '../Modal/contents/Subscription/UnlockDocCreationModal'
 
 const NewDocButton = ({ team }: { team: SerializedTeam }) => {
   const {
+    docsMap,
     currentWorkspaceId,
     workspacesMap,
     currentPath,
@@ -20,6 +25,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
   const { openNewDocForm } = useCloudResourceModals()
   const { openModal } = useModal()
   const { translate } = useI18n()
+  const { subscription } = usePage()
 
   const openNewDocModal = useCallback(() => {
     openNewDocForm(
@@ -53,13 +59,26 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
       icon={mdiPlus}
       id='sidebar-newdoc-btn'
       label={translate(lngKeys.CreateNewDoc)}
-      labelClick={() => openNewDocModal()}
+      labelClick={() =>
+        canCreateDoc(getMapValues(docsMap), subscription)
+          ? openNewDocModal()
+          : openModal(<UnlockDocCreationModal />, {
+              showCloseIcon: false,
+              width: 'small',
+            })
+      }
       contextControls={[
         {
           icon: mdiPencilBoxMultipleOutline,
           type: MenuTypes.Normal,
           label: translate(lngKeys.UseATemplate),
-          onClick: () => openModal(<TemplatesModal />, { width: 'large' }),
+          onClick: () =>
+            canCreateDoc(getMapValues(docsMap), subscription)
+              ? openModal(<TemplatesModal />, { width: 'large' })
+              : openModal(<UnlockDocCreationModal />, {
+                  showCloseIcon: false,
+                  width: 'small',
+                }),
         },
       ]}
     />
