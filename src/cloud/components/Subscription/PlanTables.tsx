@@ -26,6 +26,7 @@ import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import { ExternalLink } from '../../../design/components/atoms/Link'
 import Pastille from '../../../design/components/atoms/Pastille'
+import { Emoji } from 'emoji-mart'
 
 interface PlanTablesProps {
   team: SerializedTeam
@@ -227,6 +228,7 @@ const PlanTables = ({
           </div>
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanStandardPerk2)}</span>
+            <Emoji set='apple' emoji={'heart'} size={16} />
           </div>
         </div>
         <div className='plan__item__footer'>
@@ -314,6 +316,7 @@ const PlanTables = ({
           </div>
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanStandardPerk2)}</span>
+            <Emoji set='apple' emoji={'heart'} size={16} />
           </div>
         </div>
         <div className='plan__item__footer'>
