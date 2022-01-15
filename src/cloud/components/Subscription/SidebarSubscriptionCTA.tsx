@@ -102,7 +102,7 @@ const Container = styled.nav`
 
     .plan__item__perk + .plan__item__perk,
     .plan__item__perk + button {
-      margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+      margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
     }
   }
 

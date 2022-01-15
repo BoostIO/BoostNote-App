@@ -110,13 +110,6 @@ const UpgradeTab = ({
                 close={() => setShowTrialPopup(false)}
               />
             )}
-            <p style={{ textAlign: 'center' }}>
-              ⚠️ We are rolling out{' '}
-              <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/5821514-plan-changes-at-january-17th-2022'>
-                new plans and pricing
-              </ExternalLink>{' '}
-              on 17th January, 2022
-            </p>
             <section>
               {teamIsEligibleForDiscount && (
                 <Banner variant='warning' iconPath={mdiGift}>
@@ -167,13 +160,6 @@ const UpgradeTab = ({
       }
       body={
         <div>
-          <p>
-            ⚠️ We are rolling out{' '}
-            <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/5821514-plan-changes-at-january-17th-2022'>
-              new plans and pricing
-            </ExternalLink>{' '}
-            on 17th January, 2022
-          </p>
           {currentUserPermissions.role !== 'admin' ? (
             <ColoredBlock variant='danger'>
               Only admins can access this content.

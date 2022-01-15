@@ -291,7 +291,7 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
         {pendingInvites.map((invite) => (
           <SectionListItem key={invite.id} className='li'>
             <label>{invite.email}</label>
-            <div>
+            <Flexbox>
               {getRoleLabel(invite.role as TeamPermissionType)}{' '}
               {(invite.role === userPermissions.role ||
                 userPermissions.role !== 'viewer') && (
@@ -302,7 +302,7 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
                   onClick={() => cancelInvite(invite)}
                 />
               )}
-            </div>
+            </Flexbox>
           </SectionListItem>
         ))}
       </SectionList>

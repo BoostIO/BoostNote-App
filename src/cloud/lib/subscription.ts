@@ -1,6 +1,8 @@
 import { differenceInDays } from 'date-fns'
+import { SerializedDoc } from '../interfaces/db/doc'
 import { SerializedSubscription } from '../interfaces/db/subscription'
 import { SerializedUserTeamPermissions } from '../interfaces/db/userTeamPermissions'
+import { filterIter } from './utils/iterator'
 
 export const freePlanDocLimit = 30
 export const freeTrialPeriodDays = 7
@@ -54,4 +56,15 @@ export function canCreatePrivateFolders(
   subscription?: SerializedSubscription
 ): boolean {
   return subscription != null && subscription.plan === 'pro'
+}
+
+export function canCreateDoc(
+  docs: SerializedDoc[],
+  subscription?: SerializedSubscription
+): boolean {
+  return (
+    subscription != null ||
+    filterIter((doc) => doc.generated === false, docs).length <=
+      freePlanDocLimit
+  )
 }
