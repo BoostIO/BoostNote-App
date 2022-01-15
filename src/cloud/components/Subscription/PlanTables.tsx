@@ -406,7 +406,7 @@ const Container = styled.div`
   }
 
   .plan__item__perk + .plan__item__perk {
-    margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    margin-top: 10px;
   }
 
   .plan__item__discount {

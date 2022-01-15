@@ -7,6 +7,7 @@ import styled from '../../lib/styled'
 interface BannerProps {
   variant: 'danger' | 'warning' | 'info'
   iconPath?: string
+  rounded?: boolean
 }
 
 const Banner: AppComponent<BannerProps> = ({
@@ -14,8 +15,16 @@ const Banner: AppComponent<BannerProps> = ({
   iconPath,
   children,
   className,
+  rounded,
 }) => (
-  <Container className={cc(['banner', `banner--${variant}`, className])}>
+  <Container
+    className={cc([
+      'banner',
+      `banner--${variant}`,
+      rounded && `banner--rounded`,
+      className,
+    ])}
+  >
     {iconPath != null && (
       <Icon className='banner__icon' path={iconPath} size={16} />
     )}
@@ -35,6 +44,10 @@ const Container = styled.div`
 
   .banner__icon {
     margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  &.banner--rounded {
+    border-radius: ${({ theme }) => theme.borders.radius}px;
   }
 
   &.banner--danger {
