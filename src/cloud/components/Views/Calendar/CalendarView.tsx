@@ -370,7 +370,7 @@ const Container = styled.div`
     }
   }
 
-  &:not(.fc--selectable) .fc-daygrid-day::before {
+  .fc-daygrid:not(.fc--selectable) .fc-daygrid-day::before {
     display: none !important;
   }
 
