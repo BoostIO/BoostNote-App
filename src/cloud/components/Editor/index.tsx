@@ -13,6 +13,7 @@ import { uploadFile, buildTeamFileUrl } from '../../api/teams/files'
 import {
   createRelativePositionFromTypeIndex,
   createAbsolutePositionFromRelativePosition,
+  YEvent,
 } from 'yjs'
 import {
   useGlobalKeyDownHandler,
@@ -104,6 +105,8 @@ import {
 import { nginxSizeLimitInMb } from '../../lib/upload'
 import CustomizedMarkdownPreviewer from '../MarkdownView/CustomizedMarkdownPreviewer'
 import BottomBarButton from '../BottomBarButton'
+import { YText } from 'yjs/dist/src/internals'
+import { useLocalSnapshot } from '../../lib/stores/localSnapshots'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -907,6 +910,16 @@ const Editor = ({
     }
   }, [toggleSplitEditMode])
 
+  const { takeSnapshot } = useLocalSnapshot()
+
+  const handleYTextChange = useCallback(
+    (_event: YEvent, ytext: YText) => {
+      takeSnapshot(doc.id, ytext.toString())
+      console.log('snapshot taken')
+    },
+    [takeSnapshot, doc.id]
+  )
+
   if (!initialLoadDone) {
     return (
       <StyledLoadingView>
@@ -1118,6 +1131,7 @@ const Editor = ({
                     bind={bindCallback}
                     config={editorConfig}
                     realtime={realtime}
+                    onYTextChange={handleYTextChange}
                   />
                   {editorContent === '' && (
                     <EditorTemplateButton

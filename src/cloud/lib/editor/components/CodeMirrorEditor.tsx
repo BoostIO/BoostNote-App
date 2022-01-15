@@ -4,6 +4,8 @@ import { CodeMirrorBinding } from 'y-codemirror'
 import { useEffectOnce } from 'react-use'
 import { WebsocketProvider } from 'y-websocket'
 import throttle from 'lodash.throttle'
+import { UndoManager, YEvent } from 'yjs'
+import { YText } from 'yjs/dist/src/internals'
 
 interface EditorProps {
   config?: CodeMirror.EditorConfiguration
@@ -11,6 +13,7 @@ interface EditorProps {
   realtime?: WebsocketProvider
   lineScrollTarget?: number
   onLineScroll?: (line: number) => void
+  onYTextChange?: (event: YEvent, ytext: YText) => void
 }
 
 const CodeMirrorEditor = ({
@@ -19,6 +22,7 @@ const CodeMirrorEditor = ({
   bind,
   lineScrollTarget,
   onLineScroll,
+  onYTextChange,
 }: EditorProps) => {
   const editorRootRef = useRef<HTMLDivElement>(null)
   const editorRef = useRef<CodeMirror.Editor>()
@@ -86,17 +90,34 @@ const CodeMirrorEditor = ({
       return undefined
     }
 
-    editorRef.current.setValue('')
+    const content = realtime.doc.getText('content')
+    const undoManager = new UndoManager(content)
     const binding = new CodeMirrorBinding(
-      realtime.doc.getText('content'),
+      content,
       editorRef.current,
-      realtime.awareness
+      realtime.awareness,
+      {
+        yUndoManager: undoManager,
+      }
     )
-    editorRef.current.clearHistory()
+    let firstChange = true
+    const observer = (event: YEvent) => {
+      if (onYTextChange == null) {
+        return
+      }
+      // The first event is triggered for loading initial content. So it is not a change event actually.
+      if (firstChange) {
+        firstChange = false
+        return
+      }
+      onYTextChange(event, content)
+    }
+    content.observe(observer)
     return () => {
+      content.unobserve(observer)
       binding.destroy()
     }
-  }, [realtime])
+  }, [realtime, onYTextChange])
 
   useEffect(() => {
     if (lineScrollTarget != null && editorRef.current != null) {
