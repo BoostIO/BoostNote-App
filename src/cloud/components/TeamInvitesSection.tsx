@@ -283,8 +283,10 @@ const TeamInvitesSection = ({ userPermissions }: TeamInvitesSectionProps) => {
           ? translate(lngKeys.RoleMemberDescription)
           : translate(lngKeys.RoleViewerDescription)}
         <ExternalLink href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'>
-          {translate(lngKeys.SeeRoleDetails)}
-          <Icon path={mdiOpenInNew} size={12} />
+          <Flexbox>
+            <span>{translate(lngKeys.SeeRoleDetails)}</span>
+            <Icon path={mdiOpenInNew} size={12} />
+          </Flexbox>
         </ExternalLink>
       </small>
       <SectionList>
