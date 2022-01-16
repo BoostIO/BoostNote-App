@@ -8,7 +8,11 @@ export type BulkApiActionRes =
 export type BulkApiAction = (
   id: string,
   act: string,
-  body: { api: () => Promise<any>; cb?: (res: any) => any }
+  body: {
+    api: () => Promise<any>
+    cb?: (res: any) => any
+    onError?: (err: any) => Promise<{ overrideDefault: boolean }>
+  }
 ) => Promise<BulkApiActionRes>
 
 interface UseBulkApiRes {
@@ -21,7 +25,7 @@ const useBulkApi = () => {
   const { pushApiErrorMessage } = useToast()
 
   const send: BulkApiAction = useCallback(
-    async (id: string, act: string, { api, cb }) => {
+    async (id: string, act: string, { api, cb, onError }) => {
       let res: BulkApiActionRes = { err: false, data: undefined }
       if (sendingMap.get(id)) {
         return {
@@ -48,7 +52,15 @@ const useBulkApi = () => {
           error: error,
         }
         console.error(error)
-        pushApiErrorMessage(error)
+
+        if (onError != null) {
+          const onErrorRes = await onError(error)
+          if (!onErrorRes.overrideDefault) {
+            pushApiErrorMessage(error)
+          }
+        } else {
+          pushApiErrorMessage(error)
+        }
       }
 
       setSendingMap((prev) => {
