@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import shortid from 'shortid'
 import {
   createDoc,
@@ -120,6 +120,8 @@ import {
 } from '../../api/teams/dashboards'
 import { SerializedDashboard } from '../../interfaces/db/dashboard'
 import { getDashboardHref } from '../../components/Link/DashboardLink'
+import { useModal } from '../../../design/lib/stores/modal'
+import UnlockDocCreationModal from '../../components/Modal/contents/Subscription/UnlockDocCreationModal'
 
 export function useCloudApi() {
   const { pageDoc, pageFolder, setPartialPageData } = usePage()
@@ -145,6 +147,7 @@ export function useCloudApi() {
     removeFromDashboardsMap,
   } = useNav()
   const { push } = useRouter()
+  const { openModal } = useModal()
 
   const { sendingMap, send } = useBulkApi()
 
@@ -210,6 +213,32 @@ export function useCloudApi() {
             options?.afterSuccess(res.doc)
           }
         },
+        onError: async (err: any) => {
+          const error = Object.assign({}, err) as any
+          if (
+            error.response != null &&
+            typeof error.response.text === 'function'
+          ) {
+            try {
+              const description = (await error.response.text())
+                .split('\n')[0]
+                .split(': ')[1]
+              if (
+                error.response.status === 403 &&
+                description.includes(
+                  `Your space exceeds the free tier's capacity`
+                )
+              ) {
+                openModal(<UnlockDocCreationModal />, {
+                  showCloseIcon: false,
+                  width: 'small',
+                })
+                return { overrideDefault: true }
+              }
+            } catch (error) {}
+          }
+          return { overrideDefault: false }
+        },
       })
     },
     [
@@ -218,6 +247,7 @@ export function useCloudApi() {
       updateDocsMap,
       updateParentFolderOfDoc,
       updateParentWorkspaceOfDoc,
+      openModal,
     ]
   )
 
