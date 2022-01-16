@@ -64,7 +64,6 @@ export function canCreateDoc(
 ): boolean {
   return (
     subscription != null ||
-    filterIter((doc) => doc.generated === false, docs).length <=
-      freePlanDocLimit
+    filterIter((doc) => doc.generated === false, docs).length < freePlanDocLimit
   )
 }
