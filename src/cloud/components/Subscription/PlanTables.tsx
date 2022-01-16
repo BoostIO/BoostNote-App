@@ -380,9 +380,12 @@ const Container = styled.div`
   }
 
   .plan__item__perks__viewers-description,
-  .plan__item__perks,
   .plan__item__perks strong {
     margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
+
+  .plan__item__perks {
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
   }
 
   .plan__item__perks strong {
@@ -452,7 +455,7 @@ const Container = styled.div`
     }
 
     .plan__item__price__description {
-      font-size: ${({ theme }) => theme.sizes.fonts.xsm}px;
+      font-size: ${({ theme }) => theme.sizes.fonts.df}px;
       line-height: 1;
       opacity: 0.6;
       width: 70px;
