@@ -18,6 +18,7 @@ import { ViewMoveType } from '../../views'
 import { sortByLexorankProperty } from '../../utils/string'
 import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
+import { getDefaultListView } from '../../views/list'
 
 interface ViewHandlerStoreProps {
   parent: ViewParent
@@ -25,7 +26,10 @@ interface ViewHandlerStoreProps {
 }
 
 export type ViewHandlerActionsRef = React.MutableRefObject<{
-  createNewView: (type: SupportedViewTypes) => Promise<BulkApiActionRes>
+  createNewView: (
+    type: SupportedViewTypes,
+    name?: string
+  ) => Promise<BulkApiActionRes>
   updateView: (
     view: SerializedView,
     body: Omit<UpdateViewRequestBody, 'move'>
@@ -50,23 +54,33 @@ export function useViewHandler({
   const { viewsMap } = useNav()
 
   const childrenViews = useMemo(() => {
+    let views: SerializedView[] = []
     switch (parent.type) {
       case 'folder':
-        return filterIter(
+        views = filterIter(
           (view) => view.folderId === parent.target.id,
           viewsMap.values()
         )
+        break
       case 'workspace':
-        return filterIter(
+        views = filterIter(
           (view) => view.workspaceId === parent.target.id,
           viewsMap.values()
         )
+        break
       case 'smartView':
-        return filterIter(
+        views = filterIter(
           (view) => view.smartViewId === parent.target.id,
           viewsMap.values()
         )
+        break
     }
+
+    if (views.length === 0) {
+      views = [getDefaultListView(parent)]
+    }
+
+    return views
   }, [parent, viewsMap])
 
   const orderedViews = useMemo(() => {
@@ -74,14 +88,16 @@ export function useViewHandler({
   }, [childrenViews])
 
   const createNewView = useCallback(
-    async (type: SupportedViewTypes) => {
+    async (type: SupportedViewTypes, defaultName?: string) => {
       const viewsOfTheSameType = filterIter(
         (view) => view.type === type,
         childrenViews
       ).length
-      const name = `${capitalize(type)}${
-        viewsOfTheSameType === 0 ? '' : ` ${viewsOfTheSameType}`
-      }`
+      const name =
+        defaultName ||
+        `${capitalize(type)}${
+          viewsOfTheSameType === 0 ? '' : ` ${viewsOfTheSameType}`
+        }`
       const res = await createViewApi(
         parent.type === 'folder'
           ? { folder: parent.target.id, type, name }
