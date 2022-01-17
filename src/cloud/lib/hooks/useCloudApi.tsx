@@ -222,11 +222,13 @@ export function useCloudApi() {
             try {
               const description = (await error.response.text())
                 .split('\n')[0]
-                .split(': ')[1]
+                .split(': ')
               if (
                 error.response.status === 403 &&
-                description.includes(
-                  `Your space exceeds the free tier's capacity`
+                description.some((desc: any) =>
+                  (desc || '').includes(
+                    `Your space exceeds the free tier's capacity`
+                  )
                 )
               ) {
                 openModal(<UnlockDocCreationModal />, {
