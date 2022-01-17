@@ -497,26 +497,26 @@ const jpTranslation: TranslationSource = {
   [lngKeys.RequestSent]: 'リクエストが送信されました',
   [lngKeys.RequestAskMemberRole]: 'メンバーの役割を尋ねる',
   [lngKeys.UploadLimit]:
-    'The maximum allowed size for uploads is {{sizeInMb}}Mb',
+    'アップロード可能な最大容量は{{sizeInMb}}MBです。',
 
-  [lngKeys.OnboardingFolderSectionTitle]: 'Welcome to Boost Note!',
+  [lngKeys.OnboardingFolderSectionTitle]: 'Boost Noteへようこそ！',
   [lngKeys.OnboardingFolderSectionDisclaimer]:
-    'Invite your teammates to this space',
+    'メンバーをこのSpaceへ招待しましょう。',
   [lngKeys.GeneralContent]: 'Content',
   [lngKeys.CreateNewCanvas]: 'Create new canvas (beta)',
 
   [lngKeys.GeneralYes]: 'はい',
   [lngKeys.GeneralNo]: 'いいえ',
 
-  [lngKeys.ModalUnlockDashboardsTitle]: 'Unlock Dashboards',
+  [lngKeys.ModalUnlockDashboardsTitle]: 'Dashboard作成数上限を無くす',
   [lngKeys.ModalUnlockDashboardsDescription]:
-    'Create unlimited dashboards to organize your docs, tasks, etc., in order to guide your workflow in your own way! Display the information the way you want to see it.',
-  [lngKeys.ModalUnlockSmartviewsTitle]: 'Unlock Smart Views',
+    'アップグレードを行うことで、Dashboard作成数の上限を無くすことが出来ます。様々な条件でドキュメントを絞り込み、あなたに最適な情報管理を行いましょう！',
+  [lngKeys.ModalUnlockSmartviewsTitle]: 'Smart Viewsを追加しましょう',
   [lngKeys.ModalUnlockSmartviewsDescription]:
-    'Add unlimited smart views to your dashboard in order to customize even more your own experience. More smart views will allow you to be even more specific when it comes to what you want to see and how you want to see it!',
+    'アップグレードを行うことで、Dashboardあたり無制限でSmart Viewを追加することが出来ます。様々な条件でドキュメントを絞り込み、あなたに最適な情報管理を行いましょう！',
   [lngKeys.ModalUnlockCheckDetails]:
-    'Check the details of the Standard and Pro plans and learn what you can do with it!',
-  [lngKeys.OverlimitDashboards]: `Your dashboards exceed the limit of your current plan. Consider upgrading your plan or deleting other dashboards in order to continue using this feature with your current plan.`,
+    'Standard・Proプランの詳細を確認し、どれが最適なプランか比較してみましょう！',
+  [lngKeys.OverlimitDashboards]: `無料プランでのDashboard作成上限に到達いたしました。アップグレードを行うことで、Dashboard作成数の上限を無くすことが可能になります。`,
 }
 
 export default {
