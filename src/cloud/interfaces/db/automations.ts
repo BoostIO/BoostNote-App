@@ -23,7 +23,7 @@ export interface SerializedAutomation {
   description: string
   workflowId: number
   teamId: string
-  args: any
+  env: any
   createdById: string
   createdAt: string
   updatedAt: string
