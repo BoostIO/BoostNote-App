@@ -38,8 +38,9 @@ export async function getAutomations(params: ListAutomationsQuery) {
 export interface CreateAutomationRequestBody {
   name: string
   description?: string
-  workflow: string
+  workflow: number
   team: string
+  env: any
 }
 
 export interface CreateAutomationResponseBody {
@@ -69,10 +70,11 @@ export interface UpdateAutomationResponseBody {
 }
 
 export async function updateAutomation(
-  automationData: CreateAutomationRequestBody
+  id: number,
+  automationData: UpdateAutomationRequestBody
 ) {
   const { data } = await callApi<CreateAutomationResponseBody>(
-    `api/automations`,
+    `api/automations/${id}`,
     {
       method: 'patch',
       json: automationData,
