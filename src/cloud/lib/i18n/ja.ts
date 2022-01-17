@@ -496,8 +496,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.GeneralDocuments]: 'ドキュメント',
   [lngKeys.RequestSent]: 'リクエストが送信されました',
   [lngKeys.RequestAskMemberRole]: 'メンバーの役割を尋ねる',
-  [lngKeys.UploadLimit]:
-    'アップロード可能な最大容量は{{sizeInMb}}MBです。',
+  [lngKeys.UploadLimit]: 'アップロード可能な最大容量は{{sizeInMb}}MBです。',
 
   [lngKeys.OnboardingFolderSectionTitle]: 'Boost Noteへようこそ！',
   [lngKeys.OnboardingFolderSectionDisclaimer]:
