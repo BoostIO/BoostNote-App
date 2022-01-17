@@ -18,6 +18,7 @@ import NavigationItem from '../../../../design/components/molecules/Navigation/N
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerBreak from '../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
+import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import { useModal } from '../../../../design/lib/stores/modal'
 import styled from '../../../../design/lib/styled'
 import { trackEvent } from '../../../api/track'
@@ -28,7 +29,7 @@ import {
   ViewParent,
 } from '../../../interfaces/db/view'
 import { useViewHandler } from '../../../lib/hooks/views/viewHandler'
-import { getIconPathOfViewType } from '../../../lib/views'
+import { getIconPathOfViewType, isDefaultView } from '../../../lib/views'
 
 export interface ViewsSelectorProps {
   selectedViewId: number | undefined
@@ -49,9 +50,9 @@ const ViewsSelector = ({
   })
 
   const createNewView = useCallback(
-    async (type: SupportedViewTypes) => {
+    async (type: SupportedViewTypes, name?: string) => {
       closeLastModal()
-      return actionsRef.current.createNewView(type)
+      return actionsRef.current.createNewView(type, name)
     },
     [closeLastModal, actionsRef]
   )
@@ -113,10 +114,28 @@ const ViewsSelector = ({
         iconPath={mdiPlus}
         iconSize={20}
         onClick={(ev) =>
-          openContextModal(ev, <ViewModal createNewView={createNewView} />, {
-            alignment: 'bottom-left',
-            width: 300,
-          })
+          openContextModal(
+            ev,
+            <ViewModal
+              createNewView={(type) => {
+                if (
+                  orderedViews.length === 1 &&
+                  isDefaultView(orderedViews[0])
+                ) {
+                  createNewView(
+                    orderedViews[0].type,
+                    orderedViews[0].name
+                  ).then(() => createNewView(type))
+                } else {
+                  createNewView(type)
+                }
+              }}
+            />,
+            {
+              alignment: 'bottom-left',
+              width: 300,
+            }
+          )
         }
       >
         Add view
@@ -218,7 +237,12 @@ const ViewContextModal = ({
   const renameView = useCallback(
     async (view: SerializedView, newName: string) => {
       setSending('name')
-      const res = await actionsRef.current.updateView(view, { name: newName })
+      let res: BulkApiActionRes
+      if (isDefaultView(view)) {
+        res = await actionsRef.current.createNewView(view.type, newName)
+      } else {
+        res = await actionsRef.current.updateView(view, { name: newName })
+      }
       setSending(undefined)
       if (!res.err) {
         closeLastModal()
@@ -273,50 +297,54 @@ const ViewContextModal = ({
             ),
         }}
       />
-      <MetadataContainerBreak />
-      {!position.isFirst && (
-        <MetadataContainerRow
-          row={{
-            type: 'button',
-            props: {
-              id: 'metadata-move-left',
-              label: 'Move left',
-              iconPath: mdiArrowLeft,
-              spinning: sending === 'before',
-              disabled: sendingMap.has(view.id.toString()),
-              onClick: () => moveView(view, 'before'),
-            },
-          }}
-        />
+      {!isDefaultView(view) && (
+        <>
+          <MetadataContainerBreak />
+          {!position.isFirst && (
+            <MetadataContainerRow
+              row={{
+                type: 'button',
+                props: {
+                  id: 'metadata-move-left',
+                  label: 'Move left',
+                  iconPath: mdiArrowLeft,
+                  spinning: sending === 'before',
+                  disabled: sendingMap.has(view.id.toString()),
+                  onClick: () => moveView(view, 'before'),
+                },
+              }}
+            />
+          )}
+          {!position.isLast && (
+            <MetadataContainerRow
+              row={{
+                type: 'button',
+                props: {
+                  id: 'metadata-move-right',
+                  label: 'Move right',
+                  iconPath: mdiArrowRight,
+                  spinning: sending === 'after',
+                  disabled: sendingMap.has(view.id.toString()),
+                  onClick: () => moveView(view, 'after'),
+                },
+              }}
+            />
+          )}
+          <MetadataContainerRow
+            row={{
+              type: 'button',
+              props: {
+                id: 'metadata-delete-view',
+                label: 'Delete',
+                iconPath: mdiTrashCanOutline,
+                spinning: sendingMap.get(view.id.toString()) === 'delete',
+                disabled: sendingMap.has(view.id.toString()),
+                onClick: () => deleteView(view),
+              },
+            }}
+          />
+        </>
       )}
-      {!position.isLast && (
-        <MetadataContainerRow
-          row={{
-            type: 'button',
-            props: {
-              id: 'metadata-move-right',
-              label: 'Move right',
-              iconPath: mdiArrowRight,
-              spinning: sending === 'after',
-              disabled: sendingMap.has(view.id.toString()),
-              onClick: () => moveView(view, 'after'),
-            },
-          }}
-        />
-      )}
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            id: 'metadata-delete-view',
-            label: 'Delete',
-            iconPath: mdiTrashCanOutline,
-            spinning: sendingMap.get(view.id.toString()) === 'delete',
-            disabled: sendingMap.has(view.id.toString()),
-            onClick: () => deleteView(view),
-          },
-        }}
-      />
     </StyledContainer>
   )
 }
