@@ -493,8 +493,8 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SettingsRolesRestrictedDescription]:
     'メンバー権限を変更するためには、有料プランを購入する必要があります。アップグレードをご検討いただけますと幸いです。',
 
-  [lngKeys.GeneralDocuments]: 'Documents',
-  [lngKeys.RequestSent]: 'Request sent',
+  [lngKeys.GeneralDocuments]: 'ドキュメント',
+  [lngKeys.RequestSent]: 'リクエストが送信されました',
   [lngKeys.RequestAskMemberRole]: 'メンバーの役割を尋ねる',
   [lngKeys.UploadLimit]:
     'The maximum allowed size for uploads is {{sizeInMb}}Mb',
