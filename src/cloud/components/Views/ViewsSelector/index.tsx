@@ -297,7 +297,7 @@ const ViewContextModal = ({
             ),
         }}
       />
-      {!isDefaultView(view) && (
+      {!isDefaultView(view) && !(position.isFirst && position.isLast) && (
         <>
           <MetadataContainerBreak />
           {!position.isFirst && (
