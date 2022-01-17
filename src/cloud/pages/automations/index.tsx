@@ -30,7 +30,7 @@ const AutomationListPage = ({
   const [automations, setAutomations] = useState(initialAutomations)
   const [deleteSet, setDeleteSet] = useState(new Set<number>())
 
-  const handleWorkflowDelete = useCallback(
+  const handleAutomationDelete = useCallback(
     async (automation: SerializedAutomation) => {
       try {
         setDeleteSet((set) => {
@@ -82,7 +82,7 @@ const AutomationListPage = ({
                     {workflow.name}
                   </a>
                   <Button
-                    onClick={() => handleWorkflowDelete(workflow)}
+                    onClick={() => handleAutomationDelete(workflow)}
                     disabled={deleteSet.has(workflow.id)}
                     variant='danger'
                     iconPath={mdiTrashCanOutline}
