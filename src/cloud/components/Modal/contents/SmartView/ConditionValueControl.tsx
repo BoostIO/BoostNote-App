@@ -22,6 +22,7 @@ import FormSelect, {
 } from '../../../../../design/components/molecules/Form/atoms/FormSelect'
 import { ConditionNameSuggestionsPerTypeOrSubType } from '../../../../lib/props'
 import StatusSelect from './StatusSelect'
+import { useEffectOnce } from 'react-use'
 
 interface ConditionValueControlProps {
   teamId: string
@@ -113,6 +114,22 @@ const PropConditionValueControl = ({
     },
     [fetchPropertySuggestionsApi]
   )
+
+  useEffectOnce(() => {
+    fetchProperties(
+      Object.assign(
+        {
+          team: teamId,
+          propertyType: condition.type,
+        },
+        condition.type === 'json'
+          ? {
+              jsonPropertyType: condition.value.type,
+            }
+          : {}
+      )
+    )
+  })
 
   useEffect(() => {
     if (previousPropType !== condition.type) {
