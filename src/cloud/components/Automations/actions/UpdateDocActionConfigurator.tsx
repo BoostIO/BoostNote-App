@@ -1,5 +1,5 @@
 import { mdiFileDocumentOutline } from '@mdi/js'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import FormEmoji from '../../../../design/components/molecules/Form/atoms/FormEmoji'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import FormTextarea from '../../../../design/components/molecules/Form/atoms/FormTextArea'
@@ -9,7 +9,6 @@ import { ActionConfiguratorProps } from './'
 import ActionConfigurationInput from './ActionConfigurationInput'
 import PropertySelect, { PropertySelectProps } from './PropertySelect'
 
-// support Props + Title query
 const UpdateDocActionConfigurator = ({
   configuration,
   onChange,
@@ -38,6 +37,16 @@ const UpdateDocActionConfigurator = ({
     )
   }, [configuration.query])
 
+  const setContent = useCallback(
+    (config: Record<string, any>) => {
+      onChange({
+        ...configuration,
+        content: { ...(configuration.content || {}), ...config },
+      })
+    },
+    [configuration, onChange]
+  )
+
   const setConditions: PropertySelectProps['onChange'] = useCallback(
     (props) => {
       onChange({
@@ -54,6 +63,10 @@ const UpdateDocActionConfigurator = ({
     [configuration, onChange]
   )
 
+  useEffect(() => {
+    console.log(configuration)
+  }, [configuration])
+
   return (
     <div>
       <FormRow row={{ title: 'Prop Query' }} />
@@ -64,8 +77,8 @@ const UpdateDocActionConfigurator = ({
       />
       <FormRow row={{ title: 'Title' }}>
         <ActionConfigurationInput
-          value={configuration.title}
-          onChange={(title) => onChange({ ...configuration, title })}
+          value={configuration.content?.title}
+          onChange={(title) => setContent({ title })}
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
             return (
@@ -79,8 +92,8 @@ const UpdateDocActionConfigurator = ({
       </FormRow>
       <FormRow row={{ title: 'Emoji' }}>
         <ActionConfigurationInput
-          value={configuration.emoji}
-          onChange={(emoji) => onChange({ ...configuration, emoji })}
+          value={configuration.content?.emoji}
+          onChange={(emoji) => setContent({ emoji })}
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
             return (
@@ -95,8 +108,8 @@ const UpdateDocActionConfigurator = ({
       </FormRow>
       <FormRow row={{ title: 'Content' }}>
         <ActionConfigurationInput
-          value={configuration.content.content}
-          onChange={(content) => onChange({ ...configuration, content })}
+          value={configuration.content?.content}
+          onChange={(content) => setContent({ content })}
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
             return (
@@ -110,8 +123,8 @@ const UpdateDocActionConfigurator = ({
       </FormRow>
       <FormRow row={{ title: 'Props' }} />
       <PropertySelect
-        value={configuration.props || {}}
-        onChange={(props) => onChange({ ...configuration, props })}
+        value={configuration.content?.props || {}}
+        onChange={(props) => setContent({ props })}
         eventDataOptions={eventDataOptions}
       />
     </div>
