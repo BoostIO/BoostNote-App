@@ -62,7 +62,6 @@ import Sidebar, {
 } from '../../design/components/organisms/Sidebar'
 import SidebarHeader from '../../design/components/organisms/Sidebar/atoms/SidebarHeader'
 import SidebarButtonList from '../../design/components/organisms/Sidebar/molecules/SidebarButtonList'
-import NotifyIcon from '../../design/components/atoms/NotifyIcon'
 import { getTeamLinkHref } from './Link/TeamLink'
 import SidebarButton from '../../design/components/organisms/Sidebar/atoms/SidebarButton'
 import CloudGlobalSearch from './CloudGlobalSearch'
@@ -451,7 +450,7 @@ const Application = ({
           {isTimeEligibleForDiscount(team) && subscription == null ? (
             <SidebarButton
               variant='subtle'
-              icon={<NotifyIcon text='!' size={16} path={mdiGiftOutline} />}
+              icon={mdiGiftOutline}
               id='sidebar__button__promo'
               label={translate(lngKeys.SidebarNewUserDiscount)}
               labelClick={() => {
