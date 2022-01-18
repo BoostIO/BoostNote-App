@@ -159,7 +159,7 @@ const RevisionModalNavigator = React.forwardRef<
               </div>
             )}
             <NavigationItem
-              label={'Cloud Revision'}
+              label={'Local Snapshots'}
               folded={foldedLocalSnapshots}
               folding={{
                 fold: () => setLocalSnapshots(true),
