@@ -384,14 +384,14 @@ const Container = styled.div`
 
   .fc .fc-daygrid-day:hover::before {
     content: '+';
-    font-size: 18px;
+    font-size: 15px;
     border-radius: ${({ theme }) => theme.borders.radius}px;
     position: absolute;
     top: 4px;
     left: 4px;
     color: ${({ theme }) => theme.colors.text.primary};
     background-color: ${({ theme }) => theme.colors.background.tertiary};
-    padding: 1px 7px;
+    padding: 0px 5px;
     display: flex;
     align-items: center;
   }
