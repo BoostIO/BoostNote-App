@@ -1,4 +1,4 @@
-import { mdiLinkVariant, mdiPen, mdiTrashCanOutline } from '@mdi/js'
+import {mdiPencil, mdiTrashCanOutline } from '@mdi/js'
 import React from 'react'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
@@ -6,8 +6,6 @@ import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
-import { useRouter } from '../../../lib/router'
-import { getDocLinkHref } from '../../Link/DocLink'
 
 interface CalendarEventItemContextMenuProps {
   doc: SerializedDocWithSupplemental
@@ -15,10 +13,8 @@ interface CalendarEventItemContextMenuProps {
 }
 
 const CalendarEventItemContextMenu = ({
-  doc,
-  team,
+  doc
 }: CalendarEventItemContextMenuProps) => {
-  const { push } = useRouter()
   const { deleteDocApi, sendingMap } = useCloudApi()
   const { openRenameDocForm } = useCloudResourceModals()
   return (
@@ -27,20 +23,8 @@ const CalendarEventItemContextMenu = ({
         row={{
           type: 'button',
           props: {
-            label: 'Open',
-            iconPath: mdiLinkVariant,
-            id: 'event__item__open',
-            disabled: sendingMap.get(doc.id) != null,
-            onClick: () => push(getDocLinkHref(doc, team, 'index')),
-          },
-        }}
-      />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            label: 'Edit title',
-            iconPath: mdiPen,
+            label: 'Rename',
+            iconPath: mdiPencil,
             id: 'event__item__edit',
             disabled: sendingMap.get(doc.id) != null,
             spinning: sendingMap.get(doc.id) === 'update',
