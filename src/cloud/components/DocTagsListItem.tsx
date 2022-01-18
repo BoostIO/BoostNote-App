@@ -93,13 +93,13 @@ const Container = styled.div`
   flex-wrap: wrap;
   padding: 0.25em 0.5em;
   position: relative;
-  margin: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
+  margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
-  border-radius: 3px;
+  border-radius: 4px;
   vertical-align: middle;
-  min-height: 22px;
+  height: 22px;
   flex: 0 1 auto;
-  width: fit-content;
+  width: max-content;
   align-items: center;
 
   .doc__tags__list__item__remove {
@@ -116,7 +116,7 @@ const Container = styled.div`
 
   .doc__tags__list__item__link {
     display: inline-block;
-    max-width: 200px;
+    max-width: 150px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
