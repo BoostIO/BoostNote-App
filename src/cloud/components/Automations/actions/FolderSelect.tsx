@@ -17,10 +17,7 @@ const FolderSelect = ({ value, onChange }: FolderSelectProps) => {
 
   const label = useMemo(() => {
     const folder = foldersMap.get(value)
-    console.log(folder)
-    return folder != null
-      ? `${folder.pathname}/${folder.name}`
-      : 'Select Folder'
+    return folder != null ? `${folder.pathname}` : 'Select Folder'
   }, [value, foldersMap])
 
   const onChangeRef = useRef(onChange)
