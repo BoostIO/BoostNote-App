@@ -914,7 +914,6 @@ const Editor = ({
   const handleYTextChange = useCallback(
     (_event: YEvent, ytext: YText) => {
       takeSnapshot(doc.id, ytext.toString())
-      console.log('snapshot taken')
     },
     [takeSnapshot, doc.id]
   )
