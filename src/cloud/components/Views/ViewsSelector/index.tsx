@@ -132,7 +132,7 @@ const Container = styled.div`
   flex-wrap: wrap;
   padding-top: ${({ theme }) => theme.sizes.spaces.sm}px;
   padding-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
-  padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+  padding-left: 40px;
 
   .views__item {
     align-items: center;
@@ -158,10 +158,6 @@ const Container = styled.div`
         pointer-events: initial;
       }
     }
-  }
-
-  .views__item + .views__item {
-    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 `
 
