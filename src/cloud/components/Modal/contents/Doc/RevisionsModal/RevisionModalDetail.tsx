@@ -101,16 +101,9 @@ const RevisionModalDetail = ({
           <h3>
             Updated at {format(new Date(revisionCreatedAt), 'HH:mm, dd MMMM u')}
           </h3>
-          {revisionCreators != null && (
+          {revisionCreators != null && revisionCreators.length > 0 && (
             <span>
-              {revisionCreators.length === 0 ? (
-                <i>unknown</i>
-              ) : (
-                <>
-                  by{' '}
-                  {revisionCreators.map((user) => user.displayName).join(',')}
-                </>
-              )}
+              by {revisionCreators.map((user) => user.displayName).join(',')}
             </span>
           )}
         </Flexbox>
