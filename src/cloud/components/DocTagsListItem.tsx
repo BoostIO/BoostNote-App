@@ -91,7 +91,7 @@ const DocTagsListItem = ({
 const Container = styled.div`
   display: inline-flex;
   flex-wrap: wrap;
-  padding: 0.25em 0.5em;
+  padding: 0 0.5em;
   position: relative;
   margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
