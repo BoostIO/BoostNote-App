@@ -553,13 +553,12 @@ const Editor = ({
   )
 
   const onRestoreRevisionCallback = useCallback(
-    (rev: SerializedRevision) => {
+    (revisionContent: string) => {
       if (realtime == null) {
         return
       }
-      const realtimeTitle = realtime.doc.getText('title')
-      realtimeTitle.delete(0, realtimeTitle.toString().length)
-      setEditorRefContent(rev.content)
+
+      setEditorRefContent(revisionContent)
     },
     [realtime, setEditorRefContent]
   )

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { SerializedSubscription } from '../../../../../interfaces/db/subscription'
 import { SerializedRevision } from '../../../../../interfaces/db/revision'
 import { SerializedUserTeamPermissions } from '../../../../../interfaces/db/userTeamPermissions'
@@ -25,18 +25,22 @@ import {
 } from '../../../../../lib/subscription'
 import { useSettings } from '../../../../../lib/stores/settings'
 import { useModal } from '../../../../../../design/lib/stores/modal'
+import { LocalSnapshot } from '../../../../../lib/stores/localSnapshots'
 
 interface RevisionModalNavigatorProps {
   revisions: SerializedRevision[]
-  revisionIndex?: number
+  revisionIndex?: { type: 'cloud'; id: number } | { type: 'local'; id: string }
   fetching: boolean
   currentUserPermissions?: SerializedUserTeamPermissions
   menuRef: React.RefObject<HTMLDivElement>
-  setRevisionIndex: (index: number) => void
+  setRevisionIndex: (
+    index: { type: 'cloud'; id: number } | { type: 'local'; id: string }
+  ) => void
   subscription?: SerializedSubscription
   currentPage: number
   totalPages: number
   fetchRevisions: (page: number) => void
+  localSnapshots: LocalSnapshot[]
 }
 
 const RevisionModalNavigator = React.forwardRef<
@@ -55,6 +59,7 @@ const RevisionModalNavigator = React.forwardRef<
       revisionIndex,
       fetchRevisions,
       subscription,
+      localSnapshots,
     },
     _ref
   ) => {
@@ -71,6 +76,9 @@ const RevisionModalNavigator = React.forwardRef<
     }, [menuRef])
     useGlobalKeyDownHandler(keydownHandler)
     useUpDownNavigationListener(menuRef)
+
+    const [foldedCloudRevisions, setFoldedCloudRevisions] = useState(false)
+    const [foldedLocalSnapshots, setLocalSnapshots] = useState(true)
 
     return (
       <Container className='revision__navigator' ref={menuRef}>
@@ -91,41 +99,107 @@ const RevisionModalNavigator = React.forwardRef<
         </header>
 
         <Scroller className='revisions__scroller'>
-          {revisions.map((rev) => (
+          <Flexbox direction='column' style={{ flex: 1 }}>
             <NavigationItem
-              key={rev.id}
-              id={`rev-${rev.id}`}
-              active={revisionIndex === rev.id}
-              labelClick={() => setRevisionIndex(rev.id)}
-              label={format(new Date(rev.created), 'HH:mm, dd MMMM u')}
-              borderRadius={true}
-              icon={{
-                type: 'node',
-                icon: (
-                  <Flexbox alignItems='center'>
-                    {rev.creators.map((user) => (
-                      <UserIcon
-                        user={user}
-                        key={`${rev.id}-${user.id}`}
-                        className='user__icon'
-                      />
-                    ))}
-                  </Flexbox>
-                ),
+              label={'Cloud Revision'}
+              folded={foldedCloudRevisions}
+              folding={{
+                fold: () => setFoldedCloudRevisions(true),
+                unfold: () => setFoldedCloudRevisions(false),
+                toggle: () =>
+                  setFoldedCloudRevisions((previousValue) => !previousValue),
               }}
+              labelClick={() =>
+                setFoldedCloudRevisions((previousValue) => !previousValue)
+              }
             />
-          ))}
+            {!foldedCloudRevisions && (
+              <div style={{ flex: 1 }}>
+                {revisions.map((rev) => (
+                  <NavigationItem
+                    depth={2}
+                    key={rev.id}
+                    id={`rev-${rev.id}`}
+                    active={
+                      revisionIndex != null &&
+                      revisionIndex.type === 'cloud' &&
+                      revisionIndex.id === rev.id
+                    }
+                    labelClick={() =>
+                      setRevisionIndex({ type: 'cloud', id: rev.id })
+                    }
+                    label={format(new Date(rev.created), 'HH:mm, dd MMMM u')}
+                    borderRadius={true}
+                    icon={{
+                      type: 'node',
+                      icon: (
+                        <Flexbox alignItems='center'>
+                          {rev.creators.map((user) => (
+                            <UserIcon
+                              user={user}
+                              key={`${rev.id}-${user.id}`}
+                              className='user__icon'
+                            />
+                          ))}
+                        </Flexbox>
+                      ),
+                    }}
+                  />
+                ))}
+                {currentPage < totalPages && (
+                  <Button
+                    variant='secondary'
+                    onClick={() => fetchRevisions(currentPage + 1)}
+                    disabled={fetching}
+                    id='revision__navigator__load'
+                  >
+                    Load more
+                  </Button>
+                )}
+              </div>
+            )}
+            <NavigationItem
+              label={'Cloud Revision'}
+              folded={foldedLocalSnapshots}
+              folding={{
+                fold: () => setLocalSnapshots(true),
+                unfold: () => setLocalSnapshots(false),
+                toggle: () =>
+                  setLocalSnapshots((previousValue) => !previousValue),
+              }}
+              labelClick={() =>
+                setLocalSnapshots((previousValue) => !previousValue)
+              }
+            />
+            {!foldedLocalSnapshots && (
+              <div style={{ flex: 1 }}>
+                {localSnapshots.map((localSnapshot) => (
+                  <NavigationItem
+                    depth={2}
+                    key={localSnapshot.id}
+                    id={`localsnapshot-${localSnapshot.id}`}
+                    active={
+                      revisionIndex != null &&
+                      revisionIndex.type === 'local' &&
+                      revisionIndex.id === localSnapshot.id
+                    }
+                    labelClick={() =>
+                      setRevisionIndex({
+                        type: 'local',
+                        id: localSnapshot.id,
+                      })
+                    }
+                    label={format(
+                      new Date(localSnapshot.createdAt),
+                      'HH:mm, dd MMMM u'
+                    )}
+                    borderRadius={true}
+                  />
+                ))}
+              </div>
+            )}
+          </Flexbox>
         </Scroller>
-        {currentPage < totalPages && (
-          <Button
-            variant='secondary'
-            onClick={() => fetchRevisions(currentPage + 1)}
-            disabled={fetching}
-            id='revision__navigator__load'
-          >
-            Load more
-          </Button>
-        )}
         {(subscription == null || subscription.plan !== 'pro') && (
           <footer>
             <ColoredBlock variant='secondary'>

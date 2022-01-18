@@ -45,7 +45,6 @@ import MetadataContainerRow from '../../../design/components/organisms/MetadataC
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import RevisionsModal from '../Modal/contents/Doc/RevisionsModal'
-import { SerializedRevision } from '../../interfaces/db/revision'
 import MetadataContainerBreak from '../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import { usePage } from '../../lib/stores/pageStore'
 import Button from '../../../design/components/atoms/Button'
@@ -64,7 +63,7 @@ export interface DocContextMenuActionsProps {
   doc: SerializedDocWithSupplemental
   currentUserIsCoreMember: boolean
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
-  restoreRevision?: (revision: SerializedRevision) => void
+  restoreRevision?: (revisionContent: string) => void
   isCanvas?: boolean
 }
 

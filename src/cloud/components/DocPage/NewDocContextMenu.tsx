@@ -16,7 +16,6 @@ import {
   SerializedDoc,
   SerializedDocWithSupplemental,
 } from '../../interfaces/db/doc'
-import { SerializedRevision } from '../../interfaces/db/revision'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedUser } from '../../interfaces/db/user'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
@@ -36,7 +35,7 @@ interface DocContextMenuProps {
   permissions: SerializedUserTeamPermissions[]
   currentUserIsCoreMember: boolean
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
-  restoreRevision?: (revision: SerializedRevision) => void
+  restoreRevision?: (revisionContent: string) => void
   isCanvas?: boolean
 }
 

@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { SerializedRevision } from '../../../../../interfaces/db/revision'
 import { format } from 'date-fns'
 import Button from '../../../../../../design/components/atoms/Button'
 import styled from '../../../../../../design/lib/styled'
@@ -9,20 +8,23 @@ import CodeMirrorEditor from '../../../../../lib/editor/components/CodeMirrorEdi
 import Scroller from '../../../../../../design/components/atoms/Scroller'
 import cc from 'classcat'
 import CodeMirror from 'codemirror'
+import { SerializedUser } from '../../../../../interfaces/db/user'
 
 interface RevisionModalDetailProps {
-  revision: SerializedRevision
+  revisionCreatedAt: Date | string
+  revisionCreators?: SerializedUser[]
+  revisionContent: string
   revisionDiff: string
-  onRestoreClick: (rev: SerializedRevision) => void
-  restoreRevision?: (rev: SerializedRevision) => void
+  onRestoreClick: (revisionContent: string) => void
   scrollbarStyle?: 'native' | 'transparent'
 }
 
 const RevisionModalDetail = ({
-  revision,
+  revisionCreatedAt,
+  revisionCreators,
+  revisionContent,
   revisionDiff,
   onRestoreClick,
-  restoreRevision,
   scrollbarStyle = 'native',
 }: RevisionModalDetailProps) => {
   const { settings } = useSettings()
@@ -97,23 +99,26 @@ const RevisionModalDetail = ({
           alignItems='baseline'
         >
           <h3>
-            Updated at {format(new Date(revision.created), 'HH:mm, dd MMMM u')}
+            Updated at {format(new Date(revisionCreatedAt), 'HH:mm, dd MMMM u')}
           </h3>
-          <span>
-            {revision.creators.length === 0 ? (
-              <i>unknown</i>
-            ) : (
-              <>
-                by {revision.creators.map((user) => user.displayName).join(',')}
-              </>
-            )}
-          </span>
+          {revisionCreators != null && (
+            <span>
+              {revisionCreators.length === 0 ? (
+                <i>unknown</i>
+              ) : (
+                <>
+                  by{' '}
+                  {revisionCreators.map((user) => user.displayName).join(',')}
+                </>
+              )}
+            </span>
+          )}
         </Flexbox>
-        {restoreRevision != null && (
+        {onRestoreClick != null && (
           <Button
             variant='primary'
             className='restore__btn'
-            onClick={() => onRestoreClick(revision)}
+            onClick={() => onRestoreClick(revisionContent)}
           >
             Restore
           </Button>
