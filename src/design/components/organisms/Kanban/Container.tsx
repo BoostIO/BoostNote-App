@@ -42,9 +42,9 @@ const Container = React.forwardRef<
 )
 
 const StyledContainer = styled.div`
-  width: 250px;
+  width: 270px;
   background-color: ${({ theme }) => theme.colors.background.primary};
-  padding: ${({ theme }) => theme.sizes.spaces.sm}px;
+  padding: ${({ theme }) => theme.sizes.spaces.xsm}px;
 
   & .kanban__list__header {
     display: flex;

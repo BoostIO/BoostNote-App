@@ -331,14 +331,15 @@ const Container = styled.div`
   .kanban__list__footer,
   .kanban__list__footer > button,
   .kanban__list__footer > input {
-    height: 32px;
-    min-height: 32px;
+    height: 40px;
+    min-height: 40px;
   }
 
   .kanban__item,
   .kanban__item .navigation__item {
     height: auto !important;
-    min-height: 32px !important;
+    min-height: 40px !important;
+    border-radius: 3px;
   }
 
   .kanban__item .navigation__item {
