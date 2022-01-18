@@ -7,7 +7,6 @@ import Button from '../../../../design/components/atoms/Button'
 import {
   mdiArrowRight,
   mdiCalendarMonthOutline,
-  mdiCalendarRemoveOutline,
   mdiClose,
 } from '@mdi/js'
 import cc from 'classcat'
@@ -70,7 +69,7 @@ const DatePropPicker = ({
         empty={date == null && emptyLabel == null}
         isReadOnly={isReadOnly}
         disabled={sending || disabled}
-        iconPath={!isDue ? mdiCalendarMonthOutline : mdiCalendarRemoveOutline}
+        iconPath={mdiCalendarMonthOutline}
         onClick={(e) =>
           openContextModal(
             e,
