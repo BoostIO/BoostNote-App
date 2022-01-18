@@ -277,10 +277,9 @@ const KanbanView = ({
           </Button>
         </Flexbox>
       </Flexbox>
-      <div className='view--kanban__wrapper'>
+      <div>
         <Kanban
           disabled={!currentUserIsCoreMember}
-          className='view--kanban--board'
           lists={lists}
           onItemMove={onItemMove}
           onListMove={onListMove}
@@ -310,10 +309,6 @@ const Container = styled.div`
   display: block;
   width: 100%;
   position: relative;
-
-  .view--kanban__wrapper {
-    padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
-  }
 
   .view--kanban--board__add-btn {
     flex-wrap: nowrap;

@@ -165,6 +165,7 @@ const KanbanContainer = styled.div`
   min-height: 250px;
   background-color: ${({ theme }) => theme.colors.background.primary};
   padding-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
+  padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
 `
 
 export default Kanban
