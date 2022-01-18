@@ -1,5 +1,5 @@
 import { mdiPlus } from '@mdi/js'
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import Button from '../../../design/components/atoms/Button'
 import Form from '../../../design/components/molecules/Form'
 import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
@@ -39,10 +39,6 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
       SUPPORTED_ACTION_OPTIONS[0]
     )
   }, [pipe.action])
-
-  useEffect(() => {
-    console.log(pipe)
-  }, [pipe])
 
   return (
     <Container>
