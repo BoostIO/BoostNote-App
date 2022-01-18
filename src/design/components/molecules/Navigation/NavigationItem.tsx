@@ -267,15 +267,6 @@ const NavigationItemContainer = styled.div<{ depth: number }>`
     &.navigation__item--focused {
       background-color: ${({ theme }) => theme.colors.background.quaternary};
     }
-
-    &:hover .navigation__item__label,
-    &:focus .navigation__item__label,
-    &.navigation__item--focused .navigation__item__label {
-      color: ${({ theme }) => theme.colors.text.primary};
-      svg {
-        color: inherit;
-      }
-    }
   }
 
   &.navigation__item--category {
