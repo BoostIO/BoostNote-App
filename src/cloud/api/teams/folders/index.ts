@@ -37,7 +37,7 @@ export async function createFolder(
 }
 
 export interface UpdateFolderRequestBody {
-  emoji?: string
+  emoji?: string | null
   description?: string
   folderName?: string
   parentFolderId?: string

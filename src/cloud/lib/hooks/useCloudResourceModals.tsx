@@ -82,7 +82,7 @@ export function useCloudResourceModals() {
               workspaceId: folder.workspaceId,
               parentFolderId: folder.parentFolderId,
               folderName: inputValue,
-              emoji,
+              emoji: typeof emoji === 'string' ? emoji : null,
             })
             closeLastModal()
           }}
