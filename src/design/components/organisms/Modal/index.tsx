@@ -366,7 +366,7 @@ const Container = styled.div`
     flex-direction: column;
     align-items: stretch;
     padding: ${({ theme }) => theme.sizes.spaces.df}px
-      ${({ theme }) => theme.sizes.spaces.md}px;
+      ${({ theme }) => theme.sizes.spaces.df}px;
   }
 
   .modal__title {
