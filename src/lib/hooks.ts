@@ -33,3 +33,33 @@ export function usePrevious<S>(value: S) {
   }, [value])
   return ref.current
 }
+
+export function useWillUnmountRef() {
+  const willUnmountRef = useRef(false)
+
+  useEffect(() => {
+    return () => {
+      willUnmountRef.current = true
+    }
+  }, [])
+
+  return {
+    willUnmountRef,
+  }
+}
+
+export function useEffectOnUnmount(
+  callback: (() => () => void) | (() => void)
+) {
+  const { willUnmountRef } = useWillUnmountRef()
+
+  useEffect(() => {
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      if (!willUnmountRef.current) {
+        return
+      }
+      callback()
+    }
+  }, [callback, willUnmountRef])
+}
