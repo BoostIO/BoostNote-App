@@ -79,7 +79,7 @@ const TableView = ({
   const { translate } = useI18n()
   const { createDoc } = useCloudApi()
   const { openContextModal, closeLastModal } = useModal()
-  const { openDocPreview } = useCloudResourceModals()
+  const { goToDocPreview } = useCloudResourceModals()
   const { permissions = [] } = usePage()
 
   const {
@@ -270,7 +270,7 @@ const TableView = ({
                   children: (
                     <NavigationItem
                       labelHref={docLink}
-                      labelClick={() => openDocPreview(doc, team)}
+                      labelClick={() => goToDocPreview(doc)}
                       label={getDocTitle(doc, 'Untitled')}
                       icon={
                         doc.emoji != null

@@ -19,6 +19,7 @@ import { PropData } from '../../interfaces/db/props'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedWorkspace } from '../../interfaces/db/workspace'
 import { lngKeys } from '../i18n/types'
+import { useRouter } from '../router'
 import { useNav } from '../stores/nav'
 import { usePage } from '../stores/pageStore'
 import { resourceDeleteEventEmitter } from '../utils/events'
@@ -31,6 +32,7 @@ import {
 } from '../utils/patterns'
 import { useCloudApi } from './useCloudApi'
 import { useI18n } from './useI18n'
+import { stringify } from 'querystring'
 
 export function useCloudResourceModals() {
   const { openModal, closeLastModal } = useModal()
@@ -48,6 +50,7 @@ export function useCloudResourceModals() {
   const { translate } = useI18n()
   const { team } = usePage()
   const { foldersMap, workspacesMap } = useNav()
+  const { pathname, push, query } = useRouter()
 
   const openWorkspaceCreateForm = useCallback(() => {
     openModal(<WorkspaceModalForm />, {
@@ -414,12 +417,29 @@ export function useCloudResourceModals() {
 
   const openDocPreview = useCallback(
     (doc: SerializedDocWithSupplemental, team: SerializedTeam) => {
+      const cleanedupQuery = Object.assign({}, query)
+      delete cleanedupQuery.preview
+      const fallbackQuery = stringify(cleanedupQuery)
+      const fallbackUrl = `${pathname}${
+        fallbackQuery.trim() !== '' ? `?${fallbackQuery}` : ''
+      }`
       return openModal(<DocPreviewModal doc={doc} team={team} />, {
         showCloseIcon: false,
         removePadding: true,
+        navigation: {
+          url: `${pathname}?preview=${doc.id}`,
+          fallbackUrl,
+        },
       })
     },
-    [openModal]
+    [openModal, pathname, query]
+  )
+
+  const goToDocPreview = useCallback(
+    (doc: SerializedDocWithSupplemental) => {
+      return push(`${pathname}?preview=${doc.id}`)
+    },
+    [pathname, push]
   )
 
   return {
@@ -428,6 +448,7 @@ export function useCloudResourceModals() {
     openNewDocForm,
     openNewFolderForm,
     openDocPreview,
+    goToDocPreview,
     openRenameFolderForm,
     openRenameDocForm,
     deleteFolder,

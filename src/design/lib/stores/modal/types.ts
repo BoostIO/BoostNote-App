@@ -16,6 +16,10 @@ export interface ModalElement {
   hideBackground?: boolean
   removePadding?: boolean
   onBlur?: boolean
+  navigation?: {
+    url: string
+    fallbackUrl?: string
+  }
   onClose?: () => void
 }
 
@@ -32,6 +36,10 @@ export type ModalOpeningOptions = {
   width?: 'large' | 'default' | 'small' | 'full' | number
   hideBackground?: boolean
   title?: string
+  navigation?: {
+    url: string
+    fallbackUrl?: string
+  }
   onClose?: () => void
 }
 

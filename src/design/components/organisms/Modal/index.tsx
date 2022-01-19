@@ -1,4 +1,10 @@
-import React, { CSSProperties, useCallback, useMemo, useRef } from 'react'
+import React, {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { mdiClose } from '@mdi/js'
 import cc from 'classcat'
 import { ModalElement, useModal } from '../../../lib/stores/modal'
@@ -10,6 +16,7 @@ import Scroller from '../../atoms/Scroller'
 import { useWindow } from '../../../lib/stores/window'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import { useEffectOnce } from 'react-use'
+import { useRouter } from '../../../../cloud/lib/router'
 
 const Modal = () => {
   const { modals, closeLastModal } = useModal()
@@ -208,6 +215,8 @@ const ModalItem = ({
   modal: ModalElement
 }) => {
   const contentRef = useRef<HTMLDivElement>(null)
+  const { push, goBack } = useRouter()
+  const willUnmountRef = useRef(false)
 
   const onScrollClickHandler: React.MouseEventHandler = useCallback(
     (event) => {
@@ -222,6 +231,30 @@ const ModalItem = ({
     },
     [closeModal]
   )
+
+  useEffectOnce(() => {
+    if (modal.navigation != null) {
+      push(modal.navigation.url)
+    }
+  })
+
+  useEffect(() => {
+    return () => {
+      willUnmountRef.current = true
+    }
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (willUnmountRef.current && modal.navigation != null) {
+        if (modal.navigation.fallbackUrl != null) {
+          push(modal.navigation.fallbackUrl)
+        } else if (goBack != null) {
+          goBack()
+        }
+      }
+    }
+  }, [push, goBack, modal.navigation])
 
   return (
     <Scroller

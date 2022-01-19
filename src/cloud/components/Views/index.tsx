@@ -19,6 +19,8 @@ import KanbanView from './Kanban'
 import ListView from './List'
 import { sortListViewProps } from '../../lib/views/list'
 import { useRouter } from '../../lib/router'
+import { useNav } from '../../lib/stores/nav'
+import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 
 type ViewsManagerProps = {
   views: SerializedView[]
@@ -67,8 +69,9 @@ export const ViewsManager = ({
       reset: resetDocsInSelection,
     },
   ] = useSet<string>(new Set())
-
   const { query, push, pathname } = useRouter()
+  const { docsMap } = useNav()
+  const { openDocPreview } = useCloudResourceModals()
 
   const currentDocumentsRef = useRef(
     new Map<string, SerializedDocWithSupplemental>(
@@ -80,6 +83,18 @@ export const ViewsManager = ({
       (folders || []).map((folder) => [folder.id, folder])
     )
   )
+
+  const openDocInPreview = useCallback(
+    (docId: string) => {
+      const doc = docsMap.get(docId)
+      if (doc == null) {
+        return
+      }
+      return openDocPreview(doc, team)
+    },
+    [openDocPreview, docsMap, team]
+  )
+  const openDocInPreviewRef = useRef(openDocInPreview)
 
   useEffect(() => {
     if (!query || typeof query.view !== 'string') {
@@ -94,6 +109,13 @@ export const ViewsManager = ({
       setSelectedViewId(viewToLoad.id)
     }
   }, [query, views])
+
+  useEffect(() => {
+    if (typeof query.preview !== 'string') {
+      return
+    }
+    openDocInPreviewRef.current(query.preview)
+  }, [query.preview])
 
   useEffect(() => {
     const newMap = new Map(docs.map((doc) => [doc.id, doc]))
