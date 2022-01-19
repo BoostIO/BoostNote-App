@@ -27,7 +27,7 @@ import { createPatch } from 'diff'
 
 interface MobileDocRevisionsModalProps {
   currentDoc: SerializedDocWithSupplemental
-  restoreRevision?: (revision: SerializedRevision) => void
+  restoreRevision?: (revisionContent: string) => void
 }
 
 const MobileDocRevisionsModal = ({
@@ -50,7 +50,7 @@ const MobileDocRevisionsModal = ({
   const [totalPages, setTotalPages] = useState<number>(1)
 
   const onRestoreClick = useCallback(
-    async (rev: SerializedRevision) => {
+    async (revisionContent: string) => {
       if (restoreRevision == null) {
         return
       }
@@ -71,7 +71,7 @@ const MobileDocRevisionsModal = ({
             variant: 'primary',
             label: 'Restore',
             onClick: async () => {
-              restoreRevision(rev)
+              restoreRevision(revisionContent)
               closeModal()
               return
             },
@@ -155,9 +155,10 @@ const MobileDocRevisionsModal = ({
         return (
           <RevisionModalDetail
             revisionDiff={currentDocumentRevisionDiff}
-            revision={currentRevision}
+            revisionContent={currentRevision.content}
+            revisionCreatedAt={currentRevision.created}
+            revisionCreators={currentRevision.creators}
             onRestoreClick={onRestoreClick}
-            restoreRevision={restoreRevision}
           />
         )
       }
@@ -182,16 +183,17 @@ const MobileDocRevisionsModal = ({
 
       return (
         <RevisionModalDetail
-          revision={currentRevision}
+          revisionContent={currentRevision.content}
+          revisionCreatedAt={currentRevision.created}
+          revisionCreators={currentRevision.creators}
           revisionDiff={revisionDiff}
           onRestoreClick={onRestoreClick}
-          restoreRevision={restoreRevision}
         />
       )
     } catch (err) {
       return null
     }
-  }, [revisionsMap, revisionIndex, onRestoreClick, restoreRevision])
+  }, [revisionsMap, revisionIndex, onRestoreClick])
 
   const rightSideContent = useMemo(() => {
     if (error != null) {
@@ -266,9 +268,13 @@ const MobileDocRevisionsModal = ({
         revisions={orderedRevisions}
         menuRef={menuRef}
         fetching={fetching}
-        revisionIndex={revisionIndex}
+        revisionIndex={
+          revisionIndex == null
+            ? undefined
+            : { type: 'cloud', id: revisionIndex }
+        }
         subscription={subscription}
-        setRevisionIndex={setRevisionIndex}
+        setRevisionIndex={({ id }) => setRevisionIndex(id as number)}
         currentPage={currentPage}
         totalPages={totalPages}
         fetchRevisions={fetchRevisions}

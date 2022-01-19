@@ -40,7 +40,7 @@ interface RevisionModalNavigatorProps {
   currentPage: number
   totalPages: number
   fetchRevisions: (page: number) => void
-  localSnapshots: LocalSnapshot[]
+  localSnapshots?: LocalSnapshot[]
 }
 
 const RevisionModalNavigator = React.forwardRef<
@@ -158,45 +158,49 @@ const RevisionModalNavigator = React.forwardRef<
                 )}
               </div>
             )}
-            <NavigationItem
-              label={'Local Snapshots'}
-              folded={foldedLocalSnapshots}
-              folding={{
-                fold: () => setLocalSnapshots(true),
-                unfold: () => setLocalSnapshots(false),
-                toggle: () =>
-                  setLocalSnapshots((previousValue) => !previousValue),
-              }}
-              labelClick={() =>
-                setLocalSnapshots((previousValue) => !previousValue)
-              }
-            />
-            {!foldedLocalSnapshots && (
-              <div style={{ flex: 1 }}>
-                {localSnapshots.map((localSnapshot) => (
-                  <NavigationItem
-                    depth={2}
-                    key={localSnapshot.id}
-                    id={`localsnapshot-${localSnapshot.id}`}
-                    active={
-                      revisionIndex != null &&
-                      revisionIndex.type === 'local' &&
-                      revisionIndex.id === localSnapshot.id
-                    }
-                    labelClick={() =>
-                      setRevisionIndex({
-                        type: 'local',
-                        id: localSnapshot.id,
-                      })
-                    }
-                    label={format(
-                      new Date(localSnapshot.createdAt),
-                      'HH:mm, dd MMMM u'
-                    )}
-                    borderRadius={true}
-                  />
-                ))}
-              </div>
+            {localSnapshots != null && (
+              <>
+                <NavigationItem
+                  label={'Local Snapshots'}
+                  folded={foldedLocalSnapshots}
+                  folding={{
+                    fold: () => setLocalSnapshots(true),
+                    unfold: () => setLocalSnapshots(false),
+                    toggle: () =>
+                      setLocalSnapshots((previousValue) => !previousValue),
+                  }}
+                  labelClick={() =>
+                    setLocalSnapshots((previousValue) => !previousValue)
+                  }
+                />
+                {!foldedLocalSnapshots && (
+                  <div style={{ flex: 1 }}>
+                    {localSnapshots.map((localSnapshot) => (
+                      <NavigationItem
+                        depth={2}
+                        key={localSnapshot.id}
+                        id={`localsnapshot-${localSnapshot.id}`}
+                        active={
+                          revisionIndex != null &&
+                          revisionIndex.type === 'local' &&
+                          revisionIndex.id === localSnapshot.id
+                        }
+                        labelClick={() =>
+                          setRevisionIndex({
+                            type: 'local',
+                            id: localSnapshot.id,
+                          })
+                        }
+                        label={format(
+                          new Date(localSnapshot.createdAt),
+                          'HH:mm, dd MMMM u'
+                        )}
+                        borderRadius={true}
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </Flexbox>
         </Scroller>
