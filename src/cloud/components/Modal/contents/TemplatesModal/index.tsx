@@ -361,8 +361,6 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
                     <Switch
                       className='switch'
                       checked={!inPreview}
-                      width={50}
-                      height={20}
                       onChange={toggleMode}
                     />{' '}
                     <LoadingButton
@@ -487,6 +485,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
 
 const TemplatesModalContainer = styled.div`
   height: 80vh;
+  margin: -12px 0;
 
   > .two__pane {
     height: 100%;
@@ -501,6 +500,7 @@ const TemplatesModalContainer = styled.div`
     display: block;
     text-align: center;
     flex: 0 0 auto;
+    padding: ${({ theme }) => theme.sizes.spaces.md}px 0;
 
     h2 {
       margin: 0;
@@ -510,7 +510,6 @@ const TemplatesModalContainer = styled.div`
     .templates__navigator__description {
       font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
       color: ${({ theme }) => theme.colors.text.subtle};
-      margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
     }
   }
 
