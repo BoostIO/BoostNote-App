@@ -734,7 +734,7 @@ const Container = styled.div`
 
   .item__due-date__select,
   .item__status__select,
-  .item__assignee__select {
+  .assignee__select {
     margin-left: ${({ theme }) => theme.sizes.spaces.sm}px !important;
     width: fit-content !important;
     display: inline-flex;
@@ -747,6 +747,7 @@ const Container = styled.div`
 
   button.cm__tool {
     white-space: nowrap;
+    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px !important;
   }
 
   .item__status__select {
