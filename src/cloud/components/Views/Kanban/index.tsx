@@ -69,7 +69,7 @@ const KanbanView = ({
   const { openContextModal, closeLastModal } = useModal()
   const { createDoc } = useCloudApi()
   const { translate } = useI18n()
-  const { openDocPreview } = useCloudResourceModals()
+  const { goToDocPreview } = useCloudResourceModals()
 
   const addListRef = useRef(addList)
   useEffect(() => {
@@ -151,13 +151,13 @@ const KanbanView = ({
     (doc: SerializedDocWithSupplemental) => {
       return (
         <Item
-          onClick={() => openDocPreview(doc, team)}
+          onClick={() => goToDocPreview(doc)}
           doc={doc}
           displayedProps={view.data.props || {}}
         />
       )
     },
-    [team, openDocPreview, view.data.props]
+    [goToDocPreview, view.data.props]
   )
 
   const renderListFooter = useCallback(

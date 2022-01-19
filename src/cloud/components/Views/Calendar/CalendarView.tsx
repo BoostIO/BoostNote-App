@@ -50,7 +50,7 @@ const CalendarView = ({
 }: CalendarViewProps) => {
   const { openNewDocForm } = useCloudResourceModals()
   const { openContextModal, closeLastModal } = useModal()
-  const { openDocPreview } = useCloudResourceModals()
+  const { goToDocPreview } = useCloudResourceModals()
 
   const { watchedProp, actionsRef } = useCalendarView({
     view,
@@ -96,7 +96,7 @@ const CalendarView = ({
         extendedProps: {
           doc,
           displayedProps,
-          onClick: () => openDocPreview(doc, team),
+          onClick: () => goToDocPreview(doc),
           onContextClick: (event: React.MouseEvent) =>
             openContextModal(
               event,
@@ -115,7 +115,7 @@ const CalendarView = ({
     team,
     view.data.props,
     watchedProp,
-    openDocPreview,
+    goToDocPreview,
     openContextModal,
   ])
 
