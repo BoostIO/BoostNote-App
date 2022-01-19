@@ -10,6 +10,7 @@ export interface ViewState {
 
 export interface SerializableViewProps<T> {
   id: number
+  shortId: string
   name: string
   folderId?: string
   smartViewId?: string

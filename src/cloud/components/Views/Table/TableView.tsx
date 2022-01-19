@@ -51,7 +51,7 @@ type TableViewProps = {
   currentWorkspaceId?: string
   currentFolderId?: string
   viewsSelector: React.ReactNode
-  selectViewId: (viewId: number) => void
+  selectViewShortId: (viewShortId: string) => void
   addDocInSelection: (key: string) => void
   hasDocInSelection: (key: string) => boolean
   toggleDocInSelection: (key: string) => void
@@ -66,7 +66,7 @@ const TableView = ({
   currentFolderId,
   team,
   viewsSelector,
-  selectViewId,
+  selectViewShortId,
   addDocInSelection,
   hasDocInSelection,
   toggleDocInSelection,
@@ -91,7 +91,7 @@ const TableView = ({
   const { actionsRef } = useTableView({
     view,
     state,
-    selectNewView: selectViewId,
+    selectNewView: selectViewShortId,
   })
 
   const filteredDocs = useMemo(() => {

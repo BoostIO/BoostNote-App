@@ -20,7 +20,7 @@ import { isDefaultView } from '../../views'
 interface TableViewStoreProps {
   state: ViewTableData
   view: SerializedView<ViewTableData>
-  selectNewView: (id: number) => void
+  selectNewView: (shortId: string) => void
 }
 
 export type TableViewActionsRef = React.MutableRefObject<{
@@ -64,7 +64,7 @@ export function useTableView({
           )
         )
         if (!res.err) {
-          selectNewView((res.data as CreateViewResponseBody).data.id)
+          selectNewView((res.data as CreateViewResponseBody).data.shortId)
         }
         return res
       }

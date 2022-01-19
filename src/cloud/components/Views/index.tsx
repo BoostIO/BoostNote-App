@@ -43,8 +43,12 @@ export const ViewsManager = ({
   currentWorkspaceId,
   workspacesMap,
 }: ViewsManagerProps) => {
-  const [selectedViewId, setSelectedViewId] = useState<number | undefined>(() =>
-    views.length > 0 ? sortByLexorankProperty(views, 'order')[0].id : undefined
+  const [selectedViewShortId, setSelectedViewShortId] = useState<
+    string | undefined
+  >(() =>
+    views.length > 0
+      ? sortByLexorankProperty(views, 'order')[0].shortId
+      : undefined
   )
   const [updating, setUpdating] = useState<string[]>([])
   const [
@@ -88,10 +92,10 @@ export const ViewsManager = ({
     if (Number.isNaN(query.view)) {
       return
     }
-    const viewId = parseInt(query.view)
-    const viewToLoad = views.find((view) => view.id === viewId)
+    const viewShortId = query.view
+    const viewToLoad = views.find((view) => view.shortId === viewShortId)
     if (viewToLoad != null) {
-      setSelectedViewId(viewToLoad.id)
+      setSelectedViewShortId(viewShortId)
     }
   }, [query, views])
 
@@ -116,17 +120,19 @@ export const ViewsManager = ({
   }, [folders, removeFolderInSelection])
 
   const currentView = useMemo(() => {
-    if (selectedViewId == null || views.length === 0) {
+    if (selectedViewShortId == null || views.length === 0) {
       return undefined
     }
 
-    const index = views.findIndex((view) => view.id === selectedViewId)
+    const index = views.findIndex(
+      (view) => view.shortId === selectedViewShortId
+    )
     if (index !== -1) {
       return views[index]
     }
 
     return sortByLexorankProperty(views, 'order')[0]
-  }, [selectedViewId, views])
+  }, [selectedViewShortId, views])
 
   const toolbarColumns = useMemo(() => {
     if (
@@ -143,11 +149,11 @@ export const ViewsManager = ({
     return sortListViewProps(currentView.data.props)
   }, [currentView])
 
-  const selectViewId = useCallback(
-    (id: number) => {
-      push(`${pathname}?view=${id}`)
+  const selectViewShortId = useCallback(
+    (shortId: string) => {
+      push(`${pathname}?view=${shortId}`)
 
-      setSelectedViewId(id)
+      setSelectedViewShortId(shortId)
       resetDocsInSelection()
       resetFoldersInSelection()
     },
@@ -157,13 +163,15 @@ export const ViewsManager = ({
   const viewsSelector = useMemo(() => {
     return (
       <ViewsSelector
-        selectedViewId={currentView != null ? currentView.id : undefined}
-        setSelectedViewId={selectViewId}
+        selectedViewShortId={
+          currentView != null ? currentView.shortId : undefined
+        }
+        setSelectedViewShortId={selectViewShortId}
         parent={parent}
         views={views}
       />
     )
-  }, [parent, views, currentView, selectViewId])
+  }, [parent, views, currentView, selectViewShortId])
 
   return (
     <Container>
@@ -179,7 +187,7 @@ export const ViewsManager = ({
                 view={currentView}
                 docs={docs}
                 currentUserIsCoreMember={currentUserIsCoreMember}
-                selectViewId={setSelectedViewId}
+                selectViewShortId={setSelectedViewShortId}
                 addDocInSelection={addDocinSelection}
                 hasDocInSelection={hasDocInSelection}
                 toggleDocInSelection={toggleDocInSelection}
@@ -201,7 +209,7 @@ export const ViewsManager = ({
                 view={currentView}
                 docs={docs}
                 currentUserIsCoreMember={currentUserIsCoreMember}
-                selectViewId={setSelectedViewId}
+                selectViewShortId={setSelectedViewShortId}
                 addDocInSelection={addDocinSelection}
                 hasDocInSelection={hasDocInSelection}
                 toggleDocInSelection={toggleDocInSelection}
