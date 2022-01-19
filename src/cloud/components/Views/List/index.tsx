@@ -49,7 +49,7 @@ type ListViewProps = {
   currentWorkspaceId?: string
   currentFolderId?: string
   viewsSelector: React.ReactNode
-  selectViewId: (viewId: number) => void
+  selectViewShortId: (viewShortId: string) => void
   addDocInSelection: (key: string) => void
   hasDocInSelection: (key: string) => boolean
   toggleDocInSelection: (key: string) => void
@@ -70,7 +70,7 @@ const ListView = ({
   currentFolderId,
   team,
   viewsSelector,
-  selectViewId,
+  selectViewShortId,
   addDocInSelection,
   hasDocInSelection,
   toggleDocInSelection,
@@ -91,7 +91,7 @@ const ListView = ({
 
   const { actionsRef, props: orderedViewProps } = useListView({
     view,
-    selectNewView: selectViewId,
+    selectNewView: selectViewShortId,
   })
 
   const {

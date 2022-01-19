@@ -9,7 +9,7 @@ import { isDefaultView } from '../../views'
 
 interface ListViewStoreProps {
   view: SerializedView<ViewListData>
-  selectNewView: (id: number) => void
+  selectNewView: (shortId: string) => void
 }
 
 export type ListViewActionsRef = React.MutableRefObject<{
@@ -38,7 +38,7 @@ export function useListView({ view, selectNewView }: ListViewStoreProps) {
           )
         )
         if (!res.err) {
-          selectNewView((res.data as CreateViewResponseBody).data.id)
+          selectNewView((res.data as CreateViewResponseBody).data.shortId)
         }
         return res
       }

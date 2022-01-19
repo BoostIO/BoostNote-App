@@ -32,21 +32,21 @@ import { useViewHandler } from '../../../lib/hooks/views/viewHandler'
 import { getIconPathOfViewType, isDefaultView } from '../../../lib/views'
 
 export interface ViewsSelectorProps {
-  selectedViewId: number | undefined
-  setSelectedViewId: (id: number) => void
+  selectedViewShortId: string | undefined
+  setSelectedViewShortId: (shortId: string) => void
   views: SerializedView[]
   parent: ViewParent
 }
 
 const ViewsSelector = ({
   parent,
-  selectedViewId,
-  setSelectedViewId,
+  selectedViewShortId,
+  setSelectedViewShortId,
 }: ViewsSelectorProps) => {
   const { openContextModal, closeLastModal } = useModal()
   const { actionsRef, sendingMap, orderedViews } = useViewHandler({
     parent,
-    selectNewView: setSelectedViewId,
+    selectNewView: setSelectedViewShortId,
   })
 
   const createNewView = useCallback(
@@ -63,9 +63,9 @@ const ViewsSelector = ({
         trueEventName: `view.${view.type}.open`,
         view: view.id,
       })
-      setSelectedViewId(view.id)
+      setSelectedViewShortId(view.shortId)
     },
-    [setSelectedViewId]
+    [setSelectedViewShortId]
   )
 
   return (
@@ -78,7 +78,7 @@ const ViewsSelector = ({
             iconPath={getIconPathOfViewType(view.type)}
             iconSize={20}
             onClick={() => selectView(view)}
-            active={selectedViewId === view.id}
+            active={selectedViewShortId === view.shortId}
             size='sm'
             className='view__item'
           >
@@ -95,7 +95,7 @@ const ViewsSelector = ({
                 <ViewContextModal
                   view={view}
                   parent={parent}
-                  setSelectedViewId={setSelectedViewId}
+                  setSelectedViewId={setSelectedViewShortId}
                 />,
                 {
                   removePadding: true,
@@ -187,7 +187,7 @@ const ViewContextModal = ({
 }: {
   view: SerializedView
   parent: ViewParent
-  setSelectedViewId: (id: number) => void
+  setSelectedViewId: (shortId: string) => void
 }) => {
   const compositionStateRef = useRef(false)
   const inputRef = useRef<HTMLInputElement>(null)

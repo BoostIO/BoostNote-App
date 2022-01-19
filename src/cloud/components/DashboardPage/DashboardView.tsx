@@ -80,7 +80,7 @@ export const DashboardView = ({
                 view={currentView}
                 docs={docs}
                 currentUserIsCoreMember={currentUserIsCoreMember}
-                selectViewId={() => {}}
+                selectViewShortId={() => {}}
                 addDocInSelection={addDocinSelection}
                 hasDocInSelection={hasDocInSelection}
                 toggleDocInSelection={toggleDocInSelection}
@@ -99,7 +99,7 @@ export const DashboardView = ({
                 view={currentView}
                 docs={docs}
                 currentUserIsCoreMember={currentUserIsCoreMember}
-                selectViewId={() => {}}
+                selectViewShortId={() => {}}
                 addDocInSelection={addDocinSelection}
                 hasDocInSelection={hasDocInSelection}
                 toggleDocInSelection={toggleDocInSelection}

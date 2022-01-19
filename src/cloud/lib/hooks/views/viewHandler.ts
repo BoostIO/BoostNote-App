@@ -22,7 +22,7 @@ import { getDefaultListView } from '../../views/list'
 
 interface ViewHandlerStoreProps {
   parent: ViewParent
-  selectNewView: (id: number) => void
+  selectNewView: (shortId: string) => void
 }
 
 export type ViewHandlerActionsRef = React.MutableRefObject<{
@@ -111,7 +111,7 @@ export function useViewHandler({
           trueEventName: `view.${view.type}.create`,
           view: view.id,
         })
-        selectNewView(view.id)
+        selectNewView(view.shortId)
       }
       return res
     },
@@ -129,8 +129,8 @@ export function useViewHandler({
         const children = filterIter((v) => v.id !== view.id, childrenViews)
         selectNewView(
           children.length !== 0
-            ? children[0].id
-            : getDefaultTableView(parent).id
+            ? children[0].shortId
+            : getDefaultTableView(parent).shortId
         )
       }
       return res
