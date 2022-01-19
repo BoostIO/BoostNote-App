@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import {
-  mdiApplicationCog,
+  mdiCog,
   mdiFileDocumentOutline,
   mdiTextBoxPlus,
   mdiFolderPlusOutline,
@@ -265,7 +265,7 @@ export function useCloudSidebarTree() {
               ? [
                   {
                     type: MenuTypes.Normal,
-                    icon: mdiApplicationCog,
+                    icon: mdiCog,
                     label: translate(lngKeys.GeneralEditVerb),
                     onClick: () => openWorkspaceEditForm(wp),
                   },
@@ -273,7 +273,7 @@ export function useCloudSidebarTree() {
               : [
                   {
                     type: MenuTypes.Normal,
-                    icon: mdiApplicationCog,
+                    icon: mdiCog,
                     label: translate(lngKeys.GeneralEditVerb),
                     onClick: () => openWorkspaceEditForm(wp),
                   },

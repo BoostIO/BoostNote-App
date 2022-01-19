@@ -6,7 +6,7 @@ import {
   mdiContentCopy,
   mdiOpenInNew,
   mdiFolderMultipleOutline,
-  mdiApplicationCog,
+  mdiCog,
 } from '@mdi/js'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
 import { useI18n } from '../../lib/hooks/useI18n'
@@ -186,7 +186,7 @@ const WorkspaceContextMenu = ({
                 disabled: sendingMap.has(currentWorkspace.id),
                 id: 'metadata-rename',
                 label: translate(lngKeys.GeneralEditVerb),
-                iconPath: mdiApplicationCog,
+                iconPath: mdiCog,
                 onClick: () => openWorkspaceEditForm(currentWorkspace),
               },
             }}

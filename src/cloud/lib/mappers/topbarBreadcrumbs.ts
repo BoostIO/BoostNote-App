@@ -1,5 +1,5 @@
 import {
-  mdiApplicationCog,
+  mdiCog,
   mdiFileDocumentOutline,
   mdiFolderPlusOutline,
   mdiLock,
@@ -395,7 +395,7 @@ export function mapWorkspaceBreadcrumb(
       ...(editWorkspace != null && !workspace.personal
         ? [
             {
-              icon: mdiApplicationCog,
+              icon: mdiCog,
               label: t(lngKeys.GeneralEditVerb),
               onClick: () => editWorkspace(workspace),
             },
