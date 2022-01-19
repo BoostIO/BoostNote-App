@@ -26,6 +26,7 @@ export interface CreateTeamRequestBody {
 export interface CreateTeamResponseBody {
   team: SerializedTeamWithPermissions
   doc?: SerializedDocWithSupplemental
+  folder?: SerializedFolderWithBookmark
   openInvite?: SerializedOpenInvite
   initialFolders: SerializedFolderWithBookmark[]
 }

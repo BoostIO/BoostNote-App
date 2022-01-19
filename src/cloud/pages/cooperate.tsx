@@ -7,14 +7,12 @@ import { usePage } from '../lib/stores/pageStore'
 import { useSidebarCollapse } from '../lib/stores/sidebarCollapse'
 import { useGlobalData } from '../lib/stores/globalData'
 import { GetInitialPropsParameters } from '../interfaces/pages'
-import { getDocLinkHref } from '../components/Link/DocLink'
 import styled from '../../design/lib/styled'
 import OnboardingLayout from '../components/Onboarding/OnboardingLayout'
 import BulkInvitesForm from '../components/Onboarding/BulkInvitesForm'
 import { useToast } from '../../design/lib/stores/toast'
 import CreateTeamForm from '../components/Onboarding/CreateTeamForm'
 import { SerializedTeam } from '../interfaces/db/team'
-import { SerializedDoc } from '../interfaces/db/doc'
 import { SerializedOpenInvite } from '../interfaces/db/openInvite'
 import { boostHubBaseUrl } from '../lib/consts'
 import { getOpenInviteURL, getTeamURL } from '../lib/utils/patterns'
@@ -26,6 +24,8 @@ import { SpaceUsageIntent } from '../components/Onboarding/UsageFormRow'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 import { trackEvent } from '../api/track'
 import { useRouter } from '../lib/router'
+import { SerializedFolder } from '../interfaces/db/folder'
+import { getFolderHref } from '../components/Link/FolderLink'
 
 const CooperatePage = () => {
   const [intent, setIntent] = useState<SpaceUsageIntent>()
@@ -34,7 +34,7 @@ const CooperatePage = () => {
   const [sending, setSending] = useState<boolean>(false)
   const { translate } = useI18n()
   const { usingElectron, sendToElectron } = useElectron()
-  const { updateDocsMap } = useNav()
+  const { updateFoldersMap } = useNav()
   const { setTeamInGlobal } = useGlobalData()
   const { setPartialPageData } = usePage()
   const { setToLocalStorage } = useSidebarCollapse()
@@ -43,7 +43,7 @@ const CooperatePage = () => {
   const { pushApiErrorMessage } = useToast()
   const [createTeamReturn, setCreateTeamReturn] = useState<{
     team: SerializedTeam
-    doc: SerializedDoc
+    folder: SerializedFolder
     openInvite: SerializedOpenInvite
   }>()
   const { push } = useRouter()
@@ -58,7 +58,9 @@ const CooperatePage = () => {
     try {
       const body = { name, domain }
 
-      const { team, doc, openInvite, initialFolders } = await createTeam(body)
+      const { team, folder, openInvite, initialFolders } = await createTeam(
+        body
+      )
 
       if (usingElectron && usingLegacyElectron) {
         sendToElectron('team-create', {
@@ -75,9 +77,9 @@ const CooperatePage = () => {
       }
       setTeamInGlobal(team)
 
-      if (doc != null) {
-        updateDocsMap([doc.id, doc])
-        setPartialPageData({ pageDoc: doc, team })
+      if (folder != null) {
+        updateFoldersMap([folder.id, folder])
+        setPartialPageData({ pageFolder: folder, team })
       }
 
       setToLocalStorage(team.id, {
@@ -102,8 +104,8 @@ const CooperatePage = () => {
         )
       }
 
-      if (doc != null && openInvite != null) {
-        setCreateTeamReturn({ team, doc, openInvite })
+      if (folder != null && openInvite != null) {
+        setCreateTeamReturn({ team, folder, openInvite })
       } else {
         window.location.href = getTeamLinkHref(team, 'index', {
           onboarding: true,
@@ -121,7 +123,7 @@ const CooperatePage = () => {
     iconFile,
     setTeamInGlobal,
     sendToElectron,
-    updateDocsMap,
+    updateFoldersMap,
     setPartialPageData,
     pushApiErrorMessage,
     setToLocalStorage,
@@ -149,8 +151,8 @@ const CooperatePage = () => {
             )}${getOpenInviteURL(createTeamReturn.openInvite)}`}
             teamId={createTeamReturn.team.id}
             onProceed={() => {
-              return (window.location.href = getDocLinkHref(
-                createTeamReturn.doc,
+              return (window.location.href = getFolderHref(
+                createTeamReturn.folder,
                 createTeamReturn.team,
                 'index',
                 {
