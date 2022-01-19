@@ -4,11 +4,7 @@ import PropertyValueButton from './PropertyValueButton'
 import { format as formatDate, isValid } from 'date-fns'
 import styled from '../../../../design/lib/styled'
 import Button from '../../../../design/components/atoms/Button'
-import {
-  mdiArrowRight,
-  mdiCalendarMonthOutline,
-  mdiClose,
-} from '@mdi/js'
+import { mdiArrowRight, mdiCalendarMonthOutline, mdiClose } from '@mdi/js'
 import cc from 'classcat'
 import { useModal } from '../../../../design/lib/stores/modal'
 import Flexbox from '../../../../design/components/atoms/Flexbox'

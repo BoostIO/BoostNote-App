@@ -1,4 +1,4 @@
-import {mdiPencil, mdiTrashCanOutline } from '@mdi/js'
+import { mdiPencil, mdiTrashCanOutline } from '@mdi/js'
 import React from 'react'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
@@ -13,7 +13,7 @@ interface CalendarEventItemContextMenuProps {
 }
 
 const CalendarEventItemContextMenu = ({
-  doc
+  doc,
 }: CalendarEventItemContextMenuProps) => {
   const { deleteDocApi, sendingMap } = useCloudApi()
   const { openRenameDocForm } = useCloudResourceModals()
