@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, MouseEvent } from 'react'
 import {
-  mdiApplicationCog,
+  mdiCog,
   mdiFileDocumentOutline,
   mdiFilePlusOutline,
   mdiFolderPlusOutline,
@@ -209,7 +209,7 @@ export function useNavigatorTree() {
               ? [
                   {
                     type: MenuTypes.Normal,
-                    icon: mdiApplicationCog,
+                    icon: mdiCog,
                     label: 'Edit',
                     onClick: () => openWorkspaceEditForm(wp),
                   },
@@ -217,7 +217,7 @@ export function useNavigatorTree() {
               : [
                   {
                     type: MenuTypes.Normal,
-                    icon: mdiApplicationCog,
+                    icon: mdiCog,
                     label: 'Edit',
                     onClick: () => openWorkspaceEditForm(wp),
                   },

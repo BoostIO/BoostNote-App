@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import {
-  mdiApplicationCog,
+  mdiCog,
   mdiFileDocumentOutline,
   mdiTextBoxPlus,
   mdiFolderPlusOutline,
@@ -11,7 +11,6 @@ import {
   mdiStarOutline,
   mdiTag,
   mdiTrashCanOutline,
-  mdiCog,
   mdiViewDashboard,
 } from '@mdi/js'
 import { FoldingProps } from '../../../../design/components/atoms/FoldingWrapper'
@@ -265,7 +264,7 @@ export function useCloudSidebarTree() {
               ? [
                   {
                     type: MenuTypes.Normal,
-                    icon: mdiApplicationCog,
+                    icon: mdiCog,
                     label: translate(lngKeys.GeneralEditVerb),
                     onClick: () => openWorkspaceEditForm(wp),
                   },
@@ -273,7 +272,7 @@ export function useCloudSidebarTree() {
               : [
                   {
                     type: MenuTypes.Normal,
-                    icon: mdiApplicationCog,
+                    icon: mdiCog,
                     label: translate(lngKeys.GeneralEditVerb),
                     onClick: () => openWorkspaceEditForm(wp),
                   },

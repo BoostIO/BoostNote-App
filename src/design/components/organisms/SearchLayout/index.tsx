@@ -370,7 +370,7 @@ const Container = styled.div`
       border-top: 0 !important;
       border-left: 0 !important;
       border-right: 0 !important;
-      border-radus: 0 !important;
+      border-radius: 0 !important;
       height: 43px;
       padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
     }

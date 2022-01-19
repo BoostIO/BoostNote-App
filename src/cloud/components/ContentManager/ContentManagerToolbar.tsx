@@ -747,6 +747,7 @@ const Container = styled.div`
 
   button.cm__tool {
     white-space: nowrap;
+    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px !important;
   }
 
   .item__status__select {

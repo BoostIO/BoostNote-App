@@ -196,16 +196,17 @@ const EditableInputContainer = styled.div`
     .editable__input__btn__icon {
       margin-right: 4px;
       margin-left: 4px;
-      opacity: 0;
+      color: ${({ theme }) => theme.colors.text.subtle};
       transition: opacity 0.3s ease-in-out;
     }
     &:hover {
       .editable__input__btn__icon {
-        opacity: 1;
+        color: ${({ theme }) => theme.colors.text.primary};
       }
     }
     .editable__input__btn__label {
-      padding: 2px 5px;
+      color: ${({ theme }) => theme.colors.text.primary};
+      padding: 2px;
       border-radius: 3px;
       ${overflowEllipsis}
       min-width: 0;

@@ -223,12 +223,6 @@ const Container = styled.div<{ depth: number }>`
     &:hover {
       background-color: ${({ theme }) => theme.colors.background.quaternary};
     }
-
-    &:hover .sidebar__tree__item__label,
-    &:focus .sidebar__tree__item__label,
-    &.focused .sidebar__tree__item__label {
-      color: ${({ theme }) => theme.colors.text.primary};
-    }
   }
 
   &.sidebar__category {

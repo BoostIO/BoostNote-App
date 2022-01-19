@@ -438,7 +438,7 @@ const Container = styled.div`
     color: ${({ theme }) => theme.colors.text.subtle};
     span {
       ${overflowEllipsis()}
-      text-align: center;
+      text-align: left;
       padding: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
     }
   }

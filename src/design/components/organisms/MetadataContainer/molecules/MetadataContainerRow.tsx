@@ -177,13 +177,13 @@ const Container = styled.div`
     }
 
     &:disabled {
-      color: ${({ theme }) => theme.colors.text.subtle};
+      color: ${({ theme }) => theme.colors.text.primary};
+      opacity: 1;
 
       &:hover,
       &:focus {
-        color: ${({ theme }) => theme.colors.text.subtle} !important;
         background-color: transparent;
-        cursor: not-allowed;
+        cursor: default;
       }
     }
   }

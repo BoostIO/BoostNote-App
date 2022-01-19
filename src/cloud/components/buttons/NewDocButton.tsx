@@ -1,7 +1,7 @@
 import SidebarButton from '../../../design/components/organisms/Sidebar/atoms/SidebarButton'
 import { MenuTypes } from '../../../design/lib/stores/contextMenu'
 import { useModal } from '../../../design/lib/stores/modal'
-import { mdiPencilBoxMultipleOutline, mdiPlus } from '@mdi/js'
+import { mdiPalette, mdiPlus } from '@mdi/js'
 import React, { useCallback } from 'react'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
@@ -69,12 +69,15 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
       }
       contextControls={[
         {
-          icon: mdiPencilBoxMultipleOutline,
+          icon: mdiPalette,
           type: MenuTypes.Normal,
           label: translate(lngKeys.UseATemplate),
           onClick: () =>
             canCreateDoc(getMapValues(docsMap), subscription)
-              ? openModal(<TemplatesModal />, { width: 'large' })
+              ? openModal(<TemplatesModal />, {
+                  width: 'large',
+                  removePadding: true,
+                })
               : openModal(<UnlockDocCreationModal />, {
                   showCloseIcon: false,
                   width: 'small',

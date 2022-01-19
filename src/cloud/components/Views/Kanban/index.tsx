@@ -311,10 +311,6 @@ const Container = styled.div`
   width: 100%;
   position: relative;
 
-  .view--kanban__wrapper {
-    padding-left: ${({ theme }) => theme.sizes.spaces.l}px;
-  }
-
   .view--kanban--board__add-btn {
     flex-wrap: nowrap;
     margin: ${({ theme }) => theme.sizes.spaces.sm}px;
@@ -336,14 +332,15 @@ const Container = styled.div`
   .kanban__list__footer,
   .kanban__list__footer > button,
   .kanban__list__footer > input {
-    height: 32px;
-    min-height: 32px;
+    height: 40px;
+    min-height: 40px;
   }
 
   .kanban__item,
   .kanban__item .navigation__item {
     height: auto !important;
-    min-height: 32px !important;
+    min-height: 40px !important;
+    border-radius: 3px;
   }
 
   .kanban__item .navigation__item {
