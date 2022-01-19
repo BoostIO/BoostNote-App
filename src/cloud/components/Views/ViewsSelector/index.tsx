@@ -377,14 +377,14 @@ const ViewModal = ({
         labelClick={() => createNewView('table')}
       />
       <NavigationItem
-        id={`view__modal--table`}
+        id={`view__modal--kanban`}
         borderRadius={true}
         icon={{ type: 'icon', path: getIconPathOfViewType('kanban') }}
         label={'Kanban'}
         labelClick={() => createNewView('kanban')}
       />
       <NavigationItem
-        id={`view__modal--table`}
+        id={`view__modal--calendar`}
         borderRadius={true}
         icon={{ type: 'icon', path: getIconPathOfViewType('calendar') }}
         label={'Calendar'}
