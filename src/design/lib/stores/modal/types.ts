@@ -16,11 +16,13 @@ export interface ModalElement {
   hideBackground?: boolean
   removePadding?: boolean
   onBlur?: boolean
-  navigation?: {
-    url: string
-    fallbackUrl?: string
-  }
+  navigation?: ModalNavigationProps
   onClose?: () => void
+}
+
+export type ModalNavigationProps = {
+  url: string
+  fallbackUrl?: string
 }
 
 export type ContextModalAlignment =
@@ -36,10 +38,7 @@ export type ModalOpeningOptions = {
   width?: 'large' | 'default' | 'small' | 'full' | number
   hideBackground?: boolean
   title?: string
-  navigation?: {
-    url: string
-    fallbackUrl?: string
-  }
+  navigation?: ModalNavigationProps
   onClose?: () => void
 }
 
