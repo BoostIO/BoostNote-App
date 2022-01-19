@@ -11,7 +11,6 @@ import {
   mdiStarOutline,
   mdiTag,
   mdiTrashCanOutline,
-  mdiCog,
   mdiViewDashboard,
 } from '@mdi/js'
 import { FoldingProps } from '../../../../design/components/atoms/FoldingWrapper'

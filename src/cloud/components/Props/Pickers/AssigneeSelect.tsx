@@ -60,7 +60,7 @@ const AssigneeSelect = ({
   }, [defaultValue, permissions])
 
   return (
-    <Container className='assignee__select prop__margin'>
+    <Container className='item__assignee__select prop__margin'>
       <PropertyValueButton
         disabled={disabled}
         sending={isLoading}

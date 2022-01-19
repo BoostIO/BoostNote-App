@@ -74,7 +74,7 @@ const NewDocButton = ({ team }: { team: SerializedTeam }) => {
           label: translate(lngKeys.UseATemplate),
           onClick: () =>
             canCreateDoc(getMapValues(docsMap), subscription)
-              ? openModal(<TemplatesModal />, { width: 'large' })
+              ? openModal(<TemplatesModal />, { width: 'large', removePadding: true })
               : openModal(<UnlockDocCreationModal />, {
                   showCloseIcon: false,
                   width: 'small',

@@ -384,7 +384,7 @@ const Container = styled.div`
 
   .fc .fc-daygrid-day:hover::before {
     content: '+';
-    font-size: 15px;
+    font-size: ${({ theme }) => theme.sizes.fonts.md}px;
     border-radius: ${({ theme }) => theme.borders.radius}px;
     position: absolute;
     top: 4px;

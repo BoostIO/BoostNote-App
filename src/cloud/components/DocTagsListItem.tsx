@@ -95,7 +95,7 @@ const Container = styled.div`
   position: relative;
   margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
   font-size: ${({ theme }) => theme.sizes.fonts.df}px;
-  border-radius: 4px;
+  border-radius: ${({ theme }) => theme.borders.radius}px;
   vertical-align: middle;
   height: 22px;
   flex: 0 1 auto;

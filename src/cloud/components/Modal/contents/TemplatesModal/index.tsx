@@ -485,7 +485,7 @@ const TemplatesModal = ({ callback }: TemplatesModalProps) => {
 
 const TemplatesModalContainer = styled.div`
   height: 80vh;
-  margin: -12px 0;
+  padding: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
 
   > .two__pane {
     height: 100%;

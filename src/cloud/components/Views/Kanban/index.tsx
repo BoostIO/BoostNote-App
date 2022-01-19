@@ -277,9 +277,10 @@ const KanbanView = ({
           </Button>
         </Flexbox>
       </Flexbox>
-      <div>
+      <div className='view--kanban__wrapper'>
         <Kanban
           disabled={!currentUserIsCoreMember}
+          className='view--kanban--board'
           lists={lists}
           onItemMove={onItemMove}
           onListMove={onListMove}
