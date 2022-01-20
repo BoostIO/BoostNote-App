@@ -224,6 +224,10 @@ const Container = styled.div`
 
     margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
 
+    .thread__content__back_button {
+      margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
+    }
+
     & .comment__list {
       & > div {
         margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
