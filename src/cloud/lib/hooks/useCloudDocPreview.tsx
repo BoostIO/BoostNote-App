@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { useRouter } from '../router'
 import { useNav } from '../stores/nav'
-import { modalEventEmitter } from '../utils/events'
+import { ModalEventDetails, modalEventEmitter } from '../utils/events'
 import { useCloudResourceModals } from './useCloudResourceModals'
 
 export const docPreviewCloseEvent = 'doc-preview-close'
@@ -23,7 +23,26 @@ export function useCloudDocPreview(team: SerializedTeam) {
     },
     [openDocPreview, docsMap, team]
   )
+
   const openDocInPreviewRef = useRef(openDocInPreview)
+
+  const resetPreviewId = useCallback(
+    (event: CustomEvent<ModalEventDetails>) => {
+      if (event.detail.type !== docPreviewCloseEvent) {
+        return
+      }
+
+      prevPreviewRef.current = ''
+    },
+    []
+  )
+
+  useEffect(() => {
+    modalEventEmitter.listen(resetPreviewId)
+    return () => {
+      modalEventEmitter.unlisten(resetPreviewId)
+    }
+  }, [resetPreviewId])
 
   useEffect(() => {
     if (

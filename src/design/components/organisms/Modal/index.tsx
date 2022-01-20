@@ -1,4 +1,10 @@
-import React, { CSSProperties, useCallback, useMemo, useRef } from 'react'
+import React, {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { mdiClose } from '@mdi/js'
 import cc from 'classcat'
 import {
@@ -16,6 +22,10 @@ import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import { useEffectOnce } from 'react-use'
 import { useRouter } from '../../../../cloud/lib/router'
 import { useEffectOnUnmount } from '../../../../lib/hooks'
+import {
+  ModalEventDetails,
+  modalEventEmitter,
+} from '../../../../cloud/lib/utils/events'
 
 const Modal = () => {
   const { modals, closeLastModal } = useModal()
@@ -23,10 +33,10 @@ const Modal = () => {
   const keydownHandler = useMemo(() => {
     return (event: KeyboardEvent) => {
       if (event.key.toLowerCase() === 'escape' && !isActiveElementAnInput()) {
-        closeLastModal()
+        modalEventEmitter.dispatch({ type: `modal-${modals.length - 1}-close` })
       }
     }
-  }, [closeLastModal])
+  }, [modals.length])
   useGlobalKeyDownHandler(keydownHandler)
 
   if (modals.length === 0) return null
@@ -44,6 +54,7 @@ const Modal = () => {
             <ContextModalItem
               key={`modal-${i}`}
               modal={modal}
+              id={i}
               closeModal={closeLastModal}
             />
           )
@@ -53,6 +64,7 @@ const Modal = () => {
           <ModalItem
             key={`modal-${i}`}
             modal={modal}
+            id={i}
             closeModal={closeLastModal}
           />
         )
@@ -64,9 +76,11 @@ const Modal = () => {
 const ContextModalItem = ({
   closeModal,
   modal,
+  id,
 }: {
   closeModal: () => void
   modal: ModalElement
+  id: number
 }) => {
   const {
     windowSize: { width: windowWidth, height: windowHeight },
@@ -152,6 +166,23 @@ const ContextModalItem = ({
     }
   })
 
+  const closeModalOnEscape = useCallback(
+    (event: CustomEvent<ModalEventDetails>) => {
+      if (event.detail.type !== `modal-${id}-close`) {
+        return
+      }
+      closeModal()
+    },
+    [closeModal, id]
+  )
+
+  useEffect(() => {
+    modalEventEmitter.listen(closeModalOnEscape)
+    return () => {
+      modalEventEmitter.unlisten(closeModalOnEscape)
+    }
+  }, [closeModalOnEscape])
+
   if (modal.onBlur != null) {
     return (
       <>
@@ -209,9 +240,11 @@ const ContextModalItem = ({
 const ModalItem = ({
   closeModal,
   modal,
+  id,
 }: {
   closeModal: () => void
   modal: ModalElement
+  id: number
 }) => {
   const contentRef = useRef<HTMLDivElement>(null)
   const manualClosing = useRef(false)
@@ -233,6 +266,23 @@ const ModalItem = ({
     },
     [closing]
   )
+
+  const closeModalOnEscape = useCallback(
+    (event: CustomEvent<ModalEventDetails>) => {
+      if (event.detail.type !== `modal-${id}-close`) {
+        return
+      }
+      closing()
+    },
+    [closing, id]
+  )
+
+  useEffect(() => {
+    modalEventEmitter.listen(closeModalOnEscape)
+    return () => {
+      modalEventEmitter.unlisten(closeModalOnEscape)
+    }
+  }, [closeModalOnEscape])
 
   useModalNavigationHistory(manualClosing, modal.navigation)
 
