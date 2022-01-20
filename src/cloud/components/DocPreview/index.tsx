@@ -1,5 +1,5 @@
 import { mdiArrowExpand, mdiClose, mdiPencil } from '@mdi/js'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useCallback } from 'react'
 import { useMemo } from 'react'
@@ -14,10 +14,12 @@ import { overflowEllipsis } from '../../../design/lib/styled/styleFunctions'
 import { getDocCollaborationToken } from '../../api/docs/token'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedTeam } from '../../interfaces/db/team'
+import { docPreviewCloseEvent } from '../../lib/hooks/useCloudDocPreview'
 import { useRouter } from '../../lib/router'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { useNav } from '../../lib/stores/nav'
 import { usePage } from '../../lib/stores/pageStore'
+import { ModalEventDetails, modalEventEmitter } from '../../lib/utils/events'
 import { getDocTitle } from '../../lib/utils/patterns'
 import DocProperties from '../DocProperties'
 import { getDocLinkHref } from '../Link/DocLink'
@@ -66,6 +68,24 @@ const DocPreviewModal = ({ doc, team }: DocPreviewModalProps) => {
     push(getDocLinkHref(doc, team, 'index'))
     return closeLastModal()
   }, [push, closeLastModal, team, doc])
+
+  const closePreviewModal = useCallback(
+    (event: CustomEvent<ModalEventDetails>) => {
+      if (event.detail.type !== docPreviewCloseEvent) {
+        return
+      }
+
+      closeLastModal()
+    },
+    [closeLastModal]
+  )
+
+  useEffect(() => {
+    modalEventEmitter.listen(closePreviewModal)
+    return () => {
+      modalEventEmitter.unlisten(closePreviewModal)
+    }
+  }, [closePreviewModal])
 
   if (currentDoc == null) {
     return (

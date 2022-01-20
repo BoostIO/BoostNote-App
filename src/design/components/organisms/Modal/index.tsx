@@ -220,6 +220,7 @@ const ModalItem = ({
     manualClosing.current = true
     closeModal()
   }, [closeModal])
+
   const onScrollClickHandler: React.MouseEventHandler = useCallback(
     (event) => {
       if (

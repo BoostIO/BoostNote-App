@@ -31,6 +31,7 @@ import {
 import UnlockDashboardModal from '../Modal/contents/Subscription/UnlockDashboardModal'
 import { useNav } from '../../lib/stores/nav'
 import DashboardSubscriptionBanner from './DashboardSubscriptionBanner'
+import { useCloudDocPreview } from '../../lib/hooks/useCloudDocPreview'
 
 const DashboardPage = ({
   dashboard: propsDashboard,
@@ -87,6 +88,8 @@ const DashboardPage = ({
     dashboardsMap.size,
     openModal,
   ])
+
+  useCloudDocPreview(propsTeam)
 
   const renderSmartview = useCallback(
     (smartview: SerializedSmartView) => {

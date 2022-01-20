@@ -116,3 +116,11 @@ export type SignInViaAccessTokenDetails = {
 export const signInViaAccessTokenEventEmitter = createCustomEventEmitter<
   SignInViaAccessTokenDetails
 >('sign-in-via-access-token')
+
+export const modalEventEmitter = createCustomEventEmitter<ModalEventDetails>(
+  'modal'
+)
+
+export type ModalEventDetails = {
+  type: string
+}
