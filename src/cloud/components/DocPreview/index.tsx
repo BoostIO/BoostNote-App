@@ -14,6 +14,7 @@ import { overflowEllipsis } from '../../../design/lib/styled/styleFunctions'
 import { getDocCollaborationToken } from '../../api/docs/token'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedTeam } from '../../interfaces/db/team'
+import { useEffectOnUnmount } from '../../../lib/hooks'
 import { docPreviewCloseEvent } from '../../lib/hooks/useCloudDocPreview'
 import { useRouter } from '../../lib/router'
 import { useGlobalData } from '../../lib/stores/globalData'
@@ -86,6 +87,10 @@ const DocPreviewModal = ({ doc, team }: DocPreviewModalProps) => {
       modalEventEmitter.unlisten(closePreviewModal)
     }
   }, [closePreviewModal])
+
+  useEffectOnUnmount(() => {
+    modalEventEmitter.dispatch({ type: docPreviewCloseEvent })
+  })
 
   if (currentDoc == null) {
     return (
