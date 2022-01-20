@@ -63,6 +63,7 @@ export async function createAutomation(
 export interface UpdateAutomationRequestBody {
   name: string
   description?: string
+  env?: any
 }
 
 export interface UpdateAutomationResponseBody {

@@ -35,6 +35,7 @@ const AutomationPage = ({ automation, workflows }: AutomationPageProps) => {
         const newAutomation = await updateAutomation(automation.id, {
           name: automation.name,
           description: automation.description,
+          env: automation.env,
         })
         pushMessage({
           type: 'success',
