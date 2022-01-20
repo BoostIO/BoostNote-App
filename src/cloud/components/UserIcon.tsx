@@ -25,7 +25,7 @@ const UserIcon = ({ user, style, className }: UserIconProps) => {
 export default UserIcon
 
 export const StyledUserIcon = styled.div`
-  ${userIconStyle}
+  ${userIconStyle};
   width: 30px;
   height: 30px;
   background-color: ${({ theme }) => theme.colors.variants.primary.base};

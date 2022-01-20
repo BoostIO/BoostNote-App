@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { isToday, format, formatDistanceToNow } from 'date-fns'
 import { Thread, Comment } from '../../interfaces/db/comments'
 import UserIcon from '../UserIcon'
@@ -85,6 +85,20 @@ function ThreadItem({
     [onDelete, reloadComments]
   )
 
+  const threadCommentedUser = useMemo(() => {
+    if (threadComments == null || threadComments.length == 0) {
+      return
+    }
+
+    for (const user of users) {
+      if (threadComments[0].user.id == user.id) {
+        return user
+      }
+    }
+
+    return threadComments[0].user
+  }, [threadComments, users])
+
   return (
     <StyledListItem>
       <div
@@ -94,14 +108,15 @@ function ThreadItem({
       >
         <div className={'thread__info'}>
           <div className='thread__info__line'>
-            {thread.contributors.map((user) => (
-              <UserIcon
-                className={'thread__info__line__icon'}
-                key={user.id}
-                style={smallUserIconStyle}
-                user={user}
-              />
-            ))}
+            <UserIcon
+              className={'thread__info__line__icon'}
+              style={smallUserIconStyle}
+              user={
+                threadCommentedUser != null
+                  ? threadCommentedUser
+                  : thread.contributors[0]
+              }
+            />
           </div>
           {threadComments && threadComments.length > 0 && (
             <div className={'thread__comment__line'}>
@@ -125,14 +140,14 @@ function ThreadItem({
 
               {threadComments && threadComments.length > 1 && (
                 <div className={'thread__comment__line_more_replies_container'}>
-                  {thread.contributors.map((user) => (
-                    <UserIcon
-                      className={'thread__comment__line__icon'}
-                      key={user.id}
-                      style={smallerUserIconReplyStyle}
-                      user={user}
-                    />
-                  ))}
+                  <UserIcon
+                    style={smallerUserIconReplyStyle}
+                    user={
+                      threadCommentedUser != null
+                        ? threadCommentedUser
+                        : threadComments[0].user
+                    }
+                  />
                   <div
                     onClick={() => onSelect(thread)}
                     className={'thread__comment__line__replies__link'}
