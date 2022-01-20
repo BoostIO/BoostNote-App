@@ -200,6 +200,7 @@ const CommentItemContainer = styled.div`
     right: 7px;
 
     padding: 4px;
+    gap: 4px;
     border-radius: ${({ theme }) => theme.borders.radius}px;
 
     background-color: #1e2024;
@@ -207,6 +208,7 @@ const CommentItemContainer = styled.div`
     .comment__meta__actions__edit,
     .comment__meta__actions__remove {
       height: 20px;
+      margin: 3px;
 
       color: ${({ theme }) => theme.colors.text.subtle};
 
