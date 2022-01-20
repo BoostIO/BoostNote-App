@@ -214,6 +214,12 @@ const ModalItem = ({
   modal: ModalElement
 }) => {
   const contentRef = useRef<HTMLDivElement>(null)
+  const manualClosing = useRef(false)
+
+  const closing = useCallback(() => {
+    manualClosing.current = true
+    closeModal()
+  }, [closeModal])
   const onScrollClickHandler: React.MouseEventHandler = useCallback(
     (event) => {
       if (
@@ -222,13 +228,12 @@ const ModalItem = ({
       ) {
         return
       }
-
-      closeModal()
+      closing()
     },
-    [closeModal]
+    [closing]
   )
 
-  useModalNavigationHistory(modal.navigation)
+  useModalNavigationHistory(manualClosing, modal.navigation)
 
   return (
     <Scroller
@@ -249,7 +254,7 @@ const ModalItem = ({
           <Button
             variant='icon'
             iconPath={mdiClose}
-            onClick={closeModal}
+            onClick={closing}
             className='modal__window__close'
             iconSize={26}
           />
@@ -265,7 +270,10 @@ const ModalItem = ({
   )
 }
 
-function useModalNavigationHistory(navigation?: ModalNavigationProps) {
+function useModalNavigationHistory(
+  manualClosing: React.MutableRefObject<boolean>,
+  navigation?: ModalNavigationProps
+) {
   const { push, goBack } = useRouter()
 
   //push modal's url to history on load
@@ -278,7 +286,7 @@ function useModalNavigationHistory(navigation?: ModalNavigationProps) {
 
   //on modal's closure, goes back to wanted URL
   useEffectOnUnmount(() => {
-    if (navigation == null) {
+    if (!manualClosing.current || navigation == null) {
       return
     }
 
