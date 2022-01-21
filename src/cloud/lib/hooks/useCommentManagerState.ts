@@ -54,7 +54,7 @@ function useCommentManagerState(docId: string): [State, Actions] {
     async (data) => {
       const thread = await threadActions.create({ doc: docId, ...data })
       if (!(thread instanceof Error)) {
-        setMode({ mode: 'thread', thread })
+        setMode({ mode: 'list' })
       }
       return thread
     },
