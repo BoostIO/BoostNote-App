@@ -10,8 +10,8 @@ export const docPreviewCloseEvent = 'doc-preview-close'
 export function useCloudDocPreview(team: SerializedTeam) {
   const { query } = useRouter()
   const { openDocPreview } = useCloudResourceModals()
-  const { docsMap } = useNav()
   const prevPreviewRef = useRef<string>('')
+  const { docsMap } = useNav()
 
   const openDocInPreview = useCallback(
     (docId: string) => {
@@ -25,6 +25,10 @@ export function useCloudDocPreview(team: SerializedTeam) {
   )
 
   const openDocInPreviewRef = useRef(openDocInPreview)
+
+  useEffect(() => {
+    openDocInPreviewRef.current = openDocInPreview
+  }, [openDocInPreview])
 
   const resetPreviewId = useCallback(
     (event: CustomEvent<ModalEventDetails>) => {
