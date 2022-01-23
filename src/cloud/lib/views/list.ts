@@ -105,6 +105,7 @@ export function getDefaultListView(
   const labelPropId = makeListViewPropId('Label', 'label')
   return {
     id: -1,
+    shortId: '-1',
     workspace: parent.type === 'workspace' ? parent.target : undefined,
     workspaceId: parent.type === 'workspace' ? parent.target.id : undefined,
     folder: parent.type === 'folder' ? parent.target : undefined,
