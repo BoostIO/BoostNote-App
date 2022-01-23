@@ -423,14 +423,17 @@ export function useCloudResourceModals() {
       const fallbackUrl = `${pathname}${
         fallbackQuery.trim() !== '' ? `?${fallbackQuery}` : ''
       }`
-      return openModal(<DocPreviewModal doc={doc} team={team} />, {
-        showCloseIcon: false,
-        removePadding: true,
-        navigation: {
-          url: `${pathname}?preview=${doc.id}`,
-          fallbackUrl,
-        },
-      })
+      return openModal(
+        <DocPreviewModal doc={doc} team={team} fallbackUrl={fallbackUrl} />,
+        {
+          showCloseIcon: false,
+          removePadding: true,
+          navigation: {
+            url: `${pathname}?preview=${doc.id}`,
+            fallbackUrl,
+          },
+        }
+      )
     },
     [openModal, pathname, query]
   )

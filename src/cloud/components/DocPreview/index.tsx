@@ -29,9 +29,10 @@ import DocPreviewRealtime from './DocPreviewRealtime'
 interface DocPreviewModalProps {
   doc: SerializedDocWithSupplemental
   team: SerializedTeam
+  fallbackUrl: string
 }
 
-const DocPreviewModal = ({ doc, team }: DocPreviewModalProps) => {
+const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
   const { closeLastModal } = useModal()
   const { docsMap } = useNav()
   const { push } = useRouter()
@@ -70,6 +71,17 @@ const DocPreviewModal = ({ doc, team }: DocPreviewModalProps) => {
     return closeLastModal()
   }, [push, closeLastModal, team, doc])
 
+  const manualClosing = useCallback(
+    (event: React.MouseEvent) => {
+      event.preventDefault()
+      if (fallbackUrl != null) {
+        push(fallbackUrl)
+      }
+      closeLastModal()
+    },
+    [closeLastModal, fallbackUrl, push]
+  )
+
   const closePreviewModal = useCallback(
     (event: CustomEvent<ModalEventDetails>) => {
       if (event.detail.type !== docPreviewCloseEvent) {
@@ -77,8 +89,11 @@ const DocPreviewModal = ({ doc, team }: DocPreviewModalProps) => {
       }
 
       closeLastModal()
+      if (fallbackUrl != null) {
+        push(fallbackUrl)
+      }
     },
-    [closeLastModal]
+    [closeLastModal, fallbackUrl, push]
   )
 
   useEffect(() => {
@@ -96,11 +111,7 @@ const DocPreviewModal = ({ doc, team }: DocPreviewModalProps) => {
     return (
       <Flexbox direction='column'>
         <Flexbox justifyContent='flex-end'>
-          <Button
-            variant='icon'
-            iconPath={mdiClose}
-            onClick={() => closeLastModal()}
-          />
+          <Button variant='icon' iconPath={mdiClose} onClick={manualClosing} />
         </Flexbox>
         <div className='doc-preview__content'>
           <ColoredBlock variant='danger'>
@@ -134,7 +145,7 @@ const DocPreviewModal = ({ doc, team }: DocPreviewModalProps) => {
           <Button
             variant='icon'
             iconPath={mdiClose}
-            onClick={closeLastModal}
+            onClick={manualClosing}
             id='doc-preview__close'
             size='sm'
           />
