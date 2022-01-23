@@ -45,3 +45,7 @@ export function getDescriptionOfViewType(type: SupportedViewTypes) {
       return 'Provides a simple and clean interface to see your documents.'
   }
 }
+
+export function getDefaultViewShortId() {
+  return '-1'
+}
