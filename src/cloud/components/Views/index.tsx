@@ -20,6 +20,7 @@ import ListView from './List'
 import { sortListViewProps } from '../../lib/views/list'
 import { useRouter } from '../../lib/router'
 import { useCloudDocPreview } from '../../lib/hooks/useCloudDocPreview'
+import { getDefaultViewShortId } from '../../lib/views'
 
 type ViewsManagerProps = {
   views: SerializedView[]
@@ -49,7 +50,7 @@ export const ViewsManager = ({
   >(() =>
     views.length > 0
       ? sortByLexorankProperty(views, 'order')[0].shortId
-      : undefined
+      : getDefaultViewShortId()
   )
   const [updating, setUpdating] = useState<string[]>([])
   const [

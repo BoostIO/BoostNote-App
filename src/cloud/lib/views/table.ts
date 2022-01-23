@@ -15,6 +15,7 @@ import { SerializedStatus } from '../../interfaces/db/status'
 import { isArray } from 'lodash'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
+import { getDefaultViewShortId } from '.'
 export interface ViewTableData {
   columns: Record<string, Column>
   sort?: ViewTableSortingOptions
@@ -184,7 +185,7 @@ export function getDefaultTableView(
   const labelColId = makeTablePropColId('Label', 'label')
   return {
     id: -1,
-    shortId: '-1',
+    shortId: getDefaultViewShortId(),
     workspace: parent.type === 'workspace' ? parent.target : undefined,
     workspaceId: parent.type === 'workspace' ? parent.target.id : undefined,
     folder: parent.type === 'folder' ? parent.target : undefined,

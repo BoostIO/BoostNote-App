@@ -9,6 +9,7 @@ import { sortByAttributeAsc } from '../../../design/lib/utils/array'
 import { LexoRank } from 'lexorank'
 import { getArrayFromRecord } from '../utils/array'
 import { SerializedView, ViewParent } from '../../interfaces/db/view'
+import { getDefaultViewShortId } from '.'
 
 export interface ViewListData {
   props?: Record<string, ListViewProp>
@@ -105,7 +106,7 @@ export function getDefaultListView(
   const labelPropId = makeListViewPropId('Label', 'label')
   return {
     id: -1,
-    shortId: '-1',
+    shortId: getDefaultViewShortId(),
     workspace: parent.type === 'workspace' ? parent.target : undefined,
     workspaceId: parent.type === 'workspace' ? parent.target.id : undefined,
     folder: parent.type === 'folder' ? parent.target : undefined,
