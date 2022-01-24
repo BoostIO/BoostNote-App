@@ -71,6 +71,7 @@ import WorkflowCreatePage from '../pages/workflows/create'
 import AutomationCreatePage from '../pages/automations/create'
 import AutomationPage from '../pages/automations/[automationId]'
 import GithubSourceCallbackPage from './sources/GithubSourceCallbackPage'
+import { BetaRegistrationProvider } from '../lib/stores/beta'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -82,7 +83,8 @@ const CombinedProvider = combineProviders(
   SearchProvider,
   ExternalEntitiesProvider,
   CommentsProvider,
-  TeamPreferencesProvider
+  TeamPreferencesProvider,
+  BetaRegistrationProvider
 )
 
 const V2CombinedProvider = combineProviders(

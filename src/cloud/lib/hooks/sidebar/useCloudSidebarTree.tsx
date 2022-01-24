@@ -56,7 +56,10 @@ import { useCloudDnd } from './useCloudDnd'
 import { DocStatus } from '../../../interfaces/db/doc'
 import { useI18n } from '../useI18n'
 import { lngKeys } from '../../i18n/types'
-import { SidebarControls } from '../../../../design/components/organisms/Sidebar/atoms/SidebarHeader'
+import {
+  SidebarControl,
+  SidebarControls,
+} from '../../../../design/components/organisms/Sidebar/atoms/SidebarHeader'
 import { useSearch } from '../../stores/search'
 import {
   SidebarNavCategory,
@@ -69,6 +72,8 @@ import { useElectron } from '../../stores/electron'
 import { isString } from '../../utils/string'
 import { getDashboardHref } from '../../../components/Link/DashboardLink'
 import UnlockDashboardModal from '../../../components/Modal/contents/Subscription/UnlockDashboardModal'
+import { useBetaRegistration } from '../../stores/beta'
+import { getTeamLinkHref } from '../../../components/Link/TeamLink'
 
 export function useCloudSidebarTree() {
   const { team, currentUserIsCoreMember, subscription } = usePage()
@@ -78,6 +83,7 @@ export function useCloudSidebarTree() {
   const { translate } = useI18n()
   const { showSearchScreen } = useSearch()
   const { sendToElectron, usingElectron } = useElectron()
+  const betaRegistrationState = useBetaRegistration()
 
   const {
     initialLoadDone,
@@ -149,39 +155,53 @@ export function useCloudSidebarTree() {
   )
 
   const sidebarHeaderControls: SidebarControls = useMemo(() => {
+    const viewControls: SidebarControl[] = [
+      {
+        type: 'check',
+        label: translate(lngKeys.GeneralBookmarks),
+        checked: !sideBarOpenedLinksIdsSet.has('hide-bookmarks'),
+        onClick: () => toggleItem('links', 'hide-bookmarks'),
+      },
+      {
+        type: 'check',
+        label: translate(lngKeys.GeneralDashboards),
+        checked: !sideBarOpenedLinksIdsSet.has('hide-dashboards'),
+        onClick: () => toggleItem('links', 'hide-dashboards'),
+      },
+      {
+        type: 'check',
+        label: translate(lngKeys.GeneralFolders),
+        checked: !sideBarOpenedLinksIdsSet.has('hide-folders'),
+        onClick: () => toggleItem('links', 'hide-folders'),
+      },
+      {
+        type: 'check',
+        label: translate(lngKeys.GeneralLabels),
+        checked: !sideBarOpenedLinksIdsSet.has('hide-labels'),
+        onClick: () => toggleItem('links', 'hide-labels'),
+      },
+      {
+        type: 'check',
+        label: translate(lngKeys.GeneralPrivate),
+        checked: !sideBarOpenedLinksIdsSet.has('hide-private'),
+        onClick: () => toggleItem('links', 'hide-private'),
+      },
+    ]
+
+    if (
+      betaRegistrationState.state === 'loaded' &&
+      betaRegistrationState.betaRegistration != null
+    ) {
+      viewControls.push({
+        type: 'check',
+        label: 'Beta',
+        checked: !sideBarOpenedLinksIdsSet.has('hide-beta'),
+        onClick: () => toggleItem('links', 'hide-beta'),
+      })
+    }
+
     return {
-      [translate(lngKeys.SidebarViewOptions)]: [
-        {
-          type: 'check',
-          label: translate(lngKeys.GeneralBookmarks),
-          checked: !sideBarOpenedLinksIdsSet.has('hide-bookmarks'),
-          onClick: () => toggleItem('links', 'hide-bookmarks'),
-        },
-        {
-          type: 'check',
-          label: translate(lngKeys.GeneralDashboards),
-          checked: !sideBarOpenedLinksIdsSet.has('hide-dashboards'),
-          onClick: () => toggleItem('links', 'hide-dashboards'),
-        },
-        {
-          type: 'check',
-          label: translate(lngKeys.GeneralFolders),
-          checked: !sideBarOpenedLinksIdsSet.has('hide-folders'),
-          onClick: () => toggleItem('links', 'hide-folders'),
-        },
-        {
-          type: 'check',
-          label: translate(lngKeys.GeneralLabels),
-          checked: !sideBarOpenedLinksIdsSet.has('hide-labels'),
-          onClick: () => toggleItem('links', 'hide-labels'),
-        },
-        {
-          type: 'check',
-          label: translate(lngKeys.GeneralPrivate),
-          checked: !sideBarOpenedLinksIdsSet.has('hide-private'),
-          onClick: () => toggleItem('links', 'hide-private'),
-        },
-      ],
+      [translate(lngKeys.SidebarViewOptions)]: viewControls,
       [translate(lngKeys.GeneralOrdering)]: Object.values(
         SidebarTreeSortingOrders
       ).map((sort) => {
@@ -202,6 +222,7 @@ export function useCloudSidebarTree() {
     translate,
     toggleItem,
     sideBarOpenedLinksIdsSet,
+    betaRegistrationState,
   ])
 
   const tree = useMemo(() => {
@@ -820,6 +841,36 @@ export function useCloudSidebarTree() {
       })
     }
 
+    if (
+      betaRegistrationState.state === 'loaded' &&
+      betaRegistrationState.betaRegistration != null
+    ) {
+      const betaTree: SidebarTreeChildRow[] = []
+      if (betaRegistrationState.betaRegistration.state.automations) {
+        const href = `${getTeamLinkHref(team, 'automations')}`
+        betaTree.push({
+          id: 'beta-automations',
+          label: 'Automations',
+          depth: 0,
+          href,
+          active: !showSearchScreen && href === currentPathWithDomain,
+          navigateTo: (event?: any) => {
+            if (event && event.shiftKey && usingElectron) {
+              sendToElectron('new-window', href)
+              return
+            }
+            push(href)
+          },
+        })
+      }
+
+      tree.push({
+        label: 'Beta',
+        title: 'Beta',
+        rows: betaTree,
+      })
+    }
+
     tree.forEach((category) => {
       const key = (category.label || '').toLocaleLowerCase()
       const foldKey = `fold-${key}`
@@ -877,6 +928,7 @@ export function useCloudSidebarTree() {
     toggleItem,
     openRenameDashboardForm,
     deleteDashboard,
+    betaRegistrationState,
   ])
 
   const treeWithOrderedCategories = useMemo(() => {
