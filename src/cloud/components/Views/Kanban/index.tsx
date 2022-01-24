@@ -317,6 +317,16 @@ const Container = styled.div`
     white-space: nowrap;
   }
 
+  .kanban__item--header {
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+
+  .kanban__list__header {
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+
   .kanban__item--header > span:hover {
     cursor: grab;
   }

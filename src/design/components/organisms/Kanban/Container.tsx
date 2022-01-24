@@ -49,6 +49,7 @@ const StyledContainer = styled.div`
   & .kanban__list__header {
     display: flex;
     align-items: center;
+    background-color: ${({ theme }) => theme.colors.background.primary};
     & .kanban__list__header__title {
       flex: 1 0 auto;
     }
