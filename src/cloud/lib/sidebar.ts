@@ -6,6 +6,7 @@ export const cloudSidebaCategoryLabels = [
   'Labels',
   'More',
   'Status',
+  'Beta',
 ]
 
 export const cloudSidebarOrderedCategoriesDelimiter = '|'
