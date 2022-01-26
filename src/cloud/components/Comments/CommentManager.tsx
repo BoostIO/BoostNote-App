@@ -78,14 +78,16 @@ function CommentManager({
         )
       case 'list': {
         return (
-          <div className={'thread__list__container'}>
-            <ThreadList
-              threads={state.threads}
-              onSelect={(thread) => setMode({ mode: 'thread', thread })}
-              onDelete={deleteThread}
-              users={usersOrEmpty}
-              updateComment={updateComment}
-            />
+          <>
+            <div className={'thread__list__container'}>
+              <ThreadList
+                threads={state.threads}
+                onSelect={(thread) => setMode({ mode: 'thread', thread })}
+                onDelete={deleteThread}
+                users={usersOrEmpty}
+                updateComment={updateComment}
+              />
+            </div>
             <div className={'thread__list__container__create__thread'}>
               <CommentInput
                 placeholder={'Comment...'}
@@ -96,7 +98,7 @@ function CommentManager({
                 users={usersOrEmpty}
               />
             </div>
-          </div>
+          </>
         )
       }
       case 'thread': {
@@ -137,7 +139,6 @@ function CommentManager({
       case 'new_thread': {
         return (
           <div className='thread__new'>
-            {/*<div className='thread__context'>{state.data.context}</div>*/}
             <CommentInput
               placeholder={'Comment...'}
               onSubmit={async (comment) => {
@@ -175,6 +176,7 @@ function CommentManager({
 const Container = styled.div`
   margin: auto;
   height: 100vh;
+  overflow: hidden;
   width: 480px;
   display: flex;
   flex-direction: column;
@@ -184,7 +186,7 @@ const Container = styled.div`
   color: ${({ theme }) => theme.colors.text.primary};
   font-size: ${({ theme }) => theme.sizes.fonts.md}px;
   position: relative;
-  scrollbar-width: thin;
+
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -282,9 +284,12 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     flex: 1;
-    .thread__list__container__create__thread {
-      margin-top: auto;
-    }
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .thread__list__container__create__thread {
+    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 `
 
