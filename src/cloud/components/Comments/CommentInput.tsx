@@ -24,6 +24,7 @@ interface CommentInputProps {
 }
 
 const smallUserIconStyle = { width: '20px', height: '20px', lineHeight: '17px' }
+
 export function CommentInput({
   onSubmit,
   value = '',
@@ -78,10 +79,6 @@ export function CommentInput({
       inputRef.current.addEventListener('blur', closeSuggestions)
       if (value.length > 0) {
         inputRef.current.appendChild(toFragment(value))
-      } else {
-        // todo: [komediruzecki-2022-01-8] see why this was done... - makes placeholder impossible with pseudo:class
-        // maybe we could leave this and add placeholder directly, but then we need to remove it on type start...
-        // resetInitialContent(inputRef.current)
       }
       if (autoFocus) {
         inputRef.current.focus()
@@ -95,11 +92,12 @@ export function CommentInput({
         setWorking(true)
         await onSubmit(fromNode(inputRef.current).trim())
         if (inputRef.current != null) {
-          resetInitialContent(inputRef.current)
-          inputRef.current.focus()
+          inputRef.current.innerHTML = ''
+          setIsInputEmpty(true)
         }
       } finally {
         setWorking(false)
+        inputRef.current.focus()
       }
     }
   }, [onSubmit])
@@ -116,7 +114,6 @@ export function CommentInput({
 
       const inputContent =
         inputRef.current !== null ? fromNode(inputRef.current).trim() : ''
-      // setIsInputEmpty(inputContent === '')
       if (
         ev.key === 'Enter' &&
         (ev.ctrlKey || ev.metaKey) &&
@@ -224,6 +221,7 @@ export function CommentInput({
 const InputContainer = styled.div`
   position: relative;
   width: 100%;
+
   & .comment__input__editable {
     white-space: pre-wrap;
     resize: none;
@@ -266,16 +264,6 @@ const InputContainer = styled.div`
     }
   }
 `
-
-function resetInitialContent(element: Element) {
-  for (let i = 0; i < element.childNodes.length; i++) {
-    element.removeChild(element.childNodes[i])
-  }
-
-  const child = document.createElement('div')
-  child.appendChild(document.createElement('br'))
-  element.appendChild(child)
-}
 
 function getMentionInSelection() {
   const selection = getSelection()
