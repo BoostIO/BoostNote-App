@@ -61,7 +61,6 @@ interface CommentItemProps {
 
 const smallUserIconStyle = { width: '28px', height: '28px', lineHeight: '22px' }
 
-// todo: [komediruzecki-2022-01-18] Num of replies not reflect upon removal of item!
 export function CommentItem({
   comment,
   editable,

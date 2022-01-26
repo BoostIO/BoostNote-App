@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useRef, useMemo } from 'react'
-import Button from '../../../design/components/atoms/Button'
 import styled from '../../../design/lib/styled'
 import { useEffectOnce } from 'react-use'
 import useSuggestions from '../../../design/lib/hooks/useSuggestions'
@@ -11,9 +10,6 @@ import {
   toFragment,
   isMention,
 } from '../../lib/comments'
-import { lngKeys } from '../../lib/i18n/types'
-import { useI18n } from '../../lib/hooks/useI18n'
-import Flexbox from '../../../design/components/atoms/Flexbox'
 
 interface CommentInputProps {
   onSubmit: (comment: string) => any
@@ -33,9 +29,7 @@ export function CommentInput({
   placeholder,
 }: CommentInputProps) {
   const [working, setWorking] = useState(false)
-  const [isInputEmpty, setIsInputEmpty] = useState(false)
   const inputRef = useRef<HTMLDivElement>(null)
-  const { translate } = useI18n()
   const onSuggestionSelect = useRef((item: SerializedUser, hint: string) => {
     if (inputRef.current == null) {
       return
@@ -93,7 +87,6 @@ export function CommentInput({
         await onSubmit(fromNode(inputRef.current).trim())
         if (inputRef.current != null) {
           inputRef.current.innerHTML = ''
-          setIsInputEmpty(true)
         }
       } finally {
         setWorking(false)
@@ -101,12 +94,6 @@ export function CommentInput({
       }
     }
   }, [onSubmit])
-
-  const onKeyUp = useCallback(() => {
-    const inputContent =
-      inputRef.current !== null ? fromNode(inputRef.current).trim() : ''
-    setIsInputEmpty(inputContent === '')
-  }, [])
 
   const onKeyDown: React.KeyboardEventHandler<HTMLDivElement> = useCallback(
     (ev) => {
@@ -165,31 +152,18 @@ export function CommentInput({
     }
   }, [])
 
-  const onCommentInput = useCallback(() => {
-    if (inputRef.current != null) {
-      setIsInputEmpty(fromNode(inputRef.current).trim() === '')
-    }
-  }, [])
-
   return (
     <InputContainer>
       <div
         className='comment__input__editable'
         ref={inputRef}
         onKeyDown={onKeyDown}
-        onKeyUp={onKeyUp}
         contentEditable={!working}
         onCompositionEnd={onCompositionEndListener}
         onClick={closeSuggestions}
         onBeforeInput={beforeInputHandler}
-        onInput={onCommentInput}
         data-placeholder={placeholder}
       />
-      <Flexbox justifyContent='flex-end'>
-        <Button disabled={working || isInputEmpty} onClick={submit}>
-          {translate(lngKeys.ThreadPost)}
-        </Button>
-      </Flexbox>
       {state.type === 'enabled' && state.suggestions.length > 0 && (
         <div
           className='comment__input__suggestions'
@@ -223,11 +197,12 @@ const InputContainer = styled.div`
   width: 100%;
 
   & .comment__input__editable {
+    margin: auto;
+    width: 90%;
     white-space: pre-wrap;
     resize: none;
-    width: 100%;
     border: 1px solid ${({ theme }) => theme.colors.border.second};
-    min-height: 60px;
+    min-height: 30px;
     background-color: ${({ theme }) => theme.colors.background.secondary};
     color: ${({ theme }) => theme.colors.text.primary};
     padding: 5px 10px;
