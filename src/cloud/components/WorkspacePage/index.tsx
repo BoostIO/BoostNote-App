@@ -15,11 +15,24 @@ import ApplicationContent from '../ApplicationContent'
 import { getDefaultListView } from '../../lib/views/list'
 import { getMapValues } from '../../../design/lib/utils/array'
 import { ViewsManager } from '../Views'
+import ApplicationPageLoader from '../ApplicationPageLoader'
 
-const WorkspacePage = ({ workspace }: { workspace: SerializedWorkspace }) => {
+const WorkspacePage = ({
+  workspace: pageWorkspace,
+}: {
+  workspace: SerializedWorkspace
+}) => {
   const { team, currentUserIsCoreMember } = usePage()
-  const { docsMap, foldersMap, viewsMap } = useNav()
+  const { workspacesMap, docsMap, foldersMap, viewsMap } = useNav()
   const { openContextModal } = useModal()
+
+  const workspace = useMemo(() => {
+    if (pageWorkspace == null) {
+      return
+    }
+
+    return workspacesMap.get(pageWorkspace.id)
+  }, [workspacesMap, pageWorkspace])
 
   const childFolders = useMemo(() => {
     if (workspace == null) {
@@ -100,13 +113,7 @@ const WorkspacePage = ({ workspace }: { workspace: SerializedWorkspace }) => {
   }, [viewsMap, workspace])
 
   if (team == null) {
-    return (
-      <ApplicationPage showingTopbarPlaceholder={true}>
-        <ApplicationContent reduced={true}>
-          <ColoredBlock variant='danger'>{'Team is missing'}</ColoredBlock>
-        </ApplicationContent>
-      </ApplicationPage>
-    )
+    return <ApplicationPageLoader team={team} loader='folder-page' />
   }
 
   if (workspace == null) {

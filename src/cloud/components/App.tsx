@@ -52,9 +52,10 @@ const App = () => {
     }
   })
 
-  if (!accessTokenInitialized) {
+  if (usingElectron && !accessTokenInitialized) {
     return <div>Fetching access token...</div>
   }
+
   return (
     <>
       <link href='/app/katex/katex.min.css' rel='stylesheet' />

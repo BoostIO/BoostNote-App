@@ -11,6 +11,7 @@ import { scrollbarOverlay } from '../../../lib/styled/styleFunctions'
 import WithTooltip from '../../atoms/WithTooltip'
 import styled from '../../../lib/styled'
 import { TopbarActionItemAttrbs } from './atoms/TopbarActionItem'
+import Loader from '../../atoms/loaders'
 
 export interface TopbarBreadcrumbProps {
   link: { href: string; navigateTo: () => void }
@@ -46,6 +47,7 @@ export type TopbarControlProps =
 export interface TopbarPageProps {
   controls?: TopbarControlProps[]
   breadcrumbs?: TopbarBreadcrumbProps[]
+  initialLoadDone?: boolean
 }
 
 export type TopbarProps = TopbarPageProps & {
@@ -63,6 +65,7 @@ const Topbar: AppComponent<TopbarProps> = ({
   breadcrumbs = [],
   navigation,
   tree,
+  initialLoadDone,
 }) => {
   const [treeState, setTreeState] = useState<{
     bottom: number
@@ -136,52 +139,58 @@ const Topbar: AppComponent<TopbarProps> = ({
           ])}
           onScroll={onScrollHandler}
         >
-          {breadcrumbs.map((breadcrumb, i) => (
-            <React.Fragment key={`topbar__breadcrumb__${i}`}>
-              <TopbarBreadcrumb
-                id={`topbar__breadcrumb__${i}`}
-                className='topbar__breadcrumbs__item'
-                label={breadcrumb.label}
-                href={breadcrumb.link.href}
-                active={breadcrumb.active}
-                emoji={breadcrumb.emoji}
-                defaultIcon={breadcrumb.icon}
-                minimized={i !== breadcrumbs.length - 1}
-                onContextMenu={(event: React.MouseEvent) => {
-                  event.preventDefault()
-                  event.stopPropagation()
-                  const {
-                    bottom,
-                    left,
-                  } = event.currentTarget.getBoundingClientRect()
-                  return openNavTree(breadcrumb.parentId, {
-                    bottom,
-                    left,
-                    actions: breadcrumb.controls,
-                  })
-                }}
-                onClick={breadcrumb.link.navigateTo}
-                onDoubleClick={(event: React.MouseEvent) => {
-                  const {
-                    bottom,
-                    left,
-                  } = event.currentTarget.getBoundingClientRect()
-                  return openNavTree(breadcrumb.parentId, {
-                    bottom,
-                    left,
-                    actions: breadcrumb.controls,
-                  })
-                }}
-              />
-              {i !== breadcrumbs.length - 1 && (
-                <Icon
-                  path={mdiChevronRight}
-                  size={16}
-                  className='topbar__separator'
-                />
-              )}
-            </React.Fragment>
-          ))}
+          {!initialLoadDone ? (
+            <Loader variant='topbar-breadcrumb' />
+          ) : (
+            <>
+              {breadcrumbs.map((breadcrumb, i) => (
+                <React.Fragment key={`topbar__breadcrumb__${i}`}>
+                  <TopbarBreadcrumb
+                    id={`topbar__breadcrumb__${i}`}
+                    className='topbar__breadcrumbs__item'
+                    label={breadcrumb.label}
+                    href={breadcrumb.link.href}
+                    active={breadcrumb.active}
+                    emoji={breadcrumb.emoji}
+                    defaultIcon={breadcrumb.icon}
+                    minimized={i !== breadcrumbs.length - 1}
+                    onContextMenu={(event: React.MouseEvent) => {
+                      event.preventDefault()
+                      event.stopPropagation()
+                      const {
+                        bottom,
+                        left,
+                      } = event.currentTarget.getBoundingClientRect()
+                      return openNavTree(breadcrumb.parentId, {
+                        bottom,
+                        left,
+                        actions: breadcrumb.controls,
+                      })
+                    }}
+                    onClick={breadcrumb.link.navigateTo}
+                    onDoubleClick={(event: React.MouseEvent) => {
+                      const {
+                        bottom,
+                        left,
+                      } = event.currentTarget.getBoundingClientRect()
+                      return openNavTree(breadcrumb.parentId, {
+                        bottom,
+                        left,
+                        actions: breadcrumb.controls,
+                      })
+                    }}
+                  />
+                  {i !== breadcrumbs.length - 1 && (
+                    <Icon
+                      path={mdiChevronRight}
+                      size={16}
+                      className='topbar__separator'
+                    />
+                  )}
+                </React.Fragment>
+              ))}
+            </>
+          )}
           {children != null && (
             <div className='topbar__children'>{children}</div>
           )}

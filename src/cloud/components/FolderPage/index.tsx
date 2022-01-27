@@ -26,14 +26,14 @@ import ApplicationPage from '../ApplicationPage'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import ApplicationTopbar from '../ApplicationTopbar'
 import ApplicationContent from '../ApplicationContent'
-import Spinner from '../../../design/components/atoms/Spinner'
 import { getMapValues } from '../../../design/lib/utils/array'
 import { getDefaultListView } from '../../lib/views/list'
 import { filterIter } from '../../lib/utils/iterator'
 import { ViewsManager } from '../Views'
+import ApplicationPageLoader from '../ApplicationPageLoader'
 
 const FolderPage = () => {
-  const { pageFolder, team, currentUserIsCoreMember, pageData } = usePage()
+  const { pageFolder, team, currentUserIsCoreMember } = usePage()
   const {
     docsMap,
     foldersMap,
@@ -199,23 +199,10 @@ const FolderPage = () => {
   }, [currentFolder, currentUserIsCoreMember, openContextModal, team])
 
   if (team == null) {
-    return (
-      <ApplicationPage showingTopbarPlaceholder={true}>
-        <ApplicationContent reduced={true}>
-          <ColoredBlock variant='danger'>{'Team is missing'}</ColoredBlock>
-        </ApplicationContent>
-      </ApplicationPage>
-    )
+    return <ApplicationPageLoader team={team} loader='folder-page' />
   }
 
   if (currentFolder == null) {
-    if ((pageData as any).needsReload != null) {
-      return (
-        <ApplicationPage showingTopbarPlaceholder={true}>
-          <Spinner variant='subtle' style={{ marginLeft: 15, marginTop: 15 }} />
-        </ApplicationPage>
-      )
-    }
     return (
       <ApplicationPage showingTopbarPlaceholder={true}>
         <ApplicationContent reduced={true}>

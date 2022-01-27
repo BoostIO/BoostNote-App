@@ -16,12 +16,15 @@ import ApplicationTopbar from '../../../../components/ApplicationTopbar'
 import ApplicationContent from '../../../../components/ApplicationContent'
 
 const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
-  const { docsMap, tagsMap, workspacesMap } = useNav()
+  const { docsMap, tagsMap, workspacesMap, initialLoadDone } = useNav()
   const { team, currentUserIsCoreMember } = usePage()
 
   const pageTag = useMemo(() => {
+    if (!initialLoadDone) {
+      return pagePropsTag
+    }
     return tagsMap.get(pagePropsTag.id)
-  }, [tagsMap, pagePropsTag.id])
+  }, [tagsMap, pagePropsTag, initialLoadDone])
 
   const docs = useMemo(() => {
     if (pageTag == null) {

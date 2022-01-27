@@ -237,7 +237,10 @@ const Router = () => {
   }
 
   return (
-    <PageDataProvider pageProps={pageInfo.pageProps as any}>
+    <PageDataProvider
+      pageProps={pageInfo.pageProps as any}
+      navigatingBetweenPage={false}
+    >
       <V2CombinedProvider>
         <CombinedProvider>
           <NavProvider>

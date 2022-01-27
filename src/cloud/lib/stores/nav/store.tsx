@@ -73,6 +73,7 @@ function useNavStore(): NavContext {
     pageDoc,
     workspaces,
     setPartialPageData,
+    pageData: pageProps,
   } = usePage()
   const { messageBox } = useDialog()
   const router = useRouter()
@@ -260,11 +261,24 @@ function useNavStore(): NavContext {
 
   const prevTeamId = useRef<string>()
 
+  useEffect(() => {
+    const maps = getTagsFoldersDocsMapsFromProps(pageProps)
+    setFoldersMap((prev) => new Map([...prev, ...maps.foldersData]))
+    setDocsMap((prev) => new Map([...prev, ...maps.docsData]))
+    setTagsMap((prev) => new Map([...prev, ...maps.tagsData]))
+    setTemplatesMap((prev) => new Map([...prev, ...maps.templatesData]))
+    setDashboardsMap((prev) => new Map([...prev, ...maps.dashboardsData]))
+    setViewsMap((prev) => new Map([...prev, ...maps.viewsData]))
+    setSmartViewsMap((prev) => new Map([...prev, ...maps.smartViewsData]))
+    setWorkspacesMap((prev) => new Map([...prev, ...maps.workspacesData]))
+  }, [pageProps])
+
   const getAllResourcesAbortController = useRef<AbortController | null>(null)
 
   useEffect(() => {
     const getAllResources = async () => {
       if (team == null) {
+        console.log('reset map')
         setFoldersMap(new Map())
         setDocsMap(new Map())
         setTagsMap(new Map())
