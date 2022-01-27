@@ -74,6 +74,8 @@ import {
 } from './molecules/PageSearch/InPageSearchPortal'
 import SidebarToggleButton from './SidebarToggleButton'
 import SidebarSubscriptionCTA from './Subscription/SidebarSubscriptionCTA'
+import Loader from '../../design/components/atoms/loaders'
+import { isEmpty } from 'lodash'
 
 interface ApplicationProps {
   className?: string
@@ -92,11 +94,13 @@ const Application = ({
     currentPath,
   } = useNav()
   const {
+    pageData,
     team,
     permissions = [],
     currentUserPermissions,
     currentUserIsCoreMember,
     subscription,
+    navigatingBetweenPage,
   } = usePage()
   const { openModal } = useModal()
   const {
@@ -353,6 +357,14 @@ const Application = ({
   }, [])
 
   const sidebarHeader = useMemo(() => {
+    if (isEmpty(pageData || {}) && navigatingBetweenPage) {
+      return (
+        <>
+          <Loader variant='team-picker' />
+          <Loader variant='nav-item' count={4} />
+        </>
+      )
+    }
     if (team == null) {
       return (
         <SidebarHeader
@@ -418,6 +430,8 @@ const Application = ({
     team,
     translate,
     showSearchScreen,
+    navigatingBetweenPage,
+    pageData,
   ])
 
   const sidebarFooter = useMemo(() => {
@@ -514,7 +528,15 @@ const Application = ({
         }
         pageBody={
           <>
-            {showSearchScreen ? <CloudGlobalSearch team={team} /> : children}
+            {showSearchScreen ? (
+              <CloudGlobalSearch team={team} />
+            ) : isEmpty(pageData || {}) && navigatingBetweenPage ? (
+              <>
+                <Loader variant='topbar' />
+              </>
+            ) : (
+              children
+            )}
             {preferences.sidebarIsHidden && <SidebarToggleButton />}
           </>
         }

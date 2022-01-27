@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from '../lib/router'
 import { ThemeProvider } from 'styled-components'
-import { useGlobalData } from '../lib/stores/globalData'
+import { GlobalDataProvider, useGlobalData } from '../lib/stores/globalData'
 import { getGlobalData } from '../api/global'
 import { useEffectOnce } from 'react-use'
 import nProgress from 'nprogress'
@@ -55,15 +55,14 @@ import { NotificationsProvider } from '../../design/lib/stores/notifications'
 import { TeamIntegrationsProvider } from '../../design/lib/stores/integrations'
 import { TeamStorageProvider } from '../lib/stores/teamStorage'
 import DenyRequestsPage from '../pages/[teamId]/requests/deny'
-import styled from '../../design/lib/styled'
 import { darkTheme } from '../../design/lib/styled/dark'
-import Spinner from '../../design/components/atoms/Spinner'
 import { TeamPreferencesProvider } from '../lib/stores/teamPreferences'
 import Application from './Application'
 import { BaseTheme } from '../../design/lib/styled/types'
 import { PreviewStyleProvider } from '../../lib/preview'
 import HomePage from '../pages/home'
 import DashboardPage from '../pages/[teamId]/dashboard'
+import ApplicationWithoutPageInfo from './ApplicationWithoutInfoLoader'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -93,6 +92,7 @@ const V2CombinedProvider = combineProviders(
 interface PageInfo {
   Component: React.ComponentType<any>
   pageProps: any
+  navigating?: boolean
   isError?: boolean
 }
 
@@ -111,7 +111,8 @@ const Router = () => {
   const { connect } = useRealtimeConn()
   const previousPathnameRef = useRef<string | null>(null)
   const previousSearchRef = useRef<string | null>(null)
-
+  const previousSecondaryPathnameRef = useRef<string | null>(null)
+  const [navigatingBetweenPage, setNavigatingBetweenPage] = useState(true)
   const { initGlobalData, initialized, globalData } = useGlobalData()
   const { currentUser, realtimeAuth } = globalData
 
@@ -155,6 +156,26 @@ const Router = () => {
   })
 
   useEffect(() => {
+    if (initialized || previousSecondaryPathnameRef.current === pathname) {
+      return
+    }
+
+    previousSecondaryPathnameRef.current = pathname
+    getGlobalData()
+      .then((globalData) => {
+        initGlobalData(globalData)
+      })
+      .catch((_err) => {
+        initGlobalData({
+          teams: [],
+          invites: [],
+        })
+      })
+
+    return
+  }, [initGlobalData, initialized, pathname])
+
+  useEffect(() => {
     if (
       previousPathnameRef.current === pathname &&
       previousSearchRef.current === search
@@ -175,25 +196,25 @@ const Router = () => {
 
     const abortController = new AbortController()
 
-    Promise.all([
-      initialized ? null : getGlobalData(),
-      pageSpec.getInitialProps != null
-        ? pageSpec.getInitialProps({
-            pathname,
-            search,
-            signal: abortController.signal,
-          })
-        : {},
-    ])
-      .then(([globalData, pageData]) => {
-        if (globalData != null) {
-          initGlobalData(globalData)
-        }
+    setNavigatingBetweenPage(true)
+    new Promise((resolve, _reject) =>
+      resolve(
+        pageSpec.getInitialProps != null
+          ? pageSpec.getInitialProps({
+              pathname,
+              search,
+              signal: abortController.signal,
+            })
+          : {}
+      )
+    )
+      .then((pageData) => {
         setPageInfo({
           Component: pageSpec.Component,
           pageProps: pageData,
         })
         nProgress.done()
+        setNavigatingBetweenPage(false)
       })
       .catch((error: Error) => {
         if (error.name === 'AbortError') {
@@ -201,13 +222,6 @@ const Router = () => {
           console.warn(error)
         } else {
           console.error(error)
-          if (!initialized) {
-            initGlobalData({
-              teams: [],
-              invites: [],
-            })
-          }
-
           setPageInfo({
             isError: true,
             Component: ErrorPage,
@@ -216,54 +230,55 @@ const Router = () => {
             },
           })
           nProgress.done()
+          setNavigatingBetweenPage(false)
         }
       })
 
     intercom.update()
-
     return () => {
       abortController.abort()
     }
     // Determine which page to show and how to fetch it
 
     // How to fetch does exist in get initial props so we need to determine the component
-  }, [pathname, search, initialized, initGlobalData])
+  }, [pathname, search])
 
-  if (!initialized) {
-    return (
-      <SettingsProvider>
-        <V2ThemeProvider theme={darkTheme}>
-          <LoadingScreen message='Fetching global data...' />
-          <GlobalStyleV2 />
-        </V2ThemeProvider>
-      </SettingsProvider>
-    )
-  }
   if (pageInfo == null) {
-    return (
-      <SettingsProvider>
-        <V2ThemeProvider theme={darkTheme}>
-          <LoadingScreen message='Fetching page data...' />
-          <GlobalStyleV2 />
-        </V2ThemeProvider>
-      </SettingsProvider>
-    )
+    if (isApplicationPagePathname(pathname)) {
+      return (
+        <PreferencesProvider>
+          <GlobalDataProvider>
+            <SettingsProvider>
+              <V2ThemeProvider>
+                <ApplicationWithoutPageInfo />
+              </V2ThemeProvider>
+            </SettingsProvider>
+          </GlobalDataProvider>
+        </PreferencesProvider>
+      )
+    } else {
+      return null
+    }
   }
 
   return (
-    <PageDataProvider pageProps={pageInfo.pageProps as any}>
+    <PageDataProvider
+      pageProps={pageInfo.pageProps as any}
+      navigatingBetweenPage={navigatingBetweenPage}
+    >
       <V2CombinedProvider>
         <CombinedProvider>
           <NavProvider>
             <V2ThemeProvider>
-              {isApplicationPagePathname(pathname) && !pageInfo.isError ? (
+              {!isApplicationPagePathname(pathname) || pageInfo.isError ? (
+                <>
+                  <pageInfo.Component {...pageInfo.pageProps} />
+                </>
+              ) : (
                 <Application>
                   <pageInfo.Component {...pageInfo.pageProps} />
                 </Application>
-              ) : (
-                <pageInfo.Component {...pageInfo.pageProps} />
               )}
-
               <GlobalStyleV2 />
               <CodeMirrorStyle />
               <CloudModal />
@@ -281,38 +296,6 @@ const Router = () => {
 }
 
 export default Router
-
-interface LoadingScreenProps {
-  message?: string
-}
-
-const LoadingScreenContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.background.primary};
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  color: ${({ theme }) => theme.colors.text.primary};
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .message {
-    margin-left: 5px;
-  }
-`
-
-const LoadingScreen = ({ message }: LoadingScreenProps) => {
-  return (
-    <LoadingScreenContainer>
-      <Spinner />
-      <p className='message'>{message == null ? 'Loading...' : message}</p>
-    </LoadingScreenContainer>
-  )
-}
 
 const V2ThemeProvider: React.FC<{ theme?: BaseTheme }> = ({
   children,

@@ -7,7 +7,6 @@ import { useEffectOnce } from 'react-use'
 import Button from '../../../design/components/atoms/Button'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Flexbox from '../../../design/components/atoms/Flexbox'
-import Spinner from '../../../design/components/atoms/Spinner'
 import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
 import { overflowEllipsis } from '../../../design/lib/styled/styleFunctions'
@@ -25,6 +24,7 @@ import { getDocTitle } from '../../lib/utils/patterns'
 import DocProperties from '../DocProperties'
 import { getDocLinkHref } from '../Link/DocLink'
 import DocPreviewRealtime from './DocPreviewRealtime'
+import Loader from '../../../design/components/atoms/loaders'
 
 interface DocPreviewModalProps {
   doc: SerializedDocWithSupplemental
@@ -165,7 +165,7 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
         />
         {fetching ? (
           <Flexbox>
-            <Spinner />
+            <Loader variant='doc-editor' />
           </Flexbox>
         ) : (
           <DocPreviewRealtime

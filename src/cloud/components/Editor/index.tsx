@@ -91,7 +91,6 @@ import EditorLayout from '../DocPage/EditorLayout'
 import PreferencesContextMenuWrapper from '../PreferencesContextMenuWrapper'
 import InviteCTAButton from '../buttons/InviteCTAButton'
 import { BaseTheme } from '../../../design/lib/styled/types'
-import Spinner from '../../../design/components/atoms/Spinner'
 import styled from '../../../design/lib/styled'
 import { rightSidePageLayout } from '../../../design/lib/styled/styleFunctions'
 import Icon from '../../../design/components/atoms/Icon'
@@ -120,7 +119,6 @@ interface EditorProps {
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
   docIsEditable?: boolean
-  loading?: boolean
 }
 
 interface EditorPosition {
@@ -143,7 +141,6 @@ const Editor = ({
   contributors,
   backLinks,
   docIsEditable,
-  loading = false,
 }: EditorProps) => {
   const { translate } = useI18n()
   const {
@@ -275,9 +272,8 @@ const Editor = ({
       // fixes IME being on top of current line, Codemirror issue: https://github.com/codemirror/CodeMirror/issues/3137
       spellcheck: enableSpellCheck,
       inputStyle: 'contenteditable',
-      readOnly: loading,
     }
-  }, [settings, loading])
+  }, [settings])
 
   const shortcodeConvertMenuStyle: React.CSSProperties = useMemo(() => {
     if (shortcodeConvertMenu == null || editorRef.current == null) {
@@ -920,17 +916,6 @@ const Editor = ({
     [takeSnapshot, doc.id]
   )
 
-  if (!initialLoadDone) {
-    return (
-      <StyledLoadingView>
-        <h3>Loading..</h3>
-        <span>
-          <Spinner />
-        </span>
-      </StyledLoadingView>
-    )
-  }
-
   return (
     <ApplicationPage
       right={
@@ -956,7 +941,7 @@ const Editor = ({
             {
               type: 'separator',
             },
-            ...(loading || connState === 'reconnecting'
+            ...(connState === 'reconnecting'
               ? [
                   {
                     type: 'button',
@@ -1091,13 +1076,6 @@ const Editor = ({
         )}
       </ApplicationTopbar>
       <ApplicationContent>
-        {loading && (
-          <ReloadingAlert>
-            <div className='container'>
-              <Spinner variant='subtle' /> Loading Doc Data
-            </div>
-          </ReloadingAlert>
-        )}
         <EditorLayout
           doc={doc}
           docIsEditable={true}
@@ -1200,22 +1178,6 @@ const Editor = ({
   )
 }
 
-const ReloadingAlert = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 10000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  .container {
-    background-color: ${({ theme }) => theme.colors.background.tertiary};
-    padding: 10px;
-  }
-`
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -1288,19 +1250,6 @@ const StyledLayoutDimensions = styled.div`
   .preview {
     width: 100%;
     height: auto;
-  }
-`
-
-const StyledLoadingView = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  & span {
-    width: 100%;
-    height: 38px;
-    position: relative;
   }
 `
 

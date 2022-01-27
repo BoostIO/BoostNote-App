@@ -20,10 +20,11 @@ import { freePlanDocLimit } from '../../subscription'
 
 interface PageStoreProps {
   pageProps: any
+  navigatingBetweenPage: boolean
 }
 
-function usePageDataStore(pageProps: any) {
-  const [pageData, setPageData] = useState(pageProps)
+function usePageDataStore(pageProps: any, navigatingBetweenPage: boolean) {
+  const [pageData, setPageData] = useState(pageProps || {})
   const {
     globalData: { currentUser },
   } = useGlobalData()
@@ -232,11 +233,15 @@ function usePageDataStore(pageProps: any) {
     setPartialPageDataRef,
     currentUserPermissions,
     currentUserIsCoreMember,
+    navigatingBetweenPage,
   }
 }
 
 function createPageStoreContext(
-  storeCreator: (pageProps: any) => PageDataContext<any>,
+  storeCreator: (
+    pageProps: any,
+    navigatingBetweenPage: boolean
+  ) => PageDataContext<any>,
   storeName?: string
 ) {
   const reloadContext = createContext<null | any>(null)
@@ -244,8 +249,11 @@ function createPageStoreContext(
   const StoreProvider = ({
     children,
     pageProps,
+    navigatingBetweenPage,
   }: PropsWithChildren<PageStoreProps>) => (
-    <reloadContext.Provider value={storeCreator(pageProps)}>
+    <reloadContext.Provider
+      value={storeCreator(pageProps, navigatingBetweenPage)}
+    >
       {children}
     </reloadContext.Provider>
   )

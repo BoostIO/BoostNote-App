@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Flexbox from '../../../design/components/atoms/Flexbox'
-import Spinner from '../../../design/components/atoms/Spinner'
+import Loader from '../../../design/components/atoms/loaders'
 import { buildIconUrl } from '../../api/files'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedUser } from '../../interfaces/db/user'
@@ -91,7 +91,7 @@ const DocPreviewRealtime = ({ doc, token, user }: DocPreviewRealtimeProps) => {
   if (!loaded) {
     return (
       <Flexbox>
-        <Spinner />
+        <Loader variant='doc-editor' />
       </Flexbox>
     )
   }

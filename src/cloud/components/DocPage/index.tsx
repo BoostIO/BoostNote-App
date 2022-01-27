@@ -22,7 +22,6 @@ import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Editor from '../Editor'
 import ApplicationPage from '../ApplicationPage'
 import { freePlanDocLimit, freePlanMembersLimit } from '../../lib/subscription'
-import Spinner from '../../../design/components/atoms/Spinner'
 
 interface DocPageProps {
   doc: SerializedDocWithSupplemental
@@ -30,7 +29,6 @@ interface DocPageProps {
   backLinks: SerializedDoc[]
   revisionHistory: SerializedRevision[]
   thread?: string
-  loading?: boolean
 }
 
 const DocPage = ({
@@ -38,7 +36,6 @@ const DocPage = ({
   contributors,
   backLinks,
   revisionHistory,
-  loading = false,
 }: DocPageProps) => {
   const {
     team,
@@ -46,7 +43,6 @@ const DocPage = ({
     permissions = [],
     currentUserPermissions,
     currentUserIsCoreMember,
-    pageData,
   } = usePage()
   const { docsMap, setCurrentPath, deleteDocHandler } = useNav()
   const {
@@ -150,13 +146,6 @@ const DocPage = ({
   useGlobalKeyDownHandler(docPageControlsKeyDownHandler)
 
   if (currentDoc == null || team == null) {
-    if ((pageData as any).needsReload != null) {
-      return (
-        <ApplicationPage showingTopbarPlaceholder={true}>
-          <Spinner variant='subtle' style={{ marginLeft: 15, marginTop: 15 }} />
-        </ApplicationPage>
-      )
-    }
     return (
       <ApplicationPage showingTopbarPlaceholder={true}>
         <ColoredBlock
@@ -203,7 +192,6 @@ const DocPage = ({
       backLinks={backLinks}
       revisionHistory={revisionHistory}
       docIsEditable={docIsEditable}
-      loading={loading}
     />
   )
 }

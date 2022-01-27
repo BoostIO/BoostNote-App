@@ -7,7 +7,6 @@ import {
 } from '../../../lib/sidebar'
 import styled from '../../../lib/styled'
 import WidthEnlarger from '../../atoms/WidthEnlarger'
-import Spinner from '../../atoms/Spinner'
 import { AppUser } from '../../../lib/mappers/users'
 import NotificationList, {
   NotificationState,
@@ -21,6 +20,7 @@ import Scroller from '../../atoms/Scroller'
 import Button from '../../atoms/Button'
 import { mdiArrowLeft } from '@mdi/js'
 import { rightSideTopBarHeight } from '../Topbar'
+import Loader from '../../atoms/loaders'
 
 export type PopOverState = null | 'spaces' | 'notifications'
 
@@ -99,7 +99,10 @@ const Sidebar = ({
           <div className='sidebar--expanded__wrapper__header'>{header}</div>
           <Scroller className='sidebar--expanded__wrapper__content'>
             {tree == null ? (
-              <Spinner className='sidebar__loader' />
+              <>
+                <Loader variant='nav-item' withDepth={true} count={5} />
+                <Loader variant='nav-item' withDepth={true} count={3} />
+              </>
             ) : (
               <SidebarTree tree={tree} />
             )}
@@ -113,7 +116,7 @@ const Sidebar = ({
 
 export default React.memo(Sidebar)
 
-const SidebarContainer = styled.div`
+export const SidebarContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;

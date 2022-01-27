@@ -301,6 +301,7 @@ const ApplicationTopbar = ({
       controls={controls}
       navigation={{ goBack, goForward }}
       breadcrumbs={topbarBreadcrumbs}
+      initialLoadDone={initialLoadDone}
       className='topbar'
     >
       {children}
