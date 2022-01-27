@@ -1,4 +1,4 @@
-import { mdiLabelOutline, mdiMenuDown, mdiMenuUp, mdiPlus } from '@mdi/js'
+import { mdiLabelOutline, mdiChevronDown, mdiChevronUp, mdiPlus } from '@mdi/js'
 import React, { useMemo } from 'react'
 import Button from '../../design/components/atoms/Button'
 import Flexbox from '../../design/components/atoms/Flexbox'
@@ -51,7 +51,8 @@ const DocProperties = ({
             <Button
               id='properties-show'
               variant='transparent'
-              iconPath={mdiMenuDown}
+              size='sm'
+              iconPath={mdiChevronDown}
               onClick={() => setPreferences({ docPropertiesAreHidden: false })}
             >
               Show Properties
@@ -143,6 +144,7 @@ const DocProperties = ({
               variant='transparent'
               iconPath={mdiPlus}
               className='doc-props__property'
+              size='sm'
               onClick={(event) => {
                 openContextModal(
                   event,
@@ -168,8 +170,9 @@ const DocProperties = ({
             <Button
               id='properties-hide'
               variant='transparent'
+              size='sm'
               className='doc-props__property'
-              iconPath={mdiMenuUp}
+              iconPath={mdiChevronUp}
               onClick={() => setPreferences({ docPropertiesAreHidden: true })}
             >
               Hide Properties
@@ -182,10 +185,6 @@ const DocProperties = ({
 }
 
 const Container = styled.div`
-  .doc-props__properties {
-    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
-  }
-
   #properties-hide {
     margin-left: 0;
   }
@@ -193,9 +192,6 @@ const Container = styled.div`
   .doc-props__property {
     &:not(button) {
       padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
-    }
-    &:not(div) {
-      padding-left: 9px;
     }
     flex: 1 1 auto;
     display: flex;
