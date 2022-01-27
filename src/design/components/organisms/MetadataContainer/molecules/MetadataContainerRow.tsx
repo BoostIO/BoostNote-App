@@ -76,11 +76,7 @@ const MetadataContainerRow: AppComponent<MetadataRowProps> = ({
             {row.label != null && (
               <label className='metadata__label'>
                 {row.icon != null && (
-                  <Icon
-                    path={row.icon}
-                    className='metadata__icon'
-                    size={16}
-                  />
+                  <Icon path={row.icon} className='metadata__icon' size={16} />
                 )}
                 {row.label}
               </label>
