@@ -132,7 +132,6 @@ const Container = styled.div`
     align-items: flex-start;
     height: fit-content;
     flex: 1 1 auto;
-    padding: 0px ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 
   .metadata__item--column {
