@@ -13,13 +13,22 @@ import { useModal } from '../../../design/lib/stores/modal'
 import styled from '../../../design/lib/styled'
 import Spinner from '../../../design/components/atoms/Spinner'
 import ImportFlowSource from './molecules/ImportFlowSources'
+import {
+  evernoteAccessTokenDataKey,
+  evernoteAuthorize,
+  evernoteTempTokenKey,
+  evernoteTempTokenSecretKey,
+} from '../../api/migrations/EvernoteApi'
+import { useRouter } from '../../lib/router'
+import { useElectron } from '../../lib/stores/electron'
 
-type ImportStep = 'destination' | 'source' | 'import'
+type ImportStep = 'destination' | 'source' | 'import' | 'evernote-import'
 
 const ImportFlow = () => {
   const [step, setStep] = useState<ImportStep>('source')
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>()
   const [selectedFolderId, setSelectedFolderId] = useState<string>()
+
   const { closeLastModal: closeModal } = useModal()
   const fileUploaderRef = useRef<HTMLInputElement>(null)
   const [uploadType, setUploadType] = useState<
@@ -40,6 +49,7 @@ const ImportFlow = () => {
 
   const navigateToTeam = useNavigateToTeam()
   const navigateToWorkspace = useNavigateToWorkspace()
+  const { sendToElectron, usingElectron } = useElectron()
 
   const onFileUpload = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,27 +152,59 @@ const ImportFlow = () => {
       navigateToFolder,
     ]
   )
+  const { push } = useRouter()
+  const fetchEvernoteTempToken = useCallback(() => {
+    evernoteAuthorize()
+      .then((result) => {
+        localStorage.setItem(evernoteTempTokenKey, result.oauthToken)
+        localStorage.setItem(
+          evernoteTempTokenSecretKey,
+          result.oauthTokenSecret
+        )
 
-  const onsourceCallback = useCallback((val: string) => {
-    switch (val) {
-      case 'dropbox':
-      case 'gdocs':
-      case 'md':
-        setUploadType('md')
-        break
-      case 'evernote':
-      case 'confluence':
-      case 'html':
-        setUploadType('html')
-        break
-      case 'quip':
-      case 'notion':
-      default:
-        setUploadType('md|html')
-        break
+        if (usingElectron) {
+          sendToElectron('open-external-url', result.redirectUrl)
+        } else {
+          open(result.redirectUrl)
+        }
+      })
+      .catch((err) => console.log('Err' + err))
+  }, [sendToElectron, usingElectron])
+
+  const evernoteLoginOauth = useCallback(() => {
+    const accessTokenData = localStorage.getItem(evernoteAccessTokenDataKey)
+    if (accessTokenData != null) {
+      push('/migrations/evernote')
+      return
     }
-    setStep('destination')
-  }, [])
+    fetchEvernoteTempToken()
+  }, [fetchEvernoteTempToken, push])
+
+  const onsourceCallback = useCallback(
+    (val: string) => {
+      switch (val) {
+        case 'dropbox':
+        case 'gdocs':
+        case 'md':
+          setUploadType('md')
+          setStep('destination')
+          break
+        case 'evernote':
+        case 'confluence':
+        case 'html':
+          setUploadType('html')
+          evernoteLoginOauth()
+          break
+        case 'quip':
+        case 'notion':
+        default:
+          setUploadType('md|html')
+          setStep('destination')
+          break
+      }
+    },
+    [evernoteLoginOauth]
+  )
 
   const content = useMemo(() => {
     switch (step) {

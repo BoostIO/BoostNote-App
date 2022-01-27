@@ -1,10 +1,10 @@
-import { SerializedDoc } from '../../interfaces/db/doc'
+import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { callApi } from '../../lib/client'
 
 interface DocCreateRequestBody {
   content: string
   title: string
-  workspaceId: string
+  workspaceId?: string
   path: string
   tags: string[]
   teamId: string
@@ -13,7 +13,7 @@ interface DocCreateRequestBody {
 }
 
 interface DocCreateResponseBody {
-  doc: SerializedDoc
+  doc: SerializedDocWithSupplemental
 }
 
 export function createDocREST(body: DocCreateRequestBody) {

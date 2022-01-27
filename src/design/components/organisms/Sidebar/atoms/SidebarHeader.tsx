@@ -52,7 +52,7 @@ const SidebarHeader: AppComponent<SidebarHeaderProps> = ({
           <RoundedImage
             className='button__icon'
             size={22}
-            alt={spaceName}
+            alt={spaceName === 'Select space' ? '...' : spaceName}
             url={spaceImage}
           />
         }

@@ -131,6 +131,8 @@ const Application = ({
         return openSettingsTab('teamUpgrade')
       case 'members':
         return openSettingsTab('teamMembers')
+      case 'evernote-migration':
+        return openSettingsTab('import')
       default:
         return
     }
@@ -357,7 +359,7 @@ const Application = ({
       return (
         <SidebarHeader
           onSpaceClick={onSpaceClick}
-          spaceName={'...'}
+          spaceName={'Select space'}
           controls={sidebarHeaderControls}
         />
       )

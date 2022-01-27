@@ -64,6 +64,7 @@ import { BaseTheme } from '../../design/lib/styled/types'
 import { PreviewStyleProvider } from '../../lib/preview'
 import HomePage from '../pages/home'
 import DashboardPage from '../pages/[teamId]/dashboard'
+import EvernoteMigration from '../pages/migrations'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -347,6 +348,7 @@ function isHomepagePathname(pathname: string) {
   }
   switch (pathname) {
     case '/':
+    // case '/migrations':
     case '/features':
     case '/pricing':
     case '/integrations':
@@ -367,6 +369,9 @@ function isApplicationPagePathname(pathname: string) {
   if (isHomepagePathname(pathname)) return false
 
   const [, ...splittedPathnames] = pathname.split('/')
+  if (splittedPathnames.length === 2 && splittedPathnames[1] === 'migrations') {
+    return true
+  }
 
   if (
     (splittedPathnames.length >= 2 &&
@@ -402,6 +407,11 @@ function getPageComponent(pathname: string): PageSpec | null {
         return {
           Component: CooperatePage,
           getInitialProps: CooperatePage.getInitialProps,
+        }
+      case 'migrations':
+        return {
+          Component: EvernoteMigration,
+          getInitialProps: EvernoteMigration.getInitialProps,
         }
       case 'settings':
         return {
