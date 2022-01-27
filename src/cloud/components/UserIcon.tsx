@@ -28,7 +28,10 @@ export const StyledUserIcon = styled.div`
   ${userIconStyle}
   width: 30px;
   height: 30px;
-  border: 2px solid currentColor;
+  background-color: ${({ theme }) => theme.colors.variants.primary.base};
+  color: ${({ theme }) => theme.colors.variants.primary.text};
+  border: none;
+  line-height: 30px;
 
   &.subtle {
     border: 1px solid ${({ theme }) => theme.colors.border.second};
