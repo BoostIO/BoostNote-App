@@ -77,7 +77,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.ManageIntegrations]:
     'Connect 3rd party content to your Boost Note documents.',
   [lngKeys.CurrentMembers]: 'Current members',
-  [lngKeys.MembersAccessLevel]: 'Access level',
+  [lngKeys.MembersAccessLevel]: 'Role',
   [lngKeys.AddMembers]: 'Add members',
   [lngKeys.TeamCreate]: 'Create a team space',
   [lngKeys.TeamCreateSubtitle]:
