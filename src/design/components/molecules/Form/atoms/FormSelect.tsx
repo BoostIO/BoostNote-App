@@ -168,10 +168,6 @@ const Container = styled.div`
     width: 0;
   }
 
-  .form__select__single-value {
-    margin: ${({ theme }) => theme.sizes.spaces.xsm}px;
-  }
-
   .form__select__multi-value__label {
     padding: 2px;
   }
