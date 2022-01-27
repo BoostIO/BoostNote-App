@@ -313,6 +313,11 @@ const ModalContainer = styled(MetadataContainer)`
     .react-datepicker__day {
       color: ${({ theme }) => theme.colors.text.primary};
     }
+    .react-datepicker__day--today {
+      color: ${({ theme }) => theme.colors.text.primary};
+      background: ${({ theme }) => theme.colors.background.tertiary};
+      border-radius: ${({ theme }) => theme.borders.radius}px;
+    }
 
     .react-datepicker__day {
       &.react-datepicker__day--selected {
