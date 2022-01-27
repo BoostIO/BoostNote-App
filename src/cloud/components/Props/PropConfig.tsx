@@ -173,7 +173,7 @@ const PropConfig = ({
               shouldModify.current = false
               onDelete(prop)
             },
-            label: 'Delete property',
+            label: 'Delete',
             iconPath: mdiTrashCanOutline,
             id: 'delete-property',
           },
