@@ -108,8 +108,11 @@ const Container = styled.div`
     display: inline-flex;
     width: 22px;
     height: 22px;
-    line-height: 19px;
-    margin-right: 0;
+    line-height: 23px;
+    margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    background-color: ${({ theme }) => theme.colors.variants.primary.base};
+    color: ${({ theme }) => theme.colors.variants.primary.text};
+    border: none;
   }
 `
 
