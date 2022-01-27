@@ -1,6 +1,5 @@
 export type TeamStorage = {
   showTrialAlert?: boolean
-  showRoleUpgradeAlert?: boolean
   hideFreePlanLimitReachedAlert?: boolean
 }
 export type LocallyStoredTeamPreferences = {

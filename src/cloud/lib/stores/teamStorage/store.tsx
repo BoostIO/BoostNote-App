@@ -10,7 +10,6 @@ import {
 } from './types'
 
 const initialContent: TeamStorage = {
-  showRoleUpgradeAlert: true,
   showTrialAlert: true,
 }
 
