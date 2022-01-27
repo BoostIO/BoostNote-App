@@ -197,7 +197,7 @@ const TableView = ({
           cols={[
             {
               id: 'doc-title',
-              children: <Flexbox style={{ height: '100%' }}>Documents</Flexbox>,
+              children: <Flexbox style={{ height: '100%' }}>Title</Flexbox>,
               width: view.data.titleColumnWidth ?? 300,
               onWidthChange: (newWidth) => {
                 actionsRef.current.updateTitleColumnWidth(newWidth)
