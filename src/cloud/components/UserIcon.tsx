@@ -32,8 +32,4 @@ export const StyledUserIcon = styled.div`
   color: ${({ theme }) => theme.colors.variants.primary.text};
   border: none;
   line-height: 30px;
-
-  &.subtle {
-    border: 1px solid ${({ theme }) => theme.colors.border.second};
-  }
 `

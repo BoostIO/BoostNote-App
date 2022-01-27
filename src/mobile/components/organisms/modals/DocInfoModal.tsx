@@ -130,7 +130,6 @@ DocInfoModalProps) => {
                         <UserIcon
                           key={creator.id}
                           user={creator}
-                          className='subtle'
                         />
                       </Flexbox>
                     </div>
@@ -179,7 +178,6 @@ DocInfoModalProps) => {
                               <UserIcon
                                 key={user.id}
                                 user={usersMap.get(user.id) || user}
-                                className='subtle'
                               />
                             ))}
                           </>
@@ -208,7 +206,6 @@ DocInfoModalProps) => {
                         <UserIcon
                           key={contributor.id}
                           user={usersMap.get(contributor.id) || contributor}
-                          className='subtle'
                         />
                       ))}
 
@@ -220,7 +217,7 @@ DocInfoModalProps) => {
                         >
                           {contributorsState.sliced > 0
                             ? `+${contributorsState.sliced}`
-                            : '-'}
+                            : 'feafea'}
                         </Button>
                       )}
                     </Flexbox>
