@@ -30,12 +30,15 @@ const InviteCTAButton = ({ origin }: InviteCTAButtonProps) => {
 
   return (
     <Button
-      variant='primary'
+      variant='bordered'
       type='button'
       iconPath={mdiAccountPlus}
       size='sm'
+      iconSize={16}
       onClick={onClick}
-    />
+    >
+      Invite
+    </Button>
   )
 }
 
