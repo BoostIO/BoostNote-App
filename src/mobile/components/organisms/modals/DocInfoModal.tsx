@@ -127,10 +127,7 @@ DocInfoModalProps) => {
                     </label>
                     <div className='context__content'>
                       <Flexbox wrap='wrap'>
-                        <UserIcon
-                          key={creator.id}
-                          user={creator}
-                        />
+                        <UserIcon key={creator.id} user={creator} />
                       </Flexbox>
                     </div>
                   </div>
