@@ -135,7 +135,7 @@ const DocContextMenu = ({
             icon: mdiAccountCircleOutline,
             content: (
               <Flexbox wrap='wrap'>
-                <UserIcon key={creator.id} user={creator} className='subtle' />
+                <UserIcon key={creator.id} user={creator} />
               </Flexbox>
             ),
           }}
@@ -174,7 +174,6 @@ const DocContextMenu = ({
                     <UserIcon
                       key={user.id}
                       user={usersMap.get(user.id) || user}
-                      className='subtle'
                     />
                   ))}
                 </>
@@ -197,7 +196,6 @@ const DocContextMenu = ({
                   <UserIcon
                     key={contributor.id}
                     user={usersMap.get(contributor.id) || contributor}
-                    className='subtle'
                   />
                 ))}
                 {contributors.length > 0 && (
@@ -210,7 +208,7 @@ const DocContextMenu = ({
                     >
                       {contributorsState.sliced > 0
                         ? `+${contributorsState.sliced}`
-                        : '-'}
+                        : ''}
                     </Button>
                   </>
                 )}
