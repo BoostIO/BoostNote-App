@@ -122,7 +122,6 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: baseline;
     background: none;
     outline: 0;
     border: 0;
@@ -148,7 +147,7 @@ const Container = styled.div`
     flex: 0 0 auto;
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
     svg {
-      color: ${({ theme }) => theme.colors.text.link};
+      color: ${({ theme }) => theme.colors.text.subtle};
     }
   }
 
