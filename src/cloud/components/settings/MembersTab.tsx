@@ -17,12 +17,10 @@ import UserIcon from '../UserIcon'
 import { arraysAreIdentical } from '../../lib/utils/array'
 import { getUserEmailsFromPermissions } from '../../api/teams/permissions/emails'
 import { useRouter } from '../../lib/router'
-import cc from 'classcat'
 import { useSet } from 'react-use'
 import { useToast } from '../../../design/lib/stores/toast'
 import SettingTabContent from '../../../design/components/organisms/Settings/atoms/SettingTabContent'
 import Flexbox from '../../../design/components/atoms/Flexbox'
-import SettingTabSelector from '../../../design/components/organisms/Settings/atoms/SettingTabSelector'
 import FormSelect, {
   FormSelectOption,
 } from '../../../design/components/molecules/Form/atoms/FormSelect'
@@ -338,16 +336,7 @@ const MembersTab = () => {
 
   return (
     <SettingTabContent
-      title={
-        <SettingTabSelector>
-          <button
-            className={cc([tab === 'member' && 'active'])}
-            onClick={() => setTab('member')}
-          >
-            {translate(lngKeys.GeneralMembers)} ({permissions.length})
-          </button>
-        </SettingTabSelector>
-      }
+      title={translate(lngKeys.GeneralMembers)}
       description={translate(lngKeys.ManageTeamMembers)}
       body={
         <>
