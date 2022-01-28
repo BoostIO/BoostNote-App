@@ -329,7 +329,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.EditorReconnectAttempt1]: 'Attempting auto-reconnection',
   [lngKeys.EditorReconnectAttempt2]:
     'Changes will not be synced with the server until reconnection',
-  [lngKeys.EditorReconnectDisconnected]: 'Reconnect',
+  [lngKeys.EditorReconnectDisconnected]: 'Your edit session has expired. Please click it to reconnect.',
   [lngKeys.EditorReconnectDisconnected1]: 'Please try reconnecting.',
   [lngKeys.EditorReconnectDisconnected2]:
     'Changes will not be synced with the server until reconnection',

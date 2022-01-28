@@ -45,6 +45,8 @@ import {
   mdiViewSplitVertical,
   mdiCommentTextOutline,
   mdiDotsHorizontal,
+  mdiCloudOffOutline,
+  mdiCloudSyncOutline,
 } from '@mdi/js'
 import EditorToolButton from './EditorToolButton'
 import { not } from 'ramda'
@@ -958,7 +960,8 @@ const Editor = ({
               ? [
                   {
                     type: 'button',
-                    variant: 'secondary' as const,
+                    iconPath: mdiCloudSyncOutline,
+                    variant: 'danger' as const,
                     disabled: true,
                     label: translate(lngKeys.EditorReconnectAttempt),
                     tooltip: (
@@ -974,7 +977,8 @@ const Editor = ({
               ? [
                   {
                     type: 'button',
-                    variant: 'warning' as const,
+                    iconPath: mdiCloudOffOutline,
+                    variant: 'danger' as const,
                     onClick: () => realtime.connect(),
                     label: translate(lngKeys.EditorReconnectDisconnected),
                     tooltip: (
