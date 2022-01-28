@@ -184,7 +184,7 @@ const StyledContainer = styled.div`
   }
 
   &:hover {
-    background: rgba(0, 0, 0, 0.1);
+    background: ${({ theme }) => theme.colors.background.secondary};
 
     .list-view-item__ordering-handle {
       opacity: 1;
