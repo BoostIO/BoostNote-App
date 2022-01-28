@@ -35,9 +35,7 @@ const InviteMembersModal = () => {
 
   return (
     <SettingTabContent
-      title={
-        <OpenInviteTitle>Invite members to {team.name}</OpenInviteTitle>
-      }
+      title={<OpenInviteTitle>Invite members to {team.name}</OpenInviteTitle>}
       body={
         <>
           <OpenInvitesSection userPermissions={currentUserPermissions} />
@@ -55,6 +53,5 @@ const OpenInviteTitle = styled.div`
   color: ${({ theme }) => theme.colors.text.primary};
   font-size: ${({ theme }) => theme.sizes.fonts.xl}px;
 `
-
 
 export default InviteMembersModal
