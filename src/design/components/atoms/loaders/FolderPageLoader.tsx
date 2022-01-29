@@ -1,6 +1,7 @@
 import ContentLoader from 'react-content-loader'
 import React from 'react'
 import { CommonLoaderProps } from './types'
+import { generate } from 'shortid'
 
 export type FolderPageLoaderProps = {}
 
@@ -12,7 +13,7 @@ export default ({
   ry,
 }: FolderPageLoaderProps & CommonLoaderProps) => (
   <ContentLoader
-    uniqueKey='folder-page-load'
+    uniqueKey={`folder-page-load-${generate()}`}
     height={400}
     width='100%'
     speed={speed}
