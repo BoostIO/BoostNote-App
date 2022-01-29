@@ -357,14 +357,6 @@ const Application = ({
   }, [])
 
   const sidebarHeader = useMemo(() => {
-    if (isEmpty(pageData || {}) && navigatingBetweenPage) {
-      return (
-        <>
-          <Loader variant='team-picker' />
-          <Loader variant='nav-item' count={4} />
-        </>
-      )
-    }
     if (team == null) {
       return (
         <SidebarHeader
@@ -430,8 +422,6 @@ const Application = ({
     team,
     translate,
     showSearchScreen,
-    navigatingBetweenPage,
-    pageData,
   ])
 
   const sidebarFooter = useMemo(() => {

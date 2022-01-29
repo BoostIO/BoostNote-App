@@ -4,6 +4,7 @@ import { selectV2Theme } from '../../../lib/styled/styleFunctions'
 import DocEditorLoader from './DocEditorLoader'
 import FolderPageLoader from './FolderPageLoader'
 import NavItemLoader, { NavItemLoaderProps } from './NavItemLoader'
+import SmartViewLoader from './SmartViewLoader'
 import TeamPickerLoader from './TeamPickerLoader'
 import TopbarLoader, { TopbarBreadcrumbLoader } from './TopbarLoader'
 
@@ -24,6 +25,7 @@ type LoaderProps = {} & (
   | {
       variant: 'folder-page'
     }
+  | { variant: 'smart-view' }
 )
 
 const commonLoaderSpeed = 6
@@ -41,6 +43,16 @@ const Loader = ({ variant, ...props }: LoaderProps) => {
   }, [settings])
 
   switch (variant) {
+    case 'smart-view':
+      return (
+        <SmartViewLoader
+          {...colors}
+          {...props}
+          speed={commonLoaderSpeed}
+          rx={commonRadiuses}
+          ry={commonRadiuses}
+        />
+      )
     case 'folder-page':
       return (
         <FolderPageLoader
