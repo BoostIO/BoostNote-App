@@ -238,9 +238,6 @@ const Router = () => {
     return () => {
       abortController.abort()
     }
-    // Determine which page to show and how to fetch it
-
-    // How to fetch does exist in get initial props so we need to determine the component
   }, [pathname, search])
 
   if (pageInfo == null) {
