@@ -2,6 +2,7 @@ import ContentLoader from 'react-content-loader'
 import React from 'react'
 import { CommonLoaderProps } from './types'
 import { rightSideTopBarHeight } from '../../organisms/Topbar'
+import { generate } from 'shortid'
 
 export type TopbarLoaderProps = {}
 
@@ -13,7 +14,7 @@ export default ({
   ry,
 }: TopbarLoaderProps & CommonLoaderProps) => (
   <ContentLoader
-    uniqueKey='topbar-item-load'
+    uniqueKey={`topbar-load-${generate()}`}
     height={rightSideTopBarHeight}
     width='100%'
     speed={speed}

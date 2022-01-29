@@ -1,6 +1,7 @@
 import ContentLoader from 'react-content-loader'
 import React from 'react'
 import { CommonLoaderProps } from './types'
+import { generate } from 'shortid'
 
 export type TeamPickerLoaderProps = {}
 
@@ -12,7 +13,7 @@ export default ({
   ry,
 }: TeamPickerLoaderProps & CommonLoaderProps) => (
   <ContentLoader
-    uniqueKey='team-picker-load'
+    uniqueKey={`team-picker-load-${generate()}`}
     height={32}
     width='100%'
     speed={speed}
