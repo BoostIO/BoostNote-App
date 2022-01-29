@@ -155,6 +155,7 @@ const CommentItemContainer = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 4px;
+    position: relative;
 
     & svg {
       color: ${({ theme }) => theme.colors.icon.default};

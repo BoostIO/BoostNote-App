@@ -10,6 +10,8 @@ import {
   toFragment,
   isMention,
 } from '../../lib/comments'
+import Button from '../../../design/components/atoms/Button'
+import { mdiSendOutline } from '@mdi/js'
 
 interface CommentInputProps {
   onSubmit: (comment: string) => any
@@ -21,7 +23,7 @@ interface CommentInputProps {
 
 const smallUserIconStyle = { width: '20px', height: '20px', lineHeight: '17px' }
 
-export function CommentInput({
+function CommentInput({
   onSubmit,
   value = '',
   autoFocus = false,
@@ -30,6 +32,7 @@ export function CommentInput({
 }: CommentInputProps) {
   const [working, setWorking] = useState(false)
   const inputRef = useRef<HTMLDivElement>(null)
+  const [isInputEmpty, setIsInputEmpty] = useState(true)
   const onSuggestionSelect = useRef((item: SerializedUser, hint: string) => {
     if (inputRef.current == null) {
       return
@@ -80,18 +83,21 @@ export function CommentInput({
     }
   })
 
-  const submit = useCallback(async () => {
-    if (inputRef.current != null) {
-      try {
-        setWorking(true)
-        await onSubmit(fromNode(inputRef.current).trim())
-        if (inputRef.current != null) {
-          inputRef.current.innerHTML = ''
-        }
-      } finally {
-        setWorking(false)
-        inputRef.current.focus()
-      }
+  const onPostCommentAction = useCallback(async () => {
+    if (inputRef.current == null) {
+      return
+    }
+    const inputContent = fromNode(inputRef.current).trim()
+    if (inputContent === '') {
+      return
+    }
+    try {
+      setWorking(true)
+      await onSubmit(fromNode(inputRef.current).trim())
+      inputRef.current.innerHTML = ''
+    } finally {
+      setWorking(false)
+      inputRef.current.focus()
     }
   }, [onSubmit])
 
@@ -99,17 +105,13 @@ export function CommentInput({
     (ev) => {
       onKeyDownListener(ev)
 
-      const inputContent =
-        inputRef.current !== null ? fromNode(inputRef.current).trim() : ''
-      if (
-        ev.key === 'Enter' &&
-        (ev.ctrlKey || ev.metaKey) &&
-        inputContent !== ''
-      ) {
-        ev.preventDefault()
-        ev.stopPropagation()
-        submit()
-        return
+      if (ev.key === 'Enter' && (ev.ctrlKey || ev.metaKey)) {
+        if (inputRef.current != null) {
+          ev.preventDefault()
+          ev.stopPropagation()
+          onPostCommentAction()
+          return
+        }
       }
 
       if (ev.key === 'Enter' && ev.shiftKey) {
@@ -125,8 +127,20 @@ export function CommentInput({
         }
       }
     },
-    [submit, onKeyDownListener]
+    [onKeyDownListener, onPostCommentAction]
   )
+
+  const onKeyUp = useCallback(() => {
+    const inputContent =
+      inputRef.current !== null ? fromNode(inputRef.current).trim() : ''
+    setIsInputEmpty(inputContent === '')
+  }, [])
+
+  const onCommentInput = useCallback(() => {
+    if (inputRef.current != null) {
+      setIsInputEmpty(fromNode(inputRef.current).trim() === '')
+    }
+  }, [])
 
   const selectSuggestion: React.MouseEventHandler = useCallback(
     (ev) => {
@@ -154,16 +168,30 @@ export function CommentInput({
 
   return (
     <InputContainer>
-      <div
-        className='comment__input__editable'
-        ref={inputRef}
-        onKeyDown={onKeyDown}
-        contentEditable={!working}
-        onCompositionEnd={onCompositionEndListener}
-        onClick={closeSuggestions}
-        onBeforeInput={beforeInputHandler}
-        data-placeholder={placeholder}
-      />
+      <div className={'comment__input__container'}>
+        <div className={'comment__input__input__editable_container'}>
+          <div
+            className='comment__input__editable'
+            ref={inputRef}
+            onKeyDown={onKeyDown}
+            onKeyUp={onKeyUp}
+            contentEditable={!working}
+            onCompositionEnd={onCompositionEndListener}
+            onClick={closeSuggestions}
+            onBeforeInput={beforeInputHandler}
+            onInput={onCommentInput}
+            data-placeholder={placeholder}
+          />
+        </div>
+        <Button
+          className={'comment__input__send_button'}
+          variant={'icon-secondary'}
+          iconPath={mdiSendOutline}
+          size={'sm'}
+          onClick={() => onPostCommentAction()}
+          disabled={working || isInputEmpty}
+        />
+      </div>
       {state.type === 'enabled' && state.suggestions.length > 0 && (
         <div
           className='comment__input__suggestions'
@@ -196,19 +224,34 @@ const InputContainer = styled.div`
   position: relative;
   width: 100%;
 
-  & .comment__input__editable {
+  .comment__input__container {
+    display: flex;
+    position: relative;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.l}px;
+
+    .comment__input__send_button {
+      position: absolute;
+      right: 30px;
+      bottom: 6px;
+    }
+  }
+
+  & .comment__input__input__editable_container {
     margin: auto;
     width: 90%;
-    white-space: pre-wrap;
-    resize: none;
     border: 1px solid ${({ theme }) => theme.colors.border.second};
     min-height: 30px;
     background-color: ${({ theme }) => theme.colors.background.secondary};
     color: ${({ theme }) => theme.colors.text.primary};
     padding: 5px 10px;
-    margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
 
     border-radius: ${({ theme }) => theme.borders.radius}px;
+  }
+
+  & .comment__input__editable {
+    white-space: pre-wrap;
+    resize: none;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
 
     &:empty:before {
       content: attr(data-placeholder);
