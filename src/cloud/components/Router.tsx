@@ -176,13 +176,9 @@ const Router = () => {
   }, [initGlobalData, initialized, pathname])
 
   useEffect(() => {
-    if (
-      previousPathnameRef.current === pathname &&
-      previousSearchRef.current === search
-    ) {
+    if (previousPathnameRef.current === pathname) {
       return
     }
-    console.info('navigate to ', pathname, search)
     previousPathnameRef.current = pathname
     previousSearchRef.current = search
     nProgress.start()
