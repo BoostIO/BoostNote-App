@@ -9,7 +9,6 @@ import { SerializedTag } from '../../../interfaces/db/tag'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedOpenInvite } from '../../../interfaces/db/openInvite'
 import { SerializedDashboard } from '../../../interfaces/db/dashboard'
-import React from 'react'
 
 export interface PageDataContext<D> {
   pageData: D
