@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './components/App'
 import './lib/i18n'
+import { RouterProvider } from './lib/router'
 import { ElectronProvider } from './lib/stores/electron'
 
 function render(Component: typeof App) {
@@ -13,7 +14,9 @@ function render(Component: typeof App) {
   }
   ReactDOM.render(
     <ElectronProvider>
-      <Component />
+      <RouterProvider>
+        <Component />
+      </RouterProvider>
     </ElectronProvider>,
 
     document.getElementById('root')
