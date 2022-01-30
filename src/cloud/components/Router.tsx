@@ -92,7 +92,6 @@ const V2CombinedProvider = combineProviders(
 interface PageInfo {
   Component: React.ComponentType<any>
   pageProps: any
-  navigating?: boolean
   isError?: boolean
 }
 
