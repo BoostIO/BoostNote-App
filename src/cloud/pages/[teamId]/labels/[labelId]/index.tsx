@@ -21,7 +21,7 @@ const TagsShowPage = ({ pageTag: pagePropsTag }: TagsShowPageResponseBody) => {
 
   const pageTag = useMemo(() => {
     return tagsMap.get(pagePropsTag.id)
-  }, [tagsMap, pagePropsTag])
+  }, [tagsMap, pagePropsTag.id])
 
   const docs = useMemo(() => {
     if (pageTag == null) {
