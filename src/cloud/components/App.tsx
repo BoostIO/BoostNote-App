@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Router from './Router'
-import { RouterProvider } from '../lib/router'
 import {
   initAccessToken,
   usingElectron,
@@ -64,9 +63,7 @@ const App = () => {
       <V2ToastProvider>
         <GlobalDataProvider>
           <RealtimeConnProvider>
-            <RouterProvider>
-              <Router />
-            </RouterProvider>
+            <Router />
           </RealtimeConnProvider>
         </GlobalDataProvider>
       </V2ToastProvider>
