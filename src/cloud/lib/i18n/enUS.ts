@@ -405,6 +405,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.GeneralContinueVerb]: 'Continue',
   [lngKeys.GeneralShared]: 'Shared',
   [lngKeys.GeneralRenameVerb]: 'Rename',
+  [lngKeys.GeneralEditTitle]: 'Edit title',
   [lngKeys.GeneralEditVerb]: 'Settings',
   [lngKeys.GeneralBookmarks]: 'Bookmarks',
   [lngKeys.GeneralUnbookmarkVerb]: 'Remove from Bookmarks',

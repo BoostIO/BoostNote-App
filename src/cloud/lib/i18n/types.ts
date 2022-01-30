@@ -56,6 +56,7 @@ export enum lngKeys {
   GeneralLabels = 'general.Labels',
   GeneralMore = 'general.More',
   GeneralStatus = 'general.Status',
+  GeneralEditTitle = 'general.EditTitle',
   GeneralRenameVerb = 'general.Renameverb',
   GeneralEditVerb = 'general.Editverb',
   GeneralSettings = 'general.Settings',
