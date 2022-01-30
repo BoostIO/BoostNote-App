@@ -18,8 +18,6 @@ import { DraggedTo } from '../../../../design/lib/dnd'
 import { StyledContentManagerList } from '../../ContentManager/styled'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import ColumnSettingsContext from './ColSettingsContext'
-import { getDocLinkHref } from '../../Link/DocLink'
-import NavigationItem from '../../../../design/components/molecules/Navigation/NavigationItem'
 import { mdiFileDocumentOutline, mdiPlus } from '@mdi/js'
 import DocTagsList from '../../DocPage/DocTagsList'
 import { getFormattedBoosthubDateTime } from '../../../lib/date'
@@ -41,6 +39,9 @@ import Button from '../../../../design/components/atoms/Button'
 import TableViewPropertiesContext from './TableViewPropertiesContext'
 import TitleColumnSettingsContext from './TitleColumnSettingsContext'
 import { usePage } from '../../../lib/stores/pageStore'
+import EditableItemContainer from '../EditableItemContainer'
+import NavigationItem from '../../../../design/components/molecules/Navigation/NavigationItem'
+import { getDocLinkHref } from '../../Link/DocLink'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 
 type TableViewProps = {
@@ -72,6 +73,8 @@ const TableView = ({
   toggleDocInSelection,
   resetDocsInSelection,
 }: TableViewProps) => {
+  const { goToDocPreview } = useCloudResourceModals()
+
   const currentStateRef = useRef(view.data)
   const [state, setState] = useState<ViewTableData>(
     Object.assign({}, view.data as ViewTableData)
@@ -79,7 +82,6 @@ const TableView = ({
   const { translate } = useI18n()
   const { createDoc } = useCloudApi()
   const { openContextModal, closeLastModal } = useModal()
-  const { goToDocPreview } = useCloudResourceModals()
   const { permissions = [] } = usePage()
 
   const {
@@ -268,16 +270,18 @@ const TableView = ({
               cells: [
                 {
                   children: (
-                    <NavigationItem
-                      labelHref={docLink}
-                      labelClick={() => goToDocPreview(doc)}
-                      label={getDocTitle(doc, 'Untitled')}
-                      icon={
-                        doc.emoji != null
-                          ? { type: 'emoji', path: doc.emoji }
-                          : { type: 'icon', path: mdiFileDocumentOutline }
-                      }
-                    />
+                    <EditableItemContainer doc={doc} teamId={team.id}>
+                      <NavigationItem
+                        labelHref={docLink}
+                        labelClick={() => goToDocPreview(doc)}
+                        label={getDocTitle(doc, 'Untitled')}
+                        icon={
+                          doc.emoji != null
+                            ? { type: 'emoji', path: doc.emoji }
+                            : { type: 'icon', path: mdiFileDocumentOutline }
+                        }
+                      />
+                    </EditableItemContainer>
                   ),
                 },
                 ...orderedColumns.map((col) => {

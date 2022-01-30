@@ -24,11 +24,6 @@ interface EditableInputProps {
   onKeydownConfirm?: () => void
 }
 
-type EditableInput = {
-  folderLabel: string
-  folderPathname: string
-}[]
-
 const EditableInput = ({
   editOnStart = false,
   placeholder,
@@ -108,9 +103,13 @@ const EditableInput = ({
           event.preventDefault()
           cancelEditingText()
           break
+        case 'Enter':
+          event.preventDefault()
+          onSubmit(event)
+          break
       }
     },
-    [cancelEditingText]
+    [cancelEditingText, onSubmit]
   )
 
   const maxWidth: string | number = useMemo(() => {
@@ -208,7 +207,7 @@ const EditableInputContainer = styled.div`
       color: ${({ theme }) => theme.colors.text.primary};
       padding: 2px;
       border-radius: 3px;
-      ${overflowEllipsis}
+      ${overflowEllipsis};
       min-width: 0;
       display: flex;
       align-items: center;
