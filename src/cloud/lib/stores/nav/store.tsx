@@ -278,11 +278,11 @@ function useNavStore(): NavContext {
   useEffect(() => {
     const getAllResources = async () => {
       if (team == null) {
-        console.log('reset map')
         setFoldersMap(new Map())
         setDocsMap(new Map())
         setTagsMap(new Map())
         setWorkspacesMap(new Map())
+        setTemplatesMap(new Map())
         setViewsMap(new Map())
         setDashboardsMap(new Map())
         return
