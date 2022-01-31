@@ -1,10 +1,5 @@
 {
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "typings/**/*.d.ts",
-    "src/design/components/atoms/loaders/withThemeProps.tss"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "typings/**/*.d.ts"],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
