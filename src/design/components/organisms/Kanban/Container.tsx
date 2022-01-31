@@ -1,6 +1,8 @@
 import cc from 'classcat'
 import React from 'react'
 import styled from '../../../lib/styled'
+import Scroller from '../../atoms/Scroller'
+import { rightSideTopBarHeight } from '../Topbar'
 
 interface ContainerProps {
   style?: React.CSSProperties
@@ -35,7 +37,7 @@ const Container = React.forwardRef<
             {header}
           </div>
         </div>
-        <div>{children}</div>
+        <Scroller className='kanban__list__items__wrapper'>{children}</Scroller>
       </StyledContainer>
     )
   }
@@ -55,6 +57,23 @@ const StyledContainer = styled.div`
     & .kanban__list__handle > button {
       cursor: grab;
     }
+  }
+
+  &.kanban__list {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - ${rightSideTopBarHeight * 3}px);
+    overflow: hidden;
+    height: auto;
+  }
+
+  .kanban__list__header {
+    flex: 0 0 auto;
+  }
+
+  .kanban__list__items__wrapper {
+    display: flexbox;
+    flex: 1 1 auto !important;
   }
 `
 
