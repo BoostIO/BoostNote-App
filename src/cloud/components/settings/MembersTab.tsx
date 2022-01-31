@@ -3,7 +3,6 @@ import { usePage } from '../../lib/stores/pageStore'
 import { useDialog, DialogIconTypes } from '../../../design/lib/stores/dialog'
 import {
   SerializedUserTeamPermissions,
-  TeamPermissionType,
 } from '../../interfaces/db/userTeamPermissions'
 import { useGlobalData } from '../../lib/stores/globalData'
 import {
@@ -58,7 +57,6 @@ const MembersTab = () => {
   const [userEmailsMap, setUserEmailsMap] = useState<Map<string, string>>(
     new Map()
   )
-  const [tab, setTab] = useState<TeamPermissionType>('member')
   const { subscription } = usePage()
   const mountedRef = useRef(false)
   const { translate, getRoleLabel } = useI18n()

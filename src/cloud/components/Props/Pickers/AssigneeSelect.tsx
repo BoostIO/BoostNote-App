@@ -181,6 +181,7 @@ const ModalContainer = styled.div`
     width: 24px;
     height: 24px;
     margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    line-height: 26px;
   }
 `
 

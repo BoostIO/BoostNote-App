@@ -208,7 +208,7 @@ const DocContextMenu = ({
                     >
                       {contributorsState.sliced > 0
                         ? `+${contributorsState.sliced}`
-                        : ''}
+                        : '-'}
                     </Button>
                   </>
                 )}
