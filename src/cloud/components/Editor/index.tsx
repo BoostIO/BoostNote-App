@@ -961,7 +961,7 @@ const Editor = ({
                   {
                     type: 'button',
                     iconPath: mdiCloudSyncOutline,
-                    variant: 'danger' as const,
+                    variant: 'danger',
                     disabled: true,
                     label: translate(lngKeys.EditorReconnectAttempt),
                     tooltip: (
@@ -978,7 +978,7 @@ const Editor = ({
                   {
                     type: 'button',
                     iconPath: mdiCloudOffOutline,
-                    variant: 'danger' as const,
+                    variant: 'danger',
                     onClick: () => realtime.connect(),
                     label: translate(lngKeys.EditorReconnectDisconnected),
                     tooltip: (
