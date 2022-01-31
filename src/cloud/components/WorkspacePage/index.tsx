@@ -16,6 +16,7 @@ import { getDefaultListView } from '../../lib/views/list'
 import { getMapValues } from '../../../design/lib/utils/array'
 import { ViewsManager } from '../Views'
 import ApplicationPageLoader from '../ApplicationPageLoader'
+import LoaderFolderPage from '../../../design/components/atoms/loaders/LoaderFolderPage'
 
 const WorkspacePage = ({
   workspace: pageWorkspace,
@@ -113,7 +114,7 @@ const WorkspacePage = ({
   }, [viewsMap, workspace])
 
   if (team == null) {
-    return <ApplicationPageLoader team={team} loader='folder-page' />
+    return <ApplicationPageLoader team={team} loader={<LoaderFolderPage />} />
   }
 
   if (workspace == null) {

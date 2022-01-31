@@ -31,6 +31,7 @@ import { getDefaultListView } from '../../lib/views/list'
 import { filterIter } from '../../lib/utils/iterator'
 import { ViewsManager } from '../Views'
 import ApplicationPageLoader from '../ApplicationPageLoader'
+import LoaderFolderPage from '../../../design/components/atoms/loaders/LoaderFolderPage'
 
 const FolderPage = () => {
   const { pageFolder, team, currentUserIsCoreMember } = usePage()
@@ -199,7 +200,7 @@ const FolderPage = () => {
   }, [currentFolder, currentUserIsCoreMember, openContextModal, team])
 
   if (team == null) {
-    return <ApplicationPageLoader team={team} loader='folder-page' />
+    return <ApplicationPageLoader team={team} loader={<LoaderFolderPage />} />
   }
 
   if (currentFolder == null) {
