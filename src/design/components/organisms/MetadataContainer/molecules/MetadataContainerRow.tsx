@@ -141,7 +141,7 @@ const Container = styled.div`
     width: 120px;
     flex: 0 0 auto;
     margin-bottom: 0;
-    margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
+    margin: 0 ${({ theme }) => theme.sizes.spaces.df}px;
     cursor: inherit;
   }
 
@@ -191,6 +191,7 @@ const Container = styled.div`
   .metadata__item__header {
     text-transform: uppercase;
     color: ${({ theme }) => theme.colors.text.subtle} !important;
+    margin-left: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 `
 
