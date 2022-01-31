@@ -1,14 +1,14 @@
 import React from 'react'
-import { LoaderProvider } from '.'
+import { LoaderPropsProvider } from '.'
 
 function withLoaderProps<T>(
   Component: React.ComponentType<T>
 ): React.ComponentType<T> {
   return (props: React.PropsWithChildren<T>) => {
     return (
-      <LoaderProvider>
+      <LoaderPropsProvider>
         <Component {...props} />
-      </LoaderProvider>
+      </LoaderPropsProvider>
     )
   }
 }
