@@ -1,8 +1,10 @@
 import ContentLoader from 'react-content-loader'
 import React from 'react'
 import shortid from 'shortid'
-import { withLoaderProps } from '../../../../cloud/lib/stores/loaders'
-import { useLoaderStore } from '../../../../cloud/lib/stores/loaders/store'
+import {
+  withLoaderProps,
+  useLoaderProps,
+} from '../../../../cloud/lib/stores/loaders'
 
 export type LoaderNavItemProps = {
   count?: number
@@ -10,7 +12,7 @@ export type LoaderNavItemProps = {
 }
 
 const LoaderNavItem = ({ count = 1, withDepth }: LoaderNavItemProps) => {
-  const { backgroundColor, foregroundColor, speed, rx, ry } = useLoaderStore()
+  const { backgroundColor, foregroundColor, speed, rx, ry } = useLoaderProps()
   return (
     <>
       {[...Array(count)].map((_val, i) => (

@@ -1,11 +1,13 @@
 import ContentLoader from 'react-content-loader'
 import React from 'react'
 import { generate } from 'shortid'
-import { withLoaderProps } from '../../../../cloud/lib/stores/loaders'
-import { useLoaderStore } from '../../../../cloud/lib/stores/loaders/store'
+import {
+  withLoaderProps,
+  useLoaderProps,
+} from '../../../../cloud/lib/stores/loaders'
 
 const LoaderTeamPicker = () => {
-  const { backgroundColor, foregroundColor, speed, rx, ry } = useLoaderStore()
+  const { backgroundColor, foregroundColor, speed, rx, ry } = useLoaderProps()
   return (
     <ContentLoader
       uniqueKey={`team-picker-load-${generate()}`}

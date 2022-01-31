@@ -2,11 +2,13 @@ import ContentLoader from 'react-content-loader'
 import React from 'react'
 import { rightSideTopBarHeight } from '../../organisms/Topbar'
 import { generate } from 'shortid'
-import { withLoaderProps } from '../../../../cloud/lib/stores/loaders'
-import { useLoaderStore } from '../../../../cloud/lib/stores/loaders/store'
+import {
+  useLoaderProps,
+  withLoaderProps,
+} from '../../../../cloud/lib/stores/loaders'
 
 const LoaderTopbar = () => {
-  const { backgroundColor, foregroundColor, speed, rx, ry } = useLoaderStore()
+  const { backgroundColor, foregroundColor, speed, rx, ry } = useLoaderProps()
   return (
     <ContentLoader
       uniqueKey={`topbar-load-${generate()}`}
