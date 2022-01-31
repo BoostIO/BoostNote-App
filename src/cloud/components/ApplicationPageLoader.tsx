@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash'
 import React from 'react'
 import ColoredBlock from '../../design/components/atoms/ColoredBlock'
-import Loader from '../../design/components/atoms/loaders'
+import LoaderTopbar from '../../design/components/atoms/loaders/LoaderTopbar'
 import { TopbarPlaceholder } from '../../design/components/organisms/Topbar'
 import { usePage } from '../lib/stores/pageStore'
 import ApplicationContent from './ApplicationContent'
@@ -12,7 +12,7 @@ const ApplicationPageLoader = ({
   loader,
 }: {
   team: any
-  loader: 'folder-page'
+  loader: React.ReactNode
 }) => {
   const { pageData } = usePage()
 
@@ -29,11 +29,9 @@ const ApplicationPageLoader = ({
   return (
     <ApplicationPage>
       <TopbarPlaceholder>
-        <Loader variant='topbar' />
+        <LoaderTopbar />
       </TopbarPlaceholder>
-      <ApplicationContent reduced={true}>
-        <Loader variant={loader} />
-      </ApplicationContent>
+      <ApplicationContent reduced={true}>{loader}</ApplicationContent>
     </ApplicationPage>
   )
 }

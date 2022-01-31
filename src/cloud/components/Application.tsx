@@ -74,8 +74,8 @@ import {
 } from './molecules/PageSearch/InPageSearchPortal'
 import SidebarToggleButton from './SidebarToggleButton'
 import SidebarSubscriptionCTA from './Subscription/SidebarSubscriptionCTA'
-import Loader from '../../design/components/atoms/loaders'
 import { isEmpty } from 'lodash'
+import LoaderTopbar from '../../design/components/atoms/loaders/LoaderTopbar'
 
 interface ApplicationProps {
   className?: string
@@ -522,7 +522,7 @@ const Application = ({
               <CloudGlobalSearch team={team} />
             ) : isEmpty(pageData || {}) && navigatingBetweenPage ? (
               <>
-                <Loader variant='topbar' />
+                <LoaderTopbar />
               </>
             ) : (
               children

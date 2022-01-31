@@ -11,7 +11,7 @@ import { scrollbarOverlay } from '../../../lib/styled/styleFunctions'
 import WithTooltip from '../../atoms/WithTooltip'
 import styled from '../../../lib/styled'
 import { TopbarActionItemAttrbs } from './atoms/TopbarActionItem'
-import Loader from '../../atoms/loaders'
+import LoaderTopbarBreadcrumb from '../../atoms/loaders/LoaderTopbarBreadcrumb'
 
 export interface TopbarBreadcrumbProps {
   link: { href: string; navigateTo: () => void }
@@ -140,7 +140,7 @@ const Topbar: AppComponent<TopbarProps> = ({
           onScroll={onScrollHandler}
         >
           {!initialLoadDone ? (
-            <Loader variant='topbar-breadcrumb' />
+            <LoaderTopbarBreadcrumb />
           ) : (
             <>
               {breadcrumbs.map((breadcrumb, i) => (
