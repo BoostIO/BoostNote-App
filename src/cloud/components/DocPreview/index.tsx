@@ -24,7 +24,7 @@ import { getDocTitle } from '../../lib/utils/patterns'
 import DocProperties from '../DocProperties'
 import { getDocLinkHref } from '../Link/DocLink'
 import DocPreviewRealtime from './DocPreviewRealtime'
-import Loader from '../../../design/components/atoms/loaders'
+import LoaderDocEditor from '../../../design/components/atoms/loaders/LoaderDocEditor'
 
 interface DocPreviewModalProps {
   doc: SerializedDocWithSupplemental
@@ -165,7 +165,7 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
         />
         {fetching ? (
           <Flexbox>
-            <Loader variant='doc-editor' />
+            <LoaderDocEditor />
           </Flexbox>
         ) : (
           <DocPreviewRealtime

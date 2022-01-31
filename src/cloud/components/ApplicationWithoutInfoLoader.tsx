@@ -1,5 +1,4 @@
 import React from 'react'
-import Loader from '../../design/components/atoms/loaders'
 import WidthEnlarger from '../../design/components/atoms/WidthEnlarger'
 import ApplicationLayout from '../../design/components/molecules/ApplicationLayout'
 import { SidebarContainer } from '../../design/components/organisms/Sidebar'
@@ -9,6 +8,8 @@ import {
 } from '../../design/lib/sidebar'
 import cc from 'classcat'
 import { usePreferences } from '../lib/stores/preferences'
+import LoaderTeamPicker from '../../design/components/atoms/loaders/LoaderTeamPicker'
+import LoaderNavItem from '../../design/components/atoms/loaders/LoaderNavItem'
 
 const ApplicationWithoutPageInfo = () => {
   const { preferences } = usePreferences()
@@ -28,12 +29,12 @@ const ApplicationWithoutPageInfo = () => {
           >
             <div className='sidebar--expanded__wrapper'>
               <div className='sidebar--expanded__wrapper__header'>
-                <Loader variant='team-picker' />
-                <Loader variant='nav-item' count={4} />
+                <LoaderTeamPicker />
+                <LoaderNavItem count={4} />
               </div>
               <div className='sidebar--expanded__wrapper__content'>
-                <Loader variant='nav-item' withDepth={true} count={5} />
-                <Loader variant='nav-item' withDepth={true} count={3} />
+                <LoaderNavItem count={5} />
+                <LoaderNavItem count={3} />
               </div>
             </div>
           </WidthEnlarger>

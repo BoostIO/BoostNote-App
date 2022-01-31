@@ -32,7 +32,7 @@ import UnlockDashboardModal from '../Modal/contents/Subscription/UnlockDashboard
 import { useNav } from '../../lib/stores/nav'
 import DashboardSubscriptionBanner from './DashboardSubscriptionBanner'
 import { useCloudDocPreview } from '../../lib/hooks/useCloudDocPreview'
-import Loader from '../../../design/components/atoms/loaders'
+import LoaderSmartView from '../../../design/components/atoms/loaders/LoaderSmartView'
 
 const DashboardPage = ({
   dashboard: propsDashboard,
@@ -95,7 +95,7 @@ const DashboardPage = ({
   const renderSmartview = useCallback(
     (smartview: SerializedSmartView) => {
       if (!initialLoadDone) {
-        return <Loader variant='smart-view' />
+        return <LoaderSmartView />
       }
 
       return (

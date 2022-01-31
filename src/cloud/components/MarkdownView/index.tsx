@@ -47,7 +47,7 @@ import { agentType, sendPostMessage } from '../../../mobile/lib/nativeMobile'
 import { TableOfContents } from './TableOfContents'
 import ExpandableImage from '../../../design/components/molecules/Image/ExpandableImage'
 import { defaultPreviewStyle } from './styles'
-import Loader from '../../../design/components/atoms/loaders'
+import LoaderDocEditor from '../../../design/components/atoms/loaders/LoaderDocEditor'
 
 const remarkAdmonitionOptions = {
   tag: ':::',
@@ -383,7 +383,7 @@ const MarkdownView = ({
   const displayContent = useMemo(() => {
     switch (state.type) {
       case 'loading':
-        return <Loader variant='doc-editor' />
+        return <LoaderDocEditor />
       case 'error':
         return 'On no! An error occured while parsing the document!'
       case 'loaded':

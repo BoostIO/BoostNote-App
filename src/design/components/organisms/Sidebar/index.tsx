@@ -20,7 +20,7 @@ import Scroller from '../../atoms/Scroller'
 import Button from '../../atoms/Button'
 import { mdiArrowLeft } from '@mdi/js'
 import { rightSideTopBarHeight } from '../Topbar'
-import Loader from '../../atoms/loaders'
+import LoaderNavItem from '../../atoms/loaders/LoaderNavItem'
 
 export type PopOverState = null | 'spaces' | 'notifications'
 
@@ -100,8 +100,8 @@ const Sidebar = ({
           <Scroller className='sidebar--expanded__wrapper__content'>
             {tree == null ? (
               <>
-                <Loader variant='nav-item' withDepth={true} count={5} />
-                <Loader variant='nav-item' withDepth={true} count={3} />
+                <LoaderNavItem count={5} />
+                <LoaderNavItem count={3} />
               </>
             ) : (
               <SidebarTree tree={tree} />
