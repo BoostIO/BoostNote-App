@@ -62,9 +62,8 @@ const StyledContainer = styled.div`
   &.kanban__list {
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - ${rightSideTopBarHeight * 3}px);
+    height: fit-content;
     overflow: hidden;
-    height: auto;
   }
 
   .kanban__list__header {
@@ -72,10 +71,10 @@ const StyledContainer = styled.div`
   }
 
   .kanban__list__items__wrapper {
-    display: flexbox;
-    flex: 1 1 auto !important;
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
+    max-height: calc(100vh - ${rightSideTopBarHeight * 5}px);
   }
 `
 
