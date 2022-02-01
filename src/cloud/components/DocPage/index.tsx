@@ -52,13 +52,16 @@ const DocPage = ({
 
   const currentDoc = useMemo(() => {
     const mapDoc = docsMap.get(doc.id)
-    if (mapDoc != null && doc.collaborationToken != null) {
-      mapDoc.collaborationToken = doc.collaborationToken
-    }
+
     // FIXME: docsMap should be updated before rendering DocPage
     if (mapDoc == null) {
       return doc
     }
+
+    if (doc.collaborationToken != null) {
+      mapDoc.collaborationToken = doc.collaborationToken
+    }
+
     return mapDoc
   }, [docsMap, doc])
 

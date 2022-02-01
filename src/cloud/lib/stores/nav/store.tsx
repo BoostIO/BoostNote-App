@@ -78,7 +78,7 @@ function useNavStore(): NavContext {
   const { messageBox } = useDialog()
   const router = useRouter()
   const { pushMessage } = useToast()
-
+  const previousPathRef = useRef('')
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const [sideNavCreateButtonState, setSideNavCreateButtonState] = useState<
     string | undefined
@@ -261,17 +261,23 @@ function useNavStore(): NavContext {
 
   const prevTeamId = useRef<string>()
 
+  /** initialize maps to prevent flashing red alerts, reactualize maps based on recent pageProps
+   * warn: update only on new path to prevent pageDocs/pageFolders override
+   */
   useEffect(() => {
-    const maps = getTagsFoldersDocsMapsFromProps(pageProps)
-    setFoldersMap((prev) => new Map([...prev, ...maps.foldersData]))
-    setDocsMap((prev) => new Map([...prev, ...maps.docsData]))
-    setTagsMap((prev) => new Map([...prev, ...maps.tagsData]))
-    setTemplatesMap((prev) => new Map([...prev, ...maps.templatesData]))
-    setDashboardsMap((prev) => new Map([...prev, ...maps.dashboardsData]))
-    setViewsMap((prev) => new Map([...prev, ...maps.viewsData]))
-    setSmartViewsMap((prev) => new Map([...prev, ...maps.smartViewsData]))
-    setWorkspacesMap((prev) => new Map([...prev, ...maps.workspacesData]))
-  }, [pageProps])
+    if (previousPathRef.current !== router.pathname) {
+      previousPathRef.current = router.pathname
+      const maps = getTagsFoldersDocsMapsFromProps(pageProps)
+      setFoldersMap((prev) => new Map([...prev, ...maps.foldersData]))
+      setDocsMap((prev) => new Map([...prev, ...maps.docsData]))
+      setTagsMap((prev) => new Map([...prev, ...maps.tagsData]))
+      setTemplatesMap((prev) => new Map([...prev, ...maps.templatesData]))
+      setDashboardsMap((prev) => new Map([...prev, ...maps.dashboardsData]))
+      setViewsMap((prev) => new Map([...prev, ...maps.viewsData]))
+      setSmartViewsMap((prev) => new Map([...prev, ...maps.smartViewsData]))
+      setWorkspacesMap((prev) => new Map([...prev, ...maps.workspacesData]))
+    }
+  }, [pageProps, router.pathname])
 
   const getAllResourcesAbortController = useRef<AbortController | null>(null)
 
