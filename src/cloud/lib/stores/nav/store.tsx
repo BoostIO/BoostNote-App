@@ -62,6 +62,10 @@ import { useToast } from '../../../../design/lib/stores/toast'
 import { SerializedSmartView } from '../../../interfaces/db/smartView'
 import { SerializedView } from '../../../interfaces/db/view'
 import { SerializedDashboard } from '../../../interfaces/db/dashboard'
+import {
+  PagePropsUpdateEventDetails,
+  PagePropsUpdateEventEmitter,
+} from '../../utils/events'
 export * from './types'
 
 function useNavStore(): NavContext {
@@ -74,6 +78,7 @@ function useNavStore(): NavContext {
     workspaces,
     setPartialPageData,
     pageData: pageProps,
+    navigatingBetweenPage,
   } = usePage()
   const { messageBox } = useDialog()
   const router = useRouter()
@@ -265,9 +270,10 @@ function useNavStore(): NavContext {
    * warn: update only on new path to prevent pageDocs/pageFolders override
    */
   useEffect(() => {
-    if (previousPathRef.current !== router.pathname) {
+    if (previousPathRef.current === '') {
       previousPathRef.current = router.pathname
       const maps = getTagsFoldersDocsMapsFromProps(pageProps)
+      console.log(maps.docsData)
       setFoldersMap((prev) => new Map([...prev, ...maps.foldersData]))
       setDocsMap((prev) => new Map([...prev, ...maps.docsData]))
       setTagsMap((prev) => new Map([...prev, ...maps.tagsData]))
@@ -277,7 +283,30 @@ function useNavStore(): NavContext {
       setSmartViewsMap((prev) => new Map([...prev, ...maps.smartViewsData]))
       setWorkspacesMap((prev) => new Map([...prev, ...maps.workspacesData]))
     }
-  }, [pageProps, router.pathname])
+  }, [pageProps, router.pathname, navigatingBetweenPage])
+
+  const updateMapsWithPageProps = useCallback(
+    (event: CustomEvent<PagePropsUpdateEventDetails>) => {
+      previousPathRef.current = router.pathname
+      const maps = getTagsFoldersDocsMapsFromProps(event.detail.pageProps)
+      setFoldersMap((prev) => new Map([...prev, ...maps.foldersData]))
+      setDocsMap((prev) => new Map([...prev, ...maps.docsData]))
+      setTagsMap((prev) => new Map([...prev, ...maps.tagsData]))
+      setTemplatesMap((prev) => new Map([...prev, ...maps.templatesData]))
+      setDashboardsMap((prev) => new Map([...prev, ...maps.dashboardsData]))
+      setViewsMap((prev) => new Map([...prev, ...maps.viewsData]))
+      setSmartViewsMap((prev) => new Map([...prev, ...maps.smartViewsData]))
+      setWorkspacesMap((prev) => new Map([...prev, ...maps.workspacesData]))
+    },
+    [router.pathname]
+  )
+
+  useEffect(() => {
+    PagePropsUpdateEventEmitter.listen(updateMapsWithPageProps)
+    return () => {
+      PagePropsUpdateEventEmitter.unlisten(updateMapsWithPageProps)
+    }
+  }, [updateMapsWithPageProps])
 
   const getAllResourcesAbortController = useRef<AbortController | null>(null)
 

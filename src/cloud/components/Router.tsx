@@ -63,6 +63,7 @@ import { PreviewStyleProvider } from '../../lib/preview'
 import HomePage from '../pages/home'
 import DashboardPage from '../pages/[teamId]/dashboard'
 import ApplicationWithoutPageInfo from './ApplicationWithoutInfoLoader'
+import { PagePropsUpdateEventEmitter } from '../lib/utils/events'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -178,6 +179,7 @@ const Router = () => {
     if (previousPathnameRef.current === pathname) {
       return
     }
+    setNavigatingBetweenPage(true)
     previousPathnameRef.current = pathname
     previousSearchRef.current = search
     nProgress.start()
@@ -191,7 +193,6 @@ const Router = () => {
 
     const abortController = new AbortController()
 
-    setNavigatingBetweenPage(true)
     new Promise((resolve, _reject) =>
       resolve(
         pageSpec.getInitialProps != null
@@ -208,6 +209,7 @@ const Router = () => {
           Component: pageSpec.Component,
           pageProps: pageData,
         })
+        PagePropsUpdateEventEmitter.dispatch({ pageProps: pageData })
         nProgress.done()
         setNavigatingBetweenPage(false)
       })
