@@ -74,6 +74,8 @@ const StyledContainer = styled.div`
   .kanban__list__items__wrapper {
     display: flexbox;
     flex: 1 1 auto !important;
+    display: flex;
+    flex-direction: column;
   }
 `
 
