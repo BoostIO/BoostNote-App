@@ -124,3 +124,11 @@ export const modalEventEmitter = createCustomEventEmitter<ModalEventDetails>(
 export type ModalEventDetails = {
   type: string
 }
+
+export type PagePropsUpdateEventDetails = {
+  pageProps: any
+}
+
+export const PagePropsUpdateEventEmitter = createCustomEventEmitter<
+  PagePropsUpdateEventDetails
+>('page-props-update')
