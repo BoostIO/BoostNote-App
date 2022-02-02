@@ -101,8 +101,8 @@ const CreateTeamForm = ({
               title: translate(lngKeys.SpaceDomain),
               description: (
                 <div className='domain__description'>
-                    {translate(lngKeys.TeamDomainShow)}{' '}
-                    <span className='underlined'>{slugDomain}</span>
+                  {translate(lngKeys.TeamDomainShow)}{' '}
+                  <span className='underlined'>{slugDomain}</span>
                   <br />
                   {translate(lngKeys.TeamDomainWarning)}
                 </div>
