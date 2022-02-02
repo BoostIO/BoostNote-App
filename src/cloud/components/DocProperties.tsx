@@ -188,9 +188,6 @@ const Container = styled.div`
   }
 
   .doc-props__property {
-    &:not(button) {
-      padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
-    }
     flex: 1 1 auto;
     display: flex;
     align-items: center;
