@@ -5,6 +5,11 @@ import styled from '../../../design/lib/styled'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import cc from 'classcat'
+import Icon from '../../../design/components/atoms/Icon'
+import {
+  mdiAccountOutline,
+  mdiAccountMultiplePlusOutline
+} from '@mdi/js'
 
 export type SpaceUsageIntent = 'personal' | 'team'
 
@@ -39,10 +44,7 @@ const UsageFormRow = ({
           type='button'
         >
           <Radio checked={intent === 'personal'} />
-          <img
-            className='usage__option__img'
-            src='/app/static/images/sozai1.svg'
-          />
+          <Icon path={mdiAccountOutline} className='usage__option__icon' />
           <span className='usage__option__label'>
             {translate(lngKeys.SpaceIntentPersonal)}
           </span>
@@ -56,10 +58,7 @@ const UsageFormRow = ({
           type='button'
         >
           <Radio checked={intent === 'team'} />
-          <img
-            className='usage__option__img'
-            src='/app/static/images/sozai2.svg'
-          />
+          <Icon path={mdiAccountMultiplePlusOutline} className='usage__option__icon' />
           <span className='usage__option__label'>
             {translate(lngKeys.SpaceIntentTeam)}
           </span>
@@ -94,14 +93,9 @@ const Container = styled.div`
     }
   }
 
-  .usage__option__img {
-    width: 40px;
-    height: auto;
-  }
-
   .usage__option__label,
-  .usage__option__img {
-    padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
+  .usage__option__icon {
+    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 
   .usage__option + .usage__option {
@@ -109,11 +103,3 @@ const Container = styled.div`
 `
 
 export default UsageFormRow
-
-/** 
- * 
-            <img src='/app/static/images/sozai1.svg' />
-            <strong>Cloud space for myself</strong>
-            <img src='/app/static/images/sozai2.svg' />
-            <strong>Cloud space with my team</strong>
- */
