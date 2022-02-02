@@ -1,5 +1,8 @@
 import { stringify } from 'querystring'
-import { SerializedAutomation } from '../../interfaces/db/automations'
+import {
+  SerializedAutomation,
+  SerializedAutomationLog,
+} from '../../interfaces/db/automations'
 import { callApi } from '../../lib/client'
 
 export interface GetAutomationResponseBody {
@@ -86,4 +89,25 @@ export async function updateAutomation(
 
 export async function deleteAutomation(id: number) {
   await callApi(`api/automations/${id}`, { method: 'delete' })
+}
+
+export interface LogPagination {
+  page?: number
+  perPage?: number
+}
+
+export interface GetAutomationLogResponseBody {
+  data: SerializedAutomationLog[]
+}
+
+export async function getAutomationLogs(
+  id: number | string,
+  pagin: LogPagination = {}
+) {
+  const { data } = await callApi<GetAutomationLogResponseBody>(
+    `api/automations/${id}/logs`,
+    { search: { ...pagin } }
+  )
+
+  return data
 }
