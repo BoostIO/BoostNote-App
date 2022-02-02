@@ -273,7 +273,6 @@ function useNavStore(): NavContext {
     if (previousPathRef.current === '') {
       previousPathRef.current = router.pathname
       const maps = getTagsFoldersDocsMapsFromProps(pageProps)
-      console.log(maps.docsData)
       setFoldersMap((prev) => new Map([...prev, ...maps.foldersData]))
       setDocsMap((prev) => new Map([...prev, ...maps.docsData]))
       setTagsMap((prev) => new Map([...prev, ...maps.tagsData]))
