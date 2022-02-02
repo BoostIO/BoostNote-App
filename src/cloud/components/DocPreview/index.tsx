@@ -1,4 +1,4 @@
-import { mdiArrowExpand, mdiClose, mdiPencil } from '@mdi/js'
+import { mdiArrowExpand, mdiClose, mdiDotsHorizontal, mdiPencil } from '@mdi/js'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useCallback } from 'react'
@@ -25,6 +25,7 @@ import DocProperties from '../DocProperties'
 import { getDocLinkHref } from '../Link/DocLink'
 import DocPreviewRealtime from './DocPreviewRealtime'
 import LoaderDocEditor from '../../../design/components/atoms/loaders/LoaderDocEditor'
+import NewDocContextMenu from '../DocPage/NewDocContextMenu'
 
 interface DocPreviewModalProps {
   doc: SerializedDocWithSupplemental
@@ -33,10 +34,10 @@ interface DocPreviewModalProps {
 }
 
 const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
-  const { closeLastModal } = useModal()
+  const { openContextModal, closeLastModal } = useModal()
   const { docsMap } = useNav()
   const { push } = useRouter()
-  const { currentUserIsCoreMember } = usePage()
+  const { currentUserIsCoreMember, permissions } = usePage()
   const [fetching, setFetching] = useState(true)
   const [collabToken, setCollabToken] = useState(
     doc.collaborationToken || doc.id
@@ -141,6 +142,27 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
             onClick={navigateToDoc}
             id='doc-preview__edit'
             size='sm'
+          />
+          <Button
+            variant='icon'
+            iconPath={mdiDotsHorizontal}
+            onClick={(event) => {
+              openContextModal(
+                event,
+                <NewDocContextMenu
+                  currentDoc={doc}
+                  team={team}
+                  currentUserIsCoreMember={currentUserIsCoreMember}
+                  permissions={permissions || []}
+                />,
+                {
+                  alignment: 'bottom-right',
+                  removePadding: true,
+                  hideBackground: true,
+                  keepAll: true,
+                }
+              )
+            }}
           />
           <Button
             variant='icon'
