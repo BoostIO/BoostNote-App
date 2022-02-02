@@ -1,9 +1,7 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { usePage } from '../../lib/stores/pageStore'
 import { useDialog, DialogIconTypes } from '../../../design/lib/stores/dialog'
-import {
-  SerializedUserTeamPermissions,
-} from '../../interfaces/db/userTeamPermissions'
+import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 import { useGlobalData } from '../../lib/stores/globalData'
 import {
   destroyPermission,
