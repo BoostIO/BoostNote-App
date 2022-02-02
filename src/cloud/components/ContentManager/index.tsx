@@ -12,7 +12,6 @@ import { difference } from 'ramda'
 import ContentManagerToolbar from './ContentManagerToolbar'
 import styled from '../../../design/lib/styled'
 import { usePreferences } from '../../lib/stores/preferences'
-import EmptyRow from './Rows/EmptyRow'
 import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { useCloudDnd } from '../../lib/hooks/sidebar/useCloudDnd'
@@ -185,7 +184,7 @@ const ContentManager = ({
               />
             )
           })}
-          {orderedDocs.length === 0 && <EmptyRow label='No Documents' />}
+          {orderedDocs.length === 0 && <EmptyDoc>No documents shared</EmptyDoc>}
         </StyledContentManagerList>
       </Scroller>
 
@@ -257,4 +256,12 @@ export const StyledContentManagerHeader = styled.div`
       opacity: 1;
     }
   }
+`
+
+export const EmptyDoc = styled.div`
+height: 40px;
+display: flex;
+align-items: center;
+padding: 0 ${({ theme }) => theme.sizes.spaces.xl}px;
+color: ${({ theme }) => theme.colors.text.subtle};
 `
