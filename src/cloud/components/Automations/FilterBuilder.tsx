@@ -2,6 +2,7 @@ import { mdiClose, mdiPlus } from '@mdi/js'
 import { assocPath, dissocPath } from 'ramda'
 import React, { useCallback, useMemo, useState } from 'react'
 import Button from '../../../design/components/atoms/Button'
+import Switch from '../../../design/components/atoms/Switch'
 import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
 import FormSelect, {
   FormSelectOption,
@@ -19,14 +20,19 @@ interface FilterBuilderProps {
 }
 
 const FilterBuilder = ({ typeDef, filter, onChange }: FilterBuilderProps) => {
-  const [selected, setSelected] = useState<FormSelectOption | undefined>()
-  const [addingValue, setAddingValue] = useState('')
+  const [selected, setSelected] = useState<
+    (FormSelectOption & { type: string }) | undefined
+  >()
+  const [addingValue, setAddingValue] = useState<
+    string | number | boolean | undefined
+  >()
 
   const flattenedTypeKeys = useMemo(
     () =>
-      Object.keys(flattenObj(typeDef as any)).map((key) => ({
+      Object.entries(flattenObj(typeDef as any)).map(([key, val]) => ({
         label: key,
         value: key,
+        type: val,
       })),
     [typeDef]
   )
@@ -46,6 +52,7 @@ const FilterBuilder = ({ typeDef, filter, onChange }: FilterBuilderProps) => {
     [filter, onChange]
   )
 
+  console.log(selected)
   return (
     <div>
       {Object.entries(flattenedFilter).map(([key, val]) => {
@@ -72,10 +79,19 @@ const FilterBuilder = ({ typeDef, filter, onChange }: FilterBuilderProps) => {
           />
         </FormRowItem>
         <FormRowItem>
-          <FormInput
-            value={addingValue}
-            onChange={(ev) => setAddingValue(ev.target.value)}
-          />
+          {selected != null && selected.type === 'boolean' ? (
+            <Switch checked={!!addingValue} onChange={setAddingValue} />
+          ) : (
+            <FormInput
+              type={
+                selected != null && selected.type === 'number'
+                  ? 'number'
+                  : 'text'
+              }
+              value={addingValue?.toString()}
+              onChange={(ev) => setAddingValue(ev.target.value)}
+            />
+          )}
         </FormRowItem>
         <FormRowItem>
           <Button onClick={addFilter} iconPath={mdiPlus}></Button>
