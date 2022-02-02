@@ -162,7 +162,10 @@ const LabelManager = <T extends LabelLike>({
             className='autocomplete__option'
             key={`option-autocomplete=${label.name}`}
             href='#'
-            onClick={() => onSelect(label)}
+            onClick={(e) => {
+              e.preventDefault()
+              onSelect(label)
+            }}
             id={`option-autocomplete-${label.name}`}
           >
             <Flexbox justifyContent='space-between'>
