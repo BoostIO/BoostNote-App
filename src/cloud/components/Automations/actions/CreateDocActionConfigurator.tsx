@@ -16,7 +16,7 @@ const CreateDocActionConfigurator = ({
   eventType,
 }: ActionConfiguratorProps) => {
   const eventDataOptions = useMemo(() => {
-    return Object.keys(flattenObj(eventType as any))
+    return flattenObj(eventType as any)
   }, [eventType])
 
   return (
@@ -24,6 +24,7 @@ const CreateDocActionConfigurator = ({
       <FormRow row={{ title: 'Title' }}>
         <ActionConfigurationInput
           value={configuration.title}
+          type={'string'}
           onChange={(title) => onChange({ ...configuration, title })}
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
@@ -39,6 +40,7 @@ const CreateDocActionConfigurator = ({
       <FormRow row={{ title: 'Emoji' }}>
         <ActionConfigurationInput
           value={configuration.emoji}
+          type={'string'}
           onChange={(emoji) => onChange({ ...configuration, emoji })}
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
@@ -55,6 +57,7 @@ const CreateDocActionConfigurator = ({
       <FormRow row={{ title: 'Content' }}>
         <ActionConfigurationInput
           value={configuration.content}
+          type={'string'}
           onChange={(content) => onChange({ ...configuration, content })}
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
@@ -70,6 +73,7 @@ const CreateDocActionConfigurator = ({
       <FormRow row={{ title: 'Parent Folder' }}>
         <ActionConfigurationInput
           value={configuration.parentFolder}
+          type={'string'}
           onChange={(parentFolder) =>
             onChange({ ...configuration, parentFolder })
           }
