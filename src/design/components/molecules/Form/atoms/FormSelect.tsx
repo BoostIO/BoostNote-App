@@ -226,7 +226,7 @@ const Container = styled.div`
     }
   }
   .form__select__value-container {
-    padding: 0 4px;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.sm};
   }
 
   .form__select .form__select__single-value,
