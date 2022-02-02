@@ -36,19 +36,17 @@ interface DocContextMenuProps {
   currentUserIsCoreMember: boolean
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
   restoreRevision?: (revisionContent: string) => void
-  isCanvas?: boolean
 }
 
 const DocContextMenu = ({
   team,
   currentDoc: doc,
-  contributors = [],
+  contributors,
   backLinks = [],
   permissions,
   currentUserIsCoreMember,
   editorRef,
   restoreRevision,
-  isCanvas,
 }: DocContextMenuProps) => {
   const [sliceContributors, setSliceContributors] = useState(true)
   const { docsMap } = useNav()
@@ -68,6 +66,9 @@ const DocContextMenu = ({
   }, [permissions])
 
   const contributorsState = useMemo(() => {
+    if (contributors == null) {
+      return
+    }
     let allContributors = contributors
     let sliced = 0
     if (sliceContributors && contributors.length > 5) {
@@ -184,7 +185,7 @@ const DocContextMenu = ({
           ),
         }}
       />
-      {!isCanvas && (
+      {contributorsState != null && (
         <MetadataContainerRow
           row={{
             label: translate(lngKeys.Contributors),
@@ -198,7 +199,7 @@ const DocContextMenu = ({
                     user={usersMap.get(contributor.id) || contributor}
                   />
                 ))}
-                {contributors.length > 0 && (
+                {(contributors || []).length > 0 && (
                   <>
                     <div style={{ marginRight: 5 }} />
                     <Button
@@ -241,7 +242,6 @@ const DocContextMenu = ({
         editorRef={editorRef}
         currentUserIsCoreMember={currentUserIsCoreMember}
         restoreRevision={restoreRevision}
-        isCanvas={isCanvas}
       />
     </MetadataContainer>
   )

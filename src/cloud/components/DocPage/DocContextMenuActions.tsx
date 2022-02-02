@@ -64,7 +64,6 @@ export interface DocContextMenuActionsProps {
   currentUserIsCoreMember: boolean
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
   restoreRevision?: (revisionContent: string) => void
-  isCanvas?: boolean
 }
 
 export function DocContextMenuActions({
@@ -73,7 +72,6 @@ export function DocContextMenuActions({
   currentUserIsCoreMember,
   editorRef,
   restoreRevision,
-  isCanvas,
 }: DocContextMenuActionsProps) {
   const { translate } = useI18n()
   const { sendingMap, toggleDocBookmark, send, updateDoc } = useCloudApi()
@@ -249,7 +247,7 @@ export function DocContextMenuActions({
           },
         }}
       />
-      {currentUserIsCoreMember && !isCanvas && (
+      {currentUserIsCoreMember && (
         <MetadataContainerRow
           row={{
             type: 'button',
@@ -264,19 +262,17 @@ export function DocContextMenuActions({
           }}
         />
       )}
-      {!isCanvas && (
-        <MetadataContainerRow
-          row={{
-            type: 'button',
-            props: {
-              id: 'metadata-history',
-              onClick: revisionNavigateCallback,
-              iconPath: mdiHistory,
-              label: translate(lngKeys.History),
-            },
-          }}
-        />
-      )}
+      <MetadataContainerRow
+        row={{
+          type: 'button',
+          props: {
+            id: 'metadata-history',
+            onClick: revisionNavigateCallback,
+            iconPath: mdiHistory,
+            label: translate(lngKeys.History),
+          },
+        }}
+      />
       <MetadataContainerRow
         row={{
           type: 'button',
@@ -305,67 +301,63 @@ export function DocContextMenuActions({
           }}
         />
       )}
-      {!isCanvas && (
-        <>
-          <MetadataContainerBreak />
-          <MetadataContainerRow
-            row={{
-              type: 'button',
-              props: {
-                id: 'metadata-export-markdown',
-                label: translate(lngKeys.DocExportMarkdown),
-                iconPath: mdiLanguageMarkdownOutline,
-                onClick: exportAsMarkdown,
-              },
-            }}
-          />
-          <MetadataContainerRow
-            row={{
-              type: 'button',
-              props: {
-                id: 'metadata-export-html',
-                label: translate(lngKeys.DocExportHtml),
-                iconPath: mdiFileCodeOutline,
-                onClick: exportAsHtml,
-              },
-            }}
-          />
-          <MetadataContainerRow
-            row={{
-              type: 'button',
-              props: {
-                id: 'metadata-export-pdf',
-                label: translate(lngKeys.DocExportPdf),
-                iconPath: mdiFilePdfOutline,
-                onClick: exportAsPdf,
-                disabled: subscription == null || fetchingPdf,
-              },
+      <MetadataContainerBreak />
+      <MetadataContainerRow
+        row={{
+          type: 'button',
+          props: {
+            id: 'metadata-export-markdown',
+            label: translate(lngKeys.DocExportMarkdown),
+            iconPath: mdiLanguageMarkdownOutline,
+            onClick: exportAsMarkdown,
+          },
+        }}
+      />
+      <MetadataContainerRow
+        row={{
+          type: 'button',
+          props: {
+            id: 'metadata-export-html',
+            label: translate(lngKeys.DocExportHtml),
+            iconPath: mdiFileCodeOutline,
+            onClick: exportAsHtml,
+          },
+        }}
+      />
+      <MetadataContainerRow
+        row={{
+          type: 'button',
+          props: {
+            id: 'metadata-export-pdf',
+            label: translate(lngKeys.DocExportPdf),
+            iconPath: mdiFilePdfOutline,
+            onClick: exportAsPdf,
+            disabled: subscription == null || fetchingPdf,
+          },
+        }}
+      >
+        {subscription == null && (
+          <Button
+            variant='secondary'
+            onClick={() => {
+              closeAllModals()
+              openSettingsTab('teamUpgrade')
             }}
           >
-            {subscription == null && (
-              <Button
-                variant='secondary'
-                onClick={() => {
-                  closeAllModals()
-                  openSettingsTab('teamUpgrade')
-                }}
-              >
-                Upgrade
-              </Button>
-            )}
-            {fetchingPdf && (
-              <Spinner
-                variant={'subtle'}
-                style={{
-                  position: 'absolute',
-                  left: '90%',
-                  marginTop: 8,
-                }}
-              />
-            )}
-          </MetadataContainerRow>
-        </>
-      )}
+            Upgrade
+          </Button>
+        )}
+        {fetchingPdf && (
+          <Spinner
+            variant={'subtle'}
+            style={{
+              position: 'absolute',
+              left: '90%',
+              marginTop: 8,
+            }}
+          />
+        )}
+      </MetadataContainerRow>
       {currentUserIsCoreMember && (
         <>
           <MetadataContainerBreak />
