@@ -15,7 +15,7 @@ const UpdateDocActionConfigurator = ({
   eventType,
 }: ActionConfiguratorProps) => {
   const eventDataOptions = useMemo(() => {
-    return Object.keys(flattenObj(eventType as any))
+    return flattenObj(eventType as any)
   }, [eventType])
 
   const conditions = useMemo(() => {

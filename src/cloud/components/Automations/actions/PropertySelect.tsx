@@ -19,7 +19,7 @@ type PlaceholderPropData = Omit<PropData, 'data'> & {
 export interface PropertySelectProps {
   value: Record<string, PlaceholderPropData>
   onChange: (props: Record<string, PlaceholderPropData>) => void
-  eventDataOptions: string[]
+  eventDataOptions: Record<string, any>
 }
 
 const PropertySelect = ({
@@ -53,6 +53,7 @@ const PropertySelect = ({
             <FormRowItem>
               <ActionConfigurationInput
                 value={propData.data}
+                type={getDataTypeForPropType(propData.type)}
                 onChange={(data) =>
                   onChange({
                     ...value,
@@ -123,3 +124,14 @@ const PropertySelect = ({
 }
 
 export default PropertySelect
+
+function getDataTypeForPropType(type: PropData['type']): string | undefined {
+  switch (type) {
+    case 'number':
+      return 'number'
+    case 'string':
+      return 'string'
+    default:
+      return undefined
+  }
+}
