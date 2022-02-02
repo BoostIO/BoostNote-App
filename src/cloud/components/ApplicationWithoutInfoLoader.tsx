@@ -10,6 +10,9 @@ import cc from 'classcat'
 import { usePreferences } from '../lib/stores/preferences'
 import LoaderTeamPicker from '../../design/components/atoms/loaders/LoaderTeamPicker'
 import LoaderNavItem from '../../design/components/atoms/loaders/LoaderNavItem'
+import LoaderTopbar from '../../design/components/atoms/loaders/LoaderTopbar'
+import { TopbarPlaceholder } from '../../design/components/organisms/Topbar'
+import LoaderFolderPage from '../../design/components/atoms/loaders/LoaderFolderPage'
 
 const ApplicationWithoutPageInfo = () => {
   const { preferences } = usePreferences()
@@ -40,7 +43,14 @@ const ApplicationWithoutPageInfo = () => {
           </WidthEnlarger>
         </SidebarContainer>
       }
-      pageBody={<></>}
+      pageBody={
+        <>
+          <TopbarPlaceholder style={{ paddingLeft: 0 }}>
+            <LoaderTopbar />
+          </TopbarPlaceholder>
+          <LoaderFolderPage />
+        </>
+      }
     />
   )
 }

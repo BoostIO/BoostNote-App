@@ -324,8 +324,9 @@ const Container = styled.div`
 
 export const TopbarPlaceholder = ({
   children,
-}: React.PropsWithChildren<{}>) => (
-  <PlaceholderContainer className='topbar topbar--placeholder'>
+  style,
+}: React.PropsWithChildren<{ style?: React.CSSProperties }>) => (
+  <PlaceholderContainer className='topbar topbar--placeholder' style={style}>
     {children}
   </PlaceholderContainer>
 )
