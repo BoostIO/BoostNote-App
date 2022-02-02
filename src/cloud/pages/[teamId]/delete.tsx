@@ -18,6 +18,7 @@ import { LoadingButton } from '../../../design/components/atoms/Button'
 import Card from '../../../design/components/atoms/Card'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import { useGlobalData } from '../../lib/stores/globalData'
+import { usePage } from '../../lib/stores/pageStore'
 
 const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
   const [sendingRemoval, setSendingRemoval] = useState<boolean>(false)
@@ -25,6 +26,7 @@ const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
   const { pushMessage } = useToast()
   const { push } = useRouter()
   const { t } = useTranslation()
+  const { setPageData } = usePage()
   const { usingElectron, sendToElectron } = useElectron()
   const { setPartialGlobalData, globalData } = useGlobalData()
 
@@ -73,6 +75,7 @@ const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
                   .slice()
                   .filter((t) => t.id !== team.id)
                 setPartialGlobalData({ teams: cleanedUpTeams })
+                setPageData({})
                 if (usingElectron) {
                   sendToElectron('team-delete', team)
                 } else {
@@ -100,6 +103,7 @@ const DeleteTeamPage = ({ team }: DeleteTeamPageResponseBody) => {
     usingElectron,
     globalData,
     setPartialGlobalData,
+    setPageData,
   ])
 
   return (
