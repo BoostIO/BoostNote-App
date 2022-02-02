@@ -1,11 +1,9 @@
 import React, { useMemo, useState } from 'react'
-import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import FormSelect from '../../../../design/components/molecules/Form/atoms/FormSelect'
 import FormRowItem from '../../../../design/components/molecules/Form/templates/FormRowItem'
 
 const CONFIG_TYPES = [
   { label: 'Event', value: 'event' },
-  { label: 'Env', value: 'env' },
   { label: 'Custom', value: 'custom' },
 ]
 
@@ -33,7 +31,7 @@ const ActionConfigurationInput = ({
         return CONFIG_TYPES[1]
       }
     }
-    return CONFIG_TYPES[2]
+    return CONFIG_TYPES[1]
   })
 
   const options = useMemo(() => {
@@ -62,12 +60,6 @@ const ActionConfigurationInput = ({
         <FormSelect options={CONFIG_TYPES} value={type} onChange={setType} />
       </FormRowItem>
       <FormRowItem>
-        {type.value === 'env' && (
-          <FormInput
-            value={normalized}
-            onChange={(ev) => onChange(`$env.${ev.target.value}`)}
-          />
-        )}
         {type.value === 'event' && (
           <FormSelect
             value={{ label: normalized, value: normalized }}
