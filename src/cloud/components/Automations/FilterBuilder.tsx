@@ -52,7 +52,6 @@ const FilterBuilder = ({ typeDef, filter, onChange }: FilterBuilderProps) => {
     [filter, onChange]
   )
 
-  console.log(selected)
   return (
     <div>
       {Object.entries(flattenedFilter).map(([key, val]) => {
