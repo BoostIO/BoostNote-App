@@ -28,3 +28,10 @@ export interface SerializedAutomation {
   createdAt: string
   updatedAt: string
 }
+
+export interface SerializedAutomationLog {
+  type: string
+  info: string
+  isError: boolean
+  createdAt: string
+}
