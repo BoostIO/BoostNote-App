@@ -101,12 +101,10 @@ const CreateTeamForm = ({
               title: translate(lngKeys.SpaceDomain),
               description: (
                 <div className='domain__description'>
-                  <small>
                     {translate(lngKeys.TeamDomainShow)}{' '}
                     <span className='underlined'>{slugDomain}</span>
-                  </small>
                   <br />
-                  <small>{translate(lngKeys.TeamDomainWarning)}</small>
+                  {translate(lngKeys.TeamDomainWarning)}
                 </div>
               ),
             }}
@@ -175,6 +173,10 @@ const Container = styled.div`
       margin-left: 0;
       margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
     }
+  }
+
+  .domain__description {
+    margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 `
 
