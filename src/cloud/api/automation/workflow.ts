@@ -34,6 +34,7 @@ export interface CreateWorkflowRequestBody {
   name: string
   description?: string
   pipes: SerializedPipe[]
+  env?: Record<string, any>
   team: string
 }
 
@@ -53,6 +54,7 @@ export interface UpdateWorkflowRequestBody {
   name: string
   description?: string
   pipes: SerializedPipe[]
+  env?: Record<string, any>
   team: string
 }
 
