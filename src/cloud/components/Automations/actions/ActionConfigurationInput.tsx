@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import FormSelect from '../../../../design/components/molecules/Form/atoms/FormSelect'
 import FormRowItem from '../../../../design/components/molecules/Form/templates/FormRowItem'
+import { pickBy } from 'ramda'
 
 const CONFIG_TYPES = [
   { label: 'Event', value: 'event' },
@@ -14,13 +15,15 @@ interface ActionConfigurationInputProps {
     onChange: ActionConfigurationInputProps['onChange'],
     value: any
   ) => React.ReactNode
-  eventDataOptions: string[]
+  eventDataOptions: Record<string, string>
+  type?: string
 }
 const ActionConfigurationInput = ({
   value,
   eventDataOptions,
   onChange,
   customInput,
+  type: dataType,
 }: ActionConfigurationInputProps) => {
   const [type, setType] = useState(() => {
     if (typeof value === 'string') {
@@ -35,8 +38,10 @@ const ActionConfigurationInput = ({
   })
 
   const options = useMemo(() => {
-    return eventDataOptions.map((key) => ({ label: key, value: key }))
-  }, [eventDataOptions])
+    return Object.keys(
+      pickBy((val) => dataType == null || val === dataType, eventDataOptions)
+    ).map((key) => ({ label: key, value: key }))
+  }, [eventDataOptions, dataType])
 
   const normalized = useMemo(() => {
     if (typeof value === 'string') {
