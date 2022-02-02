@@ -202,7 +202,7 @@ const TableContainer = styled.div`
       }
 
       .table-row > div:nth-child(3) {
-        z-index: 10;
+        z-index: 9;
         position: sticky;
         background-color: ${({ theme }) => theme.colors.background.primary};
       }
@@ -213,7 +213,7 @@ const TableContainer = styled.div`
       }
 
       .table__header > div:nth-child(3) {
-        z-index: 10;
+        z-index: 9;
         position: sticky;
         background-color: ${({ theme }) => theme.colors.background.primary};
       }
