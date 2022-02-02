@@ -7,11 +7,7 @@ import React, {
 } from 'react'
 import { mdiClose } from '@mdi/js'
 import cc from 'classcat'
-import {
-  ModalElement,
-  ModalNavigationProps,
-  useModal,
-} from '../../../lib/stores/modal'
+import { ModalElement, useModal } from '../../../lib/stores/modal'
 import { isActiveElementAnInput } from '../../../lib/dom'
 import { useGlobalKeyDownHandler } from '../../../lib/keyboard'
 import styled from '../../../lib/styled'
@@ -87,6 +83,7 @@ const ContextModalItem = ({
   } = useWindow()
   const modalWidth = typeof modal.width === 'string' ? 400 : modal.width
   const contentScrollerRef = useRef<OverlayScrollbarsComponent>(null)
+  const manualClosing = useRef(false)
 
   const style: CSSProperties | undefined = useMemo(() => {
     const properties: CSSProperties = {
@@ -166,14 +163,19 @@ const ContextModalItem = ({
     }
   })
 
+  const closing = useCallback(() => {
+    manualClosing.current = true
+    closeModal()
+  }, [closeModal])
+
   const closeModalOnEscape = useCallback(
     (event: CustomEvent<ModalEventDetails>) => {
       if (event.detail.type !== `modal-${id}-close`) {
         return
       }
-      closeModal()
+      closing()
     },
-    [closeModal, id]
+    [closing, id]
   )
 
   useEffect(() => {
@@ -182,6 +184,8 @@ const ContextModalItem = ({
       modalEventEmitter.unlisten(closeModalOnEscape)
     }
   }, [closeModalOnEscape])
+
+  useModalNavigationHistory(modal, manualClosing)
 
   if (modal.onBlur != null) {
     return (
@@ -284,7 +288,7 @@ const ModalItem = ({
     }
   }, [closeModalOnEscape])
 
-  useModalNavigationHistory(manualClosing, modal.navigation)
+  useModalNavigationHistory(modal, manualClosing)
 
   return (
     <Scroller
@@ -322,27 +326,51 @@ const ModalItem = ({
 }
 
 function useModalNavigationHistory(
-  manualClosing: React.MutableRefObject<boolean>,
-  navigation?: ModalNavigationProps
+  modal: ModalElement,
+  manualClosing: React.MutableRefObject<boolean>
 ) {
   const { push, goBack } = useRouter()
+  const previousModalRef = useRef({
+    id: modal.id,
+    navigation: modal.navigation,
+  })
 
   //push modal's url to history on load
   useEffectOnce(() => {
-    if (navigation == null) {
+    if (modal.navigation == null) {
       return
     }
-    push(navigation.url)
+    push(modal.navigation.url)
   })
+
+  //on modals change ( no unmount ), triggers the navigation for the replaced modal
+  useEffect(() => {
+    if (modal.id !== previousModalRef.current.id) {
+      if (previousModalRef.current.navigation == null) {
+        previousModalRef.current = {
+          id: modal.id,
+          navigation: modal.navigation,
+        }
+        return
+      }
+
+      if (previousModalRef.current.navigation.fallbackUrl != null) {
+        push(previousModalRef.current.navigation.fallbackUrl)
+      } else if (goBack != null) {
+        goBack()
+      }
+      previousModalRef.current = { id: modal.id, navigation: modal.navigation }
+    }
+  }, [modal, push, goBack])
 
   //on modal's closure, goes back to wanted URL
   useEffectOnUnmount(() => {
-    if (!manualClosing.current || navigation == null) {
+    if (!manualClosing.current || modal.navigation == null) {
       return
     }
 
-    if (navigation.fallbackUrl != null) {
-      push(navigation.fallbackUrl)
+    if (modal.navigation.fallbackUrl != null) {
+      push(modal.navigation.fallbackUrl)
     } else if (goBack != null) {
       goBack()
     }

@@ -6,6 +6,8 @@ import {
   ModalElement,
   ContextModalOpeningOptions,
 } from './types'
+import { modalEventEmitter } from '../../../../cloud/lib/utils/events'
+import shortid from 'shortid'
 export * from './types'
 
 function useModalStore(): ModalsContext {
@@ -22,6 +24,7 @@ function useModalStore(): ModalsContext {
         content,
         ...options,
         width: options.width || 400,
+        id: shortid.generate(),
         position: {
           left: currentTargetRect.left,
           right: currentTargetRect.right,
@@ -49,6 +52,7 @@ function useModalStore(): ModalsContext {
       const modal: ModalElement = {
         content,
         ...options,
+        id: shortid.generate(),
         width: options.width || 'default',
       }
       if (!options.keepAll) {
@@ -65,13 +69,13 @@ function useModalStore(): ModalsContext {
   )
 
   const closeAllModals = useCallback(() => {
-    setModals([])
-  }, [])
+    setModals((modals) => {
+      modals.reverse().forEach((_modal, i) => {
+        modalEventEmitter.dispatch({ type: `modal-${i}-close` })
+      })
 
-  const closeModal = useCallback((index: number, collapse?: boolean) => {
-    setModals((modals) =>
-      collapse ? modals.slice(0, index - 1) : modals.splice(index, 1)
-    )
+      return []
+    })
   }, [])
 
   const closeLastModal = useCallback(() => {
@@ -90,7 +94,6 @@ function useModalStore(): ModalsContext {
   return {
     modals,
     openContextModal,
-    closeModal,
     closeAllModals,
     closeLastModal,
     openModal,
