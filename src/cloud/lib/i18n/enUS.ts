@@ -497,7 +497,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.UploadLimit]:
     'The maximum allowed size for uploads is {{sizeInMb}}Mb',
 
-  [lngKeys.OnboardingFolderSectionTitle]: 'Collaborate with your teammates on one platform',
+  [lngKeys.OnboardingFolderSectionTitle]:
+    'Collaborate with your teammates on one platform',
   [lngKeys.OnboardingFolderSectionDisclaimer]:
     'Welcome to Boost Note – a workspace for DevOps teams where information and collaboration meet. Create, collaborate, and organize all your work in one place.',
   [lngKeys.GeneralContent]: 'Content',

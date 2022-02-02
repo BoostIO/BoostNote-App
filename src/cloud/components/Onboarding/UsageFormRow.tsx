@@ -6,10 +6,7 @@ import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import cc from 'classcat'
 import Icon from '../../../design/components/atoms/Icon'
-import {
-  mdiAccountOutline,
-  mdiAccountMultiplePlusOutline
-} from '@mdi/js'
+import { mdiAccountOutline, mdiAccountMultiplePlusOutline } from '@mdi/js'
 
 export type SpaceUsageIntent = 'personal' | 'team'
 
@@ -58,7 +55,10 @@ const UsageFormRow = ({
           type='button'
         >
           <Radio checked={intent === 'team'} />
-          <Icon path={mdiAccountMultiplePlusOutline} className='usage__option__icon' />
+          <Icon
+            path={mdiAccountMultiplePlusOutline}
+            className='usage__option__icon'
+          />
           <span className='usage__option__label'>
             {translate(lngKeys.SpaceIntentTeam)}
           </span>

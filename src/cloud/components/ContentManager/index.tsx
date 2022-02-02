@@ -259,9 +259,9 @@ export const StyledContentManagerHeader = styled.div`
 `
 
 export const EmptyDoc = styled.div`
-height: 40px;
-display: flex;
-align-items: center;
-padding: 0 ${({ theme }) => theme.sizes.spaces.xl}px;
-color: ${({ theme }) => theme.colors.text.subtle};
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 ${({ theme }) => theme.sizes.spaces.xl}px;
+  color: ${({ theme }) => theme.colors.text.subtle};
 `
