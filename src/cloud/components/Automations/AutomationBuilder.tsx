@@ -113,31 +113,6 @@ const AutomationBuilder = <T extends BaseAutomation>({
             />
           </FormRowItem>
         </FormRow>
-        <FormRow row={{ title: 'Env' }} />
-        {Object.keys(automation.env).length === 0 && (
-          <div>No Required Env for this this Workflow</div>
-        )}
-        {Object.entries(automation.env).map(([key, value]) => {
-          return (
-            <FormRow key={key}>
-              <FormRowItem>
-                <FormInput value={key} readOnly={true} />
-              </FormRowItem>
-              <FormRowItem>
-                <FormInput
-                  readOnly={disabled && disabled.has('env')}
-                  value={(value || '') as string}
-                  onChange={(ev) =>
-                    setAutomation({
-                      ...automation,
-                      env: { ...automation.env, [key]: ev.target.value },
-                    })
-                  }
-                />
-              </FormRowItem>
-            </FormRow>
-          )
-        })}
       </Form>
       <Button disabled={working} onClick={() => onSubmit(automation)}>
         Save
