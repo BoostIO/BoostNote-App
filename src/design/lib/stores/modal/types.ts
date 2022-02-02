@@ -1,4 +1,5 @@
 export interface ModalElement {
+  id: string
   title?: React.ReactNode
   content: React.ReactNode
   showCloseIcon?: boolean
@@ -60,7 +61,6 @@ export interface ModalsContext {
     options?: ContextModalOpeningOptions
   ) => void
   openModal: (modalContent: JSX.Element, options?: ModalOpeningOptions) => void
-  closeModal: (index: number, collapse?: boolean) => void
   closeAllModals: () => void
   closeLastModal: () => void
 }
