@@ -114,10 +114,8 @@ function useRouterStore() {
   return router
 }
 
-export const {
-  useStore: useRouter,
-  StoreProvider: RouterProvider,
-} = createStoreContext(useRouterStore)
+export const { useStore: useRouter, StoreProvider: RouterProvider } =
+  createStoreContext(useRouterStore)
 
 export function usePathnameChangeEffect(
   callback: (() => () => void) | (() => void)

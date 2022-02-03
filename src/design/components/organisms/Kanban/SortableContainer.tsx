@@ -10,9 +10,9 @@ interface SortableContainerProps extends Identifyable {
   disabled: boolean
 }
 
-const SortableContainer: React.PropsWithChildren<AppComponent<
-  SortableContainerProps
->> = ({ id, disabled, className, header, children }) => {
+const SortableContainer: React.PropsWithChildren<
+  AppComponent<SortableContainerProps>
+> = ({ id, disabled, className, header, children }) => {
   const {
     attributes,
     listeners,

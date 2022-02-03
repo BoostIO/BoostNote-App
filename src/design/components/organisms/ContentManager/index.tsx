@@ -32,9 +32,10 @@ const ContentManager = <T extends string>({
   users = new Map(),
   push,
 }: ContentManagerProps<T>) => {
-  const [order, setOrder] = useState<
-    typeof contentManagerSortOptions[number]['value']
-  >('Latest Updated')
+  const [order, setOrder] =
+    useState<typeof contentManagerSortOptions[number]['value']>(
+      'Latest Updated'
+    )
   const [activeCategory, setActiveCategory] = useState<T | 'all'>('all')
   const [
     selectedRows,

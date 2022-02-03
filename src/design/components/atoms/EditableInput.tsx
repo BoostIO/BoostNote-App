@@ -100,18 +100,19 @@ const EditableInput = ({
     [onKeydownConfirm, finishEditingText]
   )
 
-  const handleTextInputKeyDown: KeyboardEventHandler<HTMLInputElement> = useCallback(
-    (event) => {
-      switch (event.key) {
-        case 'Esc':
-        case 'Escape':
-          event.preventDefault()
-          cancelEditingText()
-          break
-      }
-    },
-    [cancelEditingText]
-  )
+  const handleTextInputKeyDown: KeyboardEventHandler<HTMLInputElement> =
+    useCallback(
+      (event) => {
+        switch (event.key) {
+          case 'Esc':
+          case 'Escape':
+            event.preventDefault()
+            cancelEditingText()
+            break
+        }
+      },
+      [cancelEditingText]
+    )
 
   const maxWidth: string | number = useMemo(() => {
     // HTML5 canvas width to calculate

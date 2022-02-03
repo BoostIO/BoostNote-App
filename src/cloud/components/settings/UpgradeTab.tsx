@@ -40,19 +40,14 @@ const UpgradeTab = ({
   initialPlan: defaultInitialPlan = 'standard',
 }: UpgradeTabOpeningOptions) => {
   const { translate } = useI18n()
-  const {
-    team,
-    subscription,
-    updateTeamSubscription,
-    currentUserPermissions,
-  } = usePage<PageStoreWithTeam>()
+  const { team, subscription, updateTeamSubscription, currentUserPermissions } =
+    usePage<PageStoreWithTeam>()
   const { usingElectron, sendToElectron } = useElectron()
   const [tabState, setTabState] = useState<UpgradeTabs>(defaultTabState)
   const { openSettingsTab } = useSettings()
   const [showTrialPopup, setShowTrialPopup] = useState(defaultShowTrial)
-  const [initialPlan, setInitialPlan] = useState<UpgradePlans>(
-    defaultInitialPlan
-  )
+  const [initialPlan, setInitialPlan] =
+    useState<UpgradePlans>(defaultInitialPlan)
 
   useEffect(() => {
     if (

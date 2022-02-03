@@ -49,7 +49,5 @@ function useOnboardingStore(): OnboardingContext {
   }
 }
 
-export const {
-  StoreProvider: OnboardingProvider,
-  useStore: useOnboarding,
-} = createStoreContext(useOnboardingStore, 'onboarding')
+export const { StoreProvider: OnboardingProvider, useStore: useOnboarding } =
+  createStoreContext(useOnboardingStore, 'onboarding')

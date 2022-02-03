@@ -26,23 +26,21 @@ const MobileResourceMoveModal = ({
 
   const sortedWorkspaces = useMemo(() => {
     const workspaces = [...workspacesMap.values()]
-    const {
-      public: publicWorkspaces,
-      private: privateWorkspaces,
-    } = workspaces.reduce<{
-      public: SerializedWorkspace[]
-      private: SerializedWorkspace[]
-    }>(
-      (acc, workspace) => {
-        if (workspace.public) {
-          acc.public.push(workspace)
-        } else {
-          acc.private.push(workspace)
-        }
-        return acc
-      },
-      { public: [], private: [] }
-    )
+    const { public: publicWorkspaces, private: privateWorkspaces } =
+      workspaces.reduce<{
+        public: SerializedWorkspace[]
+        private: SerializedWorkspace[]
+      }>(
+        (acc, workspace) => {
+          if (workspace.public) {
+            acc.public.push(workspace)
+          } else {
+            acc.private.push(workspace)
+          }
+          return acc
+        },
+        { public: [], private: [] }
+      )
 
     return [
       ...sortByAttributeAsc('name', publicWorkspaces),

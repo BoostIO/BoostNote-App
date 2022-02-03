@@ -220,8 +220,8 @@ const RevisionsModal = ({
         )
       }
 
-      const numberOfRevisionLines = previousLocalSnapshot.content.split('\n')
-        .length
+      const numberOfRevisionLines =
+        previousLocalSnapshot.content.split('\n').length
       const revisionDiff = createPatch(
         'Local Snapshot Diff',
         previousLocalSnapshot.content,

@@ -12,5 +12,6 @@ export interface SerializedUnserializableFolderPositionsProps {
   updatedAt: string
 }
 
-export type SerializedFolderPositions = SerializedUnserializableFolderPositionsProps &
-  SerializableFolderPositionsProps
+export type SerializedFolderPositions =
+  SerializedUnserializableFolderPositionsProps &
+    SerializableFolderPositionsProps

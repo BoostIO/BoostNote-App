@@ -18,9 +18,8 @@ interface ExpandableImageProps {
 
 const ExpandableImage = ({ src }: ExpandableImageProps) => {
   const [isHovered, setIsHovered] = useState<boolean>(false)
-  const [showingEnlargedImage, setShowingEnlargedImage] = useState<boolean>(
-    false
-  )
+  const [showingEnlargedImage, setShowingEnlargedImage] =
+    useState<boolean>(false)
   const { closeLastModal, openModal } = useModal()
   const onImageExpand = useCallback(() => {
     closeLastModal()

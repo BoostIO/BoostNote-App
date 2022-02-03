@@ -41,9 +41,8 @@ const PropRegisterForm = ({
   registerProp,
   registerStaticProp,
 }: PropRegisterFormProps) => {
-  const [formState, setFormState] = useState<PropRegisterFormState>(
-    initialState
-  )
+  const [formState, setFormState] =
+    useState<PropRegisterFormState>(initialState)
   const [suggestions, setSuggestions] = useState<PropertySuggestion[]>([])
   const [sending, setSending] = useState(false)
 

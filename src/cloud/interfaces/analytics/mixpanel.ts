@@ -240,7 +240,8 @@ export type MixpanelCommentEvent =
   | MixpanelActionTrackTypes.CommentUpdate
   | MixpanelActionTrackTypes.CommentDelete
 
-export type MixpanelIntegrationEvent = MixpanelActionTrackTypes.IntegrationCreateSlack
+export type MixpanelIntegrationEvent =
+  MixpanelActionTrackTypes.IntegrationCreateSlack
 
 export type MixpanelUserProfile = {
   $first_name?: string

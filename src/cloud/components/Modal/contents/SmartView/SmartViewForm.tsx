@@ -57,12 +57,9 @@ const SmartViewForm = ({
   )
 
   const viewTypeOptions: FormSelectOption[] = useMemo(() => {
-    return ([
-      'list',
-      'table',
-      'kanban',
-      'calendar',
-    ] as SupportedViewTypes[]).map((type) => getFormOptionFromViewType(type))
+    return (
+      ['list', 'table', 'kanban', 'calendar'] as SupportedViewTypes[]
+    ).map((type) => getFormOptionFromViewType(type))
   }, [])
 
   const updateName = useCallback(

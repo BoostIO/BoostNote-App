@@ -34,13 +34,14 @@ function ThreadStatusFilterControl({
   const { getThreadStatusLabel, translate } = useI18n()
   const { popup } = useContextMenu()
 
-  const openActionMenu: React.MouseEventHandler<HTMLButtonElement> = useCallback(
-    (event) => {
-      event.preventDefault()
-      popup(event, buildMenu(translate, onChange, counts))
-    },
-    [popup, onChange, counts, translate]
-  )
+  const openActionMenu: React.MouseEventHandler<HTMLButtonElement> =
+    useCallback(
+      (event) => {
+        event.preventDefault()
+        popup(event, buildMenu(translate, onChange, counts))
+      },
+      [popup, onChange, counts, translate]
+    )
 
   return (
     <FilterButton variant='icon_secondary' onClick={openActionMenu}>

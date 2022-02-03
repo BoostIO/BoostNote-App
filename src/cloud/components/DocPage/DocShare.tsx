@@ -94,12 +94,10 @@ const DocShare = ({ currentDoc, team }: DocShareProps) => {
     return `${boostHubBaseUrl}/shared/${currentDoc.shareLink.id}`
   }, [currentDoc.shareLink])
 
-  const updatePasswordText: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (event) => {
+  const updatePasswordText: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback((event) => {
       setPasswordText(event.target.value)
-    },
-    []
-  )
+    }, [])
 
   const copyButtonHandler = useCallback(() => {
     copy(sharedLinkHref)

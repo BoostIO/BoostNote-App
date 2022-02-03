@@ -3,9 +3,7 @@ import React, { ChangeEventHandler, EventHandler } from 'react'
 export type SelectChangeEventHandler = ChangeEventHandler<HTMLSelectElement>
 export type ButtonClickEventHandler = EventHandler<React.MouseEvent>
 
-export function createCustomEventEmitter(
-  name: string
-): {
+export function createCustomEventEmitter(name: string): {
   dispatch: () => void
   listen: (handler: (event: CustomEvent) => void) => void
   unlisten: (handler: (event: CustomEvent) => void) => void
@@ -31,9 +29,8 @@ export function createCustomEventEmitter<D = any>(name: string) {
   }
 }
 
-export const toggleSettingsEventEmitter = createCustomEventEmitter(
-  'toggle-settings'
-)
+export const toggleSettingsEventEmitter =
+  createCustomEventEmitter('toggle-settings')
 
 export const newDocEventEmitter = createCustomEventEmitter('new-doc')
 
@@ -61,17 +58,14 @@ export const toggleSplitEditModeEventEmitter = createCustomEventEmitter(
   'toggle-split-edit-mode'
 )
 
-export const applyBoldStyleEventEmitter = createCustomEventEmitter(
-  'apply-bold-style'
-)
+export const applyBoldStyleEventEmitter =
+  createCustomEventEmitter('apply-bold-style')
 
-export const applyItalicStyleEventEmitter = createCustomEventEmitter(
-  'apply-italic-style'
-)
+export const applyItalicStyleEventEmitter =
+  createCustomEventEmitter('apply-italic-style')
 
-export const toggleSidebarSearchEventEmitter = createCustomEventEmitter(
-  'sidebar-search'
-)
+export const toggleSidebarSearchEventEmitter =
+  createCustomEventEmitter('sidebar-search')
 
 export const toggleSidebarNotificationsEventEmitter = createCustomEventEmitter(
   'sidebar-notifications'
@@ -87,9 +81,8 @@ export type BlockEventDetails = {
   event: 'creation'
 }
 
-export const blockEventEmitter = createCustomEventEmitter<BlockEventDetails>(
-  'blocks-events'
-)
+export const blockEventEmitter =
+  createCustomEventEmitter<BlockEventDetails>('blocks-events')
 
 export type ResourceDeleteEventDetails = {
   resourceType: 'doc' | 'workspace' | 'folder'
@@ -97,29 +90,27 @@ export type ResourceDeleteEventDetails = {
   parentURL: string
 }
 
-export const resourceDeleteEventEmitter = createCustomEventEmitter<
-  ResourceDeleteEventDetails
->('delete-resource')
+export const resourceDeleteEventEmitter =
+  createCustomEventEmitter<ResourceDeleteEventDetails>('delete-resource')
 
 export type SwitchSpaceEventDetails = {
   index: number
 }
 
-export const switchSpaceEventEmitter = createCustomEventEmitter<
-  SwitchSpaceEventDetails
->('switch-space')
+export const switchSpaceEventEmitter =
+  createCustomEventEmitter<SwitchSpaceEventDetails>('switch-space')
 
 export type SignInViaAccessTokenDetails = {
   accessToken: string
 }
 
-export const signInViaAccessTokenEventEmitter = createCustomEventEmitter<
-  SignInViaAccessTokenDetails
->('sign-in-via-access-token')
+export const signInViaAccessTokenEventEmitter =
+  createCustomEventEmitter<SignInViaAccessTokenDetails>(
+    'sign-in-via-access-token'
+  )
 
-export const modalEventEmitter = createCustomEventEmitter<ModalEventDetails>(
-  'modal'
-)
+export const modalEventEmitter =
+  createCustomEventEmitter<ModalEventDetails>('modal')
 
 export type ModalEventDetails = {
   type: string
@@ -129,6 +120,5 @@ export type PagePropsUpdateEventDetails = {
   pageProps: any
 }
 
-export const PagePropsUpdateEventEmitter = createCustomEventEmitter<
-  PagePropsUpdateEventDetails
->('page-props-update')
+export const PagePropsUpdateEventEmitter =
+  createCustomEventEmitter<PagePropsUpdateEventDetails>('page-props-update')

@@ -33,9 +33,10 @@ const PropConfig = ({
 }: PropConfigProps) => {
   const { openContextModal, closeLastModal } = useModal()
   const [newProp, setNewProp] = useState(prop)
-  const disallowedNamesSet = useMemo(() => new Set(disallowedNames || []), [
-    disallowedNames,
-  ])
+  const disallowedNamesSet = useMemo(
+    () => new Set(disallowedNames || []),
+    [disallowedNames]
+  )
   const shouldModify = useRef(true)
 
   const closeCallback = useCallback(() => {

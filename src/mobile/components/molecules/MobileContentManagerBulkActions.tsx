@@ -148,13 +148,8 @@ const MobileContentManagerBulkActions = ({
         return
       }
       try {
-        const {
-          parentFolder,
-          workspace,
-          docs,
-          docsIds,
-          foldersIds,
-        } = await destroyFolder(team, target)
+        const { parentFolder, workspace, docs, docsIds, foldersIds } =
+          await destroyFolder(team, target)
 
         foldersIds.forEach((folderId) => {
           removeFromFoldersMap(folderId)

@@ -20,9 +20,10 @@ const EditorKeyMapSelect = () => {
   const menuRef = useRef<HTMLDivElement>(null)
   const { translate } = useI18n()
 
-  const showMenu: React.MouseEventHandler<HTMLButtonElement> = useCallback(() => {
-    setShowingMenu(true)
-  }, [])
+  const showMenu: React.MouseEventHandler<HTMLButtonElement> =
+    useCallback(() => {
+      setShowingMenu(true)
+    }, [])
 
   useEffect(() => {
     if (showingMenu && menuRef.current != null) {

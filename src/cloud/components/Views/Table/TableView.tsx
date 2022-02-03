@@ -82,11 +82,8 @@ const TableView = ({
   const { goToDocPreview } = useCloudResourceModals()
   const { permissions = [] } = usePage()
 
-  const {
-    dropInDocOrFolder,
-    saveDocTransferData,
-    clearDragTransferData,
-  } = useCloudDnd()
+  const { dropInDocOrFolder, saveDocTransferData, clearDragTransferData } =
+    useCloudDnd()
 
   const { actionsRef } = useTableView({
     view,

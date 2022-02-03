@@ -37,14 +37,14 @@ export async function callApi<T = any>(
   }: CallCloudJsonApiParameter = {}
 ) {
   if (mockBackend) {
-    return (mockHandler(pathname, {
+    return mockHandler(pathname, {
       method,
       search,
       headers,
       signal,
       json,
       body,
-    }) as any) as T
+    }) as any as T
   }
   const mergedHeaders = {
     ...headers,
@@ -84,14 +84,14 @@ export async function callPdfApi<T = any>(
   }: CallCloudJsonApiParameter = {}
 ) {
   if (mockBackend) {
-    return (mockHandler(pathname, {
+    return mockHandler(pathname, {
       method,
       search,
       headers,
       signal,
       json,
       body,
-    }) as any) as T
+    }) as any as T
   }
   const mergedHeaders = {
     ...headers,

@@ -51,11 +51,8 @@ const ContentmanagerFolderRow = ({
   onSelect,
 }: ContentManagerFolderRowProps) => {
   const [sending, setSending] = useState<ActionsIds>()
-  const {
-    updateFoldersMap,
-    deleteFolderHandler,
-    updateFolderHandler,
-  } = useNav()
+  const { updateFoldersMap, deleteFolderHandler, updateFolderHandler } =
+    useNav()
   const { pushMessage, pushApiErrorMessage } = useToast()
   const { openModal } = useModal()
 
