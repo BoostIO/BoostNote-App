@@ -51,9 +51,8 @@ function useSettingsStore() {
   const { globalData, setPartialGlobalData } = useGlobalData()
   const { currentUserSettings, currentUser } = globalData
   const [settingsTab, setSettingsTab] = useState<SettingsTab>('personalInfo')
-  const [settingsOpeningOptions, setSettingsOpeningOptions] = useState<
-    SettingsTabOpeningOptions
-  >()
+  const [settingsOpeningOptions, setSettingsOpeningOptions] =
+    useState<SettingsTabOpeningOptions>()
 
   const { pushMessage } = useToast()
 
@@ -183,7 +182,5 @@ function useSettingsStore() {
   }
 }
 
-export const {
-  StoreProvider: SettingsProvider,
-  useStore: useSettings,
-} = createStoreContext(useSettingsStore, 'settings')
+export const { StoreProvider: SettingsProvider, useStore: useSettings } =
+  createStoreContext(useSettingsStore, 'settings')

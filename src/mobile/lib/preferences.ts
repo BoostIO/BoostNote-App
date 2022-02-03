@@ -46,9 +46,8 @@ const basePreferences: Preferences = {
 
 function getExistingPreferences() {
   try {
-    const stringifiedPreferences = localLiteStorage.getItem(
-      mobilePreferencesKey
-    )
+    const stringifiedPreferences =
+      localLiteStorage.getItem(mobilePreferencesKey)
     if (stringifiedPreferences == null) return
     const existingPreferences = JSON.parse(stringifiedPreferences)
     if (existingPreferences.version == null) {
@@ -82,9 +81,8 @@ const initialPreference = {
 }
 
 function usePreferencesStore() {
-  const [preferences, setPreferences] = useSetState<Partial<Preferences>>(
-    initialPreference
-  )
+  const [preferences, setPreferences] =
+    useSetState<Partial<Preferences>>(initialPreference)
   const hoverOffTimeoutRef = useRef<number>()
 
   useEffect(() => {
@@ -144,7 +142,5 @@ function usePreferencesStore() {
   }
 }
 
-export const {
-  StoreProvider: PreferencesProvider,
-  useStore: usePreferences,
-} = createStoreContext(usePreferencesStore, 'preferences')
+export const { StoreProvider: PreferencesProvider, useStore: usePreferences } =
+  createStoreContext(usePreferencesStore, 'preferences')

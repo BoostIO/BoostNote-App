@@ -26,20 +26,22 @@ const EmailForm = ({
   const [code, setCode] = useState<string>('')
   const [sending, setSending] = useState<boolean>(false)
 
-  const emailChangeHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (event) => {
-      setEmail(event.target.value)
-      setStep('email')
-    },
-    [setEmail]
-  )
+  const emailChangeHandler: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback(
+      (event) => {
+        setEmail(event.target.value)
+        setStep('email')
+      },
+      [setEmail]
+    )
 
-  const codeChangeHandler: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (event) => {
-      setCode(event.target.value)
-    },
-    [setCode]
-  )
+  const codeChangeHandler: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback(
+      (event) => {
+        setCode(event.target.value)
+      },
+      [setCode]
+    )
 
   const onSubmit: FormEventHandler = useCallback(
     async (event) => {

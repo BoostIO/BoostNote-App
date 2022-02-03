@@ -232,59 +232,60 @@ export function useCloudSidebarTree() {
         'index'
       )}`
 
-      const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
-        ? {
-            dropIn: true,
-            onDrop: (event: any) =>
-              dropInWorkspace(event, wp.id, updateFolder, updateDoc),
-            controls: [
-              {
-                icon: mdiTextBoxPlus,
-                onClick: undefined,
-                placeholder: translate(lngKeys.DocTitlePlaceholder),
-                create: (title: string) =>
-                  createDoc(team, {
-                    workspaceId: wp.id,
-                    title,
-                  }),
-              },
-              {
-                icon: mdiFolderPlusOutline,
-                onClick: undefined,
-                placeholder: translate(lngKeys.FolderNamePlaceholder),
-                create: (folderName: string) =>
-                  createFolder(team, {
-                    workspaceId: wp.id,
-                    description: '',
-                    folderName,
-                  }),
-              },
-            ],
-            contextControls: wp.default
-              ? [
-                  {
-                    type: MenuTypes.Normal,
-                    icon: mdiCog,
-                    label: translate(lngKeys.GeneralEditVerb),
-                    onClick: () => openWorkspaceEditForm(wp),
-                  },
-                ]
-              : [
-                  {
-                    type: MenuTypes.Normal,
-                    icon: mdiCog,
-                    label: translate(lngKeys.GeneralEditVerb),
-                    onClick: () => openWorkspaceEditForm(wp),
-                  },
-                  {
-                    type: MenuTypes.Normal,
-                    icon: mdiTrashCanOutline,
-                    label: translate(lngKeys.GeneralDelete),
-                    onClick: () => deleteWorkspace(wp),
-                  },
-                ],
-          }
-        : {}
+      const coreRestrictedFeatures: Partial<CloudTreeItem> =
+        currentUserIsCoreMember
+          ? {
+              dropIn: true,
+              onDrop: (event: any) =>
+                dropInWorkspace(event, wp.id, updateFolder, updateDoc),
+              controls: [
+                {
+                  icon: mdiTextBoxPlus,
+                  onClick: undefined,
+                  placeholder: translate(lngKeys.DocTitlePlaceholder),
+                  create: (title: string) =>
+                    createDoc(team, {
+                      workspaceId: wp.id,
+                      title,
+                    }),
+                },
+                {
+                  icon: mdiFolderPlusOutline,
+                  onClick: undefined,
+                  placeholder: translate(lngKeys.FolderNamePlaceholder),
+                  create: (folderName: string) =>
+                    createFolder(team, {
+                      workspaceId: wp.id,
+                      description: '',
+                      folderName,
+                    }),
+                },
+              ],
+              contextControls: wp.default
+                ? [
+                    {
+                      type: MenuTypes.Normal,
+                      icon: mdiCog,
+                      label: translate(lngKeys.GeneralEditVerb),
+                      onClick: () => openWorkspaceEditForm(wp),
+                    },
+                  ]
+                : [
+                    {
+                      type: MenuTypes.Normal,
+                      icon: mdiCog,
+                      label: translate(lngKeys.GeneralEditVerb),
+                      onClick: () => openWorkspaceEditForm(wp),
+                    },
+                    {
+                      type: MenuTypes.Normal,
+                      icon: mdiTrashCanOutline,
+                      label: translate(lngKeys.GeneralDelete),
+                      onClick: () => deleteWorkspace(wp),
+                    },
+                  ],
+            }
+          : {}
 
       items.set(wp.id, {
         id: wp.id,
@@ -309,91 +310,95 @@ export function useCloudSidebarTree() {
         'index'
       )}`
 
-      const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
-        ? {
-            onDrop: (event: any, position: SidebarDragState) =>
-              dropInDocOrFolder(
-                event,
-                { type: 'folder', resource: folderToDataTransferItem(folder) },
-                position
-              ),
-            onDragStart: (event: any) => {
-              saveFolderTransferData(event, folder)
-            },
-            onDragEnd: (event: any) => {
-              clearDragTransferData(event)
-            },
-            dropIn: true,
-            dropAround: sortingOrder === 'drag' ? true : false,
-            controls: [
-              {
-                icon: mdiTextBoxPlus,
-                onClick: undefined,
-                placeholder: translate(lngKeys.DocTitlePlaceholder),
-                create: (title: string) =>
-                  createDoc(team, {
-                    parentFolderId: folder.id,
-                    workspaceId: folder.workspaceId,
-                    title,
-                  }),
+      const coreRestrictedFeatures: Partial<CloudTreeItem> =
+        currentUserIsCoreMember
+          ? {
+              onDrop: (event: any, position: SidebarDragState) =>
+                dropInDocOrFolder(
+                  event,
+                  {
+                    type: 'folder',
+                    resource: folderToDataTransferItem(folder),
+                  },
+                  position
+                ),
+              onDragStart: (event: any) => {
+                saveFolderTransferData(event, folder)
               },
-              {
-                icon: mdiFolderPlusOutline,
-                onClick: undefined,
-                placeholder: translate(lngKeys.FolderNamePlaceholder),
-                create: (folderName: string) =>
-                  createFolder(team, {
-                    parentFolderId: folder.id,
-                    workspaceId: folder.workspaceId,
-                    description: '',
-                    folderName,
-                  }),
+              onDragEnd: (event: any) => {
+                clearDragTransferData(event)
               },
-            ],
-            contextControls: [
-              {
-                type: MenuTypes.Normal,
-                icon: folder.bookmarked ? mdiStar : mdiStarOutline,
-                label:
-                  treeSendingMap.get(folder.id) === 'bookmark'
-                    ? '...'
-                    : folder.bookmarked
-                    ? translate(lngKeys.GeneralUnbookmarkVerb)
-                    : translate(lngKeys.GeneralBookmarkVerb),
-                onClick: () =>
-                  toggleFolderBookmark(
-                    folder.teamId,
-                    folder.id,
-                    folder.bookmarked
-                  ),
-              },
-              {
-                type: MenuTypes.Normal,
-                icon: mdiPencil,
-                label: translate(lngKeys.GeneralRenameVerb),
-                onClick: () => openRenameFolderForm(folder),
-              },
-              {
-                type: MenuTypes.Normal,
-                icon: mdiTrashCanOutline,
-                label: translate(lngKeys.GeneralDelete),
-                onClick: () => deleteFolder(folder),
-              },
-            ],
-          }
-        : {
-            controls: [
-              {
-                icon: folder.bookmarked ? mdiStar : mdiStarOutline,
-                onClick: () =>
-                  toggleFolderBookmark(
-                    folder.teamId,
-                    folder.id,
-                    folder.bookmarked
-                  ),
-              },
-            ],
-          }
+              dropIn: true,
+              dropAround: sortingOrder === 'drag' ? true : false,
+              controls: [
+                {
+                  icon: mdiTextBoxPlus,
+                  onClick: undefined,
+                  placeholder: translate(lngKeys.DocTitlePlaceholder),
+                  create: (title: string) =>
+                    createDoc(team, {
+                      parentFolderId: folder.id,
+                      workspaceId: folder.workspaceId,
+                      title,
+                    }),
+                },
+                {
+                  icon: mdiFolderPlusOutline,
+                  onClick: undefined,
+                  placeholder: translate(lngKeys.FolderNamePlaceholder),
+                  create: (folderName: string) =>
+                    createFolder(team, {
+                      parentFolderId: folder.id,
+                      workspaceId: folder.workspaceId,
+                      description: '',
+                      folderName,
+                    }),
+                },
+              ],
+              contextControls: [
+                {
+                  type: MenuTypes.Normal,
+                  icon: folder.bookmarked ? mdiStar : mdiStarOutline,
+                  label:
+                    treeSendingMap.get(folder.id) === 'bookmark'
+                      ? '...'
+                      : folder.bookmarked
+                      ? translate(lngKeys.GeneralUnbookmarkVerb)
+                      : translate(lngKeys.GeneralBookmarkVerb),
+                  onClick: () =>
+                    toggleFolderBookmark(
+                      folder.teamId,
+                      folder.id,
+                      folder.bookmarked
+                    ),
+                },
+                {
+                  type: MenuTypes.Normal,
+                  icon: mdiPencil,
+                  label: translate(lngKeys.GeneralRenameVerb),
+                  onClick: () => openRenameFolderForm(folder),
+                },
+                {
+                  type: MenuTypes.Normal,
+                  icon: mdiTrashCanOutline,
+                  label: translate(lngKeys.GeneralDelete),
+                  onClick: () => deleteFolder(folder),
+                },
+              ],
+            }
+          : {
+              controls: [
+                {
+                  icon: folder.bookmarked ? mdiStar : mdiStarOutline,
+                  onClick: () =>
+                    toggleFolderBookmark(
+                      folder.teamId,
+                      folder.id,
+                      folder.bookmarked
+                    ),
+                },
+              ],
+            }
 
       items.set(folderId, {
         id: folderId,
@@ -433,57 +438,58 @@ export function useCloudSidebarTree() {
         'index'
       )}`
 
-      const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
-        ? {
-            dropAround: sortingOrder === 'drag' ? true : false,
-            onDrop: (event: any, position: SidebarDragState) =>
-              dropInDocOrFolder(
-                event,
-                { type: 'doc', resource: docToDataTransferItem(doc) },
-                position
-              ),
-            onDragStart: (event: any) => {
-              saveDocTransferData(event, doc)
-            },
-            onDragEnd: (event: any) => {
-              clearDragTransferData(event)
-            },
-            contextControls: [
-              {
-                type: MenuTypes.Normal,
-                icon: doc.bookmarked ? mdiStar : mdiStarOutline,
-                label:
-                  treeSendingMap.get(doc.id) === 'bookmark'
-                    ? '...'
-                    : doc.bookmarked
-                    ? translate(lngKeys.GeneralUnbookmarkVerb)
-                    : translate(lngKeys.GeneralBookmarkVerb),
-                onClick: () =>
-                  toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
+      const coreRestrictedFeatures: Partial<CloudTreeItem> =
+        currentUserIsCoreMember
+          ? {
+              dropAround: sortingOrder === 'drag' ? true : false,
+              onDrop: (event: any, position: SidebarDragState) =>
+                dropInDocOrFolder(
+                  event,
+                  { type: 'doc', resource: docToDataTransferItem(doc) },
+                  position
+                ),
+              onDragStart: (event: any) => {
+                saveDocTransferData(event, doc)
               },
-              {
-                type: MenuTypes.Normal,
-                icon: mdiPencil,
-                label: translate(lngKeys.GeneralRenameVerb),
-                onClick: () => openRenameDocForm(doc),
+              onDragEnd: (event: any) => {
+                clearDragTransferData(event)
               },
-              {
-                type: MenuTypes.Normal,
-                icon: mdiTrashCanOutline,
-                label: translate(lngKeys.GeneralDelete),
-                onClick: () => deleteDoc(doc),
-              },
-            ],
-          }
-        : {
-            controls: [
-              {
-                icon: doc.bookmarked ? mdiStar : mdiStarOutline,
-                onClick: () =>
-                  toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
-              },
-            ],
-          }
+              contextControls: [
+                {
+                  type: MenuTypes.Normal,
+                  icon: doc.bookmarked ? mdiStar : mdiStarOutline,
+                  label:
+                    treeSendingMap.get(doc.id) === 'bookmark'
+                      ? '...'
+                      : doc.bookmarked
+                      ? translate(lngKeys.GeneralUnbookmarkVerb)
+                      : translate(lngKeys.GeneralBookmarkVerb),
+                  onClick: () =>
+                    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
+                },
+                {
+                  type: MenuTypes.Normal,
+                  icon: mdiPencil,
+                  label: translate(lngKeys.GeneralRenameVerb),
+                  onClick: () => openRenameDocForm(doc),
+                },
+                {
+                  type: MenuTypes.Normal,
+                  icon: mdiTrashCanOutline,
+                  label: translate(lngKeys.GeneralDelete),
+                  onClick: () => deleteDoc(doc),
+                },
+              ],
+            }
+          : {
+              controls: [
+                {
+                  icon: doc.bookmarked ? mdiStar : mdiStarOutline,
+                  onClick: () =>
+                    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
+                },
+              ],
+            }
 
       items.set(docId, {
         id: docId,

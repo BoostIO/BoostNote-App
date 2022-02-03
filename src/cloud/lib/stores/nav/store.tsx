@@ -652,13 +652,8 @@ function useNavStore(): NavContext {
             label: 'Delete',
             onClick: async () => {
               try {
-                const {
-                  parentFolder,
-                  workspace,
-                  docs,
-                  docsIds,
-                  foldersIds,
-                } = await destroyFolder(team, target)
+                const { parentFolder, workspace, docs, docsIds, foldersIds } =
+                  await destroyFolder(team, target)
 
                 foldersIds.forEach((folderId) => {
                   removeFromFoldersMap(folderId)
@@ -905,10 +900,8 @@ function useNavStore(): NavContext {
         const changedDocs = getMapFromEntityArray(docs)
         updateDocsMap(...changedDocs)
         /** check removals **/
-        const {
-          uniqueFoldersIds,
-          uniqueDocsIds,
-        } = getUniqueFolderAndDocIdsFromResourcesIds(Array.from(resourcesIds))
+        const { uniqueFoldersIds, uniqueDocsIds } =
+          getUniqueFolderAndDocIdsFromResourcesIds(Array.from(resourcesIds))
         uniqueFoldersIds.forEach((folderId) => {
           if (!changedFolders.has(folderId)) {
             removeFromFoldersMap(folderId)
@@ -1066,10 +1059,8 @@ function createNavStoreContext(
   }
 }
 
-export const {
-  StoreProvider: NavProvider,
-  useStore: useNav,
-} = createNavStoreContext(useNavStore, 'nav')
+export const { StoreProvider: NavProvider, useStore: useNav } =
+  createNavStoreContext(useNavStore, 'nav')
 
 interface CreateMapsFromPagePropsProps {
   foldersData: Map<string, SerializedFolderWithBookmark>

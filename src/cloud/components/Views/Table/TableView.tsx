@@ -84,11 +84,8 @@ const TableView = ({
   const { openContextModal, closeLastModal } = useModal()
   const { permissions = [] } = usePage()
 
-  const {
-    dropInDocOrFolder,
-    saveDocTransferData,
-    clearDragTransferData,
-  } = useCloudDnd()
+  const { dropInDocOrFolder, saveDocTransferData, clearDragTransferData } =
+    useCloudDnd()
 
   const { actionsRef } = useTableView({
     view,

@@ -33,12 +33,8 @@ interface CloudGlobalSearchProps {
 }
 
 const CloudGlobalSearch = ({ team }: CloudGlobalSearchProps) => {
-  const {
-    addToSearchHistory,
-    searchHistory,
-    history,
-    setShowSearchScreen,
-  } = useSearch()
+  const { addToSearchHistory, searchHistory, history, setShowSearchScreen } =
+    useSearch()
   const { push } = useRouter()
   const { translate } = useI18n()
   const [searchQuery, setStateSearchQuery] = useState('')

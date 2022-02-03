@@ -118,11 +118,8 @@ const ContentManager = ({
     [setPreferences]
   )
 
-  const {
-    dropInDocOrFolder,
-    saveDocTransferData,
-    clearDragTransferData,
-  } = useCloudDnd()
+  const { dropInDocOrFolder, saveDocTransferData, clearDragTransferData } =
+    useCloudDnd()
 
   const onDragStartDoc = useCallback(
     (event: any, doc: SerializedDocWithSupplemental) => {

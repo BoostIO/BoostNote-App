@@ -76,7 +76,5 @@ const useToastStore = (): ToastStore => {
   }
 }
 
-export const {
-  StoreProvider: V2ToastProvider,
-  useStore: useToast,
-} = createStoreContext(useToastStore)
+export const { StoreProvider: V2ToastProvider, useStore: useToast } =
+  createStoreContext(useToastStore)

@@ -312,7 +312,5 @@ function getContributors(comments: Comment[]) {
   )
 }
 
-export const {
-  StoreProvider: CommentsProvider,
-  useStore: useComments,
-} = createStoreContext(useCommentsStore, 'comments')
+export const { StoreProvider: CommentsProvider, useStore: useComments } =
+  createStoreContext(useCommentsStore, 'comments')

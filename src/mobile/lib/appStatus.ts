@@ -17,7 +17,5 @@ function useAppStatusStore() {
   }
 }
 
-export const {
-  StoreProvider: AppStatusProvider,
-  useStore: useAppStatus,
-} = createStoreContext(useAppStatusStore, 'appStatus')
+export const { StoreProvider: AppStatusProvider, useStore: useAppStatus } =
+  createStoreContext(useAppStatusStore, 'appStatus')

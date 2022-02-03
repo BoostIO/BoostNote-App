@@ -47,9 +47,8 @@ const CalendarViewPropertiesContext = ({
   setProperties,
 }: CalendarViewPropertiesContextProps) => {
   const [formState, setFormState] = useState<'list' | 'add'>('list')
-  const [props, setProps] = useState<Record<string, CalendarViewProp>>(
-    properties
-  )
+  const [props, setProps] =
+    useState<Record<string, CalendarViewProp>>(properties)
   const [sending, setSending] = useState<string>()
   const { fetchPropertySuggestionsApi } = useCloudApi()
 

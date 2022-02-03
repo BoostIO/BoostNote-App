@@ -151,36 +151,37 @@ const MarkdownTabForm = () => {
     }
   }, [settings])
 
-  const editorConfigMarkdownPreview: CodeMirror.EditorConfiguration = useMemo(() => {
-    const editorTheme = settings['general.editorTheme']
-    const theme =
-      editorTheme == null || editorTheme === 'default'
-        ? settings['general.theme'] === 'light'
-          ? 'default'
-          : 'material-darker'
-        : editorTheme === 'solarized-dark'
-        ? 'solarized dark'
-        : editorTheme
-    const editorIndentType = settings['general.editorIndentType']
-    const editorIndentSize = settings['general.editorIndentSize']
+  const editorConfigMarkdownPreview: CodeMirror.EditorConfiguration =
+    useMemo(() => {
+      const editorTheme = settings['general.editorTheme']
+      const theme =
+        editorTheme == null || editorTheme === 'default'
+          ? settings['general.theme'] === 'light'
+            ? 'default'
+            : 'material-darker'
+          : editorTheme === 'solarized-dark'
+          ? 'solarized dark'
+          : editorTheme
+      const editorIndentType = settings['general.editorIndentType']
+      const editorIndentSize = settings['general.editorIndentSize']
 
-    return {
-      value: defaultPreviewContent,
-      mode: 'markdown',
-      lineNumbers: true,
-      lineWrapping: true,
-      theme,
-      indentWithTabs: editorIndentType === 'tab',
-      indentUnit: editorIndentSize,
-      tabSize: editorIndentSize,
-      inputStyle: osName === 'android' ? 'textarea' : 'contenteditable',
-      extraKeys: {
-        Enter: 'newlineAndIndentContinueMarkdownList',
-        Tab: 'indentMore',
-      },
-      scrollPastEnd: true,
-    }
-  }, [settings])
+      return {
+        value: defaultPreviewContent,
+        mode: 'markdown',
+        lineNumbers: true,
+        lineWrapping: true,
+        theme,
+        indentWithTabs: editorIndentType === 'tab',
+        indentUnit: editorIndentSize,
+        tabSize: editorIndentSize,
+        inputStyle: osName === 'android' ? 'textarea' : 'contenteditable',
+        extraKeys: {
+          Enter: 'newlineAndIndentContinueMarkdownList',
+          Tab: 'indentMore',
+        },
+        scrollPastEnd: true,
+      }
+    }, [settings])
 
   return (
     <Form

@@ -39,16 +39,14 @@ const remarkDocEmbed: Plugin = function ({
     visit(tree, isDocEmbedNode, (node) => embeds.push(node))
 
     const withDocs = await Promise.all(
-      embeds.map(
-        async (node): Promise<ContentResult> => {
-          try {
-            const embedContent = await getEmbed(node.attributes.id)
-            return [node, embedContent]
-          } catch (err) {
-            return [node, undefined]
-          }
+      embeds.map(async (node): Promise<ContentResult> => {
+        try {
+          const embedContent = await getEmbed(node.attributes.id)
+          return [node, embedContent]
+        } catch (err) {
+          return [node, undefined]
         }
-      )
+      })
     )
 
     const parser = unified()

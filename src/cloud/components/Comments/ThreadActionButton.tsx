@@ -23,13 +23,14 @@ function ThreadActionButton({ thread, onDelete }: ThreadActionButtonProps) {
   const actions = useThreadActions({ thread, onDelete })
   const { getThreadStatusLabel } = useI18n()
 
-  const openActionMenu: React.MouseEventHandler<HTMLButtonElement> = useCallback(
-    (event) => {
-      event.preventDefault()
-      popup(event, actions)
-    },
-    [popup, actions]
-  )
+  const openActionMenu: React.MouseEventHandler<HTMLButtonElement> =
+    useCallback(
+      (event) => {
+        event.preventDefault()
+        popup(event, actions)
+      },
+      [popup, actions]
+    )
 
   const [variant, iconPath] = useMemo(() => {
     switch (thread.status.type) {

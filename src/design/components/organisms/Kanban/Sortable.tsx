@@ -5,9 +5,9 @@ import { useSortable } from '@dnd-kit/sortable'
 import { AppComponent } from '../../../lib/types'
 import { Identifyable } from './hook'
 
-const Sortable: AppComponent<React.PropsWithChildren<
-  Identifyable & { disabled: boolean }
->> = ({ id, children, className, disabled }) => {
+const Sortable: AppComponent<
+  React.PropsWithChildren<Identifyable & { disabled: boolean }>
+> = ({ id, children, className, disabled }) => {
   const {
     attributes,
     listeners,

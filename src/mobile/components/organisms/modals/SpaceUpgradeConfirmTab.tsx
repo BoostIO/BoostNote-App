@@ -23,12 +23,8 @@ interface SpaqceUpgradeConfirmTabProps {
 }
 
 const UpgradeTab = ({ plan, setActiveTab }: SpaqceUpgradeConfirmTabProps) => {
-  const {
-    team,
-    subscription,
-    updateTeamSubscription,
-    currentUserPermissions,
-  } = usePage<PageStoreWithTeam>()
+  const { team, subscription, updateTeamSubscription, currentUserPermissions } =
+    usePage<PageStoreWithTeam>()
 
   const onSuccessCallback = useCallback(
     (sub) => {

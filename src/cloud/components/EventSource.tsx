@@ -350,10 +350,8 @@ const EventSource = ({ teamId }: EventSourceProps) => {
         const changedDocs = getMapFromEntityArray(docs)
         updateDocsMap(...changedDocs)
         /** check removals **/
-        const {
-          uniqueFoldersIds,
-          uniqueDocsIds,
-        } = getUniqueFolderAndDocIdsFromResourcesIds(resourcesIds)
+        const { uniqueFoldersIds, uniqueDocsIds } =
+          getUniqueFolderAndDocIdsFromResourcesIds(resourcesIds)
         uniqueFoldersIds.forEach((folderId) => {
           if (!changedFolders.has(folderId)) {
             removeFromFoldersMap(folderId)
