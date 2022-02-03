@@ -39,7 +39,5 @@ function useWindowStore(): WindowContext {
   }
 }
 
-export const {
-  StoreProvider: V2WindowProvider,
-  useStore: useWindow,
-} = createStoreContext(useWindowStore, 'window')
+export const { StoreProvider: V2WindowProvider, useStore: useWindow } =
+  createStoreContext(useWindowStore, 'window')

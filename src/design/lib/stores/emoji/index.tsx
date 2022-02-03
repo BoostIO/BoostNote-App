@@ -59,7 +59,5 @@ function useEmojiPickerStore(): EmojiPickerContext {
   }
 }
 
-export const {
-  StoreProvider: V2EmojiProvider,
-  useStore: useEmoji,
-} = createStoreContext(useEmojiPickerStore, 'emojiPicker')
+export const { StoreProvider: V2EmojiProvider, useStore: useEmoji } =
+  createStoreContext(useEmojiPickerStore, 'emojiPicker')

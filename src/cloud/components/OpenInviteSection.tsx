@@ -45,9 +45,8 @@ const OpenInvitesSection = ({ userPermissions }: OpenInvitesSectionProps) => {
   const [copyButtonLabel, setCopyButtonLabel] = useState<string>(
     translate(lngKeys.GeneralCopyVerb)
   )
-  const [selectedInviteRole, setSelectedInviteRole] = useState<
-    TeamPermissionType
-  >('member')
+  const [selectedInviteRole, setSelectedInviteRole] =
+    useState<TeamPermissionType>('member')
 
   const isSmallScreen = useMediaQuery({
     maxWidth: commonTheme.breakpoints.mobile,

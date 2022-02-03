@@ -35,9 +35,10 @@ const EditorIndentationStatus = () => {
   const menuRef = useRef<HTMLDivElement>(null)
   const { translate } = useI18n()
 
-  const showIndentMenu: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
-    setShowingIndentMenu(true)
-  }, [])
+  const showIndentMenu: MouseEventHandler<HTMLButtonElement> =
+    useCallback(() => {
+      setShowingIndentMenu(true)
+    }, [])
 
   useEffect(() => {
     if (showingIndentMenu && menuRef.current != null) {

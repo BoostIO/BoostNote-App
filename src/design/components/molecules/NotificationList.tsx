@@ -103,18 +103,17 @@ interface NotificationItemProps {
 
 const smallUserIconStyle = { width: '20px', height: '20px', lineHeight: '17px' }
 const NotificationItem = ({ notification, onClick }: NotificationItemProps) => {
-  const navigate: React.ReactEventHandler<React.MouseEvent<
-    HTMLAnchorElement
-  >> = useCallback(
-    (ev) => {
-      if (onClick != null) {
-        ev.stopPropagation()
-        ev.preventDefault()
-        onClick(notification)
-      }
-    },
-    [onClick, notification]
-  )
+  const navigate: React.ReactEventHandler<React.MouseEvent<HTMLAnchorElement>> =
+    useCallback(
+      (ev) => {
+        if (onClick != null) {
+          ev.stopPropagation()
+          ev.preventDefault()
+          onClick(notification)
+        }
+      },
+      [onClick, notification]
+    )
 
   return (
     <NotificationItemContainer href={notification.link} onClick={navigate}>

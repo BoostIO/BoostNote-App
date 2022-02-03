@@ -56,15 +56,16 @@ export const InPageSearch = ({
   const [caseSensitiveSearch, setCaseSensitiveSearch] = useState<boolean>(false)
   const [numberOfMatches, setNumberOfMatches] = useState<number | null>(null)
 
-  const updateSearchValue: ChangeEventHandler<HTMLTextAreaElement> = useCallback(
-    (event) => {
-      setSearchValue(event.target.value)
-      if (onSearchQueryChange != null) {
-        onSearchQueryChange(event.target.value)
-      }
-    },
-    [onSearchQueryChange]
-  )
+  const updateSearchValue: ChangeEventHandler<HTMLTextAreaElement> =
+    useCallback(
+      (event) => {
+        setSearchValue(event.target.value)
+        if (onSearchQueryChange != null) {
+          onSearchQueryChange(event.target.value)
+        }
+      },
+      [onSearchQueryChange]
+    )
 
   const closeSearch = useCallback(() => {
     stopFindInPage('clearSelection')

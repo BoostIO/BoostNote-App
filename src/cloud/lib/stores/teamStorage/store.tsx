@@ -58,7 +58,5 @@ function useTeamStorageStore(): TeamStorageContext {
   }
 }
 
-export const {
-  StoreProvider: TeamStorageProvider,
-  useStore: useTeamStorage,
-} = createStoreContext(useTeamStorageStore, 'teamStorage')
+export const { StoreProvider: TeamStorageProvider, useStore: useTeamStorage } =
+  createStoreContext(useTeamStorageStore, 'teamStorage')

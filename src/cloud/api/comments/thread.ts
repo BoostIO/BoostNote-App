@@ -88,12 +88,14 @@ export async function deleteThread(thread: { id: string }) {
 function serializeSelection(
   selection: Thread['selection']
 ): SerializedThread['selection'] {
-  return (selection != null
-    ? {
-        anchor: Array.from(encodeRelativePosition(selection.anchor)),
-        head: Array.from(encodeRelativePosition(selection.head)),
-      }
-    : undefined) as SerializedThread['selection']
+  return (
+    selection != null
+      ? {
+          anchor: Array.from(encodeRelativePosition(selection.anchor)),
+          head: Array.from(encodeRelativePosition(selection.head)),
+        }
+      : undefined
+  ) as SerializedThread['selection']
 }
 
 function deserialize(serialized: SerializedThread): Thread {

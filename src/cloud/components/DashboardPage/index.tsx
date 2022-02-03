@@ -43,17 +43,12 @@ const DashboardPage = ({
   const dashboardRef = useRef<string | undefined>(undefined)
   const dashboardSubRef = useRef<string | undefined>(undefined)
   const { openContextModal, openModal, closeAllModals } = useModal()
-  const {
-    dashboard,
-    actionsRef,
-    smartViews,
-    sendingMap,
-    dashboardData,
-  } = useDashboard({
-    dashboard: propsDashboard,
-    smartViews: propsSmartViews,
-    team: propsTeam,
-  })
+  const { dashboard, actionsRef, smartViews, sendingMap, dashboardData } =
+    useDashboard({
+      dashboard: propsDashboard,
+      smartViews: propsSmartViews,
+      team: propsTeam,
+    })
   const { dashboardsMap, initialLoadDone } = useNav()
   const { currentUserIsCoreMember, subscription } = usePage()
 

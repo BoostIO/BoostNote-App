@@ -64,13 +64,8 @@ export function useNavigatorTree() {
   const { preferences } = usePreferences()
   const { setShowingNavigator } = useAppStatus()
 
-  const {
-    initialLoadDone,
-    docsMap,
-    foldersMap,
-    workspacesMap,
-    tagsMap,
-  } = useNav()
+  const { initialLoadDone, docsMap, foldersMap, workspacesMap, tagsMap } =
+    useNav()
 
   const {
     sideBarOpenedLinksIdsSet,
@@ -147,89 +142,90 @@ export function useNavigatorTree() {
         'index'
       )}`
 
-      const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
-        ? {
-            controls: [
-              {
-                icon: mdiPlus,
-                onClick: (event, openCreateForm) => {
-                  popup(event, [
-                    {
-                      type: MenuTypes.Normal,
-                      icon: mdiFilePlusOutline,
-                      label: 'Create Document',
-                      onClick: () => {
-                        openCreateForm({
-                          placeholder: 'Document title...',
-                          onSubmit: (title) => {
-                            createDoc(
-                              team,
-                              {
-                                workspaceId: wp.id,
-                                title,
-                              },
-                              {
-                                afterSuccess: () => {
-                                  setShowingNavigator(false)
+      const coreRestrictedFeatures: Partial<CloudTreeItem> =
+        currentUserIsCoreMember
+          ? {
+              controls: [
+                {
+                  icon: mdiPlus,
+                  onClick: (event, openCreateForm) => {
+                    popup(event, [
+                      {
+                        type: MenuTypes.Normal,
+                        icon: mdiFilePlusOutline,
+                        label: 'Create Document',
+                        onClick: () => {
+                          openCreateForm({
+                            placeholder: 'Document title...',
+                            onSubmit: (title) => {
+                              createDoc(
+                                team,
+                                {
+                                  workspaceId: wp.id,
+                                  title,
                                 },
-                              }
-                            )
-                          },
-                        })
+                                {
+                                  afterSuccess: () => {
+                                    setShowingNavigator(false)
+                                  },
+                                }
+                              )
+                            },
+                          })
+                        },
                       },
+                      {
+                        type: MenuTypes.Normal,
+                        icon: mdiFolderPlusOutline,
+                        label: 'Create Folder',
+                        onClick: () => {
+                          openCreateForm({
+                            placeholder: 'Folder name...',
+                            onSubmit: (folderName) => {
+                              createFolder(
+                                team,
+                                {
+                                  workspaceId: wp.id,
+                                  description: '',
+                                  folderName,
+                                },
+                                {
+                                  skipRedirect: false,
+                                }
+                              )
+                            },
+                          })
+                        },
+                      },
+                    ] as MenuItem[])
+                  },
+                },
+              ],
+              contextControls: wp.default
+                ? [
+                    {
+                      type: MenuTypes.Normal,
+                      icon: mdiCog,
+                      label: 'Edit',
+                      onClick: () => openWorkspaceEditForm(wp),
+                    },
+                  ]
+                : [
+                    {
+                      type: MenuTypes.Normal,
+                      icon: mdiCog,
+                      label: 'Edit',
+                      onClick: () => openWorkspaceEditForm(wp),
                     },
                     {
                       type: MenuTypes.Normal,
-                      icon: mdiFolderPlusOutline,
-                      label: 'Create Folder',
-                      onClick: () => {
-                        openCreateForm({
-                          placeholder: 'Folder name...',
-                          onSubmit: (folderName) => {
-                            createFolder(
-                              team,
-                              {
-                                workspaceId: wp.id,
-                                description: '',
-                                folderName,
-                              },
-                              {
-                                skipRedirect: false,
-                              }
-                            )
-                          },
-                        })
-                      },
+                      icon: mdiTrashCanOutline,
+                      label: 'Delete',
+                      onClick: () => deleteWorkspace(wp),
                     },
-                  ] as MenuItem[])
-                },
-              },
-            ],
-            contextControls: wp.default
-              ? [
-                  {
-                    type: MenuTypes.Normal,
-                    icon: mdiCog,
-                    label: 'Edit',
-                    onClick: () => openWorkspaceEditForm(wp),
-                  },
-                ]
-              : [
-                  {
-                    type: MenuTypes.Normal,
-                    icon: mdiCog,
-                    label: 'Edit',
-                    onClick: () => openWorkspaceEditForm(wp),
-                  },
-                  {
-                    type: MenuTypes.Normal,
-                    icon: mdiTrashCanOutline,
-                    label: 'Delete',
-                    onClick: () => deleteWorkspace(wp),
-                  },
-                ],
-          }
-        : {}
+                  ],
+            }
+          : {}
 
       items.set(wp.id, {
         id: wp.id,
@@ -257,113 +253,114 @@ export function useNavigatorTree() {
         'index'
       )}`
 
-      const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
-        ? {
-            controls: [
-              {
-                icon: mdiPlus,
-                onClick: (event, openCreateForm) => {
-                  popup(event, [
-                    {
-                      type: MenuTypes.Normal,
-                      icon: mdiFilePlusOutline,
-                      label: 'Create Document',
-                      onClick: () => {
-                        openCreateForm({
-                          placeholder: 'Document title...',
-                          onSubmit: (title) => {
-                            createDoc(
-                              team,
-                              {
-                                workspaceId: folder.workspaceId,
-                                parentFolderId: folder.id,
-                                title,
-                              },
-                              {
-                                afterSuccess: () => {
-                                  setShowingNavigator(false)
+      const coreRestrictedFeatures: Partial<CloudTreeItem> =
+        currentUserIsCoreMember
+          ? {
+              controls: [
+                {
+                  icon: mdiPlus,
+                  onClick: (event, openCreateForm) => {
+                    popup(event, [
+                      {
+                        type: MenuTypes.Normal,
+                        icon: mdiFilePlusOutline,
+                        label: 'Create Document',
+                        onClick: () => {
+                          openCreateForm({
+                            placeholder: 'Document title...',
+                            onSubmit: (title) => {
+                              createDoc(
+                                team,
+                                {
+                                  workspaceId: folder.workspaceId,
+                                  parentFolderId: folder.id,
+                                  title,
                                 },
-                              }
-                            )
-                          },
-                        })
+                                {
+                                  afterSuccess: () => {
+                                    setShowingNavigator(false)
+                                  },
+                                }
+                              )
+                            },
+                          })
+                        },
                       },
-                    },
-                    {
-                      type: MenuTypes.Normal,
-                      icon: mdiFolderPlusOutline,
-                      label: 'Create Folder',
-                      onClick: () => {
-                        openCreateForm({
-                          placeholder: 'Folder name...',
-                          onSubmit: (folderName) => {
-                            createFolder(
-                              team,
-                              {
-                                workspaceId: folder.workspaceId,
-                                parentFolderId: folder.id,
-                                description: '',
-                                folderName,
-                              },
-                              { skipRedirect: true }
-                            )
-                          },
-                        })
+                      {
+                        type: MenuTypes.Normal,
+                        icon: mdiFolderPlusOutline,
+                        label: 'Create Folder',
+                        onClick: () => {
+                          openCreateForm({
+                            placeholder: 'Folder name...',
+                            onSubmit: (folderName) => {
+                              createFolder(
+                                team,
+                                {
+                                  workspaceId: folder.workspaceId,
+                                  parentFolderId: folder.id,
+                                  description: '',
+                                  folderName,
+                                },
+                                { skipRedirect: true }
+                              )
+                            },
+                          })
+                        },
                       },
-                    },
-                  ] as MenuItem[])
+                    ] as MenuItem[])
+                  },
                 },
-              },
-              {
-                icon: mdiDotsHorizontal,
-                onClick: (event) => {
-                  popup(event, [
-                    {
-                      type: MenuTypes.Normal,
-                      icon: folder.bookmarked ? mdiStar : mdiStarOutline,
-                      label:
-                        treeSendingMap.get(folder.id) === 'bookmark'
-                          ? '...'
-                          : folder.bookmarked
-                          ? 'Bookmarked'
-                          : 'Bookmark',
-                      onClick: () =>
-                        toggleFolderBookmark(
-                          folder.teamId,
-                          folder.id,
-                          folder.bookmarked
-                        ),
-                    },
-                    {
-                      type: MenuTypes.Normal,
-                      icon: mdiPencil,
-                      label: 'Rename',
-                      onClick: () => openRenameFolderForm(folder),
-                    },
-                    {
-                      type: MenuTypes.Normal,
-                      icon: mdiTrashCanOutline,
-                      label: 'Delete',
-                      onClick: () => deleteFolder(folder),
-                    },
-                  ])
+                {
+                  icon: mdiDotsHorizontal,
+                  onClick: (event) => {
+                    popup(event, [
+                      {
+                        type: MenuTypes.Normal,
+                        icon: folder.bookmarked ? mdiStar : mdiStarOutline,
+                        label:
+                          treeSendingMap.get(folder.id) === 'bookmark'
+                            ? '...'
+                            : folder.bookmarked
+                            ? 'Bookmarked'
+                            : 'Bookmark',
+                        onClick: () =>
+                          toggleFolderBookmark(
+                            folder.teamId,
+                            folder.id,
+                            folder.bookmarked
+                          ),
+                      },
+                      {
+                        type: MenuTypes.Normal,
+                        icon: mdiPencil,
+                        label: 'Rename',
+                        onClick: () => openRenameFolderForm(folder),
+                      },
+                      {
+                        type: MenuTypes.Normal,
+                        icon: mdiTrashCanOutline,
+                        label: 'Delete',
+                        onClick: () => deleteFolder(folder),
+                      },
+                    ])
+                  },
                 },
-              },
-            ],
-          }
-        : {
-            controls: [
-              {
-                icon: folder.bookmarked ? mdiStar : mdiStarOutline,
-                onClick: () =>
-                  toggleFolderBookmark(
-                    folder.teamId,
-                    folder.id,
-                    folder.bookmarked
-                  ),
-              },
-            ],
-          }
+              ],
+            }
+          : {
+              controls: [
+                {
+                  icon: folder.bookmarked ? mdiStar : mdiStarOutline,
+                  onClick: () =>
+                    toggleFolderBookmark(
+                      folder.teamId,
+                      folder.id,
+                      folder.bookmarked
+                    ),
+                },
+              ],
+            }
 
       items.set(folderId, {
         id: folderId,
@@ -400,44 +397,45 @@ export function useNavigatorTree() {
         'index'
       )}`
 
-      const coreRestrictedFeatures: Partial<CloudTreeItem> = currentUserIsCoreMember
-        ? {
-            contextControls: [
-              {
-                type: MenuTypes.Normal,
-                icon: doc.bookmarked ? mdiStar : mdiStarOutline,
-                label:
-                  treeSendingMap.get(doc.id) === 'bookmark'
-                    ? '...'
-                    : doc.bookmarked
-                    ? 'Bookmarked'
-                    : 'Bookmark',
-                onClick: () =>
-                  toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
-              },
-              {
-                type: MenuTypes.Normal,
-                icon: mdiPencil,
-                label: 'Rename',
-                onClick: () => openRenameDocForm(doc),
-              },
-              {
-                type: MenuTypes.Normal,
-                icon: mdiTrashCanOutline,
-                label: 'Delete',
-                onClick: () => deleteDoc(doc),
-              },
-            ],
-          }
-        : {
-            controls: [
-              {
-                icon: doc.bookmarked ? mdiStar : mdiStarOutline,
-                onClick: () =>
-                  toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
-              },
-            ],
-          }
+      const coreRestrictedFeatures: Partial<CloudTreeItem> =
+        currentUserIsCoreMember
+          ? {
+              contextControls: [
+                {
+                  type: MenuTypes.Normal,
+                  icon: doc.bookmarked ? mdiStar : mdiStarOutline,
+                  label:
+                    treeSendingMap.get(doc.id) === 'bookmark'
+                      ? '...'
+                      : doc.bookmarked
+                      ? 'Bookmarked'
+                      : 'Bookmark',
+                  onClick: () =>
+                    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
+                },
+                {
+                  type: MenuTypes.Normal,
+                  icon: mdiPencil,
+                  label: 'Rename',
+                  onClick: () => openRenameDocForm(doc),
+                },
+                {
+                  type: MenuTypes.Normal,
+                  icon: mdiTrashCanOutline,
+                  label: 'Delete',
+                  onClick: () => deleteDoc(doc),
+                },
+              ],
+            }
+          : {
+              controls: [
+                {
+                  icon: doc.bookmarked ? mdiStar : mdiStarOutline,
+                  onClick: () =>
+                    toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
+                },
+              ],
+            }
 
       items.set(docId, {
         id: docId,

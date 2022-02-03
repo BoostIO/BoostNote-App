@@ -17,9 +17,8 @@ export function useProps(
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
 ) {
   const previousProps = usePrevious(itemProps)
-  const [props, setProps] = useState<Record<string, SerializedPropData>>(
-    itemProps
-  )
+  const [props, setProps] =
+    useState<Record<string, SerializedPropData>>(itemProps)
   const { updateDocPropsApi, updateBulkDocPropsApi } = useCloudApi()
 
   useEffect(() => {

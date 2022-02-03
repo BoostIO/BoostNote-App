@@ -12,9 +12,8 @@ import {
 
 function useTeamPreferencesStore(): TeamPreferencesContext {
   const { team } = usePage()
-  const [currentTeamPreferences, setCurrentTeamPreferences] = useState<
-    TeamPreferencesContent
-  >({})
+  const [currentTeamPreferences, setCurrentTeamPreferences] =
+    useState<TeamPreferencesContent>({})
 
   const setToLocalStorage = useCallback(
     (teamId: string, content: TeamPreferencesContent) => {

@@ -18,10 +18,8 @@ const ContentManagerStatusFilter = ({
   setStatusFilterSet,
 }: ContentManagerStatusFilterProps) => {
   const { setPreferences } = usePreferences()
-  const [
-    showingStatusFilterContextMenu,
-    setShowingStatusFilterContextMenu,
-  ] = useState(false)
+  const [showingStatusFilterContextMenu, setShowingStatusFilterContextMenu] =
+    useState(false)
 
   const filterMenuRef = useRef<HTMLDivElement>(null)
 

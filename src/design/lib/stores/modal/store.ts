@@ -100,7 +100,5 @@ function useModalStore(): ModalsContext {
   }
 }
 
-export const {
-  StoreProvider: V2ModalProvider,
-  useStore: useModal,
-} = createStoreContext(useModalStore, 'modal')
+export const { StoreProvider: V2ModalProvider, useStore: useModal } =
+  createStoreContext(useModalStore, 'modal')

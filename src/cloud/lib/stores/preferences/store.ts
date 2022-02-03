@@ -68,9 +68,8 @@ const initialPreference = {
 }
 
 function usePreferencesStore() {
-  const [preferences, setPreferences] = useSetState<Partial<Preferences>>(
-    initialPreference
-  )
+  const [preferences, setPreferences] =
+    useSetState<Partial<Preferences>>(initialPreference)
   const hoverOffTimeoutRef = useRef<number>()
 
   useEffect(() => {
@@ -130,7 +129,5 @@ function usePreferencesStore() {
   }
 }
 
-export const {
-  StoreProvider: PreferencesProvider,
-  useStore: usePreferences,
-} = createStoreContext(usePreferencesStore, 'preferences')
+export const { StoreProvider: PreferencesProvider, useStore: usePreferences } =
+  createStoreContext(usePreferencesStore, 'preferences')

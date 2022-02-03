@@ -113,9 +113,8 @@ const routes: MockRoute[] = [
     pathname: 'api/teams/:teamId/resources',
     handler: ({ params }): GetResourcesResponseBody => {
       const { teamId } = params
-      const workspaces = getMockWorkspacesByTeamId(teamId).map(
-        populateWorkspace
-      )
+      const workspaces =
+        getMockWorkspacesByTeamId(teamId).map(populateWorkspace)
       const folders = getMockTeamFolders(teamId)
       const docs = getTeamMockDocs(teamId).map(populateDoc)
 
@@ -210,12 +209,8 @@ const routes: MockRoute[] = [
         throw new Error('Need default user to create a mock doc')
       }
       const { teamId } = params
-      const {
-        workspaceId,
-        parentFolderId,
-        title,
-        emoji,
-      } = body as CreateDocRequestBody
+      const { workspaceId, parentFolderId, title, emoji } =
+        body as CreateDocRequestBody
 
       const doc = createMockDoc({
         title: title || '',

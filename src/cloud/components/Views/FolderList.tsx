@@ -58,11 +58,8 @@ export const FolderList = ({
   const { push } = useRouter()
   const { createFolder, updateFolderPageOrder } = useCloudApi()
 
-  const {
-    dropInDocOrFolder,
-    saveFolderTransferData,
-    clearDragTransferData,
-  } = useCloudDnd()
+  const { dropInDocOrFolder, saveFolderTransferData, clearDragTransferData } =
+    useCloudDnd()
 
   const orderedFolders = useMemo(() => {
     if (folders == null) {

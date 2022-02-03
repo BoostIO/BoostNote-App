@@ -10,8 +10,8 @@ export interface SerializedUnserializableUserOnboardingProps {
   user: SerializedUser
 }
 
-export type SerializedUserOnboarding = SerializedUnserializableUserOnboardingProps &
-  SerializableUserOnboardingProps
+export type SerializedUserOnboarding =
+  SerializedUnserializableUserOnboardingProps & SerializableUserOnboardingProps
 
 export const userOnboardingBasicStepsStateKeys = [
   'createdFolder',
