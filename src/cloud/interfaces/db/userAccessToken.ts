@@ -11,5 +11,6 @@ export interface SerializedUnserializableUserAccessTokenProps {
   user: SerializedUser
 }
 
-export type SerializedUserAccessToken = SerializedUnserializableUserAccessTokenProps &
-  SerializableUserAccessTokenProps
+export type SerializedUserAccessToken =
+  SerializedUnserializableUserAccessTokenProps &
+    SerializableUserAccessTokenProps

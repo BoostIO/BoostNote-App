@@ -316,7 +316,5 @@ const useElectronStore = (): ElectronStore => {
   }
 }
 
-export const {
-  StoreProvider: ElectronProvider,
-  useStore: useElectron,
-} = createStoreContext(useElectronStore)
+export const { StoreProvider: ElectronProvider, useStore: useElectron } =
+  createStoreContext(useElectronStore)

@@ -75,12 +75,13 @@ const Topbar: AppComponent<TopbarProps> = ({
   }>()
   const [scrollingBreadcrumbs, setScrollingBreadcrumbs] = useState(false)
   const scrollTimer = useRef<any>()
-  const onScrollHandler: React.UIEventHandler<HTMLDivElement> = useCallback(() => {
-    setScrollingBreadcrumbs(true)
-    scrollTimer.current = setTimeout(() => {
-      setScrollingBreadcrumbs(false)
-    }, 600)
-  }, [])
+  const onScrollHandler: React.UIEventHandler<HTMLDivElement> =
+    useCallback(() => {
+      setScrollingBreadcrumbs(true)
+      scrollTimer.current = setTimeout(() => {
+        setScrollingBreadcrumbs(false)
+      }, 600)
+    }, [])
 
   const openNavTree = useCallback(
     (
@@ -157,10 +158,8 @@ const Topbar: AppComponent<TopbarProps> = ({
                     onContextMenu={(event: React.MouseEvent) => {
                       event.preventDefault()
                       event.stopPropagation()
-                      const {
-                        bottom,
-                        left,
-                      } = event.currentTarget.getBoundingClientRect()
+                      const { bottom, left } =
+                        event.currentTarget.getBoundingClientRect()
                       return openNavTree(breadcrumb.parentId, {
                         bottom,
                         left,
@@ -169,10 +168,8 @@ const Topbar: AppComponent<TopbarProps> = ({
                     }}
                     onClick={breadcrumb.link.navigateTo}
                     onDoubleClick={(event: React.MouseEvent) => {
-                      const {
-                        bottom,
-                        left,
-                      } = event.currentTarget.getBoundingClientRect()
+                      const { bottom, left } =
+                        event.currentTarget.getBoundingClientRect()
                       return openNavTree(breadcrumb.parentId, {
                         bottom,
                         left,

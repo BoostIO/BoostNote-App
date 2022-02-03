@@ -12,5 +12,6 @@ export interface SerializedUnserializableWorkspacePositionsProps {
   updatedAt: string
 }
 
-export type SerializedWorkspacePositions = SerializedUnserializableWorkspacePositionsProps &
-  SerializableWorkspacePositionsProps
+export type SerializedWorkspacePositions =
+  SerializedUnserializableWorkspacePositionsProps &
+    SerializableWorkspacePositionsProps

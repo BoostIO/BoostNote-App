@@ -45,12 +45,8 @@ export function useViewHandler({
   parent,
   selectNewView,
 }: ViewHandlerStoreProps) {
-  const {
-    updateViewApi,
-    createViewApi,
-    deleteViewApi,
-    sendingMap,
-  } = useCloudApi()
+  const { updateViewApi, createViewApi, deleteViewApi, sendingMap } =
+    useCloudApi()
   const { viewsMap } = useNav()
 
   const childrenViews = useMemo(() => {

@@ -19,9 +19,8 @@ const initialContent: CollapsableContent = {
 
 function useSidebarCollapseStore(): SidebarCollapseContext {
   const { team } = usePage()
-  const [currentTeamCollapsable, setCurrentTeamCollapsable] = useState<
-    CollapsableContent
-  >(initialContent)
+  const [currentTeamCollapsable, setCurrentTeamCollapsable] =
+    useState<CollapsableContent>(initialContent)
 
   const setToLocalStorage = useCallback(
     (teamId: string, content: CollapsableContent) => {

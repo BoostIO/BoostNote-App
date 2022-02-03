@@ -144,7 +144,5 @@ function useSearchStore(): SearchContext {
   }
 }
 
-export const {
-  StoreProvider: SearchProvider,
-  useStore: useSearch,
-} = createStoreContext(useSearchStore, 'search')
+export const { StoreProvider: SearchProvider, useStore: useSearch } =
+  createStoreContext(useSearchStore, 'search')

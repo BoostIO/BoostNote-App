@@ -31,13 +31,15 @@ const DocProperties = ({
 }: DocPropertiesProps) => {
   const { preferences, setPreferences } = usePreferences()
   const { openContextModal, closeLastModal } = useModal()
-  const { props: docProperties, updateProp, modifyProp, removeProp } = useProps(
-    doc.props || {},
-    {
-      type: 'doc',
-      target: doc,
-    }
-  )
+  const {
+    props: docProperties,
+    updateProp,
+    modifyProp,
+    removeProp,
+  } = useProps(doc.props || {}, {
+    type: 'doc',
+    target: doc,
+  })
 
   const existingPropNames = useMemo(() => {
     return docProperties.map((prop) => prop[1].name)

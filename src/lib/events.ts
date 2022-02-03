@@ -2,9 +2,7 @@ import { ChangeEventHandler } from 'react'
 
 export type SelectChangeEventHandler = ChangeEventHandler<HTMLSelectElement>
 
-function createCustomEventEmitter(
-  name: string
-): {
+function createCustomEventEmitter(name: string): {
   dispatch: () => void
   listen: (handler: (event: CustomEvent) => void) => void
   unlisten: (handler: (event: CustomEvent) => void) => void
@@ -34,6 +32,5 @@ interface BoostHubLoginEventDetail {
   code: string
 }
 export type BoostHubLoginEvent = CustomEvent<BoostHubLoginEventDetail>
-export const boostHubLoginEventEmitter = createCustomEventEmitter<
-  BoostHubLoginEventDetail
->('BoostHub:login')
+export const boostHubLoginEventEmitter =
+  createCustomEventEmitter<BoostHubLoginEventDetail>('BoostHub:login')

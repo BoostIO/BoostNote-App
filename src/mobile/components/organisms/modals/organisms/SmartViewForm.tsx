@@ -43,9 +43,8 @@ const SmartViewForm = ({
   const [name, setName] = useState(defaultName)
   const { translate } = useI18n()
 
-  const [secondaryConditions, setSecondaryConditions] = useState<EditableQuery>(
-    defaultConditions
-  )
+  const [secondaryConditions, setSecondaryConditions] =
+    useState<EditableQuery>(defaultConditions)
 
   const updateName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

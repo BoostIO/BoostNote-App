@@ -24,9 +24,10 @@ export interface KanbanContainer<T extends Identifyable> extends Identifyable {
   items: T[]
 }
 
-type Helpers<T extends Identifyable, U extends KanbanContainer<T>> = Partial<
-  DndContextProps
-> & {
+type Helpers<
+  T extends Identifyable,
+  U extends KanbanContainer<T>
+> = Partial<DndContextProps> & {
   containers: U[]
   active: { type: 'item'; item: T } | { type: 'container'; item: U } | null
 }

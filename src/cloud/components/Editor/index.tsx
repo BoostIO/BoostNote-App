@@ -439,7 +439,8 @@ const Editor = ({
       },
       formatter: (pasted) => {
         if (pasted.length === 1) {
-          const githubRegex = /https:\/\/github.com\/([^\/\s]+)\/([^\/\s]+)\/(pull|issues)\/(\d+)/
+          const githubRegex =
+            /https:\/\/github.com\/([^\/\s]+)\/([^\/\s]+)\/(pull|issues)\/(\d+)/
           const githubMatch = githubRegex.exec(pasted[0])
 
           if (githubMatch !== null) {
@@ -620,9 +621,8 @@ const Editor = ({
       if (targetHeadingElement == null) {
         return
       }
-      const dataLineAttribute = targetHeadingElement.attributes.getNamedItem(
-        'data-line'
-      )
+      const dataLineAttribute =
+        targetHeadingElement.attributes.getNamedItem('data-line')
       if (dataLineAttribute == null) {
         return
       }

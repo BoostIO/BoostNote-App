@@ -80,10 +80,8 @@ const ContentManagerToolbar = ({
   const { translate } = useI18n()
   const { messageBox } = useDialog()
   const { openModal, openContextModal, closeAllModals } = useModal()
-  const [
-    bulkActionState,
-    setBulkActionState,
-  ] = useState<BulkActionState | null>(null)
+  const [bulkActionState, setBulkActionState] =
+    useState<BulkActionState | null>(null)
 
   const selectedDocsAreUpdating = useMemo(() => {
     return (

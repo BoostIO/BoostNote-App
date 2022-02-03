@@ -30,12 +30,10 @@ const SharedPage = (props: SharePageDataResponseBody) => {
     return null
   })
 
-  const onPasswordChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    (event) => {
+  const onPasswordChange: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback((event) => {
       setPassword(event.target.value)
-    },
-    []
-  )
+    }, [])
 
   const onSubmitPassword: React.FormEventHandler = useCallback(
     async (event) => {

@@ -34,7 +34,5 @@ function useDialogStore(): DialogContext {
   }
 }
 
-export const {
-  StoreProvider: V2DialogProvider,
-  useStore: useDialog,
-} = createStoreContext(useDialogStore, 'dialog')
+export const { StoreProvider: V2DialogProvider, useStore: useDialog } =
+  createStoreContext(useDialogStore, 'dialog')

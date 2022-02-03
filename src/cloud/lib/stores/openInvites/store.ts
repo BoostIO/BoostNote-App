@@ -40,9 +40,10 @@ type OpenInvitesState =
 export type OpenInviteLoadedEventDetail = {
   openInvites: SerializedOpenInvite[]
 }
-export const OpenInviteLoadedEvent = createCustomEventEmitter<
-  OpenInviteLoadedEventDetail
->('store-openinvites-loaded')
+export const OpenInviteLoadedEvent =
+  createCustomEventEmitter<OpenInviteLoadedEventDetail>(
+    'store-openinvites-loaded'
+  )
 
 export function useOpenInvitesStore(): OpenInvitesState {
   const { team } = usePage()

@@ -282,30 +282,38 @@ const StyledSelectOption = styled.div`
   }
 `
 
-const SUPPORTED_PRIMARY_OPTIONS: (
-  | FormSelectOption
-  | FormSelectGroupOption
-)[] = [
-  {
-    label: 'Custom Props',
-    options: Object.values(supportedCustomPropertyTypes).map((propertyType) => {
-      return {
-        label: (
-          <StyledOption icon={propertyType.icon} label={propertyType.label} />
-        ),
-        value: propertyType.value,
-      }
-    }),
-  },
-  {
-    label: 'Static',
-    options: Object.values(supportedStaticPropertyTypes).map((propertyType) => {
-      return {
-        label: (
-          <StyledOption icon={propertyType.icon} label={propertyType.label} />
-        ),
-        value: propertyType.value,
-      }
-    }),
-  },
-]
+const SUPPORTED_PRIMARY_OPTIONS: (FormSelectOption | FormSelectGroupOption)[] =
+  [
+    {
+      label: 'Custom Props',
+      options: Object.values(supportedCustomPropertyTypes).map(
+        (propertyType) => {
+          return {
+            label: (
+              <StyledOption
+                icon={propertyType.icon}
+                label={propertyType.label}
+              />
+            ),
+            value: propertyType.value,
+          }
+        }
+      ),
+    },
+    {
+      label: 'Static',
+      options: Object.values(supportedStaticPropertyTypes).map(
+        (propertyType) => {
+          return {
+            label: (
+              <StyledOption
+                icon={propertyType.icon}
+                label={propertyType.label}
+              />
+            ),
+            value: propertyType.value,
+          }
+        }
+      ),
+    },
+  ]

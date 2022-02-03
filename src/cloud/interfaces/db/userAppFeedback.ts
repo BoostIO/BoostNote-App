@@ -11,7 +11,8 @@ export interface SerializedUnserializableUserAppFeedbackProps {
   user: SerializedUser
 }
 
-export type SerializedUserAppFeedback = SerializedUnserializableUserAppFeedbackProps &
-  SerializableUserAppFeedbackProps
+export type SerializedUserAppFeedback =
+  SerializedUnserializableUserAppFeedbackProps &
+    SerializableUserAppFeedbackProps
 
 export type AppFeedbackTypeOption = 'Feature Request' | 'Bug Report'

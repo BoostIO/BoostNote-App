@@ -21,12 +21,8 @@ type SubscriptionFormTabs = 'method' | 'email' | 'promo'
 
 const SubscriptionTab = () => {
   const { t } = useTranslation()
-  const {
-    team,
-    subscription,
-    currentUserPermissions,
-    updateTeamSubscription,
-  } = usePage<PageStoreWithTeam>()
+  const { team, subscription, currentUserPermissions, updateTeamSubscription } =
+    usePage<PageStoreWithTeam>()
   const [formtab, setFormTab] = useState<SubscriptionFormTabs | undefined>()
   const { openSettingsTab } = useSettings()
 

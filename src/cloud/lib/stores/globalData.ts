@@ -60,7 +60,5 @@ function useGlobalDataStore() {
   }
 }
 
-export const {
-  StoreProvider: GlobalDataProvider,
-  useStore: useGlobalData,
-} = createStoreContext(useGlobalDataStore, 'globalData')
+export const { StoreProvider: GlobalDataProvider, useStore: useGlobalData } =
+  createStoreContext(useGlobalDataStore, 'globalData')

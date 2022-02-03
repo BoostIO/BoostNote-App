@@ -35,9 +35,10 @@ const EditorThemeSelect = () => {
   const [showingMenu, setShowingMenu] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const showIndentMenu: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
-    setShowingMenu(true)
-  }, [])
+  const showIndentMenu: MouseEventHandler<HTMLButtonElement> =
+    useCallback(() => {
+      setShowingMenu(true)
+    }, [])
 
   useEffect(() => {
     if (showingMenu && menuRef.current != null) {

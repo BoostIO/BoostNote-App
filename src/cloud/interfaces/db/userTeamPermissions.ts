@@ -17,5 +17,6 @@ export interface SerializedUnserializableUserTeamPermissionsProps {
   team: SerializedTeam
 }
 
-export type SerializedUserTeamPermissions = SerializedUnserializableUserTeamPermissionsProps &
-  SerializableUserTeamPermissionsProps
+export type SerializedUserTeamPermissions =
+  SerializedUnserializableUserTeamPermissionsProps &
+    SerializableUserTeamPermissionsProps

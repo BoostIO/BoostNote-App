@@ -70,7 +70,7 @@ const Container = styled.div`
     align-items: center !important;
   }
 
-  .__PrivateStripeElement{ 
+  .__PrivateStripeElement {
     width: 100%;
   }
 `
