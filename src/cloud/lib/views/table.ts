@@ -345,13 +345,13 @@ export function mapComparableItem(
       }
     case 'column':
       const docProp = doc.props[sort.columnName]
-      if (docProp == null) {
+      if (docProp == null || docProp.type !== sort.columnType) {
         return {
           doc,
           compareValue: null,
         }
       }
-      switch (sort.columnType) {
+      switch (docProp.type) {
         case 'string': {
           const compareValue = isArray(docProp.data)
             ? docProp.data[0]
@@ -380,12 +380,6 @@ export function mapComparableItem(
             compareValue: isValidDate(compareValue) ? compareValue : null,
           }
         }
-        case 'json':
-          return {
-            doc,
-            compareValue:
-              docProp.data != null ? JSON.stringify(docProp.data) : null,
-          }
         case 'number': {
           const compareValue = isArray(docProp.data)
             ? docProp.data[0]
@@ -426,7 +420,9 @@ export function mapComparableItem(
             )
           } else {
             const targetPermission = permissions.find(
-              (permission) => permission.userId === docProp.data?.userId
+              (permission) =>
+                permission.userId ===
+                (docProp.data as SerializedUserTeamPermissions)?.userId
             )
 
             compareValue =

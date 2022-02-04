@@ -237,7 +237,6 @@ const ContentManagerDocRow = ({
       itemLink={
         <DocLink doc={doc} team={team} id={`cm-doc-${doc.id}`}>
           <ContentManagerRowLinkContent
-            status={doc.props.status?.data}
             label={getDocTitle(doc, 'Untitled')}
             defaultIcon={mdiFileDocumentOutline}
             emoji={doc.emoji}

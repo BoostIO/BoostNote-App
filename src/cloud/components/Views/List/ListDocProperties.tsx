@@ -65,8 +65,7 @@ const ListDocProperties = ({
               getInitialPropDataOfPropType(propType)
 
             const isPropDataAccurate =
-              propData.type === propType ||
-              (propData.type === 'json' && propData.data.dataType === propType)
+              propData.type === prop.type && propData.subType === prop.subType
             return (
               <PropPicker
                 parent={{ type: 'doc', target: doc }}

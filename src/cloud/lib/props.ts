@@ -32,7 +32,7 @@ export const supportedPropTypes: {
   subType?: PropSubType
 }[] = [
   { type: 'date' },
-  { type: 'json', subType: 'timeperiod' },
+  { type: 'number', subType: 'timeperiod' },
   { type: 'status' },
   { type: 'user' },
   { type: 'number' },
@@ -131,8 +131,9 @@ export function getInitialPropDataOfPropType(
       return { type: 'date', data: undefined, createdAt: new Date().toString() }
     case 'timeperiod':
       return {
-        type: 'json',
-        data: { dataType: 'timeperiod', data: null },
+        type: 'number',
+        subType: 'timeperiod',
+        data: null,
         createdAt: new Date().toString(),
       }
     case 'user':
@@ -212,8 +213,8 @@ export function getDefaultColumnSuggestionsPerType(): {
   return [
     { type: 'user', name: 'Assignees' },
     { type: 'user', name: 'Reviewers' },
-    { type: 'json', subType: 'timeperiod', name: 'Time Estimate' },
-    { type: 'json', subType: 'timeperiod', name: 'Time Tracked' },
+    { type: 'number', subType: 'timeperiod', name: 'Time Estimate' },
+    { type: 'number', subType: 'timeperiod', name: 'Time Tracked' },
     { type: 'status', name: 'Status' },
     { type: 'date', name: 'Due Date' },
     { type: 'date', name: 'Start Date' },

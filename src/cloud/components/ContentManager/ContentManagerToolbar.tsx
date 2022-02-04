@@ -292,18 +292,10 @@ const ContentManagerToolbar = ({
 
       const docProp = props[key] as FilledSerializedPropData
       switch (docProp.type) {
-        case 'json':
-          if (docProp.data.dataType === 'timeperiod') {
-            values[key] = {
-              type: docProp.type,
-              subType: 'timeperiod',
-              value: docProp.data.data,
-            }
-          }
-          break
         case 'user':
           values[key] = {
             type: docProp.type,
+            subType: docProp.subType,
             value:
               docProp.data == null
                 ? []
@@ -315,6 +307,7 @@ const ContentManagerToolbar = ({
         case 'status':
           values[key] = {
             type: docProp.type,
+            subType: docProp.subType,
             value:
               docProp.data == null
                 ? undefined
@@ -328,6 +321,7 @@ const ContentManagerToolbar = ({
         case 'string':
           values[key] = {
             type: docProp.type,
+            subType: docProp.subType,
             value: docProp.data,
           }
           break
@@ -366,14 +360,6 @@ const ContentManagerToolbar = ({
 
         const docProp = props[key] as FilledSerializedPropData
         switch (docProp.type) {
-          case 'json':
-            if (
-              docProp.data.dataType !== 'timeperiod' ||
-              docProp.data.data !== values[key]['value']
-            ) {
-              delete values[key]
-            }
-            break
           case 'user':
             {
               let newUserArray = values[key].value.slice() as string[]
@@ -391,11 +377,9 @@ const ContentManagerToolbar = ({
           case 'status':
             {
               const docPropStatus: SerializedStatus | undefined =
-                props[key] == null
-                  ? undefined
-                  : Array.isArray(props[key].data)
-                  ? props[key].data[0]
-                  : props[key].data
+                docProp[key] == Array.isArray(docProp[key].data)
+                  ? docProp[key].data[0]
+                  : docProp[key].data
               if (
                 docPropStatus == null ||
                 docPropStatus.id !== values[key].value.id
@@ -595,8 +579,9 @@ const ContentManagerToolbar = ({
                     updateProp([
                       propColumn.name,
                       {
-                        type: 'json',
-                        data: { dataType: 'timeperiod', data: val },
+                        type: 'number',
+                        subType: 'timeperiod',
+                        data: val,
                       },
                     ])
                   }}

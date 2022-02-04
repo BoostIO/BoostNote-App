@@ -321,8 +321,7 @@ const TableView = ({
 
                     const isPropDataAccurate =
                       propData.type === propType ||
-                      (propData.type === 'json' &&
-                        propData.data.dataType === propType)
+                      propData.subType === propType
                     return {
                       children: (
                         <PropPicker

@@ -84,11 +84,7 @@ const DocProperties = ({
             </div>
             {docProperties.map((prop, i) => {
               const iconPath = getIconPathOfPropType(
-                prop[1].data.type === 'json' &&
-                  prop[1].data.data != null &&
-                  prop[1].data.data.dataType != null
-                  ? prop[1].data.data.dataType
-                  : prop[1].data.type
+                prop[1].data.subType || prop[1].data.type
               )
               return (
                 <div className='doc-props__property' key={`prop-${i}`}>

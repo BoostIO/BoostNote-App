@@ -65,8 +65,8 @@ export function useProps(
             updateDocPropsApi(parent.target, [
               propName,
               isObject(data.data)
-                ? { type: data.type, data: data.data }
-                : { type: data.type, data: null },
+                ? { type: data.type, subType: data.subType, data: data.data }
+                : { type: data.type, subType: data.subType, data: null },
             ])
           }
         }
@@ -138,6 +138,7 @@ export function useProps(
           trackEvent(MixpanelActionTrackTypes.DocPropDelete, {
             propName,
             propType: newProps[propName].type,
+            propSubType: newProps[propName].subType,
           })
         }
         delete newProps[propName]

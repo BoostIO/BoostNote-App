@@ -103,10 +103,7 @@ const PropConfig = ({
               variant='transparent'
               className='metadata__button prop__config__submenu__button'
               iconPath={getIconPathOfPropType(
-                newProp.data.type === 'json' &&
-                  newProp.data.data.dataType != null
-                  ? newProp.data.data.dataType
-                  : newProp.data.type
+                newProp.data.subType || newProp.data.type
               )}
               iconSize={16}
               onClick={(event) => {
@@ -153,12 +150,7 @@ const PropConfig = ({
               }}
             >
               <span>
-                {getLabelOfPropType(
-                  newProp.data.type === 'json' &&
-                    newProp.data.data.dataType != null
-                    ? newProp.data.data.dataType
-                    : newProp.data.type
-                )}
+                {getLabelOfPropType(newProp.data.subType || newProp.data.type)}
               </span>
               <Icon path={mdiChevronRight} size={16} />
             </Button>
