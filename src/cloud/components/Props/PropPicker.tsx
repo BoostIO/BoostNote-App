@@ -133,7 +133,8 @@ const PropPicker = ({
       return (
         <StatusSelect
           status={
-            Array.isArray(propData.data) ? propData.data[0] : propData.data
+            (Array.isArray(propData.data) ? propData.data[0] : propData.data) ||
+            undefined
           }
           sending={sendingMap.get(parent.target.id) === 'status'}
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
@@ -149,10 +150,32 @@ const PropPicker = ({
         />
       )
     case 'number':
+      if (propData.subType === 'timeperiod') {
+        return (
+          <TimePeriodPicker
+            modalLabel={propName}
+            isReadOnly={readOnly}
+            emptyLabel={emptyLabel}
+            sending={sendingMap.get(parent.target.id) === propName}
+            disabled={sendingMap.get(parent.target.id) != null || readOnly}
+            value={
+              Array.isArray(propData.data) ? propData.data[0] : propData.data
+            }
+            onPeriodChange={(val) => {
+              updateProp({
+                type: 'number',
+                subType: 'timeperiod',
+                data: val,
+              })
+            }}
+          />
+        )
+      }
       return (
         <NumberSelect
           number={
-            Array.isArray(propData.data) ? propData.data[0] : propData.data
+            (Array.isArray(propData.data) ? propData.data[0] : propData.data) ||
+            undefined
           }
           sending={sendingMap.get(parent.target.id) === 'number'}
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
@@ -171,11 +194,8 @@ const PropPicker = ({
       return (
         <TextSelect
           value={
-            Array.isArray(propData.data)
-              ? propData.data[0]
-              : propData.data == null
-              ? ''
-              : propData.data
+            (Array.isArray(propData.data) ? propData.data[0] : propData.data) ||
+            undefined
           }
           sending={sendingMap.get(parent.target.id) === 'string'}
           disabled={sendingMap.get(parent.target.id) != null || readOnly}
@@ -189,30 +209,6 @@ const PropPicker = ({
           }
         />
       )
-    case 'json':
-      if (
-        propData.data != null &&
-        propData.data.dataType === 'timeperiod' &&
-        (propData.data.data == null || typeof propData.data.data === 'number')
-      ) {
-        return (
-          <TimePeriodPicker
-            modalLabel={propName}
-            isReadOnly={readOnly}
-            emptyLabel={emptyLabel}
-            sending={sendingMap.get(parent.target.id) === propName}
-            disabled={sendingMap.get(parent.target.id) != null || readOnly}
-            value={propData.data.data}
-            onPeriodChange={(val) => {
-              updateProp({
-                type: 'json',
-                data: { dataType: 'timeperiod', data: val },
-              })
-            }}
-          />
-        )
-      }
-      return null
     default:
       return null
   }

@@ -18,6 +18,7 @@ import {
 } from '@mdi/js'
 import { getInitialPropDataOfPropType } from './props'
 import { floorISOTime, getISODateFromLocalTime } from './date'
+import { SerializedStatus } from '../interfaces/db/status'
 
 export const supportedCustomPropertyTypes: Record<
   string,
@@ -107,8 +108,12 @@ const validators: Validators = {
       return false
     }
 
+    if (condition.value.type !== prop.type) {
+      return false
+    }
+
     const nonNullableVal = Array.isArray(prop.data)
-      ? prop.data.filter((d) => d != null)
+      ? (prop.data as Array<any>).filter((d) => d != null)
       : prop.data
 
     if (Array.isArray(nonNullableVal) && nonNullableVal.length === 0) {
@@ -121,8 +126,6 @@ const validators: Validators = {
           Array.isArray(nonNullableVal) ? nonNullableVal[0] : nonNullableVal,
           condition.value.value
         )
-      case 'json':
-        return false
       case 'user':
         return Array.isArray(condition.value.value)
           ? condition.value.value.length === 0
@@ -157,7 +160,7 @@ const validators: Validators = {
             if (st == null) {
               return id === -1
             }
-            return st.id === id
+            return (st as SerializedStatus).id === id
           },
           prop.data,
           condition.value.value

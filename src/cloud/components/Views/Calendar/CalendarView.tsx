@@ -69,6 +69,7 @@ const CalendarView = ({
       }
       if (
         dateProps != null &&
+        dateProps.type === 'date' &&
         dateProps.type === watchedProp.type &&
         dateProps.data != null
       ) {
@@ -76,12 +77,12 @@ const CalendarView = ({
           props.start = dateProps.data
         } else {
           const orderedDates = dateProps.data.sort((a, b) => {
-            if (a < b) {
+            if (a! < b!) {
               return -1
             } else {
               return 1
             }
-          })
+          }) as Date[]
           if (dateProps.data.length === 2) {
             props.start = orderedDates[0]
             const endDate = new Date(orderedDates[1])

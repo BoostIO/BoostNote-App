@@ -9,7 +9,7 @@ import DocStatusIcon from '../../../cloud/components/DocStatusIcon'
 import styled from '../../../design/lib/styled'
 
 interface ContentManagerRowLinkContentProps {
-  status?: DocStatus
+  status?: DocStatus | null
   label: string
   emoji?: string
   defaultIcon?: string
