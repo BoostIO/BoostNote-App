@@ -14,6 +14,7 @@ import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 import NumberSelect from './Pickers/NumberSelect'
 import TextSelect from './Pickers/TextSelect'
 import { getISODateFromLocalTime } from '../../lib/date'
+import UrlSelect from './Pickers/UrlSelect'
 
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
@@ -191,6 +192,29 @@ const PropPicker = ({
         />
       )
     case 'string':
+      if (propData.subType === 'url') {
+        return (
+          <UrlSelect
+            value={
+              (Array.isArray(propData.data)
+                ? propData.data[0]
+                : propData.data) || undefined
+            }
+            sending={sendingMap.get(parent.target.id) === 'string'}
+            disabled={sendingMap.get(parent.target.id) != null || readOnly}
+            isReadOnly={readOnly}
+            showIcon={showIcon}
+            onUrlChange={(val) =>
+              updateProp({
+                type: 'string',
+                subType: 'url',
+                data: val,
+              })
+            }
+          />
+        )
+      }
+
       return (
         <TextSelect
           value={

@@ -1,32 +1,35 @@
 import { SerializedStatus } from './status'
 import { SerializedUserTeamPermissions } from './userTeamPermissions'
 
-export interface Prop<T, D> {
+export interface Prop<T, S, D> {
   type: T
   data: D | D[]
-  subType?: PropSubType
+  subType?: S
   createdAt: string
 }
 
 export type FilledSerializedPropData =
-  | Prop<'string', string>
-  | Prop<'date', Date>
-  | Prop<'number', number>
-  | Prop<'user', SerializedUserTeamPermissions>
-  | Prop<'status', SerializedStatus>
+  | Prop<'string', PropStringSubtype, string>
+  | Prop<'date', undefined, Date>
+  | Prop<'number', PropNumberSubtype, number>
+  | Prop<'user', undefined, SerializedUserTeamPermissions>
+  | Prop<'status', undefined, SerializedStatus>
 
 export type NullablePropData<T> = T | undefined | null
 export type SerializedPropData =
-  | Prop<'string', NullablePropData<string>>
-  | Prop<'date', NullablePropData<Date>>
-  | Prop<'number', NullablePropData<number>>
-  | Prop<'user', NullablePropData<SerializedUserTeamPermissions>>
-  | Prop<'status', NullablePropData<SerializedStatus>>
+  | Prop<'string', PropStringSubtype, NullablePropData<string>>
+  | Prop<'date', undefined, NullablePropData<Date>>
+  | Prop<'number', PropNumberSubtype, NullablePropData<number>>
+  | Prop<'user', undefined, NullablePropData<SerializedUserTeamPermissions>>
+  | Prop<'status', undefined, NullablePropData<SerializedStatus>>
 
 export type PropData = Omit<SerializedPropData, 'createdAt'>
+export type PropNumberSubtype = 'timeperiod'
+export type PropStringSubtype = 'url'
 
 export type PropType = SerializedPropData['type']
+export type PropSubType = SerializedPropData['subType']
+
 export type StaticPropType = 'creation_date' | 'update_date' | 'label'
-export type PropSubType = 'timeperiod'
 
 export type Props = Record<string, SerializedPropData>
