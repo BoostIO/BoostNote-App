@@ -31,3 +31,9 @@ export function parseNumberStringOrReturnZero(str: string): number {
     return 0
   }
 }
+
+export function isValidUrl(str: string): boolean {
+  return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/.test(
+    str
+  )
+}

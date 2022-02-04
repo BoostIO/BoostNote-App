@@ -6,6 +6,7 @@ import {
   mdiContentSaveOutline,
   mdiFormatText,
   mdiLabelOutline,
+  mdiLinkVariant,
   mdiMusicAccidentalSharp,
   mdiTimerOutline,
 } from '@mdi/js'
@@ -37,6 +38,7 @@ export const supportedPropTypes: {
   { type: 'user' },
   { type: 'number' },
   { type: 'string' },
+  { type: 'string', subType: 'url' },
 ]
 
 export function getLabelOfPropType(
@@ -100,6 +102,8 @@ export function getIconPathOfPropType(
   type: PropType | StaticPropType | PropSubType
 ): string | undefined {
   switch (type) {
+    case 'url':
+      return mdiLinkVariant
     case 'creation_date':
       return mdiClockOutline
     case 'update_date':
@@ -148,6 +152,13 @@ export function getInitialPropDataOfPropType(
       return {
         type: 'number',
         data: undefined,
+        createdAt: new Date().toString(),
+      }
+    case 'url':
+      return {
+        type: 'string',
+        subType: 'url',
+        data: '',
         createdAt: new Date().toString(),
       }
     case 'string':
@@ -220,5 +231,6 @@ export function getDefaultColumnSuggestionsPerType(): {
     { type: 'date', name: 'Start Date' },
     { type: 'number', name: 'Story Point' },
     { type: 'string', name: 'Text' },
+    { type: 'string', subType: 'url', name: 'Url' },
   ]
 }
