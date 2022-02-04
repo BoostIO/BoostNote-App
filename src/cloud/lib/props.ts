@@ -188,10 +188,10 @@ export function getDomainOrInitialDataPropToPropData(
   }
 
   if (isObject(propData)) {
-    return { type: data.type, data: propData }
+    return { type: data.type, subType: data.subType, data: propData }
   }
 
-  return { type: data.type, data: null }
+  return { type: data.type, subType: data.subType, data: null }
 }
 
 export function getDefaultStaticSuggestionsPerType(): {

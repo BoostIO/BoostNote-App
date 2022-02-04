@@ -41,7 +41,9 @@ const PropConfig = ({
   const closeCallback = useCallback(() => {
     if (
       prop.name != newProp.name ||
-      (prop.data.type !== newProp.data.type && shouldModify.current)
+      ((prop.data.type !== newProp.data.type ||
+        prop.data.subType !== newProp.data.subType) &&
+        shouldModify.current)
     ) {
       onUpdate(prop, newProp)
     }
@@ -124,7 +126,8 @@ const PropConfig = ({
                             ),
                             onClick: () => {
                               setNewProp((prev) => {
-                                return prev.data.type === propType
+                                return prev.data.type === propType &&
+                                  prev.data.subType === subType
                                   ? prev
                                   : {
                                       name: prev.name,

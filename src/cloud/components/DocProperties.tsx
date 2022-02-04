@@ -104,7 +104,8 @@ const DocProperties = ({
                           onUpdate={(prop, updated) => {
                             if (
                               prop.name !== updated.name ||
-                              prop.data.type !== updated.data.type
+                              prop.data.type !== updated.data.type ||
+                              prop.data.subType !== updated.data.subType
                             ) {
                               modifyProp(prop.name, updated.name, updated.data)
                             }
