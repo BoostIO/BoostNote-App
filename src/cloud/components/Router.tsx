@@ -70,8 +70,8 @@ import WorkflowPage from '../pages/workflows/[workflowId]'
 import WorkflowCreatePage from '../pages/workflows/create'
 import AutomationCreatePage from '../pages/automations/create'
 import AutomationPage from '../pages/automations/[automationId]'
-import GithubSourceCallbackPage from './sources/GithubSourceCallbackPage'
 import { BetaRegistrationProvider } from '../lib/stores/beta'
+import GithubSourceCallbackPage from './sources/GithubSourceCallbackPage'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
