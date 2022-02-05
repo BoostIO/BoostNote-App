@@ -2,6 +2,7 @@ import {
   mdiAccountOutline,
   mdiArrowDownDropCircleOutline,
   mdiCalendarMonthOutline,
+  mdiCheckBoxOutline,
   mdiClockOutline,
   mdiContentSaveOutline,
   mdiFormatText,
@@ -41,6 +42,7 @@ export const supportedPropTypes: {
   { type: 'string' },
   { type: 'string', subType: 'url' },
   { type: 'compound', subType: 'dependency' },
+  { type: 'number', subType: 'checkbox' },
 ]
 
 export function getLabelOfPropType(
@@ -99,7 +101,7 @@ export const ConditionNameSuggestionsPerTypeOrSubType: Record<
   timeperiod: ['Time Estimate', 'Time Tracked'],
   date: ['Due Date', 'Start Date'],
   status: ['Status'],
-  number: ['Number'],
+  number: ['Number', 'Checkbox'],
 }
 
 export function getIconPathOfPropType(
@@ -122,6 +124,8 @@ export function getIconPathOfPropType(
       return mdiLabelOutline
     case 'status':
       return mdiArrowDownDropCircleOutline
+    case 'checkbox':
+      return mdiCheckBoxOutline
     case 'number':
       return mdiMusicAccidentalSharp
     case 'string':
@@ -172,6 +176,13 @@ export function getInitialPropDataOfPropType(
         type: 'string',
         subType: 'url',
         data: '',
+        createdAt: new Date().toString(),
+      }
+    case 'checkbox':
+      return {
+        type: 'number',
+        subType: 'checkbox',
+        data: undefined,
         createdAt: new Date().toString(),
       }
     case 'string':
@@ -283,5 +294,6 @@ export function getDefaultColumnSuggestionsPerType(): {
     { type: 'string', name: 'Text' },
     { type: 'string', subType: 'url', name: 'Url' },
     { type: 'compound', subType: 'dependency', name: 'Dependencies' },
+    { type: 'number', subType: 'checkbox', name: 'Checkbox' },
   ]
 }

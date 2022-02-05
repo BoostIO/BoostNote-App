@@ -22,6 +22,8 @@ import TextSelect from './Pickers/TextSelect'
 import { getISODateFromLocalTime } from '../../lib/date'
 import UrlSelect from './Pickers/UrlSelect'
 import DocDependencySelect from './Pickers/DocDependencySelect'
+import CheckboxSelect from './Pickers/CheckboxSelect'
+import { IconSize } from '../../../design/components/atoms/Icon'
 
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
@@ -30,6 +32,8 @@ interface PropPickerProps {
   readOnly?: boolean
   isErrored?: boolean
   showIcon?: boolean
+  iconSize?: IconSize
+  showPropName?: boolean
   emptyLabel?: string
   onUpdate?: (newProps: Props) => void
 }
@@ -43,6 +47,8 @@ const PropPicker = ({
   isErrored,
   showIcon,
   emptyLabel,
+  showPropName = false,
+  iconSize = 20,
 }: PropPickerProps) => {
   const { sendingMap, updateDocPropsApi } = useCloudApi()
 
@@ -81,7 +87,6 @@ const PropPicker = ({
       </WithTooltip>
     )
   }
-
   switch (propData.type) {
     case 'user':
       return (
@@ -158,46 +163,83 @@ const PropPicker = ({
         />
       )
     case 'number':
-      if (propData.subType === 'timeperiod') {
-        return (
-          <TimePeriodPicker
-            modalLabel={propName}
-            isReadOnly={readOnly}
-            emptyLabel={emptyLabel}
-            sending={sendingMap.get(parent.target.id) === propName}
-            disabled={sendingMap.get(parent.target.id) != null || readOnly}
-            value={
-              Array.isArray(propData.data) ? propData.data[0] : propData.data
-            }
-            onPeriodChange={(val) => {
-              updateProp({
-                type: 'number',
-                subType: 'timeperiod',
-                data: val,
-              })
-            }}
-          />
-        )
+      switch (propData.subType) {
+        case 'checkbox':
+          return showPropName ? (
+            <WithTooltip tooltip={propName}>
+              <CheckboxSelect
+                value={propData.data != null && propData.data == true}
+                iconSize={iconSize}
+                isReadOnly={readOnly}
+                onCheckboxToggle={() =>
+                  updateProp({
+                    type: 'number',
+                    subType: 'checkbox',
+                    data: propData.data == true ? 0 : 1,
+                  })
+                }
+                showIcon={showIcon}
+                disabled={sendingMap.get(parent.target.id) != null || readOnly}
+              />
+            </WithTooltip>
+          ) : (
+            <CheckboxSelect
+              value={propData.data != null && propData.data == true}
+              iconSize={iconSize}
+              isReadOnly={readOnly}
+              onCheckboxToggle={() =>
+                updateProp({
+                  type: 'number',
+                  subType: 'checkbox',
+                  data: propData.data == true ? 0 : 1,
+                })
+              }
+              showIcon={showIcon}
+              disabled={sendingMap.get(parent.target.id) != null || readOnly}
+            />
+          )
+        case 'timeperiod':
+          return (
+            <TimePeriodPicker
+              modalLabel={propName}
+              isReadOnly={readOnly}
+              emptyLabel={emptyLabel}
+              sending={sendingMap.get(parent.target.id) === propName}
+              disabled={sendingMap.get(parent.target.id) != null || readOnly}
+              value={
+                Array.isArray(propData.data) ? propData.data[0] : propData.data
+              }
+              onPeriodChange={(val) => {
+                updateProp({
+                  type: 'number',
+                  subType: 'timeperiod',
+                  data: val,
+                })
+              }}
+            />
+          )
+        default:
+          return (
+            <NumberSelect
+              number={
+                (Array.isArray(propData.data)
+                  ? propData.data[0]
+                  : propData.data) || undefined
+              }
+              sending={sendingMap.get(parent.target.id) === 'number'}
+              disabled={sendingMap.get(parent.target.id) != null || readOnly}
+              emptyLabel={emptyLabel}
+              isReadOnly={readOnly}
+              showIcon={showIcon}
+              onNumberChange={(val) =>
+                updateProp({
+                  type: 'number',
+                  data: val,
+                })
+              }
+            />
+          )
       }
-      return (
-        <NumberSelect
-          number={
-            (Array.isArray(propData.data) ? propData.data[0] : propData.data) ||
-            undefined
-          }
-          sending={sendingMap.get(parent.target.id) === 'number'}
-          disabled={sendingMap.get(parent.target.id) != null || readOnly}
-          emptyLabel={emptyLabel}
-          isReadOnly={readOnly}
-          showIcon={showIcon}
-          onNumberChange={(val) =>
-            updateProp({
-              type: 'number',
-              data: val,
-            })
-          }
-        />
-      )
     case 'string':
       if (propData.subType === 'url') {
         return (

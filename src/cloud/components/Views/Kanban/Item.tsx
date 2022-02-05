@@ -59,6 +59,7 @@ const Item = ({ doc, displayedProps, onClick }: ItemProps) => {
                     propData={docProp}
                     readOnly={true}
                     showIcon={true}
+                    showPropName={true}
                   />
                 </div>
               )
