@@ -1,6 +1,7 @@
-import React, { ChangeEvent } from 'react'
-import { useState } from 'react'
+import React from 'react'
 import { useCallback } from 'react'
+import Button from '../../../design/components/atoms/Button'
+import styled from '../../../design/lib/styled'
 import { callApi } from '../../lib/client'
 import { useRouter } from '../../lib/router'
 import { useGlobalData } from '../../lib/stores/globalData'
@@ -8,61 +9,51 @@ import { useGlobalData } from '../../lib/stores/globalData'
 const GithubSourceCallbackPage = () => {
   const { query, push } = useRouter()
   const { globalData } = useGlobalData()
-  const [teamId, setTeamId] = useState<string>('')
 
-  const submit = useCallback(async () => {
-    if (teamId === '') {
-      return
-    }
-    const data = await callApi(`/api/sources/github/callback`, {
-      method: 'post',
-      json: {
-        code: query.code,
-        installationId: query.installation_id,
-        teamId,
-      },
-    })
+  const submit = useCallback(
+    async (teamId: string) => {
+      const data = await callApi(`/api/sources/github/callback`, {
+        method: 'post',
+        json: {
+          code: query.code,
+          installationId: query.installation_id,
+          teamId,
+        },
+      })
 
-    console.log(data)
-    const team = globalData.teams.find((team) => team.id === teamId)
-    push(`/${team!.domain}`)
-  }, [globalData.teams, push, query.code, query.installation_id, teamId])
-
-  const updateTeamId = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
-    setTeamId(event.target.value)
-  }, [])
+      console.info(data)
+      const team = globalData.teams.find((team) => team.id === teamId)
+      push(`/${team!.domain}`)
+    },
+    [globalData.teams, push, query.code, query.installation_id]
+  )
 
   return (
-    <div>
-      <div>
-        <h2>Code</h2>
-        <input defaultValue={query.code} readOnly />
-      </div>
-
-      <div>
-        <h2>Install</h2>
-        <input defaultValue={query.installation_id} readOnly />
-      </div>
-
-      <div>
-        Team select
-        <select value={teamId} onChange={updateTeamId}>
-          <option value=''>Select Team</option>
-          {globalData.teams.map((team) => {
-            return (
-              <option value={team.id} key={team.id}>
-                {team.name}
-              </option>
-            )
-          })}
-        </select>
-      </div>
-
-      <div>
-        <button onClick={submit}>Create Source</button>
-      </div>
-    </div>
+    <Container>
+      <h1>Install Github App</h1>
+      <p>Select a Team to install the Github app.</p>
+      <ul>
+        {globalData.teams.map((team) => {
+          return (
+            <li value={team.id} key={team.id}>
+              {team.name}{' '}
+              <Button
+                onClick={() => {
+                  submit(team.id)
+                }}
+              >
+                Install
+              </Button>
+            </li>
+          )
+        })}
+      </ul>
+    </Container>
   )
 }
 
 export default GithubSourceCallbackPage
+
+const Container = styled.div`
+  padding: ${({ theme }) => theme.sizes.spaces.df}px;
+`
