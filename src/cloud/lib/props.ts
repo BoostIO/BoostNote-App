@@ -15,6 +15,7 @@ import {
 import { capitalize, isNumber, isObject } from 'lodash'
 import {
   FilledSerializedPropData,
+  PropData,
   PropSubType,
   PropType,
   SerializedPropData,
@@ -64,6 +65,31 @@ export function getLabelOfPropType(
     default:
       return capitalize(propType)
   }
+}
+
+export function prepareDocPropsForAPI(props: Record<string, PropData | null>) {
+  if (props == null) {
+    return undefined
+  }
+  const preparedProps: Record<string, PropData | null> = {} as Record<
+    string,
+    PropData | null
+  >
+
+  for (const key in props) {
+    const prop = props[key]
+    if (prop != null && prop.data != null) {
+      if (prop.type == 'status' || prop.type == 'user') {
+        preparedProps[key] = {
+          type: prop.type,
+          data: prop.type == 'user' ? prop.data.userId : prop.data.id,
+        } as PropData
+      } else {
+        preparedProps[key] = prop
+      }
+    }
+  }
+  return preparedProps
 }
 
 export function getPropsOfItem(

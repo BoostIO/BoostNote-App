@@ -11,6 +11,7 @@ import {
   mdiTrashCanOutline,
   mdiStar,
   mdiHistory,
+  mdiContentDuplicate,
 } from '@mdi/js'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 
@@ -57,6 +58,7 @@ import {
 import Spinner from '../../../design/components/atoms/Spinner'
 import useApi from '../../../design/lib/hooks/useApi'
 import { usePreviewStyle } from '../../../lib/preview'
+import { prepareDocPropsForAPI } from '../../lib/props'
 
 export interface DocContextMenuActionsProps {
   team: SerializedTeam
@@ -74,7 +76,13 @@ export function DocContextMenuActions({
   restoreRevision,
 }: DocContextMenuActionsProps) {
   const { translate } = useI18n()
-  const { sendingMap, toggleDocBookmark, send, updateDoc } = useCloudApi()
+  const {
+    sendingMap,
+    toggleDocBookmark,
+    send,
+    updateDoc,
+    createDoc,
+  } = useCloudApi()
   const { deleteDoc } = useCloudResourceModals()
   const { openModal, closeAllModals } = useModal()
   const { settings, openSettingsTab } = useSettings()
@@ -82,11 +90,47 @@ export function DocContextMenuActions({
   const { subscription } = usePage()
   const { updateTemplatesMap } = useNav()
   const [copied, setCopied] = useState(false)
+  const [duplicated, setDuplicated] = useState(false)
   const { previewStyle } = usePreviewStyle()
 
   const docUrl = useMemo(() => {
     return boostHubBaseUrl + getDocLinkHref(doc, team, 'index')
   }, [team, doc])
+
+  const duplicateButtonHandler = useCallback(async () => {
+    if (team == null) {
+      return
+    }
+
+    const newProps = prepareDocPropsForAPI(doc.props)
+    setDuplicated(true)
+    await createDoc(
+      team,
+      {
+        workspaceId: doc.workspaceId,
+        parentFolderId: doc.parentFolderId,
+        emoji: doc.emoji,
+        title: doc.title,
+        props: newProps,
+        content: doc.head ? doc.head.content : '',
+      },
+      {
+        skipRedirect: true,
+        afterSuccess: () => {
+          setDuplicated(false)
+        },
+      }
+    )
+  }, [
+    createDoc,
+    doc.emoji,
+    doc.head,
+    doc.parentFolderId,
+    doc.props,
+    doc.title,
+    doc.workspaceId,
+    team,
+  ])
 
   const copyButtonHandler = useCallback(() => {
     copy(docUrl)
@@ -270,6 +314,19 @@ export function DocContextMenuActions({
             onClick: revisionNavigateCallback,
             iconPath: mdiHistory,
             label: translate(lngKeys.History),
+          },
+        }}
+      />
+      <MetadataContainerRow
+        row={{
+          type: 'button',
+          props: {
+            id: 'metadata-duplicate-link',
+            label: translate(lngKeys.GeneralDuplicate),
+            iconPath: mdiContentDuplicate,
+            spinning: duplicated,
+            disabled: duplicated,
+            onClick: duplicateButtonHandler,
           },
         }}
       />

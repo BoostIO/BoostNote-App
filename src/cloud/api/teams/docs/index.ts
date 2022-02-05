@@ -23,6 +23,7 @@ export interface CreateDocRequestBody {
   title?: string
   emoji?: string
   props?: Record<string, PropData | null>
+  content?: string
 }
 
 export interface CreateDocResponseBody {

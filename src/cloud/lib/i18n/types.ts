@@ -28,6 +28,7 @@ export enum lngKeys {
   GeneralNever = 'general.never',
   GeneralTemplates = 'general.templates',
   GeneralTitle = 'general.title',
+  GeneralDuplicate = 'general.duplicate',
   GeneralUse = 'general.use',
   GeneralChangeIcon = 'general.changeicon',
   GeneralOwner = 'general.Owner',

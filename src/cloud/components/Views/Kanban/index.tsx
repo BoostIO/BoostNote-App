@@ -210,13 +210,14 @@ const KanbanView = ({
     (doc: SerializedDocWithSupplemental) => {
       return (
         <Item
+          team={team}
           onClick={() => goToDocPreview(doc)}
           doc={doc}
           displayedProps={view.data.props || {}}
         />
       )
     },
-    [goToDocPreview, view.data.props]
+    [goToDocPreview, team, view.data.props]
   )
 
   const renderListFooter = useCallback(
