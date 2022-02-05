@@ -1,16 +1,20 @@
 import React, { useState } from 'react'
 import { useCallback } from 'react'
 import { useEffectOnce } from 'react-use'
+import Button from '../../../design/components/atoms/Button'
+import { ExternalLink } from '../../../design/components/atoms/Link'
 import Spinner from '../../../design/components/atoms/Spinner'
 import SettingTabContent from '../../../design/components/organisms/Settings/atoms/SettingTabContent'
 import { useToast } from '../../../design/lib/stores/toast'
 import { listSources, deleteSource } from '../../api/teams/sources'
 import { SerializedSource } from '../../interfaces/db/source'
 import { githubAppUrl } from '../../lib/consts'
+import { useBetaRegistration } from '../../lib/stores/beta'
 import { usePage } from '../../lib/stores/pageStore'
 import IntegrationManager from './IntegrationManager'
 
 const GithubIntegrations = () => {
+  const betaRegistration = useBetaRegistration()
   return (
     <SettingTabContent
       title='GitHub'
@@ -24,8 +28,14 @@ const GithubIntegrations = () => {
             <h3>How does it work?</h3>
             <p>Create Github Issue blocks in Canvas Documents (beta)</p>
           </IntegrationManager>
-          <hr />
-          <GithubSourceManager />
+          {betaRegistration.state === 'loading' ? (
+            <Spinner />
+          ) : betaRegistration.betaRegistration?.state.automations ? (
+            <>
+              <hr />
+              <GithubSourceManager />
+            </>
+          ) : null}
         </>
       }
     />
@@ -79,11 +89,11 @@ const GithubSourceManager = () => {
 
   return (
     <div>
-      <h3>Github Sources</h3>
+      <h3>(BETA) Github Sources</h3>
       <div>
-        <a href={githubAppUrl} target='_blank' rel='noreferrer'>
+        <ExternalLink href={githubAppUrl}>
           Install Github app to add more sources
-        </a>
+        </ExternalLink>
       </div>
       {fetching ? (
         <Spinner />
@@ -100,7 +110,7 @@ const GithubSourceManager = () => {
               )
             })}
           </ul>
-          <button onClick={fetchSources}>Reload</button>
+          <Button onClick={fetchSources}>Reload</Button>
         </>
       )}
     </div>
@@ -122,14 +132,12 @@ const GithubSourceItem = ({
     <li key={source.id}>
       {source.name}
       {source.invalidated && '(Invalidated)'}
-      <a
+      <ExternalLink
         href={`https://github.com/settings/installations/${githubInstallationId}`}
-        target='_blank'
-        rel='noreferrer'
       >
         Configure
-      </a>
-      <button
+      </ExternalLink>
+      <Button
         disabled={deleting}
         onClick={() => {
           // Add dialog
@@ -139,7 +147,7 @@ const GithubSourceItem = ({
         }}
       >
         Delete
-      </button>
+      </Button>
     </li>
   )
 }
