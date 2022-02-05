@@ -99,7 +99,7 @@ const AutomationListPage = ({
               }}
               iconPath={mdiPlus}
             >
-              Create A Workflow
+              Create Automation
             </Button>
           </a>
         </Container>
