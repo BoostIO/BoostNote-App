@@ -30,7 +30,7 @@ export type SerializedPropData =
     >
 
 export type PropData = Omit<SerializedPropData, 'createdAt'>
-export type PropNumberSubtype = 'timeperiod'
+export type PropNumberSubtype = 'timeperiod' | 'checkbox'
 export type PropStringSubtype = 'url'
 export type PropCompoundSubType = 'dependency'
 

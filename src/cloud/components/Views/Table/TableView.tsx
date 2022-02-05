@@ -336,6 +336,7 @@ const TableView = ({
                             !currentUserIsCoreMember || !isPropDataAccurate
                           }
                           isErrored={!isPropDataAccurate}
+                          iconSize={20}
                         />
                       ),
                     }
