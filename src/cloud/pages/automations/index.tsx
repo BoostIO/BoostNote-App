@@ -16,6 +16,8 @@ import { getTeamURL } from '../../lib/utils/patterns'
 import { useRouter } from '../../lib/router'
 import styled from '../../../design/lib/styled'
 import { useToast } from '../../../design/lib/stores/toast'
+import { trackEvent } from '../../api/track'
+import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 type AutomationListPageProps = GeneralAppProps & {
   automations: SerializedAutomation[]
@@ -47,6 +49,7 @@ const AutomationListPage = ({
           title: 'Automation Deleted!',
           description: `${automation.name} was succesfully deleted.`,
         })
+        trackEvent(MixpanelActionTrackTypes.AutomationDelete)
       } catch (err) {
         pushApiErrorMessage(err)
       } finally {

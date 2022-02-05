@@ -11,6 +11,8 @@ import { GeneralAppProps } from '../../interfaces/api'
 import WorkflowBuilder, {
   NewWorkflow,
 } from '../../components/Automations/WorkflowBuilder'
+import { trackEvent } from '../../api/track'
+import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 type WorkflowPageProps = GeneralAppProps & { workflow: SerializedWorkflow }
 
@@ -33,6 +35,7 @@ const WorkflowPage = ({ team, workflow: initial }: WorkflowPageProps) => {
           description: `"${workflow.name}" has been successfully updated`,
           type: 'success',
         })
+        trackEvent(MixpanelActionTrackTypes.WorkflowUpdate)
       } catch (err) {
         pushApiErrorMessage(err)
       } finally {

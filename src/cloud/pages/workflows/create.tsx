@@ -12,6 +12,8 @@ import WorkflowBuilder, {
 } from '../../components/Automations/WorkflowBuilder'
 import { useRouter } from '../../lib/router'
 import { getTeamURL } from '../../lib/utils/patterns'
+import { trackEvent } from '../../api/track'
+import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 const WorkflowCreatePage = ({ team }: GeneralAppProps) => {
   const { pushApiErrorMessage } = useToast()
@@ -35,6 +37,7 @@ const WorkflowCreatePage = ({ team }: GeneralAppProps) => {
           team: team.id,
         })
         push(`${getTeamURL(team)}/workflows/${created.id}`)
+        trackEvent(MixpanelActionTrackTypes.WorkflowCreate)
       } catch (err) {
         pushApiErrorMessage(err)
       } finally {

@@ -23,6 +23,8 @@ import AutomationBuilder, {
 import AutomationLogList from '../../components/Automations/AutomationLogList'
 import Button from '../../../design/components/atoms/Button'
 import { mdiChevronDoubleDown } from '@mdi/js'
+import { trackEvent } from '../../api/track'
+import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 type AutomationPageProps = GeneralAppProps & {
   workflows: SerializedWorkflow[]
@@ -49,9 +51,10 @@ const AutomationPage = ({
         })
         pushMessage({
           type: 'success',
-          title: 'Automation Created',
+          title: 'Automation Updated',
           description: `${newAutomation.name} has been successfully enabled!`,
         })
+        trackEvent(MixpanelActionTrackTypes.AutomationUpdate)
       } catch (err) {
         pushApiErrorMessage(err)
       } finally {
