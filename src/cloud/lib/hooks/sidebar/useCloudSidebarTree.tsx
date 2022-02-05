@@ -76,7 +76,12 @@ import { useBetaRegistration } from '../../stores/beta'
 import { getTeamLinkHref } from '../../../components/Link/TeamLink'
 
 export function useCloudSidebarTree() {
-  const { team, currentUserIsCoreMember, subscription } = usePage()
+  const {
+    team,
+    currentUserIsCoreMember,
+    currentUserPermissions,
+    subscription,
+  } = usePage()
   const { push, pathname } = useRouter()
   const { openModal } = useModal()
   const { preferences, setPreferences } = usePreferences()
@@ -849,23 +854,40 @@ export function useCloudSidebarTree() {
 
     if (
       betaRegistrationState.state === 'loaded' &&
-      betaRegistrationState.betaRegistration != null
+      betaRegistrationState.betaRegistration != null &&
+      currentUserPermissions?.role === 'admin'
     ) {
       const betaTree: SidebarTreeChildRow[] = []
       if (betaRegistrationState.betaRegistration.state.automations) {
-        const href = `${getTeamLinkHref(team, 'automations')}`
+        const workflowsHref = `${getTeamLinkHref(team, 'workflows')}`
+        betaTree.push({
+          id: 'beta-workflows',
+          label: 'Workflows',
+          depth: 0,
+          href: workflowsHref,
+          active: !showSearchScreen && workflowsHref === currentPathWithDomain,
+          navigateTo: (event?: any) => {
+            if (event && event.shiftKey && usingElectron) {
+              sendToElectron('new-window', workflowsHref)
+              return
+            }
+            push(workflowsHref)
+          },
+        })
+        const automationsHref = `${getTeamLinkHref(team, 'automations')}`
         betaTree.push({
           id: 'beta-automations',
           label: 'Automations',
           depth: 0,
-          href,
-          active: !showSearchScreen && href === currentPathWithDomain,
+          href: automationsHref,
+          active:
+            !showSearchScreen && automationsHref === currentPathWithDomain,
           navigateTo: (event?: any) => {
             if (event && event.shiftKey && usingElectron) {
-              sendToElectron('new-window', href)
+              sendToElectron('new-window', automationsHref)
               return
             }
-            push(href)
+            push(automationsHref)
           },
         })
       }
@@ -901,6 +923,7 @@ export function useCloudSidebarTree() {
     tagsMap,
     translate,
     currentUserIsCoreMember,
+    currentUserPermissions?.role,
     openWorkspaceCreateForm,
     sideBarOpenedWorkspaceIdsSet,
     getFoldEvents,
