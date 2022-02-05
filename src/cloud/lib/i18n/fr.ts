@@ -417,6 +417,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.GeneralMoveVerb]: 'Déplacer',
   [lngKeys.GeneralShared]: 'Partagé',
   [lngKeys.GeneralRenameVerb]: 'Renommer',
+  [lngKeys.GeneralEditTitle]: 'Modifier le titre',
   [lngKeys.GeneralEditVerb]: 'Editer',
   [lngKeys.GeneralDashboards]: 'Dashboards',
   [lngKeys.GeneralBookmarks]: 'Favoris',

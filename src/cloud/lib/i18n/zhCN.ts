@@ -366,6 +366,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.GeneralContinueVerb]: '跳过',
   [lngKeys.GeneralShared]: '分享',
   [lngKeys.GeneralRenameVerb]: '重命名',
+  [lngKeys.GeneralEditTitle]: '编辑标题',
   [lngKeys.GeneralEditVerb]: '编辑',
   [lngKeys.GeneralBookmarks]: '书签',
   [lngKeys.GeneralUnbookmarkVerb]: '移除书签',

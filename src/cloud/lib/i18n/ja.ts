@@ -390,6 +390,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.GeneralContinueVerb]: '次に進む',
   [lngKeys.GeneralShared]: 'シェア済',
   [lngKeys.GeneralRenameVerb]: '名前変更',
+  [lngKeys.GeneralEditTitle]: 'タイトルを編集',
   [lngKeys.GeneralEditVerb]: '編集',
   [lngKeys.GeneralBookmarks]: 'ブックマーク',
   [lngKeys.GeneralUnbookmarkVerb]: 'ブックマーク削除',
