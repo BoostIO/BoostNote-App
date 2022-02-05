@@ -16,6 +16,7 @@ export type TeamLinkIntent =
   | 'shared'
   | 'requests/deny'
   | 'dashboard'
+  | 'workflows'
   | 'automations'
 
 export interface TeamIdProps {
