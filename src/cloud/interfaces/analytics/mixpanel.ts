@@ -118,6 +118,12 @@ export enum MixpanelActionTrackTypes {
   DashboardCreate = 'dashboard.create',
   DashboardEdit = 'dashboard.edit',
   DashboardDelete = 'dashboard.delete',
+  WorkflowCreate = 'workflow.create',
+  WorkflowDelete = 'workflow.delete',
+  WorkflowUpdate = 'workflow.update',
+  AutomationCreate = 'automation.create',
+  AutomationDelete = 'automation.delete',
+  AutomationUpdate = 'automation.update',
 }
 
 export type MixpanelViewEvent =
@@ -166,6 +172,7 @@ export type MixpanelFrontEvent =
   | MixpanelActionTrackTypes.TableColDelete
   | MixpanelActionTrackTypes.TableColUpdateOrder
   | MixpanelViewEvent
+  | MixpanelAutomationEvent
 
 export type MixpanelUserEvent = MixpanelActionTrackTypes.AccountDelete
 
@@ -259,3 +266,11 @@ export type MixpanelDashboardEvent =
   | MixpanelActionTrackTypes.DashboardCreate
   | MixpanelActionTrackTypes.DashboardEdit
   | MixpanelActionTrackTypes.DashboardDelete
+
+export type MixpanelAutomationEvent =
+  | MixpanelActionTrackTypes.WorkflowCreate
+  | MixpanelActionTrackTypes.WorkflowDelete
+  | MixpanelActionTrackTypes.WorkflowUpdate
+  | MixpanelActionTrackTypes.AutomationCreate
+  | MixpanelActionTrackTypes.AutomationDelete
+  | MixpanelActionTrackTypes.AutomationUpdate

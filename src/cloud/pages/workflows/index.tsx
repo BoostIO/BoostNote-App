@@ -13,6 +13,8 @@ import { getTeamURL } from '../../lib/utils/patterns'
 import { useRouter } from '../../lib/router'
 import styled from '../../../design/lib/styled'
 import { useToast } from '../../../design/lib/stores/toast'
+import { trackEvent } from '../../api/track'
+import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 type WorkflowListPageProps = GeneralAppProps & {
   workflows: SerializedWorkflow[]
@@ -44,6 +46,7 @@ const WorkflowListPage = ({
           title: 'Workflow Deleted!',
           description: `${workflow.name} was succesfully deleted.`,
         })
+        trackEvent(MixpanelActionTrackTypes.WorkflowDelete)
       } catch (err) {
         pushApiErrorMessage(err)
       } finally {

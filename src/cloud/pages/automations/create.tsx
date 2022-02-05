@@ -14,6 +14,8 @@ import { getTeamURL } from '../../lib/utils/patterns'
 import AutomationBuilder, {
   BaseAutomation,
 } from '../../components/Automations/AutomationBuilder'
+import { trackEvent } from '../../api/track'
+import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 type AutomationCreatePageProps = GeneralAppProps & {
   workflows: SerializedWorkflow[]
@@ -48,6 +50,7 @@ const AutomationCreatePage = ({
           description: `${newAutomation.name} has been successfully enabled!`,
         })
         push(`${getTeamURL(team)}/automations/${newAutomation.id}`)
+        trackEvent(MixpanelActionTrackTypes.AutomationCreate)
       } catch (err) {
         pushApiErrorMessage(err)
       } finally {
