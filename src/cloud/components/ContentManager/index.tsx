@@ -23,6 +23,7 @@ import { mdiFileDocumentOutline } from '@mdi/js'
 import { getDocLinkHref } from '../Link/DocLink'
 import { useRouter } from '../../lib/router'
 import ListViewHeader from '../Views/List/ListViewHeader'
+import EmptyRow from './Rows/EmptyRow'
 
 interface ContentManagerProps {
   team: SerializedTeam
@@ -41,6 +42,7 @@ const ContentManager = ({
   folders,
   workspacesMap,
   currentUserIsCoreMember,
+  page,
 }: ContentManagerProps) => {
   const { preferences, setPreferences } = usePreferences()
   const [order, setOrder] = useState<typeof sortingOrders[number]['value']>(
@@ -184,7 +186,12 @@ const ContentManager = ({
               />
             )
           })}
-          {orderedDocs.length === 0 && <EmptyDoc>No documents shared</EmptyDoc>}
+          {orderedDocs.length === 0 && (
+            <EmptyRow
+              bordered={false}
+              label={page === 'shared' ? 'No documents shared' : 'No documents'}
+            />
+          )}
         </StyledContentManagerList>
       </Scroller>
 
@@ -256,12 +263,4 @@ export const StyledContentManagerHeader = styled.div`
       opacity: 1;
     }
   }
-`
-
-export const EmptyDoc = styled.div`
-  height: 40px;
-  display: flex;
-  align-items: center;
-  padding: 0 ${({ theme }) => theme.sizes.spaces.xl}px;
-  color: ${({ theme }) => theme.colors.text.subtle};
 `
