@@ -26,7 +26,11 @@ export const supportedCustomPropertyTypes: Record<
 > = {
   date: { label: 'Date', value: 'date', icon: mdiCalendarMonthOutline },
   person: { label: 'Person', value: 'user', icon: mdiAccountOutline },
-  timeperiod: { label: 'Time', value: 'json', icon: mdiTimerOutline },
+  timeperiod: {
+    label: 'Time',
+    value: 'number/timeperiod',
+    icon: mdiTimerOutline,
+  },
   status: {
     label: 'Status',
     value: 'status',
@@ -119,7 +123,6 @@ const validators: Validators = {
     if (Array.isArray(nonNullableVal) && nonNullableVal.length === 0) {
       return false
     }
-
     switch (condition.value.type) {
       case 'date':
         return validateDateValue(
