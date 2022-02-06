@@ -34,6 +34,7 @@ export interface ConditionType<T extends string, U extends any> {
 export interface PropConditionType<T extends string, U extends any> {
   name: string
   type: T
+  subType?: string
   value: U
 }
 

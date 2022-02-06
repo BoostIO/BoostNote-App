@@ -215,7 +215,7 @@ const PropConditionValueControl = ({
             }
           />
         )}
-        {condition.type === 'number' && (
+        {condition.type === 'number' && condition.subType == null && (
           <FormInput
             type='number'
             value={condition.value.toString()}
@@ -227,17 +227,15 @@ const PropConditionValueControl = ({
             }
           />
         )}
-        {condition.type === 'json' && condition.value.type === 'timeperiod' && (
+        {condition.type === 'number' && condition.subType === 'timeperiod' && (
           <TimePeriodForm
             disabled={
               condition.name.trim() === '' ||
               sendingMap.get('properties') === 'suggestions'
             }
-            period={condition.value.value}
+            period={condition.value}
             updatePeriod={(period) => {
-              updateValue({
-                value: { type: 'timeperiod', value: period },
-              })
+              updateValue({ value: period })
             }}
           />
         )}
