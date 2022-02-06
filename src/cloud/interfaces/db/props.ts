@@ -1,4 +1,4 @@
-import { SerializedDoc } from './doc'
+import { SerializedDocWithSupplemental } from './doc'
 import { SerializedStatus } from './status'
 import { SerializedUserTeamPermissions } from './userTeamPermissions'
 
@@ -47,5 +47,5 @@ export type SerializedCompoundProp = {
   number?: number
   member?: SerializedUserTeamPermissions
   status?: SerializedStatus
-  targetDoc?: SerializedDoc
+  targetDoc?: SerializedDocWithSupplemental
 }

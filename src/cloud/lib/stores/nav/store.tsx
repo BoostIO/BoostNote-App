@@ -66,6 +66,11 @@ import {
   PagePropsUpdateEventDetails,
   PagePropsUpdateEventEmitter,
 } from '../../utils/events'
+import { isObject } from 'lodash'
+import {
+  NullablePropData,
+  SerializedCompoundProp,
+} from '../../../interfaces/db/props'
 export * from './types'
 
 function useNavStore(): NavContext {
@@ -84,6 +89,7 @@ function useNavStore(): NavContext {
   const router = useRouter()
   const { pushMessage } = useToast()
   const previousPathRef = useRef('')
+  const [mapsInitializedByProps, setMapsInitializedByProps] = useState(false)
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const [sideNavCreateButtonState, setSideNavCreateButtonState] = useState<
     string | undefined
@@ -281,6 +287,7 @@ function useNavStore(): NavContext {
       setViewsMap((prev) => new Map([...prev, ...maps.viewsData]))
       setSmartViewsMap((prev) => new Map([...prev, ...maps.smartViewsData]))
       setWorkspacesMap((prev) => new Map([...prev, ...maps.workspacesData]))
+      setMapsInitializedByProps(true)
     }
   }, [pageProps, router.pathname, navigatingBetweenPage])
 
@@ -1027,6 +1034,7 @@ function useNavStore(): NavContext {
     dashboardsMap,
     updateDashboardsMap,
     removeFromDashboardsMap,
+    mapsInitializedByProps,
   }
 }
 
@@ -1107,9 +1115,52 @@ function getTagsFoldersDocsMapsFromProps(
   const foldersData = getMapFromEntityArray(
     folders as SerializedFolderWithBookmark[]
   )
+
   const docsData = getMapFromEntityArray(
     docs as SerializedDocWithSupplemental[]
   )
+
+  const docsGivenByProps = (docs as SerializedDocWithSupplemental[]).reduce(
+    (acc, doc) => {
+      Object.values(doc.props).forEach((propData) => {
+        if (
+          !(
+            propData.type === 'compound' && propData.subType === 'dependency'
+          ) ||
+          propData.data == null
+        ) {
+          return
+        }
+
+        let data: NullablePropData<SerializedCompoundProp>[]
+        if (!Array.isArray(propData.data)) {
+          data = [propData.data]
+        } else {
+          data = propData.data
+        }
+
+        for (const dependency of data) {
+          if (
+            dependency == null ||
+            dependency.targetDoc == null ||
+            !isObject(dependency.targetDoc)
+          ) {
+            continue
+          }
+          acc.push(dependency.targetDoc)
+        }
+      })
+      return acc
+    },
+    [] as SerializedDocWithSupplemental[]
+  )
+
+  docsGivenByProps.forEach((doc) => {
+    if (!docsData.has(doc.id)) {
+      docsData.set(doc.id, doc)
+    }
+  })
+
   const tagsData = getMapFromEntityArray(tags as SerializedTag[])
   const workspacesData = getMapFromEntityArray(
     workspaces as SerializedWorkspace[]

@@ -22,6 +22,7 @@ import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Editor from '../Editor'
 import ApplicationPage from '../ApplicationPage'
 import { freePlanDocLimit, freePlanMembersLimit } from '../../lib/subscription'
+import { useCloudDocPreview } from '../../lib/hooks/useCloudDocPreview'
 
 interface DocPageProps {
   doc: SerializedDocWithSupplemental
@@ -74,6 +75,7 @@ const DocPage = ({
   }, [currentDoc, team])
 
   useTitle(pageTitle)
+  useCloudDocPreview(team)
 
   useEffect(() => {
     if (currentDoc == null) {
