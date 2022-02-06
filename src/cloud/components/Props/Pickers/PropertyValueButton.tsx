@@ -54,6 +54,7 @@ const PropertyValueButton = forwardRef<
             isErrored && 'item__property__button--errored',
             className,
           ])}
+          onClick={onClick}
         >
           {sending ? (
             <>

@@ -4,6 +4,7 @@ import cc from 'classcat'
 import styled from '../../../../lib/styled'
 import { formInputHeight } from '../../../../lib/styled/styleFunctions'
 import { capitalize } from 'lodash'
+import { getOptionLabel, getOptionValue } from 'react-select/src/builtins'
 
 export interface FormSelectOption {
   label: string | React.ReactNode
@@ -28,6 +29,8 @@ interface FormSelectCommonProps {
   onMenuOpen?: () => void
   minWidth?: string | number
   placeholder?: React.ReactNode
+  getOptionLabel?: getOptionLabel<FormSelectOption>
+  getOptionValue?: getOptionValue<FormSelectOption>
 }
 
 interface StandardFormSelectOptions {
@@ -57,6 +60,8 @@ const FormSelect = ({
   isLoading = false,
   isMulti = false,
   isSearchable = false,
+  getOptionLabel,
+  getOptionValue,
   placeholder = 'Select...',
   name,
   filterOption,
@@ -81,8 +86,11 @@ const FormSelect = ({
         filterOption={filterOption}
         onChange={onChange}
         isDisabled={isDisabled}
+        getOptionLabel={getOptionLabel}
+        getOptionValue={getOptionValue}
         isLoading={isLoading}
         isSearchable={isSearchable}
+        defaultMenuIsOpen={true}
         isMulti={isMulti}
         name={name}
         onFocus={() => setFocused(true)}

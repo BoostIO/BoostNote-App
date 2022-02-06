@@ -1,6 +1,12 @@
 import React, { useCallback } from 'react'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
-import { SerializedPropData, PropData, Props } from '../../interfaces/db/props'
+import {
+  SerializedPropData,
+  PropData,
+  Props,
+  NullablePropData,
+  SerializedCompoundProp,
+} from '../../interfaces/db/props'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
 import AssigneeSelect from './Pickers/AssigneeSelect'
 import DatePropPicker from './Pickers/DatePropPicker'
@@ -15,6 +21,7 @@ import NumberSelect from './Pickers/NumberSelect'
 import TextSelect from './Pickers/TextSelect'
 import { getISODateFromLocalTime } from '../../lib/date'
 import UrlSelect from './Pickers/UrlSelect'
+import DocDependencySelect from './Pickers/DocDependencySelect'
 
 interface PropPickerProps {
   parent: { type: 'doc'; target: SerializedDocWithSupplemental }
@@ -233,6 +240,38 @@ const PropPicker = ({
           }
         />
       )
+    case 'compound':
+      if (propData.subType === 'dependency') {
+        return (
+          <DocDependencySelect
+            disabled={sendingMap.get(parent.target.id) != null || readOnly}
+            isLoading={sendingMap.get(parent.target.id) === propName}
+            readOnly={readOnly}
+            emptyLabel={emptyLabel}
+            defaultValue={
+              propData.data != null
+                ? Array.isArray(propData.data)
+                  ? (propData.data.filter((item) => item != null) as any)
+                  : [propData.data]
+                : []
+            }
+            showIcon={showIcon}
+            update={(val) =>
+              updateProp(
+                val.length === 0 || val == null
+                  ? { type: 'compound', subType: 'dependency', data: null }
+                  : {
+                      type: 'compound',
+                      subType: 'dependency',
+                      data: val as NullablePropData<SerializedCompoundProp>,
+                    }
+              )
+            }
+          />
+        )
+      }
+
+      return null
     default:
       return null
   }

@@ -8,6 +8,7 @@ import {
   mdiLabelOutline,
   mdiLinkVariant,
   mdiMusicAccidentalSharp,
+  mdiSwapHorizontal,
   mdiTimerOutline,
 } from '@mdi/js'
 import { capitalize, isNumber, isObject } from 'lodash'
@@ -39,6 +40,7 @@ export const supportedPropTypes: {
   { type: 'number' },
   { type: 'string' },
   { type: 'string', subType: 'url' },
+  { type: 'compound', subType: 'dependency' },
 ]
 
 export function getLabelOfPropType(
@@ -55,6 +57,8 @@ export function getLabelOfPropType(
       return 'Update Date'
     case 'string':
       return 'Text'
+    case 'dependency':
+      return 'Dependencies'
     default:
       return capitalize(propType)
   }
@@ -122,6 +126,8 @@ export function getIconPathOfPropType(
       return mdiMusicAccidentalSharp
     case 'string':
       return mdiFormatText
+    case 'dependency':
+      return mdiSwapHorizontal
     default:
       return
   }
@@ -131,6 +137,13 @@ export function getInitialPropDataOfPropType(
   type: PropType | PropSubType
 ): SerializedPropData {
   switch (type) {
+    case 'dependency':
+      return {
+        type: 'compound',
+        subType: 'dependency',
+        createdAt: new Date().toString(),
+        data: undefined,
+      }
     case 'date':
       return { type: 'date', data: undefined, createdAt: new Date().toString() }
     case 'timeperiod':
@@ -177,6 +190,43 @@ export function getDomainOrInitialDataPropToPropData(
   let propData = data.data
   if (data.data != null) {
     switch (data.type) {
+      case 'compound':
+        const copyData = Object.assign({}, propData)
+        Object.entries(copyData).forEach(([key, value]) => {
+          if (key == null) {
+            return
+          }
+          switch (key) {
+            case 'targetDoc': {
+              const val = Array.isArray(value) ? value : [value]
+              if (!isUUIDArray(value)) {
+                copyData[key] = val
+                  .filter((doc: any) => doc != null)
+                  .map((doc: any) => doc.id)
+              }
+              return
+            }
+            case 'member': {
+              const val = Array.isArray(value) ? value : [value]
+              if (!isUUIDArray(value)) {
+                copyData[key] = val
+                  .filter((user: any) => user != null)
+                  .map((user: any) => user.userId)
+              }
+              return
+            }
+            case 'status': {
+              const val = Array.isArray(value) ? value : [value]
+              if (!isUUIDArray(value)) {
+                copyData[key] = val
+                  .filter((status: any) => status != null)
+                  .map((status: any) => status.id)
+              }
+              return
+            }
+          }
+        })
+        break
       case 'user':
         const users = Array.isArray(data.data) ? data.data : [data.data]
         if (!isUUIDArray(users)) {
@@ -232,5 +282,6 @@ export function getDefaultColumnSuggestionsPerType(): {
     { type: 'number', name: 'Story Point' },
     { type: 'string', name: 'Text' },
     { type: 'string', subType: 'url', name: 'Url' },
+    { type: 'compound', subType: 'dependency', name: 'Dependencies' },
   ]
 }
