@@ -30,6 +30,7 @@ import Item from './Item'
 import KanbanViewPropertiesContext from './KanbanViewPropertiesContext'
 import KanbanWatchedPropSetter from './KanbanWatchedPropSetter'
 import ListSettings from './ListSettings'
+import EditableInput from '../../../../design/components/atoms/EditableInput'
 
 interface KanbanViewProps {
   view: SerializedView<KanbanViewData>
@@ -107,6 +108,10 @@ const KanbanView = ({
     (list: typeof lists[number]) => {
       const id = Number(list.id)
       const status = statuses.find((status) => status.id === id)
+      const statusProp =
+        list.id !== 'none'
+          ? statuses.find((status) => status.id === parseInt(list.id))
+          : undefined
       return (
         <Flexbox
           justifyContent='space-between'
@@ -116,35 +121,91 @@ const KanbanView = ({
             name={status?.name || 'No Status'}
             backgroundColor={status?.backgroundColor}
           />
-          <Button
-            onClick={(event) => {
-              openContextModal(
-                event,
-                <ListSettings
-                  list={list}
-                  remove={(list) => {
-                    removeListRef.current(list)
-                    closeLastModal()
-                  }}
-                  move={(list, move) => {
-                    onListMoveRef.current(list, move)
-                    closeLastModal()
-                  }}
-                />,
-                {
-                  width: 250,
-                  removePadding: true,
-                  keepAll: true,
-                }
-              )
-            }}
-            iconPath={mdiDotsHorizontal}
-            variant='icon'
-          />
+          <div className={'kanban__item--action-buttons'}>
+            <Button
+              className={'kanban__item--action-button'}
+              variant={'icon'}
+              iconPath={mdiPlus}
+              onClick={(event) => {
+                openContextModal(
+                  event,
+                  <EditableInput
+                    editOnStart={true}
+                    placeholder={translate(lngKeys.GeneralTitle)}
+                    text={''}
+                    onTextChange={(val: string) => {
+                      createDoc(
+                        team,
+                        {
+                          title: val,
+                          workspaceId: currentWorkspaceId,
+                          parentFolderId: currentFolderId,
+                          props:
+                            statusProp != null
+                              ? {
+                                  [prop]: {
+                                    type: 'status',
+                                    data: statusProp.id,
+                                  },
+                                }
+                              : undefined,
+                        },
+                        {
+                          skipRedirect: true,
+                        }
+                      )
+                      closeLastModal()
+                    }}
+                  />,
+                  {
+                    width: 215,
+                    removePadding: true,
+                    keepAll: true,
+                  }
+                )
+              }}
+            />
+            <Button
+              className={'kanban__item--action-button'}
+              onClick={(event) => {
+                openContextModal(
+                  event,
+                  <ListSettings
+                    list={list}
+                    remove={(list) => {
+                      removeListRef.current(list)
+                      closeLastModal()
+                    }}
+                    move={(list, move) => {
+                      onListMoveRef.current(list, move)
+                      closeLastModal()
+                    }}
+                  />,
+                  {
+                    width: 250,
+                    removePadding: true,
+                    keepAll: true,
+                  }
+                )
+              }}
+              iconPath={mdiDotsHorizontal}
+              variant='icon'
+            />
+          </div>
         </Flexbox>
       )
     },
-    [statuses, openContextModal, closeLastModal]
+    [
+      statuses,
+      openContextModal,
+      translate,
+      createDoc,
+      team,
+      currentWorkspaceId,
+      currentFolderId,
+      prop,
+      closeLastModal,
+    ]
   )
 
   const renderItem = useCallback(
@@ -319,6 +380,12 @@ const Container = styled.div`
 
   .kanban__item--header > span:hover {
     cursor: grab;
+  }
+
+  .kanban__item--header {
+    .kanban__item--action-button {
+      padding: 1px;
+    }
   }
 
   .kanban__list__footer,
