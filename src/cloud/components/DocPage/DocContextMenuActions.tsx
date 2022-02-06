@@ -59,6 +59,8 @@ import Spinner from '../../../design/components/atoms/Spinner'
 import useApi from '../../../design/lib/hooks/useApi'
 import { usePreviewStyle } from '../../../lib/preview'
 import { prepareDocPropsForAPI } from '../../lib/props'
+import { getDoc } from '../../api/teams/docs'
+import { getDocContent } from '../../lib/utils/patterns'
 
 export interface DocContextMenuActionsProps {
   team: SerializedTeam
@@ -102,6 +104,8 @@ export function DocContextMenuActions({
       return
     }
 
+    const promise = getDoc(doc.id, team.id).then((data) => data.doc)
+    const docWithContent = await promise
     const newProps = prepareDocPropsForAPI(doc.props)
     setDuplicated(true)
     await createDoc(
@@ -112,7 +116,7 @@ export function DocContextMenuActions({
         emoji: doc.emoji,
         title: doc.title,
         props: newProps,
-        content: doc.head ? doc.head.content : '',
+        content: getDocContent(docWithContent),
       },
       {
         skipRedirect: true,

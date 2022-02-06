@@ -19,6 +19,8 @@ import styled from '../../../design/lib/styled'
 import EditableInput from '../../../design/components/atoms/EditableInput'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { prepareDocPropsForAPI } from '../../lib/props'
+import { getDoc } from '../../api/teams/docs'
+import { getDocContent } from '../../lib/utils/patterns'
 
 interface ItemProps {
   doc: SerializedDocWithSupplemental
@@ -48,6 +50,9 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
 
   const onDocDuplicate = useCallback(
     async (doc) => {
+      const docWithContent = await getDoc(doc.id, doc.teamId).then(
+        (data) => data.doc
+      )
       const newProps = prepareDocPropsForAPI(doc.props)
       await createDoc(
         { id: doc.teamId } as SerializedTeam,
@@ -56,7 +61,7 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
           parentFolderId: doc.parentFolderId,
           emoji: doc.emoji,
           title: doc.title,
-          content: doc.head != null ? doc.head.content : '',
+          content: getDocContent(docWithContent),
           props: newProps,
         },
         {
