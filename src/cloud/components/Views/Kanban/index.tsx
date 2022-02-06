@@ -52,6 +52,7 @@ const KanbanView = ({
 }: KanbanViewProps) => {
   const {
     state: { statuses },
+    editStatus,
   } = useStatuses(team.id)
   const {
     prop,
