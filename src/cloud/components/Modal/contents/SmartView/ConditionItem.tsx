@@ -74,8 +74,9 @@ const ConditionItem = ({
               onChange: (selectedOption: { label: any; value: string }) => {
                 update(
                   getDefaultConditionByType(
-                    selectedOption.value,
-                    condition.rule
+                    selectedOption.value.split('/')[0],
+                    condition.rule,
+                    selectedOption.value.split('/')[1] || undefined
                   )
                 )
               },
@@ -152,8 +153,8 @@ function inferConditionPrimaryType(t: TFunction, condition: EditableCondition) {
             value: supportedCustomPropertyTypes['status'].value,
           }
           break
-        case 'json':
-          switch (condition.value.value.type) {
+        case 'number':
+          switch (condition.value.subType) {
             case 'timeperiod':
               return {
                 label: (
@@ -167,7 +168,6 @@ function inferConditionPrimaryType(t: TFunction, condition: EditableCondition) {
             default:
               break
           }
-
         //unsupported
         case 'number':
         default:
@@ -180,7 +180,8 @@ function inferConditionPrimaryType(t: TFunction, condition: EditableCondition) {
 
 function getDefaultConditionByType(
   type: string,
-  rule: 'and' | 'or'
+  rule: 'and' | 'or',
+  subType?: string
 ): EditableCondition {
   switch (type) {
     case 'date': {
@@ -193,6 +194,7 @@ function getDefaultConditionByType(
             type: 'relative',
             period: 0,
           },
+          subType,
           type: 'date',
         },
       }
@@ -205,19 +207,18 @@ function getDefaultConditionByType(
           name: '',
           value: [],
           type: 'user',
+          subType,
         },
       }
-    case 'json':
+    case 'number':
       return {
         rule,
         type: 'prop',
         value: {
           name: '',
-          value: {
-            type: 'timeperiod',
-            value: 0,
-          },
-          type: 'json',
+          value: 0,
+          type: 'number',
+          subType,
         },
       }
     case 'status':
@@ -228,6 +229,7 @@ function getDefaultConditionByType(
           name: '',
           value: -1,
           type: 'status',
+          subType,
         },
       }
     case 'label':
