@@ -90,7 +90,6 @@ const FormSelect = ({
         getOptionValue={getOptionValue}
         isLoading={isLoading}
         isSearchable={isSearchable}
-        defaultMenuIsOpen={true}
         isMulti={isMulti}
         name={name}
         onFocus={() => setFocused(true)}
