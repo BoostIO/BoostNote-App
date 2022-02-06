@@ -22,7 +22,7 @@ import { lngKeys } from '../i18n/types'
 import { useRouter } from '../router'
 import { useNav } from '../stores/nav'
 import { usePage } from '../stores/pageStore'
-import { resourceDeleteEventEmitter } from '../utils/events'
+import { modalEventEmitter, resourceDeleteEventEmitter } from '../utils/events'
 import {
   getDocId,
   getFolderId,
@@ -33,6 +33,7 @@ import {
 import { useCloudApi } from './useCloudApi'
 import { useI18n } from './useI18n'
 import { stringify } from 'querystring'
+import { docPreviewCloseEvent } from './useCloudDocPreview'
 
 export function useCloudResourceModals() {
   const { openModal, closeLastModal } = useModal()
@@ -440,6 +441,7 @@ export function useCloudResourceModals() {
 
   const goToDocPreview = useCallback(
     (doc: SerializedDocWithSupplemental) => {
+      modalEventEmitter.dispatch({ type: docPreviewCloseEvent })
       return push(`${pathname}?preview=${doc.id}`)
     },
     [pathname, push]

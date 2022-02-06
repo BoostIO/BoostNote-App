@@ -58,7 +58,7 @@ const DocDependencySelect = ({
 }: DocDependencySelectProps) => {
   const { translate } = useI18n()
   const { openContextModal, closeLastModal } = useModal()
-  const { openDocPreview } = useCloudResourceModals()
+  const { goToDocPreview } = useCloudResourceModals()
   const { team } = usePage()
   const { docsMap } = useNav()
 
@@ -114,7 +114,7 @@ const DocDependencySelect = ({
                   onClick={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
-                    openDocPreview(docsMap.get(p.targetDoc.id)!, team)
+                    goToDocPreview(docsMap.get(p.targetDoc.id)!)
                   }}
                 >
                   <DependencyPastille type={p.string as any} />
@@ -151,7 +151,7 @@ const DocDependencySelect = ({
           })}
       </div>
     )
-  }, [defaultValue, team, docsMap, openDocPreview, update, disabled])
+  }, [defaultValue, team, docsMap, goToDocPreview, update, disabled])
 
   return (
     <Container className='item__dependency___select prop__margin'>

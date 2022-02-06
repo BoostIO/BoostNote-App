@@ -26,6 +26,7 @@ import { SerializedDashboard } from '../../../interfaces/db/dashboard'
 
 export interface NavContext {
   initialLoadDone: boolean
+  mapsInitializedByProps: boolean
   sideNavCreateButtonState: string | undefined
   setSideNavCreateButtonState: (value?: string) => void
   currentPath: string
