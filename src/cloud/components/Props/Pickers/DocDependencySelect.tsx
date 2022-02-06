@@ -230,6 +230,7 @@ const Container = styled.div`
     display: flex;
     width: auto;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   .dependency__pastille {
@@ -242,6 +243,8 @@ const Container = styled.div`
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
     background: ${({ theme }) => theme.colors.background.quaternary};
     border-radius: ${({ theme }) => theme.borders.radius}px;
+    margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
 
     .dependency__label {
       color: ${({ theme }) => theme.colors.text.primary};
