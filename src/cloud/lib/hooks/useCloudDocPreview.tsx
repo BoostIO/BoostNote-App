@@ -17,7 +17,6 @@ export function useCloudDocPreview(team?: SerializedTeam) {
     (docId: string) => {
       const doc = docsMap.get(docId)
       if (doc == null) {
-        console.log(`no foundo ${docId}`)
         return modalEventEmitter.dispatch({ type: docPreviewCloseEvent })
       }
       if (team == null) {
