@@ -114,7 +114,9 @@ const DocDependencySelect = ({
                   onClick={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
-                    goToDocPreview(docsMap.get(p.targetDoc.id)!)
+                    if (doc != null) {
+                      goToDocPreview(doc)
+                    }
                   }}
                 >
                   <DependencyPastille type={p.string as any} />
