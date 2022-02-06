@@ -7,17 +7,21 @@ import { useCloudResourceModals } from './useCloudResourceModals'
 
 export const docPreviewCloseEvent = 'doc-preview-close'
 
-export function useCloudDocPreview(team: SerializedTeam) {
+export function useCloudDocPreview(team?: SerializedTeam) {
   const { query } = useRouter()
   const { openDocPreview } = useCloudResourceModals()
   const prevPreviewRef = useRef<string>('')
-  const { docsMap } = useNav()
+  const { docsMap, mapsInitializedByProps } = useNav()
 
   const openDocInPreview = useCallback(
     (docId: string) => {
       const doc = docsMap.get(docId)
       if (doc == null) {
+        console.log(`no foundo ${docId}`)
         return modalEventEmitter.dispatch({ type: docPreviewCloseEvent })
+      }
+      if (team == null) {
+        return
       }
       return openDocPreview(doc, team)
     },
@@ -51,11 +55,12 @@ export function useCloudDocPreview(team: SerializedTeam) {
   useEffect(() => {
     if (
       typeof query.preview !== 'string' ||
-      query.preview === prevPreviewRef.current
+      query.preview === prevPreviewRef.current ||
+      !mapsInitializedByProps
     ) {
       return
     }
     prevPreviewRef.current = query.preview
     openDocInPreviewRef.current(query.preview)
-  }, [query.preview])
+  }, [query.preview, mapsInitializedByProps])
 }
