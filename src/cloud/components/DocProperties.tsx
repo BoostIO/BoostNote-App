@@ -86,6 +86,7 @@ const DocProperties = ({
               const iconPath = getIconPathOfPropType(
                 prop[1].data.subType || prop[1].data.type
               )
+
               return (
                 <div className='doc-props__property' key={`prop-${i}`}>
                   <Button

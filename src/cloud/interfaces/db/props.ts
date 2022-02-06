@@ -1,3 +1,4 @@
+import { SerializedDoc } from './doc'
 import { SerializedStatus } from './status'
 import { SerializedUserTeamPermissions } from './userTeamPermissions'
 
@@ -22,10 +23,16 @@ export type SerializedPropData =
   | Prop<'number', PropNumberSubtype, NullablePropData<number>>
   | Prop<'user', undefined, NullablePropData<SerializedUserTeamPermissions>>
   | Prop<'status', undefined, NullablePropData<SerializedStatus>>
+  | Prop<
+      'compound',
+      PropCompoundSubType,
+      NullablePropData<SerializedCompoundProp>
+    >
 
 export type PropData = Omit<SerializedPropData, 'createdAt'>
 export type PropNumberSubtype = 'timeperiod'
 export type PropStringSubtype = 'url'
+export type PropCompoundSubType = 'dependency'
 
 export type PropType = SerializedPropData['type']
 export type PropSubType = SerializedPropData['subType']
@@ -33,3 +40,12 @@ export type PropSubType = SerializedPropData['subType']
 export type StaticPropType = 'creation_date' | 'update_date' | 'label'
 
 export type Props = Record<string, SerializedPropData>
+
+export type SerializedCompoundProp = {
+  string?: string
+  date?: Date
+  number?: number
+  member?: SerializedUserTeamPermissions
+  status?: SerializedStatus
+  targetDoc?: SerializedDoc
+}
