@@ -76,8 +76,6 @@ function useMultiContainerDragDrop<
       let overId = getFirstCollision(intersections, 'id')
 
       if (overId != null) {
-        // find wrapper container
-        // get container items
         const overContainer = containers.find(
           (container) => container.id === overId
         )
