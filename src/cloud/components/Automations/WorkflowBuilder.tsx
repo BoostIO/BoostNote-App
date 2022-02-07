@@ -46,7 +46,9 @@ const WorkflowBuilder = ({
     setWorkflow((workflow) => {
       return {
         ...workflow,
-        pipes: workflow.pipes.concat([defaultPipe]),
+        pipes: workflow.pipes.concat([
+          { ...defaultPipe, name: `New Pipeline ${workflow.pipes.length + 1}` },
+        ]),
       }
     })
   }, [])
