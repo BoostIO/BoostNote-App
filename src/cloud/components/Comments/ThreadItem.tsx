@@ -268,7 +268,7 @@ const StyledListItem = styled.div`
     gap: 4px;
     border-radius: ${({ theme }) => theme.borders.radius}px;
 
-    background-color: ${({ theme }) => theme.colors.background.primary};;
+    background-color: ${({ theme }) => theme.colors.background.primary};
 
     .comment__meta__actions__comment,
     .comment__meta__actions__edit,
