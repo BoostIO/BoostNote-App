@@ -227,18 +227,19 @@ const InputContainer = styled.div`
   .comment__input__container {
     display: flex;
     position: relative;
-    margin-bottom: ${({ theme }) => theme.sizes.spaces.l}px;
+    margin-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
 
     .comment__input__send_button {
       position: absolute;
-      right: 30px;
+      right: 20px;
       bottom: 6px;
     }
   }
 
   & .comment__input__input__editable_container {
     margin: auto;
-    width: 90%;
+    width: 100%;
     border: 1px solid ${({ theme }) => theme.colors.border.second};
     min-height: 30px;
     background-color: ${({ theme }) => theme.colors.background.secondary};
@@ -251,7 +252,7 @@ const InputContainer = styled.div`
   & .comment__input__editable {
     white-space: pre-wrap;
     resize: none;
-    margin-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
+    margin: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
 
     &:empty:before {
       content: attr(data-placeholder);

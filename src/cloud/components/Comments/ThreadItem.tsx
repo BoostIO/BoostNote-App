@@ -23,12 +23,7 @@ export type ThreadListItemProps = ThreadActionProps & {
   updateComment: (comment: Comment, message: string) => Promise<any>
 }
 
-const smallUserIconStyle = { width: '28px', height: '28px', lineHeight: '22px' }
-const smallerUserIconReplyStyle = {
-  width: '22px',
-  height: '22px',
-  lineHeight: '18px',
-}
+const smallUserIconStyle = { width: '28px', height: '28px', lineHeight: '26px' }
 
 function ThreadItem({
   thread,
@@ -140,14 +135,6 @@ function ThreadItem({
 
               {threadComments && threadComments.length > 1 && (
                 <div className={'thread__comment__line_more_replies_container'}>
-                  <UserIcon
-                    style={smallerUserIconReplyStyle}
-                    user={
-                      threadCommentedUser != null
-                        ? threadCommentedUser
-                        : threadComments[0].user
-                    }
-                  />
                   <div
                     onClick={() => onSelect(thread)}
                     className={'thread__comment__line__replies__link'}
@@ -238,13 +225,12 @@ const StyledListItem = styled.div`
     align-items: center;
 
     & .thread__comment__line__replies__link {
-      margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
       margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
       align-self: center;
-      color: #519aba;
+      color: ${({ theme }) => theme.colors.text.link};
 
       &:hover {
-        color: #65afd0;
+        cursor: pointer;
       }
     }
 
@@ -256,9 +242,12 @@ const StyledListItem = styled.div`
     & .thread__comment__line__date {
       align-self: center;
       color: ${({ theme }) => theme.colors.text.subtle};
-      font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
-      padding-left: 4px;
+      padding-left: ${({ theme }) => theme.sizes.spaces.sm}px;
       margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    }
+
+    & .thread__comment__line__first__comment {
+      margin: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
     }
 
     & .thread__comment__line_more_replies_container {
@@ -279,7 +268,7 @@ const StyledListItem = styled.div`
     gap: 4px;
     border-radius: ${({ theme }) => theme.borders.radius}px;
 
-    background-color: #1e2024;
+    background-color: ${({ theme }) => theme.colors.background.primary};;
 
     .comment__meta__actions__comment,
     .comment__meta__actions__edit,
@@ -299,8 +288,8 @@ const StyledListItem = styled.div`
 
 function formatDate(date: Date) {
   return isToday(date)
-    ? `at ${format(date, 'KK:mm a')} today`
-    : `${formatDistanceToNow(date)} ago`
+    ? `Today at ${format(date, 'KK:mm a')}`
+    : `Last reply ${formatDistanceToNow(date)} ago`
 }
 
 export default ThreadItem

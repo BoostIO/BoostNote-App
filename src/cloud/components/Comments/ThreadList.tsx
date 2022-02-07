@@ -50,7 +50,7 @@ const Container = styled.div`
   & > div {
     padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
     &:hover {
-      background-color: ${({ theme }) => theme.colors.background.tertiary};
+      background-color: ${({ theme }) => theme.colors.background.secondary};
     }
   }
 `

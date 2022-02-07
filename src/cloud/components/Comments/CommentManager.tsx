@@ -120,7 +120,6 @@ function CommentManager({
               <CommentList
                 comments={state.comments}
                 className='comment__list'
-                commentItemClassName={'comment__list__comment__item'}
                 updateComment={updateComment}
                 deleteComment={deleteComment}
                 user={user}
@@ -221,22 +220,16 @@ const Container = styled.div`
     display: flex;
     flex-direction: column-reverse;
     scrollbar-width: thin;
-    padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
 
-    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
-
     .thread__content__back_button {
-      margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
+      margin: ${({ theme }) => theme.sizes.spaces.df}px;
     }
 
     & .comment__list {
       & > div {
         margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
-      }
-
-      & .comment__list__comment__item:not(:first-child) {
-        margin-left: 35px;
+        padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
       }
 
       &:hover {
