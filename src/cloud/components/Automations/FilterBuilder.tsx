@@ -21,8 +21,8 @@ interface FilterBuilderProps {
 
 const FilterBuilder = ({ typeDef, filter, onChange }: FilterBuilderProps) => {
   const [selected, setSelected] = useState<
-    (FormSelectOption & { type: string }) | undefined
-  >()
+    (FormSelectOption & { type: string }) | null
+  >(null)
   const [addingValue, setAddingValue] = useState<
     string | number | boolean | undefined
   >()
@@ -43,6 +43,7 @@ const FilterBuilder = ({ typeDef, filter, onChange }: FilterBuilderProps) => {
     if (selected != null) {
       onChange(assocPath(selected.value.split('.'), addingValue, filter))
       setAddingValue('')
+      setSelected(null)
     }
   }, [filter, selected, addingValue, onChange])
 
