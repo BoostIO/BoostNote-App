@@ -16,7 +16,7 @@ import { trackEvent } from '../../api/track'
 import { MixpanelActionTrackTypes } from '../../interfaces/analytics/mixpanel'
 
 const WorkflowCreatePage = ({ team }: GeneralAppProps) => {
-  const { pushApiErrorMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage } = useToast()
   const { push } = useRouter()
   const [workflow] = useState<NewWorkflow | SerializedWorkflow>({
     name: 'New Workflow',
@@ -36,6 +36,11 @@ const WorkflowCreatePage = ({ team }: GeneralAppProps) => {
           pipes: workflow.pipes,
           team: team.id,
         })
+        pushMessage({
+          title: 'Workflow Created!',
+          description: `"${workflow.name}" has been successfully created`,
+          type: 'success',
+        })
         push(`${getTeamURL(team)}/workflows/${created.id}`)
         trackEvent(MixpanelActionTrackTypes.WorkflowCreate)
       } catch (err) {
@@ -44,7 +49,7 @@ const WorkflowCreatePage = ({ team }: GeneralAppProps) => {
         setWorking(false)
       }
     },
-    [pushApiErrorMessage, team, push]
+    [pushMessage, pushApiErrorMessage, team, push]
   )
 
   return (
