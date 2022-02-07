@@ -101,7 +101,8 @@ export const ConditionNameSuggestionsPerTypeOrSubType: Record<
   timeperiod: ['Time Estimate', 'Time Tracked'],
   date: ['Due Date', 'Start Date'],
   status: ['Status'],
-  number: ['Number', 'Checkbox'],
+  checkbox: ['Checkbox'],
+  number: ['Number'],
 }
 
 export function getIconPathOfPropType(

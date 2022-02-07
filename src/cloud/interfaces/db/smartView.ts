@@ -40,20 +40,13 @@ export interface PropConditionType<T extends string, U extends any> {
 
 export type SmartViewPropConditionTypes =
   | 'user'
-  | 'json'
   | 'string'
   | 'number'
   | 'date'
   | 'status'
 
-export interface JsonPropCondition {
-  type: string
-  value: any
-}
-
 export type PropCondition =
   | PropConditionType<'user', string[]>
-  | PropConditionType<'json', JsonPropCondition>
   | PropConditionType<'string', string>
   | PropConditionType<'number', number>
   | PropConditionType<'date', DateCondition>

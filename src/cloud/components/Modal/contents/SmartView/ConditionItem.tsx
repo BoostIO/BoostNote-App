@@ -155,15 +155,22 @@ function inferConditionPrimaryType(t: TFunction, condition: EditableCondition) {
           break
         case 'number':
           switch (condition.value.subType) {
+            case 'checkbox':
             case 'timeperiod':
               return {
                 label: (
                   <StyledOption
-                    icon={supportedCustomPropertyTypes['timeperiod'].icon}
-                    label={supportedCustomPropertyTypes['timeperiod'].label}
+                    icon={
+                      supportedCustomPropertyTypes[condition.value.subType].icon
+                    }
+                    label={
+                      supportedCustomPropertyTypes[condition.value.subType]
+                        .label
+                    }
                   />
                 ),
-                value: supportedCustomPropertyTypes['timeperiod'].value,
+                value:
+                  supportedCustomPropertyTypes[condition.value.subType].value,
               }
             default:
               break

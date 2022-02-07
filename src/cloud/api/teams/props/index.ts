@@ -12,7 +12,7 @@ export type ListPropertySuggestionsRequestBody = {
   folder?: string
   smartView?: string
   propertyType?: string
-  jsonPropertyType?: string
+  propertySubType?: string
 }
 
 export interface ListPropertySuggestionsResponseBody {
