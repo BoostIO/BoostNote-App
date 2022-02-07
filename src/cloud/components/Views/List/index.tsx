@@ -38,7 +38,6 @@ import { getDocLinkHref } from '../../Link/DocLink'
 import ListViewPropertiesContext from './ListViewPropertiesContext'
 import { useListView } from '../../../lib/hooks/views/listView'
 import ListDocProperties from './ListDocProperties'
-import EditableDocItemContainer from '../EditableDocItemContainer'
 
 type ListViewProps = {
   view: SerializedView<ViewListData>
@@ -230,30 +229,29 @@ const ListView = ({
           const { id } = doc
           const href = getDocLinkHref(doc, team, 'index')
           return (
-            <EditableDocItemContainer key={id} doc={doc}>
-              <ListViewItem
-                id={id}
-                checked={hasDocInSelection(doc.id)}
-                onSelect={() => toggleDocInSelection(doc.id)}
-                showCheckbox={currentUserIsCoreMember}
-                label={doc.title}
-                defaultIcon={mdiFileDocumentOutline}
-                emoji={doc.emoji}
-                labelHref={href}
-                labelOnclick={() => push(href)}
-                onDragStart={(event: any) => saveDocTransferData(event, doc)}
-                onDragEnd={(event: any) => clearDragTransferData(event)}
-                onDrop={(event: any) => onDropDoc(event, doc)}
-                hideOrderingHandle={true}
-              >
-                <ListDocProperties
-                  doc={doc}
-                  props={orderedViewProps}
-                  team={team}
-                  currentUserIsCoreMember={currentUserIsCoreMember}
-                />
-              </ListViewItem>
-            </EditableDocItemContainer>
+            <ListViewItem
+              key={id}
+              id={id}
+              checked={hasDocInSelection(doc.id)}
+              onSelect={() => toggleDocInSelection(doc.id)}
+              showCheckbox={currentUserIsCoreMember}
+              label={doc.title}
+              defaultIcon={mdiFileDocumentOutline}
+              emoji={doc.emoji}
+              labelHref={href}
+              labelOnclick={() => push(href)}
+              onDragStart={(event: any) => saveDocTransferData(event, doc)}
+              onDragEnd={(event: any) => clearDragTransferData(event)}
+              onDrop={(event: any) => onDropDoc(event, doc)}
+              hideOrderingHandle={true}
+            >
+              <ListDocProperties
+                doc={doc}
+                props={orderedViewProps}
+                team={team}
+                currentUserIsCoreMember={currentUserIsCoreMember}
+              />
+            </ListViewItem>
           )
         })}
         {currentWorkspaceId != null && (
