@@ -227,7 +227,8 @@ export const PropPickerRaw = ({
                   })
                 }
                 showIcon={showIcon}
-                disabled={sendingMap.get(parent.target.id) != null || readOnly}
+                sending={sending}
+                disabled={sending || readOnly}
               />
             </WithTooltip>
           ) : (
@@ -243,7 +244,8 @@ export const PropPickerRaw = ({
                 })
               }
               showIcon={showIcon}
-              disabled={sendingMap.get(parent.target.id) != null || readOnly}
+              sending={sending}
+              disabled={sending || readOnly}
             />
           )
         case 'timeperiod':
@@ -252,8 +254,8 @@ export const PropPickerRaw = ({
               modalLabel={propName}
               isReadOnly={readOnly}
               emptyLabel={emptyLabel}
-              sending={sendingMap.get(parent.target.id) === propName}
-              disabled={sendingMap.get(parent.target.id) != null || readOnly}
+              sending={sending}
+              disabled={sending || readOnly}
               value={
                 Array.isArray(propData.data) ? propData.data[0] : propData.data
               }
@@ -274,8 +276,8 @@ export const PropPickerRaw = ({
                   ? propData.data[0]
                   : propData.data) || undefined
               }
-              sending={sendingMap.get(parent.target.id) === 'number'}
-              disabled={sendingMap.get(parent.target.id) != null || readOnly}
+              sending={sending}
+              disabled={sending || readOnly}
               emptyLabel={emptyLabel}
               isReadOnly={readOnly}
               showIcon={showIcon}
