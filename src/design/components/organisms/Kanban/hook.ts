@@ -12,6 +12,8 @@ import {
   Active,
   Over,
   MeasuringStrategy,
+  pointerWithin,
+  getFirstCollision,
 } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -57,8 +59,6 @@ function useMultiContainerDragDrop<
 
   const collisionDetection: CollisionDetection = useCallback(
     (args) => {
-      let overId = rectIntersection(args)
-
       if (active != null && active.type === 'container') {
         return closestCenter({
           ...args,
@@ -68,9 +68,21 @@ function useMultiContainerDragDrop<
         })
       }
 
+      const pointerIntersections = pointerWithin(args)
+      const intersections =
+        pointerIntersections.length > 0
+          ? pointerIntersections
+          : rectIntersection(args)
+      let overId = getFirstCollision(intersections, 'id')
+
       if (overId != null) {
-        if (overId in containers) {
-          const containerItems = containers[overId]
+        // find wrapper container
+        // get container items
+        const overContainer = containers.find(
+          (container) => container.id === overId
+        )
+        if (overContainer != null) {
+          const containerItems = overContainer.items
 
           if (containerItems.length > 0) {
             overId = closestCenter({
@@ -78,14 +90,14 @@ function useMultiContainerDragDrop<
               droppableContainers: args.droppableContainers.filter(
                 (container) =>
                   container.id !== overId &&
-                  containerItems.includes(container.id)
+                  containerItems.some(({ id }) => id === container.id)
               ),
-            })
+            })[0]?.id
           }
         }
 
         lastOverId.current = overId
-        return overId
+        return [{ id: overId }]
       }
 
       // When a draggable item moves to a new container, the layout may shift
@@ -96,7 +108,7 @@ function useMultiContainerDragDrop<
         lastOverId.current = active?.item.id || null
       }
 
-      return lastOverId.current
+      return lastOverId.current != null ? [{ id: lastOverId.current }] : []
     },
     [active, containers]
   )
@@ -348,8 +360,5 @@ function isBelow(active: Active, over: Over): boolean {
   if (active.rect.current.translated == null) {
     return false
   }
-  return (
-    active.rect.current.translated.offsetTop >
-    over.rect.offsetTop + over.rect.height
-  )
+  return active.rect.current.translated.top > over.rect.top + over.rect.height
 }
