@@ -188,12 +188,12 @@ export default LabelManager
 
 interface StatusEditorProps<T extends LabelLike> {
   label: T
-  onDelete: (status: T) => void
+  onDelete?: (status: T) => void
   onSave: (status: T) => void
   type?: string
 }
 
-const StatusEditor = <T extends LabelLike>({
+export const StatusEditor = <T extends LabelLike>({
   label,
   onDelete,
   onSave,
@@ -259,16 +259,18 @@ const StatusEditor = <T extends LabelLike>({
           ),
         }}
       />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            label: 'Delete',
-            iconPath: mdiTrashCanOutline,
-            onClick: () => onDelete(editingStatus),
-          },
-        }}
-      />
+      {onDelete != null && (
+        <MetadataContainerRow
+          row={{
+            type: 'button',
+            props: {
+              label: 'Delete',
+              iconPath: mdiTrashCanOutline,
+              onClick: () => onDelete(editingStatus),
+            },
+          }}
+        />
+      )}
     </MetadataContainer>
   )
 }

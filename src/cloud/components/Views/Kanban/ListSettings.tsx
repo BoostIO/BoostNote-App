@@ -11,9 +11,16 @@ interface ListSettingsProps {
   sending?: 'move' | 'delete'
 }
 
-const ListSettings = ({ list, move, remove, sending }: ListSettingsProps) => {
+const ListSettings = ({
+  children,
+  list,
+  move,
+  remove,
+  sending,
+}: React.PropsWithChildren<ListSettingsProps>) => {
   return (
-    <MetadataContainer>
+    <MetadataContainer className={'list-settings__metadata__status_border'}>
+      {children != null && children}
       <MetadataContainerRow
         row={{
           type: 'button',
