@@ -38,7 +38,7 @@ import { getDocLinkHref } from '../../Link/DocLink'
 import ListViewPropertiesContext from './ListViewPropertiesContext'
 import { useListView } from '../../../lib/hooks/views/listView'
 import ListDocProperties from './ListDocProperties'
-import EditableItemContainer from '../EditableItemContainer'
+import EditableDocItemContainer from '../EditableDocItemContainer'
 
 type ListViewProps = {
   view: SerializedView<ViewListData>
@@ -230,7 +230,7 @@ const ListView = ({
           const { id } = doc
           const href = getDocLinkHref(doc, team, 'index')
           return (
-            <EditableItemContainer key={id} doc={doc} teamId={team.id}>
+            <EditableDocItemContainer key={id} doc={doc}>
               <ListViewItem
                 id={id}
                 checked={hasDocInSelection(doc.id)}
@@ -253,7 +253,7 @@ const ListView = ({
                   currentUserIsCoreMember={currentUserIsCoreMember}
                 />
               </ListViewItem>
-            </EditableItemContainer>
+            </EditableDocItemContainer>
           )
         })}
         {currentWorkspaceId != null && (
