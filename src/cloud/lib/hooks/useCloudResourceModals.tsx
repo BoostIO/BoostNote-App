@@ -198,6 +198,7 @@ export function useCloudResourceModals() {
           }}
           prevRows={options?.precedingRows}
           onSubmit={async (inputValue: string, emoji?: string) => {
+            console.log(body)
             if (body.team == null || body.workspaceId == null) {
               return
             }
