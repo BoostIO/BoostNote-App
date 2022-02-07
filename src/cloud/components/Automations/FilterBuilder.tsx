@@ -42,6 +42,7 @@ const FilterBuilder = ({ typeDef, filter, onChange }: FilterBuilderProps) => {
   const addFilter = useCallback(() => {
     if (selected != null) {
       onChange(assocPath(selected.value.split('.'), addingValue, filter))
+      setAddingValue('')
     }
   }, [filter, selected, addingValue, onChange])
 
