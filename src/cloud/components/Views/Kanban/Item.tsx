@@ -10,7 +10,7 @@ import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { getDocTitle } from '../../../lib/utils/patterns'
 import { isKanbanStaticProp, KanbanViewProp } from '../../../lib/views/kanban'
 import PropPicker from '../../Props/PropPicker'
-import EditableItemContainer from '../EditableItemContainer'
+import EditableDocItemContainer from '../EditableDocItemContainer'
 
 interface ItemProps {
   doc: SerializedDocWithSupplemental
@@ -20,7 +20,7 @@ interface ItemProps {
 
 const Item = ({ doc, displayedProps, onClick }: ItemProps) => {
   return (
-    <EditableItemContainer doc={doc}>
+    <EditableDocItemContainer doc={doc}>
       <Container
         labelClick={() => onClick && onClick(doc)}
         label={
@@ -66,7 +66,7 @@ const Item = ({ doc, displayedProps, onClick }: ItemProps) => {
           </Flexbox>
         }
       />
-    </EditableItemContainer>
+    </EditableDocItemContainer>
   )
 }
 

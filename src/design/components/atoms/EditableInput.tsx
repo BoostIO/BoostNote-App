@@ -22,6 +22,7 @@ interface EditableInputProps {
   onTextChange: (newText: string) => void
   disabled?: boolean
   onKeydownConfirm?: () => void
+  onBlur?: () => void
 }
 
 const EditableInput = ({
@@ -31,6 +32,7 @@ const EditableInput = ({
   text,
   onTextChange,
   onKeydownConfirm,
+  onBlur,
 }: EditableInputProps) => {
   const titleInputRef = useRef<HTMLInputElement>(null)
   const textRef = useRef(text)
@@ -138,6 +140,7 @@ const EditableInput = ({
             value={newText}
             onKeyDown={handleTextInputKeyDown}
             disabled={disabled}
+            onBlur={onBlur}
           />
           <Button
             variant='icon'

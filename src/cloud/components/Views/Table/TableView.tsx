@@ -39,7 +39,7 @@ import Button from '../../../../design/components/atoms/Button'
 import TableViewPropertiesContext from './TableViewPropertiesContext'
 import TitleColumnSettingsContext from './TitleColumnSettingsContext'
 import { usePage } from '../../../lib/stores/pageStore'
-import EditableItemContainer from '../EditableItemContainer'
+import EditableDocItemContainer from '../EditableDocItemContainer'
 import NavigationItem from '../../../../design/components/molecules/Navigation/NavigationItem'
 import { getDocLinkHref } from '../../Link/DocLink'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
@@ -270,7 +270,7 @@ const TableView = ({
               cells: [
                 {
                   children: (
-                    <EditableItemContainer doc={doc} teamId={team.id}>
+                    <EditableDocItemContainer doc={doc}>
                       <NavigationItem
                         labelHref={docLink}
                         labelClick={() => goToDocPreview(doc)}
@@ -281,7 +281,7 @@ const TableView = ({
                             : { type: 'icon', path: mdiFileDocumentOutline }
                         }
                       />
-                    </EditableItemContainer>
+                    </EditableDocItemContainer>
                   ),
                 },
                 ...orderedColumns.map((col) => {

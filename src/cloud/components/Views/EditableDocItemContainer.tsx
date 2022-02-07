@@ -15,17 +15,16 @@ import EditableInput from '../../../design/components/atoms/EditableInput'
 
 interface ItemProps {
   doc: SerializedDocWithSupplemental
-  teamId?: string
   children?: React.ReactNode
 }
 
-const EditableItemContainer = ({ doc, teamId, children }: ItemProps) => {
+const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
   const [editingItemTitle, setEditingItemTitle] = useState<boolean>(false)
   const [showingContextMenuActions, setShowingContextMenuActions] = useState<
     boolean
   >(false)
 
-  const { updateDoc, deleteDocApi } = useCloudApi()
+  const { updateDoc, deleteDocApi, sendingMap } = useCloudApi()
   const { translate } = useI18n()
   const { popup } = useContextMenu()
 
@@ -33,24 +32,12 @@ const EditableItemContainer = ({ doc, teamId, children }: ItemProps) => {
     async (doc, newTitle) => {
       await updateDoc(doc, {
         workspaceId: doc.workspaceId,
+        parentFolderId: doc.parentFolderId,
         title: newTitle,
       })
       setEditingItemTitle(false)
     },
     [updateDoc]
-  )
-
-  const onDocRemove = useCallback(
-    (doc) => {
-      if (teamId == null) {
-        if (doc.teamId != null && doc.teamId != '') {
-          deleteDocApi({ id: doc.id, teamId: doc.teamId })
-        }
-        return
-      }
-      deleteDocApi({ id: doc.id, teamId: teamId })
-    },
-    [deleteDocApi, teamId]
   )
 
   const openActionMenu: (
@@ -71,7 +58,7 @@ const EditableItemContainer = ({ doc, teamId, children }: ItemProps) => {
         icon: <Icon path={mdiTrashCanOutline} />,
         type: MenuTypes.Normal,
         label: translate(lngKeys.GeneralDelete),
-        onClick: () => onDocRemove(doc),
+        onClick: () => deleteDocApi({ id: doc.id, teamId: doc.teamId }),
       }
       const actions: MenuItem[] = [editTitleAction, deleteDocAction]
 
@@ -79,24 +66,26 @@ const EditableItemContainer = ({ doc, teamId, children }: ItemProps) => {
       event.stopPropagation()
       popup(event, actions)
     },
-    [onDocRemove, popup, translate]
+    [deleteDocApi, popup, translate]
   )
 
+  const showInput = !sendingMap.has(doc.id) && editingItemTitle
   return (
     <ItemContainer
       onMouseEnter={() => setShowingContextMenuActions(true)}
       onMouseLeave={() => setShowingContextMenuActions(false)}
     >
-      {editingItemTitle && (
+      {showInput && (
         <EditableInput
           editOnStart={true}
           placeholder={'Title...'}
           text={doc.title}
           onTextChange={(newText) => updateDocTitle(doc, newText)}
+          onBlur={() => setEditingItemTitle(false)}
         />
       )}
 
-      {!editingItemTitle && <>{children}</>}
+      {!showInput && <>{children}</>}
 
       {showingContextMenuActions && (
         <div className={'item__container__item__actions'}>
@@ -122,7 +111,12 @@ const ItemContainer = styled.div`
     margin: 0;
     top: 50%;
     transform: translate(-50%, -50%);
+
+    .doc__action {
+      width: 20px;
+      height: 20px;
+    }
   }
 `
 
-export default EditableItemContainer
+export default EditableDocItemContainer
