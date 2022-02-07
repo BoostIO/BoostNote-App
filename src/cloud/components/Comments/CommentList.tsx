@@ -14,7 +14,6 @@ import { toText } from '../../lib/comments'
 interface CommentThreadProps {
   comments: Comment[]
   className: string
-  commentItemClassName: string
   updateComment: (comment: Comment, message: string) => Promise<any>
   deleteComment: (comment: Comment) => Promise<any>
   user?: SerializedUser
@@ -24,7 +23,6 @@ interface CommentThreadProps {
 function CommentList({
   comments,
   className,
-  commentItemClassName,
   updateComment,
   deleteComment,
   user,
@@ -37,7 +35,7 @@ function CommentList({
   return (
     <div className={className}>
       {sorted.map((comment) => (
-        <div key={comment.id} className={commentItemClassName}>
+        <div key={comment.id}>
           <CommentItem
             comment={comment}
             updateComment={updateComment}
@@ -59,7 +57,7 @@ interface CommentItemProps {
   users: SerializedUser[]
 }
 
-const smallUserIconStyle = { width: '28px', height: '28px', lineHeight: '22px' }
+const smallUserIconStyle = { width: '28px', height: '28px', lineHeight: '26px' }
 
 export function CommentItem({
   comment,
@@ -169,7 +167,6 @@ const CommentItemContainer = styled.div`
   .comment__meta__date {
     flex-grow: 1;
     color: ${({ theme }) => theme.colors.text.subtle};
-    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
   }
 
   .comment__meta__name {
