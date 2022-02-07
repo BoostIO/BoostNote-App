@@ -30,7 +30,6 @@ import Item from './Item'
 import KanbanViewPropertiesContext from './KanbanViewPropertiesContext'
 import KanbanWatchedPropSetter from './KanbanWatchedPropSetter'
 import ListSettings from './ListSettings'
-import EditableInput from '../../../../design/components/atoms/EditableInput'
 
 interface KanbanViewProps {
   view: SerializedView<KanbanViewData>
@@ -70,7 +69,7 @@ const KanbanView = ({
   const { openContextModal, closeLastModal } = useModal()
   const { createDoc } = useCloudApi()
   const { translate } = useI18n()
-  const { goToDocPreview } = useCloudResourceModals()
+  const { goToDocPreview, openNewDocForm } = useCloudResourceModals()
 
   const addListRef = useRef(addList)
   useEffect(() => {
@@ -122,49 +121,35 @@ const KanbanView = ({
             backgroundColor={status?.backgroundColor}
           />
           <div className={'kanban__item--action-buttons'}>
-            <Button
-              className={'kanban__item--action-button'}
-              variant={'icon'}
-              iconPath={mdiPlus}
-              onClick={(event) => {
-                openContextModal(
-                  event,
-                  <EditableInput
-                    editOnStart={true}
-                    placeholder={translate(lngKeys.GeneralTitle)}
-                    text={''}
-                    onTextChange={(val: string) => {
-                      createDoc(
-                        team,
-                        {
-                          title: val,
-                          workspaceId: currentWorkspaceId,
-                          parentFolderId: currentFolderId,
-                          props:
-                            statusProp != null
-                              ? {
-                                  [prop]: {
-                                    type: 'status',
-                                    data: statusProp.id,
-                                  },
-                                }
-                              : undefined,
-                        },
-                        {
-                          skipRedirect: true,
-                        }
-                      )
-                      closeLastModal()
-                    }}
-                  />,
-                  {
-                    width: 215,
-                    removePadding: true,
-                    keepAll: true,
-                  }
-                )
-              }}
-            />
+            {currentWorkspaceId != null && (
+              <Button
+                className={'kanban__item--action-button'}
+                variant={'icon'}
+                iconPath={mdiPlus}
+                onClick={() => {
+                  openNewDocForm(
+                    {
+                      team,
+                      workspaceId: currentWorkspaceId,
+                      parentFolderId: currentFolderId,
+                      props:
+                        statusProp != null
+                          ? {
+                              [prop]: {
+                                type: 'status',
+                                data: statusProp.id,
+                              },
+                            }
+                          : undefined,
+                    },
+                    {
+                      precedingRows: [],
+                      skipRedirect: true,
+                    }
+                  )
+                }}
+              />
+            )}
             <Button
               className={'kanban__item--action-button'}
               onClick={(event) => {
@@ -198,13 +183,12 @@ const KanbanView = ({
     [
       statuses,
       openContextModal,
-      translate,
-      createDoc,
       team,
       currentWorkspaceId,
       currentFolderId,
       prop,
       closeLastModal,
+      openNewDocForm,
     ]
   )
 
