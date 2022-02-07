@@ -35,7 +35,7 @@ interface FormSelectCommonProps {
 
 interface StandardFormSelectOptions {
   id?: string
-  value?: FormSelectOption | FormSelectOption[]
+  value?: FormSelectOption | FormSelectOption[] | null
   options: (FormSelectOption | FormSelectGroupOption)[]
   onChange: (val: any) => void
 }
