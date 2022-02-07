@@ -165,17 +165,22 @@ const PropPicker = ({
     case 'number':
       switch (propData.subType) {
         case 'checkbox':
+          const isChecked =
+            ((Array.isArray(propData.data)
+              ? propData.data[0]
+              : propData.data) || undefined) === 1
+
           return showPropName ? (
             <WithTooltip tooltip={propName}>
               <CheckboxSelect
-                value={propData.data != null && propData.data == true}
+                value={isChecked}
                 iconSize={iconSize}
                 isReadOnly={readOnly}
                 onCheckboxToggle={() =>
                   updateProp({
                     type: 'number',
                     subType: 'checkbox',
-                    data: propData.data == true ? 0 : 1,
+                    data: isChecked ? 0 : 1,
                   })
                 }
                 showIcon={showIcon}
@@ -184,14 +189,14 @@ const PropPicker = ({
             </WithTooltip>
           ) : (
             <CheckboxSelect
-              value={propData.data != null && propData.data == true}
+              value={isChecked}
               iconSize={iconSize}
               isReadOnly={readOnly}
               onCheckboxToggle={() =>
                 updateProp({
                   type: 'number',
                   subType: 'checkbox',
-                  data: propData.data == true ? 0 : 1,
+                  data: isChecked ? 0 : 1,
                 })
               }
               showIcon={showIcon}

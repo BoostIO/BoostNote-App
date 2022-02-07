@@ -23,6 +23,7 @@ import FormSelect, {
 import { ConditionNameSuggestionsPerTypeOrSubType } from '../../../../lib/props'
 import StatusSelect from './StatusSelect'
 import { useEffectOnce } from 'react-use'
+import Checkbox from '../../../../../design/components/molecules/Form/atoms/FormCheckbox'
 
 interface ConditionValueControlProps {
   teamId: string
@@ -105,7 +106,11 @@ const PropConditionValueControl = ({
       if (!res.err) {
         setSuggestions(
           (res.data as ListPropertySuggestionsResponseBody).data
-            .filter((property) => property.type === body.propertyType)
+            .filter(
+              (property) =>
+                property.type === body.propertyType &&
+                property.subType === body.propertySubType
+            )
             .map((property) => property.name)
         )
       } else {
@@ -117,34 +122,22 @@ const PropConditionValueControl = ({
 
   useEffectOnce(() => {
     fetchProperties(
-      Object.assign(
-        {
-          team: teamId,
-          propertyType: condition.type,
-        },
-        condition.type === 'json'
-          ? {
-              jsonPropertyType: condition.value.type,
-            }
-          : {}
-      )
+      Object.assign({
+        team: teamId,
+        propertyType: condition.type,
+        propertySubType: condition.subType,
+      })
     )
   })
 
   useEffect(() => {
     if (previousPropType !== condition.type) {
       fetchProperties(
-        Object.assign(
-          {
-            team: teamId,
-            propertyType: condition.type,
-          },
-          condition.type === 'json'
-            ? {
-                jsonPropertyType: condition.value.type,
-              }
-            : {}
-        )
+        Object.assign({
+          team: teamId,
+          propertyType: condition.type,
+          propertySubType: condition.subType,
+        })
       )
     }
   }, [condition, previousPropType, teamId, fetchProperties])
@@ -153,9 +146,7 @@ const PropConditionValueControl = ({
     const options: (FormSelectGroupOption | FormSelectOption)[] = []
     const defaultSuggestions = (
       ConditionNameSuggestionsPerTypeOrSubType[
-        condition.type === 'json' && condition.value.type === 'timeperiod'
-          ? 'timeperiod'
-          : condition.type
+        condition.subType || condition.type
       ] || []
     ).filter((option) => {
       return !suggestions.includes(option)
@@ -238,6 +229,20 @@ const PropConditionValueControl = ({
               updateValue({ value: period })
             }}
           />
+        )}
+        {condition.type === 'number' && condition.subType === 'checkbox' && (
+          <div>
+            <Checkbox
+              disabled={
+                condition.name.trim() === '' ||
+                sendingMap.get('properties') === 'suggestions'
+              }
+              checked={condition.value === 1}
+              toggle={() =>
+                updateValue({ value: condition.value === 1 ? 0 : 1 })
+              }
+            />
+          </div>
         )}
         {condition.type === 'date' && (
           <DocDateSelect

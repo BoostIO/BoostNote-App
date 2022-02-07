@@ -14,6 +14,7 @@ import {
   mdiClockOutline,
   mdiContentSaveOutline,
   mdiLabelOutline,
+  mdiSquareOutline,
   mdiTimerOutline,
 } from '@mdi/js'
 import { getInitialPropDataOfPropType } from './props'
@@ -26,6 +27,11 @@ export const supportedCustomPropertyTypes: Record<
 > = {
   date: { label: 'Date', value: 'date', icon: mdiCalendarMonthOutline },
   person: { label: 'Person', value: 'user', icon: mdiAccountOutline },
+  checkbox: {
+    label: 'Checkbox',
+    value: 'number/checkbox',
+    icon: mdiSquareOutline,
+  },
   timeperiod: {
     label: 'Time',
     value: 'number/timeperiod',
