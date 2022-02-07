@@ -14,9 +14,8 @@ type BetaRegistrationState =
 export function useBetaRegistrationStore(): BetaRegistrationState {
   const teamRef = useRef('')
   const { team } = usePage()
-  const [betaRegistration, setBetaRegistration] = useState<
-    SerializedBetaRegistration
-  >()
+  const [betaRegistration, setBetaRegistration] =
+    useState<SerializedBetaRegistration>()
 
   const { submit: getBetaRegistration, sending: fetching } = useApi({
     api: () => getTeamBetaRegistration(teamRef.current),

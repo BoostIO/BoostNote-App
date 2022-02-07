@@ -19,5 +19,6 @@ export interface SerializedUnserializableBetaRegistrationProps {
   team: SerializedTeam
 }
 
-export type SerializedBetaRegistration = SerializedUnserializableBetaRegistrationProps &
-  SerializableBetaRegistrationProps
+export type SerializedBetaRegistration =
+  SerializedUnserializableBetaRegistrationProps &
+    SerializableBetaRegistrationProps
