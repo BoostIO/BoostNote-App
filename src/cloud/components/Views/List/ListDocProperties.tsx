@@ -65,8 +65,7 @@ const ListDocProperties = ({
               getInitialPropDataOfPropType(propType)
 
             const isPropDataAccurate =
-              propData.type === prop.type &&
-              (propData.subType || null === prop.subType || null)
+              propType === propData.subType || propData.type
 
             return (
               <PropPicker
