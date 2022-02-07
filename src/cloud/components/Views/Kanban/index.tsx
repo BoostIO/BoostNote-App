@@ -9,6 +9,7 @@ import Flexbox from '../../../../design/components/atoms/Flexbox'
 import Icon from '../../../../design/components/atoms/Icon'
 import { Label } from '../../../../design/components/atoms/Label'
 import FormToggableInput from '../../../../design/components/molecules/Form/atoms/FormToggableInput'
+import { StatusEditor } from '../../../../design/components/molecules/LabelManager'
 import Kanban from '../../../../design/components/organisms/Kanban'
 import { useModal } from '../../../../design/lib/stores/modal'
 import styled from '../../../../design/lib/styled'
@@ -166,7 +167,17 @@ const KanbanView = ({
                       onListMoveRef.current(list, move)
                       closeLastModal()
                     }}
-                  />,
+                  >
+                    {status != null && (
+                      <>
+                        <StatusEditor
+                          label={status}
+                          onSave={(status) => editStatus(status)}
+                        />
+                        <hr />
+                      </>
+                    )}
+                  </ListSettings>,
                   {
                     width: 250,
                     removePadding: true,
@@ -184,6 +195,7 @@ const KanbanView = ({
     [
       statuses,
       openContextModal,
+      editStatus,
       team,
       currentWorkspaceId,
       currentFolderId,

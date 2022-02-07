@@ -3,34 +3,24 @@ import React from 'react'
 import MetadataContainer from '../../../../design/components/organisms/MetadataContainer'
 import MetadataContainerRow from '../../../../design/components/organisms/MetadataContainer/molecules/MetadataContainerRow'
 import { KanbanViewList } from '../../../lib/hooks/views/kanbanView'
-import { SerializedStatus } from '../../../interfaces/db/status'
-import { StatusEditor } from '../../../../design/components/molecules/LabelManager'
 
 interface ListSettingsProps {
-  status?: SerializedStatus
   list: KanbanViewList
   remove: (list: KanbanViewList) => void
-  onStatusUpdate: (status: SerializedStatus) => void
   move: (list: KanbanViewList, move: 'left' | 'right') => void
   sending?: 'move' | 'delete'
 }
 
 const ListSettings = ({
-  status,
+  children,
   list,
   move,
   remove,
   sending,
-  onStatusUpdate,
-}: ListSettingsProps) => {
+}: React.PropsWithChildren<ListSettingsProps>) => {
   return (
     <MetadataContainer className={'list-settings__metadata__status_border'}>
-      {status != null && (
-        <>
-          <StatusEditor label={status} onSave={onStatusUpdate} />
-          <hr />
-        </>
-      )}
+      {children != null && children}
       <MetadataContainerRow
         row={{
           type: 'button',
