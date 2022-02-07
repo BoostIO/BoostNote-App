@@ -80,8 +80,10 @@ const ContentManagerToolbar = ({
   const { translate } = useI18n()
   const { messageBox } = useDialog()
   const { openModal, openContextModal, closeAllModals } = useModal()
-  const [bulkActionState, setBulkActionState] =
-    useState<BulkActionState | null>(null)
+  const [
+    bulkActionState,
+    setBulkActionState,
+  ] = useState<BulkActionState | null>(null)
 
   const selectedDocsAreUpdating = useMemo(() => {
     return (
@@ -356,7 +358,7 @@ const ContentManagerToolbar = ({
           return
         }
 
-        const docProp = props[key] as FilledSerializedPropData
+        const docProp = (props[key] || {}) as FilledSerializedPropData
         switch (docProp.type) {
           case 'user':
             {
@@ -374,10 +376,11 @@ const ContentManagerToolbar = ({
             break
           case 'status':
             {
-              const docPropStatus: SerializedStatus | undefined =
-                docProp[key] == Array.isArray(docProp[key].data)
-                  ? docProp[key].data[0]
-                  : docProp[key].data
+              const docPropStatus: SerializedStatus | undefined = Array.isArray(
+                docProp.data
+              )
+                ? docProp.data[0]
+                : docProp.data
               if (
                 docPropStatus == null ||
                 docPropStatus.id !== values[key].value.id
