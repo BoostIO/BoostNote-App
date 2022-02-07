@@ -171,6 +171,7 @@ const KanbanView = ({
                     {status != null && (
                       <>
                         <StatusEditor
+                          type='status'
                           label={status}
                           onSave={(status) => editStatus(status)}
                         />
