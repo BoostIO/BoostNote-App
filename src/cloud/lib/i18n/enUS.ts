@@ -19,6 +19,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.GeneralNever]: 'never',
   [lngKeys.GeneralTemplates]: 'Templates',
   [lngKeys.GeneralTitle]: 'Title',
+  [lngKeys.GeneralDuplicate]: 'Duplicate',
   [lngKeys.GeneralUse]: 'Use',
   [lngKeys.GeneralChangeIcon]: 'Change icon',
   [lngKeys.GeneralFolders]: 'Folders',

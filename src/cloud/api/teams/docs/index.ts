@@ -8,7 +8,7 @@ import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedTag } from '../../../interfaces/db/tag'
 import { PropData, Props } from '../../../interfaces/db/props'
 
-interface GetDocResponseBody {
+export interface GetDocResponseBody {
   doc: SerializedDocWithSupplemental
 }
 
@@ -23,6 +23,7 @@ export interface CreateDocRequestBody {
   title?: string
   emoji?: string
   props?: Record<string, PropData | null>
+  content?: string
 }
 
 export interface CreateDocResponseBody {

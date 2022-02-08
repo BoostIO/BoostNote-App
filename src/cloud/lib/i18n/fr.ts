@@ -19,6 +19,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.GeneralNever]: 'Jamais',
   [lngKeys.GeneralTemplates]: 'Templates',
   [lngKeys.GeneralTitle]: 'Titre',
+  [lngKeys.GeneralDuplicate]: 'Dupliquer',
   [lngKeys.GeneralUse]: 'Utiliser',
   [lngKeys.GeneralChangeIcon]: "Changer l'icône",
   [lngKeys.GeneralFolders]: 'Dossiers',

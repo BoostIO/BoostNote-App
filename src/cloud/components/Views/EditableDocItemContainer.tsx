@@ -1,5 +1,10 @@
 import { lngKeys } from '../../lib/i18n/types'
-import { mdiDotsVertical, mdiPencilOutline, mdiTrashCanOutline } from '@mdi/js'
+import {
+  mdiContentDuplicate,
+  mdiDotsVertical,
+  mdiPencilOutline,
+  mdiTrashCanOutline,
+} from '@mdi/js'
 import React, { useCallback, useState } from 'react'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { useCloudApi } from '../../lib/hooks/useCloudApi'
@@ -12,6 +17,11 @@ import {
 import Icon from '../../../design/components/atoms/Icon'
 import styled from '../../../design/lib/styled'
 import EditableInput from '../../../design/components/atoms/EditableInput'
+import { SerializedTeam } from '../../interfaces/db/team'
+import { prepareDocPropsForAPI } from '../../lib/props'
+import { GetDocResponseBody } from '../../api/teams/docs'
+import { getDocContent } from '../../lib/utils/patterns'
+import { BulkApiActionRes } from '../../../design/lib/hooks/useBulkApi'
 
 interface ItemProps {
   doc: SerializedDocWithSupplemental
@@ -23,7 +33,13 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
   const [showingContextMenuActions, setShowingContextMenuActions] =
     useState<boolean>(false)
 
-  const { updateDoc, deleteDocApi, sendingMap } = useCloudApi()
+  const {
+    createDoc,
+    updateDoc,
+    deleteDocApi,
+    getUpdatedDocApi,
+    sendingMap,
+  } = useCloudApi()
   const { translate } = useI18n()
   const { popup } = useContextMenu()
 
@@ -37,6 +53,34 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
       setEditingItemTitle(false)
     },
     [updateDoc]
+  )
+
+  const onDocDuplicate = useCallback(
+    async (doc) => {
+      const res: BulkApiActionRes<GetDocResponseBody> = await getUpdatedDocApi(
+        doc
+      )
+      if (res.err) {
+        return
+      }
+
+      const newProps = prepareDocPropsForAPI(doc.props)
+      await createDoc(
+        { id: doc.teamId } as SerializedTeam,
+        {
+          workspaceId: doc.workspaceId,
+          parentFolderId: doc.parentFolderId,
+          emoji: doc.emoji,
+          title: doc.title,
+          content: getDocContent(res.data.doc),
+          props: newProps,
+        },
+        {
+          skipRedirect: true,
+        }
+      )
+    },
+    [createDoc, getUpdatedDocApi]
   )
 
   const openActionMenu: (
@@ -53,19 +97,29 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
         label: translate(lngKeys.GeneralEditTitle),
         onClick: () => setEditingItemTitle(true),
       }
+      const duplicateAction: MenuItem = {
+        icon: <Icon path={mdiContentDuplicate} />,
+        type: MenuTypes.Normal,
+        label: translate(lngKeys.GeneralDuplicate),
+        onClick: () => onDocDuplicate(doc),
+      }
       const deleteDocAction: MenuItem = {
         icon: <Icon path={mdiTrashCanOutline} />,
         type: MenuTypes.Normal,
         label: translate(lngKeys.GeneralDelete),
         onClick: () => deleteDocApi({ id: doc.id, teamId: doc.teamId }),
       }
-      const actions: MenuItem[] = [editTitleAction, deleteDocAction]
+      const actions: MenuItem[] = [
+        editTitleAction,
+        duplicateAction,
+        deleteDocAction,
+      ]
 
       event.preventDefault()
       event.stopPropagation()
       popup(event, actions)
     },
-    [deleteDocApi, popup, translate]
+    [deleteDocApi, popup, translate, onDocDuplicate]
   )
 
   const showInput = !sendingMap.has(doc.id) && editingItemTitle

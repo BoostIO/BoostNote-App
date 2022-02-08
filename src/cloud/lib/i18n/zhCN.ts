@@ -19,6 +19,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.GeneralNever]: '从未',
   [lngKeys.GeneralTemplates]: '模板',
   [lngKeys.GeneralTitle]: '标题',
+  [lngKeys.GeneralDuplicate]: '复制',
   [lngKeys.GeneralUse]: '使用',
   [lngKeys.GeneralChangeIcon]: '更改图标',
   [lngKeys.GeneralFolders]: '文件夹',
