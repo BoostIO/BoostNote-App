@@ -19,8 +19,9 @@ import styled from '../../../design/lib/styled'
 import EditableInput from '../../../design/components/atoms/EditableInput'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { prepareDocPropsForAPI } from '../../lib/props'
-import { getDoc } from '../../api/teams/docs'
+import { GetDocResponseBody } from '../../api/teams/docs'
 import { getDocContent } from '../../lib/utils/patterns'
+import { BulkApiActionRes } from '../../../design/lib/hooks/useBulkApi'
 
 interface ItemProps {
   doc: SerializedDocWithSupplemental
@@ -32,7 +33,13 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
   const [showingContextMenuActions, setShowingContextMenuActions] =
     useState<boolean>(false)
 
-  const { createDoc, updateDoc, deleteDocApi, sendingMap } = useCloudApi()
+  const {
+    createDoc,
+    updateDoc,
+    deleteDocApi,
+    getUpdatedDocApi,
+    sendingMap,
+  } = useCloudApi()
   const { translate } = useI18n()
   const { popup } = useContextMenu()
 
@@ -50,9 +57,13 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
 
   const onDocDuplicate = useCallback(
     async (doc) => {
-      const docWithContent = await getDoc(doc.id, doc.teamId).then(
-        (data) => data.doc
+      const res: BulkApiActionRes<GetDocResponseBody> = await getUpdatedDocApi(
+        doc
       )
+      if (res.err) {
+        return
+      }
+
       const newProps = prepareDocPropsForAPI(doc.props)
       await createDoc(
         { id: doc.teamId } as SerializedTeam,
@@ -61,7 +72,7 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
           parentFolderId: doc.parentFolderId,
           emoji: doc.emoji,
           title: doc.title,
-          content: getDocContent(docWithContent),
+          content: getDocContent(res.data.doc),
           props: newProps,
         },
         {
@@ -69,7 +80,7 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
         }
       )
     },
-    [createDoc]
+    [createDoc, getUpdatedDocApi]
   )
 
   const openActionMenu: (

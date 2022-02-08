@@ -16,8 +16,10 @@ import { capitalize, isNumber, isObject } from 'lodash'
 import {
   FilledSerializedPropData,
   PropData,
+  Props,
   PropSubType,
   PropType,
+  SerializedCompoundProp,
   SerializedPropData,
   StaticPropType,
 } from '../interfaces/db/props'
@@ -67,7 +69,7 @@ export function getLabelOfPropType(
   }
 }
 
-export function prepareDocPropsForAPI(props: Record<string, PropData | null>) {
+export function prepareDocPropsForAPI(props: Props) {
   if (props == null) {
     return undefined
   }
@@ -79,17 +81,69 @@ export function prepareDocPropsForAPI(props: Record<string, PropData | null>) {
   for (const key in props) {
     const prop = props[key]
     if (prop != null && prop.data != null) {
-      if (prop.type == 'status' || prop.type == 'user') {
-        preparedProps[key] = {
-          type: prop.type,
-          data: prop.type == 'user' ? prop.data.userId : prop.data.id,
-        } as PropData
-      } else {
-        preparedProps[key] = prop
+      switch (prop.type) {
+        case 'compound':
+          preparedProps[key] = {
+            type: 'compound',
+            subType: prop.subType,
+            data: Array.isArray(prop.data)
+              ? (prop.data.filter(
+                  (d) => d != null
+                ) as SerializedCompoundProp[]).map(getApiFormattedCompoundProp)
+              : getApiFormattedCompoundProp(prop.data),
+          }
+          break
+        case 'status':
+          preparedProps[key] = {
+            type: 'status',
+            data: Array.isArray(prop.data)
+              ? prop.data.filter((item) => item != null).map((item) => item!.id)
+              : [prop.data.id],
+          }
+          break
+        case 'user':
+          preparedProps[key] = {
+            type: 'user',
+            data: Array.isArray(prop.data)
+              ? prop.data
+                  .filter((item) => item != null)
+                  .map((item) => item!.userId)
+              : [prop.data.userId],
+          }
+          break
+        default:
+          preparedProps[key] = prop
       }
     }
   }
   return preparedProps
+}
+
+function getApiFormattedCompoundProp(
+  propData: SerializedCompoundProp
+): SerializedCompoundProp {
+  const prop = {}
+  Object.keys(propData).forEach((key) => {
+    if (propData[key] == null) {
+      return
+    }
+    switch (key) {
+      case 'targetDoc':
+      case 'status':
+        prop[key] =
+          typeof propData[key] === 'string' ? propData[key] : propData[key]!.id
+        break
+      case 'member':
+        prop[key] =
+          typeof propData[key] === 'string'
+            ? propData[key]
+            : propData[key]!.userId
+        break
+      default:
+        prop[key] = propData[key]
+    }
+  })
+  return prop
 }
 
 export function getPropsOfItem(

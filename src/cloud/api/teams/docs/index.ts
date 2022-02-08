@@ -8,7 +8,7 @@ import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedTag } from '../../../interfaces/db/tag'
 import { PropData, Props } from '../../../interfaces/db/props'
 
-interface GetDocResponseBody {
+export interface GetDocResponseBody {
   doc: SerializedDocWithSupplemental
 }
 

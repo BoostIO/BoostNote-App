@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react'
 import { useToast } from '../stores/toast'
 
-export type BulkApiActionRes =
+export type BulkApiActionRes<T = any> =
   | { err: true; error: unknown }
-  | { err: false; data: any }
+  | { err: false; data: T }
 
 export type BulkApiAction = (
   id: string,

@@ -59,8 +59,9 @@ import Spinner from '../../../design/components/atoms/Spinner'
 import useApi from '../../../design/lib/hooks/useApi'
 import { usePreviewStyle } from '../../../lib/preview'
 import { prepareDocPropsForAPI } from '../../lib/props'
-import { getDoc } from '../../api/teams/docs'
+import { GetDocResponseBody } from '../../api/teams/docs'
 import { getDocContent } from '../../lib/utils/patterns'
+import { BulkApiActionRes } from '../../../design/lib/hooks/useBulkApi'
 
 export interface DocContextMenuActionsProps {
   team: SerializedTeam
@@ -84,6 +85,7 @@ export function DocContextMenuActions({
     send,
     updateDoc,
     createDoc,
+    getUpdatedDocApi,
   } = useCloudApi()
   const { deleteDoc } = useCloudResourceModals()
   const { openModal, closeAllModals } = useModal()
@@ -100,12 +102,13 @@ export function DocContextMenuActions({
   }, [team, doc])
 
   const duplicateButtonHandler = useCallback(async () => {
-    if (team == null) {
+    const res: BulkApiActionRes<GetDocResponseBody> = await getUpdatedDocApi(
+      doc
+    )
+    if (res.err) {
       return
     }
 
-    const promise = getDoc(doc.id, team.id).then((data) => data.doc)
-    const docWithContent = await promise
     const newProps = prepareDocPropsForAPI(doc.props)
     setDuplicated(true)
     await createDoc(
@@ -116,7 +119,7 @@ export function DocContextMenuActions({
         emoji: doc.emoji,
         title: doc.title,
         props: newProps,
-        content: getDocContent(docWithContent),
+        content: getDocContent(res.data.doc),
       },
       {
         skipRedirect: true,
@@ -125,16 +128,7 @@ export function DocContextMenuActions({
         },
       }
     )
-  }, [
-    createDoc,
-    doc.emoji,
-    doc.head,
-    doc.parentFolderId,
-    doc.props,
-    doc.title,
-    doc.workspaceId,
-    team,
-  ])
+  }, [team, createDoc, doc, getUpdatedDocApi])
 
   const copyButtonHandler = useCallback(() => {
     copy(docUrl)

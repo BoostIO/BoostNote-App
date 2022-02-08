@@ -16,6 +16,8 @@ import {
   UpdateDocTagsResponseBody,
   UpdateDocPropsResponseBody,
   updateUnsignedDocProps,
+  getDoc,
+  GetDocResponseBody,
 } from '../../api/teams/docs'
 import {
   createDocBookmark,
@@ -1006,6 +1008,16 @@ export function useCloudApi() {
     [send, removeFromDashboardsMap]
   )
 
+  const getUpdatedDocApi = useCallback(
+    async (doc: SerializedDocWithSupplemental) => {
+      return send(shortid.generate(), 'get', {
+        api: () => getDoc(doc.id, doc.teamId),
+        cb: (_res: GetDocResponseBody) => {},
+      })
+    },
+    [send]
+  )
+
   return {
     send,
     sendingMap,
@@ -1040,5 +1052,6 @@ export function useCloudApi() {
     updateDocPropsApi,
     updateBulkDocPropsApi,
     fetchPropertySuggestionsApi,
+    getUpdatedDocApi,
   }
 }
