@@ -356,6 +356,10 @@ const ModalContainer = styled(MetadataContainer)`
   .metadata__content {
     justify-content: end;
   }
+
+  .button__label {
+    margin: 0 ${({ theme }) => theme.sizes.spaces.df}px;
+  }
 `
 
 const Container = styled.div`
