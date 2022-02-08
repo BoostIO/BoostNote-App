@@ -87,9 +87,9 @@ export function prepareDocPropsForAPI(props: Props) {
             type: 'compound',
             subType: prop.subType,
             data: Array.isArray(prop.data)
-              ? (prop.data.filter(
-                  (d) => d != null
-                ) as SerializedCompoundProp[]).map(getApiFormattedCompoundProp)
+              ? (
+                  prop.data.filter((d) => d != null) as SerializedCompoundProp[]
+                ).map(getApiFormattedCompoundProp)
               : getApiFormattedCompoundProp(prop.data),
           }
           break

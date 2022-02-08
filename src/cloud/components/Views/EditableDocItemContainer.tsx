@@ -30,17 +30,11 @@ interface ItemProps {
 
 const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
   const [editingItemTitle, setEditingItemTitle] = useState<boolean>(false)
-  const [showingContextMenuActions, setShowingContextMenuActions] = useState<
-    boolean
-  >(false)
+  const [showingContextMenuActions, setShowingContextMenuActions] =
+    useState<boolean>(false)
 
-  const {
-    createDoc,
-    updateDoc,
-    deleteDocApi,
-    getUpdatedDocApi,
-    sendingMap,
-  } = useCloudApi()
+  const { createDoc, updateDoc, deleteDocApi, getUpdatedDocApi, sendingMap } =
+    useCloudApi()
   const { translate } = useI18n()
   const { popup } = useContextMenu()
 
