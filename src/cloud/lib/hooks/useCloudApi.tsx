@@ -1012,6 +1012,7 @@ export function useCloudApi() {
     async (doc: SerializedDocWithSupplemental) => {
       return send(shortid.generate(), 'get', {
         api: () => getDoc(doc.id, doc.teamId),
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         cb: (_res: GetDocResponseBody) => {},
       })
     },
