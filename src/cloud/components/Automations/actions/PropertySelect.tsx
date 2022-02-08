@@ -37,11 +37,7 @@ const PropertySelect = ({
     <>
       {props.map(([propName, propData]) => {
         const iconPath = getIconPathOfPropType(
-          propData.type === 'json' &&
-            propData.data != null &&
-            propData.data.dataType != null
-            ? propData.data.dataType
-            : propData.type
+          propData.subType || propData.type
         )
         return (
           <FormRow key={propName}>
