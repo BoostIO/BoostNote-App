@@ -19,6 +19,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.GeneralNever]: '受け取らない',
   [lngKeys.GeneralTemplates]: 'テンプレート',
   [lngKeys.GeneralTitle]: 'タイトル',
+  [lngKeys.GeneralDuplicate]: '複製',
   [lngKeys.GeneralUse]: '利用',
   [lngKeys.GeneralChangeIcon]: 'アイコン変更',
   [lngKeys.GeneralFolders]: 'フォルダー',
