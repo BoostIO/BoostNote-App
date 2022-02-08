@@ -214,6 +214,7 @@ const DependencyPastille = ({ type = 'doc' }: { type: DependencyType }) => {
 
 const PastilleContainer = styled.div`
   color: ${({ theme }) => theme.colors.text.subtle};
+  margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
   &.dependency__pastille--blocker {
     color: ${({ theme }) => theme.colors.variants.danger.base};
   }
