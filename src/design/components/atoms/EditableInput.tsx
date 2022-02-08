@@ -97,23 +97,24 @@ const EditableInput = ({
     [onKeydownConfirm, finishEditingText]
   )
 
-  const handleTextInputKeyDown: KeyboardEventHandler<HTMLInputElement> =
-    useCallback(
-      (event) => {
-        switch (event.key) {
-          case 'Esc':
-          case 'Escape':
-            event.preventDefault()
-            cancelEditingText()
-            break
-          case 'Enter':
-            event.preventDefault()
-            onSubmit(event)
-            break
-        }
-      },
-      [cancelEditingText, onSubmit]
-    )
+  const handleTextInputKeyDown: KeyboardEventHandler<HTMLInputElement> = useCallback(
+    (event) => {
+      switch (event.key) {
+        case 'Esc':
+        case 'Escape':
+          event.preventDefault()
+          cancelEditingText()
+          break
+        case 'Enter':
+          event.preventDefault()
+          onSubmit(event)
+        default:
+          event.stopPropagation()
+          break
+      }
+    },
+    [cancelEditingText, onSubmit]
+  )
 
   const maxWidth: string | number = useMemo(() => {
     // HTML5 canvas width to calculate
