@@ -226,6 +226,7 @@ const PastilleContainer = styled.div`
 const Container = styled.div`
   .item__property__button {
     cursor: pointer;
+    height: auto;
   }
 
   .dependencies___wrapper {
@@ -237,13 +238,14 @@ const Container = styled.div`
 
   .dependency__pastille {
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
   }
 
   .dependency__wrapper {
     display: inline-flex;
     line-height: 23px;
     margin-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
-    background: ${({ theme }) => theme.colors.background.quaternary};
+    background: ${({ theme }) => theme.colors.background.tertiary};
     border-radius: ${({ theme }) => theme.borders.radius}px;
     margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.xsm}px;
@@ -254,6 +256,14 @@ const Container = styled.div`
       &:hover {
         text-decoration: underline;
       }
+    }
+
+    .dependency__label__text {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 300px;
+      display: inline-block;
+      overflow: hidden;
     }
   }
 `
