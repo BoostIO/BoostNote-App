@@ -1,7 +1,7 @@
 import { lngKeys } from '../../lib/i18n/types'
 import {
   mdiContentDuplicate,
-  mdiDotsVertical,
+  mdiDotsHorizontal,
   mdiPencilOutline,
   mdiTrashCanOutline,
 } from '@mdi/js'
@@ -150,7 +150,7 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
             onClick={(event) => openActionMenu(event, doc)}
             className='doc__action'
           >
-            <Icon size={20} path={mdiDotsVertical} />
+            <Icon size={20} path={mdiDotsHorizontal} />
           </div>
         </div>
       )}
@@ -168,6 +168,10 @@ const ItemContainer = styled.div`
     margin: 0;
     top: 50%;
     transform: translate(-50%, -50%);
+
+    &:hover {
+      cursor: pointer;
+    }
 
     .doc__action {
       width: 20px;
