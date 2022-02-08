@@ -107,6 +107,7 @@ const UrlSelect = ({
               variant='bordered'
               className='url__button__edit'
               iconPath={mdiPencil}
+              iconSize={16}
               onClick={openSelector}
               size='sm'
             />
@@ -142,7 +143,7 @@ const UrlSelectContainer = styled.div`
   }
 
   .url__button:hover .url__button__edit {
-    display: block;
+    display: flex;
   }
 `
 
