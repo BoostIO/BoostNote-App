@@ -130,13 +130,12 @@ The source code is quite similar to a router interface. All you need to is `meth
 
 ## 🔗 Links
 
+- [Release Notes](https://github.com/BoostIO/BoostNote-App/discussions/categories/releases/)
 - [Twitter](https://twitter.com/boostnoteapp)
 - [Slack Group](https://join.slack.com/t/boostnote-group/shared_invite/zt-cun7pas3-WwkaezxHBB1lCbUHrwQLXw)
-- [Blog](https://medium.com/boostnote)
-- [Reddit](https://www.reddit.com/r/Boostnote/)
 - [BoostNote-Legacy](https://github.com/BoostIO/BoostNote)
 - [BoostNote.next-local](https://github.com/BoostIO/BoostNote.next-local)
 
 ## ⚖️ License
 
-[GPL-3.0 © 2016 - 2021 BoostIO](./LICENSE.md)
+[GPL-3.0 © 2016 - 2022 BoostIO](./LICENSE.md)
