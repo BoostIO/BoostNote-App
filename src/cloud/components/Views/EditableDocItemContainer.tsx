@@ -129,7 +129,9 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
           placeholder={'Title...'}
           text={doc.title}
           onTextChange={(newText) => updateDocTitle(doc, newText)}
-          onBlur={() => setEditingItemTitle(false)}
+          onBlur={'submit'}
+          onCancel={() => setEditingItemTitle(false)}
+          showConfirmation={false}
         />
       )}
 
@@ -164,6 +166,15 @@ const ItemContainer = styled.div`
       width: 20px;
       height: 20px;
     }
+  }
+
+  .editable__input,
+  .editable__input input {
+    width: 100% !important;
+  }
+
+  .editable__input form {
+    max-width: 100% !important;
   }
 `
 
