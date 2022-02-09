@@ -18,18 +18,22 @@ import { overflowEllipsis } from '../../lib/styled/styleFunctions'
 interface EditableInputProps {
   editOnStart?: boolean
   placeholder?: string
+  showConfirmation?: boolean
   text: string
   onTextChange: (newText: string) => void
   disabled?: boolean
   onKeydownConfirm?: () => void
-  onBlur?: () => void
+  onBlur?: (() => void) | 'cancel' | 'submit'
+  onCancel?: () => void
 }
 
 const EditableInput = ({
   editOnStart = false,
+  showConfirmation = true,
   placeholder,
   disabled,
   text,
+  onCancel,
   onTextChange,
   onKeydownConfirm,
   onBlur,
@@ -81,9 +85,12 @@ const EditableInput = ({
   }, [onTextChange, newText])
 
   const cancelEditingText = useCallback(() => {
+    if (onCancel != null) {
+      onCancel()
+    }
     setEditingText(false)
     setNewText(text)
-  }, [text])
+  }, [text, onCancel])
 
   const onSubmit = useCallback(
     (event: React.FormEvent) => {
@@ -132,6 +139,20 @@ const EditableInput = ({
     return `${max(newText.length, 8)}em`
   }, [newText])
 
+  const handleBlur = useCallback(() => {
+    if (onBlur == null) {
+      return
+    }
+
+    if (onBlur === 'cancel') {
+      cancelEditingText()
+    } else if (onBlur === 'submit') {
+      finishEditingText()
+    } else {
+      onBlur()
+    }
+  }, [onBlur, cancelEditingText, finishEditingText])
+
   return (
     <EditableInputContainer className='editable__input'>
       {editingText ? (
@@ -143,16 +164,18 @@ const EditableInput = ({
             value={newText}
             onKeyDown={handleTextInputKeyDown}
             disabled={disabled}
-            onBlur={onBlur}
+            onBlur={handleBlur}
           />
-          <Button
-            variant='icon'
-            iconPath={mdiCheck}
-            iconSize={16}
-            type='submit'
-            size='sm'
-            disabled={disabled}
-          />
+          {showConfirmation && (
+            <Button
+              variant='icon'
+              iconPath={mdiCheck}
+              iconSize={16}
+              type='submit'
+              size='sm'
+              disabled={disabled}
+            />
+          )}
         </form>
       ) : (
         <Button
