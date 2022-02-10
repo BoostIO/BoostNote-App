@@ -48,7 +48,7 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
   const { openContextModal, closeLastModal } = useModal()
   const { docsMap } = useNav()
   const { push } = useRouter()
-  const { currentUserIsCoreMember, permissions } = usePage()
+  const { currentUserIsCoreMember, permissions, subscription } = usePage()
   const [fetching, setFetching] = useState(true)
   const [mode, setMode] = useState<'preview' | 'editor'>('preview')
   const [collabToken, setCollabToken] = useState(
@@ -226,6 +226,7 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
             token={collabToken}
             user={currentUser}
             mode={mode}
+            subscription={subscription}
           />
         )}
       </div>

@@ -30,9 +30,11 @@ import cc from 'classcat'
 import WithTooltip from '../../../design/components/atoms/WithTooltip'
 import { useEffectOnUnmount } from '../../../lib/hooks'
 import { useDocEditor } from '../../lib/hooks/editor/docEditor'
+import { SerializedSubscription } from '../../interfaces/db/subscription'
 
 interface DocPreviewRealtimeProps {
   team: SerializedTeam
+  subscription?: SerializedSubscription
   doc: SerializedDocWithSupplemental
   token: string
   mode?: 'preview' | 'editor'
@@ -46,6 +48,7 @@ const DocPreviewRealtime = ({
   doc,
   token,
   user,
+  subscription,
   setRenderHeader,
 }: DocPreviewRealtimeProps) => {
   const [loaded, setLoaded] = useState(false)
@@ -77,6 +80,7 @@ const DocPreviewRealtime = ({
     team,
     doc,
     collaborationToken: token,
+    subscription,
   })
 
   const onEditorTemplateToolClick = useCallback(() => {

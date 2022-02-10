@@ -2,9 +2,12 @@ import { Hint } from 'codemirror'
 import throttle from 'lodash.throttle'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { YText, YEvent } from 'yjs/dist/src/internals'
+import { useToast } from '../../../../design/lib/stores/toast'
 import { buildIconUrl } from '../../../api/files'
+import { buildTeamFileUrl, uploadFile } from '../../../api/teams/files'
 import { getDocLinkHref } from '../../../components/Link/DocLink'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
+import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedTemplate } from '../../../interfaces/db/template'
 import { SerializedUser } from '../../../interfaces/db/user'
@@ -20,6 +23,9 @@ import {
 import { useLocalSnapshot } from '../../stores/localSnapshots'
 import { useNav } from '../../stores/nav'
 import { CodeMirrorKeyMap, useSettings } from '../../stores/settings'
+import { freePlanUploadSizeMb, paidPlanUploadSizeMb } from '../../subscription'
+import { nginxSizeLimitInMb } from '../../upload'
+import { bytesToMegaBytes } from '../../utils/bytes'
 import { getColorFromString, getRandomColor } from '../../utils/string'
 
 interface DocEditorHookProps {
@@ -27,6 +33,7 @@ interface DocEditorHookProps {
   collaborationToken: string
   team?: SerializedTeam
   user?: SerializedUser
+  subscription?: SerializedSubscription
 }
 
 export function useDocEditor({
@@ -34,6 +41,7 @@ export function useDocEditor({
   collaborationToken,
   user,
   team,
+  subscription,
 }: DocEditorHookProps) {
   const { settings } = useSettings()
   const [editorContent, setEditorContent] = useState('')
@@ -45,6 +53,7 @@ export function useDocEditor({
   } | null>(null)
   const suggestionsRef = useRef<Hint[]>([])
   const { loadDoc } = useNav()
+  const { pushApiErrorMessage, pushMessage } = useToast()
   const [selection, setSelection] = useState<SelectionState>({
     currentCursor: {
       line: 0,
@@ -341,6 +350,37 @@ export function useDocEditor({
     }
     return undefined
   }, [realtime, updateContent])
+
+  useEffect(() => {
+    if (team != null) {
+      fileUploadHandlerRef.current = async (file) => {
+        if (bytesToMegaBytes(file.size) > nginxSizeLimitInMb) {
+          pushMessage({
+            title: '',
+            description: `File size exceeding limit. ${
+              subscription == null ? freePlanUploadSizeMb : paidPlanUploadSizeMb
+            }Mb limit per upload allowed.`,
+          })
+          return null
+        }
+        try {
+          const { file: fileInfo } = await uploadFile(team, file, doc)
+          const url = buildTeamFileUrl(team, fileInfo.name)
+          if (file.type.match(/image\/.*/)) {
+            return { type: 'img', url, alt: file.name }
+          } else {
+            return { type: 'file', url, title: file.name }
+          }
+        } catch (err) {
+          console.log(err)
+          pushApiErrorMessage(err)
+          return null
+        }
+      }
+    } else {
+      fileUploadHandlerRef.current = undefined
+    }
+  }, [team, pushMessage, pushApiErrorMessage, subscription, doc])
 
   return {
     editorConfig,
