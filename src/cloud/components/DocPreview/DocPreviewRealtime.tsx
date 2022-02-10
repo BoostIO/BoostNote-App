@@ -29,7 +29,7 @@ import EditorToolButton from '../Editor/EditorToolButton'
 import cc from 'classcat'
 import WithTooltip from '../../../design/components/atoms/WithTooltip'
 import { useEffectOnUnmount } from '../../../lib/hooks'
-import { useDocEditor } from '../../lib/hooks/realtime/docRealtime'
+import { useDocEditor } from '../../lib/hooks/editor/docEditor'
 
 interface DocPreviewRealtimeProps {
   team: SerializedTeam
