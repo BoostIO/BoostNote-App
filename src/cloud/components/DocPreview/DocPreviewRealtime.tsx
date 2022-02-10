@@ -167,6 +167,7 @@ const DocPreviewRealtime = ({
             </Button>
           </WithTooltip>
         ))
+        break
       case 'loaded':
         setRenderHeader(() => (
           <WithTooltip
@@ -183,7 +184,9 @@ const DocPreviewRealtime = ({
             </Button>
           </WithTooltip>
         ))
+        break
       default:
+        setRenderHeader(() => null)
         break
     }
   }, [connState, translate, setRenderHeader, realtime])
