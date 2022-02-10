@@ -446,7 +446,11 @@ const Container = styled.div`
 
   .table__row__cell > *,
   .table__row__cell .react-datepicker-wrapper,
-  .table__row__cell .react-datepicker__input-container {
+  .table__row__cell .react-datepicker__input-container,
+  .table__row__cell .item__container,
+  .table__row__cell .item__container .editable__input,
+  .table__row__cell .item__container .editable__input form,
+  .table__row__cell .item__container .editable__input input {
     height: 100%;
   }
 

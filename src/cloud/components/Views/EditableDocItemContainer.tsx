@@ -122,6 +122,7 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
     <ItemContainer
       onMouseEnter={() => setShowingContextMenuActions(true)}
       onMouseLeave={() => setShowingContextMenuActions(false)}
+      className='item__container'
     >
       {showInput && (
         <EditableInput
