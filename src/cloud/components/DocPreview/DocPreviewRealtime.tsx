@@ -1,6 +1,9 @@
-import { mdiCloudOffOutline, mdiFileDocumentOutline } from '@mdi/js'
+import {
+  mdiCloudOffOutline,
+  mdiCloudSyncOutline,
+  mdiFileDocumentOutline,
+} from '@mdi/js'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { WebsocketProvider } from 'y-websocket'
 import Button from '../../../design/components/atoms/Button'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import LoaderDocEditor from '../../../design/components/atoms/loaders/LoaderDocEditor'
@@ -9,8 +12,6 @@ import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { SerializedTeam } from '../../interfaces/db/team'
 import { SerializedUser } from '../../interfaces/db/user'
 import CodeMirrorEditor from '../../lib/editor/components/CodeMirrorEditor'
-import { ConnectionState } from '../../lib/editor/hooks/useRealtime'
-import { useDocEditor } from '../../lib/hooks/realtime/docRealtime'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import EditorIndentationStatus from '../Editor/EditorIndentationStatus'
@@ -26,6 +27,9 @@ import EditorToolbar from '../Editor/EditorToolbar'
 import EditorToolbarUpload from '../Editor/EditorToolbarUpload'
 import EditorToolButton from '../Editor/EditorToolButton'
 import cc from 'classcat'
+import WithTooltip from '../../../design/components/atoms/WithTooltip'
+import { useEffectOnUnmount } from '../../../lib/hooks'
+import { useDocEditor } from '../../lib/hooks/realtime/docRealtime'
 
 interface DocPreviewRealtimeProps {
   team: SerializedTeam
@@ -33,6 +37,7 @@ interface DocPreviewRealtimeProps {
   token: string
   mode?: 'preview' | 'editor'
   user?: SerializedUser
+  setRenderHeader: React.Dispatch<React.SetStateAction<() => React.ReactNode>>
 }
 
 const DocPreviewRealtime = ({
@@ -41,6 +46,7 @@ const DocPreviewRealtime = ({
   doc,
   token,
   user,
+  setRenderHeader,
 }: DocPreviewRealtimeProps) => {
   const [loaded, setLoaded] = useState(false)
   const timeoutRef = useRef<number | null>(null)
@@ -118,6 +124,74 @@ const DocPreviewRealtime = ({
     }
   }, [mode, editorRef])
 
+  useEffect(() => {
+    switch (connState) {
+      case 'disconnected':
+        setRenderHeader(() => (
+          <WithTooltip
+            tooltip={
+              <>
+                {translate(lngKeys.EditorReconnectDisconnected1)}
+                <br />
+                {translate(lngKeys.EditorReconnectDisconnected2)}
+              </>
+            }
+          >
+            <Button
+              iconPath={mdiCloudOffOutline}
+              variant='danger'
+              onClick={() => realtime.connect()}
+            >
+              {translate(lngKeys.EditorReconnectDisconnected)}
+            </Button>
+          </WithTooltip>
+        ))
+        break
+      case 'reconnecting':
+        setRenderHeader(() => (
+          <WithTooltip
+            tooltip={
+              <>
+                {translate(lngKeys.EditorReconnectAttempt1)}
+                <br />
+                {translate(lngKeys.EditorReconnectAttempt2)}
+              </>
+            }
+          >
+            <Button
+              iconPath={mdiCloudSyncOutline}
+              variant='danger'
+              disabled={true}
+            >
+              {translate(lngKeys.EditorReconnectAttempt)}
+            </Button>
+          </WithTooltip>
+        ))
+      case 'loaded':
+        setRenderHeader(() => (
+          <WithTooltip
+            tooltip={
+              <>
+                {translate(lngKeys.EditorReconnectSyncing1)}
+                <br />
+                {translate(lngKeys.EditorReconnectSyncing2)}
+              </>
+            }
+          >
+            <Button variant='secondary' disabled={true}>
+              {translate(lngKeys.EditorReconnectSyncing)}
+            </Button>
+          </WithTooltip>
+        ))
+      default:
+        break
+    }
+  }, [connState, translate, setRenderHeader, realtime])
+
+  useEffectOnUnmount(() => {
+    setRenderHeader(() => null)
+  })
+
   if (!loaded) {
     return (
       <Flexbox>
@@ -127,7 +201,7 @@ const DocPreviewRealtime = ({
   }
 
   return (
-    <ReconnectWrapper connState={connState} realtime={realtime}>
+    <>
       <Container>
         {mode !== 'preview' && showEditorToolbar && (
           <StyledLayoutDimensions className={mode}>
@@ -197,40 +271,8 @@ const DocPreviewRealtime = ({
           <EditorIndentationStatus />
         </StyledBottomBar>
       )}
-    </ReconnectWrapper>
+    </>
   )
-}
-
-const ReconnectWrapper = ({
-  connState,
-  realtime,
-  children,
-}: React.PropsWithChildren<{
-  connState: ConnectionState
-  realtime: WebsocketProvider
-}>) => {
-  const { translate } = useI18n()
-  if (connState === 'disconnected' || connState === 'reconnecting') {
-    return (
-      <ReconnectWrapperContainer>
-        <Button
-          iconPath={mdiCloudOffOutline}
-          variant='danger'
-          onClick={() => realtime.connect()}
-          disabled={connState === 'reconnecting'}
-          className='reconnect__wrapper__button'
-        >
-          {connState === 'reconnecting'
-            ? translate(lngKeys.EditorReconnectAttempt)
-            : translate(lngKeys.EditorReconnectDisconnected)}
-        </Button>
-        <div className='reconnect__wrapper__background' />
-        {children}
-      </ReconnectWrapperContainer>
-    )
-  }
-
-  return <>{children}</>
 }
 
 export default DocPreviewRealtime
@@ -245,35 +287,6 @@ const StyledBottomBar = styled.div`
   box-sizing: content-box;
   & > :first-child {
     flex: 1;
-  }
-`
-
-const ReconnectWrapperContainer = styled.div`
-  position: relative;
-  height: fit-content;
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-
-  .reconnect__wrapper__background {
-    position: absolute;
-    width: 106%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    background: rgba(0, 0, 0, 0.4);
-    margin: 0 -3%;
-  }
-
-  .reconnect__wrapper__button {
-    z-index: 2;
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    margin: auto;
   }
 `
 
