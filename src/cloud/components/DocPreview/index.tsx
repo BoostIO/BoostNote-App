@@ -25,7 +25,11 @@ import { useRouter } from '../../lib/router'
 import { useGlobalData } from '../../lib/stores/globalData'
 import { useNav } from '../../lib/stores/nav'
 import { usePage } from '../../lib/stores/pageStore'
-import { ModalEventDetails, modalEventEmitter } from '../../lib/utils/events'
+import {
+  ModalEventDetails,
+  modalEventEmitter,
+  togglePreviewModeEventEmitter,
+} from '../../lib/utils/events'
 import { getDocTitle } from '../../lib/utils/patterns'
 import DocProperties from '../DocProperties'
 import { getDocLinkHref } from '../Link/DocLink'
@@ -107,6 +111,17 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
     },
     [closeLastModal, fallbackUrl, push]
   )
+
+  const toggleViewMode = useCallback(() => {
+    setMode((prev) => (prev === 'preview' ? 'editor' : 'preview'))
+  }, [])
+
+  useEffect(() => {
+    togglePreviewModeEventEmitter.listen(toggleViewMode)
+    return () => {
+      togglePreviewModeEventEmitter.unlisten(toggleViewMode)
+    }
+  }, [toggleViewMode])
 
   useEffect(() => {
     modalEventEmitter.listen(closePreviewModal)
