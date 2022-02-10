@@ -13,7 +13,6 @@ import {
   Over,
   MeasuringStrategy,
   pointerWithin,
-  getFirstCollision,
 } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -74,8 +73,9 @@ function useMultiContainerDragDrop<
         pointerIntersections.length > 0
           ? pointerIntersections
           : rectIntersection(args)
-      let overId = getFirstCollision(intersections, 'id')
 
+      let overId: string | null = null
+      intersections.forEach((intersection) => (overId = intersection.id))
       if (overId != null) {
         const overContainer = containers.find(
           (container) => container.id === overId
