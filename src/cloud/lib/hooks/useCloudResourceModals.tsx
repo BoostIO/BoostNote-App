@@ -428,6 +428,7 @@ export function useCloudResourceModals() {
       return openModal(
         <DocPreviewModal doc={doc} team={team} fallbackUrl={fallbackUrl} />,
         {
+          width: 'fit',
           showCloseIcon: false,
           removePadding: true,
           navigation: {

@@ -3,7 +3,7 @@ export interface ModalElement {
   title?: React.ReactNode
   content: React.ReactNode
   showCloseIcon?: boolean
-  width: 'large' | 'default' | 'small' | 'full' | number
+  width: 'large' | 'default' | 'small' | 'full' | 'fit' | number
   height?: number
   maxHeight?: number
   minHeight?: number
@@ -36,7 +36,7 @@ export type ModalOpeningOptions = {
   removePadding?: boolean
   showCloseIcon?: boolean
   keepAll?: boolean
-  width?: 'large' | 'default' | 'small' | 'full' | number
+  width?: 'large' | 'default' | 'small' | 'full' | 'fit' | number
   hideBackground?: boolean
   title?: string
   navigation?: ModalNavigationProps
