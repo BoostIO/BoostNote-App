@@ -50,6 +50,9 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
   const [collabToken, setCollabToken] = useState(
     doc.collaborationToken || doc.id
   )
+  const [renderHeader, setRenderHeader] = useState<() => React.ReactNode>(
+    () => null
+  )
 
   const {
     globalData: { currentUser },
@@ -144,6 +147,7 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
           Open as full page
         </Button>
         <Flexbox className='doc-preview__actions'>
+          {renderHeader}
           <Button
             variant='icon'
             iconPath={mode === 'preview' ? mdiPencil : mdiEyeOutline}
@@ -201,6 +205,7 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
           </Flexbox>
         ) : (
           <DocPreviewRealtime
+            setRenderHeader={setRenderHeader}
             doc={currentDoc}
             team={team}
             token={collabToken}
