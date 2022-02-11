@@ -34,6 +34,7 @@ const FormColorSelect = ({
 const Container = styled.div`
   display: inline-block;
   position: relative;
+  width: 100%;
 
   & > .form__color__selector {
     position: absolute;

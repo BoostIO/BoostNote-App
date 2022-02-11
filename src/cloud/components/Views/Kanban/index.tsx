@@ -19,6 +19,7 @@ import { SerializedView } from '../../../interfaces/db/view'
 import { useCloudApi } from '../../../lib/hooks/useCloudApi'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
 import { useI18n } from '../../../lib/hooks/useI18n'
+import MetadataContainerBreak from '../../../../design/components/organisms/MetadataContainer/atoms/MetadataContainerBreak'
 import {
   KanbanViewList,
   useKanbanView,
@@ -176,7 +177,7 @@ const KanbanView = ({
                             label={status}
                             onSave={(status) => editStatus(status)}
                           />
-                          <hr />
+                          <MetadataContainerBreak />
                         </>
                       )}
                     </ListSettings>,
