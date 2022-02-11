@@ -48,7 +48,6 @@ function ThreadList({
 
 const Container = styled.div`
   & > div {
-    padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
     &:hover {
       background-color: ${({ theme }) => theme.colors.background.secondary};
     }
