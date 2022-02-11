@@ -72,6 +72,7 @@ import AutomationCreatePage from '../pages/automations/create'
 import AutomationPage from '../pages/automations/[automationId]'
 import { BetaRegistrationProvider } from '../lib/stores/beta'
 import GithubSourceCallbackPage from './sources/GithubSourceCallbackPage'
+import Spinner from '../../design/components/atoms/Spinner'
 
 const CombinedProvider = combineProviders(
   PreviewStyleProvider,
@@ -174,7 +175,8 @@ const Router = () => {
       .then((globalData) => {
         initGlobalData(globalData)
       })
-      .catch((_err) => {
+      .catch((error) => {
+        console.warn(error)
         initGlobalData({
           teams: [],
           invites: [],
@@ -245,6 +247,20 @@ const Router = () => {
       abortController.abort()
     }
   }, [pathname, search])
+
+  if (!initialized) {
+    return (
+      <PreferencesProvider>
+        <GlobalDataProvider>
+          <SettingsProvider>
+            <V2ThemeProvider>
+              <Spinner />
+            </V2ThemeProvider>
+          </SettingsProvider>
+        </GlobalDataProvider>
+      </PreferencesProvider>
+    )
+  }
 
   if (pageInfo == null) {
     if (isApplicationPagePathname(pathname)) {
