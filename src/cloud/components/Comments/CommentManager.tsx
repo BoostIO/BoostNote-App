@@ -87,9 +87,7 @@ function CommentManager({
                 users={usersOrEmpty}
                 updateComment={updateComment}
               />
-            </div>
-            <div className={'thread__list__container__create__thread'}>
-              <CommentInput
+                            <CommentInput
                 placeholder={'Comment...'}
                 onSubmit={async (comment) => {
                   await createThread({ comment })
@@ -221,15 +219,15 @@ const Container = styled.div`
     flex-direction: column-reverse;
     scrollbar-width: thin;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
+    padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
 
     .thread__content__back_button {
-      margin: ${({ theme }) => theme.sizes.spaces.df}px;
+      margin: ${({ theme }) => theme.sizes.spaces.df}px 0;
     }
 
     & .comment__list {
       & > div {
         margin-bottom: ${({ theme }) => theme.sizes.spaces.df}px;
-        padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
       }
 
       &:hover {
@@ -279,10 +277,7 @@ const Container = styled.div`
     flex: 1;
     height: 100%;
     overflow-y: auto;
-  }
-
-  .thread__list__container__create__thread {
-    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
+    padding 0 ${({ theme }) => theme.sizes.spaces.df}px;;
   }
 `
 

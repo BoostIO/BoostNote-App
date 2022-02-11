@@ -232,7 +232,6 @@ const InputContainer = styled.div`
     display: flex;
     position: relative;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
-    padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
 
     .comment__input__send_button {
       position: absolute;
