@@ -70,12 +70,14 @@ const AddSmartViewModal = ({
                 onClick={() => setSelectedViewType(viewType)}
               >
                 <Flexbox justifyContent='center'>
+                  <div  className='smartview__header'>
                   {icon != null && (
-                    <Icon path={icon} className='smartview__icon' />
+                    <Icon path={icon} size={26} className='smartview__icon' />
                   )}
                   <strong className='smartview__name'>
                     {capitalize(viewType)}
                   </strong>
+                  </div>
                 </Flexbox>
                 <p className='smartview__description'>{desc}</p>
               </Button>
@@ -88,6 +90,10 @@ const AddSmartViewModal = ({
 }
 
 const ViewTypeSelectorContainer = styled.div`
+  .smartview__header {
+    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
+    display: flex;
+  }
   .smartview__icon {
     margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
