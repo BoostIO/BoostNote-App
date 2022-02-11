@@ -87,7 +87,7 @@ function CommentManager({
                 users={usersOrEmpty}
                 updateComment={updateComment}
               />
-                            <CommentInput
+              <CommentInput
                 placeholder={'Comment...'}
                 onSubmit={async (comment) => {
                   await createThread({ comment })
