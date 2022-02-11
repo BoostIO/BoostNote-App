@@ -281,7 +281,7 @@ const Container = styled.div`
 
   .doc-preview__content {
     padding: ${({ theme }) => theme.sizes.spaces.df}px
-      ${({ theme }) => theme.sizes.spaces.xl}px;
+      ${({ theme }) => theme.sizes.spaces.xl}px 0 ${({ theme }) => theme.sizes.spaces.xl}px;
   }
 
   .doc-preview__title__wrapper {
