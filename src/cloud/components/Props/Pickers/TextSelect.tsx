@@ -82,7 +82,6 @@ export default TextSelect
 
 const TextSelectContainer = styled.div`
   .text-select__label {
-    padding: 0.25em 0.5em;
     border-radius: 4px;
     color: white;
     overflow: hidden;

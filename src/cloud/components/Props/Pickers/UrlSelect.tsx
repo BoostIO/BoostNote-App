@@ -122,7 +122,7 @@ export default UrlSelect
 
 const UrlSelectContainer = styled.div`
   .url-select__label {
-    padding: 0.25em 0.5em;
+    padding: 0px;
     border-radius: 4px;
     overflow: hidden;
     white-space: nowrap;
