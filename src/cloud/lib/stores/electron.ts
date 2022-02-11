@@ -210,18 +210,6 @@ const useElectronStore = (): ElectronStore => {
         })
       }
     )
-    /**
-     * TODO: Should be discarded after v0.23
-     */
-    addHostListener(
-      'update-access-token',
-      (_event: IpcRendererEvent, accessToken: string | null) => {
-        if (!accessTokenHasBeenInitialized) {
-          accessTokenHasBeenInitialized = true
-        }
-        setAccessToken(accessToken)
-      }
-    )
 
     addHostListener(
       'switch-space',
