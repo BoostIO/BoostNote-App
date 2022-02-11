@@ -191,7 +191,6 @@ const Container = styled.div`
   .metadata__item__header {
     text-transform: uppercase;
     color: ${({ theme }) => theme.colors.text.subtle} !important;
-    margin-left: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 `
 

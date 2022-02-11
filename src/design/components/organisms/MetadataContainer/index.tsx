@@ -43,7 +43,7 @@ const Container = styled.div`
   .metadata__scroll {
     width: 100%;
     height: 100%;
-    padding: ${({ theme }) => theme.sizes.spaces.df}px 0;
+    padding: ${({ theme }) => theme.sizes.spaces.sm}px 0;
   }
 
   .metadata__container {
