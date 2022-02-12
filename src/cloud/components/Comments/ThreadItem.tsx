@@ -117,7 +117,7 @@ function ThreadItem({
             <div className={'thread__comment__line'}>
               <span>{thread.contributors[0].displayName}</span>
               <span className='thread__comment__line__date'>
-                {formatDate(thread.lastCommentTime)}
+                {formatDate(threadComments[0].createdAt)}
               </span>
               {editing ? (
                 <CommentInput

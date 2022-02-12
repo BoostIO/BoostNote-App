@@ -94,10 +94,14 @@ function CommentInput({
     try {
       setWorking(true)
       await onSubmit(fromNode(inputRef.current).trim())
-      inputRef.current.innerHTML = ''
+      if (inputRef.current != null) {
+        inputRef.current.innerHTML = ''
+      }
     } finally {
       setWorking(false)
-      inputRef.current.focus()
+      if (inputRef.current != null) {
+        inputRef.current.focus()
+      }
     }
   }, [onSubmit])
 
