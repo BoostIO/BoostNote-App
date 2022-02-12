@@ -40,8 +40,6 @@ import {
   mdiEyeOutline,
   mdiViewSplitVertical,
   mdiDotsHorizontal,
-  mdiCloudOffOutline,
-  mdiCloudSyncOutline,
 } from '@mdi/js'
 import EditorToolButton from './EditorToolButton'
 import { not } from 'ramda'
@@ -101,6 +99,7 @@ import CustomizedMarkdownPreviewer from '../MarkdownView/CustomizedMarkdownPrevi
 import BottomBarButton from '../BottomBarButton'
 import { YText } from 'yjs/dist/src/internals'
 import { useLocalSnapshot } from '../../lib/stores/localSnapshots'
+import SyncStatus from '../Topbar/SyncStatus'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -159,6 +158,8 @@ const Editor = ({
       : 'preview'
   )
   const [editorContent, setEditorContent] = useState('')
+  const [showingConnectIssueMessage, setShowingShowingConnectIssueMessage] =
+    useState<boolean>(false)
   const docRef = useRef<string>('')
   const router = useRouter()
   const { state } = router
@@ -484,6 +485,16 @@ const Editor = ({
       width: 'large',
     })
   }, [openModal, onTemplatePickCallback])
+
+  useEffect(() => {
+    if (connState == 'reconnecting') {
+      setShowingShowingConnectIssueMessage(true)
+    } else if (connState == 'disconnected') {
+      setShowingShowingConnectIssueMessage(true)
+    } else {
+      setShowingShowingConnectIssueMessage(false)
+    }
+  }, [connState])
 
   const toggleScrollSync = useCallback(() => {
     setScrollSync(not)
@@ -846,57 +857,6 @@ const Editor = ({
             {
               type: 'separator',
             },
-            ...(connState === 'reconnecting'
-              ? [
-                  {
-                    type: 'button',
-                    iconPath: mdiCloudSyncOutline,
-                    variant: 'danger',
-                    disabled: true,
-                    label: translate(lngKeys.EditorReconnectAttempt),
-                    tooltip: (
-                      <>
-                        {translate(lngKeys.EditorReconnectAttempt1)}
-                        <br />
-                        {translate(lngKeys.EditorReconnectAttempt2)}
-                      </>
-                    ),
-                  },
-                ]
-              : connState === 'disconnected'
-              ? [
-                  {
-                    type: 'button',
-                    iconPath: mdiCloudOffOutline,
-                    variant: 'danger',
-                    onClick: () => realtime.connect(),
-                    label: translate(lngKeys.EditorReconnectDisconnected),
-                    tooltip: (
-                      <>
-                        {translate(lngKeys.EditorReconnectDisconnected1)}
-                        <br />
-                        {translate(lngKeys.EditorReconnectDisconnected2)}
-                      </>
-                    ),
-                  },
-                ]
-              : connState === 'loaded'
-              ? [
-                  {
-                    type: 'button',
-                    variant: 'secondary' as const,
-                    disabled: true,
-                    label: translate(lngKeys.EditorReconnectSyncing),
-                    tooltip: (
-                      <>
-                        {translate(lngKeys.EditorReconnectSyncing1)}
-                        <br />
-                        {translate(lngKeys.EditorReconnectSyncing2)}
-                      </>
-                    ),
-                  },
-                ]
-              : []),
             ...(docIsEditable && currentUserIsCoreMember
               ? [
                   {
@@ -1069,6 +1029,9 @@ const Editor = ({
             )}
           </Container>
         </EditorLayout>
+        {showingConnectIssueMessage && (
+          <SyncStatus provider={realtime} connState={connState} />
+        )}
       </ApplicationContent>
     </ApplicationPage>
   )
@@ -1102,6 +1065,7 @@ const StyledBottomBar = styled.div`
   height: 24px;
   background-color: ${({ theme }) => theme.colors.background.primary};
   box-sizing: content-box;
+
   & > :first-child {
     flex: 1;
   }
@@ -1142,6 +1106,7 @@ const StyledShortcodeConvertMenu = styled.div`
 
 const StyledLayoutDimensions = styled.div`
   width: 100%;
+
   &.preview,
   .preview {
     width: 100%;
@@ -1163,17 +1128,21 @@ const ToolbarRow = styled.div`
   border: solid 1px ${({ theme }) => theme.colors.border.second};
   border-radius: 5px;
 `
+
 interface FontOptionsProps {
   fontSize: string
   fontFamily: string
 }
+
 const StyledEditorWrapper = styled.div<BaseTheme & FontOptionsProps>`
   position: relative;
   height: auto;
   width: 50%;
+
   &.layout-editor {
     width: 100%;
   }
+
   &.layout-preview {
     display: none;
   }
@@ -1189,19 +1158,23 @@ const StyledEditorWrapper = styled.div<BaseTheme & FontOptionsProps>`
 const StyledPreview = styled.div`
   height: 100%;
   width: 50%;
+
   &.layout-split {
     width: 50%;
+
     .scroller {
       height: 100%;
       overflow: auto;
       border-left: 1px solid ${({ theme }) => theme.colors.border.main};
     }
   }
+
   &.layout-preview {
     padding-top: ${({ theme }) => theme.sizes.spaces.sm}px;
     margin: 0 auto;
     width: 100%;
   }
+
   &.layout-editor {
     display: none;
   }
@@ -1223,21 +1196,25 @@ const StyledEditor = styled.div`
   height: auto;
   min-height: 0;
   font-size: 15px;
+
   &.preview,
   .preview {
     ${rightSidePageLayout};
     margin: auto;
   }
+
   & .CodeMirrorWrapper {
     height: 100%;
     word-break: break-word;
   }
+
   & .CodeMirror {
     width: 100%;
     height: 100%;
     position: relative;
     z-index: 0 !important;
     line-height: 1.4em;
+
     .CodeMirror-hints {
       position: absolute;
       z-index: 10;
@@ -1254,6 +1231,7 @@ const StyledEditor = styled.div`
       font-family: monospace;
       list-style: none;
     }
+
     .CodeMirror-hint {
       position: relative;
       margin: 0;
@@ -1264,8 +1242,10 @@ const StyledEditor = styled.div`
       cursor: pointer;
       font-size: ${({ theme }) => theme.sizes.fonts.xsm}px;
     }
+
     li.CodeMirror-hint-active {
       color: ${({ theme }) => theme.colors.variants.primary.base};
+
       &:before {
         content: '';
         display: block;
@@ -1277,15 +1257,18 @@ const StyledEditor = styled.div`
         background-color: ${({ theme }) => theme.colors.variants.primary.base};
       }
     }
+
     & .remote-caret {
       position: relative;
       border-left: 1px solid black;
       margin-left: -1px;
       box-sizing: border-box;
+
       &:hover > div {
         opacity: 1;
         transition-delay: 0s;
       }
+
       & > div {
         position: absolute;
         left: -1px;
@@ -1307,15 +1290,18 @@ const StyledEditor = styled.div`
       }
     }
   }
+
   .CodeMirror-scroll {
     position: relative;
     z-index: 0;
     width: 100%;
   }
+
   .CodeMirror-code,
   .CodeMirror-gutters {
     padding-bottom: 32px;
   }
+
   & .file-loading-widget {
     transform: translate3d(0, -100%, 0);
   }
