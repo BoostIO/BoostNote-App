@@ -13,7 +13,7 @@ const rotate = keyframes`
 `
 
 interface SpinnerProps {
-  variant?: 'primary' | 'subtle' | 'secondary'
+  variant?: 'primary' | 'subtle' | 'secondary' | 'warning'
   size?: number
   style?: React.CSSProperties
   className?: string
@@ -53,6 +53,10 @@ const SpinnerContainer = styled.div<{ size?: number }>`
 
   &.spinner--secondary {
     border-color: ${({ theme }) => theme.colors.variants.secondary.base};
+  }
+
+  &.spinner--warning {
+    border-color: ${({ theme }) => theme.colors.variants.warning.base};
   }
 `
 
