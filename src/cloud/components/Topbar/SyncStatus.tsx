@@ -68,8 +68,8 @@ const SyncStatus = ({ provider, connState }: SyncStatusProps) => {
 
 const ConnectIssueContainer = styled.div`
   position: absolute;
-  bottom: 40px;
-  right: 40px;
+  bottom: 24px;
+  right: 46px;
   z-index: 9999;
   width: 300px;
 
