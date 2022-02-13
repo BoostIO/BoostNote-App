@@ -6,10 +6,14 @@ import {
   unhighlightComment,
 } from '../../../design/lib/utils/comments'
 import styled from '../../../design/lib/styled'
+import { SerializedUser } from '../../interfaces/db/user'
 
 interface ThreadListProps extends Omit<ThreadListItemProps, 'thread'> {
   threads: Thread[]
   updateComment: (comment: Comment, message: string) => Promise<any>
+  addReaction: (comment: Comment, emoji: string) => Promise<any>
+  removeReaction: (comment: Comment, reactionId: string) => Promise<any>
+  user?: SerializedUser
 }
 
 function ThreadList({
@@ -18,6 +22,9 @@ function ThreadList({
   onDelete,
   users,
   updateComment,
+  addReaction,
+  removeReaction,
+  user,
 }: ThreadListProps) {
   return (
     <Container>
@@ -34,6 +41,9 @@ function ThreadList({
             onDelete={onDelete}
             users={users}
             updateComment={updateComment}
+            addReaction={addReaction}
+            removeReaction={removeReaction}
+            user={user}
           />
         </div>
       ))}

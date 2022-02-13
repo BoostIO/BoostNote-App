@@ -66,6 +66,8 @@ function useCommentManagerState(docId: string): [State, Actions] {
       createComment: commentActions.create,
       updateComment: commentActions.updateMessage,
       deleteComment: commentActions.delete,
+      addReaction: commentActions.addReaction,
+      removeReaction: commentActions.removeReaction,
     }
   }, [setMode, commentActions, threadActions, createThread])
 

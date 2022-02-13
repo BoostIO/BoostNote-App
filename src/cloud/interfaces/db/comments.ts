@@ -1,5 +1,6 @@
 import { SerializedUser } from './user'
 import { RelativePosition } from 'yjs'
+import { CommentReaction } from './commentReaction'
 
 export interface Thread {
   id: string
@@ -23,4 +24,5 @@ export interface Comment {
   createdAt: Date
   updatedAt: Date
   thread: string
+  reactions: CommentReaction[]
 }
