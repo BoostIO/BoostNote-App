@@ -1,24 +1,58 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from '../../lib/styled'
 import cc from 'classcat'
+import { useWillUnmountRef } from '../../../lib/hooks'
 
 interface WithTooltipProps {
   className?: string
   side?: 'right' | 'bottom' | 'bottom-right' | 'top'
   tooltip?: React.ReactNode
+  tooltipDelay: number
 }
 
 const posOffset = 5
-const WithTooltip: React.FC<WithTooltipProps> = ({
+const WithDelayedTooltip: React.FC<WithTooltipProps> = ({
   children,
   tooltip,
   className,
   side = 'bottom',
+  tooltipDelay,
 }) => {
-  const [open, setOpen] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'wait' | 'show'>('idle')
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const { willUnmountRef } = useWillUnmountRef()
+
   const [tooltipStyle, setTooltipStyle] = useState<React.CSSProperties>()
   const ref = useRef<HTMLDivElement>(null)
   const tooltipRef = useRef<HTMLDivElement>(null)
+
+  const handleMouseEnter = useCallback(() => {
+    if (status !== 'idle') {
+      return
+    }
+    setStatus('wait')
+    timerRef.current = setTimeout(() => {
+      if (willUnmountRef.current) {
+        return
+      }
+      setStatus('show')
+    }, tooltipDelay)
+  }, [status, timerRef, tooltipDelay, willUnmountRef])
+
+  const handleMouseLeave = useCallback(() => {
+    if (timerRef.current != null) {
+      clearTimeout(timerRef.current)
+    }
+    setStatus('idle')
+  }, [timerRef])
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current != null) {
+        clearTimeout(timerRef.current)
+      }
+    }
+  }, [willUnmountRef])
 
   const onMouseOver = useCallback(() => {
     if (ref.current == null || tooltipRef.current == null) {
@@ -67,15 +101,15 @@ const WithTooltip: React.FC<WithTooltipProps> = ({
 
   return (
     <div
-      onPointerEnter={() => setOpen(true)}
-      onPointerLeave={() => setOpen(false)}
+      onPointerEnter={() => handleMouseEnter()}
+      onPointerLeave={() => handleMouseLeave()}
       onPointerOver={onMouseOver}
-      onClick={() => setOpen(false)}
+      onClick={() => handleMouseLeave()}
       className={className}
       ref={ref}
     >
       {children}
-      {open && (
+      {status == 'show' && (
         <Container
           className={cc(['tooltip__container', side])}
           style={tooltipStyle}
@@ -90,7 +124,7 @@ const WithTooltip: React.FC<WithTooltipProps> = ({
   )
 }
 
-export default WithTooltip
+export default WithDelayedTooltip
 
 const Container = styled.div`
   position: fixed;
@@ -99,6 +133,7 @@ const Container = styled.div`
   min-width: 40px;
   text-align: center;
   pointer-events: none;
+
   > div {
     background-color: ${({ theme }) => theme.colors.background.primary};
     padding: ${({ theme }) => theme.sizes.spaces.xsm}px
@@ -107,17 +142,5 @@ const Container = styled.div`
     border-radius: 5px;
     font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
     color: ${({ theme }) => theme.colors.text.primary};
-    .tooltip-text {
-      background-color: transparent;
-      padding-right: ${({ theme }) => theme.sizes.spaces.df}px;
-    }
-    .tooltip-command {
-      display: inline-block;
-      line-height: 18px;
-      padding: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
-      border-radius: 2px;
-      border: 1px solid ${({ theme }) => theme.colors.border.second};
-      color: ${({ theme }) => theme.colors.text.subtle};
-    }
   }
 `

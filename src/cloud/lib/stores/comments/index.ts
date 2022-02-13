@@ -16,6 +16,8 @@ import {
   updateCommentMessage,
   deleteComment,
   getComment,
+  addReaction,
+  removeReactionFromComment,
 } from '../../../api/comments/comment'
 import groupBy from 'ramda/es/groupBy'
 import prop from 'ramda/es/prop'
@@ -233,6 +235,20 @@ function useCommentsStore() {
       delete: async (comment: Comment) => {
         await handleError.current(deleteComment(comment))
         removeCommentRef.current(comment)
+      },
+      addReaction: async (comment: Comment, reaction: string) => {
+        handleError.current(
+          addReaction({ id: comment.id, reaction }).then((comment) =>
+            insertCommentsRef.current([comment])
+          )
+        )
+      },
+      removeReaction: async (comment: Comment, reactionId: string) => {
+        handleError.current(
+          removeReactionFromComment({ commentId: comment.id, reactionId }).then(
+            (comment) => insertCommentsRef.current([comment])
+          )
+        )
       },
     }
   })

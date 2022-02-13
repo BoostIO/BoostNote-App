@@ -4,18 +4,27 @@ import styled from '../../../design/lib/styled'
 import UserIcon from '../UserIcon'
 import { format } from 'date-fns'
 import Icon from '../../../design/components/atoms/Icon'
-import { mdiClose, mdiPencil, mdiTrashCanOutline } from '@mdi/js'
+import {
+  mdiClose,
+  mdiEmoticonHappyOutline,
+  mdiPencil,
+  mdiTrashCanOutline,
+} from '@mdi/js'
 import { SerializedUser } from '../../interfaces/db/user'
 import CommentInput from './CommentInput'
 import sortBy from 'ramda/es/sortBy'
 import prop from 'ramda/es/prop'
 import { toText } from '../../lib/comments'
+import CommentReactions from './CommentReactions'
+import EmojiPickHandler from './EmojiPickHandler'
 
 interface CommentThreadProps {
   comments: Comment[]
   className: string
   updateComment: (comment: Comment, message: string) => Promise<any>
-  deleteComment: (comment: Comment) => void
+  deleteComment: (comment: Comment) => Promise<any>
+  addReaction: (comment: Comment, emoji: string) => Promise<any>
+  removeReaction: (comment: Comment, reactionId: string) => Promise<any>
   user?: SerializedUser
   users: SerializedUser[]
 }
@@ -25,6 +34,8 @@ function CommentList({
   className,
   updateComment,
   deleteComment,
+  addReaction,
+  removeReaction,
   user,
   users,
 }: CommentThreadProps) {
@@ -42,6 +53,9 @@ function CommentList({
             deleteComment={deleteComment}
             editable={user != null && comment.user.id === user.id}
             users={users}
+            addReaction={addReaction}
+            removeReaction={removeReaction}
+            user={user}
           />
         </div>
       ))}
@@ -52,19 +66,32 @@ function CommentList({
 interface CommentItemProps {
   comment: Comment
   updateComment: (comment: Comment, message: string) => Promise<any>
-  deleteComment: (comment: Comment) => void
+  deleteComment: (comment: Comment) => Promise<any>
+  addReaction: (comment: Comment, emoji: string) => Promise<any>
+  removeReaction: (comment: Comment, reactionId: string) => Promise<any>
   editable?: boolean
   users: SerializedUser[]
+  user?: SerializedUser
 }
 
 const smallUserIconStyle = { width: '28px', height: '28px', lineHeight: '26px' }
+
+export interface EmojiReactionData {
+  id: string
+  emoji: string
+  count: number
+  userIds: string[]
+}
 
 export function CommentItem({
   comment,
   editable,
   updateComment,
   deleteComment,
+  addReaction,
+  removeReaction,
   users,
+  user,
 }: CommentItemProps) {
   const [editing, setEditing] = useState(false)
   const [showingContextMenu, setShowingContextMenu] = useState<boolean>(false)
@@ -80,6 +107,50 @@ export function CommentItem({
   const content = useMemo(() => {
     return toText(comment.message, users)
   }, [comment.message, users])
+
+  const contextMenuItems = useCallback(() => {
+    if (editable) {
+      return (
+        <div className={'comment__meta__actions'}>
+          <EmojiPickHandler
+            className='comment__meta__actions__emoji'
+            comment={comment}
+            addReaction={addReaction}
+            removeReaction={removeReaction}
+            user={user}
+          >
+            <Icon size={20} path={mdiEmoticonHappyOutline} />
+          </EmojiPickHandler>
+          <div
+            onClick={() => setEditing(true)}
+            className='comment__meta__actions__edit'
+          >
+            <Icon size={20} path={mdiPencil} />
+          </div>
+          <div
+            onClick={() => deleteComment(comment)}
+            className='comment__meta__actions__remove'
+          >
+            <Icon size={20} path={mdiTrashCanOutline} />
+          </div>
+        </div>
+      )
+    } else {
+      return (
+        <div className={'comment__meta__actions'}>
+          <EmojiPickHandler
+            className='comment__meta__actions__emoji'
+            comment={comment}
+            addReaction={addReaction}
+            removeReaction={removeReaction}
+            user={user}
+          >
+            <Icon size={20} path={mdiEmoticonHappyOutline} />
+          </EmojiPickHandler>
+        </div>
+      )
+    }
+  }, [addReaction, comment, deleteComment, editable, removeReaction, user])
 
   return (
     <CommentItemContainer>
@@ -98,29 +169,14 @@ export function CommentItem({
           <span className='comment__meta__date'>
             {format(comment.createdAt, 'hh:mmaaa MMM do')}
           </span>
-          {editable &&
-            (editing ? (
-              <div onClick={() => setEditing(false)}>
-                <Icon path={mdiClose} />
-              </div>
-            ) : (
-              showingContextMenu && (
-                <div className={'comment__meta__actions'}>
-                  <div
-                    onClick={() => setEditing(true)}
-                    className='comment__meta__actions__edit'
-                  >
-                    <Icon size={20} path={mdiPencil} />
-                  </div>
-                  <div
-                    onClick={() => deleteComment(comment)}
-                    className='comment__meta__actions__remove'
-                  >
-                    <Icon size={20} path={mdiTrashCanOutline} />
-                  </div>
-                </div>
-              )
-            ))}
+
+          {editing ? (
+            <div onClick={() => setEditing(false)}>
+              <Icon path={mdiClose} />
+            </div>
+          ) : (
+            showingContextMenu && contextMenuItems()
+          )}
         </div>
         {editing ? (
           <CommentInput
@@ -131,7 +187,16 @@ export function CommentItem({
             users={users}
           />
         ) : (
-          <div className='comment__message'>{content}</div>
+          <>
+            <div className='comment__message'>{content}</div>
+            <CommentReactions
+              comment={comment}
+              addReaction={addReaction}
+              removeReaction={removeReaction}
+              users={users}
+              user={user}
+            />
+          </>
         )}
       </div>
     </CommentItemContainer>
@@ -183,6 +248,13 @@ const CommentItemContainer = styled.div`
     }
   }
 
+  .comment__add__reaction__button {
+    color: #9e9e9e;
+    background-color: ${({ theme }) => theme.colors.background.tertiary};
+    border-radius: 6px;
+    padding: 4px 8px;
+  }
+
   .comment__message {
     white-space: pre-wrap;
     word-break: break-word;
@@ -200,10 +272,11 @@ const CommentItemContainer = styled.div`
     gap: 4px;
     border-radius: ${({ theme }) => theme.borders.radius}px;
 
-    background-color: #1e2024;
+    background-color: ${({ theme }) => theme.colors.background.primary};
 
     .comment__meta__actions__edit,
-    .comment__meta__actions__remove {
+    .comment__meta__actions__remove,
+    .comment__meta__actions__emoji {
       height: 20px;
       margin: 3px;
 
