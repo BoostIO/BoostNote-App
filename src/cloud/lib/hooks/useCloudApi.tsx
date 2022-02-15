@@ -216,17 +216,14 @@ export function useCloudApi() {
           }
         },
         onError: async (err: any) => {
-          const error = Object.assign({}, err) as any
-          if (
-            error.response != null &&
-            typeof error.response.text === 'function'
-          ) {
+          if (err.response != null && typeof err.response.text === 'function') {
+            const response = Object.assign({}, err.response)
             try {
-              const description = (await error.response.text())
+              const description = (await response.text())
                 .split('\n')[0]
                 .split(': ')
               if (
-                error.response.status === 403 &&
+                response.status === 403 &&
                 description.some((desc: any) =>
                   (desc || '').includes(
                     `Your space exceeds the free tier's capacity`
