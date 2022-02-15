@@ -21,8 +21,8 @@ const TableRow = ({
 }: InternalTableRowProps) => {
   return (
     <Container div className='table-row'>
-      <div className='table-row__checkbox__wrapper'>
-        {showCheckbox && onCheckboxToggle != null && (
+      {showCheckbox && onCheckboxToggle != null && (
+        <div className='table-row__checkbox__wrapper'>
           <Checkbox
             className={cc([
               'table-row__checkbox',
@@ -31,8 +31,8 @@ const TableRow = ({
             checked={checked}
             toggle={() => onCheckboxToggle(!checked)}
           />
-        )}
-      </div>
+        </div>
+      )}
       {cells.map((cell, i) => (
         <TableCell {...cell} width={widths[i]} key={`table-cell-${i}`} />
       ))}

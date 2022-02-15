@@ -114,7 +114,7 @@ const ListViewItem: AppComponent<FolderListItemProps> = ({
         }
       }}
     >
-      {showCheckbox && (
+      {showCheckbox ? (
         <Checkbox
           className={cc([
             'list-view-item__checkbox',
@@ -123,6 +123,8 @@ const ListViewItem: AppComponent<FolderListItemProps> = ({
           checked={checked}
           toggle={() => onSelect(!checked)}
         />
+      ) : (
+        <div className='list-view-item__checkbox--placeholder' />
       )}
       {!hideOrderingHandle && (
         <div className='list-view-item__ordering-handle' {...listeners}>
@@ -220,6 +222,12 @@ const StyledContainer = styled.div`
 
   .item__label__line {
     ${overflowEllipsis()}
+  }
+
+  .list-view-item__checkbox--placeholder {
+    height: 1px;
+    width: ${({ theme }) => theme.sizes.spaces.md - 2}px;
+    margin-right: ${({ theme }) => theme.sizes.spaces.df}px;
   }
 
   .list-view-item__checkbox {

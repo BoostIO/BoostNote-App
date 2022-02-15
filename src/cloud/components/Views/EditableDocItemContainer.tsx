@@ -22,6 +22,7 @@ import { prepareDocPropsForAPI } from '../../lib/props'
 import { GetDocResponseBody } from '../../api/teams/docs'
 import { getDocContent } from '../../lib/utils/patterns'
 import { BulkApiActionRes } from '../../../design/lib/hooks/useBulkApi'
+import { usePage } from '../../lib/stores/pageStore'
 
 interface ItemProps {
   doc: SerializedDocWithSupplemental
@@ -33,6 +34,7 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
   const [showingContextMenuActions, setShowingContextMenuActions] =
     useState<boolean>(false)
 
+  const { currentUserIsCoreMember } = usePage()
   const { createDoc, updateDoc, deleteDocApi, getUpdatedDocApi, sendingMap } =
     useCloudApi()
   const { translate } = useI18n()
@@ -116,6 +118,10 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
     },
     [deleteDocApi, popup, translate, onDocDuplicate]
   )
+
+  if (!currentUserIsCoreMember) {
+    return <ItemContainer className='item__container'>{children}</ItemContainer>
+  }
 
   const showInput = !sendingMap.has(doc.id) && editingItemTitle
   return (
