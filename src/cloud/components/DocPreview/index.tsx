@@ -37,6 +37,7 @@ import DocPreviewRealtime from './DocPreviewRealtime'
 import LoaderDocEditor from '../../../design/components/atoms/loaders/LoaderDocEditor'
 import NewDocContextMenu from '../DocPage/NewDocContextMenu'
 import cc from 'classcat'
+import ViewerDisclaimer from '../ViewerDisclaimer'
 
 interface DocPreviewModalProps {
   doc: SerializedDocWithSupplemental
@@ -208,6 +209,7 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
         </Flexbox>
       </Flexbox>
       <div className='doc-preview__content'>
+        <ViewerDisclaimer />
         <Flexbox className='doc-preview__title__wrapper'>
           <span className='doc-preview__title'>
             {getDocTitle(currentDoc, 'Untitled')}
