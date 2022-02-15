@@ -315,19 +315,21 @@ export function DocContextMenuActions({
           },
         }}
       />
-      <MetadataContainerRow
-        row={{
-          type: 'button',
-          props: {
-            id: 'metadata-duplicate-link',
-            label: translate(lngKeys.GeneralDuplicate),
-            iconPath: mdiContentDuplicate,
-            spinning: duplicated,
-            disabled: duplicated,
-            onClick: duplicateButtonHandler,
-          },
-        }}
-      />
+      {currentUserIsCoreMember && (
+        <MetadataContainerRow
+          row={{
+            type: 'button',
+            props: {
+              id: 'metadata-duplicate-link',
+              label: translate(lngKeys.GeneralDuplicate),
+              iconPath: mdiContentDuplicate,
+              spinning: duplicated,
+              disabled: duplicated,
+              onClick: duplicateButtonHandler,
+            },
+          }}
+        />
+      )}
       <MetadataContainerRow
         row={{
           type: 'button',

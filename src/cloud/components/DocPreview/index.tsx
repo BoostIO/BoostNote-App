@@ -113,8 +113,11 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
   )
 
   const toggleViewMode = useCallback(() => {
+    if (!currentUserIsCoreMember) {
+      return
+    }
     setMode((prev) => (prev === 'preview' ? 'editor' : 'preview'))
-  }, [])
+  }, [currentUserIsCoreMember])
 
   useEffect(() => {
     togglePreviewModeEventEmitter.listen(toggleViewMode)
@@ -163,15 +166,17 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
         </Button>
         <Flexbox className='doc-preview__actions'>
           {renderHeader}
-          <Button
-            variant='icon'
-            iconPath={mode === 'preview' ? mdiPencil : mdiEyeOutline}
-            onClick={() =>
-              setMode((prev) => (prev === 'preview' ? 'editor' : 'preview'))
-            }
-            id='doc-preview__edit'
-            size='sm'
-          />
+          {currentUserIsCoreMember && (
+            <Button
+              variant='icon'
+              iconPath={mode === 'preview' ? mdiPencil : mdiEyeOutline}
+              onClick={() =>
+                setMode((prev) => (prev === 'preview' ? 'editor' : 'preview'))
+              }
+              id='doc-preview__edit'
+              size='sm'
+            />
+          )}
           <Button
             variant='icon'
             iconPath={mdiDotsHorizontal}
@@ -227,6 +232,7 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
             user={currentUser}
             mode={mode}
             subscription={subscription}
+            currentUserIsCoreMember={currentUserIsCoreMember}
           />
         )}
       </div>

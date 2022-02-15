@@ -34,6 +34,7 @@ import { SerializedSubscription } from '../../interfaces/db/subscription'
 
 interface DocPreviewRealtimeProps {
   team: SerializedTeam
+  currentUserIsCoreMember: boolean
   subscription?: SerializedSubscription
   doc: SerializedDocWithSupplemental
   token: string
@@ -49,6 +50,7 @@ const DocPreviewRealtime = ({
   token,
   user,
   subscription,
+  currentUserIsCoreMember,
   setRenderHeader,
 }: DocPreviewRealtimeProps) => {
   const [loaded, setLoaded] = useState(false)
@@ -204,6 +206,24 @@ const DocPreviewRealtime = ({
       <Flexbox>
         <LoaderDocEditor />
       </Flexbox>
+    )
+  }
+
+  if (!currentUserIsCoreMember) {
+    return (
+      <Container>
+        <StyledEditor className={cc(['preview', 'doc-preview__editor'])}>
+          <StyledPreview className={`layout-preview`}>
+            <CustomizedMarkdownPreviewer
+              content={editorContent}
+              updateContent={setEditorRefContent}
+              headerLinks={true}
+              className='doc-preview__content__scroller'
+              getEmbed={getEmbed}
+            />
+          </StyledPreview>
+        </StyledEditor>
+      </Container>
     )
   }
 
