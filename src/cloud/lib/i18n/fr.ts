@@ -70,7 +70,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsEnableEditorSpellcheck]:
     'Éditeur de vérification orthographique',
   [lngKeys.SettingsIndentSize]: "Taille de l'indentation pour l'éditeur",
-  [lngKeys.SettingsReleaseNotes]: "Release Notes",
+  [lngKeys.SettingsReleaseNotes]: 'Release Notes',
   [lngKeys.ManagePreferences]: 'Gérez vos préférences.',
   [lngKeys.ManagePreferencesMarkdownPreview]:
     'Gérez vos préférences de prévisualisation Markdown.',
