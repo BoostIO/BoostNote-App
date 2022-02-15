@@ -423,7 +423,7 @@ export enum lngKeys {
   FormSelectImage = 'form.image.select',
   FormChangeImage = 'form.image.change',
 
-  SettingsUserForum = 'settings.user.forum',
+  SettingsReleaseNotes = 'settings.release.notes',
 
   SidebarViewOptions = 'sidebar.view.options',
   SidebarSettingsAndMembers = 'sidebar.settings.member',

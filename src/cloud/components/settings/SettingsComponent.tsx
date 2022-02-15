@@ -302,9 +302,9 @@ const SettingsComponent = () => {
             size={16}
           />
           <SettingNavLinkItem
-            label={t(lngKeys.SettingsUserForum)}
-            href='https://github.com/BoostIO/BoostNote-App/discussions'
-            id='forum-link'
+            label={t(lngKeys.SettingsReleaseNotes)}
+            href='https://github.com/BoostIO/BoostNote-App/discussions/categories/releases'
+            id='release-note-link'
           />
 
           <SettingNavLinkItem

@@ -67,7 +67,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SettingsShowEditorLineNumbers]: '编辑器行号',
   [lngKeys.SettingsEnableEditorSpellcheck]: '拼写检查编辑器',
   [lngKeys.SettingsIndentSize]: '编辑器缩进大小',
-  [lngKeys.SettingsUserForum]: '用户论坛（新！）',
+  [lngKeys.SettingsReleaseNotes]: 'Release Notes',
   [lngKeys.ManagePreferences]: '管理您的首选项。',
   [lngKeys.ManagePreferencesMarkdownPreview]: '管理您的 Markdown 预览首选项。',
   [lngKeys.ManageProfile]: '管理你的档案。',
