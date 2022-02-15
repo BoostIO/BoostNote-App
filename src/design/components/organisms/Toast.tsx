@@ -68,6 +68,14 @@ const Container = styled.div`
     align-items: flex-start;
     border: 1px solid ${({ theme }) => theme.colors.border.main};
 
+    &.toast__item--minimized {
+      align-items: center;
+      button {
+        height: auto !important;
+        padding: 0;
+      }
+    }
+
     .toast__item__status {
       flex: 0 0 auto;
       margin-right: ${({ theme }) => theme.sizes.spaces.sm}px;
@@ -148,6 +156,7 @@ class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
         className={cc([
           `toast__item`,
           `toast__item--${this.props.item.type}`,
+          this.props.item.title == null && `toast__item--minimized`,
           this.props.onClick != null && 'toast__item--button',
         ])}
       >
@@ -164,9 +173,11 @@ class ToastItem extends React.Component<ToastItemProps, ToastItemState> {
           />
         </div>
         <div className='toast__item__content'>
-          <strong className='toast__item__title'>
-            {this.props.item.title}
-          </strong>
+          {this.props.item.title != null && (
+            <strong className='toast__item__title'>
+              {this.props.item.title}
+            </strong>
+          )}
           <p className='toast__item__description'>
             {this.props.item.description}
           </p>

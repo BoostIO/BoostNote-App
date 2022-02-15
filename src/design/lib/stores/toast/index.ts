@@ -4,7 +4,7 @@ import { createStoreContext } from '../../utils/context'
 
 export interface ToastMessage {
   id: string
-  title: string
+  title?: string
   description: string
   type?: 'info' | 'error' | 'success'
   createdAt: Date
@@ -57,7 +57,7 @@ const useToastStore = (): ToastStore => {
         {
           id: generateSecret(),
           createdAt: new Date(),
-          title,
+          title: process.env.NODE_ENV === 'development' ? title : undefined,
           type: 'error',
           description,
         },
