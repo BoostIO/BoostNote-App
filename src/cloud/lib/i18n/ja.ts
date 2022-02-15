@@ -68,7 +68,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SettingsShowEditorLineNumbers]: 'エディタの行番号',
   [lngKeys.SettingsEnableEditorSpellcheck]: 'スペルチェックエディタ',
   [lngKeys.SettingsIndentSize]: 'エディタインデントのサイズ',
-  [lngKeys.SettingsUserForum]: 'ユーザーフォーラム（New!!）',
+  [lngKeys.SettingsReleaseNotes]: 'リリースノート',
   [lngKeys.ManagePreferences]: 'あなた好みにカスタマイズしましょう。',
   [lngKeys.ManagePreferencesMarkdownPreview]:
     'Markdownプレビュー設定を管理します。',
