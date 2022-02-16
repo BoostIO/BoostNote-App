@@ -21,7 +21,13 @@ const ListViewHeader: AppComponent<ViewManagerContentRowProps> = ({
   onSelect,
 }) => {
   return (
-    <StyledContentManagerRow className={cc(['cm__row', className])}>
+    <StyledContentManagerRow
+      className={cc([
+        'cm__row',
+        !showCheckbox && 'cm__row--no-checkbox',
+        className,
+      ])}
+    >
       {showCheckbox && (
         <Checkbox
           className={cc(['row__checkbox', checked && 'row__checkbox--checked'])}
@@ -50,6 +56,12 @@ const StyledContentManagerRow = styled.div`
   width: 100%;
   font-size: 13px;
   padding: 0 ${({ theme }) => theme.sizes.spaces.df}px;
+
+  &.cm__row--no-checkbox {
+    .cm__row__label {
+      margin-left: ${({ theme }) => theme.sizes.spaces.xl - 4}px;
+    }
+  }
 
   .cm__row__label {
     color: ${({ theme }) => theme.colors.text.subtle};
