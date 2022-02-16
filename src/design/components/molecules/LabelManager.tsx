@@ -237,7 +237,7 @@ export const StatusEditor = <T extends LabelLike>({
   }, [])
 
   return (
-    <MetadataContainer>
+    <StyledStatusEditor>
       <MetadataContainerRow
         row={{ type: 'header', content: `${type.toUpperCase()} TITLE` }}
       />
@@ -271,9 +271,20 @@ export const StatusEditor = <T extends LabelLike>({
           }}
         />
       )}
-    </MetadataContainer>
+    </StyledStatusEditor>
   )
 }
+
+const StyledStatusEditor = styled(MetadataContainer)`
+  .form__input,
+  .form__color__select {
+    width: 100% !important;
+  }
+
+  .metadata__item__header {
+    margin-left: 0 !important;
+  }
+`
 
 const Container = styled.div`
   .autocomplete__input {

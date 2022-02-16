@@ -15,7 +15,7 @@ const FormColorSelect = ({
 }: FormColorSelectProps) => {
   const [open, setOpen] = useState(false)
   return (
-    <Container>
+    <Container className='form__color__select'>
       <FormInput
         {...rest}
         readOnly={true}
@@ -34,7 +34,6 @@ const FormColorSelect = ({
 const Container = styled.div`
   display: inline-block;
   position: relative;
-  width: 100%;
 
   & > .form__color__selector {
     position: absolute;

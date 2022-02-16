@@ -118,7 +118,6 @@ const StyledInput = styled.input`
   background: none;
   border: 1px solid ${({ theme }) => theme.colors.border.main};
   color: ${({ theme }) => theme.colors.text.primary};
-  width: 100%;
 
   &:read-only {
     background: ${({ theme }) => theme.colors.background.secondary};
