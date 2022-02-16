@@ -253,6 +253,10 @@ const Container = styled.div`
   flex-direction: column;
   flex: 1 1 10px;
   width: 100%;
+
+  .sync__status {
+    position: fixed;
+  }
 `
 
 const StyledShortcodeConvertMenu = styled.div`
