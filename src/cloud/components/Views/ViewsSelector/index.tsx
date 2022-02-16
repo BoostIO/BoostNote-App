@@ -30,6 +30,7 @@ import {
 } from '../../../interfaces/db/view'
 import { useViewHandler } from '../../../lib/hooks/views/viewHandler'
 import { getIconPathOfViewType, isDefaultView } from '../../../lib/views'
+import cc from 'classcat'
 
 export interface ViewsSelectorProps {
   selectedViewShortId: string | undefined
@@ -71,7 +72,12 @@ const ViewsSelector = ({
   )
 
   return (
-    <Container className='views__selector'>
+    <Container
+      className={cc([
+        'views__selector',
+        !currentUserIsCoreMember && 'views__selector--read-only',
+      ])}
+    >
       {orderedViews.map((view) => (
         <ButtonGroup className='views__item' key={view.id}>
           <Button
@@ -86,26 +92,28 @@ const ViewsSelector = ({
           >
             {view.name}
           </Button>
-          <Button
-            variant='icon'
-            iconPath={mdiDotsHorizontal}
-            size='sm'
-            className='views__item__menu'
-            onClick={(ev) =>
-              openContextModal(
-                ev,
-                <ViewContextModal
-                  view={view}
-                  parent={parent}
-                  setSelectedViewId={setSelectedViewShortId}
-                />,
-                {
-                  removePadding: true,
-                  width: 300,
-                }
-              )
-            }
-          />
+          {currentUserIsCoreMember && (
+            <Button
+              variant='icon'
+              iconPath={mdiDotsHorizontal}
+              size='sm'
+              className='views__item__menu'
+              onClick={(ev) =>
+                openContextModal(
+                  ev,
+                  <ViewContextModal
+                    view={view}
+                    parent={parent}
+                    setSelectedViewId={setSelectedViewShortId}
+                  />,
+                  {
+                    removePadding: true,
+                    width: 300,
+                  }
+                )
+              }
+            />
+          )}
         </ButtonGroup>
       ))}
       {currentUserIsCoreMember && (
@@ -156,6 +164,10 @@ const Container = styled.div`
   padding-top: ${({ theme }) => theme.sizes.spaces.sm}px;
   padding-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
   padding-left: 40px;
+
+  &.views__selector--read-only .views__item {
+    margin: 0 ${({ theme }) => theme.sizes.spaces.sm}px;
+  }
 
   .views__item {
     align-items: center;
