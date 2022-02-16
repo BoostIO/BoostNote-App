@@ -1,16 +1,13 @@
 <div align="center">
   <img src="static/logo_with_text_teal.svg" width="400">
 
-[https://boostnote.io/](https://boostnote.io/)
+  Boost Note is a document driven project management tool that maximizes remote DevOps team velocity.
+  
+  [https://boostnote.io/](https://boostnote.io/)
 
 </div>
 
 ![uiimage](./static/img_ui.png)
-
-<h2 align='center'>Collaborate easily, in real-time.</h2>
-
-Boost Note is a collaborative real-time markdown note app
-for developer teams.
 
 ## 👷 Core Team (maintainers)
 
