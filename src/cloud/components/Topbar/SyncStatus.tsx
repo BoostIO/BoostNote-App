@@ -21,7 +21,7 @@ const SyncStatus = ({ provider, connState }: SyncStatusProps) => {
     switch (connState) {
       case 'reconnecting':
         return (
-          <ConnectIssueContainer>
+          <ConnectIssueContainer className='sync__status'>
             <div className={'sync__status__container_reconnecting'}>
               <div className={'sync__status__header'}>
                 <Spinner variant={'warning'} size={20} />
@@ -35,7 +35,7 @@ const SyncStatus = ({ provider, connState }: SyncStatusProps) => {
         )
       case 'disconnected':
         return (
-          <ConnectIssueContainer>
+          <ConnectIssueContainer className='sync__status'>
             <div className={'sync__status__container_disconnected'}>
               <div className={'sync__status__header'}>
                 <Icon
@@ -116,8 +116,6 @@ const ConnectIssueContainer = styled.div`
   }
 
   .sync__status__header_text {
-    font-family: Lato sans-serif;
-    font-style: normal;
     font-weight: bold;
     font-size: 15px;
     line-height: 18px;
