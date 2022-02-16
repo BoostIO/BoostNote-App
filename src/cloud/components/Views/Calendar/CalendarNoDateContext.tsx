@@ -84,7 +84,11 @@ const CalendarNoDateContext = ({
                 content: (
                   <Flexbox
                     draggable={true}
-                    className={calendarDroppableClassName}
+                    className={
+                      currentUserIsCoreMember
+                        ? calendarDroppableClassName
+                        : undefined
+                    }
                     data={JSON.stringify({ title, extendedProps: { doc } })}
                   >
                     {currentUserIsCoreMember && (

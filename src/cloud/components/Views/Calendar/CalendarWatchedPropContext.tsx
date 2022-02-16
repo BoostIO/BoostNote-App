@@ -26,6 +26,7 @@ import { filterIter } from '../../../lib/utils/iterator'
 interface CalendarWatchedPropContextProps {
   view: SerializedView
   teamId: string
+  currentUserIsCoreMember?: boolean
   watchedProp: {
     type: PropType
     name: string
@@ -45,6 +46,7 @@ interface PropertySuggestions {
 const CalendarWatchedPropContext = ({
   view,
   watchedProp,
+  currentUserIsCoreMember,
   teamId,
   updateWatchedProp,
 }: CalendarWatchedPropContextProps) => {
@@ -160,7 +162,8 @@ const CalendarWatchedPropContext = ({
                       </Flexbox>
                     ),
                     iconPath: getIconPathOfPropType(propSuggestion.type),
-                    disabled: sending != null || isSelected,
+                    disabled:
+                      !currentUserIsCoreMember || sending != null || isSelected,
                     spinning: sending === propSuggestion.name,
                     id: id,
                     onClick: () => setNewWatchedProp(propSuggestion),
@@ -195,7 +198,8 @@ const CalendarWatchedPropContext = ({
                       </Flexbox>
                     ),
                     iconPath: getIconPathOfPropType(propSuggestion.type),
-                    disabled: sending != null || isSelected,
+                    disabled:
+                      !currentUserIsCoreMember || sending != null || isSelected,
                     spinning: sending === propSuggestion.name,
                     id: id,
                     onClick: () => setNewWatchedProp(propSuggestion),
