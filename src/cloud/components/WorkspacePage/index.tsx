@@ -17,6 +17,7 @@ import { getMapValues } from '../../../design/lib/utils/array'
 import { ViewsManager } from '../Views'
 import ApplicationPageLoader from '../ApplicationPageLoader'
 import LoaderFolderPage from '../../../design/components/atoms/loaders/LoaderFolderPage'
+import ViewerDisclaimer from '../ViewerDisclaimer'
 
 const WorkspacePage = ({
   workspace: pageWorkspace,
@@ -132,6 +133,7 @@ const WorkspacePage = ({
       <ApplicationTopbar controls={topbarControls} />
       <ApplicationContent>
         <FolderPageInviteSection />
+        <ViewerDisclaimer resource='folder' />
         <ViewsManager
           parent={{ type: 'workspace', target: workspace }}
           views={currentViews}

@@ -483,6 +483,8 @@ const jpTranslation: TranslationSource = {
   [lngKeys.ViewerDisclaimerIntro]: 'このドキュメントを編集できるように',
   [lngKeys.ViewerDisclaimerOutro]:
     'Admin権限の方があなたの権限をMemberに変更すると、ドキュメント編集等を行うことができるようになります。',
+  [lngKeys.ViewerDisclaimerFolderOutro]:
+    'Admin権限の方があなたの権限をMemberに変更すると、フォルダー編集等を行うことができるようになります。',
   [lngKeys.MemberRole]: 'メンバーの役割',
 
   [lngKeys.DiscountModalTitle]: '有料プランを購読し、割引を受け取りましょう！',
