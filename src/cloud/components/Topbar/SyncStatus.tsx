@@ -21,56 +21,60 @@ const SyncStatus = ({ provider, connState }: SyncStatusProps) => {
     switch (connState) {
       case 'reconnecting':
         return (
-          <div className={'sync__status__container_reconnecting'}>
-            <div className={'sync__status__header'}>
-              <Spinner variant={'warning'} size={20} />
-              <div className={'sync__status__header_text'}>Connecting..</div>
+          <ConnectIssueContainer>
+            <div className={'sync__status__container_reconnecting'}>
+              <div className={'sync__status__header'}>
+                <Spinner variant={'warning'} size={20} />
+                <div className={'sync__status__header_text'}>Connecting..</div>
+              </div>
+              <div>
+                Changes will not be synced with the server until reconnection
+              </div>
             </div>
-            <div>
-              Changes will not be synced with the server until reconnection
-            </div>
-          </div>
+          </ConnectIssueContainer>
         )
       case 'disconnected':
         return (
-          <div className={'sync__status__container_disconnected'}>
-            <div className={'sync__status__header'}>
-              <Icon
-                className={'sync__status__header_warn_color'}
-                path={mdiAlertOutline}
-                size={20}
-              />
-              <div className={'sync__status__header_text'}>
-                Please try reconnecting
+          <ConnectIssueContainer>
+            <div className={'sync__status__container_disconnected'}>
+              <div className={'sync__status__header'}>
+                <Icon
+                  className={'sync__status__header_warn_color'}
+                  path={mdiAlertOutline}
+                  size={20}
+                />
+                <div className={'sync__status__header_text'}>
+                  Please try reconnecting
+                </div>
               </div>
+              <div>
+                Edit session has expired. Changes will not be synced with the
+                server until reconnection.
+              </div>
+              <Button
+                className={'sync__status__reconnect_button'}
+                variant='warning'
+                onClick={reconnect}
+                size={'md'}
+              >
+                Reconnect
+              </Button>
             </div>
-            <div>
-              Edit session has expired. Changes will not be synced with the
-              server until reconnection.
-            </div>
-            <Button
-              className={'sync__status__reconnect_button'}
-              variant='warning'
-              onClick={reconnect}
-              size={'md'}
-            >
-              Reconnect
-            </Button>
-          </div>
+          </ConnectIssueContainer>
         )
       default:
-        return undefined
+        return null
     }
   }, [connState, reconnect])
 
-  return <ConnectIssueContainer>{content}</ConnectIssueContainer>
+  return content
 }
 
 const ConnectIssueContainer = styled.div`
   position: absolute;
   bottom: 24px;
   right: 46px;
-  z-index: 9999;
+  z-index: 1;
   width: 300px;
 
   background-color: ${({ theme }) => theme.colors.background.tertiary};

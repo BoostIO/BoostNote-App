@@ -1,10 +1,5 @@
-import {
-  mdiCloudOffOutline,
-  mdiCloudSyncOutline,
-  mdiFileDocumentOutline,
-} from '@mdi/js'
+import { mdiFileDocumentOutline } from '@mdi/js'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import Button from '../../../design/components/atoms/Button'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import LoaderDocEditor from '../../../design/components/atoms/loaders/LoaderDocEditor'
 import styled from '../../../design/lib/styled'
@@ -27,10 +22,10 @@ import EditorToolbar from '../Editor/EditorToolbar'
 import EditorToolbarUpload from '../Editor/EditorToolbarUpload'
 import EditorToolButton from '../Editor/EditorToolButton'
 import cc from 'classcat'
-import WithTooltip from '../../../design/components/atoms/WithTooltip'
 import { useEffectOnUnmount } from '../../../lib/hooks'
 import { useDocEditor } from '../../lib/hooks/editor/docEditor'
 import { SerializedSubscription } from '../../interfaces/db/subscription'
+import SyncStatus from '../Topbar/SyncStatus'
 
 interface DocPreviewRealtimeProps {
   team: SerializedTeam
@@ -130,73 +125,6 @@ const DocPreviewRealtime = ({
     }
   }, [mode, editorRef])
 
-  useEffect(() => {
-    switch (connState) {
-      case 'disconnected':
-        setRenderHeader(() => (
-          <WithTooltip
-            tooltip={
-              <>
-                {translate(lngKeys.EditorReconnectDisconnected1)}
-                <br />
-                {translate(lngKeys.EditorReconnectDisconnected2)}
-              </>
-            }
-          >
-            <Button
-              iconPath={mdiCloudOffOutline}
-              variant='danger'
-              onClick={() => realtime.connect()}
-            >
-              {translate(lngKeys.EditorReconnectDisconnected)}
-            </Button>
-          </WithTooltip>
-        ))
-        break
-      case 'reconnecting':
-        setRenderHeader(() => (
-          <WithTooltip
-            tooltip={
-              <>
-                {translate(lngKeys.EditorReconnectAttempt1)}
-                <br />
-                {translate(lngKeys.EditorReconnectAttempt2)}
-              </>
-            }
-          >
-            <Button
-              iconPath={mdiCloudSyncOutline}
-              variant='danger'
-              disabled={true}
-            >
-              {translate(lngKeys.EditorReconnectAttempt)}
-            </Button>
-          </WithTooltip>
-        ))
-        break
-      case 'loaded':
-        setRenderHeader(() => (
-          <WithTooltip
-            tooltip={
-              <>
-                {translate(lngKeys.EditorReconnectSyncing1)}
-                <br />
-                {translate(lngKeys.EditorReconnectSyncing2)}
-              </>
-            }
-          >
-            <Button variant='secondary' disabled={true}>
-              {translate(lngKeys.EditorReconnectSyncing)}
-            </Button>
-          </WithTooltip>
-        ))
-        break
-      default:
-        setRenderHeader(() => null)
-        break
-    }
-  }, [connState, translate, setRenderHeader, realtime])
-
   useEffectOnUnmount(() => {
     setRenderHeader(() => null)
   })
@@ -222,6 +150,8 @@ const DocPreviewRealtime = ({
               getEmbed={getEmbed}
             />
           </StyledPreview>
+
+          <SyncStatus provider={realtime} connState={connState} />
         </StyledEditor>
       </Container>
     )
@@ -286,6 +216,7 @@ const DocPreviewRealtime = ({
             />
           </StyledPreview>
         </StyledEditor>
+        <SyncStatus provider={realtime} connState={connState} />
       </Container>
       {mode !== 'preview' && (
         <StyledBottomBar className='doc-preview__toolbar'>

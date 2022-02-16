@@ -158,8 +158,6 @@ const Editor = ({
       : 'preview'
   )
   const [editorContent, setEditorContent] = useState('')
-  const [showingConnectIssueMessage, setShowingShowingConnectIssueMessage] =
-    useState<boolean>(false)
   const docRef = useRef<string>('')
   const router = useRouter()
   const { state } = router
@@ -485,16 +483,6 @@ const Editor = ({
       width: 'large',
     })
   }, [openModal, onTemplatePickCallback])
-
-  useEffect(() => {
-    if (connState == 'reconnecting') {
-      setShowingShowingConnectIssueMessage(true)
-    } else if (connState == 'disconnected') {
-      setShowingShowingConnectIssueMessage(true)
-    } else {
-      setShowingShowingConnectIssueMessage(false)
-    }
-  }, [connState])
 
   const toggleScrollSync = useCallback(() => {
     setScrollSync(not)
@@ -1029,9 +1017,7 @@ const Editor = ({
             )}
           </Container>
         </EditorLayout>
-        {showingConnectIssueMessage && (
-          <SyncStatus provider={realtime} connState={connState} />
-        )}
+        <SyncStatus provider={realtime} connState={connState} />
       </ApplicationContent>
     </ApplicationPage>
   )
