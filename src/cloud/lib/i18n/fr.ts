@@ -492,6 +492,8 @@ const frTranslation: TranslationSource = {
   [lngKeys.ViewerDisclaimerIntro]:
     'Veuillez demander à votre administrateur de vous donner un',
   [lngKeys.ViewerDisclaimerOutro]: 'afin que vous puissiez éditer ce document',
+  [lngKeys.ViewerDisclaimerFolderOutro]:
+    'afin que vous puissiez éditer ce dossier',
   [lngKeys.MemberRole]: 'Rôle de membre',
 
   [lngKeys.DiscountModalTitle]:

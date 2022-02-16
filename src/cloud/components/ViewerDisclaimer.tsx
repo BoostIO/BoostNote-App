@@ -15,7 +15,11 @@ import { trackEvent } from '../api/track'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
 import { LoadingButton } from '../../design/components/atoms/Button'
 
-const ViewerDisclaimer = () => {
+const ViewerDisclaimer = ({
+  resource = 'doc',
+}: {
+  resource?: 'doc' | 'folder'
+}) => {
   const { team, currentUserIsCoreMember } = usePage()
   const { translate } = useI18n()
 
@@ -34,7 +38,9 @@ const ViewerDisclaimer = () => {
           {translate(lngKeys.MemberRole)}
           <Icon path={mdiOpenInNew} />
         </ExternalLink>
-        {translate(lngKeys.ViewerDisclaimerOutro)}{' '}
+        {resource === 'doc'
+          ? translate(lngKeys.ViewerDisclaimerOutro)
+          : translate(lngKeys.ViewerDisclaimerFolderOutro)}
       </div>
 
       {team != null && <EditRequestButton team={team} />}

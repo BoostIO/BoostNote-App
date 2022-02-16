@@ -446,6 +446,7 @@ export enum lngKeys {
   SeeRoleDetails = 'settings.roles.see.details',
   ViewerDisclaimerIntro = 'viewer.disclaimer.intro',
   ViewerDisclaimerOutro = 'viewer.disclaimer.outro',
+  ViewerDisclaimerFolderOutro = 'viewer.disclaimer.outro.folder',
   MemberRole = 'member.role',
 
   GeneralInvite = 'general.invite',

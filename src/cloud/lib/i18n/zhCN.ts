@@ -458,6 +458,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SeeRoleDetails]: 'See role details',
   [lngKeys.ViewerDisclaimerIntro]: '请让您的管理员给您一个',
   [lngKeys.ViewerDisclaimerOutro]: '以便您可以编辑此文档',
+  [lngKeys.ViewerDisclaimerFolderOutro]: '以便您可以编辑此文件夹',
   [lngKeys.MemberRole]: '成员角色',
 
   [lngKeys.DiscountModalTitle]: '立即订阅即可享受折扣！',
