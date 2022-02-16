@@ -172,9 +172,10 @@ export const ViewsManager = ({
         setSelectedViewShortId={selectViewShortId}
         parent={parent}
         views={views}
+        currentUserIsCoreMember={currentUserIsCoreMember}
       />
     )
-  }, [parent, views, currentView, selectViewShortId])
+  }, [parent, views, currentView, selectViewShortId, currentUserIsCoreMember])
 
   return (
     <Container>

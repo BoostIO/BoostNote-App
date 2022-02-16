@@ -36,12 +36,14 @@ export interface ViewsSelectorProps {
   setSelectedViewShortId: (shortId: string) => void
   views: SerializedView[]
   parent: ViewParent
+  currentUserIsCoreMember: boolean
 }
 
 const ViewsSelector = ({
   parent,
   selectedViewShortId,
   setSelectedViewShortId,
+  currentUserIsCoreMember,
 }: ViewsSelectorProps) => {
   const { openContextModal, closeLastModal } = useModal()
   const { actionsRef, sendingMap, orderedViews } = useViewHandler({
@@ -106,40 +108,42 @@ const ViewsSelector = ({
           />
         </ButtonGroup>
       ))}
-      <LoadingButton
-        spinning={sendingMap.get('view-api') === 'create'}
-        disabled={sendingMap.has('view-api')}
-        variant='icon'
-        size='sm'
-        iconPath={mdiPlus}
-        iconSize={20}
-        onClick={(ev) =>
-          openContextModal(
-            ev,
-            <ViewModal
-              createNewView={(type) => {
-                if (
-                  orderedViews.length === 1 &&
-                  isDefaultView(orderedViews[0])
-                ) {
-                  createNewView(
-                    orderedViews[0].type,
-                    orderedViews[0].name
-                  ).then(() => createNewView(type))
-                } else {
-                  createNewView(type)
-                }
-              }}
-            />,
-            {
-              alignment: 'bottom-left',
-              width: 300,
-            }
-          )
-        }
-      >
-        Add view
-      </LoadingButton>
+      {currentUserIsCoreMember && (
+        <LoadingButton
+          spinning={sendingMap.get('view-api') === 'create'}
+          disabled={sendingMap.has('view-api')}
+          variant='icon'
+          size='sm'
+          iconPath={mdiPlus}
+          iconSize={20}
+          onClick={(ev) =>
+            openContextModal(
+              ev,
+              <ViewModal
+                createNewView={(type) => {
+                  if (
+                    orderedViews.length === 1 &&
+                    isDefaultView(orderedViews[0])
+                  ) {
+                    createNewView(
+                      orderedViews[0].type,
+                      orderedViews[0].name
+                    ).then(() => createNewView(type))
+                  } else {
+                    createNewView(type)
+                  }
+                }}
+              />,
+              {
+                alignment: 'bottom-left',
+                width: 300,
+              }
+            )
+          }
+        >
+          Add view
+        </LoadingButton>
+      )}
     </Container>
   )
 }

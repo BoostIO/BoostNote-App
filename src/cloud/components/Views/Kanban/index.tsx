@@ -122,74 +122,76 @@ const KanbanView = ({
             name={status?.name || 'No Status'}
             backgroundColor={status?.backgroundColor}
           />
-          <div className={'kanban__item--action-buttons'}>
-            {currentWorkspaceId != null && (
+          {currentUserIsCoreMember && (
+            <div className={'kanban__item--action-buttons'}>
+              {currentWorkspaceId != null && (
+                <Button
+                  className={'kanban__item--action-button'}
+                  variant={'icon'}
+                  iconPath={mdiPlus}
+                  onClick={() => {
+                    openNewDocForm(
+                      {
+                        team,
+                        workspaceId: currentWorkspaceId,
+                        parentFolderId: currentFolderId,
+                        props:
+                          statusProp != null
+                            ? {
+                                [prop]: {
+                                  type: 'status',
+                                  data: statusProp.id,
+                                },
+                              }
+                            : undefined,
+                      },
+                      {
+                        precedingRows: [],
+                        skipRedirect: true,
+                      }
+                    )
+                  }}
+                />
+              )}
               <Button
                 className={'kanban__item--action-button'}
-                variant={'icon'}
-                iconPath={mdiPlus}
-                onClick={() => {
-                  openNewDocForm(
+                onClick={(event) => {
+                  openContextModal(
+                    event,
+                    <ListSettings
+                      list={list}
+                      remove={(list) => {
+                        removeListRef.current(list)
+                        closeLastModal()
+                      }}
+                      move={(list, move) => {
+                        onListMoveRef.current(list, move)
+                        closeLastModal()
+                      }}
+                    >
+                      {status != null && (
+                        <>
+                          <StatusEditor
+                            type='status'
+                            label={status}
+                            onSave={(status) => editStatus(status)}
+                          />
+                          <hr />
+                        </>
+                      )}
+                    </ListSettings>,
                     {
-                      team,
-                      workspaceId: currentWorkspaceId,
-                      parentFolderId: currentFolderId,
-                      props:
-                        statusProp != null
-                          ? {
-                              [prop]: {
-                                type: 'status',
-                                data: statusProp.id,
-                              },
-                            }
-                          : undefined,
-                    },
-                    {
-                      precedingRows: [],
-                      skipRedirect: true,
+                      width: 250,
+                      removePadding: true,
+                      keepAll: true,
                     }
                   )
                 }}
+                iconPath={mdiDotsHorizontal}
+                variant='icon'
               />
-            )}
-            <Button
-              className={'kanban__item--action-button'}
-              onClick={(event) => {
-                openContextModal(
-                  event,
-                  <ListSettings
-                    list={list}
-                    remove={(list) => {
-                      removeListRef.current(list)
-                      closeLastModal()
-                    }}
-                    move={(list, move) => {
-                      onListMoveRef.current(list, move)
-                      closeLastModal()
-                    }}
-                  >
-                    {status != null && (
-                      <>
-                        <StatusEditor
-                          type='status'
-                          label={status}
-                          onSave={(status) => editStatus(status)}
-                        />
-                        <hr />
-                      </>
-                    )}
-                  </ListSettings>,
-                  {
-                    width: 250,
-                    removePadding: true,
-                    keepAll: true,
-                  }
-                )
-              }}
-              iconPath={mdiDotsHorizontal}
-              variant='icon'
-            />
-          </div>
+            </div>
+          )}
         </Flexbox>
       )
     },
@@ -203,6 +205,7 @@ const KanbanView = ({
       prop,
       closeLastModal,
       openNewDocForm,
+      currentUserIsCoreMember,
     ]
   )
 

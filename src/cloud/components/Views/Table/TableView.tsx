@@ -198,24 +198,28 @@ const TableView = ({
               id: 'doc-title',
               children: <Flexbox style={{ height: '100%' }}>Title</Flexbox>,
               width: view.data.titleColumnWidth ?? 300,
-              onWidthChange: (newWidth) => {
-                actionsRef.current.updateTitleColumnWidth(newWidth)
-              },
-              onClick: (ev: any) =>
-                openContextModal(
-                  ev,
-                  <TitleColumnSettingsContext
-                    updateTableSort={actionsRef.current.updateTableSort}
-                    close={closeLastModal}
-                  />,
-                  {
-                    width: 250,
-                    hideBackground: true,
-                    removePadding: true,
-                    alignment: 'bottom-left',
-                    keepAll: true,
-                  }
-                ),
+              onWidthChange: !currentUserIsCoreMember
+                ? undefined
+                : (newWidth) => {
+                    actionsRef.current.updateTitleColumnWidth(newWidth)
+                  },
+              onClick: !currentUserIsCoreMember
+                ? undefined
+                : (ev: any) =>
+                    openContextModal(
+                      ev,
+                      <TitleColumnSettingsContext
+                        updateTableSort={actionsRef.current.updateTableSort}
+                        close={closeLastModal}
+                      />,
+                      {
+                        width: 250,
+                        hideBackground: true,
+                        removePadding: true,
+                        alignment: 'bottom-left',
+                        keepAll: true,
+                      }
+                    ),
             },
             ...orderedColumns.map((col) => {
               const icon = getIconPathOfPropType(col.id.split(':').pop() as any)
@@ -230,29 +234,33 @@ const TableView = ({
                   </Flexbox>
                 ),
                 width: col.width ?? 200,
-                onWidthChange: (newWidth: number) => {
-                  actionsRef.current.updateColumnWidth(col, newWidth)
-                },
-                onClick: (ev: any) =>
-                  openContextModal(
-                    ev,
-                    <ColumnSettingsContext
-                      column={col}
-                      updateTableSort={actionsRef.current.updateTableSort}
-                      removeColumn={actionsRef.current.removeColumn}
-                      moveColumn={(type) =>
-                        actionsRef.current.moveColumn(col, type)
-                      }
-                      close={closeLastModal}
-                    />,
-                    {
-                      width: 250,
-                      hideBackground: true,
-                      removePadding: true,
-                      alignment: 'bottom-left',
-                      keepAll: true,
-                    }
-                  ),
+                onWidthChange: !currentUserIsCoreMember
+                  ? undefined
+                  : (newWidth: number) => {
+                      actionsRef.current.updateColumnWidth(col, newWidth)
+                    },
+                onClick: !currentUserIsCoreMember
+                  ? undefined
+                  : (ev: any) =>
+                      openContextModal(
+                        ev,
+                        <ColumnSettingsContext
+                          column={col}
+                          updateTableSort={actionsRef.current.updateTableSort}
+                          removeColumn={actionsRef.current.removeColumn}
+                          moveColumn={(type) =>
+                            actionsRef.current.moveColumn(col, type)
+                          }
+                          close={closeLastModal}
+                        />,
+                        {
+                          width: 250,
+                          hideBackground: true,
+                          removePadding: true,
+                          alignment: 'bottom-left',
+                          keepAll: true,
+                        }
+                      ),
               }
             }),
           ]}
@@ -342,24 +350,28 @@ const TableView = ({
               ],
             }
           })}
-          onAddColButtonClick={(ev) =>
-            openContextModal(
-              ev,
-              <TableAddPropertyContext
-                teamId={team.id}
-                view={view}
-                columns={columns}
-                addColumn={actionsRef.current.addColumn}
-                close={closeLastModal}
-              />,
-              {
-                width: 250,
-                hideBackground: true,
-                removePadding: true,
-                alignment: 'bottom-left',
-                keepAll: true,
-              }
-            )
+          disabledAddColumn={!currentUserIsCoreMember}
+          onAddColButtonClick={
+            !currentUserIsCoreMember
+              ? undefined
+              : (ev) =>
+                  openContextModal(
+                    ev,
+                    <TableAddPropertyContext
+                      teamId={team.id}
+                      view={view}
+                      columns={columns}
+                      addColumn={actionsRef.current.addColumn}
+                      close={closeLastModal}
+                    />,
+                    {
+                      width: 250,
+                      hideBackground: true,
+                      removePadding: true,
+                      alignment: 'bottom-left',
+                      keepAll: true,
+                    }
+                  )
           }
           disabledAddRow={true}
         />

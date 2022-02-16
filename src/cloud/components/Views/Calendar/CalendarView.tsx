@@ -228,6 +228,7 @@ const CalendarView = ({
                   teamId={team.id}
                   watchedProp={watchedProp}
                   updateWatchedProp={actionsRef.current.updateWatchedProp}
+                  currentUserIsCoreMember={currentUserIsCoreMember}
                 />,
                 {
                   width: 250,
