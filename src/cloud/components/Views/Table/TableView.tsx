@@ -410,6 +410,13 @@ const Container = styled.div`
     flex: 0 0 auto;
   }
 
+  .table:not(.table--with-checkbox) {
+    .table__header:first-child > div:first-child,
+    .table-row > div:first-child .navigation__item {
+      padding-left: ${({ theme }) => theme.sizes.spaces.md}px !important;
+    }
+  }
+
   .content__manager__list__header--margin {
     margin-top: ${({ theme }) => theme.sizes.spaces.l}px !important;
   }
