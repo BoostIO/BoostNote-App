@@ -127,8 +127,7 @@ const UrlSelectContainer = styled.div`
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    line-height: 18px;
-    min-height: 25px;
+    line-height: 25px;
     width: 100%;
 
     &.url-select__label--incorrect {
