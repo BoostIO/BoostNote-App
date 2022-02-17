@@ -89,19 +89,19 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
       doc: SerializedDocWithSupplemental
     ) => {
       const editTitleAction: MenuItem = {
-        icon: <Icon path={mdiPencilOutline} />,
+        icon: <Icon size={16} path={mdiPencilOutline} />,
         type: MenuTypes.Normal,
         label: translate(lngKeys.GeneralEditTitle),
         onClick: () => setEditingItemTitle(true),
       }
       const duplicateAction: MenuItem = {
-        icon: <Icon path={mdiContentDuplicate} />,
+        icon: <Icon size={16} path={mdiContentDuplicate} />,
         type: MenuTypes.Normal,
         label: translate(lngKeys.GeneralDuplicate),
         onClick: () => onDocDuplicate(doc),
       }
       const deleteDocAction: MenuItem = {
-        icon: <Icon path={mdiTrashCanOutline} />,
+        icon: <Icon size={16} path={mdiTrashCanOutline} />,
         type: MenuTypes.Normal,
         label: translate(lngKeys.GeneralDelete),
         onClick: () => deleteDocApi({ id: doc.id, teamId: doc.teamId }),
