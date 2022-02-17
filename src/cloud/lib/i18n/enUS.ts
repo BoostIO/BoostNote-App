@@ -482,7 +482,8 @@ const enTranslation: TranslationSource = {
 
   [lngKeys.ViewerDisclaimerIntro]: 'Please ask your admin to give you a ',
   [lngKeys.ViewerDisclaimerOutro]: 'so that you can edit this document',
-  [lngKeys.ViewerDisclaimerFolderOutro]: 'so that you can create a document and folder, add properties, add views and edit folder',
+  [lngKeys.ViewerDisclaimerFolderOutro]:
+    'so that you can create a document and folder, add properties, add views and edit folder',
   [lngKeys.MemberRole]: 'Member role',
 
   [lngKeys.DiscountModalTitle]: 'Subscribe now to receive a discount',
