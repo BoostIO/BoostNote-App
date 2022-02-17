@@ -480,12 +480,12 @@ const jpTranslation: TranslationSource = {
   [lngKeys.PlanDashboardPerUser]: '{{size}} dashboards',
   [lngKeys.PlanSmartviewPerDashboard]: '{{size}} smart views per dashboard',
   [lngKeys.SeeRoleDetails]: '各権限を確認する。',
-  [lngKeys.ViewerDisclaimerIntro]: 'このドキュメントを編集できるように',
+  [lngKeys.ViewerDisclaimerIntro]: 'Admin権限の方があなたの権限を',
   [lngKeys.ViewerDisclaimerOutro]:
-    'Admin権限の方があなたの権限をMemberに変更すると、ドキュメント編集等を行うことができるようになります。',
+    'に変更すると、ドキュメント編集やプロパティの追加を行うことができるようになります。',
   [lngKeys.ViewerDisclaimerFolderOutro]:
-    'Admin権限の方があなたの権限をMemberに変更すると、フォルダー編集等を行うことができるようになります。',
-  [lngKeys.MemberRole]: 'メンバーの役割',
+    'に変更すると、ドキュメントやFolderの作成やプロパティの追加を行うことができるようになります。',
+  [lngKeys.MemberRole]: 'Member',
 
   [lngKeys.DiscountModalTitle]: '有料プランを購読し、割引を受け取りましょう！',
   [lngKeys.DiscountModalAlreadySubscribed]:
@@ -499,7 +499,7 @@ const jpTranslation: TranslationSource = {
 
   [lngKeys.GeneralDocuments]: 'ドキュメント',
   [lngKeys.RequestSent]: 'リクエストが送信されました',
-  [lngKeys.RequestAskMemberRole]: 'メンバーの役割を尋ねる',
+  [lngKeys.RequestAskMemberRole]: 'Adminに申請を送る',
   [lngKeys.UploadLimit]: 'アップロード可能な最大容量は{{sizeInMb}}MBです。',
 
   [lngKeys.OnboardingFolderSectionTitle]: 'Boost Noteへようこそ！',
