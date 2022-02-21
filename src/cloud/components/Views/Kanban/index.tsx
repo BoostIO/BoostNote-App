@@ -73,6 +73,7 @@ const KanbanView = ({
   const { createDoc } = useCloudApi()
   const { translate } = useI18n()
   const { goToDocPreview, openNewDocForm } = useCloudResourceModals()
+  const isViewEditable = currentUserIsCoreMember || view.smartViewId != null
 
   const addListRef = useRef(addList)
   useEffect(() => {
@@ -84,6 +85,7 @@ const KanbanView = ({
       openContextModal(
         ev,
         <StatusSelector
+          readOnly={!currentUserIsCoreMember}
           ignoredStatuses={lists.map((list) => list.id)}
           onSelect={(status) => {
             addListRef.current(status?.id.toString() || 'none')
@@ -93,7 +95,7 @@ const KanbanView = ({
         { width: 200, removePadding: true, keepAll: true }
       )
     },
-    [openContextModal, closeLastModal, lists]
+    [openContextModal, closeLastModal, currentUserIsCoreMember, lists]
   )
 
   const removeListRef = useRef(removeList)
@@ -123,9 +125,9 @@ const KanbanView = ({
             name={status?.name || 'No Status'}
             backgroundColor={status?.backgroundColor}
           />
-          {currentUserIsCoreMember && (
+          {isViewEditable && (
             <div className={'kanban__item--action-buttons'}>
-              {currentWorkspaceId != null && (
+              {currentWorkspaceId != null && currentUserIsCoreMember && (
                 <Button
                   className={'kanban__item--action-button'}
                   variant={'icon'}
@@ -176,6 +178,7 @@ const KanbanView = ({
                             type='status'
                             label={status}
                             onSave={(status) => editStatus(status)}
+                            readOnly={!currentUserIsCoreMember}
                           />
                           <MetadataContainerBreak />
                         </>
@@ -207,6 +210,7 @@ const KanbanView = ({
       closeLastModal,
       openNewDocForm,
       currentUserIsCoreMember,
+      isViewEditable,
     ]
   )
 
@@ -286,7 +290,7 @@ const KanbanView = ({
         {viewsSelector}
         <Flexbox flex='0 0 auto'>
           <Button
-            disabled={!currentUserIsCoreMember}
+            disabled={!isViewEditable}
             variant='transparent'
             className='view--kanban__prop'
             onClick={(event) =>
@@ -325,7 +329,7 @@ const KanbanView = ({
                   view={view}
                   teamId={team.id}
                   properties={view.data.props}
-                  currentUserIsCoreMember={currentUserIsCoreMember}
+                  isViewEditable={isViewEditable}
                   setProperties={setProperties}
                 />,
                 {
@@ -352,7 +356,7 @@ const KanbanView = ({
           afterItems={renderListFooter}
           afterLists={
             <Button
-              disabled={!currentUserIsCoreMember}
+              disabled={!isViewEditable}
               onClick={openSelector}
               iconPath={mdiPlus}
               variant='transparent'

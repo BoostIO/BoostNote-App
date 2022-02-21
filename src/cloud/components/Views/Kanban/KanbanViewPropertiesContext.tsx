@@ -33,7 +33,7 @@ interface KanbanViewPropertiesContextProps {
   view: SerializedView<KanbanViewData>
   teamId: string
   properties?: Record<string, KanbanViewProp>
-  currentUserIsCoreMember?: boolean
+  isViewEditable?: boolean
   setProperties: (
     props: Record<string, KanbanViewProp>
   ) => Promise<BulkApiActionRes | undefined>
@@ -43,7 +43,7 @@ const KanbanViewPropertiesContext = ({
   view,
   teamId,
   properties = {},
-  currentUserIsCoreMember,
+  isViewEditable,
   setProperties,
 }: KanbanViewPropertiesContextProps) => {
   const [formState, setFormState] = useState<'list' | 'add'>('list')
@@ -159,7 +159,7 @@ const KanbanViewPropertiesContext = ({
                 type: 'content',
                 icon: getIconPathOfPropType(col.id.split(':').pop() as any),
                 label: <EllipsisText>{col.name}</EllipsisText>,
-                content: currentUserIsCoreMember ? (
+                content: isViewEditable ? (
                   <Flexbox justifyContent='flex-end'>
                     <LoadingButton
                       variant='icon'
@@ -179,7 +179,7 @@ const KanbanViewPropertiesContext = ({
           ))}
         </>
       )}
-      {currentUserIsCoreMember && (
+      {isViewEditable && (
         <>
           {orderedProps.length > 0 && <MetadataContainerBreak />}
           <MetadataContainerRow

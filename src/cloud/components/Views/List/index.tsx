@@ -187,6 +187,7 @@ const ListView = ({
     [dropInDocOrFolder]
   )
 
+  const isViewEditable = currentUserIsCoreMember || view.smartViewId != null
   return (
     <Container className='view view--table'>
       <StyledContentManagerList>
@@ -204,7 +205,7 @@ const ListView = ({
                     view={view}
                     teamId={team.id}
                     properties={view.data.props}
-                    currentUserIsCoreMember={currentUserIsCoreMember}
+                    isViewEditable={isViewEditable}
                     setProperties={actionsRef.current.setProperties}
                   />,
                   {

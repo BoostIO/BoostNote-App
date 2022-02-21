@@ -156,6 +156,7 @@ const TableView = ({
     setState(Object.assign({}, view.data as ViewTableData))
   }, [view.data])
 
+  const isViewEditable = currentUserIsCoreMember || view.smartViewId != null
   return (
     <Container className='view view--table'>
       <StyledContentManagerList>
@@ -172,7 +173,7 @@ const TableView = ({
                     view={view}
                     teamId={team.id}
                     columns={view.data.columns}
-                    currentUserIsCoreMember={currentUserIsCoreMember}
+                    isViewEditable={isViewEditable}
                     setColumns={actionsRef.current.setColumns}
                   />,
                   {
@@ -198,12 +199,12 @@ const TableView = ({
               id: 'doc-title',
               children: <Flexbox style={{ height: '100%' }}>Title</Flexbox>,
               width: view.data.titleColumnWidth ?? 300,
-              onWidthChange: !currentUserIsCoreMember
+              onWidthChange: !isViewEditable
                 ? undefined
                 : (newWidth) => {
                     actionsRef.current.updateTitleColumnWidth(newWidth)
                   },
-              onClick: !currentUserIsCoreMember
+              onClick: !isViewEditable
                 ? undefined
                 : (ev: any) =>
                     openContextModal(
@@ -234,12 +235,12 @@ const TableView = ({
                   </Flexbox>
                 ),
                 width: col.width ?? 200,
-                onWidthChange: !currentUserIsCoreMember
+                onWidthChange: !isViewEditable
                   ? undefined
                   : (newWidth: number) => {
                       actionsRef.current.updateColumnWidth(col, newWidth)
                     },
-                onClick: !currentUserIsCoreMember
+                onClick: !isViewEditable
                   ? undefined
                   : (ev: any) =>
                       openContextModal(
@@ -350,9 +351,9 @@ const TableView = ({
               ],
             }
           })}
-          disabledAddColumn={!currentUserIsCoreMember}
+          disabledAddColumn={!isViewEditable}
           onAddColButtonClick={
-            !currentUserIsCoreMember
+            !isViewEditable
               ? undefined
               : (ev) =>
                   openContextModal(

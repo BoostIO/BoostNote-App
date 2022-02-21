@@ -23,9 +23,9 @@ export interface LabelLike {
 interface LabelManagerProps<T extends LabelLike> {
   labels: T[]
   onSelect: (label: T | null) => void
-  onCreate: (label: LabelLike) => void
-  onUpdate: (label: T) => void
-  onDelete: (label: T) => void
+  onCreate?: (label: LabelLike) => void
+  onUpdate?: (label: T) => void
+  onDelete?: (label: T) => void
   sending?: boolean
   type?: string
   allowEmpty?: boolean
@@ -54,7 +54,7 @@ const LabelManager = <T extends LabelLike>({
 
   const createStatusHandler = useCallback(
     async (name: string) => {
-      if (sending || labelName.trim() === '') {
+      if (sending || labelName.trim() === '' || onCreate == null) {
         return
       }
       onCreate({ name, backgroundColor: getColorFromString(name) })
@@ -74,6 +74,11 @@ const LabelManager = <T extends LabelLike>({
     (ev: React.MouseEvent, label: T) => {
       ev.stopPropagation()
       ev.preventDefault()
+
+      if (onDelete == null || onUpdate == null) {
+        return
+      }
+
       openContextModal(
         ev,
         <StatusEditor
@@ -103,9 +108,11 @@ const LabelManager = <T extends LabelLike>({
 
   const showCreate = useMemo(() => {
     return (
-      labelName != '' && !labels.some((status) => status.name === labelName)
+      onCreate != null &&
+      labelName != '' &&
+      !labels.some((status) => status.name === labelName)
     )
-  }, [labels, labelName])
+  }, [onCreate, labels, labelName])
 
   const showNoStatus = useMemo(() => {
     return (
@@ -173,9 +180,11 @@ const LabelManager = <T extends LabelLike>({
                 name={label.name}
                 backgroundColor={label.backgroundColor}
               />
-              <span onClick={(ev) => openEditor(ev, label)}>
-                <Icon path={mdiDotsHorizontal} />
-              </span>
+              {onUpdate != null && onDelete != null && (
+                <span onClick={(ev) => openEditor(ev, label)}>
+                  <Icon path={mdiDotsHorizontal} />
+                </span>
+              )}
             </Flexbox>
           </a>
         ))}
@@ -191,6 +200,7 @@ interface StatusEditorProps<T extends LabelLike> {
   onDelete?: (status: T) => void
   onSave: (status: T) => void
   type?: string
+  readOnly?: boolean
 }
 
 export const StatusEditor = <T extends LabelLike>({
@@ -198,6 +208,7 @@ export const StatusEditor = <T extends LabelLike>({
   onDelete,
   onSave,
   type = 'label',
+  readOnly,
 }: StatusEditorProps<T>) => {
   const [editingStatus, setEditingStatus] = useState(label)
   const editingStatusRef = useRef(label)
@@ -244,7 +255,13 @@ export const StatusEditor = <T extends LabelLike>({
       <MetadataContainerRow
         row={{
           type: 'content',
-          content: <FormInput value={editingStatus.name} onChange={setName} />,
+          content: (
+            <FormInput
+              value={editingStatus.name}
+              onChange={setName}
+              disabled={readOnly}
+            />
+          ),
         }}
       />
       <MetadataContainerRow row={{ type: 'header', content: 'COLOR' }} />
@@ -255,6 +272,7 @@ export const StatusEditor = <T extends LabelLike>({
             <FormColorSelect
               value={editingStatus.backgroundColor || ''}
               onChange={setColor}
+              disabled={readOnly}
             />
           ),
         }}
