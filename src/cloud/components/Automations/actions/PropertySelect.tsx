@@ -1,6 +1,6 @@
 import { dissoc } from 'ramda'
 import { mdiClose, mdiPlus } from '@mdi/js'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import Button from '../../../../design/components/atoms/Button'
 import FormRow from '../../../../design/components/molecules/Form/templates/FormRow'
 import FormRowItem from '../../../../design/components/molecules/Form/templates/FormRowItem'
@@ -10,16 +10,23 @@ import PropRegisterCreationForm from '../../Props/PropRegisterModal/PropRegister
 import ActionConfigurationInput from './ActionConfigurationInput'
 import { useModal } from '../../../../design/lib/stores/modal'
 import { PropData } from '../../../interfaces/db/props'
-import { SerializedPropData } from '../../../interfaces/db/props'
-
-type PlaceholderPropData = Omit<PropData, 'data'> & {
-  data: PropData['data'] | string
-}
+import { BoostAST } from '../../../lib/automations'
+import {
+  LiteralNode,
+  OpNode,
+  RecordNode,
+  StructNode,
+} from '../../../lib/automations/ast'
 
 export interface PropertySelectProps {
-  value: Record<string, PlaceholderPropData>
-  onChange: (props: Record<string, PlaceholderPropData>) => void
+  value: BoostAST
+  onChange: (props: BoostAST) => void
   eventDataOptions: Record<string, any>
+}
+
+type SupportedType = {
+  key: Extract<BoostAST, { type: 'literal' }>
+  val: Extract<BoostAST, { type: 'operation' } | { type: 'literal' }>
 }
 
 const PropertySelect = ({
@@ -30,32 +37,76 @@ const PropertySelect = ({
   const { openContextModal } = useModal()
 
   const props = useMemo(() => {
-    return Object.entries(value) as [string, SerializedPropData][]
+    if (value.type !== 'constructor' || value.info.type !== 'record') {
+      return []
+    }
+    return value.info.refs.filter(isSupported).map((ref) => {
+      return { key: ref.key.value, val: ref.val }
+    })
   }, [value])
+
+  const addProp = useCallback(
+    (key: string, val: SupportedType['val']) => {
+      if (value.type !== 'constructor' || value.info.type !== 'record') {
+        onChange(RecordNode([{ key: LiteralNode('string', key), val }]))
+        return
+      }
+
+      onChange(
+        RecordNode(
+          value.info.refs
+            .filter(
+              (ref) => ref.key.type === 'literal' && key !== ref.key.value
+            )
+            .concat([{ key: LiteralNode('string', key), val }])
+        )
+      )
+    },
+    [value, onChange]
+  )
 
   return (
     <>
-      {props.map(([propName, propData]) => {
-        const iconPath = getIconPathOfPropType(
-          propData.subType || propData.type
-        )
+      {props.map(({ key, val }, i) => {
+        // if literal get type + data from value
+        // else extrat type from subtype || type
+        const [propType, subType] = getPropTypeFromAst(val)
+        const iconPath = getIconPathOfPropType(subType || propType)
         return (
-          <FormRow key={propName}>
+          <FormRow key={i}>
             <FormRowItem>
               <Button variant='transparent' size='sm' iconPath={iconPath}>
-                {propName}
+                {key}
               </Button>
             </FormRowItem>
             <FormRowItem>
               <ActionConfigurationInput
-                value={propData.data}
-                type={getDataTypeForPropType(propData.type)}
-                onChange={(data) =>
-                  onChange({
-                    ...value,
-                    [propName]: { ...propData, data },
-                  })
-                }
+                value={val}
+                type={getDataTypeForPropType(propType)}
+                onChange={(data) => {
+                  if (data.type === 'literal') {
+                    addProp(key, data)
+                  } else {
+                    addProp(
+                      key,
+                      OpNode(
+                        'boost.props.make',
+                        StructNode(
+                          subType != null
+                            ? {
+                                type: LiteralNode('string', propType),
+                                subType: LiteralNode('string', subType),
+                                data,
+                              }
+                            : {
+                                type: LiteralNode('string', propType),
+                                data,
+                              }
+                        )
+                      ) as SupportedType['val']
+                    )
+                  }
+                }}
                 eventDataOptions={eventDataOptions}
                 customInput={(onChange) => {
                   return (
@@ -66,9 +117,11 @@ const PropertySelect = ({
                       }}
                     >
                       <PropPickerRaw
-                        propName={propName}
-                        propData={propData}
-                        updateProp={(data) => onChange(data?.data)}
+                        propName={key}
+                        propData={val.type === 'literal' ? val.value : null}
+                        updateProp={(data) =>
+                          onChange(LiteralNode('propData', data?.data))
+                        }
                         disabled={false}
                         isLoading={false}
                         showIcon={true}
@@ -81,7 +134,7 @@ const PropertySelect = ({
             <FormRowItem>
               <Button
                 iconPath={mdiClose}
-                onClick={() => onChange(dissoc(propName, value))}
+                onClick={() => onChange(dissoc(key, value))}
               ></Button>
             </FormRowItem>
           </FormRow>
@@ -96,10 +149,14 @@ const PropertySelect = ({
               event,
               <PropRegisterCreationForm
                 onPropCreate={(prop) =>
-                  onChange({
-                    ...value,
-                    [prop.name]: { ...prop, data: null },
-                  })
+                  addProp(
+                    prop.name,
+                    LiteralNode('propData', {
+                      type: prop.type,
+                      subType: prop.subType,
+                      data: null,
+                    }) as SupportedType['val']
+                  )
                 }
               />,
 
@@ -130,4 +187,36 @@ function getDataTypeForPropType(type: PropData['type']): string | undefined {
     default:
       return undefined
   }
+}
+
+function isSupported(x: any): x is SupportedType {
+  return (
+    x.key.type === 'literal' &&
+    x.key.def.def === 'string' &&
+    ((x.val.type === 'literal' && x.val.def.def === 'propData') ||
+      (x.val.type === 'operation' && x.val.identifier === 'boost.props.make'))
+  )
+}
+
+function getPropTypeFromAst(x: SupportedType['val']) {
+  if (x.type === 'literal') {
+    return [x.value.subType, x.value.subType]
+  }
+
+  if (
+    x.input.type === 'constructor' &&
+    x.input.info.type === 'struct' &&
+    x.input.info.refs.type != null &&
+    x.input.info.refs.type.type === 'literal'
+  ) {
+    return [
+      x.input.info.refs.type.value,
+      x.input.info.refs.subType != null &&
+      x.input.info.refs.subType.type === 'literal'
+        ? x.input.info.refs.subType.value
+        : undefined,
+    ]
+  }
+
+  return []
 }

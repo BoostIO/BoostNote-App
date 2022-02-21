@@ -1,10 +1,10 @@
-import { BoostAST } from '../../lib/automations'
+import { PipeEntry } from '../../lib/automations'
 
 export interface SerializedPipe {
   name: string
   event: string
   filter?: any
-  configuration: BoostAST
+  configuration: PipeEntry
 }
 
 export interface SerializedWorkflow {

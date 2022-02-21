@@ -34,11 +34,16 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
   }, [pipe.event])
 
   const action = useMemo(() => {
+    if (pipe.configuration.type !== 'operation') {
+      return SUPPORTED_ACTION_OPTIONS[0]
+    }
+
+    const identifier = pipe.configuration.identifier
     return (
-      SUPPORTED_ACTION_OPTIONS.find(({ value }) => value === pipe.action) ||
+      SUPPORTED_ACTION_OPTIONS.find(({ value }) => value === identifier) ||
       SUPPORTED_ACTION_OPTIONS[0]
     )
-  }, [pipe.action])
+  }, [pipe.configuration])
 
   return (
     <Container>
@@ -63,11 +68,7 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
           </FormRowItem>
         </FormRow>
         <FormRow>
-          {currentEvent != null ? (
-            <EventInfo name={pipe.event} typeDef={currentEvent} />
-          ) : (
-            <div>Select Event</div>
-          )}
+          <div>Select Event</div>
         </FormRow>
       </div>
 
@@ -96,7 +97,19 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
             <FormSelect
               options={SUPPORTED_ACTION_OPTIONS}
               value={action}
-              onChange={({ value }) => onChange({ ...pipe, action: value })}
+              onChange={({ value }) =>
+                onChange({
+                  ...pipe,
+                  configuration: {
+                    type: 'operation',
+                    identifier: value,
+                    input: {
+                      type: 'constructor',
+                      info: { type: 'struct', refs: {} },
+                    },
+                  },
+                })
+              }
             />
           </FormRowItem>
         </FormRow>

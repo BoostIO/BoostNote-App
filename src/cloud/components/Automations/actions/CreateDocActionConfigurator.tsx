@@ -4,12 +4,15 @@ import FormEmoji from '../../../../design/components/molecules/Form/atoms/FormEm
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import FormTextarea from '../../../../design/components/molecules/Form/atoms/FormTextArea'
 import FormRow from '../../../../design/components/molecules/Form/templates/FormRow'
+import { LiteralNode, StructNode } from '../../../lib/automations/ast'
 import { flattenObj } from '../../../lib/utils/object'
 import { ActionConfiguratorProps } from './'
 import ActionConfigurationInput from './ActionConfigurationInput'
 import FolderSelect from './FolderSelect'
 import PropertySelect from './PropertySelect'
 
+// TODO: flatten type (bring from backend) ? do top level? 'declarations' || 'imports'
+// TODO: sort by type
 const CreateDocActionConfigurator = ({
   configuration,
   onChange,
@@ -19,19 +22,33 @@ const CreateDocActionConfigurator = ({
     return flattenObj(eventType as any)
   }, [eventType])
 
+  const constructorTree = useMemo(() => {
+    if (
+      configuration.type !== 'constructor' ||
+      configuration.info.type !== 'struct'
+    ) {
+      return {}
+    }
+    return configuration.info.refs
+  }, [configuration])
+
   return (
     <div>
       <FormRow row={{ title: 'Title' }}>
         <ActionConfigurationInput
-          value={configuration.title}
+          value={constructorTree.title}
           type={'string'}
-          onChange={(title) => onChange({ ...configuration, title })}
+          onChange={(title) =>
+            onChange(StructNode({ ...constructorTree, title }))
+          }
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
             return (
               <FormInput
                 value={value}
-                onChange={(ev) => onChange(ev.target.value)}
+                onChange={(ev) =>
+                  onChange(LiteralNode('string', ev.target.value))
+                }
               />
             )
           }}
@@ -39,16 +56,20 @@ const CreateDocActionConfigurator = ({
       </FormRow>
       <FormRow row={{ title: 'Emoji' }}>
         <ActionConfigurationInput
-          value={configuration.emoji}
+          value={constructorTree.emoji}
           type={'string'}
-          onChange={(emoji) => onChange({ ...configuration, emoji })}
+          onChange={(emoji) =>
+            onChange(StructNode({ ...constructorTree, emoji }))
+          }
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
             return (
               <FormEmoji
                 emoji={value}
                 defaultIcon={mdiFileDocumentOutline}
-                setEmoji={onChange}
+                setEmoji={(emojiStr) =>
+                  onChange(LiteralNode('string', emojiStr))
+                }
               />
             )
           }}
@@ -56,15 +77,19 @@ const CreateDocActionConfigurator = ({
       </FormRow>
       <FormRow row={{ title: 'Content' }}>
         <ActionConfigurationInput
-          value={configuration.content}
+          value={constructorTree.content}
           type={'string'}
-          onChange={(content) => onChange({ ...configuration, content })}
+          onChange={(content) =>
+            onChange(StructNode({ ...constructorTree, content }))
+          }
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
             return (
               <FormTextarea
                 value={value}
-                onChange={(ev) => onChange(ev.target.value)}
+                onChange={(ev) =>
+                  onChange(LiteralNode('string', ev.target.value))
+                }
               />
             )
           }}
@@ -72,21 +97,28 @@ const CreateDocActionConfigurator = ({
       </FormRow>
       <FormRow row={{ title: 'Parent Folder' }}>
         <ActionConfigurationInput
-          value={configuration.parentFolder}
-          type={'string'}
+          value={constructorTree.parentFolder}
+          type={'folder'}
           onChange={(parentFolder) =>
-            onChange({ ...configuration, parentFolder })
+            onChange(StructNode({ ...constructorTree, parentFolder }))
           }
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
-            return <FolderSelect value={value} onChange={onChange} />
+            return (
+              <FolderSelect
+                value={value}
+                onChange={(id) => onChange(LiteralNode('folder', id))}
+              />
+            )
           }}
         />
       </FormRow>
       <FormRow row={{ title: 'Props' }}></FormRow>
       <PropertySelect
-        value={configuration.props || {}}
-        onChange={(props) => onChange({ ...configuration, props })}
+        value={constructorTree.props || {}}
+        onChange={(props) =>
+          onChange(StructNode({ ...constructorTree, props }))
+        }
         eventDataOptions={eventDataOptions}
       />
     </div>

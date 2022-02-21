@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react'
 import FormSelect from '../../../../design/components/molecules/Form/atoms/FormSelect'
 import FormRowItem from '../../../../design/components/molecules/Form/templates/FormRowItem'
 import { pickBy } from 'ramda'
+import { BoostAST } from '../../../lib/automations'
+import { RefNode } from '../../../lib/automations/ast'
 
 const CONFIG_TYPES = [
   { label: 'Event', value: 'event' },
@@ -9,8 +11,8 @@ const CONFIG_TYPES = [
 ]
 
 interface ActionConfigurationInputProps {
-  onChange: (value: any) => void
-  value: any
+  onChange: (value: BoostAST) => void
+  value: BoostAST
   customInput: (
     onChange: ActionConfigurationInputProps['onChange'],
     value: any
@@ -26,11 +28,11 @@ const ActionConfigurationInput = ({
   type: dataType,
 }: ActionConfigurationInputProps) => {
   const [type, setType] = useState(() => {
-    if (typeof value === 'string') {
-      if (value.startsWith('$event')) {
+    if (value.type === 'reference') {
+      if (value.identifier.startsWith('$event')) {
         return CONFIG_TYPES[0]
       }
-      if (value.startsWith('$env')) {
+      if (value.identifier.startsWith('$env')) {
         return CONFIG_TYPES[1]
       }
     }
@@ -44,19 +46,17 @@ const ActionConfigurationInput = ({
   }, [eventDataOptions, dataType])
 
   const normalized = useMemo(() => {
-    if (typeof value === 'string') {
-      if (value.startsWith('$event')) {
-        return value.substr('$event.'.length)
+    if (value.type === 'reference') {
+      if (value.identifier.startsWith('$event')) {
+        return value.identifier.substr('$event.'.length)
       }
 
-      if (value.startsWith('$env')) {
-        return value.substr('$env.'.length)
+      if (value.identifier.startsWith('$env')) {
+        return value.identifier.substr('$env.'.length)
       }
     }
 
-    return typeof value === 'string' || typeof value === 'number'
-      ? value.toString()
-      : ''
+    return value.type === 'literal' ? value.value.toString() : ''
   }, [value])
 
   return (
@@ -69,7 +69,7 @@ const ActionConfigurationInput = ({
           <FormSelect
             value={{ label: normalized, value: normalized }}
             options={options}
-            onChange={({ value }) => onChange(`$event.${value}`)}
+            onChange={({ value }) => onChange(RefNode(`$event.${value}`))}
           />
         )}
         {type.value === 'custom' && customInput(onChange, value)}

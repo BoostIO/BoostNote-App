@@ -1,5 +1,4 @@
 import React from 'react'
-import { JsonTypeDef } from '../../lib/automations/events'
 
 interface EventSelectProps {
   name: string

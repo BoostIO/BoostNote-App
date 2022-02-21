@@ -1,3 +1,7 @@
 import { ASTNode } from './ast'
+import { TypeDef } from './types'
 
-export type BoostAST = ASTNode<'folder' | 'propData'>
+export type BoostPrimitives = 'folder' | 'propData'
+export type BoostType = TypeDef<BoostPrimitives>
+export type BoostAST = ASTNode<BoostPrimitives>
+export type PipeEntry = Extract<BoostAST, { type: 'operation' }>
