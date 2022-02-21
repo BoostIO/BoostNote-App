@@ -140,33 +140,35 @@ const DocProperties = ({
                 </div>
               )
             })}
-            <Button
-              variant='transparent'
-              iconPath={mdiPlus}
-              className='doc-props__property'
-              size='sm'
-              onClick={(event) => {
-                openContextModal(
-                  event,
-                  <DocPagePropsAddContext
-                    doc={doc}
-                    disallowedNames={existingPropNames}
-                    addProp={(propName, propData) => {
-                      updateProp(propName, propData)
-                      closeLastModal()
-                    }}
-                  />,
-                  {
-                    width: 200,
-                    alignment: 'right',
-                    removePadding: true,
-                    keepAll: true,
-                  }
-                )
-              }}
-            >
-              Add a property
-            </Button>
+            {currentUserIsCoreMember && (
+              <Button
+                variant='transparent'
+                iconPath={mdiPlus}
+                className='doc-props__property'
+                size='sm'
+                onClick={(event) => {
+                  openContextModal(
+                    event,
+                    <DocPagePropsAddContext
+                      doc={doc}
+                      disallowedNames={existingPropNames}
+                      addProp={(propName, propData) => {
+                        updateProp(propName, propData)
+                        closeLastModal()
+                      }}
+                    />,
+                    {
+                      width: 200,
+                      alignment: 'right',
+                      removePadding: true,
+                      keepAll: true,
+                    }
+                  )
+                }}
+              >
+                Add a property
+              </Button>
+            )}
             <Button
               id='properties-hide'
               variant='transparent'
