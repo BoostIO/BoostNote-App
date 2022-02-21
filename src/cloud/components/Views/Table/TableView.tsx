@@ -411,9 +411,12 @@ const Container = styled.div`
   }
 
   .table:not(.table--with-checkbox) {
-    .table__header:first-child > div:first-child,
+    .table__header:first-child > div:first-child {
+      padding-left: 54px !important;
+    }
+
     .table-row > div:first-child .navigation__item {
-      padding-left: ${({ theme }) => theme.sizes.spaces.md}px !important;
+      padding-left: 50px !important;
     }
   }
 
