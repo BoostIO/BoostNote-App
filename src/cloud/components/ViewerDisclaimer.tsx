@@ -106,7 +106,8 @@ const Container = styled.div`
   border-radius: ${({ theme }) => theme.borders.radius}px;
 
   min-height: 36px;
-  margin: ${({ theme }) => theme.sizes.spaces.md}px 0;
+  margin: ${({ theme }) => theme.sizes.spaces.md}px
+    ${({ theme }) => theme.sizes.spaces.df}px;
 
   .viewer__disclaimer__text--padding {
     padding: ${({ theme }) => theme.sizes.spaces.sm}px;

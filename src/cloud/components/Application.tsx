@@ -63,6 +63,7 @@ import Sidebar, {
 import SidebarHeader from '../../design/components/organisms/Sidebar/atoms/SidebarHeader'
 import SidebarButtonList from '../../design/components/organisms/Sidebar/molecules/SidebarButtonList'
 import { getTeamLinkHref } from './Link/TeamLink'
+import WithPastille from '../../design/components/atoms/WithPastille'
 import SidebarButton from '../../design/components/organisms/Sidebar/atoms/SidebarButton'
 import CloudGlobalSearch from './CloudGlobalSearch'
 import { useCloudSidebarSpaces } from '../lib/hooks/sidebar/useCloudSidebarSpaces'
@@ -76,6 +77,7 @@ import SidebarToggleButton from './SidebarToggleButton'
 import SidebarSubscriptionCTA from './Subscription/SidebarSubscriptionCTA'
 import { isEmpty } from 'lodash'
 import LoaderTopbar from '../../design/components/atoms/loaders/LoaderTopbar'
+import Icon from '../../design/components/atoms/Icon'
 
 interface ApplicationProps {
   className?: string
@@ -452,7 +454,11 @@ const Application = ({
           {isTimeEligibleForDiscount(team) && subscription == null ? (
             <SidebarButton
               variant='subtle'
-              icon={mdiGiftOutline}
+              icon={
+                <WithPastille>
+                  <Icon size={16} path={mdiGiftOutline} />
+                </WithPastille>
+              }
               id='sidebar__button__promo'
               label={translate(lngKeys.SidebarNewUserDiscount)}
               labelClick={() => {

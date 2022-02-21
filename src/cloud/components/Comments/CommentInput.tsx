@@ -231,6 +231,7 @@ const InputContainer = styled.div`
   .comment__input__container {
     display: flex;
     position: relative;
+    margin-top: ${({ theme }) => theme.sizes.spaces.df}px;
     margin-bottom: ${({ theme }) => theme.sizes.spaces.md}px;
 
     .comment__input__send_button {

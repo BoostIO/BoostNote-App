@@ -178,10 +178,12 @@ const FolderPageInviteSectionContainer = styled.div`
       color: ${({ theme }) => theme.colors.text.subtle};
     }
     h5 {
+      color: ${({ theme }) => theme.colors.text.primary};
       margin: ${({ theme }) => theme.sizes.spaces.sm}px 0;
       font-size: ${({ theme }) => theme.sizes.fonts.l}px;
     }
     p {
+      color: ${({ theme }) => theme.colors.text.primary};
       font-size: ${({ theme }) => theme.sizes.fonts.df}px;
       margin-bottom: ${({ theme }) => theme.sizes.spaces.sm}px;
     }
