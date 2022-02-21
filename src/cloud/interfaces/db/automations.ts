@@ -1,9 +1,10 @@
+import { BoostAST } from '../../lib/automations'
+
 export interface SerializedPipe {
   name: string
-  action: string
   event: string
   filter?: any
-  configuration: any
+  configuration: BoostAST
 }
 
 export interface SerializedWorkflow {
