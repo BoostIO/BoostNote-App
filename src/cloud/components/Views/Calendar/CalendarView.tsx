@@ -212,6 +212,7 @@ const CalendarView = ({
     [actionsRef, closeLastModal]
   )
 
+  const isViewEditable = currentUserIsCoreMember || view.smartViewId != null
   return (
     <Container className='view view--calendar'>
       <Flexbox justifyContent='space-between' alignItems='center'>
@@ -228,7 +229,7 @@ const CalendarView = ({
                   teamId={team.id}
                   watchedProp={watchedProp}
                   updateWatchedProp={actionsRef.current.updateWatchedProp}
-                  currentUserIsCoreMember={currentUserIsCoreMember}
+                  isViewEditable={isViewEditable}
                 />,
                 {
                   width: 250,
@@ -281,7 +282,7 @@ const CalendarView = ({
                   view={view}
                   teamId={team.id}
                   properties={view.data.props}
-                  currentUserIsCoreMember={currentUserIsCoreMember}
+                  isViewEditable={isViewEditable}
                   setProperties={actionsRef.current.setViewProperties}
                 />,
                 {

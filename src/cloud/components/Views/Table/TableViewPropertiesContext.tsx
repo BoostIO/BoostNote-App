@@ -33,7 +33,7 @@ interface TableViewPropertiesContextProps {
   view: SerializedView<ViewTableData>
   teamId: string
   columns?: Record<string, Column>
-  currentUserIsCoreMember?: boolean
+  isViewEditable?: boolean
   setColumns: (
     cols: Record<string, Column>
   ) => Promise<BulkApiActionRes | undefined>
@@ -43,7 +43,7 @@ const TableViewPropertiesContext = ({
   view,
   teamId,
   columns = {},
-  currentUserIsCoreMember,
+  isViewEditable,
   setColumns,
 }: TableViewPropertiesContextProps) => {
   const [formState, setFormState] = useState<'list' | 'add'>('list')
@@ -160,7 +160,7 @@ const TableViewPropertiesContext = ({
                 type: 'content',
                 icon: getIconPathOfPropType(col.id.split(':').pop() as any),
                 label: <EllipsisText>{col.name}</EllipsisText>,
-                content: currentUserIsCoreMember ? (
+                content: isViewEditable ? (
                   <Flexbox justifyContent='flex-end'>
                     <LoadingButton
                       variant='icon'
@@ -178,7 +178,7 @@ const TableViewPropertiesContext = ({
           ))}
         </>
       )}
-      {currentUserIsCoreMember && (
+      {isViewEditable && (
         <>
           {orderedProps.length > 0 && <MetadataContainerBreak />}
           <MetadataContainerRow

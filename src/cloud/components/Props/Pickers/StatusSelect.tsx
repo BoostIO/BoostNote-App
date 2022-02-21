@@ -85,9 +85,11 @@ const StatusSelect = ({
 export default StatusSelect
 
 export const StatusSelector = ({
+  readOnly,
   onSelect,
   ignoredStatuses = [],
 }: {
+  readOnly?: boolean
   ignoredStatuses?: string[]
   onSelect: (status: SerializedStatus | null) => void
 }) => {
@@ -116,9 +118,9 @@ export const StatusSelector = ({
         }
       })}
       onSelect={onSelect}
-      onCreate={createStatus}
-      onUpdate={editStatus}
-      onDelete={removeStatus}
+      onCreate={!readOnly ? createStatus : undefined}
+      onUpdate={!readOnly ? editStatus : undefined}
+      onDelete={!readOnly ? removeStatus : undefined}
       type='Status'
       allowEmpty={
         ignoredStatuses == null ? true : !ignoredStatuses.includes('none')

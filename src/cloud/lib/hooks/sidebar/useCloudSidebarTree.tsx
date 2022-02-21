@@ -701,8 +701,8 @@ export function useCloudSidebarTree() {
         },
         [] as SidebarTreeChildRow[]
       ),
-      controls: currentUserIsCoreMember
-        ? subscription == null && dashboardsMap.size !== 0
+      controls:
+        subscription == null && dashboardsMap.size !== 0
           ? [
               {
                 icon: mdiPlus,
@@ -724,8 +724,7 @@ export function useCloudSidebarTree() {
                     name,
                   }),
               },
-            ]
-        : undefined,
+            ],
     })
 
     tree.push({

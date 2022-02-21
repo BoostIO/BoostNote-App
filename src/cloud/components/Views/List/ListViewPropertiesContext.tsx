@@ -33,7 +33,7 @@ interface ListViewPropertiesContextProps {
   view: SerializedView<ViewListData>
   teamId: string
   properties?: Record<string, ListViewProp>
-  currentUserIsCoreMember?: boolean
+  isViewEditable?: boolean
   setProperties: (
     view: SerializedView,
     props: Record<string, ListViewProp>
@@ -44,7 +44,7 @@ const ListViewPropertiesContext = ({
   view: currentView,
   teamId,
   properties = {},
-  currentUserIsCoreMember,
+  isViewEditable,
   setProperties,
 }: ListViewPropertiesContextProps) => {
   const [view, setView] = useState(currentView)
@@ -163,7 +163,7 @@ const ListViewPropertiesContext = ({
                 type: 'content',
                 icon: getIconPathOfPropType(prop.id.split(':').pop() as any),
                 label: <EllipsisText>{prop.name}</EllipsisText>,
-                content: currentUserIsCoreMember ? (
+                content: isViewEditable ? (
                   <Flexbox justifyContent='flex-end'>
                     <LoadingButton
                       variant='icon'
@@ -183,7 +183,7 @@ const ListViewPropertiesContext = ({
           ))}
         </>
       )}
-      {currentUserIsCoreMember && (
+      {isViewEditable && (
         <>
           {orderedProps.length > 0 && <MetadataContainerBreak />}
           <MetadataContainerRow

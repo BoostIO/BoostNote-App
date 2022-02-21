@@ -33,7 +33,7 @@ interface CalendarViewPropertiesContextProps {
   view: SerializedView<ViewCalendarData>
   teamId: string
   properties?: Record<string, CalendarViewProp>
-  currentUserIsCoreMember?: boolean
+  isViewEditable?: boolean
   setProperties: (
     props: Record<string, CalendarViewProp>
   ) => Promise<BulkApiActionRes | undefined>
@@ -43,7 +43,7 @@ const CalendarViewPropertiesContext = ({
   view,
   teamId,
   properties = {},
-  currentUserIsCoreMember,
+  isViewEditable,
   setProperties,
 }: CalendarViewPropertiesContextProps) => {
   const [formState, setFormState] = useState<'list' | 'add'>('list')
@@ -160,7 +160,7 @@ const CalendarViewPropertiesContext = ({
                 type: 'content',
                 icon: getIconPathOfPropType(col.id.split(':').pop() as any),
                 label: <EllipsisText>{col.name}</EllipsisText>,
-                content: currentUserIsCoreMember ? (
+                content: isViewEditable ? (
                   <Flexbox justifyContent='flex-end'>
                     <LoadingButton
                       variant='icon'
@@ -180,7 +180,7 @@ const CalendarViewPropertiesContext = ({
           ))}
         </>
       )}
-      {currentUserIsCoreMember && (
+      {isViewEditable && (
         <>
           {orderedProps.length > 0 && <MetadataContainerBreak />}
           <MetadataContainerRow
