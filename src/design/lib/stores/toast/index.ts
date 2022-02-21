@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { nodeEnv } from '../../../../cloud/lib/consts'
 import { generateSecret } from '../../../../cloud/lib/utils/secret'
 import { createStoreContext } from '../../utils/context'
 
@@ -57,7 +58,7 @@ const useToastStore = (): ToastStore => {
         {
           id: generateSecret(),
           createdAt: new Date(),
-          title: process.env.NODE_ENV === 'development' ? title : undefined,
+          title: nodeEnv === 'development' ? title : undefined,
           type: 'error',
           description,
         },
