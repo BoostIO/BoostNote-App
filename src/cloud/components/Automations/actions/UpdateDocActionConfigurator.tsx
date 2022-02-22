@@ -101,12 +101,14 @@ const UpdateDocActionConfigurator = ({
       <FormRow row={{ title: 'Title' }}>
         <ActionConfigurationInput
           value={contentNodes.title}
+          type='string'
+          defaultValue=''
           onChange={(title) => setContent({ title })}
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
             return (
               <FormInput
-                value={value}
+                value={value?.value}
                 onChange={(ev) =>
                   onChange(LiteralNode('string', ev.target.value))
                 }
@@ -118,12 +120,14 @@ const UpdateDocActionConfigurator = ({
       <FormRow row={{ title: 'Emoji' }}>
         <ActionConfigurationInput
           value={contentNodes.emoji}
+          type='string'
+          defaultValue=''
           onChange={(emoji) => setContent({ emoji })}
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
             return (
               <FormEmoji
-                emoji={value}
+                emoji={value?.value}
                 defaultIcon={mdiFileDocumentOutline}
                 setEmoji={(emoji) => onChange(LiteralNode('string', emoji))}
               />
@@ -134,12 +138,14 @@ const UpdateDocActionConfigurator = ({
       <FormRow row={{ title: 'Content' }}>
         <ActionConfigurationInput
           value={contentNodes.content}
+          type='string'
+          defaultValue=''
           onChange={(content) => setContent({ content })}
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
             return (
               <FormTextarea
-                value={value}
+                value={value?.value}
                 onChange={(ev) =>
                   onChange(LiteralNode('string', ev.target.value))
                 }

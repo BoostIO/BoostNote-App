@@ -41,6 +41,7 @@ const CreateDocActionConfigurator = ({
         <ActionConfigurationInput
           value={constructorTree.title}
           type={'string'}
+          defaultValue=''
           onChange={(title) =>
             onChange(StructNode({ ...constructorTree, title }))
           }
@@ -48,7 +49,7 @@ const CreateDocActionConfigurator = ({
           customInput={(onChange, value) => {
             return (
               <FormInput
-                value={value}
+                value={value?.value || ''}
                 onChange={(ev) =>
                   onChange(LiteralNode('string', ev.target.value))
                 }
@@ -60,7 +61,8 @@ const CreateDocActionConfigurator = ({
       <FormRow row={{ title: 'Emoji' }}>
         <ActionConfigurationInput
           value={constructorTree.emoji}
-          type={'string'}
+          type='string'
+          defaultValue=''
           onChange={(emoji) =>
             onChange(StructNode({ ...constructorTree, emoji }))
           }
@@ -68,7 +70,7 @@ const CreateDocActionConfigurator = ({
           customInput={(onChange, value) => {
             return (
               <FormEmoji
-                emoji={value}
+                emoji={value?.value}
                 defaultIcon={mdiFileDocumentOutline}
                 setEmoji={(emojiStr) =>
                   onChange(LiteralNode('string', emojiStr))
@@ -81,7 +83,8 @@ const CreateDocActionConfigurator = ({
       <FormRow row={{ title: 'Content' }}>
         <ActionConfigurationInput
           value={constructorTree.content}
-          type={'string'}
+          type='string'
+          defaultValue=''
           onChange={(content) =>
             onChange(StructNode({ ...constructorTree, content }))
           }
@@ -89,7 +92,7 @@ const CreateDocActionConfigurator = ({
           customInput={(onChange, value) => {
             return (
               <FormTextarea
-                value={value}
+                value={value?.value}
                 onChange={(ev) =>
                   onChange(LiteralNode('string', ev.target.value))
                 }
@@ -102,6 +105,7 @@ const CreateDocActionConfigurator = ({
         <ActionConfigurationInput
           value={constructorTree.parentFolder}
           type={'folder'}
+          defaultValue={undefined}
           onChange={(parentFolder) =>
             onChange(StructNode({ ...constructorTree, parentFolder }))
           }
@@ -109,7 +113,7 @@ const CreateDocActionConfigurator = ({
           customInput={(onChange, value) => {
             return (
               <FolderSelect
-                value={value}
+                value={value?.value}
                 onChange={(id) => onChange(LiteralNode('folder', id))}
               />
             )

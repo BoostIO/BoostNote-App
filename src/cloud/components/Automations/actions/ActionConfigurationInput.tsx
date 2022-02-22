@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import FormSelect from '../../../../design/components/molecules/Form/atoms/FormSelect'
 import FormRowItem from '../../../../design/components/molecules/Form/templates/FormRowItem'
 import { pickBy } from 'ramda'
-import { BoostAST } from '../../../lib/automations'
-import { RefNode } from '../../../lib/automations/ast'
+import { BoostAST, BoostPrimitives } from '../../../lib/automations'
+import { LiteralNode, RefNode } from '../../../lib/automations/ast'
+import { StdPrimitives } from '../../../lib/automations/types'
 
 const CONFIG_TYPES = [
   { label: 'Event', value: 'event' },
@@ -15,10 +16,11 @@ interface ActionConfigurationInputProps {
   value: BoostAST
   customInput: (
     onChange: ActionConfigurationInputProps['onChange'],
-    value: any
+    value: Extract<BoostAST, { type: 'literal' }> | null
   ) => React.ReactNode
   eventDataOptions: Record<string, string>
-  type?: string
+  type: BoostPrimitives | StdPrimitives
+  defaultValue: any
 }
 const ActionConfigurationInput = ({
   value,
@@ -26,8 +28,13 @@ const ActionConfigurationInput = ({
   onChange,
   customInput,
   type: dataType,
+  defaultValue,
 }: ActionConfigurationInputProps) => {
-  const [type, setType] = useState(() => {
+  const type = useMemo(() => {
+    if (value == null) {
+      return CONFIG_TYPES[1]
+    }
+
     if (value.type === 'reference') {
       if (value.identifier.startsWith('$event')) {
         return CONFIG_TYPES[0]
@@ -37,7 +44,7 @@ const ActionConfigurationInput = ({
       }
     }
     return CONFIG_TYPES[1]
-  })
+  }, [value])
 
   const options = useMemo(() => {
     return Object.keys(
@@ -46,6 +53,10 @@ const ActionConfigurationInput = ({
   }, [eventDataOptions, dataType])
 
   const normalized = useMemo(() => {
+    if (value == null) {
+      return ''
+    }
+
     if (value.type === 'reference') {
       if (value.identifier.startsWith('$event')) {
         return value.identifier.substr('$event.'.length)
@@ -56,13 +67,23 @@ const ActionConfigurationInput = ({
       }
     }
 
-    return value.type === 'literal' ? value.value.toString() : ''
+    return value.type === 'literal' ? value.value?.toString() || '' : ''
   }, [value])
 
   return (
     <>
       <FormRowItem>
-        <FormSelect options={CONFIG_TYPES} value={type} onChange={setType} />
+        <FormSelect
+          options={CONFIG_TYPES}
+          value={type}
+          onChange={(val) => {
+            if (val.value === 'event') {
+              onChange(RefNode('$event.'))
+            } else {
+              onChange(LiteralNode(dataType, defaultValue))
+            }
+          }}
+        />
       </FormRowItem>
       <FormRowItem>
         {type.value === 'event' && (
@@ -72,7 +93,13 @@ const ActionConfigurationInput = ({
             onChange={({ value }) => onChange(RefNode(`$event.${value}`))}
           />
         )}
-        {type.value === 'custom' && customInput(onChange, value)}
+        {type.value === 'custom' &&
+          customInput(
+            onChange,
+            value == null || value.type !== 'literal'
+              ? LiteralNode(dataType, defaultValue)
+              : value
+          )}
       </FormRowItem>
     </>
   )

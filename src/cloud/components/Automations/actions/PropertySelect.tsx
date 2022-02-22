@@ -1,4 +1,3 @@
-import { dissoc } from 'ramda'
 import { mdiClose, mdiPlus } from '@mdi/js'
 import React, { useCallback, useMemo } from 'react'
 import Button from '../../../../design/components/atoms/Button'
@@ -10,8 +9,9 @@ import PropRegisterCreationForm from '../../Props/PropRegisterModal/PropRegister
 import ActionConfigurationInput from './ActionConfigurationInput'
 import { useModal } from '../../../../design/lib/stores/modal'
 import { PropData } from '../../../interfaces/db/props'
-import { BoostAST } from '../../../lib/automations'
+import { BoostAST, BoostPrimitives } from '../../../lib/automations'
 import { LiteralNode, OpNode, StructNode } from '../../../lib/automations/ast'
+import { StdPrimitives } from '../../../lib/automations/types'
 
 export interface PropertySelectProps {
   value: SupportedType[]
@@ -62,8 +62,20 @@ const PropertySelect = ({
             </FormRowItem>
             <FormRowItem>
               <ActionConfigurationInput
-                value={val}
+                value={
+                  val.type === 'operation' &&
+                  val.input.type === 'constructor' &&
+                  val.input.info.type === 'struct'
+                    ? val.input.info.refs.data ||
+                      LiteralNode('propData', { type: 'string', data: null })
+                    : val
+                }
                 type={getDataTypeForPropType(propType)}
+                defaultValue={{
+                  type: propType,
+                  subType,
+                  data: null,
+                }}
                 onChange={(data) => {
                   if (data.type === 'literal') {
                     addProp(key, data)
@@ -99,9 +111,17 @@ const PropertySelect = ({
                     >
                       <PropPickerRaw
                         propName={key}
-                        propData={val.type === 'literal' ? val.value : null}
+                        propData={
+                          val.type === 'literal'
+                            ? val.value
+                            : {
+                                type: propType,
+                                subType,
+                                data: null,
+                              }
+                        }
                         updateProp={(data) =>
-                          onChange(LiteralNode('propData', data?.data))
+                          onChange(LiteralNode('propData', data))
                         }
                         disabled={false}
                         isLoading={false}
@@ -115,7 +135,9 @@ const PropertySelect = ({
             <FormRowItem>
               <Button
                 iconPath={mdiClose}
-                onClick={() => onChange(dissoc(key, value))}
+                onClick={() =>
+                  onChange(value.filter((ref) => key !== ref.key.value))
+                }
               ></Button>
             </FormRowItem>
           </FormRow>
@@ -159,20 +181,22 @@ const PropertySelect = ({
 
 export default PropertySelect
 
-function getDataTypeForPropType(type: PropData['type']): string | undefined {
+function getDataTypeForPropType(
+  type: PropData['type']
+): BoostPrimitives | StdPrimitives {
   switch (type) {
     case 'number':
+    case 'status':
       return 'number'
     case 'string':
-      return 'string'
     default:
-      return undefined
+      return 'string'
   }
 }
 
 function getPropTypeFromAst(x: SupportedType['val']) {
   if (x.type === 'literal') {
-    return [x.value.subType, x.value.subType]
+    return [x.value.type, x.value.subType]
   }
 
   if (
