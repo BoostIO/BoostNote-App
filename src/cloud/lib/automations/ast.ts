@@ -18,7 +18,7 @@ export type ConstructorInfo<P extends string = never> =
 export function OpNode<P extends string>(
   identifier: string,
   input: ASTNode<P>
-): ASTNode<P> {
+): Extract<ASTNode<P>, { type: 'operation' }> {
   return { type: 'operation', identifier, input }
 }
 
@@ -29,7 +29,7 @@ export function RefNode<P extends string>(identifier: string): ASTNode<P> {
 export function LiteralNode<P extends string>(
   def: P | StdPrimitives,
   value: any
-): ASTNode<P> {
+): Extract<ASTNode<P>, { type: 'literal' }> {
   return { type: 'literal', def: Primitive(def), value }
 }
 

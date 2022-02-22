@@ -11,20 +11,15 @@ import ActionConfigurationInput from './ActionConfigurationInput'
 import { useModal } from '../../../../design/lib/stores/modal'
 import { PropData } from '../../../interfaces/db/props'
 import { BoostAST } from '../../../lib/automations'
-import {
-  LiteralNode,
-  OpNode,
-  RecordNode,
-  StructNode,
-} from '../../../lib/automations/ast'
+import { LiteralNode, OpNode, StructNode } from '../../../lib/automations/ast'
 
 export interface PropertySelectProps {
-  value: BoostAST
-  onChange: (props: BoostAST) => void
+  value: SupportedType[]
+  onChange: (props: SupportedType[]) => void
   eventDataOptions: Record<string, any>
 }
 
-type SupportedType = {
+export type SupportedType = {
   key: Extract<BoostAST, { type: 'literal' }>
   val: Extract<BoostAST, { type: 'operation' } | { type: 'literal' }>
 }
@@ -37,29 +32,17 @@ const PropertySelect = ({
   const { openContextModal } = useModal()
 
   const props = useMemo(() => {
-    if (value.type !== 'constructor' || value.info.type !== 'record') {
-      return []
-    }
-    return value.info.refs.filter(isSupported).map((ref) => {
+    return value.map((ref) => {
       return { key: ref.key.value, val: ref.val }
     })
   }, [value])
 
   const addProp = useCallback(
     (key: string, val: SupportedType['val']) => {
-      if (value.type !== 'constructor' || value.info.type !== 'record') {
-        onChange(RecordNode([{ key: LiteralNode('string', key), val }]))
-        return
-      }
-
       onChange(
-        RecordNode(
-          value.info.refs
-            .filter(
-              (ref) => ref.key.type === 'literal' && key !== ref.key.value
-            )
-            .concat([{ key: LiteralNode('string', key), val }])
-        )
+        value
+          .filter((ref) => key !== ref.key.value)
+          .concat([{ key: LiteralNode('string', key), val }])
       )
     },
     [value, onChange]
@@ -68,8 +51,6 @@ const PropertySelect = ({
   return (
     <>
       {props.map(({ key, val }, i) => {
-        // if literal get type + data from value
-        // else extrat type from subtype || type
         const [propType, subType] = getPropTypeFromAst(val)
         const iconPath = getIconPathOfPropType(subType || propType)
         return (
@@ -187,15 +168,6 @@ function getDataTypeForPropType(type: PropData['type']): string | undefined {
     default:
       return undefined
   }
-}
-
-function isSupported(x: any): x is SupportedType {
-  return (
-    x.key.type === 'literal' &&
-    x.key.def.def === 'string' &&
-    ((x.val.type === 'literal' && x.val.def.def === 'propData') ||
-      (x.val.type === 'operation' && x.val.identifier === 'boost.props.make'))
-  )
 }
 
 function getPropTypeFromAst(x: SupportedType['val']) {

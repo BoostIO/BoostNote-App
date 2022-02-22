@@ -1,5 +1,5 @@
 import { mdiPlus } from '@mdi/js'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import Button from '../../../design/components/atoms/Button'
 import Form from '../../../design/components/molecules/Form'
 import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
@@ -8,10 +8,10 @@ import FormRow from '../../../design/components/molecules/Form/templates/FormRow
 import FormRowItem from '../../../design/components/molecules/Form/templates/FormRowItem'
 import styled from '../../../design/lib/styled'
 import { SerializedPipe } from '../../interfaces/db/automations'
+import { OpNode, StructNode } from '../../lib/automations/ast'
 import supportedEvents from '../../lib/automations/events'
 import CreateDocActionConfigurator from './actions/CreateDocActionConfigurator'
 import UpdateDocActionConfigurator from './actions/UpdateDocActionConfigurator'
-import EventInfo from './EventInfo'
 import FilterBuilder from './FilterBuilder'
 
 const SUPPORTED_EVENT_NAMES = Object.keys(supportedEvents).map((key) => {
@@ -44,6 +44,13 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
       SUPPORTED_ACTION_OPTIONS[0]
     )
   }, [pipe.configuration])
+
+  const updateConfig = useCallback(
+    (input: SerializedPipe['configuration']['input']) => {
+      onChange({ ...pipe, configuration: { ...pipe.configuration, input } })
+    },
+    [pipe, onChange]
+  )
 
   return (
     <Container>
@@ -100,14 +107,7 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
               onChange={({ value }) =>
                 onChange({
                   ...pipe,
-                  configuration: {
-                    type: 'operation',
-                    identifier: value,
-                    input: {
-                      type: 'constructor',
-                      info: { type: 'struct', refs: {} },
-                    },
-                  },
+                  configuration: OpNode(value, StructNode({})),
                 })
               }
             />
@@ -116,15 +116,15 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
         <FormRow>
           {action.value === 'boost.doc.create' && (
             <CreateDocActionConfigurator
-              configuration={pipe.configuration}
-              onChange={(configuration) => onChange({ ...pipe, configuration })}
+              configuration={pipe.configuration.input}
+              onChange={updateConfig}
               eventType={currentEvent}
             />
           )}
           {action.value === 'boost.doc.update' && (
             <UpdateDocActionConfigurator
-              configuration={pipe.configuration}
-              onChange={(configuration) => onChange({ ...pipe, configuration })}
+              configuration={pipe.configuration.input}
+              onChange={updateConfig}
               eventType={currentEvent}
             />
           )}

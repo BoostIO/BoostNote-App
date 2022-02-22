@@ -10,11 +10,11 @@ import FormSelect, {
 import FormRow from '../../../design/components/molecules/Form/templates/FormRow'
 import FormRowItem from '../../../design/components/molecules/Form/templates/FormRowItem'
 import { SerializedPipe } from '../../interfaces/db/automations'
-import { JsonTypeDef } from '../../lib/automations/events'
+import { BoostType } from '../../lib/automations'
 import { flattenObj } from '../../lib/utils/object'
 
 interface FilterBuilderProps {
-  typeDef: JsonTypeDef
+  typeDef: BoostType
   filter: SerializedPipe['filter']
   onChange: (filter: SerializedPipe['filter']) => void
 }

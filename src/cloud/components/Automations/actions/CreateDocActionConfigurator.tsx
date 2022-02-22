@@ -4,15 +4,18 @@ import FormEmoji from '../../../../design/components/molecules/Form/atoms/FormEm
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import FormTextarea from '../../../../design/components/molecules/Form/atoms/FormTextArea'
 import FormRow from '../../../../design/components/molecules/Form/templates/FormRow'
-import { LiteralNode, StructNode } from '../../../lib/automations/ast'
+import { BoostAST } from '../../../lib/automations'
+import {
+  LiteralNode,
+  RecordNode,
+  StructNode,
+} from '../../../lib/automations/ast'
 import { flattenObj } from '../../../lib/utils/object'
 import { ActionConfiguratorProps } from './'
 import ActionConfigurationInput from './ActionConfigurationInput'
 import FolderSelect from './FolderSelect'
-import PropertySelect from './PropertySelect'
+import PropertySelect, { SupportedType } from './PropertySelect'
 
-// TODO: flatten type (bring from backend) ? do top level? 'declarations' || 'imports'
-// TODO: sort by type
 const CreateDocActionConfigurator = ({
   configuration,
   onChange,
@@ -115,13 +118,29 @@ const CreateDocActionConfigurator = ({
       </FormRow>
       <FormRow row={{ title: 'Props' }}></FormRow>
       <PropertySelect
-        value={constructorTree.props || {}}
+        value={
+          constructorTree.props != null &&
+          constructorTree.props.type === 'constructor' &&
+          constructorTree.props.info.type === 'record'
+            ? constructorTree.props.info.refs.filter(isSupportedType)
+            : []
+        }
         onChange={(props) =>
-          onChange(StructNode({ ...constructorTree, props }))
+          onChange(StructNode({ ...constructorTree, props: RecordNode(props) }))
         }
         eventDataOptions={eventDataOptions}
       />
     </div>
+  )
+}
+
+function isSupportedType(x: {
+  key: BoostAST
+  val: BoostAST
+}): x is SupportedType {
+  return (
+    x.key.type === 'literal' &&
+    (x.val.type === 'operation' || x.val.type === 'literal')
   )
 }
 

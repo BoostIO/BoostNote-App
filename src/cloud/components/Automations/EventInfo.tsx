@@ -1,8 +1,9 @@
 import React from 'react'
+import { BoostType } from '../../lib/automations'
 
 interface EventSelectProps {
   name: string
-  typeDef: JsonTypeDef
+  typeDef: BoostType
 }
 
 const EventInfo = ({ typeDef }: EventSelectProps) => {
