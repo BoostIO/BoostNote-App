@@ -96,7 +96,7 @@ const PropertySelect = ({
                                 data,
                               }
                         )
-                      ) as SupportedType['val']
+                      )
                     )
                   }
                 }}

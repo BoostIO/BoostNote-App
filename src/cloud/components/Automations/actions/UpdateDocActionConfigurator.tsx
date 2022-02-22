@@ -11,7 +11,7 @@ import {
   RecordNode,
   StructNode,
 } from '../../../lib/automations/ast'
-import { flattenObj } from '../../../lib/utils/object'
+import { flattenType } from '../../../lib/automations/types'
 import { ActionConfiguratorProps } from './'
 import ActionConfigurationInput from './ActionConfigurationInput'
 import PropertySelect, {
@@ -25,7 +25,12 @@ const UpdateDocActionConfigurator = ({
   eventType,
 }: ActionConfiguratorProps) => {
   const eventDataOptions = useMemo(() => {
-    return flattenObj(eventType as any)
+    return Object.fromEntries(
+      Array.from(flattenType(eventType)).map(([path, type]) => [
+        path.join('.'),
+        type,
+      ])
+    )
   }, [eventType])
 
   const [propQueryNodes, contentNodes] = useMemo(() => {

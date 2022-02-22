@@ -48,3 +48,38 @@ export function Optional<T extends TypeDef<any, any>>(def: T) {
 export function Reference<U extends string>(def: U) {
   return { type: 'reference' as const, def: def as U }
 }
+
+export function* flattenType<P extends string, U extends string | never>(
+  typeDef: TypeDef<P, U>,
+  internalRepr = false
+): Generator<[string[], TypeDef<P, U>]> {
+  yield [[], typeDef]
+
+  const additionalKey = internalRepr ? ['def'] : []
+  switch (typeDef.type) {
+    case 'struct': {
+      for (const [key, val] of Object.entries(typeDef.def)) {
+        for (const [path, nestedType] of flattenType(val, internalRepr)) {
+          yield [additionalKey.concat([key]).concat(path), nestedType]
+        }
+      }
+      break
+    }
+    case 'record':
+    case 'array': {
+      for (const [path, nestedType] of flattenType(typeDef.def, internalRepr)) {
+        yield [(internalRepr ? additionalKey : ['0']).concat(path), nestedType]
+      }
+      break
+    }
+    case 'optional': {
+      for (const [path, nestedType] of flattenType(typeDef.def, internalRepr)) {
+        yield [
+          additionalKey.concat(path),
+          nestedType.type === 'optional' ? nestedType : Optional(nestedType),
+        ]
+      }
+      break
+    }
+  }
+}

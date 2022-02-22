@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import FormSelect from '../../../../design/components/molecules/Form/atoms/FormSelect'
 import FormRowItem from '../../../../design/components/molecules/Form/templates/FormRowItem'
 import { pickBy } from 'ramda'
-import { BoostAST, BoostPrimitives } from '../../../lib/automations'
+import { BoostAST, BoostPrimitives, BoostType } from '../../../lib/automations'
 import { LiteralNode, RefNode } from '../../../lib/automations/ast'
 import { StdPrimitives } from '../../../lib/automations/types'
 
@@ -18,7 +18,7 @@ interface ActionConfigurationInputProps {
     onChange: ActionConfigurationInputProps['onChange'],
     value: Extract<BoostAST, { type: 'literal' }> | null
   ) => React.ReactNode
-  eventDataOptions: Record<string, string>
+  eventDataOptions: Record<string, BoostType>
   type: BoostPrimitives | StdPrimitives
   defaultValue: any
 }
@@ -48,7 +48,10 @@ const ActionConfigurationInput = ({
 
   const options = useMemo(() => {
     return Object.keys(
-      pickBy((val) => dataType == null || val === dataType, eventDataOptions)
+      pickBy(
+        (val) => val.type === 'primitive' && val.def === dataType,
+        eventDataOptions
+      )
     ).map((key) => ({ label: key, value: key }))
   }, [eventDataOptions, dataType])
 
