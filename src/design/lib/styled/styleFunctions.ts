@@ -3,6 +3,7 @@ import { lightTheme } from './light'
 import { sepiaTheme } from './sepia'
 import { solarizedDarkTheme } from './solarizedDark'
 import { draculaTheme } from './dracula'
+import { monokaiTheme } from './monokai'
 import { BaseTheme, ThemeTypes } from './types'
 
 export interface StyledProps {
@@ -15,6 +16,8 @@ export function selectV2Theme(theme: ThemeTypes) {
       return lightTheme
     case 'sepia':
       return sepiaTheme
+    case 'monokai':
+      return monokaiTheme
     case 'solarizedDark':
       return solarizedDarkTheme
     case 'dracula':

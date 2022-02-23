@@ -137,6 +137,7 @@ export enum lngKeys {
   SettingsDracula = 'settings.dracula',
   SettingsSolarizedDark = 'settings.solarizedDark',
   SettingsSepia = 'settings.sepia',
+  SettingsMonokai = 'settings.monokai',
   SettingsNotifFrequencies = 'settings.notificationsFrequency',
   SettingsIndentType = 'settings.indentType',
   SettingsShowEditorToolbar = 'settings.showEditorToolbar',

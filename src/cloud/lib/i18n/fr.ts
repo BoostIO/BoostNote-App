@@ -66,6 +66,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsDracula]: 'Dracula',
   [lngKeys.SettingsSolarizedDark]: 'Solarized Dark',
   [lngKeys.SettingsSepia]: 'Sepia',
+  [lngKeys.SettingsMonokai]: 'Monokai',
   [lngKeys.SettingsNotifFrequencies]: 'Fréquence de mises à jour par mail',
   [lngKeys.SettingsIndentType]: "Type d'indentation pour l'éditeur",
   [lngKeys.SettingsShowEditorToolbar]: "Barre d'outils de l'éditeur",

@@ -217,6 +217,7 @@ const UserPreferencesForm = () => {
                     { label: t('settings.dracula'), value: 'dracula' },
                     { label: t('settings.solarizedDark'), value: 'solarizedDark' },
                     { label: t('settings.sepia'), value: 'sepia' },
+                    { label: t('settings.monokai'), value: 'monokai' },
                   ]}
                   value={{
                     label: t(`settings.${settings['general.theme']}`),
