@@ -140,7 +140,7 @@ function ThreadItem({
                     className={'thread__comment__line__replies__link'}
                   >
                     {translate(lngKeys.ThreadReplies, {
-                      count: thread.commentCount,
+                      count: thread.commentCount - 1,
                     })}
                   </div>
                   <span className='thread__comment__line__date'>
