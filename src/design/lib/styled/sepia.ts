@@ -52,7 +52,7 @@ export const sepiaTheme: BaseTheme = {
         text: '#FFFFFF',
       },
       info: {
-        base: '#06BCC1',
+        base: '#BFA26B',
         text: '#534324',
       },
     },
