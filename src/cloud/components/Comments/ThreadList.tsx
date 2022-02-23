@@ -14,6 +14,7 @@ interface ThreadListProps extends Omit<ThreadListItemProps, 'thread'> {
   addReaction: (comment: Comment, emoji: string) => Promise<any>
   removeReaction: (comment: Comment, reactionId: string) => Promise<any>
   user?: SerializedUser
+  onCommentDelete: (comment: Comment) => Promise<any>
 }
 
 function ThreadList({
@@ -25,6 +26,7 @@ function ThreadList({
   addReaction,
   removeReaction,
   user,
+  onCommentDelete,
 }: ThreadListProps) {
   return (
     <Container>
@@ -39,6 +41,7 @@ function ThreadList({
             thread={thread}
             onSelect={onSelect}
             onDelete={onDelete}
+            onCommentDelete={onCommentDelete}
             users={users}
             updateComment={updateComment}
             addReaction={addReaction}
