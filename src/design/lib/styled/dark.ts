@@ -5,9 +5,9 @@ export const darkTheme: BaseTheme = {
   ...commonTheme,
   colors: {
     background: {
-      primary: '#1E2024',
-      secondary: '#27282B',
-      tertiary: '#353940',
+      primary: '#2c3033',
+      secondary: '#3a3d42',
+      tertiary: '#43454a',
       quaternary: '#41454E',
     },
     icon: {
@@ -18,12 +18,12 @@ export const darkTheme: BaseTheme = {
     text: {
       primary: '#fff',
       secondary: '#E6E6E6',
-      subtle: '#9C9C9C',
+      subtle: '#b1b1b1',
       disabled: '#666666',
       link: '#329BBE',
     },
     border: {
-      main: '#303336',
+      main: '#444444',
       second: '#41454E',
     },
     variants: {
