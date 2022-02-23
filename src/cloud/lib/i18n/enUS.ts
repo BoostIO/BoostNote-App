@@ -65,6 +65,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsDracula]: 'Dracula',
   [lngKeys.SettingsSolarizedDark]: 'Solarized Dark',
   [lngKeys.SettingsSepia]: 'Sepia',
+  [lngKeys.SettingsMonokai]: 'Monokai',
   [lngKeys.SettingsNotifFrequencies]: 'Email updates',
   [lngKeys.SettingsIndentType]: 'Editor Indent Type',
   [lngKeys.SettingsShowEditorToolbar]: 'Editor Toolbar',

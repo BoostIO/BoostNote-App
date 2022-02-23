@@ -65,6 +65,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SettingsDracula]: 'Dracula',
   [lngKeys.SettingsSolarizedDark]: 'Solarized Dark',
   [lngKeys.SettingsSepia]: 'Sepia',
+  [lngKeys.SettingsMonokai]: 'Monokai',
   [lngKeys.SettingsNotifFrequencies]: 'メール設定',
   [lngKeys.SettingsIndentType]: 'エディタインデントの種類',
   [lngKeys.SettingsShowEditorToolbar]: 'エディターツールバー',

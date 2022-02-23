@@ -64,6 +64,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SettingsDracula]: 'Dracula',
   [lngKeys.SettingsSolarizedDark]: 'Solarized Dark',
   [lngKeys.SettingsSepia]: 'Sepia',
+  [lngKeys.SettingsMonokai]: 'Monokai',
   [lngKeys.SettingsNotifFrequencies]: 'Email updates',
   [lngKeys.SettingsIndentType]: '编辑器缩进类型',
   [lngKeys.SettingsShowEditorToolbar]: '编辑器工具栏',
