@@ -18,7 +18,7 @@ export const solarizedDarkTheme: BaseTheme = {
     text: {
       primary: '#ECF5F7',
       secondary: '#B1B7B9',
-      subtle: '#8D9294',
+      subtle: '#9DA3A6',
       disabled: '#5F6466',
       link: '#499EB5',
     },
@@ -28,7 +28,7 @@ export const solarizedDarkTheme: BaseTheme = {
     },
     variants: {
       primary: {
-        base: '#34A198',
+        base: '#2aa198',
         text: '#ECF5F7',
       },
       secondary: {
@@ -36,11 +36,11 @@ export const solarizedDarkTheme: BaseTheme = {
         text: '#B1B7B9',
       },
       tertiary: {
-        base: '#E2EB98',
+        base: '#cb4b16',
         text: '#ECF5F7',
       },
       warning: {
-        base: '#FEA82F',
+        base: '#b58900',
         text: '#ECF5F7',
       },
       success: {
@@ -52,7 +52,7 @@ export const solarizedDarkTheme: BaseTheme = {
         text: '#ECF5F7',
       },
       info: {
-        base: '#007FFF',
+        base: '#2aa198',
         text: '#ECF5F7',
       },
     },
