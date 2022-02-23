@@ -86,7 +86,7 @@ const EditorThemeSelect = () => {
   return (
     <StyledContainer>
       <BottomBarButton onClick={showIndentMenu}>
-        <Icon path={mdiPaletteOutline} />
+        <Icon path={mdiPaletteOutline} size={16} />
       </BottomBarButton>
       {showingMenu && (
         <div

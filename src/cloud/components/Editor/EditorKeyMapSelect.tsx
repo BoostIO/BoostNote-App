@@ -59,7 +59,7 @@ const EditorKeyMapSelect = () => {
   return (
     <StyledContainer>
       <BottomBarButton onClick={showMenu}>
-        <Icon path={mdiKeyboard} />
+        <Icon path={mdiKeyboard} size={16} />
       </BottomBarButton>
       {showingMenu && (
         <div

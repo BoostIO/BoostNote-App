@@ -24,8 +24,8 @@ const Container = styled.button`
   background-color: transparent;
   height: 100%;
   border: none;
-  color: ${({ theme }) => theme.colors.text.primary};
-  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text.subtle};
+  font-size: ${({ theme }) => theme.sizes.fonts.df}px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,5 +33,6 @@ const Container = styled.button`
   cursor: pointer;
   &:hover {
     background-color: ${({ theme }) => theme.colors.background.tertiary};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 `
