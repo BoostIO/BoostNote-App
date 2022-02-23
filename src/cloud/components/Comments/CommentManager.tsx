@@ -128,6 +128,7 @@ function CommentManager({
                 onSelect={(thread) => setMode({ mode: 'thread', thread })}
                 onDelete={deleteThread}
                 user={user}
+                onCommentDelete={deleteComment}
                 users={usersOrEmpty}
                 updateComment={updateComment}
                 addReaction={addReaction}
@@ -200,16 +201,17 @@ function CommentManager({
     }
   }, [
     state,
-    createThread,
-    createComment,
-    updateComment,
-    setMode,
     deleteThread,
     user,
+    deleteComment,
     usersOrEmpty,
+    updateComment,
     addReaction,
     removeReaction,
+    setMode,
+    createThread,
     deleteCommentWithCleanup,
+    createComment,
   ])
 
   return (

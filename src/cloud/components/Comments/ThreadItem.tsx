@@ -30,6 +30,7 @@ export type ThreadListItemProps = ThreadActionProps & {
   addReaction: (comment: Comment, emoji: string) => Promise<any>
   removeReaction: (comment: Comment, reactionId: string) => Promise<any>
   user?: SerializedUser
+  onCommentDelete: (comment: Comment) => Promise<any>
 }
 
 const smallUserIconStyle = { width: '28px', height: '28px', lineHeight: '26px' }
@@ -43,6 +44,7 @@ function ThreadItem({
   addReaction,
   removeReaction,
   user,
+  onCommentDelete,
 }: ThreadListItemProps) {
   const { translate } = useI18n()
   const [editing, setEditing] = useState(false)
@@ -60,7 +62,7 @@ function ThreadItem({
   }, [reloadComments, thread.id])
 
   const showReplyForm = useCallback(() => {
-    if (threadComments == null || threadComments.length > 1) {
+    if (threadComments == null) {
       return
     }
 
@@ -99,11 +101,18 @@ function ThreadItem({
   )
 
   const onThreadDelete = useCallback(
-    (thread) => {
-      onDelete(thread)
+    async (thread) => {
+      if (threadComments == null) {
+        return
+      }
+      if (threadComments.length > 1) {
+        await onCommentDelete(threadComments[0])
+      } else {
+        await onDelete(thread)
+      }
       reloadComments()
     },
-    [onDelete, reloadComments]
+    [onCommentDelete, onDelete, reloadComments, threadComments]
   )
 
   const contextMenuItems = useCallback(() => {
@@ -199,6 +208,79 @@ function ThreadItem({
     [removeReaction, reloadComments]
   )
 
+  const threadCommentReplyInfo = useCallback(() => {
+    if (
+      threadComments &&
+      (threadComments.length > 1 ||
+        (threadComments.length == 1 && thread.initialComment == null))
+    ) {
+      return (
+        <div className={'thread__comment__line_more_replies_container'}>
+          <div
+            onClick={() => onSelect(thread)}
+            className={'thread__comment__line__replies__link'}
+          >
+            {translate(lngKeys.ThreadReplies, {
+              count: thread.commentCount,
+            })}
+          </div>
+          <span className='thread__comment__line__date'>
+            {formatDate(thread.lastCommentTime)}
+          </span>
+        </div>
+      )
+    }
+    return null
+  }, [onSelect, thread, threadComments, translate])
+
+  const threadCommentData = useCallback(() => {
+    if (thread.initialComment == null) {
+      return (
+        <div className={'thread__comment__line'}>
+          <div className={'thread__comment__deleted__line'}>
+            This comment was deleted.
+          </div>
+          {threadCommentReplyInfo()}
+        </div>
+      )
+    }
+
+    if (threadComments && threadComments.length > 0) {
+      return (
+        <div className={'thread__comment__line'}>
+          <span>{thread.contributors[0].displayName}</span>
+          <span className='thread__comment__line__date'>
+            {formatDate(threadComments[0].createdAt)}
+          </span>
+          {editing ? (
+            <CommentInput
+              placeholder={'Reply'}
+              autoFocus={true}
+              onSubmit={submitComment}
+              value={threadComments[0].message}
+              users={users}
+            />
+          ) : (
+            <div className='thread__comment__line__first__comment'>
+              <span>{threadComments[0].message}</span>
+            </div>
+          )}
+          {threadCommentReplyInfo()}
+        </div>
+      )
+    }
+
+    return null
+  }, [
+    threadCommentReplyInfo,
+    editing,
+    submitComment,
+    thread.contributors,
+    thread.initialComment,
+    threadComments,
+    users,
+  ])
+
   return (
     <StyledListItem>
       <div
@@ -267,7 +349,24 @@ function ThreadItem({
               )}
             </div>
           )}
+          {thread.initialComment == null ? (
+            <div className={'thread__info__line__comment__removed__icon'}>
+              <Icon size={20} path={mdiTrashCanOutline} />
+            </div>
+          ) : (
+            <UserIcon
+              className={'thread__info__line__icon'}
+              style={smallUserIconStyle}
+              user={
+                thread.initialComment.user != null
+                  ? thread.initialComment.user
+                  : thread.contributors[0]
+              }
+            />
+          )}
+          {threadCommentData()}
         </div>
+
         {editing ? (
           <div onClick={() => setEditing(false)}>
             <Icon path={mdiClose} />
@@ -306,6 +405,10 @@ const StyledListItem = styled.div`
 
   & .thread__info__line {
     display: flex;
+
+    & .thread__info__line__comment__removed__icon {
+      color: ${({ theme }) => theme.colors.text.subtle};
+    }
 
     .thread__info__line__icon {
       width: 39px;
@@ -349,6 +452,10 @@ const StyledListItem = styled.div`
   & .thread__comment__line {
     width: 100%;
     align-items: center;
+
+    & .thread__comment__deleted__line {
+      color: ${({ theme }) => theme.colors.text.subtle};
+    }
 
     & .thread__comment__line__replies__link {
       margin-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
