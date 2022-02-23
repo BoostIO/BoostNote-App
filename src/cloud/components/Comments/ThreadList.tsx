@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import ThreadItem, { ThreadListItemProps } from './ThreadItem'
 import { Comment, Thread } from '../../interfaces/db/comments'
-import { sortBy } from 'ramda'
 import {
   highlightComment,
   unhighlightComment,
@@ -20,13 +19,9 @@ function ThreadList({
   users,
   updateComment,
 }: ThreadListProps) {
-  const sorted = useMemo(() => {
-    return sortBy((thread) => thread.lastCommentTime, threads).reverse()
-  }, [threads])
-
   return (
     <Container>
-      {sorted.map((thread) => (
+      {threads.map((thread) => (
         <div
           key={thread.id}
           onMouseOver={highlightComment(thread.id)}
