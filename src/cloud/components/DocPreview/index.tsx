@@ -167,7 +167,7 @@ const DocPreviewModal = ({ doc, team, fallbackUrl }: DocPreviewModalProps) => {
         >
           Open as full page
         </Button>
-        <Flexbox className='doc-preview__actions'>
+        <Flexbox>
           {renderHeader}
           {currentUserIsCoreMember && (
             <WithTooltip
@@ -274,9 +274,6 @@ const Container = styled.div`
         flex: 1 1 10px;
       }
     }
-  }
-  .doc-preview__actions > * + * {
-    margin-left: ${({ theme }) => theme.sizes.spaces.sm}px;
   }
 
   .doc-preview__topbar {
