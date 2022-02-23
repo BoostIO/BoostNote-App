@@ -253,6 +253,10 @@ const jpTranslation: TranslationSource = {
 
   [lngKeys.ModalsDeleteDocFolderTitle]: '{{label}}を削除する',
   [lngKeys.ModalsDeleteDocDisclaimer]: 'このドキュメントを永久に削除しますか？',
+  [lngKeys.ModalsDeleteCommentDisclaimer]:
+    'このコメントを完全に削除してもよろしいですか？',
+  [lngKeys.ModalsDeleteThreadDisclaimer]:
+    'このスレッドを完全に削除してもよろしいですか？',
   [lngKeys.ModalsDeleteFolderDisclaimer]:
     'このフォルダーを削除しますか？中のアイテムも削除されます。',
 

@@ -23,6 +23,8 @@ import { GetDocResponseBody } from '../../api/teams/docs'
 import { getDocContent } from '../../lib/utils/patterns'
 import { BulkApiActionRes } from '../../../design/lib/hooks/useBulkApi'
 import { usePage } from '../../lib/stores/pageStore'
+import { useCloudResourceModals } from '../../lib/hooks/useCloudResourceModals'
+import { useModal } from '../../../design/lib/stores/modal'
 
 interface ItemProps {
   doc: SerializedDocWithSupplemental
@@ -35,10 +37,11 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
     useState<boolean>(false)
 
   const { currentUserIsCoreMember } = usePage()
-  const { createDoc, updateDoc, deleteDocApi, getUpdatedDocApi, sendingMap } =
-    useCloudApi()
+  const { createDoc, updateDoc, getUpdatedDocApi, sendingMap } = useCloudApi()
+  const { deleteDoc } = useCloudResourceModals()
   const { translate } = useI18n()
   const { popup } = useContextMenu()
+  const { closeAllModals } = useModal()
 
   const updateDocTitle = useCallback(
     async (doc, newTitle) => {
@@ -104,7 +107,10 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
         icon: <Icon size={16} path={mdiTrashCanOutline} />,
         type: MenuTypes.Normal,
         label: translate(lngKeys.GeneralDelete),
-        onClick: () => deleteDocApi({ id: doc.id, teamId: doc.teamId }),
+        onClick: async () => {
+          closeAllModals()
+          await deleteDoc(doc)
+        },
       }
       const actions: MenuItem[] = [
         editTitleAction,
@@ -116,7 +122,7 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
       event.stopPropagation()
       popup(event, actions)
     },
-    [deleteDocApi, popup, translate, onDocDuplicate]
+    [translate, popup, onDocDuplicate, closeAllModals, deleteDoc]
   )
 
   if (!currentUserIsCoreMember) {

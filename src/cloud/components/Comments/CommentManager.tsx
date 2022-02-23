@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Thread, Comment } from '../../interfaces/db/comments'
 import Spinner from '../../../design/components/atoms/Spinner'
 import { mdiArrowLeft } from '@mdi/js'
@@ -12,6 +12,7 @@ import ThreadList from './ThreadList'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import Button from '../../../design/components/atoms/Button'
+import { DialogIconTypes, useDialog } from '../../../design/lib/stores/dialog'
 
 export type State =
   | { mode: 'list_loading'; thread?: { id: string } }
@@ -63,9 +64,66 @@ function CommentManager({
   users,
 }: CommentManagerProps) {
   const { translate } = useI18n()
+  const { messageBox } = useDialog()
   const usersOrEmpty = useMemo(() => {
     return users != null ? users : []
   }, [users])
+
+  const deleteCommentWithPrompt = useCallback(
+    (comment: Comment) => {
+      messageBox({
+        title: translate(lngKeys.ModalsDeleteDocFolderTitle, {
+          label: 'Comment',
+        }),
+        message: translate(lngKeys.ModalsDeleteCommentDisclaimer),
+        iconType: DialogIconTypes.Warning,
+        buttons: [
+          {
+            variant: 'secondary',
+            label: translate(lngKeys.GeneralCancel),
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: translate(lngKeys.GeneralDelete),
+            onClick: async () => {
+              await deleteComment(comment)
+            },
+          },
+        ],
+      })
+    },
+    [deleteComment, messageBox, translate]
+  )
+
+  const deleteThreadWithPrompt = useCallback(
+    (thread: Thread) => {
+      messageBox({
+        title: translate(lngKeys.ModalsDeleteDocFolderTitle, {
+          label: 'Thread',
+        }),
+        message: translate(lngKeys.ModalsDeleteThreadDisclaimer),
+        iconType: DialogIconTypes.Warning,
+        buttons: [
+          {
+            variant: 'secondary',
+            label: translate(lngKeys.GeneralCancel),
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: translate(lngKeys.GeneralDelete),
+            onClick: async () => {
+              await deleteThread(thread)
+            },
+          },
+        ],
+      })
+    },
+    [deleteThread, messageBox, translate]
+  )
 
   const content = useMemo(() => {
     switch (state.mode) {
@@ -83,7 +141,7 @@ function CommentManager({
               <ThreadList
                 threads={state.threads}
                 onSelect={(thread) => setMode({ mode: 'thread', thread })}
-                onDelete={deleteThread}
+                onDelete={(thread) => deleteThreadWithPrompt(thread)}
                 users={usersOrEmpty}
                 updateComment={updateComment}
               />
@@ -119,7 +177,7 @@ function CommentManager({
                 comments={state.comments}
                 className='comment__list'
                 updateComment={updateComment}
-                deleteComment={deleteComment}
+                deleteComment={(comment) => deleteCommentWithPrompt(comment)}
                 user={user}
                 users={usersOrEmpty}
               />
@@ -151,10 +209,10 @@ function CommentManager({
   }, [
     state,
     createThread,
-    deleteThread,
     createComment,
     updateComment,
-    deleteComment,
+    deleteCommentWithPrompt,
+    deleteThreadWithPrompt,
     setMode,
     user,
     usersOrEmpty,
