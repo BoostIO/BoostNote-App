@@ -2,6 +2,7 @@ import { darkTheme } from './dark'
 import { lightTheme } from './light'
 import { sepiaTheme } from './sepia'
 import { solarizedDarkTheme } from './solarizedDark'
+import { draculaTheme } from './dracula'
 import { BaseTheme, ThemeTypes } from './types'
 
 export interface StyledProps {
@@ -16,6 +17,8 @@ export function selectV2Theme(theme: ThemeTypes) {
       return sepiaTheme
     case 'solarizedDark':
       return solarizedDarkTheme
+    case 'dracula':
+      return draculaTheme
     case 'dark':
     default:
       return darkTheme
