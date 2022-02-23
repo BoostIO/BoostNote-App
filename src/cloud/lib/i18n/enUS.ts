@@ -272,6 +272,10 @@ const enTranslation: TranslationSource = {
   [lngKeys.ModalsDeleteDocFolderTitle]: 'Delete {{label}}',
   [lngKeys.ModalsDeleteDocDisclaimer]:
     'Are you sure to remove this document permanently?',
+  [lngKeys.ModalsDeleteCommentDisclaimer]:
+    'Are you sure to remove this comment permanently?',
+  [lngKeys.ModalsDeleteThreadDisclaimer]:
+    'Are you sure to remove this thread permanently?',
   [lngKeys.ModalsDeleteFolderDisclaimer]:
     'Are you sure to remove this folder and delete completely its documents?',
 

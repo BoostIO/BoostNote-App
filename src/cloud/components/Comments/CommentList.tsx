@@ -15,7 +15,7 @@ interface CommentThreadProps {
   comments: Comment[]
   className: string
   updateComment: (comment: Comment, message: string) => Promise<any>
-  deleteComment: (comment: Comment) => Promise<any>
+  deleteComment: (comment: Comment) => void
   user?: SerializedUser
   users: SerializedUser[]
 }
@@ -52,7 +52,7 @@ function CommentList({
 interface CommentItemProps {
   comment: Comment
   updateComment: (comment: Comment, message: string) => Promise<any>
-  deleteComment: (comment: Comment) => Promise<any>
+  deleteComment: (comment: Comment) => void
   editable?: boolean
   users: SerializedUser[]
 }

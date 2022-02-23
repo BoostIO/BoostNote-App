@@ -238,6 +238,8 @@ const zhTranslation: TranslationSource = {
 
   [lngKeys.ModalsDeleteDocFolderTitle]: '删除 {{label}}',
   [lngKeys.ModalsDeleteDocDisclaimer]: '确定要永久删除此文档吗？',
+  [lngKeys.ModalsDeleteCommentDisclaimer]: '您确定要永久删除此评论吗？',
+  [lngKeys.ModalsDeleteThreadDisclaimer]: '您确定要永久删除此主题吗？',
   [lngKeys.ModalsDeleteFolderDisclaimer]:
     '确实要删除此文件夹并完全删除其文档吗？',
 

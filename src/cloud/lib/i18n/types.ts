@@ -317,6 +317,8 @@ export enum lngKeys {
 
   ModalsDeleteDocFolderTitle = 'modals.docs.folders.delete.title',
   ModalsDeleteDocDisclaimer = 'modals.docs.delete.disclaimer',
+  ModalsDeleteCommentDisclaimer = 'modals.comment.delete.disclaimer',
+  ModalsDeleteThreadDisclaimer = 'modals.thread.delete.disclaimer',
   ModalsDeleteFolderDisclaimer = 'modals.folders.delete.disclaimer',
 
   ModalsWorkspaceCreateTitle = 'modals.workspaces.create.title',

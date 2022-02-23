@@ -262,6 +262,11 @@ const frTranslation: TranslationSource = {
   [lngKeys.ModalsDeleteDocFolderTitle]: 'Supprimer {{label}}',
   [lngKeys.ModalsDeleteDocDisclaimer]:
     'Êtes vous certain de vouloir supprimer ce document? Cette action est irréversible.',
+  [lngKeys.ModalsDeleteCommentDisclaimer]:
+    'Êtes-vous sûr de supprimer définitivement ce commentaire?',
+  [lngKeys.ModalsDeleteThreadDisclaimer]:
+    'Êtes-vous sûr de supprimer ce fil définitivement ?',
+
   [lngKeys.ModalsDeleteFolderDisclaimer]:
     'Êtes vous certain de vouloir supprimer ce dossier et ses documents? Cette action est irréversible.',
 
