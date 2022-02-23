@@ -215,7 +215,10 @@ const UserPreferencesForm = () => {
                     },
                     { label: t('settings.dark'), value: 'dark' },
                     { label: t('settings.dracula'), value: 'dracula' },
-                    { label: t('settings.solarizedDark'), value: 'solarizedDark' },
+                    {
+                      label: t('settings.solarizedDark'),
+                      value: 'solarizedDark',
+                    },
                     { label: t('settings.sepia'), value: 'sepia' },
                     { label: t('settings.monokai'), value: 'monokai' },
                   ]}

@@ -1008,7 +1008,10 @@ const Editor = ({
                   className='scroll-sync'
                   onClick={toggleScrollSync}
                 >
-                  <Icon path={scrollSync ? mdiRepeat : mdiRepeatOff} size={16} />
+                  <Icon
+                    path={scrollSync ? mdiRepeat : mdiRepeatOff}
+                    size={16}
+                  />
                 </BottomBarButton>
                 <EditorKeyMapSelect />
                 <EditorThemeSelect />
