@@ -87,4 +87,10 @@ export interface ChangingThemes {
 
 export type BaseTheme = SharedTheme & ChangingThemes
 
-export type ThemeTypes = 'light' | 'dark' | 'sepia' | 'solarizedDark' | 'dracula' | 'monokai'
+export type ThemeTypes =
+  | 'light'
+  | 'dark'
+  | 'sepia'
+  | 'solarizedDark'
+  | 'dracula'
+  | 'monokai'
