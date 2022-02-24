@@ -19,8 +19,8 @@ const SUPPORTED_EVENT_NAMES = Object.keys(supportedEvents).map((key) => {
 })
 
 const SUPPORTED_ACTION_OPTIONS = [
-  { value: 'boost.doc.create', label: 'boost.doc.create' },
-  { value: 'boost.doc.update', label: 'boost.doc.update' },
+  { value: 'boost.docs.create', label: 'boost.docs.create' },
+  { value: 'boost.docs.update', label: 'boost.docs.update' },
 ]
 
 interface PipeBuilderProps {
@@ -114,14 +114,14 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
           </FormRowItem>
         </FormRow>
         <FormRow>
-          {action.value === 'boost.doc.create' && (
+          {action.value === 'boost.docs.create' && (
             <CreateDocActionConfigurator
               configuration={pipe.configuration.input}
               onChange={updateConfig}
               eventType={currentEvent}
             />
           )}
-          {action.value === 'boost.doc.update' && (
+          {action.value === 'boost.docs.update' && (
             <UpdateDocActionConfigurator
               configuration={pipe.configuration.input}
               onChange={updateConfig}
