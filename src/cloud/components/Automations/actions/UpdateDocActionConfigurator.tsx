@@ -42,14 +42,14 @@ const UpdateDocActionConfigurator = ({
     }
 
     const propQueryAst =
-      configuration.info.refs.query !== null &&
+      configuration.info.refs.query != null &&
       configuration.info.refs.query.type === 'constructor' &&
       configuration.info.refs.query.info.type === 'array'
         ? configuration.info.refs.query.info.refs
         : []
 
     const contentAst =
-      configuration.info.refs.content !== null &&
+      configuration.info.refs.content != null &&
       configuration.info.refs.content.type === 'constructor' &&
       configuration.info.refs.content.info.type === 'struct'
         ? configuration.info.refs.content.info.refs
@@ -162,10 +162,11 @@ const UpdateDocActionConfigurator = ({
       <FormRow row={{ title: 'Props' }} />
       <PropertySelect
         value={
+          contentNodes.props != null &&
           contentNodes.props.type === 'constructor' &&
           contentNodes.props.info.type === 'record'
             ? (contentNodes.props.info.refs as any)
-            : {}
+            : []
         }
         onChange={(props) => setContent({ props: RecordNode(props) })}
         eventDataOptions={eventDataOptions}
@@ -190,7 +191,7 @@ function toQueryAST(
       value: StructNode({
         name,
         type: val.input.info.refs.type,
-        value: val.input.info.refs.data,
+        value: val,
       }),
       rule: LiteralNode('string', 'and'),
     })
@@ -202,7 +203,7 @@ function toQueryAST(
       value: StructNode({
         name,
         type: LiteralNode('string', val.value.type),
-        value: LiteralNode('propData', val.value.data),
+        value: LiteralNode('propData', val.value),
       }),
       rule: LiteralNode('string', 'and'),
     })

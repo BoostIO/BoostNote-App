@@ -158,7 +158,7 @@ const PropertySelect = ({
                       type: prop.type,
                       subType: prop.subType,
                       data: null,
-                    }) as SupportedType['val']
+                    })
                   )
                 }
               />,
