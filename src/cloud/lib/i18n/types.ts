@@ -378,6 +378,7 @@ export enum lngKeys {
   DocExportMarkdown = 'doc.export.markdown',
   DocExportHtml = 'doc.export.html',
 
+  FolderFilter = 'Folder.Filter',
   FolderInfo = 'Folder.Info',
   DocInfo = 'Doc.Info',
   Assignees = 'Assignees',

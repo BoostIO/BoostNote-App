@@ -313,6 +313,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.AttachmentsPlanUpgradeDisclaimer]: '如果你需要更多的空间，请',
   [lngKeys.AttachmentsUpgradeLink]: '升级你的计划。',
 
+  [lngKeys.FolderFilter]: '文件夹',
   [lngKeys.FolderInfo]: 'Folder Info',
   [lngKeys.DocInfo]: '文档信息',
   [lngKeys.Assignees]: '分配给',

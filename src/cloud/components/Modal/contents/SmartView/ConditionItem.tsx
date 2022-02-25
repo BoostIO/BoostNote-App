@@ -120,6 +120,8 @@ function inferConditionPrimaryType(t: TFunction, condition: EditableCondition) {
       return { label: t(lngKeys.CreationDate), value: 'creation_date' }
     case 'update_date':
       return { label: t(lngKeys.UpdateDate), value: 'update_date' }
+    case 'folder':
+      return { label: t(lngKeys.FolderFilter), value: 'folder' }
     case 'prop':
       switch (condition.value.type) {
         case 'date':
@@ -152,7 +154,6 @@ function inferConditionPrimaryType(t: TFunction, condition: EditableCondition) {
             ),
             value: supportedCustomPropertyTypes['status'].value,
           }
-          break
         case 'number':
           switch (condition.value.subType) {
             case 'checkbox':
@@ -175,8 +176,7 @@ function inferConditionPrimaryType(t: TFunction, condition: EditableCondition) {
             default:
               break
           }
-        //unsupported
-        case 'number':
+        // unsupported
         default:
       }
     case 'null':
@@ -255,6 +255,13 @@ function getDefaultConditionByType(
           period: 0,
         },
       }
+    case 'folder': {
+      return {
+        rule,
+        type,
+        value: '',
+      }
+    }
     case 'null':
     default:
       return {

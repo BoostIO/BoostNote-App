@@ -57,6 +57,7 @@ export type Condition =
   | ConditionType<'label', string[]>
   | ConditionType<'creation_date', DateCondition>
   | ConditionType<'update_date', DateCondition>
+  | ConditionType<'folder', string>
   | ConditionType<'prop', PropCondition>
 
 export type DateCondition =
