@@ -335,6 +335,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.AttachmentsPlanUpgradeDisclaimer]: '追加の容量が必要な場合',
   [lngKeys.AttachmentsUpgradeLink]: 'プランをアップグレードしてください。',
 
+  [lngKeys.FolderFilter]: 'フォルダ',
   [lngKeys.FolderInfo]: 'フォルダーの情報',
   [lngKeys.DocInfo]: 'ドキュメントの情報',
   [lngKeys.Assignees]: 'アサイン',

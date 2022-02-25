@@ -352,6 +352,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.AttachmentsPlanUpgradeDisclaimer]: 'If you need more space, please',
   [lngKeys.AttachmentsUpgradeLink]: 'upgrade your plan.',
 
+  [lngKeys.FolderFilter]: 'Folder',
   [lngKeys.FolderInfo]: 'Folder Info',
   [lngKeys.DocInfo]: 'Doc Info',
   [lngKeys.Assignees]: 'Assignees',

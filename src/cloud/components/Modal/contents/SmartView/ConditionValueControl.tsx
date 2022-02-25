@@ -24,6 +24,7 @@ import { ConditionNameSuggestionsPerTypeOrSubType } from '../../../../lib/props'
 import StatusSelect from './StatusSelect'
 import { useEffectOnce } from 'react-use'
 import Checkbox from '../../../../../design/components/molecules/Form/atoms/FormCheckbox'
+import FolderSelect from './FolderSelect'
 
 interface ConditionValueControlProps {
   teamId: string
@@ -48,6 +49,18 @@ const ConditionValueControl = ({
       return (
         <FormRowItem>
           <DocDateSelect value={condition.value} update={updateDateValue} />
+        </FormRowItem>
+      )
+    case 'folder':
+      const updateFolderIdValue = (folderId: string) => {
+        update({
+          ...condition,
+          value: folderId || '',
+        })
+      }
+      return (
+        <FormRowItem>
+          <FolderSelect value={condition.value} update={updateFolderIdValue} />
         </FormRowItem>
       )
     case 'label':

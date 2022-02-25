@@ -368,6 +368,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.OpenInBrowser]: 'Ouvrir dans le navigateur',
   [lngKeys.GeneralPickYourDestination]: 'Choisissez la destination',
 
+  [lngKeys.FolderFilter]: 'Dossier',
   [lngKeys.FolderInfo]: 'Info du dossier',
   [lngKeys.DocInfo]: 'Info du document',
   [lngKeys.Assignees]: 'Assigné à',

@@ -13,6 +13,7 @@ import {
   mdiCalendarMonthOutline,
   mdiClockOutline,
   mdiContentSaveOutline,
+  mdiFolderOutline,
   mdiLabelOutline,
   mdiSquareOutline,
   mdiTimerOutline,
@@ -59,6 +60,11 @@ export const supportedStaticPropertyTypes: Record<
     value: 'update_date',
     icon: mdiContentSaveOutline,
   },
+  folder: {
+    label: 'Folder',
+    value: 'folder',
+    icon: mdiFolderOutline,
+  },
 }
 
 type Validators = {
@@ -91,6 +97,13 @@ const validators: Validators = {
       return false
     }
     return validateDateTimeValue(new Date(doc.updatedAt), condition.value)
+  },
+  folder: (doc, condition) => {
+    if (condition.value == '') {
+      return false
+    }
+
+    return doc.parentFolderId == condition.value
   },
 
   prop: (doc, condition) => {
