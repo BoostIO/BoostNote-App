@@ -27,6 +27,7 @@ interface FormSelectCommonProps {
   name?: string
   filterOption?: (option: FormSelectOption, rawInput: string) => boolean
   onMenuOpen?: () => void
+  isMenuOpen?: boolean
   minWidth?: string | number
   placeholder?: React.ReactNode
   getOptionLabel?: getOptionLabel<FormSelectOption>
@@ -66,6 +67,7 @@ const FormSelect = ({
   name,
   filterOption,
   onMenuOpen,
+  isMenuOpen = undefined,
 }: FormSelectProps & StandardFormSelectOptions) => {
   const [focused, setFocused] = useState(false)
   return (
@@ -95,6 +97,7 @@ const FormSelect = ({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         onMenuOpen={onMenuOpen}
+        menuIsOpen={isMenuOpen}
         menuPosition='fixed'
       />
     </Container>
