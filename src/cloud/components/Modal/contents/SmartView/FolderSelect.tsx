@@ -3,6 +3,8 @@ import WorkspaceExplorer from '../../../WorkspaceExplorer'
 import { useNav } from '../../../../lib/stores/nav'
 import Button from '../../../../../design/components/atoms/Button'
 import styled from '../../../../../design/lib/styled'
+import FormRowItem from '../../../../../design/components/molecules/Form/templates/FormRowItem'
+import { useToast } from '../../../../../design/lib/stores/toast'
 
 interface FolderSelectProps {
   value: string | null
@@ -18,33 +20,66 @@ const FolderSelect = ({ value, update }: FolderSelectProps) => {
   const [selectedFolderId, setSelectedFolderId] = useState<string | undefined>(
     ''
   )
+  const [showingFolderExplorer, setShowingFolderExplorer] =
+    useState<boolean>(false)
+  const { pushMessage } = useToast()
+
   const [folders, workspaces] = useMemo(() => {
     return [Array.from(foldersMap.values()), Array.from(workspacesMap.values())]
   }, [foldersMap, workspacesMap])
 
-  const updateSelectedFolderId = useCallback(
+  const saveSelectedFolderId = useCallback(
     (folderId) => {
       if (folderId != null && folderId != '') {
         update(folderId)
+      } else {
+        pushMessage({
+          title: 'Folder selection (change) failed.',
+          description: 'Please select a valid folder.',
+        })
       }
+      setShowingFolderExplorer(false)
     },
-    [update]
+    [pushMessage, update]
   )
 
   const folderName = useMemo(() => {
     const folder = foldersMap.get(value || '')
+    const workspace = workspacesMap.get(value || '')
     if (folder != null) {
       return folder.name
+    } else if (workspace != null) {
+      return workspace.name
     } else {
-      return 'Unknown folder...'
+      return null
     }
-  }, [foldersMap, value])
+  }, [foldersMap, value, workspacesMap])
 
   return (
     <FolderSelectContainer>
-      {value != null && value != '' ? (
-        <div>{folderName}</div>
-      ) : (
+      <FormRowItem
+        className={'folder__select__row_container'}
+        item={{
+          type: 'select',
+          props: {
+            placeholder: 'Select..',
+            value:
+              folderName == null
+                ? null
+                : { label: folderName, value: value || '' },
+            options: [],
+            onChange: () => {
+              // no need - used as a selector opener which will call on change when needed
+            },
+            onMenuOpen: () => {
+              setShowingFolderExplorer(!showingFolderExplorer)
+            },
+            isMenuOpen: false,
+          },
+        }}
+      />
+
+      {showingFolderExplorer && (
         <div className={'folder__select__explorer__row'}>
           <WorkspaceExplorer
             workspaces={workspaces}
@@ -57,7 +92,13 @@ const FolderSelect = ({ value, update }: FolderSelectProps) => {
           <Button
             className={'folder__select__save_button'}
             variant={'secondary'}
-            onClick={() => updateSelectedFolderId(selectedFolderId)}
+            onClick={() =>
+              saveSelectedFolderId(
+                selectedFolderId != null
+                  ? selectedFolderId
+                  : selectedWorkspaceId
+              )
+            }
           >
             Save
           </Button>
@@ -71,10 +112,16 @@ export default FolderSelect
 
 const FolderSelectContainer = styled.div`
   display: flex;
-  align-items: center;
-  max-width: 600px;
+  flex-direction: column;
+  align-items: self-start;
+  max-width: 800px;
+
+  .folder__select__row_container {
+    min-width: 160px;
+  }
 
   .folder__select__explorer__row {
+    margin-top: ${({ theme }) => theme.sizes.spaces.sm}px;
     display: flex;
     flex-direction: column;
   }

@@ -103,7 +103,10 @@ const validators: Validators = {
       return false
     }
 
-    return doc.parentFolderId == condition.value
+    return (
+      doc.parentFolderId == condition.value ||
+      (doc.parentFolderId == null && doc.workspaceId == condition.value)
+    )
   },
 
   prop: (doc, condition) => {

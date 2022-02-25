@@ -39,7 +39,7 @@ const ConditionItem = ({
 
   return (
     <FormRow fullWidth={true}>
-      <Flexbox flex='1 1 auto'>
+      <Flexbox alignItems='flex-start' flex='1 1 auto'>
         {hideConditionRuleType ? (
           <FormRowItem
             flex='0 1 100px'
