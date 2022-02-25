@@ -1,4 +1,5 @@
 import { mdiFileDocumentOutline } from '@mdi/js'
+import { omit, pickBy } from 'lodash'
 import React, { useCallback, useMemo } from 'react'
 import FormEmoji from '../../../../design/components/molecules/Form/atoms/FormEmoji'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
@@ -63,13 +64,13 @@ const UpdateDocActionConfigurator = ({
   }, [propQueryNodes])
 
   const setContent = useCallback(
-    (config: Record<string, BoostAST>) => {
+    (config: Record<string, BoostAST | undefined>) => {
       onChange(
         StructNode({
           query: ArrayNode(propQueryNodes),
           content: StructNode({
-            ...contentNodes,
-            ...config,
+            ...omit(contentNodes, Object.keys(config)),
+            ...pickBy(config, notNull),
           }),
         })
       )
@@ -134,7 +135,11 @@ const UpdateDocActionConfigurator = ({
               <FormEmoji
                 emoji={value?.value}
                 defaultIcon={mdiFileDocumentOutline}
-                setEmoji={(emoji) => onChange(LiteralNode('string', emoji))}
+                setEmoji={(emoji) =>
+                  onChange(
+                    emoji != null ? LiteralNode('string', emoji) : undefined
+                  )
+                }
               />
             )
           }}

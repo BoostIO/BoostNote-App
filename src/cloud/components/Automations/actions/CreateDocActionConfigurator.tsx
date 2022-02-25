@@ -1,4 +1,5 @@
 import { mdiFileDocumentOutline } from '@mdi/js'
+import { dissoc } from 'ramda'
 import React, { useMemo } from 'react'
 import FormEmoji from '../../../../design/components/molecules/Form/atoms/FormEmoji'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
@@ -48,7 +49,13 @@ const CreateDocActionConfigurator = ({
           type={'string'}
           defaultValue=''
           onChange={(title) =>
-            onChange(StructNode({ ...constructorTree, title }))
+            onChange(
+              StructNode(
+                title != null
+                  ? { ...constructorTree, title }
+                  : dissoc('title', title)
+              )
+            )
           }
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
@@ -69,7 +76,13 @@ const CreateDocActionConfigurator = ({
           type='string'
           defaultValue=''
           onChange={(emoji) =>
-            onChange(StructNode({ ...constructorTree, emoji }))
+            onChange(
+              StructNode(
+                emoji != null
+                  ? { ...constructorTree, emoji }
+                  : dissoc('emoji', constructorTree)
+              )
+            )
           }
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
@@ -78,7 +91,11 @@ const CreateDocActionConfigurator = ({
                 emoji={value?.value}
                 defaultIcon={mdiFileDocumentOutline}
                 setEmoji={(emojiStr) =>
-                  onChange(LiteralNode('string', emojiStr))
+                  onChange(
+                    emojiStr != null
+                      ? LiteralNode('string', emojiStr)
+                      : undefined
+                  )
                 }
               />
             )
@@ -91,7 +108,13 @@ const CreateDocActionConfigurator = ({
           type='string'
           defaultValue=''
           onChange={(content) =>
-            onChange(StructNode({ ...constructorTree, content }))
+            onChange(
+              StructNode(
+                content != null
+                  ? { ...constructorTree, content }
+                  : dissoc('content', constructorTree)
+              )
+            )
           }
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
@@ -112,14 +135,22 @@ const CreateDocActionConfigurator = ({
           type={'folder'}
           defaultValue={undefined}
           onChange={(parentFolder) =>
-            onChange(StructNode({ ...constructorTree, parentFolder }))
+            onChange(
+              StructNode(
+                parentFolder != null
+                  ? { ...constructorTree, parentFolder }
+                  : dissoc('parentFolder', constructorTree)
+              )
+            )
           }
           eventDataOptions={eventDataOptions}
           customInput={(onChange, value) => {
             return (
               <FolderSelect
                 value={value?.value}
-                onChange={(id) => onChange(LiteralNode('folder', id))}
+                onChange={(id) =>
+                  onChange(id != null ? LiteralNode('folder', id) : undefined)
+                }
               />
             )
           }}

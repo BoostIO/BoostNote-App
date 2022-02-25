@@ -12,7 +12,7 @@ const CONFIG_TYPES = [
 ]
 
 interface ActionConfigurationInputProps {
-  onChange: (value: BoostAST) => void
+  onChange: (value: BoostAST | undefined) => void
   value: BoostAST
   customInput: (
     onChange: ActionConfigurationInputProps['onChange'],
