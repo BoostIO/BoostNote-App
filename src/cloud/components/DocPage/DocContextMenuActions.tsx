@@ -52,7 +52,6 @@ import Button from '../../../design/components/atoms/Button'
 import {
   ExportOptions,
   getDocExportForPDF,
-  GetDocPDFResponseBody,
   getExportsToken,
 } from '../../api/teams/docs/exports'
 import Spinner from '../../../design/components/atoms/Spinner'
@@ -191,11 +190,9 @@ export function DocContextMenuActions({
         token,
         exportOptions
       ),
-    cb: ({ buffer }: GetDocPDFResponseBody) => {
+    cb: (blob) => {
       const updatedDoc = getUpdatedDoc()
       const pdfName = `${filenamifyTitle(updatedDoc.title)}.pdf`
-      const arrayBuffer = new Uint8Array(buffer.data)
-      const blob = new Blob([arrayBuffer], { type: 'application/pdf' })
 
       downloadBlob(blob, pdfName)
       trackEvent(MixpanelActionTrackTypes.ExportPdf)

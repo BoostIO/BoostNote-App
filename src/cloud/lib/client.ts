@@ -72,36 +72,21 @@ export async function callApi<T = any>(
   }).json() as Promise<T>
 }
 
-export async function callPdfApi<T = any>(
+export async function callPdfApi(
   pathname: string,
   {
     method = 'get',
     search,
     headers = {},
     signal,
-    json,
     body,
   }: CallCloudJsonApiParameter = {}
 ) {
-  if (mockBackend) {
-    return mockHandler(pathname, {
-      method,
-      search,
-      headers,
-      signal,
-      json,
-      body,
-    }) as any as T
-  }
   const mergedHeaders = {
     ...headers,
   }
   const accessToken = getAccessToken()
-  if (
-    usingElectron &&
-    accessToken != null &&
-    mergedHeaders['Authorization'] == null
-  ) {
+  if (accessToken != null && mergedHeaders['Authorization'] == null) {
     mergedHeaders['Authorization'] = `Bearer ${accessToken}`
   }
 
@@ -111,10 +96,9 @@ export async function callPdfApi<T = any>(
     method,
     searchParams: search,
     signal,
-    json,
     body,
     timeout: 60 * 1000,
     credentials: usingElectron ? undefined : 'include',
     retry: 0,
-  }).json() as Promise<T>
+  }).blob()
 }
