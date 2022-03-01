@@ -128,7 +128,7 @@ const AttachmentsTab = () => {
                   current: `${occupiedSpace}MB`,
                   limit:
                     subscription == null
-                      ? `${freePlanStorageMb}MB `
+                      ? `${freePlanStorageMb * permissions.length}MB `
                       : subscription.plan === 'standard'
                       ? `${
                           (permissions.length * standardPlanStorageMb) / 1000
