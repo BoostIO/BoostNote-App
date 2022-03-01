@@ -7,8 +7,8 @@ import { mdiPlus } from '@mdi/js'
 import { EmojiReactionData } from './CommentList'
 import styled from '../../../design/lib/styled'
 import EmojiPickHandler from './EmojiPickHandler'
-import { CommentReaction } from '../../interfaces/db/commentReaction'
 import { Emoji } from 'emoji-mart'
+import { values } from 'ramda'
 
 export type CommentReactionsProps = {
   comment: Comment
@@ -25,11 +25,11 @@ const CommentReactions = ({
   users,
   user,
 }: CommentReactionsProps) => {
-  const filteredReactions = useMemo(() => {
-    const emojiReduce = (reactions: CommentReaction[], key: string) =>
-      Object.values(
-        reactions.reduce((acc, reaction) => {
-          const value = reaction[key]
+  const reducedReactionList = useMemo(() => {
+    return values(
+      comment.reactions.reduce<{ [key: string]: EmojiReactionData }>(
+        (acc, reaction) => {
+          const value = reaction.emoji
 
           if (!acc[value]) {
             acc[value] = {
@@ -43,10 +43,10 @@ const CommentReactions = ({
           }
           acc[value].count++
           return acc
-        }, {})
+        },
+        {}
       )
-    const emojiMap = emojiReduce(comment.reactions, 'emoji')
-    return emojiMap as EmojiReactionData[]
+    )
   }, [comment.reactions])
 
   const removeOrAddReaction = useCallback(
@@ -93,7 +93,7 @@ const CommentReactions = ({
 
   return (
     <CommentReactionsContainer>
-      {filteredReactions.map((reaction) => (
+      {reducedReactionList.map((reaction) => (
         <CommentEmoji
           key={reaction.id}
           tooltip={getCommentReactionUserNames(reaction)}
@@ -109,7 +109,7 @@ const CommentReactions = ({
           }
         />
       ))}
-      {filteredReactions.length > 0 && (
+      {reducedReactionList.length > 0 && (
         <EmojiPickHandler
           comment={comment}
           addReaction={addReaction}
