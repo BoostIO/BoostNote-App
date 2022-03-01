@@ -189,7 +189,7 @@ const SubscriptionPlanTables = ({
                 discounted={discounted}
               />
               <div className='plan__item__footer'>
-                {selectedPlan === 'standard' ? (
+                {selectedPlan === 'pro' ? (
                   <Button
                     className='upgrade__btn'
                     disabled={true}

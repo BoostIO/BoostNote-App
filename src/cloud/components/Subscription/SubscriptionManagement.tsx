@@ -17,6 +17,7 @@ import SubscriptionCostSummary from './SubscriptionCostSummary'
 import Banner from '../../../design/components/atoms/Banner'
 import Button, { LoadingButton } from '../../../design/components/atoms/Button'
 import {
+  newSpaceAnnualCouponId,
   newSpaceCouponId,
   newUserProCouponId,
   newUserStandardCouponId,
@@ -165,6 +166,7 @@ const SubscriptionManagement = ({
       return
     }
 
+    console.log(subscription.couponId)
     switch (subscription.couponId) {
       case newUserProCouponId:
         return discountPlans.newUserPro
@@ -172,11 +174,14 @@ const SubscriptionManagement = ({
         return discountPlans.newUserStandard
       case newSpaceCouponId:
         return discountPlans.newSpace
+      case newSpaceAnnualCouponId:
+        return discountPlans.newSpaceAnnual
       default:
         return discountPlans.migration
     }
   }, [subscription.couponId])
 
+  console.log(currentSubscriptionDiscount)
   return (
     <>
       <SectionIntroduction>
