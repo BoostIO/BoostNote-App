@@ -5,7 +5,7 @@ import { useEmoji } from '../../../design/lib/stores/emoji'
 import { useToast } from '../../../design/lib/stores/toast'
 
 export type EmojiPickHandlerProps = {
-  comment?: Comment
+  comment: Comment
   addReaction: (comment: Comment, emoji: string) => Promise<any>
   removeReaction: (comment: Comment, reactionId: string) => Promise<any>
   user?: SerializedUser
@@ -24,7 +24,10 @@ const EmojiPickHandler: React.FC<EmojiPickHandlerProps> = ({
   const { pushMessage } = useToast()
 
   const setEmoji = useCallback(
-    (emoji?: string | undefined) => {
+    (emoji?: string) => {
+      if (emoji == null) {
+        return
+      }
       if (emoji != null && comment != null) {
         const userReactions = comment.reactions.filter(
           (reaction) =>

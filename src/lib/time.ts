@@ -55,3 +55,13 @@ export function getFormattedDateTime(
       )}`
   }
 }
+
+export function wait(durationInMs: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    try {
+      setTimeout(resolve, durationInMs)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}

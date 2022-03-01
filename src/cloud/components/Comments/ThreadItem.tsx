@@ -21,6 +21,7 @@ import sortBy from 'ramda/es/sortBy'
 import prop from 'ramda/es/prop'
 import CommentReactions from './CommentReactions'
 import EmojiPickHandler from './EmojiPickHandler'
+import { wait } from '../../../lib/time'
 
 export type ThreadListItemProps = ThreadActionProps & {
   onSelect: (thread: Thread) => void
@@ -48,10 +49,10 @@ function ThreadItem({
 
   const [threadComments, setThreadComments] = useState<Comment[] | null>(null)
   const [showingContextMenu, setShowingContextMenu] = useState<boolean>(false)
-  const reloadComments = useCallback(() => {
-    listThreadComments({ id: thread.id }).then((comments) => {
-      setThreadComments(sortBy(prop('createdAt'), comments))
-    })
+  const reloadComments = useCallback(async () => {
+    const comments = await listThreadComments({ id: thread.id })
+    const sortedComments = sortBy(prop('createdAt'), comments)
+    setThreadComments(sortedComments)
   }, [thread.id])
 
   useEffect(() => {
@@ -108,18 +109,21 @@ function ThreadItem({
   const contextMenuItems = useCallback(() => {
     const editable =
       threadOpenedUser != null && user != null && threadOpenedUser.id == user.id
+
     if (editable) {
       return (
         <div className={'comment__meta__actions'}>
-          <EmojiPickHandler
-            className='comment__meta__actions__emoji'
-            comment={threadOpenerComment}
-            addReaction={addReaction}
-            removeReaction={removeReaction}
-            user={user}
-          >
-            <Icon size={20} path={mdiEmoticonHappyOutline} />
-          </EmojiPickHandler>
+          {threadOpenerComment != null && (
+            <EmojiPickHandler
+              className='comment__meta__actions__emoji'
+              comment={threadOpenerComment}
+              addReaction={addReaction}
+              removeReaction={removeReaction}
+              user={user}
+            >
+              <Icon size={20} path={mdiEmoticonHappyOutline} />
+            </EmojiPickHandler>
+          )}
           <div
             onClick={() => onSelect(thread)}
             className='comment__meta__actions__comment'
@@ -143,15 +147,17 @@ function ThreadItem({
     } else {
       return (
         <div className={'comment__meta__actions'}>
-          <EmojiPickHandler
-            className='comment__meta__actions__emoji'
-            comment={threadOpenerComment}
-            addReaction={addReaction}
-            removeReaction={removeReaction}
-            user={user}
-          >
-            <Icon size={20} path={mdiEmoticonHappyOutline} />
-          </EmojiPickHandler>
+          {threadOpenerComment != null && (
+            <EmojiPickHandler
+              className='comment__meta__actions__emoji'
+              comment={threadOpenerComment}
+              addReaction={addReaction}
+              removeReaction={removeReaction}
+              user={user}
+            >
+              <Icon size={20} path={mdiEmoticonHappyOutline} />
+            </EmojiPickHandler>
+          )}
           <div
             onClick={() => onSelect(thread)}
             className='comment__meta__actions__comment'
@@ -171,6 +177,24 @@ function ThreadItem({
     thread,
     onThreadDelete,
   ])
+
+  const addReactionToOpernerComment = useCallback(
+    async (comment, emoji) => {
+      await addReaction(comment, emoji)
+      await wait(1000)
+      reloadComments()
+    },
+    [addReaction, reloadComments]
+  )
+
+  const removeReactionToOpernerComment = useCallback(
+    async (comment, emoji) => {
+      await removeReaction(comment, emoji)
+      await wait(1000)
+      reloadComments()
+    },
+    [removeReaction, reloadComments]
+  )
 
   return (
     <StyledListItem>
@@ -217,8 +241,8 @@ function ThreadItem({
 
               <CommentReactions
                 comment={threadOpenerComment}
-                addReaction={addReaction}
-                removeReaction={removeReaction}
+                addReaction={addReactionToOpernerComment}
+                removeReaction={removeReactionToOpernerComment}
                 users={users}
                 user={user}
               />
