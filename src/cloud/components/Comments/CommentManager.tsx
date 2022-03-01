@@ -97,12 +97,11 @@ function CommentManager({
             label: translate(lngKeys.GeneralDelete),
             onClick: async () => {
               await deleteComment(comment)
-              // todo: [komediruzecki-2022-02-21] if thread.commentCount is updated properly we can just check the number of comments there
-              listThreadComments({ id: thread.id }).then((comments) => {
-                if (comments.length == 0) {
-                  deleteThread(thread)
-                }
-              })
+              // FIXME: The deleting thread behavior must be implemented in backend side.
+              const comments = await listThreadComments({ id: thread.id })
+              if (comments.length == 0) {
+                deleteThread(thread)
+              }
             },
           },
         ],
