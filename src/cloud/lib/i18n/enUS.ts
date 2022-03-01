@@ -174,6 +174,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.PlanBusinessLink]: 'contact our sales department',
   [lngKeys.PlanPerMember]: 'per member',
   [lngKeys.PlanPerMonth]: 'per month',
+  [lngKeys.PlanPerYear]: 'per year',
 
   [lngKeys.PlanFreePerk1]: 'Unlimited Viewers',
   [lngKeys.PlanFreePerk2]: 'Unlimited Members',
@@ -195,6 +196,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.UpgradeSubtitle]: 'Confirm and enter your payment information',
   [lngKeys.Viewers]: 'viewers',
   [lngKeys.Month]: 'month',
+  [lngKeys.Year]: 'year',
   [lngKeys.TotalMonthlyPrice]: 'Total Monthly Price',
   [lngKeys.PaymentMethod]: 'Payment Method',
   [lngKeys.TrialWillBeStopped]: 'Your free trial will be stopped',

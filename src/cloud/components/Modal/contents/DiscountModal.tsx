@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import styled from '../../../../design/lib/styled'
 import Countdown from 'react-countdown'
 import {
@@ -14,12 +14,16 @@ import { mdiExclamation } from '@mdi/js'
 import { useI18n } from '../../../lib/hooks/useI18n'
 import { lngKeys } from '../../../lib/i18n/types'
 import { Translation } from 'react-i18next'
+import { SubscriptionPeriod } from '../../../lib/stripe'
+import Flexbox from '../../../../design/components/atoms/Flexbox'
+import Switch from '../../../../design/components/atoms/Switch'
 
 const DiscountModal = () => {
   const { openSettingsTab } = useSettings()
   const { closeAllModals } = useModal()
   const { team, subscription } = usePage()
   const { translate } = useI18n()
+  const [period, setPeriod] = useState<SubscriptionPeriod>('yearly')
 
   const isTimeEligible = useMemo(() => {
     if (team == null) {
@@ -66,15 +70,31 @@ const DiscountModal = () => {
             {translate(lngKeys.DiscountModalExpired)}
           </div>
         )}
+        <Flexbox className='plans__period' justifyContent='center'>
+          <span>Annual</span>
+          <Switch
+            checked={period === 'monthly'}
+            inverted={true}
+            disabled={setPeriod == null}
+            onChange={() => {
+              if (setPeriod != null) {
+                setPeriod(period === 'yearly' ? 'monthly' : 'yearly')
+              }
+            }}
+          />
+          <span>Monthly</span>
+        </Flexbox>
         <PlanTables
           team={team}
           selectedPlan={'free'}
+          period={period}
           discounted={isTimeEligible}
           onStandardCallback={
             isTimeEligible
               ? () => {
                   openSettingsTab('teamUpgrade', {
                     initialPlan: 'standard',
+                    initialPeriod: period,
                     tabState: 'form',
                   })
                   closeAllModals()
@@ -86,6 +106,7 @@ const DiscountModal = () => {
               ? () => {
                   openSettingsTab('teamUpgrade', {
                     initialPlan: 'pro',
+                    initialPeriod: period,
                     tabState: 'form',
                   })
                   closeAllModals()
@@ -150,6 +171,10 @@ const DiscountCountdownRenderer = ({
 }
 
 const Container = styled.div`
+  .plans__period {
+    margin-bottom: ${({ theme }) => theme.sizes.fonts.md}px;
+  }
+
   .discount__modal__subtitle {
     span {
       font-size: ${({ theme }) => theme.sizes.fonts.md}px;

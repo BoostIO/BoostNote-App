@@ -10,6 +10,11 @@ import {
   stripeStandardPlanUnit,
   UpgradePlans,
   CloudDiscountParameters,
+  SubscriptionPeriod,
+  stripeAnnualProJpyPlanUnit,
+  stripeAnnualProPlanUnit,
+  stripeAnnualStandardPlanUnit,
+  stripeAnnualJpyStandardPlanUnit,
 } from '../../lib/stripe'
 import Icon from '../../../design/components/atoms/Icon'
 import { mdiGiftOutline } from '@mdi/js'
@@ -19,6 +24,7 @@ import { lowerCase } from 'lodash'
 
 interface SubscriptionCostSummaryProps {
   plan: UpgradePlans
+  period: SubscriptionPeriod
   seats: number
   usingJpyPricing: boolean
   discount?: CloudDiscountParameters
@@ -26,6 +32,7 @@ interface SubscriptionCostSummaryProps {
 
 const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
   plan,
+  period,
   seats,
   discount,
   usingJpyPricing,
@@ -36,16 +43,27 @@ const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
   const currencyMarker = usingJpyPricing ? '¥' : '$'
 
   const pricePerUnit = useMemo(() => {
+    const isYearly = period === 'yearly'
     switch (plan) {
       case 'pro':
-        return usingJpyPricing ? stripeProJpyPlanUnit : stripeProPlanUnit
+        return isYearly
+          ? usingJpyPricing
+            ? stripeAnnualProJpyPlanUnit
+            : stripeAnnualProPlanUnit
+          : usingJpyPricing
+          ? stripeProJpyPlanUnit
+          : stripeProPlanUnit
       case 'standard':
       default:
-        return usingJpyPricing
+        return isYearly
+          ? usingJpyPricing
+            ? stripeAnnualJpyStandardPlanUnit
+            : stripeAnnualStandardPlanUnit
+          : usingJpyPricing
           ? stripeStandardJpyPlanUnit
           : stripeStandardPlanUnit
     }
-  }, [plan, usingJpyPricing])
+  }, [plan, usingJpyPricing, period])
 
   return (
     <Container className={cc(['subscription__cost__summary', className])}>
@@ -54,8 +72,8 @@ const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
           <span className='subscription__cost__summary__plan'>{plan}</span>
           {currencyMarker}
           {pricePerUnit} &times; {seats}{' '}
-          {lowerCase(translate(lngKeys.GeneralMembers))} &times; 1{' '}
-          {translate(lngKeys.Month)}
+          {lowerCase(translate(lngKeys.GeneralMembers))} &times;{' '}
+          {period === 'yearly' ? `12 months` : `1 month`}
         </div>
         <div className='subscription__cost__summary__row__calcuration'>
           {currencyMarker}
@@ -93,15 +111,16 @@ const SubscriptionCostSummary: AppComponent<SubscriptionCostSummaryProps> = ({
       </div>
       <div className='subscription__cost__summary__row--total'>
         <strong className='subscription__cost__summary__row__description'>
-          {translate(lngKeys.TotalMonthlyPrice)}
+          Total {period === 'yearly' ? 'Yearly' : 'Monthly'} Price
         </strong>
         <strong className='subscription__cost__summary__row__calcuration'>
           {currencyMarker}
           {Math.round(
-            pricePerUnit * seats -
+            (pricePerUnit * seats -
               pricePerUnit *
                 seats *
-                (discount == null ? 0 : discount.percentageOff / 100)
+                (discount == null ? 0 : discount.percentageOff / 100)) *
+              (period === 'monthly' ? 1 : 12)
           )}
         </strong>
       </div>

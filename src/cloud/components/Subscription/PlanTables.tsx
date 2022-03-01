@@ -3,12 +3,7 @@ import React, { useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { SerializedSubscription } from '../../interfaces/db/subscription'
 import { SerializedTeam } from '../../interfaces/db/team'
-import {
-  discountPlans,
-  stripeProPlanUnit,
-  stripeStandardPlanUnit,
-  UpgradePlans,
-} from '../../lib/stripe'
+import { SubscriptionPeriod, UpgradePlans } from '../../lib/stripe'
 import {
   freePlanStorageMb,
   freePlanUploadSizeMb,
@@ -27,6 +22,7 @@ import { lngKeys } from '../../lib/i18n/types'
 import { ExternalLink } from '../../../design/components/atoms/Link'
 import Pastille from '../../../design/components/atoms/Pastille'
 import { Emoji } from 'emoji-mart'
+import SubscriptionPlanHeader from './SubscriptionPlanHeader'
 
 interface PlanTablesProps {
   team: SerializedTeam
@@ -34,6 +30,7 @@ interface PlanTablesProps {
   selectedPlan: UpgradePlans | 'free'
   discounted?: boolean
   freePlanFooter?: React.ReactNode
+  period: SubscriptionPeriod
   onFreeCallback?: () => void
   onStandardCallback?: () => void
   onProCallback?: () => void
@@ -42,6 +39,7 @@ interface PlanTablesProps {
 
 const PlanTables = ({
   team,
+  period,
   selectedPlan,
   onFreeCallback,
   onTrialCallback,
@@ -94,16 +92,11 @@ const PlanTables = ({
   return (
     <Container className={cc(['plans', isTabletOrMobile && 'plans--mobile'])}>
       <div className='plan__item plan__item--free'>
-        <div className='plan__item__header'>
-          <label className='plan__item__title'>Free</label>
-          <div className='plan__item__price'>
-            <span className='plan__item__price__default'>$0</span>
-            <div className='plan__item__price__description'>
-              {translate(lngKeys.PlanPerMember)}{' '}
-              {translate(lngKeys.PlanPerMonth)}
-            </div>
-          </div>
-        </div>
+        <SubscriptionPlanHeader
+          plan='free'
+          period={period}
+          discounted={discounted}
+        />
         <div className='plan__item__perks'>
           <div className='plan__item__perk'>
             <span>{translate(lngKeys.PlanFreePerk2)}</span>
@@ -150,41 +143,11 @@ const PlanTables = ({
         </div>
       </div>
       <div className='plan__item plan__item--standard'>
-        <div className='plan__item__header'>
-          <label className='plan__item__title'>Standard</label>
-          <div
-            className={cc([
-              'plan__item__price',
-              discounted && 'plan__item__price--discounted',
-            ])}
-          >
-            <span className='plan__item__price__default'>
-              ${stripeStandardPlanUnit}
-            </span>
-            {discounted && (
-              <span className='plan__item__price__discount'>
-                $
-                {Math.round(
-                  stripeStandardPlanUnit -
-                    stripeStandardPlanUnit *
-                      (discountPlans.newSpace.percentageOff / 100)
-                )}
-              </span>
-            )}
-            <div className='plan__item__price__description'>
-              {translate(lngKeys.PlanPerMember)}{' '}
-              {translate(lngKeys.PlanPerMonth)}
-            </div>
-          </div>
-        </div>
-        {discounted && (
-          <div className='plan__item__discount'>
-            {translate(lngKeys.PlanDiscountDetail, {
-              off: discountPlans.newSpace.percentageOff,
-              month: discountPlans.newSpace.durationInMonths,
-            })}
-          </div>
-        )}
+        <SubscriptionPlanHeader
+          plan='standard'
+          period={period}
+          discounted={discounted}
+        />
         <div className='plan__item__perks'>
           <div className='plan__item__perks__viewers-description'>
             <span>$0 per Viewer per month</span>
@@ -252,41 +215,11 @@ const PlanTables = ({
         </div>
       </div>
       <div className='plan__item plan__item--pro'>
-        <div className='plan__item__header'>
-          <label className='plan__item__title'>Pro</label>
-          <div
-            className={cc([
-              'plan__item__price',
-              discounted && 'plan__item__price--discounted',
-            ])}
-          >
-            <span className='plan__item__price__default'>
-              ${stripeProPlanUnit}
-            </span>
-            {discounted && (
-              <span className='plan__item__price__discount'>
-                $
-                {Math.round(
-                  stripeProPlanUnit -
-                    stripeProPlanUnit *
-                      (discountPlans.newSpace.percentageOff / 100)
-                )}
-              </span>
-            )}
-            <div className='plan__item__price__description'>
-              {translate(lngKeys.PlanPerMember)}{' '}
-              {translate(lngKeys.PlanPerMonth)}
-            </div>
-          </div>
-        </div>
-        {discounted && (
-          <div className='plan__item__discount'>
-            {translate(lngKeys.PlanDiscountDetail, {
-              off: discountPlans.newSpace.percentageOff,
-              month: discountPlans.newSpace.durationInMonths,
-            })}
-          </div>
-        )}
+        <SubscriptionPlanHeader
+          plan='pro'
+          period={period}
+          discounted={discounted}
+        />
         <div className='plan__item__perks'>
           <div className='plan__item__perks__viewers-description'>
             <span>$0 per Viewer per month</span>

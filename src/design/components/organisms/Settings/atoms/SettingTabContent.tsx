@@ -10,6 +10,7 @@ interface SettingTabContentProps {
   body: React.ReactNode
   footer?: React.ReactNode
   backLink?: ButtonProps
+  width?: number
 }
 
 const SettingTabContent = ({
@@ -18,12 +19,13 @@ const SettingTabContent = ({
   body,
   footer,
   backLink,
+  width: maxWidth,
 }: SettingTabContentProps) => {
   const { t } = useTranslation()
   return (
     <Container className='setting__tab__content'>
       <div className='setting__tab__content__scrollable'>
-        <div className='setting__tab__content__container'>
+        <div className='setting__tab__content__container' style={{ maxWidth }}>
           {backLink != null && (
             <Button {...backLink} className='settings__tab__content__backlink'>
               {t(lngKeys.GeneralBack)}

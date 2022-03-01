@@ -12,7 +12,6 @@ import { usePage } from '../../lib/stores/pageStore'
 import { discountPlans, UpgradePlans } from '../../lib/stripe'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import { SectionIntroduction } from '../settings/styled'
-import PlanTables from './PlanTables'
 import Alert from '../../../components/atoms/Alert'
 import SubscriptionCostSummary from './SubscriptionCostSummary'
 import Banner from '../../../design/components/atoms/Banner'
@@ -27,6 +26,7 @@ import Icon from '../../../design/components/atoms/Icon'
 import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
 import styled from '../../../design/lib/styled'
+import SubscriptionPlanTables from './SubscriptionPlanTables'
 
 interface SubscriptionManagementProps {
   subscription: SerializedSubscription
@@ -195,6 +195,7 @@ const SubscriptionManagement = ({
         )}
         <SubscriptionCostSummary
           plan={subscription.plan}
+          period={subscription.period}
           seats={subscription.seats}
           usingJpyPricing={usingJpyPricing}
           discount={currentSubscriptionDiscount}
@@ -288,7 +289,8 @@ const SubscriptionManagement = ({
         </StyledBillingDescription>
       </SectionIntroduction>
       {showPlanTables && (
-        <PlanTables
+        <SubscriptionPlanTables
+          selectedPeriod={subscription.period}
           selectedPlan={subscription.plan}
           team={team}
           onFreeCallback={() => setTargetedPlan('Free')}
@@ -343,6 +345,7 @@ const SubscriptionManagement = ({
                   <SubscriptionCostSummary
                     className='popup__billing'
                     seats={subscription.seats}
+                    period={subscription.period}
                     plan={'pro'}
                     usingJpyPricing={usingJpyPricing}
                   />
@@ -367,6 +370,7 @@ const SubscriptionManagement = ({
                   <SubscriptionCostSummary
                     className='popup__billing'
                     seats={subscription.seats}
+                    period={subscription.period}
                     plan={'standard'}
                     usingJpyPricing={usingJpyPricing}
                   />
