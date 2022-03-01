@@ -181,6 +181,8 @@ function ThreadItem({
   const addReactionToOpernerComment = useCallback(
     async (comment, emoji) => {
       await addReaction(comment, emoji)
+      // FIXME: The timer matters. Without this, new reaction might not be refreshed.
+      // Also addReaction method must be refactored to return new reaction component
       await wait(1000)
       reloadComments()
     },
@@ -190,6 +192,7 @@ function ThreadItem({
   const removeReactionToOpernerComment = useCallback(
     async (comment, emoji) => {
       await removeReaction(comment, emoji)
+      // FIXME: The timer matters. Without this, new reaction might not be refreshed.
       await wait(1000)
       reloadComments()
     },
