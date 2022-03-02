@@ -17,6 +17,7 @@ import Icon from '../../../design/components/atoms/Icon'
 import CommentInput from './CommentInput'
 import CommentReactions from './CommentReactions'
 import EmojiPickHandler from './EmojiPickHandler'
+import { DialogIconTypes, useDialog } from '../../../design/lib/stores/dialog'
 
 type ThreadListItemProps = {
   onSelect: (thread: Thread) => void
@@ -44,6 +45,8 @@ const ThreadItem = ({
   onCommentDelete,
 }: ThreadListItemProps) => {
   const [editing, setEditing] = useState(false)
+  const { messageBox } = useDialog()
+  const { translate } = useI18n()
 
   const [showingContextMenu, setShowingContextMenu] = useState<boolean>(false)
 
@@ -66,18 +69,70 @@ const ThreadItem = ({
     [thread.initialComment, updateComment]
   )
 
+  const replyCount = useMemo(() => {
+    return thread.initialComment == null
+      ? thread.commentCount
+      : thread.commentCount - 1
+  }, [thread.commentCount, thread.initialComment])
+
   const onThreadDelete = useCallback(
-    async (thread) => {
+    async (thread: Thread) => {
       if (thread == null) {
         return
       }
-      if (thread.initialThread == null) {
-        await onDelete(thread)
+
+      if (thread.initialComment == null || replyCount === 0) {
+        messageBox({
+          title: translate(lngKeys.ModalsDeleteDocFolderTitle, {
+            label: 'Thread',
+          }),
+          message: translate(lngKeys.ModalsDeleteThreadDisclaimer),
+          iconType: DialogIconTypes.Warning,
+          buttons: [
+            {
+              variant: 'secondary',
+              label: translate(lngKeys.GeneralCancel),
+              cancelButton: true,
+              defaultButton: true,
+            },
+            {
+              variant: 'danger',
+              label: translate(lngKeys.GeneralDelete),
+              onClick: async () => {
+                await onDelete(thread)
+              },
+            },
+          ],
+        })
       } else {
-        await onCommentDelete(thread.initialThread)
+        messageBox({
+          title: translate(lngKeys.ModalsDeleteDocFolderTitle, {
+            label: 'Comment',
+          }),
+          message: translate(lngKeys.ModalsDeleteCommentDisclaimer),
+          iconType: DialogIconTypes.Warning,
+          buttons: [
+            {
+              variant: 'secondary',
+              label: translate(lngKeys.GeneralCancel),
+              cancelButton: true,
+              defaultButton: true,
+            },
+            {
+              variant: 'danger',
+              label: translate(lngKeys.GeneralDelete),
+              onClick: async () => {
+                if (thread.initialComment == null) {
+                  return
+                }
+                await onCommentDelete(thread.initialComment)
+              },
+            },
+          ],
+        })
       }
     },
-    [onCommentDelete, onDelete]
+    [messageBox, onCommentDelete, onDelete, replyCount, translate]
   )
 
   const selectThread = useCallback(() => {
@@ -164,12 +219,6 @@ const ThreadItem = ({
       )
     }
   }, [thread, user, addReaction, removeReaction, selectThread, onThreadDelete])
-
-  const replyCount = useMemo(() => {
-    return thread.initialComment == null
-      ? thread.commentCount
-      : thread.commentCount - 1
-  }, [thread.commentCount, thread.initialComment])
 
   return (
     <StyledListItem>
