@@ -1,5 +1,5 @@
 import React from 'react'
-import ThreadItem, { ThreadListItemProps } from './ThreadItem'
+import ThreadItem from './ThreadItem'
 import { Comment, Thread } from '../../interfaces/db/comments'
 import {
   highlightComment,
@@ -8,7 +8,10 @@ import {
 import styled from '../../../design/lib/styled'
 import { SerializedUser } from '../../interfaces/db/user'
 
-interface ThreadListProps extends Omit<ThreadListItemProps, 'thread'> {
+interface ThreadListProps {
+  onSelect: (thread: Thread) => void
+  onDelete: (thread: Thread) => any
+  users: SerializedUser[]
   threads: Thread[]
   updateComment: (comment: Comment, message: string) => Promise<any>
   addReaction: (comment: Comment, emoji: string) => Promise<any>

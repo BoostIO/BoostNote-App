@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { isToday, format, formatDistanceToNow } from 'date-fns'
 import { Thread, Comment } from '../../interfaces/db/comments'
 import UserIcon from '../UserIcon'
 import styled from '../../../design/lib/styled'
-import { ThreadActionProps } from '../../lib/hooks/useThreadMenuActions'
 import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
-import { listThreadComments } from '../../api/comments/comment'
 import { SerializedUser } from '../../interfaces/db/user'
 import {
   mdiClose,
@@ -17,13 +15,10 @@ import {
 } from '@mdi/js'
 import Icon from '../../../design/components/atoms/Icon'
 import CommentInput from './CommentInput'
-import sortBy from 'ramda/es/sortBy'
-import prop from 'ramda/es/prop'
 import CommentReactions from './CommentReactions'
 import EmojiPickHandler from './EmojiPickHandler'
-import { wait } from '../../../lib/time'
 
-export type ThreadListItemProps = ThreadActionProps & {
+type ThreadListItemProps = {
   onSelect: (thread: Thread) => void
   users: SerializedUser[]
   updateComment: (comment: Comment, message: string) => Promise<any>
@@ -31,11 +26,13 @@ export type ThreadListItemProps = ThreadActionProps & {
   removeReaction: (comment: Comment, reactionId: string) => Promise<any>
   user?: SerializedUser
   onCommentDelete: (comment: Comment) => Promise<any>
+  thread: Thread
+  onDelete: (thread: Thread) => any
 }
 
 const smallUserIconStyle = { width: '28px', height: '28px', lineHeight: '26px' }
 
-function ThreadItem({
+const ThreadItem = ({
   thread,
   onSelect,
   onDelete,
@@ -45,87 +42,61 @@ function ThreadItem({
   removeReaction,
   user,
   onCommentDelete,
-}: ThreadListItemProps) {
-  const { translate } = useI18n()
+}: ThreadListItemProps) => {
   const [editing, setEditing] = useState(false)
 
-  const [threadComments, setThreadComments] = useState<Comment[] | null>(null)
   const [showingContextMenu, setShowingContextMenu] = useState<boolean>(false)
-  const reloadComments = useCallback(async () => {
-    const comments = await listThreadComments({ id: thread.id })
-    const sortedComments = sortBy(prop('createdAt'), comments)
-    setThreadComments(sortedComments)
-  }, [thread.id])
 
-  useEffect(() => {
-    reloadComments()
-  }, [reloadComments, thread.id])
-
-  const showReplyForm = useCallback(() => {
-    if (threadComments == null) {
-      return
-    }
-
+  const showContextMenu = useCallback(() => {
     setShowingContextMenu(true)
-  }, [threadComments])
+  }, [])
 
-  const hideReplyForm = useCallback(() => {
+  const hideContextMenu = useCallback(() => {
     setShowingContextMenu(false)
   }, [])
 
-  const threadOpenerComment = useMemo(() => {
-    if (threadComments == null || threadComments.length == 0) {
-      return
-    }
-    return threadComments[0]
-  }, [threadComments])
-
-  const threadOpenedUser = useMemo(() => {
-    if (threadComments == null || threadComments.length == 0 || user == null) {
-      return
-    }
-
-    return threadComments[0].user
-  }, [threadComments, user])
-
   const submitComment = useCallback(
     async (message: string) => {
-      if (threadOpenerComment == null) {
+      if (thread.initialComment == null) {
         return
       }
-      await updateComment(threadOpenerComment, message)
+      await updateComment(thread.initialComment, message)
       setEditing(false)
-      reloadComments()
     },
-    [reloadComments, threadOpenerComment, updateComment]
+    [thread.initialComment, updateComment]
   )
 
   const onThreadDelete = useCallback(
     async (thread) => {
-      if (threadComments == null) {
+      if (thread == null) {
         return
       }
-      if (threadComments.length > 1) {
-        await onCommentDelete(threadComments[0])
-      } else {
+      if (thread.initialThread == null) {
         await onDelete(thread)
+      } else {
+        await onCommentDelete(thread.initialThread)
       }
-      reloadComments()
     },
-    [onCommentDelete, onDelete, reloadComments, threadComments]
+    [onCommentDelete, onDelete]
   )
 
+  const selectThread = useCallback(() => {
+    onSelect(thread)
+  }, [onSelect, thread])
+
   const contextMenuItems = useCallback(() => {
-    const editable =
-      threadOpenedUser != null && user != null && threadOpenedUser.id == user.id
+    if (thread.initialComment == null) {
+      return
+    }
+    const editable = user != null && thread.initialComment.user.id == user.id
 
     if (editable) {
       return (
         <div className={'comment__meta__actions'}>
-          {threadOpenerComment != null && (
+          {thread.initialComment != null && (
             <EmojiPickHandler
               className='comment__meta__actions__emoji'
-              comment={threadOpenerComment}
+              comment={thread.initialComment}
               addReaction={addReaction}
               removeReaction={removeReaction}
               user={user}
@@ -134,7 +105,7 @@ function ThreadItem({
             </EmojiPickHandler>
           )}
           <div
-            onClick={() => onSelect(thread)}
+            onClick={selectThread}
             className='comment__meta__actions__comment'
           >
             <Icon size={20} path={mdiMessageReplyTextOutline} />
@@ -156,10 +127,10 @@ function ThreadItem({
     } else {
       return (
         <div className={'comment__meta__actions'}>
-          {threadOpenerComment != null && (
+          {thread.initialComment != null && (
             <EmojiPickHandler
               className='comment__meta__actions__emoji'
-              comment={threadOpenerComment}
+              comment={thread.initialComment}
               addReaction={addReaction}
               removeReaction={removeReaction}
               user={user}
@@ -168,7 +139,7 @@ function ThreadItem({
             </EmojiPickHandler>
           )}
           <div
-            onClick={() => onSelect(thread)}
+            onClick={selectThread}
             className='comment__meta__actions__comment'
           >
             <Icon size={20} path={mdiMessageReplyTextOutline} />
@@ -176,117 +147,20 @@ function ThreadItem({
         </div>
       )
     }
-  }, [
-    threadOpenedUser,
-    user,
-    threadOpenerComment,
-    addReaction,
-    removeReaction,
-    onSelect,
-    thread,
-    onThreadDelete,
-  ])
+  }, [thread, user, addReaction, removeReaction, selectThread, onThreadDelete])
 
-  const addReactionToOpernerComment = useCallback(
-    async (comment, emoji) => {
-      await addReaction(comment, emoji)
-      // FIXME: The timer matters. Without this, new reaction might not be refreshed.
-      // Also addReaction method must be refactored to return new reaction component
-      await wait(1000)
-      reloadComments()
-    },
-    [addReaction, reloadComments]
-  )
-
-  const removeReactionToOpernerComment = useCallback(
-    async (comment, emoji) => {
-      await removeReaction(comment, emoji)
-      // FIXME: The timer matters. Without this, new reaction might not be refreshed.
-      await wait(1000)
-      reloadComments()
-    },
-    [removeReaction, reloadComments]
-  )
-
-  const threadCommentReplyInfo = useCallback(() => {
-    if (
-      threadComments &&
-      (threadComments.length > 1 ||
-        (threadComments.length == 1 && thread.initialComment == null))
-    ) {
-      return (
-        <div className={'thread__comment__line_more_replies_container'}>
-          <div
-            onClick={() => onSelect(thread)}
-            className={'thread__comment__line__replies__link'}
-          >
-            {translate(lngKeys.ThreadReplies, {
-              count: thread.commentCount,
-            })}
-          </div>
-          <span className='thread__comment__line__date'>
-            {formatDate(thread.lastCommentTime)}
-          </span>
-        </div>
-      )
-    }
-    return null
-  }, [onSelect, thread, threadComments, translate])
-
-  const threadCommentData = useCallback(() => {
-    if (thread.initialComment == null) {
-      return (
-        <div className={'thread__comment__line'}>
-          <div className={'thread__comment__deleted__line'}>
-            This comment was deleted.
-          </div>
-          {threadCommentReplyInfo()}
-        </div>
-      )
-    }
-
-    if (threadComments && threadComments.length > 0) {
-      return (
-        <div className={'thread__comment__line'}>
-          <span>{thread.contributors[0].displayName}</span>
-          <span className='thread__comment__line__date'>
-            {formatDate(threadComments[0].createdAt)}
-          </span>
-          {editing ? (
-            <CommentInput
-              placeholder={'Reply'}
-              autoFocus={true}
-              onSubmit={submitComment}
-              value={threadComments[0].message}
-              users={users}
-            />
-          ) : (
-            <div className='thread__comment__line__first__comment'>
-              <span>{threadComments[0].message}</span>
-            </div>
-          )}
-          {threadCommentReplyInfo()}
-        </div>
-      )
-    }
-
-    return null
-  }, [
-    threadCommentReplyInfo,
-    editing,
-    submitComment,
-    thread.contributors,
-    thread.initialComment,
-    threadComments,
-    users,
-  ])
+  const replyCount = useMemo(() => {
+    return thread.initialComment == null
+      ? thread.commentCount
+      : thread.commentCount - 1
+  }, [thread.commentCount, thread.initialComment])
 
   return (
     <StyledListItem>
       <div
         className={'thread'}
-        onMouseEnter={showReplyForm}
-        onMouseLeave={hideReplyForm}
+        onMouseEnter={showContextMenu}
+        onMouseLeave={hideContextMenu}
       >
         <div className={'thread__info'}>
           <div className='thread__info__line'>
@@ -294,77 +168,62 @@ function ThreadItem({
               className={'thread__info__line__icon'}
               style={smallUserIconStyle}
               user={
-                threadOpenedUser != null
-                  ? threadOpenedUser
+                thread.initialComment != null
+                  ? thread.initialComment.user
                   : thread.contributors[0]
               }
             />
           </div>
-          {threadComments && threadOpenerComment != null && (
+          {thread.initialComment == null ? (
             <div className={'thread__comment__line'}>
-              <span>
-                {threadOpenedUser != null
-                  ? threadOpenedUser.displayName
-                  : thread.contributors[0].displayName}
-              </span>
+              <div className={'thread__comment__deleted__line'}>
+                This comment has been deleted.
+              </div>
+              {replyCount > 0 && (
+                <ThreadReplyInfo
+                  count={replyCount}
+                  selectThread={selectThread}
+                  lastCommentTime={thread.lastCommentTime}
+                />
+              )}
+            </div>
+          ) : (
+            <div className={'thread__comment__line'}>
+              <span>{thread.contributors[0].displayName}</span>
               <span className='thread__comment__line__date'>
-                {formatDate(threadOpenerComment.createdAt)}
+                {formatThreadDate(new Date(thread.initialComment.createdAt))}
               </span>
               {editing ? (
                 <CommentInput
                   placeholder={'Reply'}
                   autoFocus={true}
                   onSubmit={submitComment}
-                  value={threadOpenerComment.message}
+                  value={thread.initialComment.message}
                   users={users}
                 />
               ) : (
                 <div className='thread__comment__line__first__comment'>
-                  <span>{threadOpenerComment.message}</span>
+                  <span>{thread.initialComment.message}</span>
                 </div>
               )}
 
               <CommentReactions
-                comment={threadOpenerComment}
-                addReaction={addReactionToOpernerComment}
-                removeReaction={removeReactionToOpernerComment}
+                comment={thread.initialComment}
+                addReaction={addReaction}
+                removeReaction={removeReaction}
                 users={users}
                 user={user}
               />
 
-              {threadComments && threadComments.length > 1 && (
-                <div className={'thread__comment__line_more_replies_container'}>
-                  <div
-                    onClick={() => onSelect(thread)}
-                    className={'thread__comment__line__replies__link'}
-                  >
-                    {translate(lngKeys.ThreadReplies, {
-                      count: thread.commentCount - 1,
-                    })}
-                  </div>
-                  <span className='thread__comment__line__date'>
-                    {formatDate(thread.lastCommentTime)}
-                  </span>
-                </div>
+              {replyCount > 0 && (
+                <ThreadReplyInfo
+                  count={replyCount}
+                  selectThread={selectThread}
+                  lastCommentTime={thread.lastCommentTime}
+                />
               )}
             </div>
           )}
-          {thread.initialComment == null ? (
-            <div className={'thread__info__line__comment__removed__icon'}>
-              <Icon size={20} path={mdiTrashCanOutline} />
-            </div>
-          ) : (
-            <UserIcon
-              className={'thread__info__line__icon'}
-              style={smallUserIconStyle}
-              user={
-                thread.initialComment.user != null
-                  ? thread.initialComment.user
-                  : thread.contributors[0]
-              }
-            />
-          )}
-          {threadCommentData()}
         </div>
 
         {editing ? (
@@ -376,6 +235,33 @@ function ThreadItem({
         )}
       </div>
     </StyledListItem>
+  )
+}
+
+const ThreadReplyInfo = ({
+  count,
+  lastCommentTime,
+  selectThread,
+}: {
+  count: number
+  lastCommentTime: Date
+  selectThread: () => void
+}) => {
+  const { translate } = useI18n()
+  return (
+    <div className={'thread__comment__line_more_replies_container'}>
+      <div
+        onClick={selectThread}
+        className={'thread__comment__line__replies__link'}
+      >
+        {translate(lngKeys.ThreadReplies, {
+          count,
+        })}
+      </div>
+      <span className='thread__comment__line__date'>
+        {formatLastReplyDate(lastCommentTime)}
+      </span>
+    </div>
   )
 }
 
@@ -520,7 +406,13 @@ const StyledListItem = styled.div`
   }
 `
 
-function formatDate(date: Date) {
+function formatThreadDate(date: Date) {
+  return isToday(date)
+    ? `Today at ${format(date, 'KK:mm a')}`
+    : `${formatDistanceToNow(date)} ago`
+}
+
+function formatLastReplyDate(date: Date) {
   return isToday(date)
     ? `Today at ${format(date, 'KK:mm a')}`
     : `Last reply ${formatDistanceToNow(date)} ago`
