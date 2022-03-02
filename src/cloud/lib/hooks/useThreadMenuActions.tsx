@@ -6,7 +6,7 @@ import { mdiTrashCanOutline } from '@mdi/js'
 import { useI18n } from './useI18n'
 import { lngKeys } from '../i18n/types'
 
-export interface ThreadActionProps {
+interface ThreadActionProps {
   thread: Thread
   onDelete: (thread: Thread) => any
 }
