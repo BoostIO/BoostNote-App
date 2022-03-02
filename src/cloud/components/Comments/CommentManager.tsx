@@ -162,7 +162,9 @@ function CommentManager({
               </Button>
 
               <div className='thread__context'>{state.thread.context}</div>
+
               <CommentList
+                initialComment={state.thread.initialComment}
                 comments={state.comments}
                 className='comment__list'
                 updateComment={updateComment}

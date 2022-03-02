@@ -19,6 +19,7 @@ import CommentReactions from './CommentReactions'
 import EmojiPickHandler from './EmojiPickHandler'
 
 interface CommentThreadProps {
+  initialComment?: Comment
   comments: Comment[]
   className: string
   updateComment: (comment: Comment, message: string) => Promise<any>
@@ -30,6 +31,7 @@ interface CommentThreadProps {
 }
 
 function CommentList({
+  initialComment,
   comments,
   className,
   updateComment,
@@ -44,7 +46,12 @@ function CommentList({
   }, [comments])
 
   return (
-    <div className={className}>
+    <CommentListContainer className={className}>
+      {initialComment == null && (
+        <div className={'deleted_initial_comment'}>
+          This comment has been deleted.
+        </div>
+      )}
       {sorted.map((comment) => (
         <div key={comment.id}>
           <CommentItem
@@ -59,9 +66,16 @@ function CommentList({
           />
         </div>
       ))}
-    </div>
+    </CommentListContainer>
   )
 }
+
+const CommentListContainer = styled.div`
+  .deleted_initial_comment {
+    margin: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
+    color: ${({ theme }) => theme.colors.text.subtle};
+  }
+`
 
 interface CommentItemProps {
   comment: Comment
