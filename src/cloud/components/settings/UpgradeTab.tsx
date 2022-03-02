@@ -8,8 +8,7 @@ import SubscriptionForm from '../SubscriptionForm'
 import { useSettings } from '../../lib/stores/settings'
 import FreeTrialPopup from '../FreeTrialPopup'
 import { stripePublishableKey } from '../../lib/consts'
-import PlanTables from '../Subscription/PlanTables'
-import { UpgradePlans } from '../../lib/stripe'
+import { SubscriptionPeriod, UpgradePlans } from '../../lib/stripe'
 import SettingTabContent from '../../../design/components/organisms/Settings/atoms/SettingTabContent'
 import { ExternalLink } from '../../../design/components/atoms/Link'
 import {
@@ -23,6 +22,7 @@ import { useElectron } from '../../lib/stores/electron'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
+import SubscriptionPlanTables from '../Subscription/SubscriptionPlanTables'
 
 const stripePromise = loadStripe(stripePublishableKey)
 
@@ -32,12 +32,14 @@ export interface UpgradeTabOpeningOptions {
   tabState?: UpgradeTabs
   showTrialPopup?: boolean
   initialPlan?: UpgradePlans
+  initialPeriod?: SubscriptionPeriod
 }
 
 const UpgradeTab = ({
   tabState: defaultTabState = 'plans',
   showTrialPopup: defaultShowTrial = false,
   initialPlan: defaultInitialPlan = 'standard',
+  initialPeriod: defaultInitialPeriod = 'yearly',
 }: UpgradeTabOpeningOptions) => {
   const { translate } = useI18n()
   const { team, subscription, updateTeamSubscription, currentUserPermissions } =
@@ -46,6 +48,7 @@ const UpgradeTab = ({
   const [tabState, setTabState] = useState<UpgradeTabs>(defaultTabState)
   const { openSettingsTab } = useSettings()
   const [showTrialPopup, setShowTrialPopup] = useState(defaultShowTrial)
+  const [period, setPeriod] = useState<SubscriptionPeriod>(defaultInitialPeriod)
   const [initialPlan, setInitialPlan] =
     useState<UpgradePlans>(defaultInitialPlan)
 
@@ -90,11 +93,13 @@ const UpgradeTab = ({
   const eligibilityEnd = new Date(team.createdAt)
   eligibilityEnd.setDate(eligibilityEnd.getDate() + newTeamDiscountDays)
   const teamIsEligibleForDiscount = isTimeEligibleForDiscount(team)
+
   if (tabState === 'plans') {
     return (
       <SettingTabContent
         title={translate(lngKeys.SettingsTeamUpgrade)}
         description={translate(lngKeys.PlanChoose)}
+        width={900}
         body={
           <>
             {showTrialPopup && (
@@ -110,7 +115,7 @@ const UpgradeTab = ({
                   <strong>{format(eligibilityEnd, 'H:m, dd MMM yyyy')}</strong>
                 </Banner>
               )}
-              <PlanTables
+              <SubscriptionPlanTables
                 team={team}
                 subscription={subscription}
                 selectedPlan='free'
@@ -118,6 +123,8 @@ const UpgradeTab = ({
                 onProCallback={() => onUpgradeCallback('pro')}
                 onTrialCallback={() => setShowTrialPopup(true)}
                 discounted={teamIsEligibleForDiscount}
+                selectedPeriod={period}
+                setSelectedPeriod={setPeriod}
               />
             </section>
           </>
@@ -129,6 +136,7 @@ const UpgradeTab = ({
   return (
     <SettingTabContent
       title={translate(lngKeys.SettingsTeamUpgrade)}
+      width={900}
       description={
         <>
           {translate(lngKeys.UpgradeSubtitle)} (Service provided by{' '}
@@ -147,6 +155,7 @@ const UpgradeTab = ({
                 <SubscriptionForm
                   team={team}
                   initialPlan={initialPlan}
+                  period={period}
                   ongoingTrial={
                     subscription != null && subscription.status === 'trialing'
                   }

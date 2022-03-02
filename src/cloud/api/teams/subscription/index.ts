@@ -2,7 +2,7 @@
 import { SerializedTeam } from '../../../interfaces/db/team'
 import { callApi } from '../../../lib/client'
 import { SerializedSubscription } from '../../../interfaces/db/subscription'
-import { UpgradePlans } from '../../../lib/stripe'
+import { SubscriptionPeriod, UpgradePlans } from '../../../lib/stripe'
 
 export interface WithPromoCode {
   code?: string
@@ -12,6 +12,7 @@ export interface CreateSubscriptionRequestBody extends WithPromoCode {
   source: string
   email: string
   plan: UpgradePlans
+  period: SubscriptionPeriod
 }
 
 export interface CreateSubscriptionResponseBody {

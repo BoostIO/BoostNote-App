@@ -75,6 +75,7 @@ module.exports = (env, argv) => {
         'COUPONS_NEW_USER_STANDARD',
         'COUPONS_NEW_USER_PRO',
         'COUPONS_NEW_SPACE',
+        'COUPONS_NEW_SPACE_ANNUAL',
         'MOCK_BACKEND',
         'BOOST_PDF_EXPORT_BASE_URL',
         'GITHUB_APP_URL',

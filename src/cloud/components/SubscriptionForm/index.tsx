@@ -6,7 +6,11 @@ import { SerializedSubscription } from '../../interfaces/db/subscription'
 import Stripe from '@stripe/stripe-js'
 import { useSettings } from '../../lib/stores/settings'
 import { usePage } from '../../lib/stores/pageStore'
-import { discountPlans, UpgradePlans } from '../../lib/stripe'
+import {
+  discountPlans,
+  SubscriptionPeriod,
+  UpgradePlans,
+} from '../../lib/stripe'
 import Alert from '../../../components/atoms/Alert'
 import { useToast } from '../../../design/lib/stores/toast'
 import Button, { LoadingButton } from '../../../design/components/atoms/Button'
@@ -25,6 +29,7 @@ import { lngKeys } from '../../lib/i18n/types'
 interface SubscriptionFormProps {
   team: SerializedTeam
   initialPlan?: UpgradePlans
+  period: SubscriptionPeriod
   ongoingTrial?: boolean
   onSuccess: (subscription: SerializedSubscription) => void
   onCancel?: () => void
@@ -36,6 +41,7 @@ const SubscriptionForm = ({
   team,
   ongoingTrial,
   initialPlan,
+  period,
   onSuccess,
   onCancel,
 }: SubscriptionFormProps) => {
@@ -96,6 +102,7 @@ const SubscriptionForm = ({
         email,
         code: showPromoCode && promoCode.length > 0 ? promoCode : undefined,
         plan: currentPlan,
+        period,
       })
 
       if (result.requiresAction) {
@@ -144,9 +151,11 @@ const SubscriptionForm = ({
 
     switch (currentPlan) {
       default:
-        return discountPlans.newSpace
+        return period === 'yearly'
+          ? discountPlans.newSpaceAnnual
+          : discountPlans.newSpace
     }
-  }, [currentPlan, team])
+  }, [currentPlan, team, period])
 
   return (
     <Container>
@@ -154,6 +163,7 @@ const SubscriptionForm = ({
         <SubscriptionCostSummary
           usingJpyPricing={usingJpyPricing}
           plan={currentPlan}
+          period={period}
           seats={numberOfMembers}
           discount={eligibleDiscount}
         />

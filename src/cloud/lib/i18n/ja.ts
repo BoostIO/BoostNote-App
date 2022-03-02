@@ -173,11 +173,13 @@ const jpTranslation: TranslationSource = {
   [lngKeys.PlanBusinessLink]: 'お気軽にこちらよりお問い合わせください。',
   [lngKeys.PlanPerMember]: 'メンバーごと',
   [lngKeys.PlanPerMonth]: '毎月',
+  [lngKeys.PlanPerYear]: '毎年',
   [lngKeys.PlanTrial]: '{{days}}間の無料トライアル',
   [lngKeys.PlanInTrial]: 'トライアルを利用中です（残り{{remaining}}間）',
   [lngKeys.UpgradeSubtitle]: '支払い情報を入力してください。',
   [lngKeys.Viewers]: '人のViewer権限のユーザー',
   [lngKeys.Month]: '月',
+  [lngKeys.Year]: '年',
   [lngKeys.TotalMonthlyPrice]: '月間の合計請求額',
   [lngKeys.PaymentMethod]: '支払い方法',
   [lngKeys.TrialWillBeStopped]: 'アップグレードと共にトライアルは終了します。',
@@ -222,6 +224,8 @@ const jpTranslation: TranslationSource = {
     '無制限ドキュメントやドキュメント履歴変更、大きな容量サイズ等、特別な機能を利用することが出来ます。',
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     '無制限ドキュメントやドキュメント履歴変更、大きな容量サイズ等、特別な機能へのアクセスを失います。',
+  [lngKeys.BillingChangePlanStripeProrationUpgradeDiscount]: `The cost summary below will become the standard for your future invoices. When upgrading you will be invoiced the upgrade cost instantly which will automatically discount the remaining time you had on your current plan.`,
+  [lngKeys.BillingChangePlanStripeProrationDowngradeDiscount]: `The cost summary below will become the standard for your future invoices. The remaining time on your current plan will be discounted on your next invoice.`,
 
   [lngKeys.FreeTrialModalTitle]: 'プロプランを無料で試してみましょう',
   [lngKeys.FreeTrialModalBody]:

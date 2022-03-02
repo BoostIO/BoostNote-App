@@ -75,6 +75,7 @@ const SubscriptionTab = () => {
   return (
     <SettingTabContent
       title={t('settings.teamSubscription')}
+      width={900}
       body={
         <section>
           <div className='text--small'>

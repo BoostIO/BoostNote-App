@@ -7,7 +7,7 @@ import { filterIter } from './utils/iterator'
 export const freePlanDocLimit = 30
 export const freeTrialPeriodDays = 7
 
-export const freePlanStorageMb = 100
+export const freePlanStorageMb = 5
 export const standardPlanStorageMb = 1000
 export const proPlanStorageMb = 10000
 
@@ -25,8 +25,7 @@ export const freePlanDashboardPerUserPerTeamLimit = 1
 
 export function isTimeEligibleForDiscount(team: { createdAt: string }) {
   if (
-    differenceInDays(Date.now(), new Date(team.createdAt)) <=
-    newTeamDiscountDays
+    differenceInDays(Date.now(), new Date(team.createdAt)) < newTeamDiscountDays
   ) {
     return true
   }

@@ -171,6 +171,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.PlanBusinessLink]: 'contacter notre département de ventes',
   [lngKeys.PlanPerMember]: 'par membre',
   [lngKeys.PlanPerMonth]: 'par mois',
+  [lngKeys.PlanPerYear]: 'par an',
   [lngKeys.PlanFreePerk1]: 'Observateurs illimités',
   [lngKeys.PlanFreePerk2]: 'Membres illimités',
   [lngKeys.PlanFreePerk3]: '{{docs}} Documents',
@@ -194,6 +195,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.UpgradeSubtitle]: 'Entrez et confirmez vos informations de paiement',
   [lngKeys.Viewers]: 'observateurs',
   [lngKeys.Month]: 'mois',
+  [lngKeys.Year]: 'an',
   [lngKeys.TotalMonthlyPrice]: 'Prix mensuel total',
   [lngKeys.PaymentMethod]: 'Méthode de paiement',
   [lngKeys.TrialWillBeStopped]: 'Votre essai gratuit va être stoppé',
@@ -238,6 +240,8 @@ const frTranslation: TranslationSource = {
     "Vous allez immédiatement gagner accès à des fonctionnalités avancées tel que l'accès complet à l'historique de révisions pour vos documents, choisir et installer des mots de passe ou des dates d'expiration pour vos documents partagés, nombre illimité d'observateurs etc...",
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     "Vous allez immédiatement perdre accès à des fonctionnalités avancées tel que l'accès complet à l'historique de révisions pour vos documents, choisir et installer des mots de passe ou des dates d'expiration pour vos documents partagés, nombre illimité d'observateurs etc...",
+  [lngKeys.BillingChangePlanStripeProrationUpgradeDiscount]: `Les coûts détaillés ci-dessous deviendront la norme pour vos futures factures. Lorsque vous upgradez, vous allez être facturés instantanément le coût de l'upgrade tout en remisant le temps restant dont vous disposiez sur votre plan courant.`,
+  [lngKeys.BillingChangePlanStripeProrationDowngradeDiscount]: `Les coûts détaillés ci-dessous deviendront la norme pour vos futures factures. Le temps restant dont vous disposiez sur votre plan courant sera remisé sur votre prochaine facture.`,
 
   [lngKeys.FreeTrialModalTitle]: 'Pro Plan: Essai gratuit',
   [lngKeys.FreeTrialModalBody]:

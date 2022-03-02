@@ -12,12 +12,12 @@ import { usePage } from '../../lib/stores/pageStore'
 import { discountPlans, UpgradePlans } from '../../lib/stripe'
 import Flexbox from '../../../design/components/atoms/Flexbox'
 import { SectionIntroduction } from '../settings/styled'
-import PlanTables from './PlanTables'
 import Alert from '../../../components/atoms/Alert'
 import SubscriptionCostSummary from './SubscriptionCostSummary'
 import Banner from '../../../design/components/atoms/Banner'
 import Button, { LoadingButton } from '../../../design/components/atoms/Button'
 import {
+  newSpaceAnnualCouponId,
   newSpaceCouponId,
   newUserProCouponId,
   newUserStandardCouponId,
@@ -27,6 +27,7 @@ import Icon from '../../../design/components/atoms/Icon'
 import { lngKeys } from '../../lib/i18n/types'
 import { useI18n } from '../../lib/hooks/useI18n'
 import styled from '../../../design/lib/styled'
+import SubscriptionPlanTables from './SubscriptionPlanTables'
 
 interface SubscriptionManagementProps {
   subscription: SerializedSubscription
@@ -165,6 +166,7 @@ const SubscriptionManagement = ({
       return
     }
 
+    console.log(subscription.couponId)
     switch (subscription.couponId) {
       case newUserProCouponId:
         return discountPlans.newUserPro
@@ -172,11 +174,14 @@ const SubscriptionManagement = ({
         return discountPlans.newUserStandard
       case newSpaceCouponId:
         return discountPlans.newSpace
+      case newSpaceAnnualCouponId:
+        return discountPlans.newSpaceAnnual
       default:
         return discountPlans.migration
     }
   }, [subscription.couponId])
 
+  console.log(currentSubscriptionDiscount)
   return (
     <>
       <SectionIntroduction>
@@ -195,6 +200,7 @@ const SubscriptionManagement = ({
         )}
         <SubscriptionCostSummary
           plan={subscription.plan}
+          period={subscription.period}
           seats={subscription.seats}
           usingJpyPricing={usingJpyPricing}
           discount={currentSubscriptionDiscount}
@@ -288,7 +294,8 @@ const SubscriptionManagement = ({
         </StyledBillingDescription>
       </SectionIntroduction>
       {showPlanTables && (
-        <PlanTables
+        <SubscriptionPlanTables
+          selectedPeriod={subscription.period}
           selectedPlan={subscription.plan}
           team={team}
           onFreeCallback={() => setTargetedPlan('Free')}
@@ -328,21 +335,29 @@ const SubscriptionManagement = ({
               ) : targetedPlan === 'Pro' ? (
                 <>
                   <p>{translate(lngKeys.BillingChangePlanProDisclaimer)}</p>
+                  <div className='cost__separator' />
                   <p>
-                    {translate(lngKeys.BillingChangePlanStripeProration)}
-                    <a
-                      href='https://stripe.com/docs/billing/subscriptions/prorations'
-                      target='__blank'
-                      rel='noreferrer'
-                      style={{ marginLeft: 3 }}
-                    >
-                      {translate(lngKeys.GeneralLearnMore)}
-                      <Icon path={mdiOpenInNew} />
-                    </a>
+                    {translate(
+                      lngKeys.BillingChangePlanStripeProrationUpgradeDiscount
+                    )}
+                    <br />
+                    <span>
+                      {translate(lngKeys.BillingChangePlanStripeProration)}
+                      <a
+                        href='https://stripe.com/docs/billing/subscriptions/prorations'
+                        target='__blank'
+                        rel='noreferrer'
+                        style={{ marginLeft: 3 }}
+                      >
+                        {translate(lngKeys.GeneralLearnMore)}
+                        <Icon path={mdiOpenInNew} />
+                      </a>
+                    </span>
                   </p>
                   <SubscriptionCostSummary
                     className='popup__billing'
                     seats={subscription.seats}
+                    period={subscription.period}
                     plan={'pro'}
                     usingJpyPricing={usingJpyPricing}
                   />
@@ -352,21 +367,30 @@ const SubscriptionManagement = ({
                   <p>
                     {translate(lngKeys.BillingChangePlanStandardDisclaimer)}
                   </p>
+                  <div className='cost__separator' />
                   <p>
-                    {translate(lngKeys.BillingChangePlanStripeProration)}
-                    <a
-                      href='https://stripe.com/docs/billing/subscriptions/prorations'
-                      target='__blank'
-                      rel='noreferrer'
-                      style={{ marginLeft: 3 }}
-                    >
-                      {translate(lngKeys.GeneralLearnMore)}
-                      <Icon path={mdiOpenInNew} />
-                    </a>
+                    {translate(
+                      lngKeys.BillingChangePlanStripeProrationDowngradeDiscount
+                    )}
+                    <br />
+                    <span>
+                      {translate(lngKeys.BillingChangePlanStripeProration)}
+                      <a
+                        href='https://stripe.com/docs/billing/subscriptions/prorations'
+                        target='__blank'
+                        rel='noreferrer'
+                        style={{ marginLeft: 3 }}
+                      >
+                        {translate(lngKeys.GeneralLearnMore)}
+                        <Icon path={mdiOpenInNew} />
+                      </a>
+                    </span>
                   </p>
+
                   <SubscriptionCostSummary
                     className='popup__billing'
                     seats={subscription.seats}
+                    period={subscription.period}
                     plan={'standard'}
                     usingJpyPricing={usingJpyPricing}
                   />
@@ -417,6 +441,13 @@ const StyledPopup = styled.div`
   bottom: 0;
   overflow: hidden;
   font-size: 13px;
+
+  .cost__separator {
+    margin: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    width: 100%;
+    height: 1px;
+    background: ${({ theme }) => theme.colors.background.quaternary};
+  }
 
   .button__group {
     button {

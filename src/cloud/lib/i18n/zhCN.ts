@@ -163,11 +163,13 @@ const zhTranslation: TranslationSource = {
   [lngKeys.PlanBusinessLink]: '联系我们的销售部',
   [lngKeys.PlanPerMember]: '每个成员',
   [lngKeys.PlanPerMonth]: '每月',
+  [lngKeys.PlanPerYear]: '毎年',
   [lngKeys.PlanTrial]: '{{days}}天免费试用',
   [lngKeys.PlanInTrial]: '免费试用（剩余{{remaining}}）',
   [lngKeys.UpgradeSubtitle]: '确认并输入您的付款信息',
   [lngKeys.Viewers]: '查看者',
   [lngKeys.Month]: '月',
+  [lngKeys.Year]: '年',
   [lngKeys.TotalMonthlyPrice]: '每月总价',
   [lngKeys.PaymentMethod]: '付款方式',
   [lngKeys.TrialWillBeStopped]: '你的免费试用将停止',
@@ -207,6 +209,8 @@ const zhTranslation: TranslationSource = {
     '您可以访问高级功能，如无限文档修订历史记录、设置共享文档的密码和过期日期、无限查看器等...',
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     '您将无法访问高级功能，如无限制的文档修订历史记录、为共享文档设置密码和过期日期、无限制的查看器等...',
+  [lngKeys.BillingChangePlanStripeProrationUpgradeDiscount]: `The cost summary below will become the standard for your future invoices. When upgrading you will be invoiced the upgrade cost instantly which will automatically discount the remaining time you had on your current plan.`,
+  [lngKeys.BillingChangePlanStripeProrationDowngradeDiscount]: `The cost summary below will become the standard for your future invoices. The remaining time on your current plan will be discounted on your next invoice.`,
 
   [lngKeys.FreeTrialModalTitle]: '免费尝试专业计划',
   [lngKeys.FreeTrialModalBody]:

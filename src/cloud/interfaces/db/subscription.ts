@@ -1,4 +1,4 @@
-import { UpgradePlans } from '../../lib/stripe'
+import { SubscriptionPeriod, UpgradePlans } from '../../lib/stripe'
 
 export interface SerializeableSubscriptionProps {
   id: string
@@ -7,6 +7,7 @@ export interface SerializeableSubscriptionProps {
   subscriptionId: string
   couponId?: string
   seats: number
+  period: SubscriptionPeriod
   status:
     | 'active'
     | 'past_due'
