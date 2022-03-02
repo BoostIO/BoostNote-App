@@ -281,6 +281,8 @@ export enum lngKeys {
   BillingChangePlanProDisclaimer = 'billing.plan.change.pro.disclaimer',
   BillingChangePlanStandardDisclaimer = 'billing.plan.change.standard.disclaimer',
   BillingChangePlanStripeProration = 'billing.plan.change.stripe.proration',
+  BillingChangePlanStripeProrationUpgradeDiscount = 'billing.plan.change.stripe.proration.discount.upgrade',
+  BillingChangePlanStripeProrationDowngradeDiscount = 'billing.plan.change.stripe.proration.discount.downgrade',
 
   DiscountModalTitle = 'modals.discount.title',
   DiscountModalAlreadySubscribed = 'modals.discount.subscribed',

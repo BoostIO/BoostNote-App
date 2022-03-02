@@ -240,6 +240,8 @@ const frTranslation: TranslationSource = {
     "Vous allez immédiatement gagner accès à des fonctionnalités avancées tel que l'accès complet à l'historique de révisions pour vos documents, choisir et installer des mots de passe ou des dates d'expiration pour vos documents partagés, nombre illimité d'observateurs etc...",
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     "Vous allez immédiatement perdre accès à des fonctionnalités avancées tel que l'accès complet à l'historique de révisions pour vos documents, choisir et installer des mots de passe ou des dates d'expiration pour vos documents partagés, nombre illimité d'observateurs etc...",
+  [lngKeys.BillingChangePlanStripeProrationUpgradeDiscount]: `Les coûts détaillés ci-dessous deviendront la norme pour vos futures factures. Lorsque vous upgradez, vous allez être facturés instantanément le coût de l'upgrade tout en remisant le temps restant dont vous disposiez sur votre plan courant.`,
+  [lngKeys.BillingChangePlanStripeProrationDowngradeDiscount]: `Les coûts détaillés ci-dessous deviendront la norme pour vos futures factures. Le temps restant dont vous disposiez sur votre plan courant sera remisé sur votre prochaine facture.`,
 
   [lngKeys.FreeTrialModalTitle]: 'Pro Plan: Essai gratuit',
   [lngKeys.FreeTrialModalBody]:

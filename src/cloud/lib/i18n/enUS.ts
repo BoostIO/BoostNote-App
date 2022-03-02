@@ -240,6 +240,8 @@ const enTranslation: TranslationSource = {
     'You will get access to advanced features such as unlimited document revision history, setting password and expiration date for shared documents, unlimited viewers etc...',
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     'You will lose access to advanced features such as unlimited document revision history, setting password and expiration date for shared document, unlimited viewers, etc...',
+  [lngKeys.BillingChangePlanStripeProrationUpgradeDiscount]: `The cost summary below will become the standard for your future invoices. When upgrading you will be invoiced the upgrade cost instantly which will automatically discount the remaining time you had on your current plan.`,
+  [lngKeys.BillingChangePlanStripeProrationDowngradeDiscount]: `The cost summary below will become the standard for your future invoices. The remaining time on your current plan will be discounted on your next invoice.`,
 
   [lngKeys.FreeTrialModalTitle]: 'Try the Pro Plan for free',
   [lngKeys.FreeTrialModalBody]:

@@ -209,6 +209,8 @@ const zhTranslation: TranslationSource = {
     '您可以访问高级功能，如无限文档修订历史记录、设置共享文档的密码和过期日期、无限查看器等...',
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     '您将无法访问高级功能，如无限制的文档修订历史记录、为共享文档设置密码和过期日期、无限制的查看器等...',
+  [lngKeys.BillingChangePlanStripeProrationUpgradeDiscount]: `The cost summary below will become the standard for your future invoices. When upgrading you will be invoiced the upgrade cost instantly which will automatically discount the remaining time you had on your current plan.`,
+  [lngKeys.BillingChangePlanStripeProrationDowngradeDiscount]: `The cost summary below will become the standard for your future invoices. The remaining time on your current plan will be discounted on your next invoice.`,
 
   [lngKeys.FreeTrialModalTitle]: '免费尝试专业计划',
   [lngKeys.FreeTrialModalBody]:

@@ -224,6 +224,8 @@ const jpTranslation: TranslationSource = {
     '無制限ドキュメントやドキュメント履歴変更、大きな容量サイズ等、特別な機能を利用することが出来ます。',
   [lngKeys.BillingChangePlanStandardDisclaimer]:
     '無制限ドキュメントやドキュメント履歴変更、大きな容量サイズ等、特別な機能へのアクセスを失います。',
+  [lngKeys.BillingChangePlanStripeProrationUpgradeDiscount]: `The cost summary below will become the standard for your future invoices. When upgrading you will be invoiced the upgrade cost instantly which will automatically discount the remaining time you had on your current plan.`,
+  [lngKeys.BillingChangePlanStripeProrationDowngradeDiscount]: `The cost summary below will become the standard for your future invoices. The remaining time on your current plan will be discounted on your next invoice.`,
 
   [lngKeys.FreeTrialModalTitle]: 'プロプランを無料で試してみましょう',
   [lngKeys.FreeTrialModalBody]:

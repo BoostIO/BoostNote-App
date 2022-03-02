@@ -335,17 +335,24 @@ const SubscriptionManagement = ({
               ) : targetedPlan === 'Pro' ? (
                 <>
                   <p>{translate(lngKeys.BillingChangePlanProDisclaimer)}</p>
+                  <div className='cost__separator' />
                   <p>
-                    {translate(lngKeys.BillingChangePlanStripeProration)}
-                    <a
-                      href='https://stripe.com/docs/billing/subscriptions/prorations'
-                      target='__blank'
-                      rel='noreferrer'
-                      style={{ marginLeft: 3 }}
-                    >
-                      {translate(lngKeys.GeneralLearnMore)}
-                      <Icon path={mdiOpenInNew} />
-                    </a>
+                    {translate(
+                      lngKeys.BillingChangePlanStripeProrationUpgradeDiscount
+                    )}
+                    <br />
+                    <span>
+                      {translate(lngKeys.BillingChangePlanStripeProration)}
+                      <a
+                        href='https://stripe.com/docs/billing/subscriptions/prorations'
+                        target='__blank'
+                        rel='noreferrer'
+                        style={{ marginLeft: 3 }}
+                      >
+                        {translate(lngKeys.GeneralLearnMore)}
+                        <Icon path={mdiOpenInNew} />
+                      </a>
+                    </span>
                   </p>
                   <SubscriptionCostSummary
                     className='popup__billing'
@@ -360,18 +367,26 @@ const SubscriptionManagement = ({
                   <p>
                     {translate(lngKeys.BillingChangePlanStandardDisclaimer)}
                   </p>
+                  <div className='cost__separator' />
                   <p>
-                    {translate(lngKeys.BillingChangePlanStripeProration)}
-                    <a
-                      href='https://stripe.com/docs/billing/subscriptions/prorations'
-                      target='__blank'
-                      rel='noreferrer'
-                      style={{ marginLeft: 3 }}
-                    >
-                      {translate(lngKeys.GeneralLearnMore)}
-                      <Icon path={mdiOpenInNew} />
-                    </a>
+                    {translate(
+                      lngKeys.BillingChangePlanStripeProrationDowngradeDiscount
+                    )}
+                    <br />
+                    <span>
+                      {translate(lngKeys.BillingChangePlanStripeProration)}
+                      <a
+                        href='https://stripe.com/docs/billing/subscriptions/prorations'
+                        target='__blank'
+                        rel='noreferrer'
+                        style={{ marginLeft: 3 }}
+                      >
+                        {translate(lngKeys.GeneralLearnMore)}
+                        <Icon path={mdiOpenInNew} />
+                      </a>
+                    </span>
                   </p>
+
                   <SubscriptionCostSummary
                     className='popup__billing'
                     seats={subscription.seats}
@@ -426,6 +441,13 @@ const StyledPopup = styled.div`
   bottom: 0;
   overflow: hidden;
   font-size: 13px;
+
+  .cost__separator {
+    margin: ${({ theme }) => theme.sizes.spaces.xsm}px;
+    width: 100%;
+    height: 1px;
+    background: ${({ theme }) => theme.colors.background.quaternary};
+  }
 
   .button__group {
     button {
