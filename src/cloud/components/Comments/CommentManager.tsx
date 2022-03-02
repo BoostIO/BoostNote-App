@@ -83,7 +83,7 @@ function CommentManager({
         title: translate(lngKeys.ModalsDeleteDocFolderTitle, {
           label: 'Comment',
         }),
-        message: translate(lngKeys.ModalsDeleteThreadDisclaimer),
+        message: translate(lngKeys.ModalsDeleteCommentDisclaimer),
         iconType: DialogIconTypes.Warning,
         buttons: [
           {
