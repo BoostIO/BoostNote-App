@@ -86,8 +86,24 @@ const ThreadItem = ({
 
   const contextMenuItems = useCallback(() => {
     if (thread.initialComment == null) {
-      return
+      return (
+        <div className={'comment__meta__actions'}>
+          <div
+            onClick={selectThread}
+            className='comment__meta__actions__comment'
+          >
+            <Icon size={20} path={mdiMessageReplyTextOutline} />
+          </div>
+          <div
+            onClick={() => onThreadDelete(thread)}
+            className='comment__meta__actions__remove'
+          >
+            <Icon size={20} path={mdiTrashCanOutline} />
+          </div>
+        </div>
+      )
     }
+
     const editable = user != null && thread.initialComment.user.id == user.id
 
     if (editable) {
