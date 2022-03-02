@@ -71,27 +71,44 @@ function useCommentsStore() {
     }
   })
 
-  const insertCommentsRef = useRef((comments: Comment[]) => {
-    const partioned = groupBy(prop('thread'), comments)
-    const threadIds = Object.keys(partioned)
+  const insertCommentsRef = useRef((newComments: Comment[]) => {
+    const threadIdNewCommentsObjectMap = groupBy(prop('thread'), newComments)
+    const threadIds = Object.keys(threadIdNewCommentsObjectMap)
     const updatedThreads: Thread[] = []
     for (const threadId of threadIds) {
-      const existing = commentsCache.current.get(threadId) || []
-      const merged = mergeOnId(existing, partioned[threadId])
-      commentsCache.current.set(threadId, merged)
+      const existingCommentsOfThread = commentsCache.current.get(threadId) || []
+      const newCommentsOfThread = threadIdNewCommentsObjectMap[threadId]
+      const mergedCommentsOfThread = mergeOnId(
+        existingCommentsOfThread,
+        newCommentsOfThread
+      )
+      commentsCache.current.set(threadId, mergedCommentsOfThread)
       const observers = threadObservers.current.get(threadId) || []
       for (const observer of observers) {
-        observer(merged)
+        observer(mergedCommentsOfThread)
       }
 
       const thread = threadsCache.current.get(threadId)
       if (thread != null) {
-        updatedThreads.push({
+        const updatedThread = {
           ...thread,
-          commentCount: merged.length,
-          contributors: getContributors(merged),
-          lastCommentTime: max(merged.map(prop('createdAt'))),
-        })
+          commentCount: mergedCommentsOfThread.length,
+          contributors: getContributors(mergedCommentsOfThread),
+          lastCommentTime: max(mergedCommentsOfThread.map(prop('createdAt'))),
+        }
+
+        const updatedInitialComment =
+          thread.initialComment != null
+            ? newCommentsOfThread.find((newComment) => {
+                return newComment.id === thread.initialComment!.id
+              })
+            : undefined
+
+        if (updatedInitialComment != null) {
+          updatedThread.initialComment = updatedInitialComment
+        }
+
+        updatedThreads.push(updatedThread)
       }
     }
 
@@ -118,6 +135,21 @@ function useCommentsStore() {
     const observers = threadObservers.current.get(comment.thread) || []
     for (const observer of observers) {
       observer(filteredComments)
+    }
+
+    const thread = threadsCache.current.get(comment.thread)
+    if (
+      thread != null &&
+      thread.initialComment != null &&
+      thread.initialComment.id === comment.id
+    ) {
+      const updatedThread = {
+        ...thread,
+        initialComment: undefined,
+        commentCount: thread.commentCount - 1,
+      }
+
+      insertThreadsRef.current([updatedThread])
     }
   })
 
