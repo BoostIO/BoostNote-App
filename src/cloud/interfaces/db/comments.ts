@@ -25,6 +25,7 @@ export interface Thread {
   contributors: SerializedUser[]
   doc: string
   selection?: { anchor: RelativePosition; head: RelativePosition }
+  createdAt: Date
 }
 
 export interface Comment {

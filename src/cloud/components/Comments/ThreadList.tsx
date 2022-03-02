@@ -7,6 +7,7 @@ import {
 } from '../../../design/lib/utils/comments'
 import styled from '../../../design/lib/styled'
 import { SerializedUser } from '../../interfaces/db/user'
+import { useMemo } from 'react'
 
 interface ThreadListProps {
   onSelect: (thread: Thread) => void
@@ -31,9 +32,15 @@ function ThreadList({
   user,
   onCommentDelete,
 }: ThreadListProps) {
+  const sortedThreads = useMemo(() => {
+    return threads.slice().sort((a, b) => {
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    })
+  }, [threads])
+
   return (
     <Container>
-      {threads.map((thread) => (
+      {sortedThreads.map((thread) => (
         <div
           key={thread.id}
           onMouseOver={highlightComment(thread.id)}
