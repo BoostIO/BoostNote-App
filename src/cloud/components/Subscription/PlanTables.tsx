@@ -147,6 +147,7 @@ const PlanTables = ({
           plan='standard'
           period={period}
           discounted={discounted}
+          showYearlyPrices={true}
         />
         <div className='plan__item__perks'>
           <div className='plan__item__perks__viewers-description'>
@@ -219,6 +220,7 @@ const PlanTables = ({
           plan='pro'
           period={period}
           discounted={discounted}
+          showYearlyPrices={true}
         />
         <div className='plan__item__perks'>
           <div className='plan__item__perks__viewers-description'>

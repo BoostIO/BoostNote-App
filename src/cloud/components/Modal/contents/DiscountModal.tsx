@@ -173,6 +173,10 @@ const DiscountCountdownRenderer = ({
 const Container = styled.div`
   .plans__period {
     margin-bottom: ${({ theme }) => theme.sizes.fonts.md}px;
+
+    > * {
+      margin: 0 ${({ theme }) => theme.sizes.spaces.xsm}px;
+    }
   }
 
   .discount__modal__subtitle {
