@@ -122,7 +122,7 @@ function CommentManager({
       case 'list': {
         return (
           <>
-            <div className={'thread__list__container'}>
+            <div className='thread__list__container'>
               <ThreadList
                 threads={state.threads}
                 onSelect={(thread) => setMode({ mode: 'thread', thread })}
@@ -135,7 +135,7 @@ function CommentManager({
                 removeReaction={removeReaction}
               />
               <CommentInput
-                placeholder={'Comment...'}
+                placeholder='Comment...'
                 onSubmit={async (comment) => {
                   await createThread({ comment })
                 }}
@@ -176,7 +176,7 @@ function CommentManager({
                 users={usersOrEmpty}
               />
               <CommentInput
-                placeholder={'Reply...'}
+                placeholder='Reply...'
                 onSubmit={(message) => createComment(state.thread, message)}
                 autoFocus={true}
                 users={usersOrEmpty}
@@ -189,7 +189,7 @@ function CommentManager({
         return (
           <div className='thread__new'>
             <CommentInput
-              placeholder={'Comment...'}
+              placeholder='Comment...'
               onSubmit={async (comment) => {
                 await createThread({ ...state.data, comment })
               }}

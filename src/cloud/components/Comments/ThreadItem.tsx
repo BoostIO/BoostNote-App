@@ -142,7 +142,7 @@ const ThreadItem = ({
   const contextMenuItems = useCallback(() => {
     if (thread.initialComment == null) {
       return (
-        <div className={'comment__meta__actions'}>
+        <div className='comment__meta__actions'>
           <div
             onClick={selectThread}
             className='comment__meta__actions__comment'
@@ -163,7 +163,7 @@ const ThreadItem = ({
 
     if (editable) {
       return (
-        <div className={'comment__meta__actions'}>
+        <div className='comment__meta__actions'>
           {thread.initialComment != null && (
             <EmojiPickHandler
               className='comment__meta__actions__emoji'
@@ -197,7 +197,7 @@ const ThreadItem = ({
       )
     } else {
       return (
-        <div className={'comment__meta__actions'}>
+        <div className='comment__meta__actions'>
           {thread.initialComment != null && (
             <EmojiPickHandler
               className='comment__meta__actions__emoji'
@@ -223,14 +223,14 @@ const ThreadItem = ({
   return (
     <StyledListItem>
       <div
-        className={'thread'}
+        className='thread'
         onMouseEnter={showContextMenu}
         onMouseLeave={hideContextMenu}
       >
-        <div className={'thread__info'}>
+        <div className='thread__info'>
           <div className='thread__info__line'>
             <UserIcon
-              className={'thread__info__line__icon'}
+              className='thread__info__line__icon'
               style={smallUserIconStyle}
               user={
                 thread.initialComment != null
@@ -240,8 +240,8 @@ const ThreadItem = ({
             />
           </div>
           {thread.initialComment == null ? (
-            <div className={'thread__comment__line'}>
-              <div className={'thread__comment__deleted__line'}>
+            <div className='thread__comment__line'>
+              <div className='thread__comment__deleted__line'>
                 This comment has been deleted.
               </div>
               {replyCount > 0 && (
@@ -253,14 +253,14 @@ const ThreadItem = ({
               )}
             </div>
           ) : (
-            <div className={'thread__comment__line'}>
+            <div className='thread__comment__line'>
               <span>{thread.contributors[0].displayName}</span>
               <span className='thread__comment__line__date'>
                 {formatThreadDate(new Date(thread.initialComment.createdAt))}
               </span>
               {editing ? (
                 <CommentInput
-                  placeholder={'Reply'}
+                  placeholder='Reply'
                   autoFocus={true}
                   onSubmit={submitComment}
                   value={thread.initialComment.message}
@@ -314,10 +314,10 @@ const ThreadReplyInfo = ({
 }) => {
   const { translate } = useI18n()
   return (
-    <div className={'thread__comment__line_more_replies_container'}>
+    <div className='thread__comment__line_more_replies_container'>
       <div
         onClick={selectThread}
-        className={'thread__comment__line__replies__link'}
+        className='thread__comment__line__replies__link'
       >
         {translate(lngKeys.ThreadReplies, {
           count,

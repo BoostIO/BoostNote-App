@@ -123,7 +123,7 @@ export function CommentItem({
   const contextMenuItems = useCallback(() => {
     if (editable) {
       return (
-        <div className={'comment__meta__actions'}>
+        <div className='comment__meta__actions'>
           <EmojiPickHandler
             className='comment__meta__actions__emoji'
             comment={comment}
@@ -149,7 +149,7 @@ export function CommentItem({
       )
     } else {
       return (
-        <div className={'comment__meta__actions'}>
+        <div className='comment__meta__actions'>
           <EmojiPickHandler
             className='comment__meta__actions__emoji'
             comment={comment}
@@ -192,7 +192,7 @@ export function CommentItem({
         </div>
         {editing ? (
           <CommentInput
-            placeholder={'Reply'}
+            placeholder='Reply'
             autoFocus={true}
             onSubmit={submitComment}
             value={comment.message}
