@@ -22,10 +22,6 @@ import {
 import groupBy from 'ramda/es/groupBy'
 import prop from 'ramda/es/prop'
 import { SerializedAppEvent } from '../../../interfaces/db/appEvents'
-import { max } from 'date-fns'
-import sortBy from 'ramda/es/sortBy'
-import take from 'ramda/es/take'
-import uniqBy from 'ramda/es/uniqBy'
 import { mergeOnId } from '../../../../design/lib/utils/array'
 
 type DocThreadsObserver = (threads: Thread[]) => void
@@ -71,10 +67,67 @@ function useCommentsStore() {
     }
   })
 
+  const onCommentCreatedRef = useRef((comment: Comment) => {
+    const thread = threadsCache.current.get(comment.thread)
+    if (thread != null) {
+      insertThreadsRef.current([
+        {
+          ...thread,
+          commentCount: thread.commentCount + 1,
+          contributors: [comment.user, ...thread.contributors],
+          lastCommentTime: comment.createdAt,
+        },
+      ])
+    }
+    if (commentsCache.current.has(comment.thread)) {
+      insertCommentsRef.current([comment])
+    }
+  })
+
+  const onCommentUpdatedRef = useRef((comment: Comment) => {
+    const thread = threadsCache.current.get(comment.thread)
+    if (thread != null) {
+      insertThreadsRef.current([
+        {
+          ...thread,
+          lastCommentTime: comment.createdAt,
+          initialComment:
+            thread.initialComment != null &&
+            comment.id === thread.initialComment.id
+              ? comment
+              : thread.initialComment,
+        },
+      ])
+    }
+    if (commentsCache.current.has(comment.thread)) {
+      insertCommentsRef.current([comment])
+    }
+  })
+
+  const onCommentDeletedRef = useRef(
+    (comment: { id: string; thread: string }) => {
+      const thread = threadsCache.current.get(comment.thread)
+      if (thread != null) {
+        insertThreadsRef.current([
+          {
+            ...thread,
+            commentCount: thread.commentCount - 1,
+            initialComment:
+              thread.initialComment != null &&
+              comment.id === thread.initialComment.id
+                ? undefined
+                : thread.initialComment,
+          },
+        ])
+      }
+
+      removeCommentRef.current(comment)
+    }
+  )
+
   const insertCommentsRef = useRef((newComments: Comment[]) => {
     const threadIdNewCommentsObjectMap = groupBy(prop('thread'), newComments)
     const threadIds = Object.keys(threadIdNewCommentsObjectMap)
-    const updatedThreads: Thread[] = []
     for (const threadId of threadIds) {
       const existingCommentsOfThread = commentsCache.current.get(threadId) || []
       const newCommentsOfThread = threadIdNewCommentsObjectMap[threadId]
@@ -87,32 +140,7 @@ function useCommentsStore() {
       for (const observer of observers) {
         observer(mergedCommentsOfThread)
       }
-
-      const thread = threadsCache.current.get(threadId)
-      if (thread != null) {
-        const updatedThread = {
-          ...thread,
-          commentCount: mergedCommentsOfThread.length,
-          contributors: getContributors(mergedCommentsOfThread),
-          lastCommentTime: max(mergedCommentsOfThread.map(prop('createdAt'))),
-        }
-
-        const updatedInitialComment =
-          thread.initialComment != null
-            ? newCommentsOfThread.find((newComment) => {
-                return newComment.id === thread.initialComment!.id
-              })
-            : undefined
-
-        if (updatedInitialComment != null) {
-          updatedThread.initialComment = updatedInitialComment
-        }
-
-        updatedThreads.push(updatedThread)
-      }
     }
-
-    insertThreadsRef.current(updatedThreads)
   })
 
   const removeThreadRef = useRef((thread: { id: string; doc: string }) => {
@@ -135,21 +163,6 @@ function useCommentsStore() {
     const observers = threadObservers.current.get(comment.thread) || []
     for (const observer of observers) {
       observer(filteredComments)
-    }
-
-    const thread = threadsCache.current.get(comment.thread)
-    if (thread != null) {
-      const updatedThread = {
-        ...thread,
-        initialComment:
-          thread.initialComment != null &&
-          thread.initialComment.id === comment.id
-            ? undefined
-            : thread.initialComment,
-        commentCount: filteredComments.length,
-      }
-
-      insertThreadsRef.current([updatedThread])
     }
   })
 
@@ -309,15 +322,17 @@ function useCommentsStore() {
         case 'commentCreated':
         case 'commentUpdated': {
           try {
-            if (commentsCache.current.has(event.data.threadId)) {
-              const comment = await getComment(event.data.commentId)
-              insertCommentsRef.current([comment])
+            const comment = await getComment(event.data.commentId)
+            if (event.type === 'commentCreated') {
+              onCommentCreatedRef.current(comment)
+            } else {
+              onCommentUpdatedRef.current(comment)
             }
           } catch {}
           break
         }
         case 'commentDeleted': {
-          removeCommentRef.current({
+          onCommentDeletedRef.current({
             id: event.data.commentId,
             thread: event.data.threadId,
           })
@@ -352,13 +367,6 @@ function registerObservable<K, T>(key: K, observer: T, map: Map<K, T[]>) {
 
 function defer(fn: () => any) {
   Promise.resolve().then(fn)
-}
-
-function getContributors(comments: Comment[]) {
-  return take(
-    3,
-    uniqBy(prop('id'), sortBy(prop('createdAt'), comments).map(prop('user')))
-  )
 }
 
 export const {
