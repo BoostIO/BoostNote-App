@@ -151,14 +151,13 @@ function CommentManager({
           <div className='thread__content'>
             <div>
               <Button
+                iconSize={16}
+                iconPath={mdiArrowLeft}
                 onClick={() => setMode({ mode: 'list' })}
-                variant={'secondary'}
-                className={'thread__content__back_button'}
+                variant='secondary'
+                className='thread__content__back_button'
               >
-                <div className='icon__wrapper'>
-                  <Icon size={16} path={mdiArrowLeft} />
-                </div>
-                <span>Back</span>
+                Back
               </Button>
 
               <div className='thread__context'>{state.thread.context}</div>
