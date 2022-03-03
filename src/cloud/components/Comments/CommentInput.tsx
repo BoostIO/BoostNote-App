@@ -172,8 +172,8 @@ function CommentInput({
 
   return (
     <InputContainer>
-      <div className={'comment__input__container'}>
-        <div className={'comment__input__input__editable_container'}>
+      <div className='comment__input__container'>
+        <div className='comment__input__input__editable_container'>
           <div
             className='comment__input__editable'
             ref={inputRef}
@@ -188,10 +188,10 @@ function CommentInput({
           />
         </div>
         <Button
-          className={'comment__input__send_button'}
-          variant={'icon-secondary'}
+          className='comment__input__send_button'
+          variant='icon-secondary'
           iconPath={mdiSendOutline}
-          size={'sm'}
+          size='sm'
           onClick={() => onPostCommentAction()}
           disabled={working || isInputEmpty}
         />

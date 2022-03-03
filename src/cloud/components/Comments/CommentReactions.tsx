@@ -78,11 +78,11 @@ const CommentReactions = ({
       const commentReactionString = ` reacted with :${reaction.emoji}:`
       return (
         <ReactionTooltipContainer>
-          <div className={'tooltip__emoji__icon'}>
+          <div className='tooltip__emoji__icon'>
             <Emoji emoji={reaction.emoji} set='apple' size={50} />
           </div>
           <span>{usersData.join(', ')}</span>
-          <span className={'tooltip__reaction__reacted_text'}>
+          <span className='tooltip__reaction__reacted_text'>
             {commentReactionString}
           </span>
         </ReactionTooltipContainer>
@@ -99,11 +99,11 @@ const CommentReactions = ({
           tooltip={getCommentReactionUserNames(reaction)}
           tooltipDelay={500}
           size={20}
-          className={'thread__comment__reaction'}
+          className='thread__comment__reaction'
           emoji={reaction.emoji}
           onClick={() => removeOrAddReaction(comment, reaction.emoji)}
           emojiTextContent={
-            <div className={'thread__comment__reaction_count'}>
+            <div className='thread__comment__reaction_count'>
               {reaction.count > 999 ? '999+' : `${reaction.count}`}
             </div>
           }
@@ -117,8 +117,8 @@ const CommentReactions = ({
           user={user}
         >
           <Button
-            className={'comment__add__reaction__button'}
-            variant={'icon-secondary'}
+            className='comment__add__reaction__button'
+            variant='icon-secondary'
             iconPath={mdiPlus}
           />
         </EmojiPickHandler>
