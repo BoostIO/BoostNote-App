@@ -48,9 +48,7 @@ function CommentList({
   return (
     <CommentListContainer className={className}>
       {initialComment == null && (
-        <div className={'deleted_initial_comment'}>
-          This comment has been deleted.
-        </div>
+        <div className='comment--deleted'>This comment has been deleted.</div>
       )}
       {sorted.map((comment) => (
         <div key={comment.id}>
@@ -71,7 +69,7 @@ function CommentList({
 }
 
 const CommentListContainer = styled.div`
-  .deleted_initial_comment {
+  .comment--deleted {
     margin: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
     color: ${({ theme }) => theme.colors.text.subtle};
   }
