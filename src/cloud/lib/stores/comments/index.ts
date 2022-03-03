@@ -146,7 +146,7 @@ function useCommentsStore() {
           thread.initialComment.id === comment.id
             ? undefined
             : thread.initialComment,
-        commentCount: thread.commentCount - 1,
+        commentCount: filteredComments.length,
       }
 
       insertThreadsRef.current([updatedThread])
