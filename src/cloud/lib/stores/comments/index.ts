@@ -138,14 +138,14 @@ function useCommentsStore() {
     }
 
     const thread = threadsCache.current.get(comment.thread)
-    if (
-      thread != null &&
-      thread.initialComment != null &&
-      thread.initialComment.id === comment.id
-    ) {
+    if (thread != null) {
       const updatedThread = {
         ...thread,
-        initialComment: undefined,
+        initialComment:
+          thread.initialComment != null &&
+          thread.initialComment.id === comment.id
+            ? undefined
+            : thread.initialComment,
         commentCount: thread.commentCount - 1,
       }
 
@@ -277,9 +277,10 @@ function useCommentsStore() {
       },
       removeReaction: async (comment: Comment, reactionId: string) => {
         handleError.current(
-          removeReactionFromComment({ commentId: comment.id, reactionId }).then(
-            (comment) => insertCommentsRef.current([comment])
-          )
+          removeReactionFromComment({
+            commentId: comment.id,
+            reactionId,
+          }).then((comment) => insertCommentsRef.current([comment]))
         )
       },
     }
@@ -360,5 +361,7 @@ function getContributors(comments: Comment[]) {
   )
 }
 
-export const { StoreProvider: CommentsProvider, useStore: useComments } =
-  createStoreContext(useCommentsStore, 'comments')
+export const {
+  StoreProvider: CommentsProvider,
+  useStore: useComments,
+} = createStoreContext(useCommentsStore, 'comments')

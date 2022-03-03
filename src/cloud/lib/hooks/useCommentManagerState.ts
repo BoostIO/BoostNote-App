@@ -8,8 +8,12 @@ import {
 } from '../../components/Comments/CommentManager'
 
 function useCommentManagerState(docId: string): [State, Actions] {
-  const { observeDocThreads, observeComments, threadActions, commentActions } =
-    useComments()
+  const {
+    observeDocThreads,
+    observeComments,
+    threadActions,
+    commentActions,
+  } = useComments()
   const [state, setState] = useState<State>({ mode: 'list_loading' })
 
   useEffect(() => {
