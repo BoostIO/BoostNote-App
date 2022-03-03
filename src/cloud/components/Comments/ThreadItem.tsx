@@ -254,7 +254,7 @@ const ThreadItem = ({
             </div>
           ) : (
             <div className='thread__comment__line'>
-              <span>{thread.contributors[0].displayName}</span>
+              <span>{thread.initialComment.user.displayName}</span>
               <span className='thread__comment__line__date'>
                 {formatThreadDate(new Date(thread.initialComment.createdAt))}
               </span>
