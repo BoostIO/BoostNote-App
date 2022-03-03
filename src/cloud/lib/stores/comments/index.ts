@@ -369,7 +369,5 @@ function defer(fn: () => any) {
   Promise.resolve().then(fn)
 }
 
-export const {
-  StoreProvider: CommentsProvider,
-  useStore: useComments,
-} = createStoreContext(useCommentsStore, 'comments')
+export const { StoreProvider: CommentsProvider, useStore: useComments } =
+  createStoreContext(useCommentsStore, 'comments')
