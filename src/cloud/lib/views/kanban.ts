@@ -71,6 +71,7 @@ export function makeFromData(data: any): KanbanViewData {
     statusProp: data.statusProp || 'Status',
     ordering: data.ordering || 'drag-drop',
     props: data.props || {},
+    filter: data.filter || [],
     lists: Array.isArray(data.lists)
       ? data.lists
           .filter(isKanbanList)
