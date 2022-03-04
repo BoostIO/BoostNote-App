@@ -38,6 +38,8 @@ import { getDocLinkHref } from '../../Link/DocLink'
 import ListViewPropertiesContext from './ListViewPropertiesContext'
 import { useListView } from '../../../lib/hooks/views/listView'
 import ListDocProperties from './ListDocProperties'
+import ViewFiltersContext from '../ViewFilters'
+import { buildSmartViewQueryCheck } from '../../../lib/smartViews'
 
 type ListViewProps = {
   view: SerializedView<ViewListData>
@@ -63,7 +65,7 @@ type ListViewProps = {
 
 const ListView = ({
   view,
-  docs,
+  docs: unfilteredDocs,
   folders = [],
   currentUserIsCoreMember,
   currentWorkspaceId,
@@ -88,6 +90,14 @@ const ListView = ({
   const { createDoc, createFolder } = useCloudApi()
   const { openContextModal } = useModal()
   const { push } = useRouter()
+
+  const docs = useMemo(() => {
+    if (view.data.filter == null || view.data.filter.length === 0) {
+      return unfilteredDocs
+    }
+
+    return unfilteredDocs.filter(buildSmartViewQueryCheck(view.data.filter))
+  }, [unfilteredDocs, view.data.filter])
 
   const { actionsRef, props: orderedViewProps } = useListView({
     view,
@@ -195,6 +205,26 @@ const ListView = ({
         <Flexbox justifyContent='space-between' alignItems='center'>
           {viewsSelector}
           <Flexbox flex='0 0 auto'>
+            <Button
+              variant='transparent-primary'
+              active={view.data.filter != null && view.data.filter.length > 0}
+              onClick={(ev) =>
+                openContextModal(
+                  ev,
+                  <ViewFiltersContext
+                    teamId={team.id}
+                    sendFilters={actionsRef.current.setFilters}
+                    filters={view.data.filter}
+                  />,
+                  {
+                    width: 800,
+                    alignment: 'bottom-right',
+                  }
+                )
+              }
+            >
+              Filter
+            </Button>
             <SortingOption value={order} onChange={onChangeOrder} />
             <Button
               variant='transparent'

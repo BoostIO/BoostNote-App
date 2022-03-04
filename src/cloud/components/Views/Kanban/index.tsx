@@ -3,7 +3,7 @@ import {
   mdiDotsHorizontal,
   mdiPlus,
 } from '@mdi/js'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import Button from '../../../../design/components/atoms/Button'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
 import Icon from '../../../../design/components/atoms/Icon'
@@ -32,6 +32,8 @@ import Item from './Item'
 import KanbanViewPropertiesContext from './KanbanViewPropertiesContext'
 import KanbanWatchedPropSetter from './KanbanWatchedPropSetter'
 import ListSettings from './ListSettings'
+import ViewFiltersContext from '../ViewFilters'
+import { buildSmartViewQueryCheck } from '../../../lib/smartViews'
 
 interface KanbanViewProps {
   view: SerializedView<KanbanViewData>
@@ -45,7 +47,7 @@ interface KanbanViewProps {
 
 const KanbanView = ({
   view,
-  docs,
+  docs: unfilteredDocs,
   currentUserIsCoreMember,
   team,
   viewsSelector,
@@ -56,6 +58,15 @@ const KanbanView = ({
     state: { statuses },
     editStatus,
   } = useStatuses(team.id)
+
+  const docs = useMemo(() => {
+    if (view.data.filter == null || view.data.filter.length === 0) {
+      return unfilteredDocs
+    }
+
+    return unfilteredDocs.filter(buildSmartViewQueryCheck(view.data.filter))
+  }, [unfilteredDocs, view.data.filter])
+
   const {
     prop,
     lists,
@@ -65,6 +76,7 @@ const KanbanView = ({
     addList,
     setProp,
     setProperties,
+    setFilters,
   } = useKanbanView({
     view,
     docs,
@@ -289,6 +301,26 @@ const KanbanView = ({
       <Flexbox justifyContent='space-between' alignItems='center'>
         {viewsSelector}
         <Flexbox flex='0 0 auto'>
+          <Button
+            variant='transparent-primary'
+            active={view.data.filter != null && view.data.filter.length > 0}
+            onClick={(ev) =>
+              openContextModal(
+                ev,
+                <ViewFiltersContext
+                  teamId={team.id}
+                  sendFilters={setFilters}
+                  filters={view.data.filter}
+                />,
+                {
+                  width: 800,
+                  alignment: 'bottom-right',
+                }
+              )
+            }
+          >
+            Filter
+          </Button>
           <Button
             disabled={!isViewEditable}
             variant='transparent'

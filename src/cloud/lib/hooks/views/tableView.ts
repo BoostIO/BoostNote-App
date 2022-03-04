@@ -16,6 +16,7 @@ import { trackEvent } from '../../../api/track'
 import { MixpanelActionTrackTypes } from '../../../interfaces/analytics/mixpanel'
 import { capitalize } from 'lodash'
 import { isDefaultView } from '../../views'
+import { SerializedQuery } from '../../../interfaces/db/smartView'
 
 interface TableViewStoreProps {
   state: ViewTableData
@@ -24,6 +25,7 @@ interface TableViewStoreProps {
 }
 
 export type TableViewActionsRef = React.MutableRefObject<{
+  setFilters: (filters: SerializedQuery) => Promise<BulkApiActionRes>
   updateTableSort: (sort: ViewTableSortingOptions) => Promise<BulkApiActionRes>
   addColumn: (col: Column) => Promise<BulkApiActionRes> | undefined
   removeColumn: (col: Column) => Promise<BulkApiActionRes>
@@ -189,6 +191,15 @@ export function useTableView({
     [state, saveView, view]
   )
 
+  const setFilters = useCallback(
+    (filters: SerializedQuery) => {
+      return updateViewApi(view, {
+        data: { ...view.data, filter: filters as SerializedQuery },
+      })
+    },
+    [updateViewApi, view]
+  )
+
   const actionsRef: TableViewActionsRef = useRef({
     addColumn,
     removeColumn,
@@ -197,6 +208,7 @@ export function useTableView({
     setColumns,
     updateColumnWidth,
     updateTitleColumnWidth,
+    setFilters,
   })
 
   useEffect(() => {
@@ -208,6 +220,7 @@ export function useTableView({
       setColumns,
       updateColumnWidth: updateColumnWidth,
       updateTitleColumnWidth: updateTitleColumnWidth,
+      setFilters,
     }
   }, [
     removeColumn,
@@ -217,6 +230,7 @@ export function useTableView({
     setColumns,
     updateColumnWidth,
     updateTitleColumnWidth,
+    setFilters,
   ])
 
   return {

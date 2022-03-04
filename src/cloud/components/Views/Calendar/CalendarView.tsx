@@ -28,6 +28,8 @@ import {
 } from '../../../lib/views/calendar'
 import CalendarViewPropertiesContext from './CalendarViewPropertiesContext'
 import cc from 'classcat'
+import { buildSmartViewQueryCheck } from '../../../lib/smartViews'
+import ViewFiltersContext from '../ViewFilters'
 
 type CalendarViewProps = {
   view: SerializedView<ViewCalendarData>
@@ -56,9 +58,17 @@ const CalendarView = ({
     view,
   })
 
+  const filteredDocs = useMemo(() => {
+    if (view.data.filter == null || view.data.filter.length === 0) {
+      return docs
+    }
+
+    return docs.filter(buildSmartViewQueryCheck(view.data.filter))
+  }, [view.data.filter, docs])
+
   const docEvents: EventSourceInput = useMemo(() => {
     const displayedProps = sortCalendarViewProps(view.data.props)
-    return docs.map((doc) => {
+    return filteredDocs.map((doc) => {
       const dateProps = (doc.props || {})[watchedProp.name]
 
       const props: any = {
@@ -112,7 +122,7 @@ const CalendarView = ({
       }
     })
   }, [
-    docs,
+    filteredDocs,
     team,
     view.data.props,
     watchedProp,
@@ -126,9 +136,9 @@ const CalendarView = ({
         props[watchedProp.name] == null ||
         props[watchedProp.name].data == null ||
         props[watchedProp.name].type !== watchedProp.type,
-      docs
+      filteredDocs
     )
-  }, [watchedProp, docs])
+  }, [watchedProp, filteredDocs])
 
   const handleNewDateSelection = useCallback(
     (val: DateSelectArg) => {
@@ -218,6 +228,26 @@ const CalendarView = ({
       <Flexbox justifyContent='space-between' alignItems='center'>
         {viewsSelector}
         <Flexbox flex='0 0 auto'>
+          <Button
+            variant='transparent-primary'
+            active={view.data.filter != null && view.data.filter.length > 0}
+            onClick={(ev) =>
+              openContextModal(
+                ev,
+                <ViewFiltersContext
+                  teamId={team.id}
+                  sendFilters={actionsRef.current.setFilters}
+                  filters={view.data.filter}
+                />,
+                {
+                  width: 800,
+                  alignment: 'bottom-right',
+                }
+              )
+            }
+          >
+            Filter
+          </Button>
           <Button
             variant='transparent'
             className='view--calendar__watched'

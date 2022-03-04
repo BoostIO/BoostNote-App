@@ -15,7 +15,6 @@ export interface KanbanList {
   id: string
   ordering: Record<string, string>
   order: string
-  filter?: SerializedQuery
 }
 
 export interface KanbanViewData {
@@ -23,6 +22,7 @@ export interface KanbanViewData {
   statusProp: string
   ordering: 'drag-drop' | 'title:asc' | 'title:desc'
   props?: Record<string, KanbanViewProp>
+  filter?: SerializedQuery
 }
 
 export interface KanbanStaticProp {

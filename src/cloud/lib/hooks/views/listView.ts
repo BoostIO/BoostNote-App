@@ -6,6 +6,7 @@ import { ListViewProp, sortListViewProps, ViewListData } from '../../views/list'
 import { CreateViewResponseBody } from '../../../api/teams/views'
 import { capitalize } from 'lodash'
 import { isDefaultView } from '../../views'
+import { SerializedQuery } from '../../../interfaces/db/smartView'
 
 interface ListViewStoreProps {
   view: SerializedView<ViewListData>
@@ -17,6 +18,7 @@ export type ListViewActionsRef = React.MutableRefObject<{
     view: SerializedView,
     props: Record<string, ListViewProp>
   ) => Promise<BulkApiActionRes>
+  setFilters: (filters: SerializedQuery) => Promise<BulkApiActionRes>
 }>
 
 export function useListView({ view, selectNewView }: ListViewStoreProps) {
@@ -61,15 +63,24 @@ export function useListView({ view, selectNewView }: ListViewStoreProps) {
     [saveView]
   )
 
+  const setFilters = useCallback(
+    async (filters: SerializedQuery) => {
+      return saveView(view, { ...view.data, filter: filters })
+    },
+    [view, saveView]
+  )
+
   const actionsRef: ListViewActionsRef = useRef({
     setProperties,
+    setFilters,
   })
 
   useEffect(() => {
     actionsRef.current = {
       setProperties,
+      setFilters,
     }
-  }, [setProperties])
+  }, [setProperties, setFilters])
 
   return {
     props,

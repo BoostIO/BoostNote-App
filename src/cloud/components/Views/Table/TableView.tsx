@@ -43,6 +43,7 @@ import EditableDocItemContainer from '../EditableDocItemContainer'
 import NavigationItem from '../../../../design/components/molecules/Navigation/NavigationItem'
 import { getDocLinkHref } from '../../Link/DocLink'
 import { useCloudResourceModals } from '../../../lib/hooks/useCloudResourceModals'
+import ViewFiltersContext from '../ViewFilters'
 
 type TableViewProps = {
   view: SerializedView<ViewTableData>
@@ -164,6 +165,26 @@ const TableView = ({
         <Flexbox justifyContent='space-between' alignItems='center'>
           {viewsSelector}
           <Flexbox flex='0 0 auto'>
+            <Button
+              variant='transparent-primary'
+              active={view.data.filter != null && view.data.filter.length > 0}
+              onClick={(ev) =>
+                openContextModal(
+                  ev,
+                  <ViewFiltersContext
+                    teamId={team.id}
+                    sendFilters={actionsRef.current.setFilters}
+                    filters={view.data.filter}
+                  />,
+                  {
+                    width: 800,
+                    alignment: 'bottom-right',
+                  }
+                )
+              }
+            >
+              Filter
+            </Button>
             <Button
               variant='transparent'
               onClick={(event) =>

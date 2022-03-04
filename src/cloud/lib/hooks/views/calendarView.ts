@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { PropType } from '../../../interfaces/db/props'
+import { SerializedQuery } from '../../../interfaces/db/smartView'
 import { SerializedView } from '../../../interfaces/db/view'
 import { getArrayFromRecord } from '../../utils/array'
 import { CalendarViewProp, ViewCalendarData } from '../../views/calendar'
@@ -27,6 +28,7 @@ export type CalendarViewActionsRef = React.MutableRefObject<{
   setViewProperties: (
     props: Record<string, CalendarViewProp>
   ) => Promise<BulkApiActionRes | undefined>
+  setFilters: (filters: SerializedQuery) => Promise<BulkApiActionRes>
 }>
 
 export function useCalendarView({ view }: CalendarViewStoreProps) {
@@ -109,12 +111,22 @@ export function useCalendarView({ view }: CalendarViewStoreProps) {
     [view, updateDocPropsApi]
   )
 
+  const setFilters = useCallback(
+    (filters: SerializedQuery) => {
+      return updateViewApi(view, {
+        data: { ...view.data, filter: filters as SerializedQuery },
+      })
+    },
+    [updateViewApi, view]
+  )
+
   const actionsRef: CalendarViewActionsRef = useRef({
     updateWatchedProp,
     updateDocDate,
     addProperty,
     removeProperty,
     setViewProperties,
+    setFilters,
   })
 
   useEffect(() => {
@@ -124,6 +136,7 @@ export function useCalendarView({ view }: CalendarViewStoreProps) {
       addProperty,
       removeProperty,
       setViewProperties,
+      setFilters,
     }
   }, [
     updateWatchedProp,
@@ -131,6 +144,7 @@ export function useCalendarView({ view }: CalendarViewStoreProps) {
     addProperty,
     removeProperty,
     setViewProperties,
+    setFilters,
   ])
 
   return {
