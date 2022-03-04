@@ -166,7 +166,7 @@ const TableView = ({
           {viewsSelector}
           <Flexbox flex='0 0 auto'>
             <Button
-              variant='transparent-primary'
+              variant='transparent'
               active={view.data.filter != null && view.data.filter.length > 0}
               onClick={(ev) =>
                 openContextModal(
