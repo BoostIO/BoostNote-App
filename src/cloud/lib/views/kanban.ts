@@ -7,6 +7,7 @@ import {
   PropType,
   StaticPropType,
 } from '../../interfaces/db/props'
+import { SerializedQuery } from '../../interfaces/db/smartView'
 import { getOrdering } from '../ordering'
 import { getArrayFromRecord } from '../utils/array'
 
@@ -21,6 +22,7 @@ export interface KanbanViewData {
   statusProp: string
   ordering: 'drag-drop' | 'title:asc' | 'title:desc'
   props?: Record<string, KanbanViewProp>
+  filter?: SerializedQuery
 }
 
 export interface KanbanStaticProp {

@@ -17,6 +17,7 @@ import { prop } from '../../realtime/lib/functional'
 import { useCloudApi } from '../useCloudApi'
 import { SerializedPropData } from '../../../interfaces/db/props'
 import { BulkApiActionRes } from '../../../../design/lib/hooks/useBulkApi'
+import { SerializedQuery } from '../../../interfaces/db/smartView'
 
 interface KanbanViewProps {
   view: SerializedView
@@ -41,6 +42,7 @@ type State = Pick<
   setProperties: (
     props: Record<string, KanbanViewProp>
   ) => Promise<BulkApiActionRes>
+  setFilters: (filters: SerializedQuery) => Promise<BulkApiActionRes>
   removeList: (list: KanbanViewList) => void
 }
 
@@ -133,6 +135,11 @@ export function useKanbanView({ view, docs }: KanbanViewProps): State {
     lists,
     onItemMove,
     onListMove,
+    setFilters: (filters: SerializedQuery) => {
+      return updateViewApi(view, {
+        data: { ...view.data, filter: filters as SerializedQuery },
+      })
+    },
     setProperties: (props) => {
       return updateViewApi(view, {
         data: { ...view.data, props },

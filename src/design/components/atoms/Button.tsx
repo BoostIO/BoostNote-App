@@ -22,6 +22,7 @@ export type ButtonVariant =
   | 'success'
   | 'bordered'
   | 'transparent-blue'
+  | 'transparent-primary'
 
 export interface ButtonProps {
   variant?: ButtonVariant
@@ -415,6 +416,22 @@ const StyledButton = styled.button`
       &:focus,
       &.button__state--active {
         filter: brightness(112%);
+      }
+    }
+  }
+
+  &.button__variant--transparent-primary {
+    background: none;
+    border: 1px solid transparent;
+    color: ${({ theme }) => theme.colors.text.subtle};
+
+    &:not(.button__state--disabled) {
+      &:hover,
+      &:active,
+      &:focus,
+      &.button__state--active {
+        filter: brightness(112%);
+        color: ${({ theme }) => theme.colors.variants.primary.base};
       }
     }
   }

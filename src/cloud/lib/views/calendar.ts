@@ -7,10 +7,12 @@ import { LexoRank } from 'lexorank'
 import { sortByAttributeAsc } from '../../../design/lib/utils/array'
 import { getArrayFromRecord } from '../utils/array'
 import { generate } from 'shortid'
+import { SerializedQuery } from '../../interfaces/db/smartView'
 
 export interface ViewCalendarData {
   watchedProp?: { type: PropType; name: string }
   props?: Record<string, CalendarViewProp>
+  filter?: SerializedQuery
 }
 
 export interface CalendarStaticProp {
