@@ -135,9 +135,9 @@ export function useKanbanView({ view, docs }: KanbanViewProps): State {
     lists,
     onItemMove,
     onListMove,
-    setFilters: (filters: SerializedQuery) => {
+    setFilters: (filter) => {
       return updateViewApi(view, {
-        data: { ...view.data, filter: filters as SerializedQuery },
+        data: { ...view.data, filter },
       })
     },
     setProperties: (props) => {
