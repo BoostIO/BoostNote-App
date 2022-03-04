@@ -16,6 +16,7 @@ import { isArray } from 'lodash'
 import { SerializedUserTeamPermissions } from '../../interfaces/db/userTeamPermissions'
 import { SerializedDocWithSupplemental } from '../../interfaces/db/doc'
 import { getDefaultViewShortId } from '.'
+
 export interface ViewTableData {
   columns: Record<string, Column>
   sort?: ViewTableSortingOptions

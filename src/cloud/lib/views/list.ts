@@ -10,9 +10,11 @@ import { LexoRank } from 'lexorank'
 import { getArrayFromRecord } from '../utils/array'
 import { SerializedView, ViewParent } from '../../interfaces/db/view'
 import { getDefaultViewShortId } from '.'
+import { SerializedQuery } from '../../interfaces/db/smartView'
 
 export interface ViewListData {
   props?: Record<string, ListViewProp>
+  filter?: SerializedQuery
 }
 
 export function makeListViewPropId(
