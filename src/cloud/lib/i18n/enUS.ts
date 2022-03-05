@@ -73,6 +73,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsEnableEditorSpellcheck]: 'Editor Spellcheck',
   [lngKeys.SettingsIndentSize]: 'Editor Indent Size',
   [lngKeys.SettingsReleaseNotes]: 'Release Notes',
+  [lngKeys.SettingsBeta]: 'Beta',
+  [lngKeys.SettingsBetaAutomationAndIntegration]: 'Automation & Integration',
   [lngKeys.ManagePreferences]: 'Manage your preferences.',
   [lngKeys.ManagePreferencesMarkdownPreview]:
     'Manage your Markdown preview preferences.',

@@ -147,6 +147,8 @@ export enum lngKeys {
   SettingsSpace = 'settings.space',
   SettingsSpaceDelete = 'settings.space.delete',
   SettingsSpaceDeleteWarning = 'settings.space.delete.warning',
+  SettingsBeta = 'settings.beta',
+  SettingsBetaAutomationAndIntegration = 'settings.beta.automationAndIntegration',
   ManagePreferences = 'manage.preferences',
   ManagePreferencesMarkdownPreview = 'manage.preferences.markdownPreview',
   ManageProfile = 'manage.profile',

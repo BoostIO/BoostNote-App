@@ -12,6 +12,7 @@ import {
   mdiAccountCircleOutline,
   mdiClose,
   mdiHelpCircleOutline,
+  mdiBeta,
 } from '@mdi/js'
 import { usePage } from '../../lib/stores/pageStore'
 import { focusFirstChildFromElement } from '../../lib/dom'
@@ -45,6 +46,7 @@ import AttachmentsTab from './AttachmentsTab'
 import ImportTab from './ImportTab'
 import TeamSubLimit from './TeamSubLimit'
 import { ExternalLink } from '../../../design/components/atoms/Link'
+import BetaAutomationAndIntegrationTab from './BetaAutomationAndIntegrationTab'
 
 const SettingsComponent = () => {
   const { t } = useTranslation()
@@ -122,6 +124,8 @@ const SettingsComponent = () => {
         return <SlackIntegration />
       case 'api':
         return <ApiTab />
+      case 'beta.automationAndIntegration':
+        return <BetaAutomationAndIntegrationTab />
       case 'feedback':
         return (
           <SettingTabContent
@@ -323,6 +327,18 @@ const SettingsComponent = () => {
             label={t(lngKeys.KeyboardShortcuts)}
             href='https://intercom.help/boostnote-for-teams/en/articles/4347206-keyboard-shortcuts'
             id='setting-keyboard-shortcuts'
+          />
+
+          <SettingSidenavHeader
+            path={mdiBeta}
+            text={t(lngKeys.SettingsBeta)}
+            size={16}
+          />
+          <SettingNavButtonItem
+            label={t(lngKeys.SettingsBetaAutomationAndIntegration)}
+            active={settingsTab === 'beta.automationAndIntegration'}
+            id='settings-teamBillingTab-btn'
+            onClick={() => openSettingsTab('beta.automationAndIntegration')}
           />
         </SettingSidenav>
       }
