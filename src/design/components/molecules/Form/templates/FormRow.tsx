@@ -10,6 +10,7 @@ export type FormRowProps = {
   required?: boolean
   description?: React.ReactNode
   items?: FormItemProps[]
+  justifyContent?: string
 }
 
 const FormRow: AppComponent<{ row?: FormRowProps; fullWidth?: boolean }> = ({
@@ -33,6 +34,13 @@ const FormRow: AppComponent<{ row?: FormRowProps; fullWidth?: boolean }> = ({
           'form__row__items',
           !fullWidth && items.length <= 1 && 'form__row__items--single-item',
         ])}
+        style={
+          row.justifyContent != null
+            ? {
+                justifyContent: row.justifyContent,
+              }
+            : {}
+        }
       >
         {items.map((item, k) => (
           <FormRowItem item={item} key={`form__row__${k}`} />

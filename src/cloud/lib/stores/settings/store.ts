@@ -44,6 +44,7 @@ export type SettingsTab =
   | 'feedback'
   | 'import'
   | 'attachments'
+  | 'beta.automationAndIntegration'
 
 export type SettingsTabOpeningOptions = UpgradeTabOpeningOptions
 
