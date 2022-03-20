@@ -4,7 +4,8 @@ interface MarkdownCheckboxProps {
   index: number
   checked?: boolean
   updateContent?: (
-    newValueOrUpdater: string | ((prevValue: string) => string)
+    newValueOrUpdater: string | ((prevValue: string) => string),
+    refocusEditorAndCursor?: boolean
   ) => void
 }
 
@@ -41,7 +42,7 @@ const MarkdownCheckbox = ({
         }
       }
       return lines.join('\n')
-    })
+    }, true)
   }
 
   return <input type='checkbox' checked={checked} onChange={onChange} />

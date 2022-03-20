@@ -104,6 +104,7 @@ import {
   CodeMirrorEditorModeHints,
   getModeSuggestions,
 } from '../../lib/editor/CodeMirror'
+import { scrollEditorToLine } from '../../lib/hooks/editor/docEditor'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -500,7 +501,10 @@ const Editor = ({
   )
 
   const setEditorRefContent = useCallback(
-    (newValueOrUpdater: string | ((prevValue: string) => string)) => {
+    (
+      newValueOrUpdater: string | ((prevValue: string) => string),
+      refocusEditorAndCursor = false
+    ) => {
       if (editorRef.current == null) {
         return
       }
@@ -508,7 +512,13 @@ const Editor = ({
         typeof newValueOrUpdater === 'string'
           ? () => newValueOrUpdater
           : newValueOrUpdater
+      const { line } = editorRef.current?.getCursor()
       editorRef.current.setValue(updater(editorContent))
+      if (refocusEditorAndCursor) {
+        editorRef.current.focus()
+        editorRef.current.setCursor(line)
+        scrollEditorToLine(editorRef.current, line)
+      }
     },
     [editorRef, editorContent]
   )

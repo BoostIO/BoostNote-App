@@ -102,7 +102,8 @@ interface MarkdownViewProps {
   content: string
   customBlockRenderer?: (name: string) => JSX.Element
   updateContent?: (
-    newContentOrUpdater: string | ((newValue: string) => string)
+    newContentOrUpdater: string | ((newValue: string) => string),
+    refocusEditorAndCursor?: boolean
   ) => void
   shortcodeHandler?: ({ identifier, entityId }: any) => JSX.Element
   headerLinks?: boolean
@@ -231,7 +232,7 @@ const MarkdownView = ({
           shortcodeHandler == null
             ? ({ identifier, entityId }: any) => {
                 if (identifier === 'toc') {
-                  return <TableOfContents content={content}></TableOfContents>
+                  return <TableOfContents content={content} />
                 }
                 return (
                   <Shortcode
