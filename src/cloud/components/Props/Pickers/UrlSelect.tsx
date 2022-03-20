@@ -90,9 +90,19 @@ const UrlSelect = ({
     )
   }, [value])
 
+  const openSelectorIfEmpty = useCallback(
+    (e) => {
+      if (value.trim() === '' || !isValidUrl(value)) {
+        openSelector(e)
+      }
+    },
+    [openSelector, value]
+  )
+
   return (
     <UrlSelectContainer>
       <PropertyValueButton
+        onClick={(e) => openSelectorIfEmpty(e)}
         sending={sending}
         isReadOnly={isReadOnly}
         disabled={disabled}
