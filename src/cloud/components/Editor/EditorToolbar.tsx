@@ -11,6 +11,8 @@ import {
   mdiFormatHeaderPound,
   mdiCodeNotEqualVariant,
   mdiPageNextOutline,
+  mdiMathIntegralBox,
+  mdiCodeBrackets,
 } from '@mdi/js'
 import { Position } from 'codemirror'
 import EditorToolButton from './EditorToolButton'
@@ -157,6 +159,12 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
         case 'numberedList':
           formattingOptions = { markerLeft: '1. ', breakLine: true }
           break
+        case 'math':
+          formattingOptions = { markerLeft: '$', markerRight: '$' }
+          break
+        case 'brackets':
+          formattingOptions = { markerLeft: '[', markerRight: ']' }
+          break
         default:
           break
       }
@@ -254,6 +262,16 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
         path={mdiLinkVariant}
         tooltip={translate(lngKeys.EditorToolbarTooltipLink)}
         onClick={() => onFormatCallback('link')}
+      />
+      <EditorToolButton
+        path={mdiMathIntegralBox}
+        tooltip={translate(lngKeys.EditorToolbarTooltipMath)}
+        onClick={() => onFormatCallback('math')}
+      />
+      <EditorToolButton
+        path={mdiCodeBrackets}
+        tooltip={translate(lngKeys.EditorToolbarTooltipBrackets)}
+        onClick={() => onFormatCallback('brackets')}
       />
     </StyledEditorToolList>
   )

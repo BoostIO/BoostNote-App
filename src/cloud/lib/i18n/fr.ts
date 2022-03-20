@@ -331,6 +331,8 @@ const frTranslation: TranslationSource = {
   [lngKeys.EditorToolbarTooltipItalic]: 'Ajouter un texte en italique',
   [lngKeys.EditorToolbarTooltipCode]: 'Insérer du code',
   [lngKeys.EditorToolbarTooltipLink]: 'Ajouter un lien',
+  [lngKeys.EditorToolbarTooltipBrackets]: 'Ajouter des parenthèses',
+  [lngKeys.EditorToolbarTooltipMath]: 'Ajouter une expression mathématique',
   [lngKeys.EditorToolbarTooltipUpload]: 'Envoyer une image',
   [lngKeys.EditorToolbarTooltipTemplate]: 'Utiliser un template',
   [lngKeys.EditorToolbarTooltipScrollSyncEnable]:
