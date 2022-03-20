@@ -8,7 +8,8 @@ interface CustomizedMarkdownViewProps {
   content: string
   customBlockRenderer?: (name: string) => JSX.Element
   updateContent?: (
-    newContentOrUpdater: string | ((newValue: string) => string)
+    newContentOrUpdater: string | ((newValue: string) => string),
+    refocusEditorAndCursor?: boolean
   ) => void
   shortcodeHandler?: ({ identifier, entityId }: any) => JSX.Element
   headerLinks?: boolean

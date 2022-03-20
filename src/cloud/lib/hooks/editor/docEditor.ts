@@ -36,6 +36,15 @@ interface DocEditorHookProps {
   subscription?: SerializedSubscription
 }
 
+export function scrollEditorToLine(
+  editor: CodeMirror.Editor,
+  lineNumber: number
+) {
+  const t = editor.charCoords({ line: lineNumber, ch: 0 }, 'local').top
+  const middleHeight = editor.getScrollerElement().offsetHeight / 2
+  editor.scrollTo(null, t - middleHeight - 5)
+}
+
 export function useDocEditor({
   doc,
   collaborationToken,
@@ -167,7 +176,10 @@ export function useDocEditor({
   )
 
   const setEditorRefContent = useCallback(
-    (newValueOrUpdater: string | ((prevValue: string) => string)) => {
+    (
+      newValueOrUpdater: string | ((prevValue: string) => string),
+      refocusEditorAndCursor = false
+    ) => {
       if (editorRef.current == null) {
         return
       }
@@ -175,7 +187,13 @@ export function useDocEditor({
         typeof newValueOrUpdater === 'string'
           ? () => newValueOrUpdater
           : newValueOrUpdater
+      const { line } = editorRef.current?.getCursor()
       editorRef.current.setValue(updater(editorContent))
+      if (refocusEditorAndCursor) {
+        editorRef.current.focus()
+        editorRef.current.setCursor(line)
+        scrollEditorToLine(editorRef.current, line)
+      }
     },
     [editorRef, editorContent]
   )
