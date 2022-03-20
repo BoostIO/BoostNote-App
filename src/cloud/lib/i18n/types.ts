@@ -370,6 +370,8 @@ export enum lngKeys {
   EditorToolbarTooltipItalic = 'editor.toolbar.tooltips.italic',
   EditorToolbarTooltipCode = 'editor.toolbar.tooltips.code',
   EditorToolbarTooltipLink = 'editor.toolbar.tooltips.link',
+  EditorToolbarTooltipMath = 'editor.toolbar.tooltips.math',
+  EditorToolbarTooltipBrackets = 'editor.toolbar.tooltips.brackets',
   EditorToolbarTooltipUpload = 'editor.toolbar.tooltips.upload',
   EditorToolbarTooltipTemplate = 'editor.toolbar.tooltips.template',
   EditorToolbarTooltipScrollSyncEnable = 'editor.toolbar.tooltips.scrollsync.enable',

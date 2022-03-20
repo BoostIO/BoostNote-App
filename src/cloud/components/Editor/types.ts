@@ -19,3 +19,5 @@ export type FormattingTool =
   | 'taskList'
   | 'link'
   | 'codefence'
+  | 'math'
+  | 'brackets'

@@ -335,6 +335,8 @@ const enTranslation: TranslationSource = {
   [lngKeys.EditorToolbarTooltipItalic]: 'Add italic text',
   [lngKeys.EditorToolbarTooltipCode]: 'Insert code',
   [lngKeys.EditorToolbarTooltipLink]: 'Add a link',
+  [lngKeys.EditorToolbarTooltipMath]: 'Add a math expression',
+  [lngKeys.EditorToolbarTooltipBrackets]: 'Add brackets',
   [lngKeys.EditorToolbarTooltipUpload]: 'Upload Image',
   [lngKeys.EditorToolbarTooltipTemplate]: 'Use a template',
   [lngKeys.EditorToolbarTooltipScrollSyncEnable]: 'Enable scroll sync',

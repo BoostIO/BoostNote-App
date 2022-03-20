@@ -294,6 +294,8 @@ const zhTranslation: TranslationSource = {
   [lngKeys.EditorToolbarTooltipItalic]: '添加斜体文本',
   [lngKeys.EditorToolbarTooltipCode]: '插入代码',
   [lngKeys.EditorToolbarTooltipLink]: '添加链接',
+  [lngKeys.EditorToolbarTooltipBrackets]: '添加括号',
+  [lngKeys.EditorToolbarTooltipMath]: '添加数学表达式',
   [lngKeys.EditorToolbarTooltipUpload]: '上载图像',
   [lngKeys.EditorToolbarTooltipTemplate]: '使用模板',
   [lngKeys.EditorToolbarTooltipScrollSyncEnable]: '启用滚动同步',
