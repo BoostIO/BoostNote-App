@@ -45,7 +45,10 @@ function rehypeCodeMirror(options: Partial<RehypeCodeMirrorOptions>) {
         return
       }
 
-      const lang = language(node)
+      const langAndPath = language(node)
+      const langAndPathItems =
+        langAndPath == false ? null : langAndPath.split(':')
+      const lang = langAndPathItems == null ? null : langAndPathItems[0]
 
       const classNames =
         parent.properties.className != null
@@ -64,6 +67,9 @@ function rehypeCodeMirror(options: Partial<RehypeCodeMirrorOptions>) {
       const rawContent = node.children[0].value as string
       // TODO: Stop using html attribute after exposing HAST Node is shipped
       parent.properties['data-raw'] = rawContent
+      if (langAndPathItems != null && langAndPathItems.length > 1) {
+        parent.properties['data-path'] = langAndPathItems[1]
+      }
 
       if (lang == null || lang === false || plainText.indexOf(lang) !== -1) {
         return

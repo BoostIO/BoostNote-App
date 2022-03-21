@@ -38,11 +38,37 @@ const CodeFenceButton = styled.button`
   }
 `
 
+const CodeFencePath = styled.div`
+  display: block;
+  width: fit-content;
+  max-width: 80%;
+  border-radius: 2px;
+  margin-top: 1px;
+
+  box-sizing: border-box;
+  outline: none;
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+
+  font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+  transform: translateY(-16px);
+  padding-top: ${({ theme }) => theme.sizes.spaces.xsm}px;
+  padding-left: ${({ theme }) => theme.sizes.spaces.xsm}px;
+  padding-right: ${({ theme }) => theme.sizes.spaces.xsm}px;
+
+  background-color: ${({ theme }) => theme.colors.background.tertiary};
+  color: ${({ theme }) => theme.colors.text.primary};
+
+  border: none;
+`
+
 const CodeFence = (
   props: React.HTMLProps<HTMLPreElement> & {
     'data-raw'?: unknown
     'data-ext'?: unknown
     'data-mime'?: unknown
+    'data-path'?: unknown
   } = {}
 ) => {
   if (props.className != null && props.className!.includes('CodeMirror')) {
@@ -50,11 +76,17 @@ const CodeFence = (
       'data-raw': dataRaw,
       'data-ext': dataExt,
       'data-mime': dataMime,
+      'data-path': dataPath,
       ...otherProps
     } = props
     return (
       <CodeFenceContainer>
-        <pre {...otherProps} />
+        <pre {...otherProps}>
+          {typeof dataPath === 'string' && dataPath.length > 0 && (
+            <CodeFencePath>{dataPath}</CodeFencePath>
+          )}
+          {otherProps.children}
+        </pre>
         {typeof dataRaw === 'string' && dataRaw.length > 0 && (
           <>
             <CodeFenceButton
