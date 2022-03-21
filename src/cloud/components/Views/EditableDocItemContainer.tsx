@@ -164,6 +164,8 @@ const EditableDocItemContainer = ({ doc, children }: ItemProps) => {
   )
 }
 
+export default EditableDocItemContainer
+
 const ItemContainer = styled.div`
   position: relative;
 
@@ -174,6 +176,7 @@ const ItemContainer = styled.div`
     margin: 0;
     top: 50%;
     transform: translate(-50%, -50%);
+    background-color: ${({ theme }) => theme.colors.background.secondary};
 
     &:hover {
       cursor: pointer;
@@ -194,5 +197,3 @@ const ItemContainer = styled.div`
     max-width: 100% !important;
   }
 `
-
-export default EditableDocItemContainer
