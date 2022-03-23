@@ -45,7 +45,7 @@ import EditorToolButton from './EditorToolButton'
 import { not } from 'ramda'
 import EditorToolbarUpload from './EditorToolbarUpload'
 import { useNav } from '../../lib/stores/nav'
-import { Hint } from 'codemirror'
+import CodeMirror, { Hint } from 'codemirror'
 import { SerializedTemplate } from '../../interfaces/db/template'
 import TemplatesModal from '../Modal/contents/TemplatesModal'
 import EditorSelectionStatus from './EditorSelectionStatus'
@@ -100,6 +100,10 @@ import BottomBarButton from '../BottomBarButton'
 import { YText } from 'yjs/dist/src/internals'
 import { useLocalSnapshot } from '../../lib/stores/localSnapshots'
 import SyncStatus from '../Topbar/SyncStatus'
+import {
+  CodeMirrorEditorModeHints,
+  getModeSuggestions,
+} from '../../lib/editor/CodeMirror'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
 
@@ -124,6 +128,11 @@ interface SelectionState {
     head: EditorPosition
     anchor: EditorPosition
   }[]
+}
+
+let cursorState: EditorPosition = {
+  ch: 0,
+  line: 0,
 }
 
 const Editor = ({
@@ -258,11 +267,18 @@ const Editor = ({
       extraKeys: {
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
+        'Ctrl-Space': 'autocomplete',
       },
       scrollPastEnd: true,
       // fixes IME being on top of current line, Codemirror issue: https://github.com/codemirror/CodeMirror/issues/3137
       spellcheck: enableSpellCheck,
       inputStyle: 'contenteditable',
+      hintOptions: {
+        hint: CodeMirrorEditorModeHints,
+        completeSingle: false,
+        alignWithWord: false,
+        closeCharacters: /[\s()\[\]{};:>,\n]/,
+      },
     }
   }, [settings])
 
@@ -336,112 +352,142 @@ const Editor = ({
   }, [])
   useGlobalKeyDownHandler(editPageKeydownHandler)
 
-  const bindCallback = useCallback((editor: CodeMirror.Editor) => {
-    setEditorContent(editor.getValue())
-    editorRef.current = editor
-    attachFileHandlerToCodeMirrorEditor(editor, {
-      onFile: async (file) => {
-        return fileUploadHandlerRef.current != null
-          ? fileUploadHandlerRef.current(file)
-          : null
-      },
-    })
-    pasteFormatPlugin(editor, {
-      openMenu: (pos, cb) => {
-        setShortcodeConvertMenu({ pos, cb })
-      },
-      closeMenu: () => {
-        setShortcodeConvertMenu(null)
-      },
-      formatter: (pasted) => {
-        if (pasted.length === 1) {
-          const githubRegex =
-            /https:\/\/github.com\/([^\/\s]+)\/([^\/\s]+)\/(pull|issues)\/(\d+)/
-          const githubMatch = githubRegex.exec(pasted[0])
-
-          if (githubMatch !== null) {
-            const [, org, repo, type, num] = githubMatch
-            const entityType = type === 'pull' ? 'github.pr' : 'github.issue'
-            return {
-              replacement: `[[ ${entityType} id="${org}/${repo}#${num}" ]]`,
-              promptMenu: true,
-            }
-          }
-        }
-
-        if (pasted.length > 1) {
-          const tableRegex = /\t/
-          const tableMatch = tableRegex.test(pasted[0])
-
-          if (tableMatch) {
-            const linesInCols = pasted.map((line) => line.split('\t'))
-            const cols = Math.max(...linesInCols.map((line) => line.length))
-
-            linesInCols.splice(1, 0, new Array(cols).fill('-'))
-
-            return {
-              replacement: linesInCols
-                .map((cols) => '| ' + cols.join(' | ') + ' |')
-                .join('\n'),
-              promptMenu: false,
-            }
-          }
-        }
-
-        return { replacement: null, promptMenu: false }
-      },
-    })
-    editor.on('change', (instance) => {
-      setEditorContent(instance.getValue())
-    })
-    editor.on('inputRead', (_, change) => {
-      if (change.origin !== '+input') return
-
-      if (editor.getLine(change.to.line) === '[[') {
-        editor.showHint({
-          container: editor.getWrapperElement(),
-          closeOnUnfocus: false,
-          alignWithWord: true,
-          closeCharacters: /[\n]/,
-          hint: () => {
-            const line = editor.getLine(editor.getCursor().line)
-            const filter = line.slice(2)
-            const list = suggestionsRef.current.filter((hint) => {
-              return (
-                hint.displayText != null &&
-                hint.displayText.toLowerCase().includes(filter.toLowerCase())
-              )
-            })
-            return {
-              from: { ch: 0, line: change.to.line },
-              to: { ch: line.length, line: change.to.line },
-              list,
-            }
-          },
-        })
+  const handleCursorShowHintActivity = useCallback((cm: CodeMirror.Editor) => {
+    const currentCursor = cm.getCursor()
+    const cursorColumn = currentCursor.ch
+    const currentLine = cm.getLine(cm.getCursor().line) || ''
+    const previousCursor = cursorState
+    const cursorsEqual =
+      currentCursor.ch == previousCursor.ch &&
+      currentCursor.line == previousCursor.line
+    if (
+      !cm.state.completeActive &&
+      // user has started with '```x' and is waiting for options
+      currentLine.startsWith('```') &&
+      currentLine.length >= 4 &&
+      cursorColumn >= 3 &&
+      !cursorsEqual
+    ) {
+      const inputWord = currentLine.substring(3)
+      const modeSuggestions = getModeSuggestions(inputWord)
+      const isOnlySuggestion =
+        modeSuggestions.length == 1 && modeSuggestions[0].text == inputWord
+      if (!isOnlySuggestion) {
+        cm.showHint()
       }
-    })
-    editor.on(
-      'cursorActivity',
-      throttle(
-        (codeMirror: CodeMirror.Editor) => {
-          const doc = codeMirror.getDoc()
-          const { line, ch } = doc.getCursor()
-          const selections = doc.listSelections()
-
-          setSelection({
-            currentCursor: {
-              line,
-              ch,
-            },
-            currentSelections: selections,
-          })
-        },
-        500,
-        { trailing: true }
-      )
-    )
+    }
+    cursorState = { ch: currentCursor.ch, line: currentCursor.line }
   }, [])
+
+  const bindCallback = useCallback(
+    (editor: CodeMirror.Editor) => {
+      setEditorContent(editor.getValue())
+      editorRef.current = editor
+      attachFileHandlerToCodeMirrorEditor(editor, {
+        onFile: async (file) => {
+          return fileUploadHandlerRef.current != null
+            ? fileUploadHandlerRef.current(file)
+            : null
+        },
+      })
+      pasteFormatPlugin(editor, {
+        openMenu: (pos, cb) => {
+          setShortcodeConvertMenu({ pos, cb })
+        },
+        closeMenu: () => {
+          setShortcodeConvertMenu(null)
+        },
+        formatter: (pasted) => {
+          if (pasted.length === 1) {
+            const githubRegex =
+              /https:\/\/github.com\/([^\/\s]+)\/([^\/\s]+)\/(pull|issues)\/(\d+)/
+            const githubMatch = githubRegex.exec(pasted[0])
+
+            if (githubMatch !== null) {
+              const [, org, repo, type, num] = githubMatch
+              const entityType = type === 'pull' ? 'github.pr' : 'github.issue'
+              return {
+                replacement: `[[ ${entityType} id="${org}/${repo}#${num}" ]]`,
+                promptMenu: true,
+              }
+            }
+          }
+
+          if (pasted.length > 1) {
+            const tableRegex = /\t/
+            const tableMatch = tableRegex.test(pasted[0])
+
+            if (tableMatch) {
+              const linesInCols = pasted.map((line) => line.split('\t'))
+              const cols = Math.max(...linesInCols.map((line) => line.length))
+
+              linesInCols.splice(1, 0, new Array(cols).fill('-'))
+
+              return {
+                replacement: linesInCols
+                  .map((cols) => '| ' + cols.join(' | ') + ' |')
+                  .join('\n'),
+                promptMenu: false,
+              }
+            }
+          }
+
+          return { replacement: null, promptMenu: false }
+        },
+      })
+      editor.on('change', (instance) => {
+        setEditorContent(instance.getValue())
+      })
+      editor.on('inputRead', (_, change) => {
+        if (change.origin !== '+input') return
+
+        if (editor.getLine(change.to.line) === '[[') {
+          editor.showHint({
+            container: editor.getWrapperElement(),
+            closeOnUnfocus: false,
+            alignWithWord: true,
+            closeCharacters: /[\n]/,
+            hint: () => {
+              const line = editor.getLine(editor.getCursor().line)
+              const filter = line.slice(2)
+              const list = suggestionsRef.current.filter((hint) => {
+                return (
+                  hint.displayText != null &&
+                  hint.displayText.toLowerCase().includes(filter.toLowerCase())
+                )
+              })
+              return {
+                from: { ch: 0, line: change.to.line },
+                to: { ch: line.length, line: change.to.line },
+                list,
+              }
+            },
+          })
+        }
+      })
+      editor.on('cursorActivity', (cm) => {
+        handleCursorShowHintActivity(cm)
+        throttle(
+          (codeMirror: CodeMirror.Editor) => {
+            const doc = codeMirror.getDoc()
+            const { line, ch } = doc.getCursor()
+            const selections = doc.listSelections()
+
+            setSelection({
+              currentCursor: {
+                line,
+                ch,
+              },
+              currentSelections: selections,
+            })
+          },
+          500,
+          { trailing: true }
+        )
+      })
+    },
+    [handleCursorShowHintActivity]
+  )
 
   const onTemplatePickCallback = useCallback(
     (template: SerializedTemplate) => {
