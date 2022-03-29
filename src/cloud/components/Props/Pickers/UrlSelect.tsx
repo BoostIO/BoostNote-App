@@ -92,11 +92,10 @@ const UrlSelect = ({
 
   const openSelectorIfEmpty = useCallback(
     (e) => {
-      if (value.trim() === '' || !isValidUrl(value)) {
-        openSelector(e)
-      }
+      openSelector(e)
+      e.preventDefault()
     },
-    [openSelector, value]
+    [openSelector]
   )
 
   return (
@@ -110,8 +109,7 @@ const UrlSelect = ({
         className='url__button'
         tag='div'
       >
-        <Flexbox justifyContent='space-between'>
-          {labelNode}
+        <Flexbox justifyContent='flex-end'>
           {!isReadOnly && !disabled && (
             <Button
               variant='bordered'
@@ -124,6 +122,7 @@ const UrlSelect = ({
           )}
         </Flexbox>
       </PropertyValueButton>
+      {labelNode}
     </UrlSelectContainer>
   )
 }
@@ -131,14 +130,20 @@ const UrlSelect = ({
 export default UrlSelect
 
 const UrlSelectContainer = styled.div`
+  position: relative;
+
   .url-select__label {
-    padding: 0px;
+    position: absolute;
+    justify-self: center;
+    top: 50%;
+    transform: translateY(-50%);
+
+    padding: 0 0 0 ${({ theme }) => theme.sizes.spaces.sm}px;
     border-radius: 4px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     line-height: 25px;
-    width: 100%;
 
     &.url-select__label--incorrect {
       color: ${({ theme }) => theme.colors.text.subtle};
