@@ -315,7 +315,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.EditorToolbarTooltipItalic]: 'イタリック',
   [lngKeys.EditorToolbarTooltipCode]: 'コード',
   [lngKeys.EditorToolbarTooltipLink]: 'リンク',
-  [lngKeys.EditorToolbarTooltipBrackets]: '角かっこを追加する',
+  [lngKeys.EditorToolbarTooltipBrackets]: '角括弧を追加する',
   [lngKeys.EditorToolbarTooltipMath]: '数式を追加する',
   [lngKeys.EditorToolbarTooltipUpload]: 'ファイルアップロード',
   [lngKeys.EditorToolbarTooltipTemplate]: 'テンプレートを使う',
