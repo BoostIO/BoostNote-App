@@ -272,5 +272,7 @@ function createPageStoreContext(
   }
 }
 
-export const { StoreProvider: PageDataProvider, useStore: usePage } =
-  createPageStoreContext(usePageDataStore, 'pageData')
+export const {
+  StoreProvider: PageDataProvider,
+  useStore: usePage,
+} = createPageStoreContext(usePageDataStore, 'pageData')
