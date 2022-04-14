@@ -13,7 +13,7 @@ export async function updateUserOnboardingProgress(
   state: Partial<UserOnboardingState>
 ) {
   const body: UpdateUserOnboardingRequestBody = { value: JSON.stringify(state) }
-  return callApi<UpdateUserOnboardingResponseBody>(`api/users/onboarding`, {
+  return callApi<UpdateUserOnboardingResponseBody>(`api/user/onboarding`, {
     json: body,
     method: 'put',
   })

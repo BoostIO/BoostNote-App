@@ -21,7 +21,7 @@ export interface DeleteUserResponseBody {}
 export interface SaveUserResponseBody {}
 
 export async function saveUserInfo(body: SaveUserRequestBody) {
-  return callApi<SaveUserResponseBody>(`api/users`, {
+  return callApi<SaveUserResponseBody>(`api/user`, {
     json: body,
     method: 'put',
   })
@@ -30,14 +30,14 @@ export async function saveUserInfo(body: SaveUserRequestBody) {
 export async function updateUserIcon(file: File) {
   const formData = new FormData()
   formData.set('icon', file)
-  return callApi<UpdateUserIconResponseBody>('api/users/icon', {
+  return callApi<UpdateUserIconResponseBody>('api/user/icon', {
     body: formData,
     method: 'post',
   })
 }
 
 export async function deleteUserIcon() {
-  return callApi<DeleteUserIconResponseBody>('api/users/icon', {
+  return callApi<DeleteUserIconResponseBody>('api/user/icon', {
     method: 'delete',
   })
 }

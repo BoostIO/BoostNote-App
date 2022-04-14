@@ -25,13 +25,10 @@ export async function createFolder(
   team: SerializedTeam,
   body: CreateFolderRequestBody
 ) {
-  const data = await callApi<CreateFolderResponseBody>(
-    `api/teams/${team.id}/folders`,
-    {
-      json: body,
-      method: 'post',
-    }
-  )
+  const data = await callApi<CreateFolderResponseBody>(`api/folders`, {
+    json: { ...body, teamId: team.id },
+    method: 'post',
+  })
 
   return data
 }
@@ -55,12 +52,12 @@ export interface UpdateFolderResponseBody {
 }
 
 export async function updateFolder(
-  team: { id: string },
+  _team: { id: string },
   folderId: string,
   body: UpdateFolderRequestBody
 ) {
   const data = await callApi<UpdateFolderResponseBody>(
-    `api/teams/${team.id}/folders/${folderId}`,
+    `api/folders/${folderId}`,
     {
       json: body,
       method: 'put',
@@ -103,11 +100,11 @@ export interface DestroyFolderResponseBody {
 }
 
 export async function destroyFolder(
-  team: { id: string },
+  _team: { id: string },
   folder: { id: string }
 ) {
   const data = await callApi<DestroyFolderResponseBody>(
-    `api/teams/${team.id}/folders/${folder.id}`,
+    `api/folders/${folder.id}`,
     {
       method: 'delete',
     }
@@ -121,10 +118,10 @@ export async function updateFolderEmoji(
   emoji?: string
 ) {
   const data = await callApi<UpdateFolderEmojiResponseBody>(
-    `api/teams/${folder.teamId}/folders/${folder.id}/emoji`,
+    `api/folders/${folder.id}`,
     {
       json: { emoji },
-      method: 'put',
+      method: 'patch',
     }
   )
   return data

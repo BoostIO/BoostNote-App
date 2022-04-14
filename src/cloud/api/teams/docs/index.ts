@@ -12,8 +12,8 @@ export interface GetDocResponseBody {
   doc: SerializedDocWithSupplemental
 }
 
-export function getDoc(id: string, team: string) {
-  return callApi<GetDocResponseBody>(`api/teams/${team}/docs/${id}`)
+export function getDoc(id: string, _team: string) {
+  return callApi<GetDocResponseBody>(`api/docs/${id}`)
 }
 
 export interface CreateDocRequestBody {
@@ -34,13 +34,10 @@ export async function createDoc(
   team: { id: string },
   body: CreateDocRequestBody
 ) {
-  const data = await callApi<CreateDocResponseBody>(
-    `api/teams/${team.id}/docs`,
-    {
-      json: body,
-      method: 'post',
-    }
-  )
+  const data = await callApi<CreateDocResponseBody>(`api/docs`, {
+    json: { ...body, teamId: team.id },
+    method: 'post',
+  })
   return data
 }
 
@@ -58,17 +55,14 @@ export interface UpdateDocResponseBody {
 }
 
 export async function updateDoc(
-  teamId: string,
+  _teamId: string,
   docId: string,
   body: UpdateDocRequestBody
 ) {
-  const data = await callApi<UpdateDocResponseBody>(
-    `api/teams/${teamId}/docs/${docId}`,
-    {
-      json: body,
-      method: 'put',
-    }
-  )
+  const data = await callApi<UpdateDocResponseBody>(`api/docs/${docId}`, {
+    json: body,
+    method: 'patch',
+  })
   return data
 }
 
@@ -78,20 +72,17 @@ export interface DestroyDocResponseBody {
   doc?: SerializedDocWithSupplemental
 }
 
-export async function destroyDoc(team: { id: string }, doc: { id: string }) {
-  const data = await callApi<DestroyDocResponseBody>(
-    `api/teams/${team.id}/docs/${doc.id}`,
-    {
-      method: 'delete',
-    }
-  )
+export async function destroyDoc(_team: { id: string }, doc: { id: string }) {
+  const data = await callApi<DestroyDocResponseBody>(`api/docs/${doc.id}`, {
+    method: 'delete',
+  })
 
   return data
 }
 
 export async function updateDocEmoji(doc: SerializedDoc, emoji?: string) {
   const data = await callApi<UpdateDocResponseBody>(
-    `api/teams/${doc.teamId}/docs/${doc.id}/emoji`,
+    `api/docs/${doc.id}/emoji`,
     {
       json: { emoji },
       method: 'put',

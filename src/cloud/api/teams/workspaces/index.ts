@@ -26,13 +26,10 @@ export async function createWorkspace(
   team: { id: string },
   body: CreateWorkspaceRequestBody
 ) {
-  const data = await callApi<CreateWorkspaceResponseBody>(
-    `api/teams/${team.id}/workspaces`,
-    {
-      json: body,
-      method: 'post',
-    }
-  )
+  const data = await callApi<CreateWorkspaceResponseBody>(`api/workspaces`, {
+    json: { ...body, teamId: team.id },
+    method: 'post',
+  })
   return data
 }
 
@@ -47,12 +44,12 @@ export interface UpdateWorkspaceResponseBody {
 }
 
 export async function updateWorkspace(
-  team: { id: string },
+  _team: { id: string },
   workspaceId: string,
   body: UpdateWorkspaceRequestBody
 ) {
   const data = await callApi<UpdateWorkspaceResponseBody>(
-    `api/teams/${team.id}/workspaces/${workspaceId}`,
+    `api/workspaces/${workspaceId}`,
     {
       json: body,
       method: 'put',
@@ -66,12 +63,12 @@ export interface DestroyWorkspaceResponseBody {
 }
 
 export async function destroyWorkspace(
-  team: { id: string },
+  _team: { id: string },
   workspace: { id: string },
   destroyContent = false
 ) {
   const data = await callApi<DestroyWorkspaceResponseBody>(
-    `api/teams/${team.id}/workspaces/${workspace.id}`,
+    `api/workspaces/${workspace.id}`,
     {
       search: {
         destroyContent,

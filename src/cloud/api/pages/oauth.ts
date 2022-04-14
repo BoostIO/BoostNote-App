@@ -18,7 +18,7 @@ export async function getAuthCallbackData(search: string) {
 }
 
 export async function getSignOutData() {
-  const data = await callApi<RedirectToPageResponseBody>('api/oauth/signout')
+  const data = await callApi<RedirectToPageResponseBody>('api/user/signout')
 
   return data
 }

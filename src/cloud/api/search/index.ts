@@ -43,8 +43,8 @@ export async function getSearchResults(
   team: SerializedTeam,
   query: GetSearchResultsRequestQuery
 ) {
-  return callApi<GetSearchResultsResponseBody>(`api/teams/${team.id}/search`, {
-    search: query as any,
+  return callApi<GetSearchResultsResponseBody>(`api/search`, {
+    search: { ...query, teamId: team.id } as any,
   })
 }
 

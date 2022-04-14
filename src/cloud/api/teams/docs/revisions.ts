@@ -8,12 +8,12 @@ export interface GetAllDocRevisionsResponseBody {
 }
 
 export async function getAllRevisionsFromDoc(
-  teamId: string,
+  _teamId: string,
   docId: string,
   page = 1
 ) {
   return callApi<GetAllDocRevisionsResponseBody>(
-    `api/teams/${teamId}/docs/${docId}/revisions`,
+    `api/docs/${docId}/revisions`,
     {
       search: { page },
     }

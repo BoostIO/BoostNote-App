@@ -6,18 +6,15 @@ export async function listSources(
   team: SerializedTeam,
   filters?: { type: string }
 ) {
-  const data = await callApi<{ sources: SerializedSource[] }>(
-    `api/teams/${team.id}/sources`,
-    {
-      method: 'get',
-      search: { ...filters },
-    }
-  )
+  const data = await callApi<{ sources: SerializedSource[] }>(`api/sources`, {
+    method: 'get',
+    search: { ...filters, teamId: team.id },
+  })
   return data
 }
 
-export async function deleteSource(team: SerializedTeam, sourceId: string) {
-  const data = await callApi<{}>(`api/teams/${team.id}/sources/${sourceId}`, {
+export async function deleteSource(_team: SerializedTeam, sourceId: string) {
+  const data = await callApi<{}>(`api/sources/${sourceId}`, {
     method: 'delete',
   })
   return data

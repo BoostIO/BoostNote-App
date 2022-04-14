@@ -7,7 +7,7 @@ export type UploadsResponseBody = {
 }
 
 export async function getUploadsData(teamId: string) {
-  const data = await callApi<UploadsResponseBody>('api/uploads', {
+  const data = await callApi<UploadsResponseBody>('api/files', {
     search: `teamId=${teamId}`,
   })
 

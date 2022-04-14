@@ -36,7 +36,17 @@ export interface CreateViewResponseBody {
 
 export async function createView(body: CreateViewRequestBody) {
   return callApi<CreateViewResponseBody>(`/api/views`, {
-    json: body,
+    json: {
+      data: body.data,
+      type: body.type,
+      name: body.name,
+      parent:
+        body.smartView != null
+          ? { type: 'smart-view', id: body.smartView }
+          : body.folder != null
+          ? { type: 'folder', id: body.folder }
+          : { type: 'workspace', id: body.workspace },
+    },
     method: 'post',
   })
 }

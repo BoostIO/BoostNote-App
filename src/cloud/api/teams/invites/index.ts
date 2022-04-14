@@ -8,7 +8,7 @@ export interface GetInvitesResponseBody {
 
 export async function getTeamInvites(team: SerializedTeam) {
   const data = await callApi<GetInvitesResponseBody>(
-    `api/teams/${team.id}/invites`
+    `api/invites?teamId=${team.id}`
   )
   return data
 }
@@ -26,13 +26,10 @@ export async function createTeamInvite(
   team: SerializedTeam,
   body: CreateInviteRequestBody
 ) {
-  const data = await callApi<CreateInviteResponseBody>(
-    `api/teams/${team.id}/invites`,
-    {
-      json: body,
-      method: 'post',
-    }
-  )
+  const data = await callApi<CreateInviteResponseBody>(`api/invites`, {
+    json: { ...body, teamId: team.id },
+    method: 'post',
+  })
   return data
 }
 
@@ -49,9 +46,9 @@ export async function createTeamInvitesInBulk(
   body: CreateBulkInvitesRequestBody
 ) {
   const data = await callApi<CreateBulkInvitesResponseBody>(
-    `api/teams/${team.id}/invites/bulk`,
+    `api/invites/bulk`,
     {
-      json: body,
+      json: { ...body, teamId: team.id },
       method: 'post',
     }
   )
@@ -59,10 +56,10 @@ export async function createTeamInvitesInBulk(
 }
 
 export async function cancelTeamInvite(
-  team: SerializedTeam,
+  _team: SerializedTeam,
   invite: SerializedTeamInvite
 ) {
-  const data = await callApi(`api/teams/${team.id}/invites/${invite.id}`, {
+  const data = await callApi(`api/invites/${invite.id}`, {
     method: 'delete',
   })
   return data

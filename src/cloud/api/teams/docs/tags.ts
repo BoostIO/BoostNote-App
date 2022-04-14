@@ -6,12 +6,12 @@ export interface DeleteTagFromDocResponseBody {
 }
 
 export async function deleteTagFromDoc(
-  teamId: string,
+  _teamId: string,
   docId: string,
   tagId: string
 ) {
   return callApi<DeleteTagFromDocResponseBody>(
-    `api/teams/${teamId}/docs/${docId}/tags/${tagId}`,
+    `api/docs/${docId}/tags/${tagId}`,
     { method: 'delete' }
   )
 }
