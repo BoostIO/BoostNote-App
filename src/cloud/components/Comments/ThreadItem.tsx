@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { isToday, format, formatDistanceToNow } from 'date-fns'
 import { Thread, Comment } from '../../interfaces/db/comments'
 import UserIcon from '../UserIcon'
@@ -229,15 +229,18 @@ const ThreadItem = ({
       >
         <div className='thread__info'>
           <div className='thread__info__line'>
-            <UserIcon
-              className='thread__info__line__icon'
-              style={smallUserIconStyle}
-              user={
-                thread.initialComment != null
-                  ? thread.initialComment.user
-                  : thread.contributors[0]
-              }
-            />
+            {(thread.initialComment != null ||
+              thread.contributors.length > 0) && (
+              <UserIcon
+                className='thread__info__line__icon'
+                style={smallUserIconStyle}
+                user={
+                  thread.initialComment != null
+                    ? thread.initialComment.user
+                    : thread.contributors[0]
+                }
+              />
+            )}
           </div>
           {thread.initialComment == null ? (
             <div className='thread__comment__line'>
