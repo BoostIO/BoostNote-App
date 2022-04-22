@@ -3,13 +3,19 @@ import {
   SerializedDocWithSupplemental,
   SerializedDoc,
 } from '../../../interfaces/db/doc'
-import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
+import {
+  SerializedFolder,
+  SerializedFolderWithBookmark,
+} from '../../../interfaces/db/folder'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { SerializedUser } from '../../../interfaces/db/user'
 import { SerializedRevision } from '../../../interfaces/db/revision'
 import { callApi } from '../../../lib/client'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
 import querystring from 'querystring'
+import { prefixDocs, prefixFolders } from '../../../lib/utils/patterns'
+import { GetDocResponseBody } from '../../teams/docs'
+import { getResourceFromSlug } from '../../mock/db/utils'
 
 export type TeamIndexPageResponseBody = GeneralAppProps & {
   pageWorkspace: SerializedWorkspace
@@ -51,24 +57,46 @@ export type ResourceShowPageResponseBody = GeneralAppProps &
 
 export async function getResourceShowPageData({
   pathname,
-  search,
   signal,
 }: GetInitialPropsParameters) {
-  const [, teamId, ...otherPathnames] = pathname.split('/')
+  const [, _, ...otherPathnames] = pathname.split('/')
 
-  const resourceId = otherPathnames.join('/')
+  const resourceSlug = otherPathnames.join('/')
+  const [type, id] = getResourceFromSlug(resourceSlug)
 
-  const data = await callApi<ResourceShowPageResponseBody>(
-    'api/pages/teams/resources/show',
-    {
-      search: {
-        ...querystring.parse(search),
-        teamId,
-        resourceId,
-      },
-      signal,
+  if (type === prefixDocs) {
+    const [{ doc }, { data: token }] = await Promise.all([
+      callApi<GetDocResponseBody>(`api/docs/${id}`, { signal }),
+      callApi<{ data: string }>(`api/docs/${id}/token`, { signal }),
+    ])
+
+    return {
+      type: 'doc',
+      docs: [doc],
+      pageDoc: { ...doc, collaborationToken: token },
     }
-  )
+  }
 
-  return data
+  if (type === prefixFolders) {
+    const [{ folder }, { docs }] = await Promise.all([
+      callApi<{ folder: SerializedFolder }>(`api/folders/${id}`),
+      callApi<{ docs: SerializedDoc[] }>(`/api/docs`, {
+        search: { parentFolder: id },
+      }),
+    ])
+
+    return {
+      type: 'folder',
+      pageFolder: folder,
+      docs,
+    }
+  }
+
+  const { workspace } = await callApi<{ workspace: SerializedWorkspace }>(
+    `api/workspaces/${id}`
+  )
+  return {
+    type: 'workspace',
+    pageWorkspace: workspace,
+  }
 }

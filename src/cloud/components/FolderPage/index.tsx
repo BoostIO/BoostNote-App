@@ -53,7 +53,7 @@ const FolderPage = () => {
       return
     }
 
-    return foldersMap.get(pageFolder.id)
+    return foldersMap.get(pageFolder.id) || pageFolder
   }, [foldersMap, pageFolder])
 
   const childDocs = useMemo(() => {

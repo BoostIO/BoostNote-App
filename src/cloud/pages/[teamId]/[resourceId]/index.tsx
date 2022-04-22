@@ -2,7 +2,9 @@ import React, { useEffect, useMemo } from 'react'
 import Page from '../../../components/Page'
 import {
   getResourceShowPageData,
+  getTeamIndexPageData,
   ResourceShowPageResponseBody,
+  TeamIndexPageResponseBody,
 } from '../../../api/pages/teams'
 import DocPage from '../../../components/DocPage'
 import FolderPage from '../../../components/FolderPage'
@@ -116,12 +118,22 @@ const ResourceIndex = () => {
   return content
 }
 
-ResourceIndex.getInitialProps = async (
+ResourceIndex.getInitialProps = ((prev: { value: string | null }) => async (
   params: GetInitialPropsParameters & { forceReload?: boolean }
 ) => {
-  const result = await getResourceShowPageData(params)
+  const [, teamId] = params.pathname.split('/')
+  const [result, teamData] = await Promise.all([
+    getResourceShowPageData(params),
+    prev.value != teamId
+      ? getTeamIndexPageData(params)
+      : Promise.resolve({
+          merge: true,
+        } as any),
+  ])
+
+  prev.value = teamId
   const query = parseQuery(params.search.slice(1))
-  return { ...result, thread: query.thread }
-}
+  return { ...teamData, ...result, thread: query.thread }
+})({ value: null })
 
 export default ResourceIndex

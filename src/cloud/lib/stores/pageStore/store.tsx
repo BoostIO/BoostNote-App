@@ -31,7 +31,9 @@ function usePageDataStore(pageProps: any, navigatingBetweenPage: boolean) {
   const pageDataRef = useCommittedRef(pageData)
 
   useEffect(() => {
-    setPageData(pageProps)
+    setPageData((old: any) =>
+      pageProps.merge === true ? { ...old, ...pageProps } : pageProps
+    )
   }, [pageProps])
 
   const setPartialPageData = useCallback(
