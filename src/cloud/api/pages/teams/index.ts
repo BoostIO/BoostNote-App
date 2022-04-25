@@ -16,6 +16,7 @@ import querystring from 'querystring'
 import { prefixDocs, prefixFolders } from '../../../lib/utils/patterns'
 import { GetDocResponseBody } from '../../teams/docs'
 import { getResourceFromSlug } from '../../mock/db/utils'
+import { ListViewsResponseBody } from '../../teams/views'
 
 export type TeamIndexPageResponseBody = GeneralAppProps & {
   pageWorkspace: SerializedWorkspace
@@ -78,10 +79,13 @@ export async function getResourceShowPageData({
   }
 
   if (type === prefixFolders) {
-    const [{ folder }, { docs }] = await Promise.all([
+    const [{ folder }, { docs }, { data: views }] = await Promise.all([
       callApi<{ folder: SerializedFolder }>(`api/folders/${id}`),
       callApi<{ docs: SerializedDoc[] }>(`/api/docs`, {
         search: { parentFolder: id },
+      }),
+      callApi<ListViewsResponseBody>(`/api/views`, {
+        search: { folder: id },
       }),
     ])
 
@@ -89,6 +93,7 @@ export async function getResourceShowPageData({
       type: 'folder',
       pageFolder: folder,
       docs,
+      views,
     }
   }
 
