@@ -4,7 +4,6 @@ import {
   getResourceShowPageData,
   getTeamIndexPageData,
   ResourceShowPageResponseBody,
-  TeamIndexPageResponseBody,
 } from '../../../api/pages/teams'
 import DocPage from '../../../components/DocPage'
 import FolderPage from '../../../components/FolderPage'
