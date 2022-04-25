@@ -113,10 +113,8 @@ const Application = ({
   const { openSettingsTab, closeSettingsTab } = useSettings()
   const { openNewDocForm, openNewFolderForm } = useCloudResourceModals()
   const [showFuzzyNavigation, setShowFuzzyNavigation] = useState(false)
-  const {
-    treeWithOrderedCategories,
-    sidebarHeaderControls,
-  } = useCloudSidebarTree()
+  const { treeWithOrderedCategories, sidebarHeaderControls } =
+    useCloudSidebarTree()
   const { counts } = useNotifications()
   const { translate } = useI18n()
   const { sendToElectron } = useElectron()

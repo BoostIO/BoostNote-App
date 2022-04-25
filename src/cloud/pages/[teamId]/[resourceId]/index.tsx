@@ -118,22 +118,23 @@ const ResourceIndex = () => {
   return content
 }
 
-ResourceIndex.getInitialProps = ((prev: { value: string | null }) => async (
-  params: GetInitialPropsParameters & { forceReload?: boolean }
-) => {
-  const [, teamId] = params.pathname.split('/')
-  const [result, teamData] = await Promise.all([
-    getResourceShowPageData(params),
-    prev.value != teamId
-      ? getTeamIndexPageData(params)
-      : Promise.resolve({
-          merge: true,
-        } as any),
-  ])
+ResourceIndex.getInitialProps = (
+  (prev: { value: string | null }) =>
+  async (params: GetInitialPropsParameters & { forceReload?: boolean }) => {
+    const [, teamId] = params.pathname.split('/')
+    const [result, teamData] = await Promise.all([
+      getResourceShowPageData(params),
+      prev.value != teamId
+        ? getTeamIndexPageData(params)
+        : Promise.resolve({
+            merge: true,
+          } as any),
+    ])
 
-  prev.value = teamId
-  const query = parseQuery(params.search.slice(1))
-  return { ...teamData, ...result, thread: query.thread }
-})({ value: null })
+    prev.value = teamId
+    const query = parseQuery(params.search.slice(1))
+    return { ...teamData, ...result, thread: query.thread }
+  }
+)({ value: null })
 
 export default ResourceIndex
