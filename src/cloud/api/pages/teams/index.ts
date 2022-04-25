@@ -66,15 +66,17 @@ export async function getResourceShowPageData({
   const [type, id] = getResourceFromSlug(resourceSlug)
 
   if (type === prefixDocs) {
-    const [{ doc }, { data: token }] = await Promise.all([
+    const [{ doc: withContributors }, { data: token }] = await Promise.all([
       callApi<GetDocResponseBody>(`api/docs/${id}`, { signal }),
       callApi<{ data: string }>(`api/docs/${id}/token`, { signal }),
     ])
 
+    const { contributors, ...doc } = withContributors
     return {
       type: 'doc',
       docs: [doc],
       pageDoc: { ...doc, collaborationToken: token },
+      contributors,
     }
   }
 

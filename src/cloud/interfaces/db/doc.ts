@@ -50,4 +50,5 @@ export type SerializedDoc = SerializedUnserializableDocProps &
 export type SerializedDocWithSupplemental = SerializedDoc & {
   bookmarked: boolean
   props: Props
+  contributors?: SerializedUser[]
 }
