@@ -31,6 +31,7 @@ function usePageDataStore(pageProps: any, navigatingBetweenPage: boolean) {
   const pageDataRef = useCommittedRef(pageData)
 
   useEffect(() => {
+    console.log(pageProps)
     setPageData((old: any) =>
       pageProps.merge === true ? { ...old, ...pageProps } : pageProps
     )

@@ -2,7 +2,6 @@ import { callApi } from '../../../lib/client'
 import { GeneralAppProps } from '../../../interfaces/api'
 import { SerializedWorkspace } from '../../../interfaces/db/workspace'
 import { GetInitialPropsParameters } from '../../../interfaces/pages'
-import querystring from 'querystring'
 import { SerializedDoc } from '../../../interfaces/db/doc'
 import { SerializedFolder } from '../../../interfaces/db/folder'
 import { getResourceFromSlug } from '../../mock/db/utils'
@@ -35,7 +34,7 @@ export async function getWorkspaceShowPageData({
   ])
 
   return {
-    workspace,
+    pageWorkspace: workspace,
     workspaces: [workspace],
     docs,
     folders,
