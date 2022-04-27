@@ -42,7 +42,7 @@ const OAuthAuthorizePage = (data: OAuthPageData) => {
   }, [])
 
   const changeUserUrl = useMemo(() => {
-    return `/api/oauth/signout?${stringify({
+    return `/api/user/signout?${stringify({
       redirectTo: `/api/oauth2/authorize?${stringify({ ...router.query })}`,
     })}`
   }, [router.query])

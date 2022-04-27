@@ -319,16 +319,16 @@ const Application = ({
       label: translate(lngKeys.LogOut),
       icon: mdiLogoutVariant,
       linkProps: {
-        href: '/api/oauth/signout',
+        href: '/api/user/signout',
         onClick: (event: React.MouseEvent) => {
           event.preventDefault()
 
           if (usingElectron) {
             sendToElectron('sign-out-event')
-            window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout?redirectTo=/desktop`
+            window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/user/signout?redirectTo=/desktop`
             return
           } else {
-            window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/oauth/signout`
+            window.location.href = `${process.env.BOOST_HUB_BASE_URL}/api/user/signout`
             return
           }
         },

@@ -69,7 +69,7 @@ const AccountDeletePage = () => {
               if (usingElectron) {
                 sendToElectron('account-delete')
               } else {
-                window.location.href = `${boostHubBaseUrl}/api/oauth/signout`
+                window.location.href = `${boostHubBaseUrl}/api/user/signout`
               }
             } catch (error) {
               pushMessage({

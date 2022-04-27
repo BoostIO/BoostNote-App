@@ -51,9 +51,9 @@ const HomeForm = ({ user, teams = [] }: HomePageTeamSelectForm) => {
   const signOutCloud = useCallback(() => {
     if (usingElectron) {
       sendToHost('sign-out-event')
-      location.href = '/api/oauth/signout?redirectTo=/desktop'
+      location.href = '/api/user/signout?redirectTo=/desktop'
     } else {
-      location.href = '/api/oauth/signout'
+      location.href = '/api/user/signout'
     }
   }, [usingElectron])
 
