@@ -62,8 +62,11 @@ function useRouterStore() {
     [currentLocationIndex]
   )
 
-  const replace = useCallback((urlStr: string) => {
+  const replace = useCallback((urlStr: string, force = false) => {
     browserHistory.replace(urlStr)
+    if (force) {
+      window.location.href = urlStr
+    }
   }, [])
 
   const go = useCallback((count: number) => {

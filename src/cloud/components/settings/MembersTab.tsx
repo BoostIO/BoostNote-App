@@ -151,7 +151,7 @@ const MembersTab = () => {
               try {
                 await destroyPermission(team, permission)
                 if (currentUserId === permission.user.id) {
-                  router.replace(`/`)
+                  router.replace(`/`, true)
                   setClosed(true)
                 } else {
                   setPartialPageData({
