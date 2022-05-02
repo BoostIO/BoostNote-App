@@ -1,6 +1,5 @@
 import { SerializedFolder } from '../../interfaces/db/folder'
 import { SerializedDoc } from '../../interfaces/db/doc'
-import { SerializedTeam } from '../../interfaces/db/team'
 import { callApi } from '../../lib/client'
 
 type SerializedFolderSearchResult = {
@@ -39,15 +38,6 @@ export interface GetSearchResultsResponseBody {
   results: SearchResult[]
 }
 
-export async function getSearchResults(
-  team: SerializedTeam,
-  query: GetSearchResultsRequestQuery
-) {
-  return callApi<GetSearchResultsResponseBody>(`api/search`, {
-    search: { ...query, teamId: team.id } as any,
-  })
-}
-
 export async function getSearchResultsV2({
   teamId,
   query,
@@ -55,7 +45,7 @@ export async function getSearchResultsV2({
   teamId: string
   query: any
 }) {
-  return callApi<GetSearchResultsResponseBody>(`api/teams/${teamId}/search`, {
-    search: query as any,
+  return callApi<GetSearchResultsResponseBody>(`api/search`, {
+    search: { ...query, teamId } as any,
   })
 }
