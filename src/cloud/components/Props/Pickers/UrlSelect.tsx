@@ -10,6 +10,7 @@ import { ExternalLink } from '../../../../design/components/atoms/Link'
 import FormInput from '../../../../design/components/molecules/Form/atoms/FormInput'
 import Button from '../../../../design/components/atoms/Button'
 import Flexbox from '../../../../design/components/atoms/Flexbox'
+import { sendToHost } from '../../../lib/stores/electron'
 
 interface UrlSelectProps {
   sending?: boolean
@@ -77,7 +78,15 @@ const UrlSelect = ({
 
     if (isValidUrl(value)) {
       return (
-        <ExternalLink href={value} className='url-select__label'>
+        <ExternalLink
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            sendToHost('open-external-url', value)
+          }}
+          href={value}
+          className='url-select__label'
+        >
           {value}
         </ExternalLink>
       )
