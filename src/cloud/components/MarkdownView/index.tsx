@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react'
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import unified from 'unified'
 import remarkParse from 'remark-parse'
 import remarkShortcodes from 'remark-shortcodes'
@@ -29,7 +29,11 @@ import LinkableHeader from './LinkableHeader'
 import { rehypePosition } from '../../lib/rehypePosition'
 import remarkDocEmbed, { EmbedDoc } from '../../lib/docEmbedPlugin'
 import { boostHubBaseUrl } from '../../lib/consts'
-import { openInBrowser, usingElectron } from '../../lib/stores/electron'
+import {
+  openInBrowser,
+  useElectron,
+  usingElectron,
+} from '../../lib/stores/electron'
 import { useRouter } from '../../lib/router'
 import SelectionTooltip from './SelectionTooltip'
 import useSelectionLocation, {
@@ -43,6 +47,9 @@ import { TableOfContents } from './TableOfContents'
 import ExpandableImage from '../../../design/components/molecules/Image/ExpandableImage'
 import { defaultPreviewStyle } from './styles'
 import LoaderDocEditor from '../../../design/components/atoms/loaders/LoaderDocEditor'
+import { lngKeys } from '../../lib/i18n/types'
+import { DialogIconTypes, useDialog } from '../../../design/lib/stores/dialog'
+import { useI18n } from '../../lib/hooks/useI18n'
 
 const remarkAdmonitionOptions = {
   tag: ':::',
@@ -138,10 +145,40 @@ const MarkdownView = ({
   const checkboxIndexRef = useRef<number>(0)
   const onRenderRef = useRef(onRender)
   const { push } = useRouter()
+  const { translate } = useI18n()
+  const { messageBox } = useDialog()
+  const { sendToElectron } = useElectron()
 
   useEffect(() => {
     onRenderRef.current = onRender
   }, [onRender])
+
+  const openLinkWithWarning = useCallback(
+    (callback) => {
+      messageBox({
+        title: 'Opening an attachment link',
+        message:
+          "The attachment might include malicious data. If you don't trust authors of this shared docs, please do NOT open it.",
+        iconType: DialogIconTypes.Warning,
+        buttons: [
+          {
+            variant: 'secondary',
+            label: translate(lngKeys.GeneralCancel),
+            cancelButton: true,
+            defaultButton: true,
+          },
+          {
+            variant: 'danger',
+            label: translate(lngKeys.GeneralOpenVerb),
+            onClick: async () => {
+              callback()
+            },
+          },
+        ],
+      })
+    },
+    [messageBox, translate]
+  )
 
   const markdownProcessor = useMemo(() => {
     const linkableHeader = (as: string) => (props: any) => {
@@ -165,9 +202,11 @@ const MarkdownView = ({
                 href={href}
                 onClick={(event) => {
                   event.preventDefault()
-                  sendPostMessage({
-                    type: 'open-link',
-                    url: href,
+                  openLinkWithWarning(() => {
+                    sendPostMessage({
+                      type: 'open-link',
+                      url: href,
+                    })
                   })
                 }}
                 rel='noopener noreferrer'
@@ -182,7 +221,23 @@ const MarkdownView = ({
               .toLocaleLowerCase()
               .startsWith((boostHubBaseUrl || '').toLocaleLowerCase())
           ) {
-            return <a href={href}>{children}</a>
+            return (
+              <a
+                onClick={(event) => {
+                  event.preventDefault()
+                  openLinkWithWarning(() => {
+                    if (usingElectron) {
+                      sendToElectron('new-window', href)
+                    } else {
+                      window.open(href, '_blank', 'noopener noreferrer')
+                    }
+                  })
+                }}
+                href={href}
+              >
+                {children}
+              </a>
+            )
           }
           if (usingElectron) {
             return (
@@ -190,7 +245,9 @@ const MarkdownView = ({
                 href={href}
                 onClick={(event) => {
                   event.preventDefault()
-                  openInBrowser(href)
+                  openLinkWithWarning(() => {
+                    openInBrowser(href)
+                  })
                 }}
               >
                 {children}
@@ -199,7 +256,17 @@ const MarkdownView = ({
           }
 
           return (
-            <a href={href} target='_blank' rel='noopener noreferrer'>
+            <a
+              onClick={(event) => {
+                event.preventDefault()
+                openLinkWithWarning(() => {
+                  window.open(href, '_blank', 'noopener noreferrer')
+                })
+              }}
+              href={href}
+              target='_blank'
+              rel='noopener noreferrer'
+            >
               {children}
             </a>
           )
@@ -294,6 +361,8 @@ const MarkdownView = ({
     headerLinks,
     getEmbed,
     codeBlockTheme,
+    openLinkWithWarning,
+    sendToElectron,
     updateContent,
     content,
   ])
