@@ -76,6 +76,7 @@ export async function getResourceShowPageData({
       type: 'doc',
       docs: [doc],
       pageDoc: { ...doc, collaborationToken: token },
+      pageWorkspace: undefined,
       contributors,
     }
   }
@@ -96,6 +97,7 @@ export async function getResourceShowPageData({
       pageFolder: folder,
       docs,
       views,
+      pageWorkspace: undefined,
     }
   }
 
