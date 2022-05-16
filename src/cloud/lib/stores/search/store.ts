@@ -76,7 +76,9 @@ function useSearchStore(): SearchContext {
         stringifiedData
       ) as LocallyStoredHistoryProps
       const locallyStoredIds = locallyStoredDatas[team.id]
-      setHistory(locallyStoredIds)
+      if (Array.isArray(locallyStoredIds)) {
+        setHistory(locallyStoredIds)
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.warn(error.message)
@@ -91,7 +93,9 @@ function useSearchStore(): SearchContext {
         stringifiedSearchData
       ) as LocallyStoredSearchHistoryProps
       const locallyStoredResults = locallyStoredSearchData[team.id]
-      setSearchHistory(locallyStoredResults)
+      if (Array.isArray(locallyStoredResults)) {
+        setSearchHistory(locallyStoredResults)
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.warn(error.message)
