@@ -31,9 +31,27 @@ function usePageDataStore(pageProps: any, navigatingBetweenPage: boolean) {
   const pageDataRef = useCommittedRef(pageData)
 
   useEffect(() => {
-    setPageData((old: any) =>
-      pageProps.merge === true ? { ...old, ...pageProps } : pageProps
-    )
+    setPageData((old: any) => {
+      if (pageProps.merge !== true) {
+        return pageProps
+      }
+
+      if (
+        pageProps.pageDoc != null ||
+        pageProps.pageFolder != null ||
+        pageProps.pageWorkspace != null
+      ) {
+        return {
+          ...old,
+          pageDoc: undefined,
+          pageFolder: undefined,
+          pageWorkspace: undefined,
+          ...pageProps,
+        }
+      }
+
+      return { ...old, ...pageProps }
+    })
   }, [pageProps])
 
   const setPartialPageData = useCallback(
