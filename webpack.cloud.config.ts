@@ -79,6 +79,7 @@ module.exports = (env, argv) => {
         'MOCK_BACKEND',
         'BOOST_PDF_EXPORT_BASE_URL',
         'GITHUB_APP_URL',
+        'LEGACY_CUTOFF',
       ]),
       new CopyPlugin({
         patterns: [
