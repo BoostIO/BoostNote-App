@@ -150,8 +150,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SupportGuide]: 'サポートガイド',
   [lngKeys.SendUsAMessage]: 'メッセージを送る',
   [lngKeys.KeyboardShortcuts]: 'キーボードショートカット',
-  [lngKeys.SettingsSubLimitUsed]:
-    '{{docsNb}}個のドキュメントが利用されています',
+  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}}日',
   [lngKeys.SettingsSubLimitTrialTitle]: '無制限にアップグレードする',
   [lngKeys.SettingsSubLimitTrialDate]:
     'あなたのスペースのトライアルは{{date}}で終了します。',

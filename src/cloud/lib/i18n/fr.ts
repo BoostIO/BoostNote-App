@@ -148,7 +148,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.TokensName]: 'Nom du jeton...',
   [lngKeys.TokensDocumentation]: "documentation pour l'API de Boost Note",
 
-  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} documents utilisés',
+  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} jours',
   [lngKeys.SettingsSubLimitTrialTitle]: 'Upgrade pour accès illimité',
   [lngKeys.SettingsSubLimitTrialDate]:
     "Votre essai gratuit du plan pro est actif jusqu'à: {{date}}",

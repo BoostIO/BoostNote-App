@@ -145,7 +145,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.SendUsAMessage]: '给我们发个信息',
   [lngKeys.KeyboardShortcuts]: '键盘快捷键',
 
-  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}}使用的文档',
+  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}}天',
   [lngKeys.SettingsSubLimitTrialTitle]: '升级到unlimited',
   [lngKeys.SettingsSubLimitTrialDate]:
     '您的工作区对Pro计划的试用持续到{{date}}',

@@ -5,6 +5,7 @@ import { useSettings } from '../../lib/stores/settings'
 import styled from '../../../design/lib/styled'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
+import { format } from 'date-fns'
 
 const TeamSubLimit = ({
   padded = true,
@@ -81,27 +82,26 @@ const TeamSubLimit = ({
           <div
             className={cc([
               'progress-bar',
-              currentSubInfo.info.overLimit && 'over-limit',
+              currentSubInfo.info.trialIsOver && 'over-limit',
             ])}
             style={{ width: `${currentSubInfo.info.rate}%` }}
           />
         </div>
-        {currentSubInfo.info.docLimit != null && (
-          <p>
-            {translate(lngKeys.SettingsSubLimitUnderFreePlan, {
-              limit: currentSubInfo.info.docLimit,
-            })}
-          </p>
-        )}
         {currentSubInfo.info.trialIsOver && (
           <p>{translate(lngKeys.SettingsSubLimitTrialEnd)}</p>
         )}
-        {currentSubInfo.info.overLimit && (
-          <p className='text-danger'>
-            Your number of documents exceeds the capacity of the free plan.
-            Upgrade or remove documents in order to edit again
-          </p>
-        )}
+        <p className='note-limit'>
+          {translate(lngKeys.SettingsSubLimitTrialDate, {
+            date: format(currentSubInfo.info.endDate, 'dd MMM, yyyy'),
+          })}
+        </p>
+        <p className='note-limit'>
+          {translate(
+            currentSubInfo.info.trialIsOver
+              ? lngKeys.SettingsSubLimitTrialEnd
+              : lngKeys.SettingsSubLimitTrialUpgrade
+          )}
+        </p>
       </a>
     </Container>
   )
