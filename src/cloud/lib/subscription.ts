@@ -1,6 +1,7 @@
-import { differenceInDays } from 'date-fns'
+import { differenceInDays, isBefore, add, sub } from 'date-fns'
 import { SerializedDoc } from '../interfaces/db/doc'
 import { SerializedSubscription } from '../interfaces/db/subscription'
+import { SerializedTeam } from '../interfaces/db/team'
 import { SerializedUserTeamPermissions } from '../interfaces/db/userTeamPermissions'
 import { filterIter } from './utils/iterator'
 
@@ -23,6 +24,11 @@ export const paidPlanUploadSizeMb = 200
 export const freePlanSmartViewPerDashboardLimit = 4
 export const freePlanDashboardPerUserPerTeamLimit = 1
 
+export const initialTrialLength = { days: 14 }
+export const initialTrialCutoff = new Date(
+  process.env.LEGECY_CUTOFF || Date.now()
+)
+
 export function isTimeEligibleForDiscount(team: { createdAt: string }) {
   if (
     differenceInDays(Date.now(), new Date(team.createdAt)) < newTeamDiscountDays
@@ -31,6 +37,20 @@ export function isTimeEligibleForDiscount(team: { createdAt: string }) {
   }
 
   return false
+}
+
+export function remainingTrialInfo(team: SerializedTeam) {
+  const createDate = new Date(team.createdAt)
+  const legacy = isBefore(createDate, initialTrialCutoff)
+  const endDate = legacy
+    ? add(initialTrialCutoff, initialTrialLength)
+    : add(createDate, initialTrialLength)
+  const startDate = legacy ? initialTrialCutoff : createDate
+  return {
+    remaining: Math.max(0, differenceInDays(endDate, startDate)),
+    max: initialTrialLength.days,
+    end: endDate,
+  }
 }
 
 export function didTeamReachPlanLimit(

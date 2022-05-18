@@ -153,7 +153,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.SendUsAMessage]: 'Send us a message',
   [lngKeys.KeyboardShortcuts]: 'Keyboard Shortcuts',
 
-  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} docs used',
+  [lngKeys.SettingsSubLimitUsed]: '{{docsNb}} days',
   [lngKeys.SettingsSubLimitTrialTitle]: 'Upgrade to go unlimited',
   [lngKeys.SettingsSubLimitTrialDate]:
     "Your workspace's trial of the Pro plan lasts through {{date}}",
