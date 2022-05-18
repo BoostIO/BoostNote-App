@@ -1,18 +1,18 @@
-import { differenceInDays, isBefore, add, sub } from 'date-fns'
+import { differenceInDays, isBefore, add } from 'date-fns'
 import { SerializedDoc } from '../interfaces/db/doc'
 import { SerializedSubscription } from '../interfaces/db/subscription'
 import { SerializedTeam } from '../interfaces/db/team'
 import { SerializedUserTeamPermissions } from '../interfaces/db/userTeamPermissions'
 import { filterIter } from './utils/iterator'
 
-export const freePlanDocLimit = 30
+export const freePlanDocLimit = Infinity
 export const freeTrialPeriodDays = 7
 
-export const freePlanStorageMb = 5
+export const freePlanStorageMb = 1000
 export const standardPlanStorageMb = 1000
 export const proPlanStorageMb = 10000
 
-export const revisionHistoryFreeDays = 3
+export const revisionHistoryFreeDays = 7
 export const revisionHistoryStandardDays = 7
 export const newTeamDiscountDays = 7
 
@@ -25,9 +25,7 @@ export const freePlanSmartViewPerDashboardLimit = 4
 export const freePlanDashboardPerUserPerTeamLimit = 1
 
 export const initialTrialLength = { days: 14 }
-export const initialTrialCutoff = new Date(
-  process.env.LEGECY_CUTOFF || Date.now()
-)
+export const legacyCutoff = new Date(process.env.LEGACY_CUTOFF || Date.now())
 
 export function isTimeEligibleForDiscount(team: { createdAt: string }) {
   if (
@@ -41,13 +39,13 @@ export function isTimeEligibleForDiscount(team: { createdAt: string }) {
 
 export function remainingTrialInfo(team: SerializedTeam) {
   const createDate = new Date(team.createdAt)
-  const legacy = isBefore(createDate, initialTrialCutoff)
-  const endDate = legacy
-    ? add(initialTrialCutoff, initialTrialLength)
-    : add(createDate, initialTrialLength)
-  const startDate = legacy ? initialTrialCutoff : createDate
+  const startDate = isBefore(createDate, legacyCutoff)
+    ? legacyCutoff
+    : createDate
+  const endDate = add(startDate, initialTrialLength)
+
   return {
-    remaining: Math.max(0, differenceInDays(endDate, startDate)),
+    remaining: Math.max(0, differenceInDays(endDate, new Date())),
     max: initialTrialLength.days,
     end: endDate,
   }

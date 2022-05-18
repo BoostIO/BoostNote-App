@@ -87,9 +87,6 @@ const TeamSubLimit = ({
             style={{ width: `${currentSubInfo.info.rate}%` }}
           />
         </div>
-        {currentSubInfo.info.trialIsOver && (
-          <p>{translate(lngKeys.SettingsSubLimitTrialEnd)}</p>
-        )}
         <p className='note-limit'>
           {translate(lngKeys.SettingsSubLimitTrialDate, {
             date: format(currentSubInfo.info.endDate, 'dd MMM, yyyy'),

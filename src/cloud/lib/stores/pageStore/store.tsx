@@ -209,16 +209,13 @@ function usePageDataStore(pageProps: any, navigatingBetweenPage: boolean) {
     }
 
     const { remaining, max, end } = remainingTrialInfo(team)
-    const rate = ((max - remaining) / max) * 100
-    const progressLabel = `${max - remaining}/${max}`
-
     return {
       trialing: false,
       info: {
         trialIsOver: remaining < 1,
-        progressLabel,
+        progressLabel: `${max - remaining}/${max}`,
         endDate: end,
-        rate,
+        rate: ((max - remaining) / max) * 100,
       },
     }
   }, [subscription, team])
