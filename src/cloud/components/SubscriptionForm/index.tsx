@@ -145,17 +145,10 @@ const SubscriptionForm = ({
   }, [permissions])
 
   const eligibleDiscount = useMemo(() => {
-    if (!isTimeEligibleForDiscount(team)) {
-      return
-    }
-
-    switch (currentPlan) {
-      default:
-        return period === 'yearly'
-          ? discountPlans.newSpaceAnnual
-          : discountPlans.newSpace
-    }
-  }, [currentPlan, team, period])
+    return isTimeEligibleForDiscount(team) && period === 'yearly'
+      ? discountPlans.newSpaceAnnual
+      : undefined
+  }, [team, period])
 
   return (
     <Container>
