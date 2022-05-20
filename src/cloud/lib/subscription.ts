@@ -50,13 +50,19 @@ export function teamIsReadonly(
 
 export function remainingTrialInfo(team: SerializedTeam) {
   const createDate = new Date(team.createdAt)
+  createDate.setUTCHours(0, 0, 0, 0)
   const startDate = isBefore(createDate, legacyCutoff)
     ? legacyCutoff
     : createDate
+  startDate.setUTCHours(0, 0, 0, 0)
   const endDate = add(startDate, initialTrialLength)
+  endDate.setUTCHours(0, 0, 0, 0)
+  const today = new Date()
+  today.setUTCHours(0, 0, 0, 0)
 
+  console.log(endDate, today, differenceInDays(endDate, today))
   return {
-    remaining: Math.max(0, differenceInDays(endDate, new Date())),
+    remaining: Math.max(0, differenceInDays(endDate, today)),
     max: initialTrialLength.days,
     end: endDate,
   }
