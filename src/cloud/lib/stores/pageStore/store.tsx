@@ -16,7 +16,7 @@ import { SerializedSubscription } from '../../../interfaces/db/subscription'
 import { SubscriptionInfo } from './types'
 import { getFormattedDateFromUnixTimestamp } from '../../date'
 import { useGlobalData } from '../globalData'
-import { freePlanDocLimit, remainingTrialInfo } from '../../subscription'
+import { remainingTrialInfo } from '../../subscription'
 
 interface PageStoreProps {
   pageProps: any

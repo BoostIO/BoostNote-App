@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { isToday, format, formatDistanceToNow } from 'date-fns'
 import { Thread, Comment } from '../../interfaces/db/comments'
 import UserIcon from '../UserIcon'

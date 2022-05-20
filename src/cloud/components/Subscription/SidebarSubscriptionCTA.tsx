@@ -5,7 +5,6 @@ import { useSettings } from '../../lib/stores/settings'
 import styled from '../../../design/lib/styled'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
-import Button from '../../../design/components/atoms/Button'
 import TeamSubLimit from '../settings/TeamSubLimit'
 
 const SidebarSubscriptionCTA = ({}) => {
