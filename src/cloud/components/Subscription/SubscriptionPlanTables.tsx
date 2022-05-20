@@ -69,7 +69,7 @@ const SubscriptionPlanTables = ({
               <SubscriptionPlanHeader
                 period={selectedPeriod}
                 plan='standard'
-                discounted={false}
+                discounted={discounted && selectedPeriod === 'yearly'}
               />
               <div className='plan__item__footer'>
                 {selectedPlan === 'standard' ? (
@@ -97,7 +97,7 @@ const SubscriptionPlanTables = ({
               <SubscriptionPlanHeader
                 period={selectedPeriod}
                 plan='pro'
-                discounted={discounted}
+                discounted={discounted && selectedPeriod === 'yearly'}
               />
               <div className='plan__item__footer'>
                 {selectedPlan === 'pro' ? (
