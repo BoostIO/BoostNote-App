@@ -101,7 +101,7 @@ const DocPage = ({
     if (
       subscription == null &&
       team != null &&
-      team.creationsCounter > freePlanDocLimit
+      teamIsReadonly(team, subscription)
     ) {
       return false
     }
@@ -201,7 +201,7 @@ const DocPage = ({
       backLinks={backLinks}
       revisionHistory={revisionHistory}
       docIsEditable={docIsEditable}
-      readonly={teamIsReadonly(team, subscription)}
+      readonly={}
     />
   )
 }

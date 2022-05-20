@@ -60,7 +60,6 @@ export function remainingTrialInfo(team: SerializedTeam) {
   const today = new Date()
   today.setUTCHours(0, 0, 0, 0)
 
-  console.log(endDate, today, differenceInDays(endDate, today))
   return {
     remaining: Math.max(0, differenceInDays(endDate, today)),
     max: initialTrialLength.days,
