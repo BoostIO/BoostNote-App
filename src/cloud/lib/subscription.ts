@@ -41,11 +41,15 @@ export function teamIsReadonly(
   team: SerializedTeam,
   subscription?: SerializedSubscription
 ) {
-  return (
-    ((subscription == null || subscription.status === 'inactive') &&
-      remainingTrialInfo(team).remaining < 1) ||
-    subscription != null
-  )
+  if (subscription == null) {
+    return remainingTrialInfo(team).remaining < 1
+  }
+
+  if (subscription.status === 'inactive') {
+    return true
+  }
+
+  return false
 }
 
 export function remainingTrialInfo(team: SerializedTeam) {
