@@ -6,6 +6,7 @@ import styled from '../../../design/lib/styled'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import { format } from 'date-fns'
+import Button from '../../../design/components/atoms/Button'
 
 const TeamSubLimit = ({
   padded = true,
@@ -99,6 +100,15 @@ const TeamSubLimit = ({
               : lngKeys.SettingsSubLimitTrialUpgrade
           )}
         </p>
+        <Button
+          variant='primary'
+          onClick={(e: any) => {
+            e.preventDefault()
+            openSettingsTab('teamUpgrade')
+          }}
+        >
+          {translate(lngKeys.SettingsTeamUpgrade)}
+        </Button>
       </a>
     </Container>
   )

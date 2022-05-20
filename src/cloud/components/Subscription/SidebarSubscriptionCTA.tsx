@@ -6,6 +6,7 @@ import styled from '../../../design/lib/styled'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
 import Button from '../../../design/components/atoms/Button'
+import TeamSubLimit from '../settings/TeamSubLimit'
 
 const SidebarSubscriptionCTA = ({}) => {
   const { subscription, team, currentSubInfo } = usePage()
@@ -47,28 +48,7 @@ const SidebarSubscriptionCTA = ({}) => {
 
   return (
     <Container className={cc(['sub__limit'])}>
-      <div className='sub__limit__wrapper'>
-        <h3>Unlock more features for your space</h3>
-        <p>Upgrade your plan now and get access to a lot of perks!</p>
-        <div className='plan__item__perk'>
-          <span>Unlimited Documents</span>
-        </div>
-        <div className='plan__item__perk'>
-          <span>Unlimited Dashboards</span>
-        </div>
-        <div className='plan__item__perk'>
-          <span>Private Folders</span>
-        </div>
-        <Button
-          variant='primary'
-          onClick={(e: any) => {
-            e.preventDefault()
-            openSettingsTab('teamUpgrade')
-          }}
-        >
-          {translate(lngKeys.SettingsTeamUpgrade)}
-        </Button>
-      </div>
+      <TeamSubLimit padded={false} />
     </Container>
   )
 }
