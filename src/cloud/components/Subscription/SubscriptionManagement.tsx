@@ -6,7 +6,6 @@ import { cancelSubscription } from '../../api/teams/subscription'
 import { getTeamPortalUrl } from '../../api/teams/subscription/invoices'
 import { updateSubPlan } from '../../api/teams/subscription/update'
 import { SerializedSubscription } from '../../interfaces/db/subscription'
-import { SerializedTeam } from '../../interfaces/db/team'
 import { getFormattedDateFromUnixTimestamp } from '../../lib/date'
 import { usePage } from '../../lib/stores/pageStore'
 import { discountPlans, UpgradePlans } from '../../lib/stripe'
@@ -31,7 +30,6 @@ import SubscriptionPlanTables from './SubscriptionPlanTables'
 
 interface SubscriptionManagementProps {
   subscription: SerializedSubscription
-  team: SerializedTeam
   onMethodClick: () => void
   onEmailClick: () => void
   onPromoClick: () => void
@@ -39,7 +37,6 @@ interface SubscriptionManagementProps {
 
 const SubscriptionManagement = ({
   subscription,
-  team,
   onMethodClick,
   onEmailClick,
   onPromoClick,
@@ -166,7 +163,6 @@ const SubscriptionManagement = ({
       return
     }
 
-    console.log(subscription.couponId)
     switch (subscription.couponId) {
       case newUserProCouponId:
         return discountPlans.newUserPro
@@ -181,7 +177,6 @@ const SubscriptionManagement = ({
     }
   }, [subscription.couponId])
 
-  console.log(currentSubscriptionDiscount)
   return (
     <>
       <SectionIntroduction>
@@ -297,8 +292,7 @@ const SubscriptionManagement = ({
         <SubscriptionPlanTables
           selectedPeriod={subscription.period}
           selectedPlan={subscription.plan}
-          team={team}
-          onFreeCallback={() => setTargetedPlan('Free')}
+          onCancel={() => setTargetedPlan('Free')}
           onStandardCallback={() => setTargetedPlan('Standard')}
           onProCallback={() => setTargetedPlan('Pro')}
         />

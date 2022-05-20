@@ -1,11 +1,7 @@
-import { formatDistanceToNow } from 'date-fns'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { SerializedSubscription } from '../../interfaces/db/subscription'
-import { SerializedTeam } from '../../interfaces/db/team'
 import { SubscriptionPeriod, UpgradePlans } from '../../lib/stripe'
 import {
-  freeTrialPeriodDays,
   paidPlanUploadSizeMb,
   proPlanStorageMb,
   revisionHistoryStandardDays,
@@ -14,8 +10,6 @@ import {
 import cc from 'classcat'
 import Button from '../../../design/components/atoms/Button'
 import styled from '../../../design/lib/styled'
-import { useI18n } from '../../lib/hooks/useI18n'
-import { lngKeys } from '../../lib/i18n/types'
 import { ExternalLink } from '../../../design/components/atoms/Link'
 import Pastille from '../../../design/components/atoms/Pastille'
 import Switch from '../../../design/components/atoms/Switch'
@@ -24,71 +18,27 @@ import Flexbox from '../../../design/components/atoms/Flexbox'
 import plur from 'plur'
 
 interface SubscriptionPlansTablesProps {
-  team: SerializedTeam
-  subscription?: SerializedSubscription
   selectedPlan: UpgradePlans | 'free'
   selectedPeriod?: SubscriptionPeriod
   discounted?: boolean
-  freePlanFooter?: React.ReactNode
   hidePeriod?: boolean
-  onFreeCallback?: () => void
+  onCancel?: () => void
   onStandardCallback?: () => void
   onProCallback?: () => void
-  onTrialCallback?: () => void
   setSelectedPeriod?: React.Dispatch<React.SetStateAction<SubscriptionPeriod>>
 }
 
 const SubscriptionPlanTables = ({
-  team,
   selectedPlan,
   selectedPeriod = 'yearly',
   hidePeriod = false,
   setSelectedPeriod,
-  onTrialCallback,
   onStandardCallback,
   onProCallback,
-  subscription,
+  onCancel,
   discounted,
 }: SubscriptionPlansTablesProps) => {
-  const { translate } = useI18n()
   const isTabletOrMobile = useMediaQuery({ maxWidth: 1080 })
-
-  const freeTrialContent = useMemo(() => {
-    if (subscription != null) {
-      if (subscription.status !== 'trialing') {
-        return null
-      }
-
-      const trialEndDate = new Date(subscription.currentPeriodEnd * 1000)
-      return (
-        <p>
-          <span className='check'>&#x2713;</span>{' '}
-          {translate(lngKeys.PlanInTrial, {
-            remaining: formatDistanceToNow(trialEndDate, {
-              includeSeconds: false,
-            }),
-          })}
-        </p>
-      )
-    }
-
-    if (!team.trial || onTrialCallback == null) {
-      return null
-    }
-
-    return (
-      <Button
-        variant='link'
-        className='free__trial__btn'
-        onClick={(e: any) => {
-          e.preventDefault()
-          onTrialCallback()
-        }}
-      >
-        {translate(lngKeys.PlanTrial, { days: freeTrialPeriodDays })}
-      </Button>
-    )
-  }, [subscription, team, onTrialCallback, translate])
 
   return (
     <Container className={cc(['plans', isTabletOrMobile && 'plans--mobile'])}>
@@ -125,11 +75,11 @@ const SubscriptionPlanTables = ({
                 {selectedPlan === 'standard' ? (
                   <Button
                     className='upgrade__btn'
-                    disabled={true}
+                    onClick={onCancel}
                     size='lg'
                     variant='secondary'
                   >
-                    Current Plan
+                    Cancel
                   </Button>
                 ) : (
                   <Button
@@ -153,11 +103,11 @@ const SubscriptionPlanTables = ({
                 {selectedPlan === 'pro' ? (
                   <Button
                     className='upgrade__btn'
-                    disabled={true}
+                    onClick={onCancel}
                     variant='secondary'
                     size='lg'
                   >
-                    Current Plan
+                    Cancel
                   </Button>
                 ) : (
                   <Button
@@ -245,12 +195,6 @@ const SubscriptionPlanTables = ({
             <td>Priority Support</td>
             <td>&#x2717;</td>
             <td className='marked'>&#x2713;</td>
-          </tr>
-
-          <tr>
-            <td>Free trial</td>
-            <td>&#x2717;</td>
-            <td>{freeTrialContent}</td>
           </tr>
         </tbody>
       </table>

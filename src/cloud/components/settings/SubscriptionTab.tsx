@@ -21,7 +21,7 @@ type SubscriptionFormTabs = 'method' | 'email' | 'promo'
 
 const SubscriptionTab = () => {
   const { t } = useTranslation()
-  const { team, subscription, currentUserPermissions, updateTeamSubscription } =
+  const { subscription, currentUserPermissions, updateTeamSubscription } =
     usePage<PageStoreWithTeam>()
   const [formtab, setFormTab] = useState<SubscriptionFormTabs | undefined>()
   const { openSettingsTab } = useSettings()
@@ -40,7 +40,7 @@ const SubscriptionTab = () => {
     }
   }, [subscription, openSettingsTab])
 
-  if (team == null || currentUserPermissions == null || subscription == null) {
+  if (currentUserPermissions == null || subscription == null) {
     return null
   }
 
@@ -82,7 +82,6 @@ const SubscriptionTab = () => {
             {formtab == null ? (
               <SubscriptionManagement
                 subscription={subscription}
-                team={team}
                 onEmailClick={() => setFormTab('email')}
                 onMethodClick={() => setFormTab('method')}
                 onPromoClick={() => setFormTab('promo')}
