@@ -1,5 +1,5 @@
 import { mdiOpenInNew } from '@mdi/js'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import Icon from '../../design/components/atoms/Icon'
 import { ExternalLink } from '../../design/components/atoms/Link'
 import styled from '../../design/lib/styled'
@@ -13,38 +13,67 @@ import { getUserEditRequests, sendEditRequest } from '../api/editRequests'
 import { useEffectOnce } from 'react-use'
 import { trackEvent } from '../api/track'
 import { MixpanelActionTrackTypes } from '../interfaces/analytics/mixpanel'
-import { LoadingButton } from '../../design/components/atoms/Button'
+import Button, { LoadingButton } from '../../design/components/atoms/Button'
+import { teamIsReadonly } from '../lib/subscription'
+import { useSettings } from '../lib/stores/settings'
 
 const ViewerDisclaimer = ({
   resource = 'doc',
 }: {
   resource?: 'doc' | 'folder'
 }) => {
-  const { team, currentUserIsCoreMember } = usePage()
+  const { team, currentUserIsCoreMember, subscription } = usePage()
   const { translate } = useI18n()
+  const { openSettingsTab } = useSettings()
 
-  if (currentUserIsCoreMember) {
-    return null
-  }
+  const teamReadonly = useMemo(() => {
+    return team != null && teamIsReadonly(team, subscription)
+  }, [team, subscription])
 
   return (
-    <Container className='viewer__disclaimer'>
-      <div className={'viewer__disclaimer__text--padding'}>
-        {translate(lngKeys.ViewerDisclaimerIntro)}{' '}
-        <ExternalLink
-          className='viewer__disclaimer__link'
-          href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
-        >
-          {translate(lngKeys.MemberRole)}
-          <Icon path={mdiOpenInNew} />
-        </ExternalLink>
-        {resource === 'doc'
-          ? translate(lngKeys.ViewerDisclaimerOutro)
-          : translate(lngKeys.ViewerDisclaimerFolderOutro)}
-      </div>
+    <>
+      {!currentUserIsCoreMember && (
+        <Container className='viewer__disclaimer'>
+          <div className={'viewer__disclaimer__text--padding'}>
+            {translate(lngKeys.ViewerDisclaimerIntro)}{' '}
+            <ExternalLink
+              className='viewer__disclaimer__link'
+              href='https://intercom.help/boostnote-for-teams/en/articles/4354888-roles'
+            >
+              {translate(lngKeys.MemberRole)}
+              <Icon path={mdiOpenInNew} />
+            </ExternalLink>
+            {resource === 'doc'
+              ? translate(lngKeys.ViewerDisclaimerOutro)
+              : translate(lngKeys.ViewerDisclaimerFolderOutro)}
+          </div>
 
-      {team != null && <EditRequestButton team={team} />}
-    </Container>
+          {team != null && <EditRequestButton team={team} />}
+        </Container>
+      )}
+      {teamReadonly && (
+        <Container className='viewer__disclaimer'>
+          <div className={'viewer__disclaimer__text--padding'}>
+            Your trial has finised. Upgrade now
+          </div>
+
+          {team != null && (
+            <Button
+              className={'edit__request__button--padding'}
+              variant='secondary'
+              type='button'
+              size='sm'
+              onClick={(e) => {
+                e.preventDefault()
+                openSettingsTab('teamUpgrade')
+              }}
+            >
+              {translate(lngKeys.SettingsTeamUpgrade)}
+            </Button>
+          )}
+        </Container>
+      )}
+    </>
   )
 }
 
