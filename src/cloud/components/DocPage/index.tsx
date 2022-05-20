@@ -21,7 +21,11 @@ import { useRouter } from '../../lib/router'
 import ColoredBlock from '../../../design/components/atoms/ColoredBlock'
 import Editor from '../Editor'
 import ApplicationPage from '../ApplicationPage'
-import { freePlanDocLimit, freePlanMembersLimit } from '../../lib/subscription'
+import {
+  freePlanDocLimit,
+  freePlanMembersLimit,
+  teamIsReadonly,
+} from '../../lib/subscription'
 import { useCloudDocPreview } from '../../lib/hooks/useCloudDocPreview'
 
 interface DocPageProps {
@@ -197,6 +201,7 @@ const DocPage = ({
       backLinks={backLinks}
       revisionHistory={revisionHistory}
       docIsEditable={docIsEditable}
+      readonly={teamIsReadonly(team, subscription)}
     />
   )
 }

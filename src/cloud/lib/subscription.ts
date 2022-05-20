@@ -37,6 +37,17 @@ export function isTimeEligibleForDiscount(team: { createdAt: string }) {
   return false
 }
 
+export function teamIsReadonly(
+  team: SerializedTeam,
+  subscription?: SerializedSubscription
+) {
+  return (
+    ((subscription == null || subscription.status === 'inactive') &&
+      remainingTrialInfo(team).remaining < 1) ||
+    subscription != null
+  )
+}
+
 export function remainingTrialInfo(team: SerializedTeam) {
   const createDate = new Date(team.createdAt)
   const startDate = isBefore(createDate, legacyCutoff)
