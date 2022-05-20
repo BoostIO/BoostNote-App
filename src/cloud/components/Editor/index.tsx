@@ -116,7 +116,6 @@ interface EditorProps {
   contributors: SerializedUser[]
   backLinks: SerializedDoc[]
   docIsEditable?: boolean
-  readonly?: boolean
 }
 
 interface EditorPosition {
@@ -144,7 +143,6 @@ const Editor = ({
   contributors,
   backLinks,
   docIsEditable,
-  readonly = false,
 }: EditorProps) => {
   const { translate } = useI18n()
   const {
@@ -260,7 +258,6 @@ const Editor = ({
 
     return {
       mode: 'markdown',
-      readOnly: readonly,
       lineNumbers: showEditorLineNumbers,
       lineWrapping: true,
       theme,
@@ -284,7 +281,7 @@ const Editor = ({
         closeCharacters: /[\s()\[\]{};:>,\n]/,
       },
     }
-  }, [settings, readonly])
+  }, [settings])
 
   const shortcodeConvertMenuStyle: React.CSSProperties = useMemo(() => {
     if (shortcodeConvertMenu == null || editorRef.current == null) {
