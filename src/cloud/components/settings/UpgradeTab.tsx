@@ -6,7 +6,6 @@ import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import SubscriptionForm from '../SubscriptionForm'
 import { useSettings } from '../../lib/stores/settings'
-import FreeTrialPopup from '../FreeTrialPopup'
 import { stripePublishableKey } from '../../lib/consts'
 import { SubscriptionPeriod, UpgradePlans } from '../../lib/stripe'
 import SettingTabContent from '../../../design/components/organisms/Settings/atoms/SettingTabContent'
@@ -30,14 +29,12 @@ type UpgradeTabs = 'plans' | 'form'
 
 export interface UpgradeTabOpeningOptions {
   tabState?: UpgradeTabs
-  showTrialPopup?: boolean
   initialPlan?: UpgradePlans
   initialPeriod?: SubscriptionPeriod
 }
 
 const UpgradeTab = ({
   tabState: defaultTabState = 'plans',
-  showTrialPopup: defaultShowTrial = false,
   initialPlan: defaultInitialPlan = 'standard',
   initialPeriod: defaultInitialPeriod = 'yearly',
 }: UpgradeTabOpeningOptions) => {
@@ -47,7 +44,6 @@ const UpgradeTab = ({
   const { usingElectron, sendToElectron } = useElectron()
   const [tabState, setTabState] = useState<UpgradeTabs>(defaultTabState)
   const { openSettingsTab } = useSettings()
-  const [showTrialPopup, setShowTrialPopup] = useState(defaultShowTrial)
   const [period, setPeriod] = useState<SubscriptionPeriod>(defaultInitialPeriod)
   const [initialPlan, setInitialPlan] =
     useState<UpgradePlans>(defaultInitialPlan)
@@ -102,12 +98,6 @@ const UpgradeTab = ({
         width={900}
         body={
           <>
-            {showTrialPopup && (
-              <FreeTrialPopup
-                team={team}
-                close={() => setShowTrialPopup(false)}
-              />
-            )}
             <section>
               {teamIsEligibleForDiscount && (
                 <Banner variant='warning' iconPath={mdiGift} rounded={true}>
