@@ -69,7 +69,7 @@ const SubscriptionPlanTables = ({
               <SubscriptionPlanHeader
                 period={selectedPeriod}
                 plan='standard'
-                discounted={discounted}
+                discounted={false}
               />
               <div className='plan__item__footer'>
                 {selectedPlan === 'standard' ? (
