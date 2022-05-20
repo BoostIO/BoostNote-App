@@ -116,12 +116,9 @@ const UpgradeTab = ({
                 </Banner>
               )}
               <SubscriptionPlanTables
-                team={team}
-                subscription={subscription}
                 selectedPlan='free'
                 onStandardCallback={() => onUpgradeCallback('standard')}
                 onProCallback={() => onUpgradeCallback('pro')}
-                onTrialCallback={() => setShowTrialPopup(true)}
                 discounted={teamIsEligibleForDiscount}
                 selectedPeriod={period}
                 setSelectedPeriod={setPeriod}

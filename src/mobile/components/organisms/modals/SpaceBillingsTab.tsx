@@ -29,7 +29,7 @@ interface SpaceBillingsTabProps {
 
 const SpaceBillingsTab = ({ setActiveTab }: SpaceBillingsTabProps) => {
   const { t } = useTranslation()
-  const { team, subscription, currentUserPermissions, updateTeamSubscription } =
+  const { subscription, currentUserPermissions, updateTeamSubscription } =
     usePage<PageStoreWithTeam>()
   const [formtab, setFormTab] = useState<SubscriptionFormTabs | undefined>()
 
@@ -42,7 +42,6 @@ const SpaceBillingsTab = ({ setActiveTab }: SpaceBillingsTabProps) => {
   )
 
   if (
-    team == null ||
     currentUserPermissions == null ||
     currentUserPermissions.role !== 'admin'
   ) {
@@ -135,7 +134,6 @@ const SpaceBillingsTab = ({ setActiveTab }: SpaceBillingsTabProps) => {
               {formtab == null ? (
                 <SubscriptionManagement
                   subscription={subscription}
-                  team={team}
                   onEmailClick={() => setFormTab('email')}
                   onMethodClick={() => setFormTab('method')}
                   onPromoClick={() => setFormTab('promo')}
