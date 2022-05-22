@@ -54,7 +54,9 @@ function getMacRootMenu(): MenuItemConstructorOptions {
       {
         label: 'Add Space',
         click: () => {
-          createAWindow(electronFrontendUrl + '/cooperate')
+          createAWindow(
+            electronFrontendUrl + '?url=https%3A%2F%2Fboostnote.io%2Fcooperate'
+          )
         },
       },
       { type: 'separator' },
