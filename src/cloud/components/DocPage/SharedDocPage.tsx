@@ -95,6 +95,7 @@ const SharedDocPage = ({ doc, token }: SharedDocPageProps) => {
                   External entities are not available in shared docs.
                 </span>
               )}
+              showLinkOpenWarning={true}
             />
           </StyledContent>
         </>

@@ -124,6 +124,7 @@ interface MarkdownViewProps {
   codeFence?: boolean
   previewStyle?: string
   codeBlockTheme?: CodeMirrorEditorTheme
+  showLinkOpenWarning?: boolean
 }
 
 const MarkdownView = ({
@@ -139,6 +140,7 @@ const MarkdownView = ({
   codeFence = true,
   previewStyle,
   codeBlockTheme = 'default',
+  showLinkOpenWarning = false,
 }: MarkdownViewProps) => {
   const [state, setState] = useState<MarkdownViewState>({ type: 'loading' })
   const modeLoadCallbackRef = useRef<() => any>()
@@ -155,6 +157,10 @@ const MarkdownView = ({
 
   const openLinkWithWarning = useCallback(
     (callback) => {
+      if (!showLinkOpenWarning) {
+        callback()
+        return
+      }
       messageBox({
         title: 'Opening an attachment link',
         message:
@@ -177,7 +183,7 @@ const MarkdownView = ({
         ],
       })
     },
-    [messageBox, translate]
+    [messageBox, showLinkOpenWarning, translate]
   )
 
   const markdownProcessor = useMemo(() => {
