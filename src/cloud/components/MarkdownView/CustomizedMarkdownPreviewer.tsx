@@ -22,6 +22,7 @@ interface CustomizedMarkdownViewProps {
   SelectionMenu?: React.ComponentType<{ selection: SelectionState['context'] }>
   codeFence?: boolean
   previewStyle?: string
+  showLinkOpenWarning?: boolean
 }
 
 const CustomizedMarkdownPreviewer = ({
@@ -34,6 +35,7 @@ const CustomizedMarkdownPreviewer = ({
   getEmbed,
   scrollerRef,
   codeFence = true,
+  showLinkOpenWarning,
 }: CustomizedMarkdownViewProps) => {
   const { previewStyle } = usePreviewStyle()
   const { settings } = useSettings()
@@ -51,6 +53,7 @@ const CustomizedMarkdownPreviewer = ({
       codeFence={codeFence}
       previewStyle={previewStyle}
       codeBlockTheme={settings['general.codeBlockTheme']}
+      showLinkOpenWarning={showLinkOpenWarning}
     />
   )
 }
