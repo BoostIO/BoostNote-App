@@ -54,6 +54,7 @@ type SubscriptionTrialInfo = {
 type SubscriptionInactiveInfo = {
   trialing: false
   info: {
+    cancelled: boolean
     trialIsOver: boolean
     progressLabel: string
     rate: number
