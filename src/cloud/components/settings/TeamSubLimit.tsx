@@ -92,6 +92,13 @@ const TeamSubLimit = ({
             </div>
           </>
         )}
+        {!currentSubInfo.info.trialIsOver && (
+          <p className='note-limit'>
+            {translate(lngKeys.SettingsSubLimitTrialDate, {
+              date: format(currentSubInfo.info.endDate, 'dd MMM, yyyy'),
+            })}
+          </p>
+        )}
         <p className='note-limit'>
           {translate(
             currentSubInfo.info.trialIsOver
