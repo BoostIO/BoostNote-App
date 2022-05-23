@@ -212,6 +212,7 @@ function usePageDataStore(pageProps: any, navigatingBetweenPage: boolean) {
     return {
       trialing: false,
       info: {
+        cancelled: !team.trial,
         trialIsOver: remaining < 1,
         progressLabel: `${max - remaining}/${max}`,
         endDate: end,

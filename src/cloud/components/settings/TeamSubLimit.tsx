@@ -74,30 +74,32 @@ const TeamSubLimit = ({
           openSettingsTab('teamUpgrade')
         }}
       >
-        <p className='note-limit'>
-          {translate(lngKeys.SettingsSubLimitUsed, {
-            docsNb: currentSubInfo.info.progressLabel,
-          })}
-        </p>
-        <div className='progress-sm'>
-          <div
-            className={cc([
-              'progress-bar',
-              currentSubInfo.info.trialIsOver && 'over-limit',
-            ])}
-            style={{ width: `${currentSubInfo.info.rate}%` }}
-          />
-        </div>
-        <p className='note-limit'>
-          {translate(lngKeys.SettingsSubLimitTrialDate, {
-            date: format(currentSubInfo.info.endDate, 'dd MMM, yyyy'),
-          })}
-        </p>
+        {!currentSubInfo.info.cancelled && (
+          <>
+            <p className='note-limit'>
+              {translate(lngKeys.SettingsSubLimitUsed, {
+                docsNb: currentSubInfo.info.progressLabel,
+              })}
+            </p>
+            <div className='progress-sm'>
+              <div
+                className={cc([
+                  'progress-bar',
+                  currentSubInfo.info.trialIsOver && 'over-limit',
+                ])}
+                style={{ width: `${currentSubInfo.info.rate}%` }}
+              />
+            </div>
+          </>
+        )}
         <p className='note-limit'>
           {translate(
             currentSubInfo.info.trialIsOver
               ? lngKeys.SettingsSubLimitTrialEnd
-              : lngKeys.SettingsSubLimitTrialUpgrade
+              : lngKeys.SettingsSubLimitTrialUpgrade,
+            {
+              date: format(currentSubInfo.info.endDate, 'dd MMM, yyyy'),
+            }
           )}
         </p>
         <Button

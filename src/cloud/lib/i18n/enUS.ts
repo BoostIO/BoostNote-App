@@ -160,7 +160,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsSubLimitTrialUpgrade]:
     'You can upgrade at anytime during your trial.',
   [lngKeys.SettingsSubLimitTrialEnd]:
-    'Your pro plan trial has ended. Please upgrade now',
+    'Your trial has ended at {{date}}. Please upgrade now.',
   [lngKeys.SettingsSubLimitUnderFreePlan]:
     'Under the free plan, you can create up to {{limit}} docs.',
 
