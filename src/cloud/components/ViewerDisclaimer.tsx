@@ -54,7 +54,8 @@ const ViewerDisclaimer = ({
       {teamReadonly && (
         <Container className='viewer__disclaimer'>
           <div className={'viewer__disclaimer__text--padding'}>
-            Your trial has finised. Upgrade now
+            Your trial has finished. Enjoying Boost Note? Upgrade now to one of
+            our paid plans!
           </div>
 
           {team != null && (
