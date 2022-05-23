@@ -39,7 +39,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
   const {
     globalData: { currentUser },
   } = useGlobalData()
-  const { pushMessage } = useToast()
+  const { pushMessage, pushApiErrorMessage } = useToast()
   const { closeLastModal, openModal } = useModal()
   const { updateWorkspacesMap } = useNav()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -170,7 +170,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
         }
         closeLastModal()
       } catch (error) {
-        setError(error)
+        pushApiErrorMessage(error)
       } finally {
         setSending(false)
       }
@@ -179,6 +179,7 @@ const WorkspaceModalForm = ({ workspace }: WorkspaceModalFormProps) => {
       name,
       closeLastModal,
       pushMessage,
+      pushApiErrorMessage,
       selectedPermissions,
       submitCreateWorkSpaceHandler,
       submitEditWorkSpaceHandler,
