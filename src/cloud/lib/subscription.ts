@@ -27,14 +27,14 @@ export const freePlanDashboardPerUserPerTeamLimit = 1
 export const initialTrialLength = { days: 14 }
 export const legacyCutoff = new Date(process.env.LEGACY_CUTOFF || Date.now())
 
-export function isTimeEligibleForDiscount(team: { createdAt: string }) {
-  if (
-    differenceInDays(Date.now(), new Date(team.createdAt)) < newTeamDiscountDays
-  ) {
-    return true
-  }
-
-  return false
+export function isTimeEligibleForDiscount(team: {
+  createdAt: string
+  trial: boolean
+}) {
+  return (
+    differenceInDays(Date.now(), new Date(team.createdAt)) <
+      newTeamDiscountDays && team.trial
+  )
 }
 
 export function teamIsReadonly(
@@ -45,11 +45,7 @@ export function teamIsReadonly(
     return remainingTrialInfo(team).remaining < 1
   }
 
-  if (subscription.status === 'inactive') {
-    return true
-  }
-
-  return false
+  return subscription.status === 'inactive'
 }
 
 export function remainingTrialInfo(team: SerializedTeam) {
@@ -63,6 +59,14 @@ export function remainingTrialInfo(team: SerializedTeam) {
   endDate.setUTCHours(0, 0, 0, 0)
   const today = new Date()
   today.setUTCHours(0, 0, 0, 0)
+
+  if (!team.trial) {
+    return {
+      remaining: 0,
+      max: initialTrialLength.days,
+      end: endDate,
+    }
+  }
 
   return {
     remaining: Math.max(0, differenceInDays(endDate, today)),
