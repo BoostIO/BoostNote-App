@@ -19,6 +19,7 @@ import {
   rehypeMermaid,
   Chart,
   remarkPlantUML,
+  FlowchartWarningBlock,
 } from '../../lib/charts'
 import MarkdownCheckbox from './MarkdownCheckbox'
 import { mergeDeepRight } from 'ramda'
@@ -293,6 +294,9 @@ const MarkdownView = ({
           )
         },
         flowchart: ({ children }: any) => {
+          if (showLinkOpenWarning) {
+            return <FlowchartWarningBlock />
+          }
           return <Flowchart code={children[0]} />
         },
         chart: ({ children }: any) => {

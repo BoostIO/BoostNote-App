@@ -5,10 +5,21 @@ import visit from 'unist-util-visit'
 import unified from 'unified'
 import rehypeParse from 'rehype-parse'
 import { appendElementToBody } from './charts'
+import Icon from '../../../design/components/atoms/Icon'
+import { mdiFileAlertOutline } from '@mdi/js'
 
 export interface FlowchartProps {
   code: string
   options?: any
+}
+
+export const FlowchartWarningBlock = () => {
+  return (
+    <div>
+      <Icon path={mdiFileAlertOutline} /> Flowcharts are not available in shared
+      docs.
+    </div>
+  )
 }
 
 export const Flowchart = ({ code, options }: FlowchartProps) => {
