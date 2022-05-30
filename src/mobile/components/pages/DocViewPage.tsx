@@ -142,6 +142,7 @@ const ViewPage = ({
                 onRender={onRender.current}
                 className='scroller'
                 scrollerRef={previewRef}
+                showLinkOpenWarning={true}
               />
             ) : (
               <>
