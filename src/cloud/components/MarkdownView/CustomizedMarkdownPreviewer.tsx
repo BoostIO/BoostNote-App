@@ -35,7 +35,7 @@ const CustomizedMarkdownPreviewer = ({
   getEmbed,
   scrollerRef,
   codeFence = true,
-  showLinkOpenWarning,
+  showLinkOpenWarning = false,
 }: CustomizedMarkdownViewProps) => {
   const { previewStyle } = usePreviewStyle()
   const { settings } = useSettings()

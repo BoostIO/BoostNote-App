@@ -1050,6 +1050,9 @@ const Editor = ({
                   className='scroller'
                   getEmbed={getEmbed}
                   scrollerRef={previewRef}
+                  showLinkOpenWarning={
+                    !docIsEditable || !currentUserIsCoreMember
+                  }
                 />
               </StyledPreview>
             </StyledEditor>
