@@ -171,7 +171,7 @@
     "date-fns": "^2.16.1",
     "diff": "^4.0.2",
     "dotenv": "^8.2.0",
-    "electron": "^12.1.0",
+    "electron": "^15.5.5",
     "electron-log": "^4.0.0",
     "electron-updater": "^4.2.0",
     "emoji-mart": "^3.0.0",
