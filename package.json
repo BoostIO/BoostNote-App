@@ -178,7 +178,7 @@
     "event-source-polyfill": "^1.0.22",
     "event-target-shim": "^6.0.2",
     "file-loader": "^5.0.2",
-    "file-type": "^14.6.2",
+    "file-type": "^16.5.4",
     "filenamify": "^4.1.0",
     "flowchart.js": "^1.15.0",
     "fuse.js": "^6.4.6",
