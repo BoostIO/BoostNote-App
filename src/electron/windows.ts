@@ -43,6 +43,7 @@ export function createAWindow(
     minWidth: 960,
     minHeight: 630,
     show: false,
+    icon: path.join(app.getAppPath(), '../static/logo.png'),
     ...options,
   }
 
