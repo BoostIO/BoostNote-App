@@ -1,9 +1,10 @@
+import { PipeEntry } from '../../lib/automations'
+
 export interface SerializedPipe {
   name: string
-  action: string
   event: string
   filter?: any
-  configuration: any
+  configuration: PipeEntry
 }
 
 export interface SerializedWorkflow {

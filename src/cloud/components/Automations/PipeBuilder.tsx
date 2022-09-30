@@ -1,5 +1,5 @@
 import { mdiPlus } from '@mdi/js'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import Button from '../../../design/components/atoms/Button'
 import Form from '../../../design/components/molecules/Form'
 import FormInput from '../../../design/components/molecules/Form/atoms/FormInput'
@@ -8,10 +8,10 @@ import FormRow from '../../../design/components/molecules/Form/templates/FormRow
 import FormRowItem from '../../../design/components/molecules/Form/templates/FormRowItem'
 import styled from '../../../design/lib/styled'
 import { SerializedPipe } from '../../interfaces/db/automations'
+import { OpNode, StructNode } from '../../lib/automations/ast'
 import supportedEvents from '../../lib/automations/events'
 import CreateDocActionConfigurator from './actions/CreateDocActionConfigurator'
 import UpdateDocActionConfigurator from './actions/UpdateDocActionConfigurator'
-import EventInfo from './EventInfo'
 import FilterBuilder from './FilterBuilder'
 
 const SUPPORTED_EVENT_NAMES = Object.keys(supportedEvents).map((key) => {
@@ -19,8 +19,8 @@ const SUPPORTED_EVENT_NAMES = Object.keys(supportedEvents).map((key) => {
 })
 
 const SUPPORTED_ACTION_OPTIONS = [
-  { value: 'boost.doc.create', label: 'boost.doc.create' },
-  { value: 'boost.doc.update', label: 'boost.doc.update' },
+  { value: 'boost.docs.create', label: 'boost.docs.create' },
+  { value: 'boost.docs.update', label: 'boost.docs.update' },
 ]
 
 interface PipeBuilderProps {
@@ -34,11 +34,23 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
   }, [pipe.event])
 
   const action = useMemo(() => {
+    if (pipe.configuration.type !== 'operation') {
+      return SUPPORTED_ACTION_OPTIONS[0]
+    }
+
+    const identifier = pipe.configuration.identifier
     return (
-      SUPPORTED_ACTION_OPTIONS.find(({ value }) => value === pipe.action) ||
+      SUPPORTED_ACTION_OPTIONS.find(({ value }) => value === identifier) ||
       SUPPORTED_ACTION_OPTIONS[0]
     )
-  }, [pipe.action])
+  }, [pipe.configuration])
+
+  const updateConfig = useCallback(
+    (input: SerializedPipe['configuration']['input']) => {
+      onChange({ ...pipe, configuration: { ...pipe.configuration, input } })
+    },
+    [pipe, onChange]
+  )
 
   return (
     <Container>
@@ -63,11 +75,7 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
           </FormRowItem>
         </FormRow>
         <FormRow>
-          {currentEvent != null ? (
-            <EventInfo name={pipe.event} typeDef={currentEvent} />
-          ) : (
-            <div>Select Event</div>
-          )}
+          <div>Select Event</div>
         </FormRow>
       </div>
 
@@ -96,22 +104,27 @@ const PipeBuilder = ({ pipe, onChange }: PipeBuilderProps) => {
             <FormSelect
               options={SUPPORTED_ACTION_OPTIONS}
               value={action}
-              onChange={({ value }) => onChange({ ...pipe, action: value })}
+              onChange={({ value }) =>
+                onChange({
+                  ...pipe,
+                  configuration: OpNode(value, StructNode({})),
+                })
+              }
             />
           </FormRowItem>
         </FormRow>
         <FormRow>
-          {action.value === 'boost.doc.create' && (
+          {action.value === 'boost.docs.create' && (
             <CreateDocActionConfigurator
-              configuration={pipe.configuration}
-              onChange={(configuration) => onChange({ ...pipe, configuration })}
+              configuration={pipe.configuration.input}
+              onChange={updateConfig}
               eventType={currentEvent}
             />
           )}
-          {action.value === 'boost.doc.update' && (
+          {action.value === 'boost.docs.update' && (
             <UpdateDocActionConfigurator
-              configuration={pipe.configuration}
-              onChange={(configuration) => onChange({ ...pipe, configuration })}
+              configuration={pipe.configuration.input}
+              onChange={updateConfig}
               eventType={currentEvent}
             />
           )}
