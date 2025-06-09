@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import styled from '../../../../design/lib/styled'
 import Countdown from 'react-countdown'
 import {

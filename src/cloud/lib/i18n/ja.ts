@@ -1,6 +1,8 @@
 import { lngKeys, TranslationSource } from './types'
 
 const jpTranslation: TranslationSource = {
+  [lngKeys.SettingsBeta]: 'Beta',
+  [lngKeys.SettingsBetaAutomationAndIntegration]: 'Automation & Integration',
   //General
   [lngKeys.GeneralError]: 'エラー',
   [lngKeys.GeneralCreate]: '作成',

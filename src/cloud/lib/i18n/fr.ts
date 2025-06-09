@@ -1,6 +1,9 @@
 import { TranslationSource, lngKeys } from './types'
 
 const frTranslation: TranslationSource = {
+  [lngKeys.SettingsBeta]: 'Beta',
+  [lngKeys.SettingsBetaAutomationAndIntegration]: 'Automation & Integration',
+
   //General
   [lngKeys.GeneralError]: 'Erreur',
   [lngKeys.GeneralCreate]: 'Créer',

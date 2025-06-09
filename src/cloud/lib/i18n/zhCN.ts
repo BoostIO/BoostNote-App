@@ -1,6 +1,8 @@
 import { lngKeys, TranslationSource } from './types'
 
 const zhTranslation: TranslationSource = {
+  [lngKeys.SettingsBeta]: 'Beta',
+  [lngKeys.SettingsBetaAutomationAndIntegration]: 'Automation & Integration',
   //General
   [lngKeys.GeneralError]: '错误',
   [lngKeys.GeneralCreate]: '创建',
