@@ -102,3 +102,38 @@ export async function callPdfApi(
     retry: 0,
   }).blob()
 }
+
+export async function callApiBlob(
+  pathname: string,
+  {
+    method = 'get',
+    search,
+    headers = {},
+    signal,
+    body,
+  }: CallCloudJsonApiParameter = {}
+) {
+  const mergedHeaders = {
+    ...headers,
+  }
+  const accessToken = getAccessToken()
+  if (
+    usingLegacyElectron &&
+    usingElectron &&
+    accessToken != null &&
+    mergedHeaders['Authorization'] == null
+  ) {
+    mergedHeaders['Authorization'] = `Bearer ${accessToken}`
+  }
+  return ky(pathname.startsWith('/') ? pathname.substring(1) : pathname, {
+    prefixUrl: boostHubBaseUrl,
+    headers: mergedHeaders,
+    method,
+    searchParams: search,
+    signal,
+    body,
+    timeout: 60 * 1000,
+    credentials: usingElectron ? undefined : 'include',
+    retry: 0,
+  }).blob()
+}
