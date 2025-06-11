@@ -40,7 +40,7 @@ const ExportModal = () => {
   return (
     <Container className='export__modal'>
       <header className='export__modal__header'>
-        <div className='export__modal__title'>Export your workspace data</div>
+        <div className='export__modal__title'>Export your space data</div>
       </header>
       <p className='export__modal__description'>
         The service for boostnote is planned to be retired at the end of
