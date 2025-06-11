@@ -21,13 +21,13 @@ const ExportModal = () => {
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `workspace-export.zip`
+      a.download = `space-${team.name}-export.zip`
       document.body.appendChild(a)
       a.click()
       a.remove()
       window.URL.revokeObjectURL(url)
     } catch (err) {
-      console.error('Failed to export workspace', err)
+      console.error('Failed to export space', err)
     } finally {
       setSending(false)
     }
@@ -44,14 +44,14 @@ const ExportModal = () => {
       </header>
       <p className='export__modal__description'>
         The service for boostnote is planned to be retired at the end of
-        September. We recommend exporting your workspace&apos;s data so that you
-        do not lose any of your information.
+        September. We recommend exporting your space&apos;s data so that you do
+        not lose any of your information.
       </p>
       <p>Here is an overview of what can be exported:</p>
       <ul>
-        <li>Folders & documents hierarchy</li>
-        <li>Documents&apos; markdown content</li>
-        <li>Documents&apos;ttachments</li>
+        <li>Public & your accessible private Folders & documents hierarchy</li>
+        <li>Your Documents&apos; content</li>
+        <li>Your Documents&apos;attachments</li>
       </ul>
 
       <Flexbox justifyContent='center'>
@@ -60,7 +60,7 @@ const ExportModal = () => {
           spinning={sending}
           onClick={handleExportClick}
         >
-          Download ZIP Export
+          Download ZIP
         </LoadingButton>
       </Flexbox>
     </Container>
@@ -68,6 +68,7 @@ const ExportModal = () => {
 }
 
 const Container = styled.div`
+  text-align: center;
   .export__modal__subtitle {
     span {
       font-size: ${({ theme }) => theme.sizes.fonts.md}px;
@@ -97,6 +98,10 @@ const Container = styled.div`
     text-transform: uppercase;
     color: ${({ theme }) => theme.colors.text.subtle};
     font-size: ${({ theme }) => theme.sizes.fonts.md};
+  }
+
+  li {
+    list-style: none;
   }
 `
 
