@@ -62,7 +62,6 @@ import SidebarHeader from '../../design/components/organisms/Sidebar/atoms/Sideb
 import SidebarButtonList from '../../design/components/organisms/Sidebar/molecules/SidebarButtonList'
 import { getTeamLinkHref } from './Link/TeamLink'
 import WithPastille from '../../design/components/atoms/WithPastille'
-import SidebarButton from '../../design/components/organisms/Sidebar/atoms/SidebarButton'
 import CloudGlobalSearch from './CloudGlobalSearch'
 import { useCloudSidebarSpaces } from '../lib/hooks/sidebar/useCloudSidebarSpaces'
 import { trackEvent } from '../api/track'
@@ -404,6 +403,23 @@ const Application = ({
               },
               id: 'sidebar__button__members',
             },
+            {
+              label: 'Export your data',
+              icon: (
+                <WithPastille>
+                  <Icon size={16} path={mdiExclamationThick} />
+                </WithPastille>
+              ),
+              variant: 'transparent',
+              labelClick: () => {
+                return openModal(<ExportModal />, {
+                  showCloseIcon: true,
+                  width: 'large',
+                })
+              },
+              id: 'sidebar__button__export',
+              pastille: counts[team.id] ? counts[team.id] : undefined,
+            },
           ]}
         >
           {currentUserIsCoreMember && <NewDocButton team={team} />}
@@ -420,6 +436,7 @@ const Application = ({
     team,
     translate,
     showSearchScreen,
+    openModal,
   ])
 
   const sidebarFooter = useMemo(() => {
@@ -448,28 +465,11 @@ const Application = ({
               id: 'sidebar__button__shared',
             },
           ]}
-        >
-          <SidebarButton
-            variant='subtle'
-            icon={
-              <WithPastille>
-                <Icon size={16} path={mdiExclamationThick} />
-              </WithPastille>
-            }
-            id='sidebar__button__promo'
-            label={'Export your data'}
-            labelClick={() => {
-              return openModal(<ExportModal />, {
-                showCloseIcon: true,
-                width: 'large',
-              })
-            }}
-          />
-        </SidebarButtonList>
+        />
         <SidebarSubscriptionCTA />
       </>
     )
-  }, [team, translate, pathname, push, sendToElectron, openModal])
+  }, [team, translate, pathname, push, sendToElectron])
 
   return (
     <>
@@ -530,7 +530,6 @@ const Application = ({
           </>
         }
       />
-
       <AnnouncementAlert />
       <div
         id='application__anchor'
