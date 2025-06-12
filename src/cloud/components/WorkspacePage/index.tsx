@@ -18,7 +18,6 @@ import { ViewsManager } from '../Views'
 import ApplicationPageLoader from '../ApplicationPageLoader'
 import LoaderFolderPage from '../../../design/components/atoms/loaders/LoaderFolderPage'
 import ViewerDisclaimer from '../ViewerDisclaimer'
-import FolderPageExportSection from '../Onboarding/FolderPageExportSection'
 
 const WorkspacePage = ({
   workspace: pageWorkspace,
@@ -134,7 +133,6 @@ const WorkspacePage = ({
       <ApplicationTopbar controls={topbarControls} />
       <ApplicationContent>
         <FolderPageInviteSection />
-        <FolderPageExportSection />
         <ViewerDisclaimer resource='folder' />
         <ViewsManager
           parent={{ type: 'workspace', target: workspace }}

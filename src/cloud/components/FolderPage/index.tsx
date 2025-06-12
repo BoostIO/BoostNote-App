@@ -33,7 +33,6 @@ import { ViewsManager } from '../Views'
 import ApplicationPageLoader from '../ApplicationPageLoader'
 import LoaderFolderPage from '../../../design/components/atoms/loaders/LoaderFolderPage'
 import ViewerDisclaimer from '../ViewerDisclaimer'
-import FolderPageExportSection from '../Onboarding/FolderPageExportSection'
 
 const FolderPage = () => {
   const { pageFolder, team, currentUserIsCoreMember } = usePage()
@@ -237,7 +236,6 @@ const FolderPage = () => {
       </ApplicationTopbar>
       <ApplicationContent>
         <FolderPageInviteSection />
-        <FolderPageExportSection />
         <ViewerDisclaimer resource='folder' />
         <ViewsManager
           parent={{ type: 'folder', target: currentFolder }}
