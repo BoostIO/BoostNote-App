@@ -536,6 +536,15 @@ const jpTranslation: TranslationSource = {
   [lngKeys.ModalUnlockCheckDetails]:
     'Standard・Proプランの詳細を確認し、どれが最適なプランか比較してみましょう！',
   [lngKeys.OverlimitDashboards]: `無料プランでのDashboard作成上限に到達いたしました。アップグレードを行うことで、Dashboard作成数の上限を無くすことが可能になります。`,
+
+  [lngKeys.ExportTitle]: 'データエクスポート',
+  [lngKeys.ExportSubtitle]: `Boost Noteは9月30日にサービス終了を予定しています。終了日以降、すべてのデータは完全に削除され、復元することはできません。必ずデータのエクスポートをお願いいたします。`,
+  [lngKeys.ExportContent]: 'エクスポートできるもの:',
+  [lngKeys.ExportContentOne]:
+    'パブリックフォルダー、アクセス権限があるプライベートフォルダー、ドキュメントの階層',
+  [lngKeys.ExportContentTwo]: `ドキュメントのコンテンツ`,
+  [lngKeys.ExportContentThree]: `ドキュメントの添付ファイル`,
+  [lngKeys.ExportDownload]: `ZIPファイルをダウンロードする`,
 }
 
 export default {

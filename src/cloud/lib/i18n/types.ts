@@ -487,6 +487,14 @@ export enum lngKeys {
   ModalUnlockSmartviewsTitle = 'modal.unlock.smartview.title',
   ModalUnlockSmartviewsDescription = 'modal.unlock.smartview.description',
   OverlimitDashboards = 'sub.limit.dashboards',
+
+  ExportTitle = 'export.title',
+  ExportSubtitle = 'export.subtitle',
+  ExportContent = 'export.content',
+  ExportContentOne = 'export.content.one',
+  ExportContentTwo = 'export.content.two',
+  ExportContentThree = 'export.content.three',
+  ExportDownload = 'export.download',
 }
 
 export type TranslationSource = {

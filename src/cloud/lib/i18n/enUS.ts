@@ -536,6 +536,15 @@ const enTranslation: TranslationSource = {
   [lngKeys.ModalUnlockCheckDetails]:
     'Check the details of the Standard and Pro plans and learn what you can do with it!',
   [lngKeys.OverlimitDashboards]: `Your dashboards exceed the limit of your current plan. Consider upgrading your plan or deleting other dashboards in order to continue using this feature with your current plan.`,
+
+  [lngKeys.ExportTitle]: 'Export your space data',
+  [lngKeys.ExportSubtitle]: `The service for boostnote is planned to be retired at the end of September. We recommend exporting your space's data so that you do not lose any of your information.`,
+  [lngKeys.ExportContent]: 'Here is an overview of what can be exported:',
+  [lngKeys.ExportContentOne]:
+    'Public & your accessible private Folders & documents hierarchy',
+  [lngKeys.ExportContentTwo]: `Your Documents' content`,
+  [lngKeys.ExportContentThree]: `Your Documents' attachments`,
+  [lngKeys.ExportDownload]: `Download ZIP`,
 }
 
 export default {
