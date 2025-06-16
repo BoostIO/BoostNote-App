@@ -375,6 +375,7 @@ const MarkdownView = ({
     sendToElectron,
     updateContent,
     content,
+    showLinkOpenWarning,
   ])
 
   const processorRef = useRef(markdownProcessor)
@@ -412,7 +413,7 @@ const MarkdownView = ({
             onRenderRef.current()
           }
         } catch (err) {
-          setState({ type: 'error', err })
+          setState({ type: 'error', err: err as any })
         }
       },
       100,
