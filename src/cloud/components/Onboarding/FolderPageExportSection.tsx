@@ -6,6 +6,7 @@ import Button from '../../../design/components/atoms/Button'
 import { mdiExport } from '@mdi/js'
 import ExportModal from '../Modal/contents/ExportModal'
 import { useModal } from '../../../design/lib/stores/modal'
+import { ExternalLink } from '../../../design/components/atoms/Link'
 
 const FolderPageExportSection = () => {
   const { openModal } = useModal()
@@ -13,11 +14,27 @@ const FolderPageExportSection = () => {
   return (
     <FolderPageExportSectionContainer>
       <ColoredBlock variant='danger' className='export__section__block'>
-        <Flexbox alignItems='flex-start' justifyContent='space-between'>
+        <Flexbox alignItems='baseline' justifyContent='space-between'>
           <h5>BoostNote is getting discontinued</h5>
 
+          <ExternalLink
+            href='https://intercom.help/boostnote-for-teams/en/articles/11579215-important-service-termination-notice-for-boost-note'
+            showIcon={true}
+          >
+            Learn more
+          </ExternalLink>
+        </Flexbox>
+        <Flexbox
+          style={{ justifyContent: 'space-between', alignItems: 'center' }}
+        >
+          <p style={{ marginRight: '10px' }}>
+            We thank you for your continued support. We regret to inform you
+            that the service will end at the end of September. As such we
+            recommend for users to export their data to make sure nothing is
+            being lost.
+          </p>
           <Button
-            variant='icon'
+            variant='secondary'
             iconPath={mdiExport}
             onClick={() => {
               return openModal(<ExportModal />, {
@@ -27,14 +44,9 @@ const FolderPageExportSection = () => {
             }}
             iconSize={16}
           >
-            Learn more
+            Download
           </Button>
         </Flexbox>
-        <p>
-          We thank you for your continued support. We regret to inform you that
-          the service will end at the end of September. As such we recommend for
-          users to export their data to make sure nothing is being lost.
-        </p>
       </ColoredBlock>
     </FolderPageExportSectionContainer>
   )
@@ -43,6 +55,7 @@ const FolderPageExportSection = () => {
 const FolderPageExportSectionContainer = styled.div`
   margin: ${({ theme }) => theme.sizes.spaces.df}px
     ${({ theme }) => theme.sizes.spaces.sm}px;
+
   .export__section__block {
     input {
       color: ${({ theme }) => theme.colors.text.subtle};
@@ -63,6 +76,10 @@ const FolderPageExportSectionContainer = styled.div`
       }
       flex-wrap: wrap;
     }
+  }
+
+  .link {
+    color: ${({ theme }) => theme.colors.text.subtle} !important;
   }
 `
 
