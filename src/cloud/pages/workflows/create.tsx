@@ -2,7 +2,10 @@ import React, { useCallback, useState } from 'react'
 import { getTeamIndexPageData } from '../../api/pages/teams'
 import ApplicationContent from '../../components/ApplicationContent'
 import ApplicationPage from '../../components/ApplicationPage'
-import { SerializedWorkflow } from '../../interfaces/db/automations'
+import {
+  SerializedPipe,
+  SerializedWorkflow,
+} from '../../interfaces/db/automations'
 import Topbar from '../../../design/components/organisms/Topbar'
 import { useToast } from '../../../design/lib/stores/toast'
 import { createWorkflow } from '../../api/automation/workflow'
@@ -72,17 +75,56 @@ WorkflowCreatePage.getInitialProps = getTeamIndexPageData
 
 export default WorkflowCreatePage
 
-const defaultPipe = {
+const defaultPipe: SerializedPipe = {
   name: 'New Pipeline',
   event: 'github.issues.opened',
-  action: 'boost.doc.create',
   configuration: {
-    title: '$event.issue.title',
-    content: '$event.issue.body',
-    props: {
-      IssueID: {
-        type: 'number',
-        data: '$event.issue.id',
+    type: 'operation',
+    identifier: 'boost.docs.create',
+    input: {
+      type: 'constructor',
+      info: {
+        type: 'struct',
+        refs: {
+          title: { type: 'reference', identifier: '$event.issue.title' },
+          content: { type: 'reference', identifier: '$event.issue.body' },
+          props: {
+            type: 'constructor',
+            info: {
+              type: 'record',
+              refs: [
+                {
+                  key: {
+                    type: 'literal',
+                    def: { type: 'primitive', def: 'string' },
+                    value: 'IssueId',
+                  },
+                  val: {
+                    type: 'operation',
+                    identifier: 'boost.props.make',
+                    input: {
+                      type: 'constructor',
+                      info: {
+                        type: 'struct',
+                        refs: {
+                          type: {
+                            type: 'literal',
+                            def: { type: 'primitive', def: 'string' },
+                            value: 'number',
+                          },
+                          val: {
+                            type: 'reference',
+                            identifier: '$event.issue.id',
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
       },
     },
   },

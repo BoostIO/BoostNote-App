@@ -1,8 +1,8 @@
 import { SerializedPipe } from '../../../interfaces/db/automations'
-import { JsonTypeDef } from '../../../lib/automations/events'
+import { BoostType } from '../../../lib/automations'
 
 export interface ActionConfiguratorProps {
-  onChange: (conf: SerializedPipe['configuration']) => void
-  configuration: SerializedPipe['configuration']
-  eventType: JsonTypeDef
+  onChange: (conf: SerializedPipe['configuration']['input']) => void
+  configuration: SerializedPipe['configuration']['input']
+  eventType: BoostType
 }

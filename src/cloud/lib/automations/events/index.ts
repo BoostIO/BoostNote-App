@@ -1,55 +1,56 @@
-type JsonPrimitiveTypeTag = 'number' | 'string' | 'boolean'
-type JsonArrayTypeTag = `${JsonPrimitiveTypeTag}[]`
+import { Struct, Str, Num, Bool, TypeDef } from '../types'
 
-export type JsonTypeDef =
-  | JsonPrimitiveTypeTag
-  | JsonArrayTypeTag
-  | { [key: string]: JsonTypeDef }
+const userSchema = Struct({
+  login: Str(),
+  id: Num(),
+})
 
-const abstractGithubIssueEventDef: JsonTypeDef = {
-  //action: 'string',
-  issue: {
-    id: 'number',
-    number: 'number',
-    title: 'string',
-    body: 'string',
-    state: 'string',
-    url: 'string',
-    html_url: 'string',
-  },
-  repository: {
-    id: 'number',
-    name: 'string',
-    full_name: 'string',
-    url: 'string',
-    html_url: 'string',
-    private: 'boolean',
-    owner: {
-      login: 'string',
-      id: 'number',
-    },
-  },
-}
+const issueSchema = Struct({
+  id: Num(),
+  number: Num(),
+  title: Str(),
+  body: Str(),
+  state: Str(),
+  url: Str(),
+  html_url: Str(),
+})
 
-const supportedEvents: Record<string, JsonTypeDef> = {
-  'github.issues.opened': abstractGithubIssueEventDef,
-  'github.issues.edited': {
-    ...abstractGithubIssueEventDef,
-    changes: {
-      body: { from: 'string' },
-      title: { from: 'string' },
-    },
-  },
-  'github.issues.labeled': {
-    ...abstractGithubIssueEventDef,
-    label: {
-      id: 'number',
-      url: 'string',
-      color: 'string',
-      name: 'string',
-      default: 'boolean',
-    },
-  },
+const repositorySchema = Struct({
+  id: Num(),
+  name: Str(),
+  full_name: Str(),
+  url: Str(),
+  html_url: Str(),
+  private: Bool(),
+  owner: userSchema,
+})
+
+const labelSchema = Struct({
+  id: Num(),
+  url: Str(),
+  color: Str(),
+  name: Str(),
+})
+
+const supportedEvents: Record<string, TypeDef<never>> = {
+  'github.issues.opened': Struct({
+    issue: issueSchema,
+    repository: repositorySchema,
+  }),
+  'github.issues.edited': Struct({
+    issue: issueSchema,
+    repository: repositorySchema,
+    changes: Struct({
+      body: Struct({ from: Str() }),
+      title: Struct({ from: Str() }),
+    }),
+  }),
+  'github.issues.labeled': Struct({
+    action: Str(),
+    issue: issueSchema,
+    repository: repositorySchema,
+    label: labelSchema,
+  }),
 }
 
 export default supportedEvents

@@ -126,17 +126,17 @@ const Container = styled.div`
   }
 `
 
-const defaultPipe = {
+const defaultPipe: SerializedPipe = {
   name: 'New Pipeline',
   event: 'github.issues.opened',
-  action: 'boost.doc.create',
   configuration: {
-    title: '$event.issue.title',
-    content: '$event.issue.body',
-    props: {
-      IssueID: {
-        type: 'number',
-        data: '$event.issue.id',
+    type: 'operation',
+    identifier: 'boost.docs.create',
+    input: {
+      type: 'constructor',
+      info: {
+        type: 'struct',
+        refs: {},
       },
     },
   },

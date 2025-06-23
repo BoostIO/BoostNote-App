@@ -10,11 +10,12 @@ import FormSelect, {
 import FormRow from '../../../design/components/molecules/Form/templates/FormRow'
 import FormRowItem from '../../../design/components/molecules/Form/templates/FormRowItem'
 import { SerializedPipe } from '../../interfaces/db/automations'
-import { JsonTypeDef } from '../../lib/automations/events'
+import { BoostType } from '../../lib/automations'
+import { flattenType } from '../../lib/automations/types'
 import { flattenObj } from '../../lib/utils/object'
 
 interface FilterBuilderProps {
-  typeDef: JsonTypeDef
+  typeDef: BoostType
   filter: SerializedPipe['filter']
   onChange: (filter: SerializedPipe['filter']) => void
 }
@@ -27,15 +28,20 @@ const FilterBuilder = ({ typeDef, filter, onChange }: FilterBuilderProps) => {
     string | number | boolean | undefined
   >()
 
-  const flattenedTypeKeys = useMemo(
-    () =>
-      Object.entries(flattenObj(typeDef as any)).map(([key, val]) => ({
+  const flattenedTypeKeys = useMemo(() => {
+    const supportedPrimitives = new Set(['number', 'string', 'boolean'])
+    return Array.from(flattenType(typeDef))
+      .filter(
+        ([, type]) =>
+          type.type === 'primitive' && supportedPrimitives.has(type.def)
+      )
+      .map(([path, type]) => [path.join('.'), type] as const)
+      .map(([key, val]) => ({
         label: key,
         value: key,
-        type: val,
-      })),
-    [typeDef]
-  )
+        type: val.def,
+      }))
+  }, [typeDef])
 
   const flattenedFilter = useMemo(() => flattenObj(filter), [filter])
 
