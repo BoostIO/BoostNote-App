@@ -198,7 +198,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.throttle": "^4.1.1",
     "ltstrg": "^1.0.1",
-    "mermaid": "^8.13.8",
+    "mermaid": "^10.0.0",
     "mixpanel-browser": "^2.40.1",
     "nprogress": "^0.2.0",
     "overlayscrollbars-react": "^0.2.3",
