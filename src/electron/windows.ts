@@ -32,6 +32,9 @@ export function createAWindow(
       nodeIntegration: true,
       webSecurity: !dev,
       webviewTag: true,
+      // Ensure Chromium's spellchecker is available to renderer/webviews.
+      // The editor still controls actual usage via `spellcheck` attributes/settings.
+      spellcheck: true,
       enableRemoteModule: true,
       contextIsolation: false,
       preload: dev
