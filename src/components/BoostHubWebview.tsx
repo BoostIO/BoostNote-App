@@ -413,7 +413,9 @@ const BoostHubWebview = ({
         tabIndex={-1}
         useragent={boostHubWebViewUserAgent}
         preload={boostHubPreloadUrl}
-        webpreferences='contextIsolation=no'
+        // Electron's webview tag uses a BrowserWindow-style feature string.
+        // Keep contextIsolation off (existing behavior) and enable spellcheck.
+        webpreferences='contextIsolation=no,spellcheck=yes'
       />
     </Container>
   )
