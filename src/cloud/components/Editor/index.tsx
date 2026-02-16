@@ -174,6 +174,7 @@ const Editor = ({
   const [shortcodeConvertMenu, setShortcodeConvertMenu] = useState<{
     pos: PositionRange
     cb: Callback
+    promptLabel?: string
   } | null>(null)
   const initialRenderDone = useRef(false)
   const { docsMap, workspacesMap, loadDoc } = useNav()
@@ -392,8 +393,8 @@ const Editor = ({
         },
       })
       pasteFormatPlugin(editor, {
-        openMenu: (pos, cb) => {
-          setShortcodeConvertMenu({ pos, cb })
+        openMenu: (pos, cb, promptLabel) => {
+          setShortcodeConvertMenu({ pos, cb, promptLabel })
         },
         closeMenu: () => {
           setShortcodeConvertMenu(null)
@@ -410,6 +411,8 @@ const Editor = ({
               return {
                 replacement: `[[ ${entityType} id="${org}/${repo}#${num}" ]]`,
                 promptMenu: true,
+                promptLabel:
+                  type === 'pull' ? 'Embed Pull Request?' : 'Embed Issue?',
               }
             }
           }
@@ -1031,6 +1034,9 @@ const Editor = ({
                     <StyledShortcodeConvertMenu
                       style={shortcodeConvertMenuStyle}
                     >
+                      {shortcodeConvertMenu.promptLabel != null && (
+                        <p>{shortcodeConvertMenu.promptLabel}</p>
+                      )}
                       <button onClick={() => shortcodeConvertMenu.cb(false)}>
                         Dismiss
                       </button>
@@ -1124,6 +1130,19 @@ const StyledShortcodeConvertMenu = styled.div`
   border-radius: 5px;
   box-shadow: ${({ theme }) => theme.colors.shadow};
 
+  p {
+    margin: 0;
+    width: 200px;
+    line-height: 25px;
+    padding: ${({ theme }) => theme.sizes.spaces.xsm}px
+      ${({ theme }) => theme.sizes.spaces.sm}px;
+    background-color: ${({ theme }) => theme.colors.background.secondary};
+    color: ${({ theme }) => theme.colors.text.primary};
+    font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
+    border-radius: 5px 5px 0 0;
+    border-bottom: solid 1px ${({ theme }) => theme.colors.border.main};
+  }
+
   button {
     display: block;
     width: 200px;
@@ -1135,7 +1154,7 @@ const StyledShortcodeConvertMenu = styled.div`
     font-size: ${({ theme }) => theme.sizes.fonts.sm}px;
     text-align: left;
 
-    &:first-child {
+    &:first-of-type {
       border-radius: 5px 5px 0 0;
     }
 
