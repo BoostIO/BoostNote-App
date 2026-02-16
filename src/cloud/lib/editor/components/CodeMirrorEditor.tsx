@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import CodeMirror from '../../editor/CodeMirror'
 import { CodeMirrorBinding } from 'y-codemirror'
 import { useEffectOnce } from 'react-use'
@@ -28,6 +28,20 @@ const CodeMirrorEditor = ({
   const editorRef = useRef<CodeMirror.Editor>()
   const onScrollLineRef = useRef(onLineScroll)
   const skipOnScrollRef = useRef(false)
+
+  const applySpellcheckToInput = useCallback((enabled: boolean) => {
+    if (editorRef.current == null) {
+      return
+    }
+
+    const inputField = (editorRef.current as any).getInputField?.()
+
+    if (inputField != null) {
+      inputField.setAttribute('spellcheck', enabled ? 'true' : 'false')
+      inputField.setAttribute('autocorrect', enabled ? 'on' : 'off')
+      inputField.setAttribute('autocapitalize', enabled ? 'sentences' : 'off')
+    }
+  }, [])
 
   useEffect(() => {
     onScrollLineRef.current = onLineScroll
@@ -65,6 +79,8 @@ const CodeMirrorEditor = ({
           { leading: true, trailing: true }
         )
       )
+
+      applySpellcheckToInput(Boolean(config.spellcheck))
     }
   })
 
@@ -82,8 +98,10 @@ const CodeMirrorEditor = ({
           val
         )
       })
+
+      applySpellcheckToInput(Boolean(config.spellcheck))
     }
-  }, [config])
+  }, [config, applySpellcheckToInput])
 
   useEffect(() => {
     if (realtime == null || editorRef.current == null) {
