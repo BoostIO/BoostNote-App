@@ -200,7 +200,7 @@ const DocPreviewRealtime = ({
                     Dismiss
                   </button>
                   <button onClick={() => shortcodeConvertMenu.cb(true)}>
-                    Create embed
+                    {shortcodeConvertMenu.actionLabel ?? 'Create embed'}
                   </button>
                 </StyledShortcodeConvertMenu>
               )}
