@@ -59,6 +59,7 @@ export function useDocEditor({
   const [shortcodeConvertMenu, setShortcodeConvertMenu] = useState<{
     pos: PositionRange
     cb: Callback
+    promptLabel?: string
   } | null>(null)
   const suggestionsRef = useRef<Hint[]>([])
   const { loadDoc } = useNav()
@@ -220,8 +221,8 @@ export function useDocEditor({
       },
     })
     pasteFormatPlugin(editor, {
-      openMenu: (pos, cb) => {
-        setShortcodeConvertMenu({ pos, cb })
+      openMenu: (pos, cb, promptLabel) => {
+        setShortcodeConvertMenu({ pos, cb, promptLabel })
       },
       closeMenu: () => {
         setShortcodeConvertMenu(null)
@@ -238,6 +239,8 @@ export function useDocEditor({
             return {
               replacement: `[[ ${entityType} id="${org}/${repo}#${num}" ]]`,
               promptMenu: true,
+              promptLabel:
+                type === 'pull' ? 'Embed Pull Request?' : 'Embed Issue?',
             }
           }
         }
