@@ -99,6 +99,7 @@ const Editor = ({
   const [shortcodeConvertMenu, setShortcodeConvertMenu] = useState<{
     pos: PositionRange
     cb: Callback
+    promptLabel?: string
   } | null>(null)
   const initialRenderDone = useRef(false)
   const titleRef = useRef<HTMLInputElement>(null)
@@ -277,8 +278,8 @@ const Editor = ({
       },
     })
     pasteFormatPlugin(editor, {
-      openMenu: (pos, cb) => {
-        setShortcodeConvertMenu({ pos, cb })
+      openMenu: (pos, cb, promptLabel) => {
+        setShortcodeConvertMenu({ pos, cb, promptLabel })
       },
       closeMenu: () => {
         setShortcodeConvertMenu(null)
@@ -295,6 +296,8 @@ const Editor = ({
             return {
               replacement: `[[ ${entityType} id="${org}/${repo}#${num}" ]]`,
               promptMenu: true,
+              promptLabel:
+                type === 'pull' ? 'Embed Pull Request?' : 'Embed Issue?',
             }
           }
         }
@@ -590,7 +593,7 @@ const Editor = ({
                     Dismiss
                   </button>
                   <button onClick={() => shortcodeConvertMenu.cb(true)}>
-                    Create embed
+                    {shortcodeConvertMenu.promptLabel ?? 'Create embed'}
                   </button>
                 </StyledShortcodeConvertMenu>
               )}

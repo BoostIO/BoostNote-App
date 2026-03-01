@@ -14,10 +14,15 @@ export type Callback = (convert: boolean) => void
 type FormatterResult = {
   replacement: string | null
   promptMenu: boolean
+  promptLabel?: string
 }
 
 interface Config {
-  openMenu: (position: PositionRange, callback: Callback) => void
+  openMenu: (
+    position: PositionRange,
+    callback: Callback,
+    promptLabel?: string
+  ) => void
   closeMenu: () => void
   formatter: (pasted: string[]) => FormatterResult
 }
@@ -53,7 +58,7 @@ export const pasteFormatPlugin = (
       return
     }
 
-    const { replacement, promptMenu } = formatter(change.text)
+    const { replacement, promptMenu, promptLabel } = formatter(change.text)
 
     if (replacement === null) {
       return
@@ -78,7 +83,7 @@ export const pasteFormatPlugin = (
       close()
     }
 
-    openMenu(posRange, callback)
+    openMenu(posRange, callback, promptLabel)
     open = true
   })
 }
