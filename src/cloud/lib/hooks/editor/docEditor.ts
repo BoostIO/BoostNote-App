@@ -1,4 +1,5 @@
 import { Hint } from 'codemirror'
+import CodeMirror from '../../editor/CodeMirror'
 import throttle from 'lodash.throttle'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { YText, YEvent } from 'yjs/dist/src/internals'
@@ -132,6 +133,12 @@ export function useDocEditor({
       extraKeys: {
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
+        'Ctrl-C': (cm) => {
+          if (!cm.somethingSelected()) {
+            return CodeMirror.Pass
+          }
+          document.execCommand('copy')
+        },
       },
       scrollPastEnd: true,
       // fixes IME being on top of current line, Codemirror issue: https://github.com/codemirror/CodeMirror/issues/3137
