@@ -105,7 +105,8 @@ export default EditorHeaderToolDropdown
 const StyledMenuItem = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  white-space: nowrap;
 `
 
 const StyledIcon = styled.div`
