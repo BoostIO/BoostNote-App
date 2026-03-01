@@ -244,6 +244,20 @@ export function getModeSuggestions(
   word: string,
   suggestionModes: SuggestionModeType = improvedModeSuggestions
 ): CodeMirror.Hint[] {
+  if (word.length === 0) {
+    return Object.values(suggestionModes)
+      .flat()
+      .sort((a, b) => {
+        const textA = a.compareText != null ? a.compareText : a.autocomplete
+        const textB = b.compareText != null ? b.compareText : b.autocomplete
+        return textA.localeCompare(textB)
+      })
+      .map((suggestion) => ({
+        text: suggestion.autocomplete,
+        displayText: suggestion.displayText,
+      }))
+  }
+
   for (const [key, suggestions] of Object.entries(suggestionModes)) {
     if (!word.startsWith(key)) {
       continue
@@ -286,19 +300,50 @@ export function getModeSuggestions(
 export function CodeMirrorEditorModeHints(cm: CodeMirror.Editor) {
   return new Promise(function (accept) {
     setTimeout(function () {
-      const cursor = cm.getCursor(),
-        line = cm.getLine(cursor.line)
+      const cursor = cm.getCursor()
+      const line = cm.getLine(cursor.line)
+
+      const isCodeFenceInput = line.startsWith('```') && cursor.ch >= 3
+
       let start = cursor.ch
       let end = cursor.ch
-      while (start && /\w/.test(line.charAt(start - 1))) --start
-      while (end < line.length && /\w/.test(line.charAt(end))) ++end
+
+      if (isCodeFenceInput) {
+        start = 3
+        end = line.length
+      } else {
+        while (start && /\w/.test(line.charAt(start - 1))) --start
+        while (end < line.length && /\w/.test(line.charAt(end))) ++end
+      }
+
       const word = line.slice(start, end).toLowerCase()
       const suggestions = getModeSuggestions(word)
+
       if (suggestions.length == 0) {
         return accept(null)
       }
+
+      const list = isCodeFenceInput
+        ? suggestions.map((suggestion) => ({
+            ...suggestion,
+            hint: (editor: CodeMirror.Editor, data: any, completion: any) => {
+              const completedFence = `\`\`\`${completion.text}\n\n\`\`\``
+              editor.replaceRange(
+                completedFence,
+                data.from,
+                data.to,
+                'complete'
+              )
+              editor.setCursor({
+                line: data.from.line + 1,
+                ch: 0,
+              })
+            },
+          }))
+        : suggestions
+
       return accept({
-        list: suggestions,
+        list,
         from: CodeMirror.Pos(cursor.line, start),
         to: CodeMirror.Pos(cursor.line, end),
       })
