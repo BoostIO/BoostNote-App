@@ -269,6 +269,12 @@ const Editor = ({
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
         'Ctrl-Space': 'autocomplete',
+        'Ctrl-C': (cm) => {
+          if (!cm.somethingSelected()) {
+            return CodeMirror.Pass
+          }
+          document.execCommand('copy')
+        },
       },
       scrollPastEnd: true,
       // fixes IME being on top of current line, Codemirror issue: https://github.com/codemirror/CodeMirror/issues/3137
