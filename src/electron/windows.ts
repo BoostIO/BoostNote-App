@@ -34,6 +34,10 @@ export function createAWindow(
       webviewTag: true,
       enableRemoteModule: true,
       contextIsolation: false,
+      // Ensure Chromium spell checker is active in desktop app windows.
+      // The editor-level preference (`general.enableSpellcheck`) controls
+      // whether editable surfaces request spell checking.
+      spellcheck: true,
       preload: dev
         ? path.join(app.getAppPath(), '../static/main-preload.js')
         : path.join(app.getAppPath(), './compiled/app/static/main-preload.js'),
