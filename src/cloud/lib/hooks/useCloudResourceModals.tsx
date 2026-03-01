@@ -78,9 +78,6 @@ export function useCloudResourceModals() {
           defaultInputValue={folder.name}
           defaultEmoji={folder.emoji}
           placeholder={translate(lngKeys.FolderNamePlaceholder)}
-          submitButtonProps={{
-            label: translate(lngKeys.GeneralUpdateVerb),
-          }}
           onSubmit={async (inputValue: string, emoji?: string) => {
             await updateFolder(folder, {
               workspaceId: folder.workspaceId,
@@ -90,10 +87,18 @@ export function useCloudResourceModals() {
             })
             closeLastModal()
           }}
+          onBlur={async (inputValue: string, emoji?: string) => {
+            await updateFolder(folder, {
+              workspaceId: folder.workspaceId,
+              parentFolderId: folder.parentFolderId,
+              folderName: inputValue,
+              emoji: typeof emoji === 'string' ? emoji : null,
+            })
+          }}
         />,
         {
-          showCloseIcon: true,
-          title: translate(lngKeys.RenameFolder),
+          showCloseIcon: false,
+          width: 'small',
         }
       )
     },
