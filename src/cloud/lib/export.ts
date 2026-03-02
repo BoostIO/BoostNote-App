@@ -186,6 +186,18 @@ const generatePrintToPdfHTML = (
           pre code {
             white-space: pre-wrap;
           }
+
+          /*
+           * Keep code blocks readable in exported PDF even when theme-specific
+           * styles are unavailable.
+           */
+          pre,
+          pre code,
+          .code-highlight,
+          [class*='language-'] {
+            background: #f6f8fa !important;
+            color: #24292e !important;
+          }
         </style>
       </head>
       <body>
