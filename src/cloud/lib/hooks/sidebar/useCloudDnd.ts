@@ -1,5 +1,8 @@
 import { useCallback } from 'react'
-import { UpdateDocRequestBody } from '../../../api/teams/docs'
+import {
+  CreateDocRequestBody,
+  UpdateDocRequestBody,
+} from '../../../api/teams/docs'
 import { UpdateFolderRequestBody } from '../../../api/teams/folders'
 import { moveResource } from '../../../api/teams/resources'
 import {
@@ -24,6 +27,15 @@ import { SidebarDragState } from '../../../../design/lib/dnd'
 import { useToast } from '../../../../design/lib/stores/toast'
 import { getMapFromEntityArray } from '../../../../design/lib/utils/array'
 
+function getDroppedTextFiles(event: any): File[] {
+  const files: File[] = Array.from(event?.dataTransfer?.files || [])
+  return files.filter((file) => /\.(md|txt|html)$/i.test(file.name))
+}
+
+function fileNameToDocTitle(fileName: string) {
+  return fileName.replace(/\.(md|txt|html)$/i, '') || fileName
+}
+
 export function useCloudDnd() {
   const {
     updateFoldersMap,
@@ -45,10 +57,26 @@ export function useCloudDnd() {
       updateDoc: (
         doc: DocDataTransferItem,
         body: UpdateDocRequestBody
-      ) => Promise<void>
+      ) => Promise<void>,
+      createDoc: (body: CreateDocRequestBody) => Promise<void>
     ) => {
       const draggedResource = getDraggedResource(event)
       if (draggedResource === null) {
+        const droppedFiles = getDroppedTextFiles(event)
+        if (droppedFiles.length === 0) {
+          return
+        }
+
+        await Promise.all(
+          droppedFiles.map(async (file) => {
+            const content = await file.text()
+            await createDoc({
+              workspaceId,
+              title: fileNameToDocTitle(file.name),
+              content,
+            })
+          })
+        )
         return
       }
 
@@ -76,10 +104,36 @@ export function useCloudDnd() {
     async (
       event: any,
       targetedResource: NavResource,
-      targetedPosition: SidebarDragState
+      targetedPosition: SidebarDragState,
+      createDoc: (body: CreateDocRequestBody) => Promise<void>
     ) => {
       const draggedResource = getDraggedResource(event)
-      if (draggedResource === null || targetedPosition == null) {
+      if (draggedResource === null) {
+        const droppedFiles = getDroppedTextFiles(event)
+        if (droppedFiles.length === 0) {
+          return
+        }
+
+        const parentFolderId =
+          targetedResource.type === 'folder'
+            ? targetedResource.resource.id
+            : undefined
+
+        await Promise.all(
+          droppedFiles.map(async (file) => {
+            const content = await file.text()
+            await createDoc({
+              workspaceId: targetedResource.resource.workspaceId,
+              parentFolderId,
+              title: fileNameToDocTitle(file.name),
+              content,
+            })
+          })
+        )
+        return
+      }
+
+      if (targetedPosition == null) {
         return
       }
 
