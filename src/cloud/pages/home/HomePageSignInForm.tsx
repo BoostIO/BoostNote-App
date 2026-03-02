@@ -310,6 +310,7 @@ const Container = styled.div`
     & > button {
       padding-right: 30px;
       padding-left: 30px;
+      border-radius: 4px;
 
       &:first-child {
         margin-right: 10px;
