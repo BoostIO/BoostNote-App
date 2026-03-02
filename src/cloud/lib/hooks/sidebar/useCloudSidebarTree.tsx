@@ -263,7 +263,9 @@ export function useCloudSidebarTree() {
           ? {
               dropIn: true,
               onDrop: (event: any) =>
-                dropInWorkspace(event, wp.id, updateFolder, updateDoc),
+                dropInWorkspace(event, wp.id, updateFolder, updateDoc, (body) =>
+                  createDoc(team, body).then(() => undefined)
+                ),
               controls: [
                 {
                   icon: mdiTextBoxPlus,
@@ -346,7 +348,8 @@ export function useCloudSidebarTree() {
                     type: 'folder',
                     resource: folderToDataTransferItem(folder),
                   },
-                  position
+                  position,
+                  (body) => createDoc(team, body).then(() => undefined)
                 ),
               onDragStart: (event: any) => {
                 saveFolderTransferData(event, folder)
@@ -472,7 +475,8 @@ export function useCloudSidebarTree() {
                 dropInDocOrFolder(
                   event,
                   { type: 'doc', resource: docToDataTransferItem(doc) },
-                  position
+                  position,
+                  (body) => createDoc(team, body).then(() => undefined)
                 ),
               onDragStart: (event: any) => {
                 saveDocTransferData(event, doc)
