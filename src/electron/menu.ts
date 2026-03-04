@@ -5,7 +5,11 @@ import {
   MenuItemConstructorOptions,
   shell,
 } from 'electron'
-import { checkForUpdates } from './updater'
+import {
+  checkForUpdates,
+  installUpdateWithoutCheck,
+  getUpdateStatus,
+} from './updater-improved'
 import { createEmitIpcMenuItemHandler } from './ipc'
 import { createAWindow } from './windows'
 import { electronFrontendUrl } from './consts'
@@ -40,6 +44,18 @@ export function getTemplateFromKeymap(): MenuItemConstructorOptions[] {
 }
 
 function getMacRootMenu(): MenuItemConstructorOptions {
+  // Helper function to get update status label
+  const getUpdateMenuLabel = () => {
+    const status = getUpdateStatus()
+    if (status.isDownloading) {
+      return `Downloading Update... ${status.downloadProgress.toFixed(0)}%`
+    }
+    if (status.hasUpdateReady) {
+      return `Restart to Update (${status.updateInfo?.version})`
+    }
+    return 'Check for Updates'
+  }
+
   return {
     label: app.getName(),
     submenu: [
@@ -61,8 +77,16 @@ function getMacRootMenu(): MenuItemConstructorOptions {
       },
       { type: 'separator' },
       {
-        label: 'Check For Updates',
-        click: checkForUpdates,
+        label: getUpdateMenuLabel(),
+        click: (menuItem) => {
+          const status = getUpdateStatus()
+          if (status.hasUpdateReady) {
+            const { restartAndInstall } = require('./updater-improved')
+            restartAndInstall()
+          } else {
+            checkForUpdates(menuItem)
+          }
+        },
       },
       { type: 'separator' },
       { role: 'services' },
@@ -76,6 +100,43 @@ function getMacRootMenu(): MenuItemConstructorOptions {
 }
 
 function getFileMenu(): MenuItemConstructorOptions {
+  // Helper function to get update status label
+  const getUpdateMenuLabel = () => {
+    const status = getUpdateStatus()
+    if (status.isDownloading) {
+      return `Downloading Update... ${status.downloadProgress.toFixed(0)}%`
+    }
+    if (status.hasUpdateReady) {
+      return `Restart to Update (${status.updateInfo?.version})`
+    }
+    return 'Check for Updates'
+  }
+
+  const updateMenuItem: MenuItemConstructorOptions = {
+    type: 'normal',
+    label: getUpdateMenuLabel(),
+    click: (menuItem) => {
+      const status = getUpdateStatus()
+      if (status.hasUpdateReady) {
+        // If update is ready, restart and install
+        const { restartAndInstall } = require('./updater-improved')
+        restartAndInstall()
+      } else {
+        checkForUpdates(menuItem)
+      }
+    },
+  }
+
+  // Install update without checking (shown only if update was previously skipped)
+  const installWithoutCheckItem: MenuItemConstructorOptions = {
+    type: 'normal',
+    label: 'Install Update',
+    visible: false, // Will be shown dynamically based on update status
+    click: () => {
+      installUpdateWithoutCheck()
+    },
+  }
+
   const submenuItems: MenuItemConstructorOptions[] = mac
     ? [
         {
@@ -134,10 +195,8 @@ function getFileMenu(): MenuItemConstructorOptions {
           },
         },
         { type: 'separator' },
-        {
-          label: 'Check For Updates',
-          click: checkForUpdates,
-        },
+        updateMenuItem,
+        installWithoutCheckItem,
         { type: 'separator' },
         {
           label: 'Preferences',
