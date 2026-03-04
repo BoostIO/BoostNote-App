@@ -8,6 +8,12 @@ import {
 import { electronFrontendUrl } from './consts'
 import { getTemplateFromKeymap } from './menu'
 import { createAWindow, getWindows } from './windows'
+// Import improved auto updater
+import {
+  initAutoUpdater,
+  setMainWindow,
+  setupUpdaterIPC,
+} from './updater-improved'
 
 function applyMenuTemplate(template: MenuItemConstructorOptions[]) {
   const menu = Menu.buildFromTemplate(template)
@@ -76,11 +82,20 @@ app.on('activate', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
   ready = true
-  createAWindow(
+  const mainWindow = createAWindow(
     `${electronFrontendUrl}?url=${encodeURIComponent(
       `${process.env.BOOST_HUB_BASE_URL!}/desktop?desktop-init=true`
     )}`
   )
+
+  // Set main window for updater IPC
+  setMainWindow(mainWindow)
+
+  // Setup updater IPC handlers
+  setupUpdaterIPC()
+
+  // Initialize auto updater
+  initAutoUpdater()
 
   applyMenuTemplate(getTemplateFromKeymap())
 
