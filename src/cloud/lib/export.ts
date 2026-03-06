@@ -114,7 +114,8 @@ const fetchCorrectMdThemeName = (theme: string, appTheme: string) => {
   }
   if (theme === 'default') {
     if (appTheme === 'light') {
-      return null
+      // Fix: Return 'default' theme instead of null to ensure code block styling
+      return 'default'
     }
     return 'material-darker'
   }
@@ -185,6 +186,27 @@ const generatePrintToPdfHTML = (
         <style media="print">
           pre code {
             white-space: pre-wrap;
+          }
+          /* Fix: Ensure code blocks have proper contrast in exported PDF/HTML */
+          .CodeMirror {
+            background-color: #f5f5f5 !important;
+            color: #333 !important;
+            padding: 1em !important;
+            border-radius: 4px !important;
+          }
+          .CodeMirror .cm-s-default {
+            background-color: #f5f5f5 !important;
+            color: #333 !important;
+          }
+          /* Ensure code text is readable */
+          pre .CodeMirror-lines {
+            color: #333 !important;
+          }
+          /* Fix for dark themes in light mode exports */
+          .light .CodeMirror,
+          .light .CodeMirror-cursor {
+            background-color: #f5f5f5 !important;
+            color: #333 !important;
           }
         </style>
       </head>
