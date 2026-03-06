@@ -217,6 +217,16 @@ const Editor = ({
 
   const [commentState, commentActions] = useCommentManagerState(doc.id)
 
+  // Fix: Refresh CodeMirror when comments sidebar opens/closes to fix cursor position
+  useEffect(() => {
+    if (editorRef.current != null) {
+      // Small delay to ensure DOM has updated
+      setTimeout(() => {
+        editorRef.current!.refresh()
+      }, 0)
+    }
+  }, [commentState.mode])
+
   const { openModal, openContextModal } = useModal()
 
   const otherUsers = useMemo(() => {
