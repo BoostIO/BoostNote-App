@@ -14,7 +14,7 @@ If your issue is regarding the old Boostnote, please open an issue in the old re
 Let us know what you think should happen!
 -->
 
-# Steps to reproduce
+# Steps to reproducee
 
 <!--
 Please be thorough, issues we can reproduce are easier to fix!
