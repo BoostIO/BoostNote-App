@@ -8,7 +8,7 @@ Please include some **screenshots** with the **developer tools** open (console t
 If your issue is regarding the old Boostnote, please open an issue in the old repo 👉 https://github.com/BoostIO/Boostnote/issues.
 -->
 
-# Expected behavior
+# Expected behaviorr
 
 <!--
 Let us know what you think should happen!
