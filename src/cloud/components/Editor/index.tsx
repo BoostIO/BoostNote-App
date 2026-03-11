@@ -812,6 +812,16 @@ const Editor = ({
   }, [editorLayout])
 
   useEffect(() => {
+    if (editorRef.current == null) {
+      return
+    }
+
+    window.requestAnimationFrame(() => {
+      editorRef.current?.refresh()
+    })
+  }, [preferences.docContextMode])
+
+  useEffect(() => {
     focusEditorEventEmitter.listen(focusEditor)
     return () => {
       focusEditorEventEmitter.unlisten(focusEditor)
