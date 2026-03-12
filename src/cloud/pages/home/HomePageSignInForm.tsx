@@ -200,7 +200,7 @@ const HomePageSignInForm = () => {
               Sign Up
             </Button>
 
-            <Button variant={'secondary'} onClick={onSignIn}>
+            <Button variant={'secondary'} style={{ borderRadius: '4px' }} onClick={onSignIn}>
               Sign In
             </Button>
           </div>
