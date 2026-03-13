@@ -1,22 +1,28 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import enUS from '../locales/enUS'
+import faIR from '../locales/faIR'
 
 const resources = {
   'en-US': enUS,
+  'fa-IR': faIR,
 }
 
 i18n
-  .use(initReactI18next) // passes i18n down to react-i18next
+  .use(initReactI18next)
   .init({
     resources,
     fallbackLng: 'en-US',
-
-    keySeparator: false, // we do not use keys in form messages.welcome
-
+    keySeparator: false,
     interpolation: {
-      escapeValue: false, // react already safes from xss
+      escapeValue: false,
     },
   })
+
+i18n.on('languageChanged', (lng) => {
+  const isRTL = lng === 'fa-IR'
+  document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr')
+  document.documentElement.setAttribute('lang', lng)
+})
 
 export default i18n
