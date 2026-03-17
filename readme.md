@@ -9,7 +9,7 @@
 
 ![uiimage](./static/img_ui.png)
 
-## 👷 Core Team (maintainers)
+## 👷 Core Team (maintainerss)
 
 - [Rokt33r](https://github.com/rokt33r)
 - [ButteryCrumpet](https://github.com/ButteryCrumpet)
