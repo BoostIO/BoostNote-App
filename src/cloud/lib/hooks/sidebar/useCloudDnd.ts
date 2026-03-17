@@ -90,6 +90,13 @@ export function useCloudDnd() {
         return
       }
 
+      // A folder cannot be dropped onto a doc — only onto other folders.
+      // Without this guard the API rejects the move and shows a generic
+      // "Something wrong happened" error (#1086).
+      if (draggedResource.type === 'folder' && targetedResource.type === 'doc') {
+        return
+      }
+
       try {
         const originalResourceId = getResourceId(draggedResource)
         const pos = targetedPosition
