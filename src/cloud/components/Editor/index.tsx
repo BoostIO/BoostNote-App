@@ -363,9 +363,9 @@ const Editor = ({
       currentCursor.line == previousCursor.line
     if (
       !cm.state.completeActive &&
-      // user has started with '```x' and is waiting for options
+      // Show hints as soon as user types ``` or starts a language prefix (#1140)
       currentLine.startsWith('```') &&
-      currentLine.length >= 4 &&
+      currentLine.length >= 3 &&
       cursorColumn >= 3 &&
       !cursorsEqual
     ) {

@@ -240,6 +240,25 @@ for (const [key, suggestions] of Object.entries(supportedModeSuggestions)) {
   })
 }
 
+// Popular languages shown when user has just typed ``` with no prefix yet
+const popularModeKeys = ['js', 'ts', 'python', 'shell', 'css', 'html', 'sql', 'go', 'rust', 'java']
+
+export function getInitialModeSuggestions(): CodeMirror.Hint[] {
+  const allSuggestions: CodeMirror.Hint[] = []
+  for (const mode of Object.values(improvedModeSuggestions as SuggestionModeType)) {
+    for (const s of mode) {
+      if (popularModeKeys.includes(s.text)) {
+        allSuggestions.push(s)
+      }
+    }
+  }
+  // Sort by the popularModeKeys order
+  allSuggestions.sort(
+    (a, b) => popularModeKeys.indexOf(a.text) - popularModeKeys.indexOf(b.text)
+  )
+  return allSuggestions
+}
+
 export function getModeSuggestions(
   word: string,
   suggestionModes: SuggestionModeType = improvedModeSuggestions
@@ -293,7 +312,12 @@ export function CodeMirrorEditorModeHints(cm: CodeMirror.Editor) {
       while (start && /\w/.test(line.charAt(start - 1))) --start
       while (end < line.length && /\w/.test(line.charAt(end))) ++end
       const word = line.slice(start, end).toLowerCase()
-      const suggestions = getModeSuggestions(word)
+      // When cursor is right after ``` with no prefix typed yet, show popular
+      // languages as a starting hint (#1140)
+      const isEmptyCodeFence = line === '```' && cursor.ch === 3
+      const suggestions = isEmptyCodeFence
+        ? getInitialModeSuggestions()
+        : getModeSuggestions(word)
       if (suggestions.length == 0) {
         return accept(null)
       }
