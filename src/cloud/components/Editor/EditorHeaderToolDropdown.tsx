@@ -24,6 +24,7 @@ import Icon from '../../../design/components/atoms/Icon'
 interface EditorHeaderToolDropdownProps {
   onFormatCallback: (format: FormattingTool) => void
   closeDropdowndown: () => void
+  dropdownStyle?: React.CSSProperties
 }
 
 interface EditorHeaderToolDropdownOption {
@@ -44,6 +45,7 @@ const options: EditorHeaderToolDropdownOption[] = [
 const EditorHeaderToolDropdown = ({
   closeDropdowndown,
   onFormatCallback,
+  dropdownStyle,
 }: EditorHeaderToolDropdownProps) => {
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -79,7 +81,7 @@ const EditorHeaderToolDropdown = ({
 
   return (
     <>
-      <StyledEditorToolDropdownContainer ref={menuRef} onBlur={onBlurHandler}>
+      <StyledEditorToolDropdownContainer ref={menuRef} onBlur={onBlurHandler} style={dropdownStyle}>
         {options.map((option) => (
           <ContextMenuItem
             key={option.label}

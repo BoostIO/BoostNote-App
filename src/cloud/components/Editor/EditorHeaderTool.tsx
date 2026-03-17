@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useCallback } from 'react'
 import {
   StyledEditorToolButtonContainer,
   StyledEditorToolButton,
@@ -22,14 +22,29 @@ const EditorHeaderTool = ({
   onFormatCallback,
 }: EditorHeaderToolProps) => {
   const [openDropdown, setOpenDropdown] = useState<boolean>(false)
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({})
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // Calculate dropdown position using getBoundingClientRect so it renders
+  // correctly at any browser zoom level (fixes #1179)
+  const handleButtonClick = useCallback(() => {
+    if (!openDropdown && containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect()
+      setDropdownStyle({
+        position: 'fixed',
+        top: rect.top - 4,
+        left: rect.left,
+        transform: 'translateY(-100%)',
+        bottom: 'auto',
+      })
+    }
+    setOpenDropdown((prev) => !prev)
+  }, [openDropdown])
 
   return (
-    <StyledEditorToolButtonContainer>
+    <StyledEditorToolButtonContainer ref={containerRef}>
       <WithTooltip tooltip={tooltip} side='bottom'>
-        <StyledEditorToolButton
-          onClick={() => setOpenDropdown((prev) => !prev)}
-          style={style}
-        >
+        <StyledEditorToolButton onClick={handleButtonClick} style={style}>
           <Icon path={path} />
         </StyledEditorToolButton>
       </WithTooltip>
@@ -37,6 +52,7 @@ const EditorHeaderTool = ({
         <EditorHeaderToolDropdown
           onFormatCallback={onFormatCallback}
           closeDropdowndown={() => setOpenDropdown(false)}
+          dropdownStyle={dropdownStyle}
         />
       )}
     </StyledEditorToolButtonContainer>
