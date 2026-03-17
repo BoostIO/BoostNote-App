@@ -167,7 +167,9 @@ const generatePrintToPdfHTML = (
   const cssLinks = cssHrefs
     .map((href) => cssStyleLinkGenerator(href))
     .join('\n')
-  const themedGlobalCss = getGlobalCss(selectV2Theme(generalThemeName))
+  // Always use light theme for PDF export regardless of the app's current
+  // theme — dark/custom themes produce hard-to-read printed output (#912)
+  const themedGlobalCss = getGlobalCss(selectV2Theme('light'))
   const previewStyleCssEl = previewStyle ? `` : ''
 
   return `<!DOCTYPE html>
@@ -175,7 +177,7 @@ const generatePrintToPdfHTML = (
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-        <!-- Preview styles -->
+        <!-- Preview styles (forced light theme for print readability) -->
         <style>${themedGlobalCss}</style>
         ${previewStyle != null ? `<style>${previewStyle}</style>` : ''}
         ${previewStyleCssEl}
@@ -189,7 +191,7 @@ const generatePrintToPdfHTML = (
         </style>
       </head>
       <body>
-        <div class="${generalThemeName}">
+        <div class="light">
           ${markdownHTML}
         </div>
       </body>
