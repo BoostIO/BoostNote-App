@@ -269,6 +269,14 @@ const Editor = ({
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
         'Ctrl-Space': 'autocomplete',
+        'Ctrl-Shift-/': (cm: CodeMirror.Editor) => {
+          // Insert current date and time at cursor position (ISO 8601 format)
+          // Restores the date/time insert shortcut from classic Boostnote
+          const now = new Date()
+          const pad = (n: number) => String(n).padStart(2, '0')
+          const dateTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
+          cm.replaceSelection(dateTime)
+        },
       },
       scrollPastEnd: true,
       // fixes IME being on top of current line, Codemirror issue: https://github.com/codemirror/CodeMirror/issues/3137
