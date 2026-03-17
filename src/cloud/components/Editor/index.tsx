@@ -269,6 +269,18 @@ const Editor = ({
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
         'Ctrl-Space': 'autocomplete',
+        'Ctrl-C': (cm: CodeMirror.Editor) => {
+          // In Vim mode, Ctrl-C normally triggers escape. When text is
+          // selected, intercept and copy to clipboard instead so users
+          // can copy text without leaving visual/insert mode unexpectedly.
+          if (keyMap === 'vim' && cm.somethingSelected()) {
+            navigator.clipboard
+              .writeText(cm.getSelection())
+              .catch(() => document.execCommand('copy'))
+            return
+          }
+          return CodeMirror.Pass
+        },
       },
       scrollPastEnd: true,
       // fixes IME being on top of current line, Codemirror issue: https://github.com/codemirror/CodeMirror/issues/3137
