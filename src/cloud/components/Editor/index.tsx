@@ -269,6 +269,14 @@ const Editor = ({
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
         'Ctrl-Space': 'autocomplete',
+        'Shift-Ctrl-/': (cm: CodeMirror.Editor) =>
+          cm.replaceSelection(new Date().toLocaleDateString()),
+        'Shift-Cmd-/': (cm: CodeMirror.Editor) =>
+          cm.replaceSelection(new Date().toLocaleDateString()),
+        'Ctrl-Alt-/': (cm: CodeMirror.Editor) =>
+          cm.replaceSelection(new Date().toLocaleString()),
+        'Shift-Alt-/': (cm: CodeMirror.Editor) =>
+          cm.replaceSelection(new Date().toLocaleString()),
       },
       scrollPastEnd: true,
       // fixes IME being on top of current line, Codemirror issue: https://github.com/codemirror/CodeMirror/issues/3137
