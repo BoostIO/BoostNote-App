@@ -76,6 +76,9 @@ import { isEmpty } from 'lodash'
 import LoaderTopbar from '../../design/components/atoms/loaders/LoaderTopbar'
 import Icon from '../../design/components/atoms/Icon'
 import ExportModal from './Modal/contents/ExportModal'
+import { importDocs } from '../api/teams/docs/import'
+import { useToast } from '../../design/lib/stores/toast'
+import { getMapFromEntityArray } from '../lib/utils/array'
 
 interface ApplicationProps {
   className?: string
@@ -119,6 +122,79 @@ const Application = ({
   const { history, showSearchScreen, setShowSearchScreen } = useSearch()
   const [showInPageSearch, setShowInPageSearch] = useState(false)
   const [inPageSearchQuery, setInPageSearchQuery] = useState<string>('')
+  const { pushApiErrorMessage, pushMessage } = useToast()
+
+  const onDrop = useCallback(
+    async (event: React.DragEvent) => {
+      event.preventDefault()
+      if (team == null || currentWorkspaceId == null) {
+        return
+      }
+
+      const files = event.dataTransfer.files
+      if (files.length === 0) {
+        return
+      }
+
+      // Filter for .md, .txt, .html
+      const allowedExtensions = ['.md', '.txt', '.html', '.htm', '.text']
+      const filesToImport = Array.from(files).filter((file) =>
+        allowedExtensions.some((ext) => file.name.toLowerCase().endsWith(ext))
+      )
+
+      if (filesToImport.length === 0) {
+        return
+      }
+
+      pushMessage({
+        title: 'Importing...',
+        description: `Importing ${filesToImport.length} file(s).`,
+      })
+
+      try {
+        const { docs, parentFolder, workspace, errors } = await importDocs(
+          team.id,
+          {
+            parentFolderId: currentParentFolderId,
+            workspaceId: currentWorkspaceId,
+            files: files,
+            type: 'md|html',
+          }
+        )
+
+        if (errors.length > 0) {
+          pushMessage({
+            title: 'Import Errors',
+            description: `Some files could not be imported: ${errors.join(',')}`,
+          })
+        }
+
+        updateWorkspacesMap([workspace.id, workspace])
+        if (parentFolder != null) {
+          updateFoldersMap([parentFolder.id, parentFolder])
+        }
+        const changedDocs = getMapFromEntityArray(docs)
+        updateDocsMap(...changedDocs)
+
+        pushMessage({
+          title: 'Import Successful',
+          description: `Successfully imported ${docs.length} file(s).`,
+        })
+      } catch (error) {
+        pushApiErrorMessage(error)
+      }
+    },
+    [
+      team,
+      currentWorkspaceId,
+      currentParentFolderId,
+      pushMessage,
+      pushApiErrorMessage,
+      updateWorkspacesMap,
+      updateFoldersMap,
+      updateDocsMap,
+    ]
+  )
 
   usePathnameChangeEffect(() => {
     setShowFuzzyNavigation(false)
@@ -472,7 +548,11 @@ const Application = ({
   }, [team, translate, pathname, push, sendToElectron])
 
   return (
-    <>
+    <div
+      onDragOver={(event) => event.preventDefault()}
+      onDrop={onDrop}
+      style={{ height: '100%' }}
+    >
       {team != null && <EventSource teamId={team.id} />}
       {showFuzzyNavigation && team != null && (
         <FuzzyNavigation
@@ -543,7 +623,7 @@ const Application = ({
           onSearchClose={() => setShowInPageSearch(false)}
         />
       )}
-    </>
+    </div>
   )
 }
 
