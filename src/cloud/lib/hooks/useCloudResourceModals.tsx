@@ -72,6 +72,25 @@ export function useCloudResourceModals() {
 
   const openRenameFolderForm = useCallback(
     (folder: SerializedFolder) => {
+      let renameSubmitted = false
+      const updateFolderName = async (inputValue: string, emoji?: string) => {
+        if (renameSubmitted) {
+          return
+        }
+        try {
+          renameSubmitted = true
+          await updateFolder(folder, {
+            workspaceId: folder.workspaceId,
+            parentFolderId: folder.parentFolderId,
+            folderName: inputValue,
+            emoji: typeof emoji === 'string' ? emoji : null,
+          })
+        } catch (error) {
+          renameSubmitted = false
+          throw error
+        }
+      }
+
       openModal(
         <EmojiInputForm
           defaultIcon={mdiFolderOutline}
@@ -82,17 +101,13 @@ export function useCloudResourceModals() {
             label: translate(lngKeys.GeneralUpdateVerb),
           }}
           onSubmit={async (inputValue: string, emoji?: string) => {
-            await updateFolder(folder, {
-              workspaceId: folder.workspaceId,
-              parentFolderId: folder.parentFolderId,
-              folderName: inputValue,
-              emoji: typeof emoji === 'string' ? emoji : null,
-            })
+            await updateFolderName(inputValue, emoji)
             closeLastModal()
           }}
         />,
         {
-          showCloseIcon: true,
+          showCloseIcon: false,
+          width: 'small',
           title: translate(lngKeys.RenameFolder),
         }
       )
@@ -102,37 +117,47 @@ export function useCloudResourceModals() {
 
   const openRenameDocForm = useCallback(
     (doc: SerializedDoc) => {
+      let renameSubmitted = false
+      const updateDocTitle = async (inputValue: string, emoji?: string) => {
+        if (renameSubmitted) {
+          return
+        }
+        try {
+          renameSubmitted = true
+          await updateDoc(doc, {
+            workspaceId: doc.workspaceId,
+            parentFolderId: doc.parentFolderId,
+            title: inputValue,
+            emoji: emoji == null ? null : emoji,
+          })
+        } catch (error) {
+          renameSubmitted = false
+          throw error
+        }
+      }
+
       openModal(
         <EmojiInputForm
           defaultIcon={mdiFileDocumentOutline}
           defaultInputValue={doc.title}
           defaultEmoji={doc.emoji}
           placeholder={translate(lngKeys.DocTitlePlaceholder)}
-          onSubmit={async (inputValue: string, emoji?: string) => {
-            await updateDoc(doc, {
-              workspaceId: doc.workspaceId,
-              parentFolderId: doc.parentFolderId,
-              title: inputValue,
-              emoji: emoji == null ? null : emoji,
-            })
-            closeLastModal()
+          submitButtonProps={{
+            label: translate(lngKeys.GeneralUpdateVerb),
           }}
-          onBlur={async (inputValue: string, emoji?: string) => {
-            await updateDoc(doc, {
-              workspaceId: doc.workspaceId,
-              parentFolderId: doc.parentFolderId,
-              title: inputValue,
-              emoji: emoji == null ? null : emoji,
-            })
+          onSubmit={async (inputValue: string, emoji?: string) => {
+            await updateDocTitle(inputValue, emoji)
+            closeLastModal()
           }}
         />,
         {
           showCloseIcon: false,
           width: 'small',
+          title: translate(lngKeys.RenameDoc),
         }
       )
     },
-    [closeLastModal, openModal, translate, updateDoc]
+    [closeLastModal, openModal, updateDoc, translate]
   )
 
   const openNewFolderForm = useCallback(
@@ -237,21 +262,31 @@ export function useCloudResourceModals() {
 
   const openRenameDashboardForm = useCallback(
     (dashboard: SerializedDashboard) => {
+      let renameSubmitted = false
+      const updateDashboardName = async (inputValue: string) => {
+        if (renameSubmitted) {
+          return
+        }
+        try {
+          renameSubmitted = true
+          await updateDashboard(dashboard, {
+            name: inputValue,
+          })
+        } catch (error) {
+          renameSubmitted = false
+          throw error
+        }
+      }
+
       openModal(
         <InputForm
           defaultInputValue={dashboard.name}
           placeholder={translate(lngKeys.DocTitlePlaceholder)}
           onSubmit={async (inputValue: string) => {
-            await updateDashboard(dashboard, {
-              name: inputValue,
-            })
+            await updateDashboardName(inputValue)
             closeLastModal()
           }}
-          onBlur={async (inputValue: string) => {
-            await updateDashboard(dashboard, {
-              name: inputValue,
-            })
-          }}
+          onBlur={updateDashboardName}
         />,
         {
           showCloseIcon: false,
@@ -259,7 +294,7 @@ export function useCloudResourceModals() {
         }
       )
     },
-    [closeLastModal, openModal, translate, updateDashboard]
+    [closeLastModal, openModal, updateDashboard, translate]
   )
 
   const deleteWorkspace = useCallback(
