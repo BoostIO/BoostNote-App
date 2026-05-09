@@ -16,6 +16,33 @@ interface EditorProps {
   onYTextChange?: (event: YEvent, ytext: YText) => void
 }
 
+const defaultExtraKeys: CodeMirror.KeyMap = {
+  Enter: 'newlineAndIndentContinueMarkdownList',
+  Tab: 'indentMore',
+  'Ctrl-C': (cm: CodeMirror.Editor) => {
+    if (cm.getOption('keyMap') === 'vim') {
+      document.execCommand('copy')
+    }
+    return CodeMirror.Pass
+  },
+}
+
+function buildEditorConfig(
+  config: CodeMirror.EditorConfiguration
+): CodeMirror.EditorConfiguration {
+  if (typeof config.extraKeys === 'string') {
+    return config
+  }
+
+  return {
+    ...config,
+    extraKeys: {
+      ...defaultExtraKeys,
+      ...config.extraKeys,
+    },
+  }
+}
+
 const CodeMirrorEditor = ({
   config = {},
   realtime,
@@ -35,13 +62,10 @@ const CodeMirrorEditor = ({
 
   useEffectOnce(() => {
     if (editorRootRef.current != null) {
-      editorRef.current = CodeMirror(editorRootRef.current, {
-        extraKeys: {
-          Enter: 'newlineAndIndentContinueMarkdownList',
-          Tab: 'indentMore',
-        },
-        ...config,
-      })
+      editorRef.current = CodeMirror(
+        editorRootRef.current,
+        buildEditorConfig(config)
+      )
 
       editorRef.current.on('keydown', (cm, event) => {
         if (cm.state.vim && cm.state.vim.insertMode) {
@@ -76,7 +100,7 @@ const CodeMirrorEditor = ({
 
   useEffect(() => {
     if (editorRef.current != null) {
-      Object.entries(config).forEach(([key, val]) => {
+      Object.entries(buildEditorConfig(config)).forEach(([key, val]) => {
         editorRef.current!.setOption(
           key as keyof CodeMirror.EditorConfiguration,
           val
