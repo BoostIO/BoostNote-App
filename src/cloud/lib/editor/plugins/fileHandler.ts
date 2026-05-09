@@ -1,6 +1,10 @@
 import { boostHubBaseUrl } from '../../consts'
 
 export type OnFileCallback = (file: File) => Promise<FileNode | null>
+export type OnUnsupportedFileCallback = (
+  file: File,
+  reason: 'directory'
+) => void
 
 type FileNode =
   | { type: 'img'; url: string; alt?: string; title?: string }
@@ -8,14 +12,31 @@ type FileNode =
 
 interface FileHandlerConfig {
   onFile: OnFileCallback
+  onUnsupportedFile?: OnUnsupportedFileCallback
   buildWidget?: (file: File) => HTMLElement
   lineClass?: string
+}
+
+interface DataTransferItemEntryLike {
+  webkitGetAsEntry?: () => {
+    isDirectory: boolean
+  } | null
+}
+
+export const isDirectoryTransferItem = (item: DataTransferItem | undefined) => {
+  if (item == null) {
+    return false
+  }
+
+  const entry = (item as DataTransferItemEntryLike).webkitGetAsEntry?.()
+  return entry != null && entry.isDirectory
 }
 
 const attachFileHandlerToCodeMirrorEditor = (
   editor: CodeMirror.Editor,
   {
     onFile,
+    onUnsupportedFile,
     buildWidget = buildDefaultUploadWidget,
     lineClass = 'file-loading',
   }: FileHandlerConfig
@@ -49,6 +70,10 @@ const attachFileHandlerToCodeMirrorEditor = (
       const pos = instance.coordsChar({ left: event.pageX, top: event.pageY })
       const files = event.dataTransfer.files
       for (let i = 0; i < files.length; i++) {
+        if (isDirectoryTransferItem(event.dataTransfer.items[i])) {
+          onUnsupportedFile?.(files[i], 'directory')
+          continue
+        }
         await handler(i > 0 ? instance.getCursor() : pos, files[i])
       }
     }

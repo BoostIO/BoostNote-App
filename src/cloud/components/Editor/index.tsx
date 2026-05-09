@@ -390,6 +390,13 @@ const Editor = ({
             ? fileUploadHandlerRef.current(file)
             : null
         },
+        onUnsupportedFile: () => {
+          pushMessage({
+            title: '',
+            description:
+              'Folder uploads are not supported. Please drop individual files instead.',
+          })
+        },
       })
       pasteFormatPlugin(editor, {
         openMenu: (pos, cb) => {
@@ -487,7 +494,7 @@ const Editor = ({
         )
       })
     },
-    [handleCursorShowHintActivity]
+    [handleCursorShowHintActivity, pushMessage]
   )
 
   const onTemplatePickCallback = useCallback(
