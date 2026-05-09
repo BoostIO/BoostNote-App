@@ -1,5 +1,9 @@
 import { useCallback } from 'react'
-import { UpdateDocRequestBody } from '../../../api/teams/docs'
+import {
+  createDoc,
+  CreateDocRequestBody,
+  UpdateDocRequestBody,
+} from '../../../api/teams/docs'
 import { UpdateFolderRequestBody } from '../../../api/teams/folders'
 import { moveResource } from '../../../api/teams/resources'
 import {
@@ -20,23 +24,107 @@ import {
 } from '../../utils/patterns'
 import { SerializedFolderWithBookmark } from '../../../interfaces/db/folder'
 import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
+import { SerializedTeam } from '../../../interfaces/db/team'
 import { SidebarDragState } from '../../../../design/lib/dnd'
 import { useToast } from '../../../../design/lib/stores/toast'
 import { getMapFromEntityArray } from '../../../../design/lib/utils/array'
+
+const textFileExtensions = new Set(['.md', '.txt', '.html', '.htm'])
+
+function getDroppedFiles(event: any) {
+  return Array.from<File>(event.dataTransfer?.files || []).filter((file) => {
+    const lowerCaseName = file.name.toLowerCase()
+    return Array.from(textFileExtensions).some((extension) =>
+      lowerCaseName.endsWith(extension)
+    )
+  })
+}
+
+function getDocTitleFromFileName(fileName: string) {
+  const matchingExtension = Array.from(textFileExtensions).find((extension) =>
+    fileName.toLowerCase().endsWith(extension)
+  )
+
+  if (matchingExtension == null) {
+    return fileName
+  }
+
+  return fileName.slice(0, -matchingExtension.length) || fileName
+}
+
+function readTextFile(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(String(reader.result || ''))
+    reader.onerror = () => reject(reader.error)
+    reader.readAsText(file)
+  })
+}
 
 export function useCloudDnd() {
   const {
     updateFoldersMap,
     updateDocsMap,
     updateWorkspacesMap,
+    updateParentFolderOfDoc,
+    updateParentWorkspaceOfDoc,
     setCurrentPath,
   } = useNav()
   const { pageDoc, pageFolder } = usePage()
   const { pushApiErrorMessage } = useToast()
 
+  const dropFilesAsDocs = useCallback(
+    async (
+      event: any,
+      team: SerializedTeam,
+      destination: Pick<CreateDocRequestBody, 'workspaceId' | 'parentFolderId'>
+    ) => {
+      const files = getDroppedFiles(event)
+      if (files.length === 0) {
+        return false
+      }
+
+      event.preventDefault()
+      event.stopPropagation()
+
+      try {
+        for (const file of files) {
+          const content = await readTextFile(file)
+          const { doc } = await createDoc(
+            { id: team.id },
+            {
+              ...destination,
+              title: getDocTitleFromFileName(file.name),
+              content,
+            }
+          )
+
+          updateDocsMap([doc.id, doc])
+
+          if (doc.parentFolder != null) {
+            updateParentFolderOfDoc(doc)
+          } else if (doc.workspace != null) {
+            updateParentWorkspaceOfDoc(doc)
+          }
+        }
+      } catch (error) {
+        pushApiErrorMessage(error)
+      }
+
+      return true
+    },
+    [
+      pushApiErrorMessage,
+      updateDocsMap,
+      updateParentFolderOfDoc,
+      updateParentWorkspaceOfDoc,
+    ]
+  )
+
   const dropInWorkspace = useCallback(
     async (
       event: any,
+      team: SerializedTeam,
       workspaceId: string,
       updateFolder: (
         folder: FolderDataTransferItem,
@@ -47,6 +135,11 @@ export function useCloudDnd() {
         body: UpdateDocRequestBody
       ) => Promise<void>
     ) => {
+      const droppedFiles = await dropFilesAsDocs(event, team, { workspaceId })
+      if (droppedFiles) {
+        return
+      }
+
       const draggedResource = getDraggedResource(event)
       if (draggedResource === null) {
         return
@@ -69,7 +162,7 @@ export function useCloudDnd() {
         })
       }
     },
-    []
+    [dropFilesAsDocs]
   )
 
   const dropInDocOrFolder = useCallback(
@@ -171,6 +264,7 @@ export function useCloudDnd() {
   }, [])
 
   return {
+    dropFilesAsDocs,
     dropInWorkspace,
     dropInDocOrFolder,
     saveFolderTransferData,

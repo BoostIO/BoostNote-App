@@ -42,6 +42,8 @@ const ContentManager = ({
   folders,
   workspacesMap,
   currentUserIsCoreMember,
+  currentWorkspaceId,
+  currentFolderId,
   page,
 }: ContentManagerProps) => {
   const { preferences, setPreferences } = usePreferences()
@@ -118,8 +120,12 @@ const ContentManager = ({
     [setPreferences]
   )
 
-  const { dropInDocOrFolder, saveDocTransferData, clearDragTransferData } =
-    useCloudDnd()
+  const {
+    dropFilesAsDocs,
+    dropInDocOrFolder,
+    saveDocTransferData,
+    clearDragTransferData,
+  } = useCloudDnd()
 
   const onDragStartDoc = useCallback(
     (event: any, doc: SerializedDocWithSupplemental) => {
@@ -145,8 +151,28 @@ const ContentManager = ({
     [clearDragTransferData]
   )
 
+  const onDragOverFiles = useCallback((event: React.DragEvent) => {
+    if (event.dataTransfer.types.includes('Files')) {
+      event.preventDefault()
+    }
+  }, [])
+
+  const onDropFiles = useCallback(
+    (event: React.DragEvent) => {
+      if (currentWorkspaceId == null) {
+        return
+      }
+
+      dropFilesAsDocs(event, team, {
+        workspaceId: currentWorkspaceId,
+        parentFolderId: currentFolderId,
+      })
+    },
+    [currentFolderId, currentWorkspaceId, dropFilesAsDocs, team]
+  )
+
   return (
-    <Container>
+    <Container onDragOver={onDragOverFiles} onDrop={onDropFiles}>
       <Scroller className='cm__scroller'>
         <StyledContentManagerHeader>
           <div className='header__left' />

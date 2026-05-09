@@ -109,6 +109,7 @@ export function useCloudSidebarTree() {
   } = useSidebarCollapse()
 
   const {
+    dropFilesAsDocs,
     dropInDocOrFolder,
     dropInWorkspace,
     saveFolderTransferData,
@@ -263,7 +264,7 @@ export function useCloudSidebarTree() {
           ? {
               dropIn: true,
               onDrop: (event: any) =>
-                dropInWorkspace(event, wp.id, updateFolder, updateDoc),
+                dropInWorkspace(event, team, wp.id, updateFolder, updateDoc),
               controls: [
                 {
                   icon: mdiTextBoxPlus,
@@ -339,15 +340,24 @@ export function useCloudSidebarTree() {
       const coreRestrictedFeatures: Partial<CloudTreeItem> =
         currentUserIsCoreMember
           ? {
-              onDrop: (event: any, position: SidebarDragState) =>
-                dropInDocOrFolder(
+              onDrop: async (event: any, position: SidebarDragState) => {
+                const droppedFiles = await dropFilesAsDocs(event, team, {
+                  parentFolderId: folder.id,
+                  workspaceId: folder.workspaceId,
+                })
+                if (droppedFiles) {
+                  return
+                }
+
+                return dropInDocOrFolder(
                   event,
                   {
                     type: 'folder',
                     resource: folderToDataTransferItem(folder),
                   },
                   position
-                ),
+                )
+              },
               onDragStart: (event: any) => {
                 saveFolderTransferData(event, folder)
               },
@@ -941,6 +951,7 @@ export function useCloudSidebarTree() {
     treeSendingMap,
     sideBarOpenedFolderIdsSet,
     dropInDocOrFolder,
+    dropFilesAsDocs,
     saveFolderTransferData,
     clearDragTransferData,
     toggleFolderBookmark,
