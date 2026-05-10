@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from 'react'
-import CodeMirror from '../../editor/CodeMirror'
+import CodeMirror, { syncCodeMirrorVimKeyMaps } from '../../editor/CodeMirror'
 import { CodeMirrorBinding } from 'y-codemirror'
 import { useEffectOnce } from 'react-use'
 import { WebsocketProvider } from 'y-websocket'
 import throttle from 'lodash.throttle'
 import { UndoManager, YEvent } from 'yjs'
 import { YText } from 'yjs/dist/src/internals'
+import { useSettings } from '../../stores/settings'
 
 interface EditorProps {
   config?: CodeMirror.EditorConfiguration
@@ -24,10 +25,15 @@ const CodeMirrorEditor = ({
   onLineScroll,
   onYTextChange,
 }: EditorProps) => {
+  const { settings } = useSettings()
   const editorRootRef = useRef<HTMLDivElement>(null)
   const editorRef = useRef<CodeMirror.Editor>()
   const onScrollLineRef = useRef(onLineScroll)
   const skipOnScrollRef = useRef(false)
+
+  useEffect(() => {
+    syncCodeMirrorVimKeyMaps(settings['general.editorVimKeyMaps'])
+  }, [settings])
 
   useEffect(() => {
     onScrollLineRef.current = onLineScroll

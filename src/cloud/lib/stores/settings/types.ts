@@ -3,6 +3,12 @@ export type GeneralEditorIndentType = 'spaces' | 'tab'
 export type GeneralEditorIndentSize = 2 | 4 | 8
 export type GeneralLanguageOptions = 'en-US' | 'ja' | 'fr' | 'kr' | 'zh-CN'
 
+export interface CodeMirrorVimMapEntry {
+  toKeys: string
+  keys: string
+  context: string
+}
+
 export interface UserSettings {
   // General
   'general.language': GeneralLanguageOptions
@@ -11,6 +17,7 @@ export interface UserSettings {
   'general.codeBlockTheme': CodeMirrorEditorTheme
   'general.customBlockEditorTheme': MonacoEditorTheme
   'general.editorKeyMap': CodeMirrorKeyMap
+  'general.editorVimKeyMaps': CodeMirrorVimMapEntry[]
   'general.editorIndentType': GeneralEditorIndentType
   'general.editorIndentSize': GeneralEditorIndentSize
   'general.editorFontSize': number

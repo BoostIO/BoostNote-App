@@ -58,6 +58,11 @@ const enTranslation: TranslationSource = {
   [lngKeys.SettingsEditorTheme]: 'Editor Theme',
   [lngKeys.SettingsCodeBlockTheme]: 'Code Block Theme',
   [lngKeys.SettingsEditorKeyMap]: 'Editor Keymap',
+  [lngKeys.SettingsEditorVimKeyMaps]: 'Editor Vim Mappings',
+  [lngKeys.SettingsEditorVimKeyMapsDescription]:
+    'JSON array of Vim mappings. Example: [{"toKeys":"jk","keys":"<Esc>","context":"insert"}]',
+  [lngKeys.SettingsEditorVimKeyMapsInvalid]:
+    'Invalid Vim mappings. Enter a JSON array of { "toKeys", "keys", "context" } entries.',
   [lngKeys.SettingsEditorFontSize]: 'Editor Font Size',
   [lngKeys.SettingsEditorFontFamily]: 'Editor Font Family',
   [lngKeys.SettingsLight]: 'Light',
