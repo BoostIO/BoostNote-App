@@ -1,4 +1,5 @@
 import { boostHubBaseUrl } from '../../consts'
+import { htmlToMarkdown } from '../htmlToMarkdown'
 
 export type OnFileCallback = (file: File) => Promise<FileNode | null>
 
@@ -63,6 +64,17 @@ const attachFileHandlerToCodeMirrorEditor = (
         const files = event.clipboardData.files
         for (let i = 0; i < files.length; i++) {
           await handler(i > 0 ? instance.getCursor() : pos, files[i])
+        }
+        return
+      }
+
+      const html = event.clipboardData?.getData('text/html')
+      if (html != null && html !== '') {
+        const markdown = htmlToMarkdown(html)
+        if (markdown != null) {
+          event.stopPropagation()
+          event.preventDefault()
+          instance.replaceSelection(markdown, 'end')
         }
       }
     }
