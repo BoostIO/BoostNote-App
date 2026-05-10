@@ -331,6 +331,7 @@ const enTranslation: TranslationSource = {
   [lngKeys.EditorToolbarTooltipList]: 'Add a bulleted list',
   [lngKeys.EditorToolbarTooltipNumberedList]: 'Add a numbered list',
   [lngKeys.EditorToolbarTooltipTaskList]: 'Add a task list',
+  [lngKeys.EditorToolbarTooltipFormat]: 'Format document',
   [lngKeys.EditorToolbarTooltipBold]: 'Add bold text',
   [lngKeys.EditorToolbarTooltipItalic]: 'Add italic text',
   [lngKeys.EditorToolbarTooltipCode]: 'Insert code',

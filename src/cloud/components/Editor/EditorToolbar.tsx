@@ -13,6 +13,7 @@ import {
   mdiPageNextOutline,
   mdiMathIntegralBox,
   mdiCodeBrackets,
+  mdiFormatTextWrappingWrap,
 } from '@mdi/js'
 import { Position } from 'codemirror'
 import EditorToolButton from './EditorToolButton'
@@ -26,6 +27,7 @@ import {
 } from '../../lib/utils/events'
 import { useI18n } from '../../lib/hooks/useI18n'
 import { lngKeys } from '../../lib/i18n/types'
+import { formatMarkdown } from '../../lib/editor/formatMarkdown'
 
 interface EditorToolbarProps {
   editorRef?: React.MutableRefObject<CodeMirror.Editor | null>
@@ -205,6 +207,47 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
     }
   }, [applyItalicStyle])
 
+  const formatEditorContent = useCallback(() => {
+    if (editorRef == null || editorRef.current == null) {
+      return
+    }
+
+    const editor = editorRef.current
+    const hasSelection = editor.somethingSelected()
+    const from = hasSelection ? editor.getCursor('from') : { line: 0, ch: 0 }
+    const lastLine = editor.lineCount() - 1
+    const to = hasSelection
+      ? editor.getCursor('to')
+      : { line: lastLine, ch: (editor.getLine(lastLine) || '').length }
+    const source = editor.getRange(from, to, '\n')
+
+    if (source.trim() === '') {
+      return
+    }
+
+    const fromOffset = editor.indexFromPos(from)
+    const cursorOffset = Math.max(
+      0,
+      editor.indexFromPos(editor.getCursor()) - fromOffset
+    )
+
+    try {
+      const result = formatMarkdown(source, cursorOffset)
+
+      if (result.formatted === source) {
+        return
+      }
+
+      editor.operation(() => {
+        editor.replaceRange(result.formatted, from, to, '+format')
+        editor.setCursor(editor.posFromIndex(fromOffset + result.cursorOffset))
+      })
+      editor.focus()
+    } catch (error) {
+      console.warn('Unable to format markdown content', error)
+    }
+  }, [editorRef])
+
   return (
     <StyledEditorToolList>
       <EditorHeaderToolDropdown
@@ -242,6 +285,12 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
         tooltip={translate(lngKeys.EditorToolbarTooltipTaskList)}
         style={{ marginRight: 20 }}
         onClick={() => onFormatCallback('taskList')}
+      />
+      <EditorToolButton
+        path={mdiFormatTextWrappingWrap}
+        tooltip={translate(lngKeys.EditorToolbarTooltipFormat)}
+        style={{ marginRight: 20 }}
+        onClick={formatEditorContent}
       />
       <EditorToolButton
         path={mdiFormatBold}
