@@ -13,10 +13,55 @@ import 'codemirror/keymap/sublime'
 import 'codemirror/keymap/emacs'
 import 'codemirror/addon/scroll/scrollpastend'
 import { loadMode } from '../../../design/lib/codemirror/util'
+import { CodeMirrorVimMapEntry } from '../stores/settings/types'
 
 loadMode(CodeMirror)
 
 export default CodeMirror
+
+interface CodeMirrorVimApi {
+  map: (toKeys: string, keys: string, context?: string) => void
+  unmap: (toKeys: string, context?: string) => void
+}
+
+let lastSerializedVimKeyMaps = ''
+let lastAppliedVimKeyMaps: CodeMirrorVimMapEntry[] = []
+
+export function syncCodeMirrorVimKeyMaps(
+  vimKeyMaps: CodeMirrorVimMapEntry[] = []
+) {
+  const normalizedVimKeyMaps = Array.isArray(vimKeyMaps)
+    ? vimKeyMaps.filter((entry) => {
+        return entry.toKeys.trim() !== '' && entry.keys.trim() !== ''
+      })
+    : []
+  const serializedVimKeyMaps = JSON.stringify(normalizedVimKeyMaps)
+
+  if (serializedVimKeyMaps === lastSerializedVimKeyMaps) {
+    return
+  }
+
+  const vimApi = (
+    CodeMirror as typeof CodeMirror & {
+      Vim?: CodeMirrorVimApi
+    }
+  ).Vim
+
+  if (vimApi == null) {
+    return
+  }
+
+  lastAppliedVimKeyMaps.forEach((entry) => {
+    vimApi.unmap(entry.toKeys, entry.context)
+  })
+
+  normalizedVimKeyMaps.forEach((entry) => {
+    vimApi.map(entry.toKeys, entry.keys, entry.context)
+  })
+
+  lastAppliedVimKeyMaps = normalizedVimKeyMaps
+  lastSerializedVimKeyMaps = serializedVimKeyMaps
+}
 
 export interface EditorPosition {
   line: number

@@ -20,6 +20,7 @@ export const baseUserSettings: UserSettings = {
   'general.codeBlockTheme': 'default',
   'general.customBlockEditorTheme': 'dark',
   'general.editorKeyMap': 'default',
+  'general.editorVimKeyMaps': [],
   'general.editorIndentType': 'spaces',
   'general.editorIndentSize': 2,
   'general.editorFontSize': 15,

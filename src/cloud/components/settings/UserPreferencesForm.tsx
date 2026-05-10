@@ -6,6 +6,7 @@ import {
   CodeMirrorEditorTheme,
   codeMirrorKeyMap,
   CodeMirrorKeyMap,
+  CodeMirrorVimMapEntry,
   GeneralEditorIndentType,
   GeneralEditorIndentSize,
   GeneralLanguageOptions,
@@ -32,6 +33,10 @@ const UserPreferencesForm = () => {
   const [fontFamily, setFontFamily] = useState(
     settings['general.editorFontFamily']
   )
+  const [vimKeyMaps, setVimKeyMaps] = useState(() => {
+    return formatVimKeyMaps(settings['general.editorVimKeyMaps'])
+  })
+  const [vimKeyMapsError, setVimKeyMapsError] = useState<string | null>(null)
 
   const resetSettings = useCallback(() => {
     setSettings({})
@@ -160,6 +165,27 @@ const UserPreferencesForm = () => {
     },
     500,
     [fontFamily, setSettings]
+  )
+
+  const updateVimKeyMaps: ChangeEventHandler<HTMLTextAreaElement> = useCallback(
+    (event) => {
+      setVimKeyMaps(event.target.value)
+    },
+    [setVimKeyMaps]
+  )
+  useDebounce(
+    () => {
+      try {
+        setSettings({
+          'general.editorVimKeyMaps': parseVimKeyMaps(vimKeyMaps),
+        })
+        setVimKeyMapsError(null)
+      } catch (error) {
+        setVimKeyMapsError(t(lngKeys.SettingsEditorVimKeyMapsInvalid))
+      }
+    },
+    500,
+    [vimKeyMaps, setSettings, t]
   )
 
   return (
@@ -369,6 +395,45 @@ const UserPreferencesForm = () => {
           ],
         },
         {
+          title: t(lngKeys.SettingsEditorVimKeyMaps),
+          items: [
+            {
+              type: 'node',
+              element: (
+                <div>
+                  <textarea
+                    style={{
+                      width: '100%',
+                      minHeight: 110,
+                      resize: 'vertical',
+                      fontFamily: 'monospace',
+                    }}
+                    value={vimKeyMaps}
+                    placeholder={
+                      '[{"toKeys":"jk","keys":"<Esc>","context":"insert"}]'
+                    }
+                    onChange={updateVimKeyMaps}
+                  />
+                  <p style={{ margin: '4px 0 0', fontSize: 12 }}>
+                    {t(lngKeys.SettingsEditorVimKeyMapsDescription)}
+                  </p>
+                  {vimKeyMapsError != null && (
+                    <p
+                      style={{
+                        margin: '4px 0 0',
+                        color: '#f66',
+                        fontSize: 12,
+                      }}
+                    >
+                      {vimKeyMapsError}
+                    </p>
+                  )}
+                </div>
+              ),
+            },
+          ],
+        },
+        {
           title: t(lngKeys.SettingsIndentType),
           items: [
             {
@@ -444,3 +509,46 @@ const UserPreferencesForm = () => {
 }
 
 export default UserPreferencesForm
+
+function formatVimKeyMaps(vimKeyMaps: CodeMirrorVimMapEntry[]) {
+  return JSON.stringify(Array.isArray(vimKeyMaps) ? vimKeyMaps : [], null, 2)
+}
+
+function parseVimKeyMaps(value: string): CodeMirrorVimMapEntry[] {
+  const trimmedValue = value.trim()
+
+  if (trimmedValue === '') {
+    return []
+  }
+
+  const parsedValue = JSON.parse(trimmedValue)
+
+  if (!Array.isArray(parsedValue)) {
+    throw new Error('Vim key mappings must be an array')
+  }
+
+  return parsedValue.map((entry) => {
+    if (!isVimKeyMapEntry(entry)) {
+      throw new Error('Invalid Vim key mapping entry')
+    }
+
+    return {
+      toKeys: entry.toKeys,
+      keys: entry.keys,
+      context: entry.context,
+    }
+  })
+}
+
+function isVimKeyMapEntry(entry: unknown): entry is CodeMirrorVimMapEntry {
+  if (typeof entry !== 'object' || entry == null) {
+    return false
+  }
+
+  const vimKeyMapEntry = entry as CodeMirrorVimMapEntry
+  return (
+    typeof vimKeyMapEntry.toKeys === 'string' &&
+    typeof vimKeyMapEntry.keys === 'string' &&
+    typeof vimKeyMapEntry.context === 'string'
+  )
+}

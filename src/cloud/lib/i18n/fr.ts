@@ -62,6 +62,11 @@ const frTranslation: TranslationSource = {
   [lngKeys.SettingsEditorTheme]: "Thème de l'éditeur",
   [lngKeys.SettingsCodeBlockTheme]: 'Thème des blocs de code',
   [lngKeys.SettingsEditorKeyMap]: "KeyMap pour l'éditeur",
+  [lngKeys.SettingsEditorVimKeyMaps]: "Mappages Vim de l'éditeur",
+  [lngKeys.SettingsEditorVimKeyMapsDescription]:
+    'Tableau JSON de mappages Vim. Exemple : [{"toKeys":"jk","keys":"<Esc>","context":"insert"}]',
+  [lngKeys.SettingsEditorVimKeyMapsInvalid]:
+    'Mappages Vim invalides. Entrez un tableau JSON avec des entrées { "toKeys", "keys", "context" }.',
   [lngKeys.SettingsEditorFontSize]: "Taille de la police de l'éditeur",
   [lngKeys.SettingsEditorFontFamily]: "Famille de polices de l'éditeur",
   [lngKeys.SettingsLight]: 'Clair',

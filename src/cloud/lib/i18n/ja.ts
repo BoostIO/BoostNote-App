@@ -60,6 +60,11 @@ const jpTranslation: TranslationSource = {
   [lngKeys.SettingsEditorTheme]: 'エディタテーマ',
   [lngKeys.SettingsCodeBlockTheme]: 'コードブロックテーマ',
   [lngKeys.SettingsEditorKeyMap]: 'エディタのキーマップ',
+  [lngKeys.SettingsEditorVimKeyMaps]: 'エディタの Vim マッピング',
+  [lngKeys.SettingsEditorVimKeyMapsDescription]:
+    'Vim マッピングの JSON 配列です。例: [{"toKeys":"jk","keys":"<Esc>","context":"insert"}]',
+  [lngKeys.SettingsEditorVimKeyMapsInvalid]:
+    'Vim マッピングが無効です。{ "toKeys", "keys", "context" } を含む JSON 配列を入力してください。',
   [lngKeys.SettingsEditorFontSize]: 'エディタのフォントサイズ',
   [lngKeys.SettingsEditorFontFamily]: 'エディタフォントファミリ',
   [lngKeys.SettingsLight]: 'ライト',
