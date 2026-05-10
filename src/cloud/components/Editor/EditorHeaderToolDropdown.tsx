@@ -105,12 +105,15 @@ export default EditorHeaderToolDropdown
 const StyledMenuItem = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  width: 100%;
+  white-space: nowrap;
 `
 
 const StyledIcon = styled.div`
   display: flex;
   align-items: center;
+  flex: 0 0 auto;
   padding-right: ${({ theme }) => theme.sizes.spaces.sm}px;
   font-size: 21px;
 `
