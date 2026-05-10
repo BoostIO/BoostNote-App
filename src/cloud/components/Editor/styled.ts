@@ -47,9 +47,10 @@ export const StyledEditorToolDropdownContainer = styled.div`
   z-index: 9000;
   position: absolute;
   padding: ${({ theme }) => theme.sizes.spaces.xsm}px 0;
-  width: 110px;
+  width: 132px;
   height: auto;
   min-width: 100%;
+  box-sizing: border-box;
   border-style: solid;
   border-width: 1px;
   border-radius: 4px;
