@@ -292,6 +292,7 @@ const zhTranslation: TranslationSource = {
   [lngKeys.EditorToolbarTooltipList]: '添加项目符号列表',
   [lngKeys.EditorToolbarTooltipNumberedList]: '添加编号列表',
   [lngKeys.EditorToolbarTooltipTaskList]: '添加任务列表',
+  [lngKeys.EditorToolbarTooltipFormat]: '格式化文档',
   [lngKeys.EditorToolbarTooltipBold]: '添加粗体文本',
   [lngKeys.EditorToolbarTooltipItalic]: '添加斜体文本',
   [lngKeys.EditorToolbarTooltipCode]: '插入代码',

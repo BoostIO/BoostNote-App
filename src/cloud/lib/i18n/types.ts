@@ -366,6 +366,7 @@ export enum lngKeys {
   EditorToolbarTooltipList = 'editor.toolbar.tooltips.list',
   EditorToolbarTooltipNumberedList = 'editor.toolbar.tooltips.numberedlist',
   EditorToolbarTooltipTaskList = 'editor.toolbar.tooltips.tasklist',
+  EditorToolbarTooltipFormat = 'editor.toolbar.tooltips.format',
   EditorToolbarTooltipBold = 'editor.toolbar.tooltips.bold',
   EditorToolbarTooltipItalic = 'editor.toolbar.tooltips.italic',
   EditorToolbarTooltipCode = 'editor.toolbar.tooltips.code',

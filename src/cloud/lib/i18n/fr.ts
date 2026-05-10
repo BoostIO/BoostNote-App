@@ -330,6 +330,7 @@ const frTranslation: TranslationSource = {
   [lngKeys.EditorToolbarTooltipList]: 'Insérér une liste à puces',
   [lngKeys.EditorToolbarTooltipNumberedList]: 'Insérér une liste numérique',
   [lngKeys.EditorToolbarTooltipTaskList]: 'Insérer une liste de tâches',
+  [lngKeys.EditorToolbarTooltipFormat]: 'Formater le document',
   [lngKeys.EditorToolbarTooltipBold]: 'Ajouter un texte en gras',
   [lngKeys.EditorToolbarTooltipItalic]: 'Ajouter un texte en italique',
   [lngKeys.EditorToolbarTooltipCode]: 'Insérer du code',

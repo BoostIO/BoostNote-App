@@ -312,6 +312,7 @@ const jpTranslation: TranslationSource = {
   [lngKeys.EditorToolbarTooltipList]: '箇条書き',
   [lngKeys.EditorToolbarTooltipNumberedList]: '番号リスト',
   [lngKeys.EditorToolbarTooltipTaskList]: 'タスクリスト',
+  [lngKeys.EditorToolbarTooltipFormat]: '文書を整形',
   [lngKeys.EditorToolbarTooltipBold]: '太文字',
   [lngKeys.EditorToolbarTooltipItalic]: 'イタリック',
   [lngKeys.EditorToolbarTooltipCode]: 'コード',
