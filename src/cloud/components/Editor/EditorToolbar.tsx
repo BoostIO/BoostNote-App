@@ -239,7 +239,7 @@ const EditorToolbar = ({ editorRef }: EditorToolbarProps) => {
       }
 
       editor.operation(() => {
-        editor.replaceRange(result.formatted, from, to, source)
+        editor.replaceRange(result.formatted, from, to, '+format')
         editor.setCursor(editor.posFromIndex(fromOffset + result.cursorOffset))
       })
       editor.focus()
