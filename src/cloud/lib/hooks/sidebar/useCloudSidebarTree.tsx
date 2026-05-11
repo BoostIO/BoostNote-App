@@ -111,6 +111,7 @@ export function useCloudSidebarTree() {
   const {
     dropInDocOrFolder,
     dropInWorkspace,
+    dropFilesInWorkspace,
     saveFolderTransferData,
     saveDocTransferData,
     clearDragTransferData,
@@ -262,8 +263,14 @@ export function useCloudSidebarTree() {
         currentUserIsCoreMember
           ? {
               dropIn: true,
-              onDrop: (event: any) =>
-                dropInWorkspace(event, wp.id, updateFolder, updateDoc),
+              onDrop: (event: any) => {
+                const files = event.dataTransfer?.files
+                if (files != null && files.length > 0) {
+                  dropFilesInWorkspace(event, wp.id, team, createDoc)
+                } else {
+                  dropInWorkspace(event, wp.id, updateFolder, updateDoc)
+                }
+              },
               controls: [
                 {
                   icon: mdiTextBoxPlus,
@@ -1117,4 +1124,5 @@ type CloudTreeItem = {
   onDragStart?: (event: any) => void
   onDrop?: (event: any, position?: SidebarDragState) => void
   onDragEnd?: (event: any) => void
+  onDropFiles?: (event: any) => void
 }

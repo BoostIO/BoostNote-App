@@ -23,6 +23,10 @@ import { SerializedDocWithSupplemental } from '../../../interfaces/db/doc'
 import { SidebarDragState } from '../../../../design/lib/dnd'
 import { useToast } from '../../../../design/lib/stores/toast'
 import { getMapFromEntityArray } from '../../../../design/lib/utils/array'
+import { SerializedTeam } from '../../../interfaces/db/team'
+
+const SUPPORTED_FILE_EXTENSIONS = ['.md', '.txt', '.html']
+const FILE_ENCODING = 'utf-8'
 
 export function useCloudDnd() {
   const {
@@ -47,10 +51,16 @@ export function useCloudDnd() {
         body: UpdateDocRequestBody
       ) => Promise<void>
     ) => {
+      const files = event.dataTransfer?.files
+      if (files != null && files.length > 0) {
+        return 'files'
+      }
+
       const draggedResource = getDraggedResource(event)
       if (draggedResource === null) {
         return
       }
+
 
       if (draggedResource.type === 'folder') {
         const folder = draggedResource.resource
@@ -71,6 +81,58 @@ export function useCloudDnd() {
     },
     []
   )
+
+  const dropFilesInWorkspace = useCallback(
+    async (
+      event: any,
+      workspaceId: string,
+      team: SerializedTeam,
+      createDoc: (
+        team: SerializedTeam,
+        body: { workspaceId: string; title: string; content?: string }
+      ) => Promise<{ id: string }>
+    ) => {
+      const files = event.dataTransfer?.files
+      if (files == null || files.length === 0) {
+        return
+      }
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        const ext = getFileExtension(file.name)
+        if (!SUPPORTED_FILE_EXTENSIONS.includes(ext)) {
+          continue
+        }
+
+        try {
+          const content = await readFileAsText(file)
+          const title = file.name.replace(ext, '')
+          await createDoc(team, {
+            workspaceId,
+            title,
+            content,
+          })
+        } catch (err) {
+          console.warn('Failed to create doc from file:', file.name, err)
+        }
+      }
+    },
+    []
+  )
+
+  function getFileExtension(filename: string): string {
+    const lastDot = filename.lastIndexOf('.')
+    return lastDot >= 0 ? filename.slice(lastDot).toLowerCase() : ''
+  }
+
+  async function readFileAsText(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(reader.result as string)
+      reader.onerror = () => reject(reader.error)
+      reader.readAsText(file, FILE_ENCODING)
+    })
+  }
 
   const dropInDocOrFolder = useCallback(
     async (
@@ -173,6 +235,7 @@ export function useCloudDnd() {
   return {
     dropInWorkspace,
     dropInDocOrFolder,
+    dropFilesInWorkspace,
     saveFolderTransferData,
     saveDocTransferData,
     clearDragTransferData,
