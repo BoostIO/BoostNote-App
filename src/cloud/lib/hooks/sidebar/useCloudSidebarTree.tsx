@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 import {
   mdiCog,
+  mdiContentCopy,
   mdiFileDocumentOutline,
   mdiTextBoxPlus,
   mdiFolderPlusOutline,
@@ -13,6 +14,7 @@ import {
   mdiTrashCanOutline,
   mdiViewDashboard,
 } from '@mdi/js'
+import copy from 'copy-to-clipboard'
 import { FoldingProps } from '../../../../design/components/atoms/FoldingWrapper'
 import { SidebarDragState } from '../../../../design/lib/dnd'
 import {
@@ -483,6 +485,12 @@ export function useCloudSidebarTree() {
               contextControls: [
                 {
                   type: MenuTypes.Normal,
+                  icon: mdiContentCopy,
+                  label: translate(lngKeys.GeneralCopyTheLink),
+                  onClick: () => copy(href),
+                },
+                {
+                  type: MenuTypes.Normal,
                   icon: doc.bookmarked ? mdiStar : mdiStarOutline,
                   label:
                     treeSendingMap.get(doc.id) === 'bookmark'
@@ -513,6 +521,14 @@ export function useCloudSidebarTree() {
                   icon: doc.bookmarked ? mdiStar : mdiStarOutline,
                   onClick: () =>
                     toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
+                },
+              ],
+              contextControls: [
+                {
+                  type: MenuTypes.Normal,
+                  icon: mdiContentCopy,
+                  label: translate(lngKeys.GeneralCopyTheLink),
+                  onClick: () => copy(href),
                 },
               ],
             }
