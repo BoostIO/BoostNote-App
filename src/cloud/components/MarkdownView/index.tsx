@@ -22,8 +22,6 @@ import {
   FlowchartWarningBlock,
 } from '../../lib/charts'
 import MarkdownCheckbox from './MarkdownCheckbox'
-import { mergeDeepRight } from 'ramda'
-import gh from 'hast-util-sanitize/lib/github.json'
 import { shortcodeRehypeHandler } from '../../lib/shortcode'
 import Shortcode from './Shortcode'
 import LinkableHeader from './LinkableHeader'
@@ -51,6 +49,8 @@ import LoaderDocEditor from '../../../design/components/atoms/loaders/LoaderDocE
 import { lngKeys } from '../../lib/i18n/types'
 import { DialogIconTypes, useDialog } from '../../../design/lib/stores/dialog'
 import { useI18n } from '../../lib/hooks/useI18n'
+import { schema } from './schema'
+import MarkdownRenderWorker from 'worker-loader!./markdownRender.worker'
 
 const remarkAdmonitionOptions = {
   tag: ':::',
@@ -58,36 +58,7 @@ const remarkAdmonitionOptions = {
   infima: false,
 }
 
-export const schema = mergeDeepRight(gh, {
-  attributes: {
-    '*': [
-      ...gh.attributes['*'],
-      'className',
-      'align',
-      'data-line',
-      'data-offset',
-      'data-inline-comment',
-    ],
-    input: [...gh.attributes['input'], 'checked'],
-    pre: ['dataRaw'],
-    shortcode: ['entityId', 'identifier'],
-    iframe: ['src'],
-    path: ['d'],
-    svg: ['viewBox'],
-  },
-  tagNames: [
-    ...gh.tagNames,
-    'svg',
-    'path',
-    'mermaid',
-    'flowchart',
-    'chart',
-    'chart(yaml)',
-    'shortcode',
-    'iframe',
-    'gutter',
-  ],
-})
+export { schema }
 
 type MarkdownViewState =
   | { type: 'loading' }
@@ -126,6 +97,97 @@ interface MarkdownViewProps {
   previewStyle?: string
   codeBlockTheme?: CodeMirrorEditorTheme
   showLinkOpenWarning?: boolean
+}
+
+interface MarkdownWorkerResponse {
+  type: 'rendered' | 'error'
+  id: number
+  tree?: any
+  error?: string
+}
+
+interface RenderConfig {
+  mainThreadProcessor: any
+  reactProcessor: any
+  getEmbed?: MarkdownViewProps['getEmbed']
+}
+
+const docEmbedPattern =
+  /\[\[\s*(?:boostnote|boosthub)\.doc\b[^\]]*\bid=(?:"([^"]+)"|'([^']+)'|([^\s\]]+))/g
+
+async function resolveEmbedDocs(
+  content: string,
+  getEmbed: MarkdownViewProps['getEmbed']
+) {
+  if (getEmbed == null || !content.includes('.doc')) {
+    return {}
+  }
+
+  const ids = new Set<string>()
+  let match = docEmbedPattern.exec(content)
+  while (match != null) {
+    const id = match[1] || match[2] || match[3]
+    if (id != null) {
+      ids.add(id)
+    }
+    match = docEmbedPattern.exec(content)
+  }
+  docEmbedPattern.lastIndex = 0
+
+  const embeds: { [id: string]: EmbedDoc | undefined } = {}
+  await Promise.all(
+    Array.from(ids).map(async (id) => {
+      embeds[id] = await getEmbed(id)
+    })
+  )
+  return embeds
+}
+
+function createMarkdownWorker() {
+  if (typeof Worker === 'undefined') {
+    return null
+  }
+
+  try {
+    return new MarkdownRenderWorker()
+  } catch {
+    return null
+  }
+}
+
+function renderMarkdownInWorker(
+  worker: Worker,
+  id: number,
+  content: string,
+  embeds: { [id: string]: EmbedDoc | undefined }
+) {
+  return new Promise<any>((resolve, reject) => {
+    const onMessage = ({ data }: MessageEvent) => {
+      const response = data as MarkdownWorkerResponse
+      if (response.id !== id) {
+        return
+      }
+
+      cleanup()
+      if (response.type === 'error') {
+        reject(new Error(response.error || 'Markdown worker failed'))
+      } else {
+        resolve(response.tree)
+      }
+    }
+    const onError = (event: ErrorEvent) => {
+      cleanup()
+      reject(event.error || new Error(event.message))
+    }
+    function cleanup() {
+      worker.removeEventListener('message', onMessage)
+      worker.removeEventListener('error', onError)
+    }
+
+    worker.addEventListener('message', onMessage)
+    worker.addEventListener('error', onError)
+    worker.postMessage({ type: 'render', id, content, embeds })
+  })
 }
 
 const MarkdownView = ({
@@ -187,7 +249,7 @@ const MarkdownView = ({
     [messageBox, showLinkOpenWarning, translate]
   )
 
-  const markdownProcessor = useMemo(() => {
+  const renderConfig = useMemo<RenderConfig>(() => {
     const linkableHeader = (as: string) => (props: any) => {
       return props.id !== 'user-content-' ? (
         <LinkableHeader as={as} {...props} />
@@ -336,7 +398,7 @@ const MarkdownView = ({
       rehypeReactConfig.components.h6 = linkableHeader('h6')
     }
 
-    const parser = unified()
+    const mainThreadProcessor = unified()
       .use(remarkParse)
       .use(remarkShortcodes)
       .use(remarkDocEmbed, {
@@ -364,7 +426,16 @@ const MarkdownView = ({
       .use(rehypePosition)
       .use(rehypeReact, rehypeReactConfig)
 
-    return parser
+    const reactProcessor = unified()
+      .use(rehypeCodeMirror, {
+        ignoreMissing: true,
+        theme: codeBlockTheme,
+      })
+      .use(rehypeMermaid)
+      .use(rehypePosition)
+      .use(rehypeReact, rehypeReactConfig)
+
+    return { mainThreadProcessor, reactProcessor, getEmbed }
   }, [
     shortcodeHandler,
     codeFence,
@@ -378,42 +449,57 @@ const MarkdownView = ({
     showLinkOpenWarning,
   ])
 
-  const processorRef = useRef(markdownProcessor)
+  const renderConfigRef = useRef(renderConfig)
+  const renderWorkerRef = useRef<Worker | null>(null)
+  const renderRequestIdRef = useRef(0)
 
   const renderContentRef = useRef(
     throttle(
       async (content: string) => {
+        const requestId = ++renderRequestIdRef.current
         try {
           checkboxIndexRef.current = 0
-          const result = (await processorRef.current.process(content)) as any
+          const { reactProcessor, getEmbed } = renderConfigRef.current
+          if (renderWorkerRef.current == null) {
+            renderWorkerRef.current = createMarkdownWorker()
+          }
+          if (renderWorkerRef.current == null) {
+            throw new Error('Markdown worker is unavailable')
+          }
+
+          const embeds = await resolveEmbedDocs(content, getEmbed)
+          const tree = await renderMarkdownInWorker(
+            renderWorkerRef.current,
+            requestId,
+            content,
+            embeds
+          )
+          if (requestId !== renderRequestIdRef.current) {
+            return
+          }
+
+          const renderedTree = await reactProcessor.run(tree)
+          const result = reactProcessor.stringify(renderedTree)
           setState({
             type: 'loaded',
-            content: result.result,
+            content: result as React.ReactNode,
           })
-          document.querySelectorAll('.collapse-trigger').forEach((trigger) => {
-            trigger.addEventListener('click', triggerCollapse)
-          })
-          document
-            .querySelectorAll('.doc-embed-header a')
-            .forEach((docEmbedLink) => {
-              docEmbedLink.addEventListener('click', (event) => {
-                if (
-                  ((event as MouseEvent).ctrlKey ||
-                    (event as MouseEvent).metaKey) &&
-                  !usingElectron
-                ) {
-                  return
-                }
-
-                event.preventDefault()
-                push((event.target as HTMLAnchorElement).href)
-              })
+          runAfterRenderCallbacks(push, onRenderRef)
+        } catch {
+          try {
+            const { mainThreadProcessor } = renderConfigRef.current
+            const result = (await mainThreadProcessor.process(content)) as any
+            if (requestId !== renderRequestIdRef.current) {
+              return
+            }
+            setState({
+              type: 'loaded',
+              content: result.result,
             })
-          if (onRenderRef.current != null) {
-            onRenderRef.current()
+            runAfterRenderCallbacks(push, onRenderRef)
+          } catch (fallbackErr) {
+            setState({ type: 'error', err: fallbackErr as any })
           }
-        } catch (err) {
-          setState({ type: 'error', err: err as any })
         }
       },
       100,
@@ -422,10 +508,16 @@ const MarkdownView = ({
   )
 
   useEffect(() => {
-    processorRef.current = markdownProcessor
+    renderConfigRef.current = renderConfig
     modeLoadCallbackRef.current = () => renderContentRef.current(content)
     renderContentRef.current(content)
-  }, [content, markdownProcessor])
+  }, [content, renderConfig])
+
+  useEffectOnce(() => {
+    return () => {
+      renderWorkerRef.current?.terminate()
+    }
+  })
 
   useEffectOnce(() => {
     const callback = () => modeLoadCallbackRef.current?.call(null)
@@ -537,6 +629,31 @@ function triggerCollapse(event: Event) {
     if (parent != null) {
       parent.classList.toggle('collapsed')
     }
+  }
+}
+
+function runAfterRenderCallbacks(
+  push: (path: string) => void,
+  onRenderRef: React.MutableRefObject<(() => any) | undefined>
+) {
+  document.querySelectorAll('.collapse-trigger').forEach((trigger) => {
+    trigger.addEventListener('click', triggerCollapse)
+  })
+  document.querySelectorAll('.doc-embed-header a').forEach((docEmbedLink) => {
+    docEmbedLink.addEventListener('click', (event) => {
+      if (
+        ((event as MouseEvent).ctrlKey || (event as MouseEvent).metaKey) &&
+        !usingElectron
+      ) {
+        return
+      }
+
+      event.preventDefault()
+      push((event.currentTarget as HTMLAnchorElement).href)
+    })
+  })
+  if (onRenderRef.current != null) {
+    onRenderRef.current()
   }
 }
 
