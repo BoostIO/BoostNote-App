@@ -8,6 +8,7 @@ import {
   mdiTrashCanOutline,
 } from '@mdi/js'
 import { TFunction } from 'i18next'
+import type { MouseEvent } from 'react'
 import { TopbarBreadcrumbProps } from '../../../design/components/organisms/Topbar'
 import { getDocLinkHref } from '../../components/Link/DocLink'
 import { getFolderHref } from '../../components/Link/FolderLink'
@@ -48,8 +49,11 @@ export function mapTopbarBreadcrumbs(
     pageDoc?: SerializedDoc
     pageFolder?: SerializedFolder
   },
-  renameFolder?: (folder: SerializedFolder) => void,
-  renameDoc?: (doc: SerializedDoc) => void,
+  renameFolder?: (
+    folder: SerializedFolder,
+    event?: MouseEvent<Element>
+  ) => void,
+  renameDoc?: (doc: SerializedDoc, event?: MouseEvent<Element>) => void,
   openNewDocForm?: (
     body: CloudNewResourceRequestBody,
     options: UIFormOptions
@@ -196,7 +200,7 @@ function getDocBreadcrumb(
   doc: SerializedDoc,
   active: boolean,
   push: (url: string) => void,
-  renameDoc?: (doc: SerializedDoc) => void,
+  renameDoc?: (doc: SerializedDoc, event?: MouseEvent<Element>) => void,
   deleteDoc?: (doc: SerializedDoc) => void
 ): TopbarBreadcrumbProps & AddedProperties {
   return {
@@ -217,7 +221,7 @@ function getDocBreadcrumb(
             {
               icon: mdiPencil,
               label: t(lngKeys.GeneralRenameVerb),
-              onClick: () => renameDoc(doc),
+              onClick: (event: MouseEvent<Element>) => renameDoc(doc, event),
             },
           ]
         : []),
@@ -248,7 +252,10 @@ function getFolderBreadcrumb(
     body: CloudNewResourceRequestBody,
     options: UIFormOptions
   ) => void,
-  renameFolder?: (folder: SerializedFolder) => void,
+  renameFolder?: (
+    folder: SerializedFolder,
+    event?: MouseEvent<Element>
+  ) => void,
   deleteFolder?: (folder: SerializedFolder) => void
 ): TopbarBreadcrumbProps & AddedProperties {
   const newResourceBody = {
@@ -310,7 +317,8 @@ function getFolderBreadcrumb(
             {
               icon: mdiPencil,
               label: t(lngKeys.GeneralRenameVerb),
-              onClick: () => renameFolder(folder),
+              onClick: (event: MouseEvent<Element>) =>
+                renameFolder(folder, event),
             },
           ]
         : []),

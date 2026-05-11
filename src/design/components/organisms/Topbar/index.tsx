@@ -20,7 +20,7 @@ export interface TopbarBreadcrumbProps {
   icon?: string
   parentId: string
   active?: boolean
-  controls?: { label: string; onClick: () => void; icon: string }[]
+  controls?: TopbarActionItemAttrbs[]
 }
 
 export type TopbarControlButtonProps = ButtonProps & {

@@ -36,7 +36,7 @@ import { stringify } from 'querystring'
 import { docPreviewCloseEvent } from './useCloudDocPreview'
 
 export function useCloudResourceModals() {
-  const { openModal, closeLastModal } = useModal()
+  const { openModal, openContextModal, closeLastModal } = useModal()
   const { messageBox } = useDialog()
   const {
     updateFolder,
@@ -71,68 +71,105 @@ export function useCloudResourceModals() {
   )
 
   const openRenameFolderForm = useCallback(
-    (folder: SerializedFolder) => {
-      openModal(
+    (folder: SerializedFolder, event?: React.MouseEvent<Element>) => {
+      let renameSubmitted = false
+      const updateFolderName = async (inputValue: string, emoji?: string) => {
+        if (renameSubmitted) {
+          return
+        }
+
+        try {
+          renameSubmitted = true
+          await updateFolder(folder, {
+            workspaceId: folder.workspaceId,
+            parentFolderId: folder.parentFolderId,
+            folderName: inputValue,
+            emoji: typeof emoji === 'string' ? emoji : null,
+          })
+        } catch (error) {
+          renameSubmitted = false
+          throw error
+        }
+      }
+
+      const content = (
         <EmojiInputForm
           defaultIcon={mdiFolderOutline}
           defaultInputValue={folder.name}
           defaultEmoji={folder.emoji}
           placeholder={translate(lngKeys.FolderNamePlaceholder)}
-          submitButtonProps={{
-            label: translate(lngKeys.GeneralUpdateVerb),
-          }}
           onSubmit={async (inputValue: string, emoji?: string) => {
-            await updateFolder(folder, {
-              workspaceId: folder.workspaceId,
-              parentFolderId: folder.parentFolderId,
-              folderName: inputValue,
-              emoji: typeof emoji === 'string' ? emoji : null,
-            })
+            await updateFolderName(inputValue, emoji)
             closeLastModal()
           }}
-        />,
-        {
-          showCloseIcon: true,
-          title: translate(lngKeys.RenameFolder),
-        }
+          onBlur={updateFolderName}
+        />
       )
+      if (event != null) {
+        openContextModal(event, content, {
+          width: 320,
+          alignment: 'right',
+        })
+        return
+      }
+
+      openModal(content, {
+        showCloseIcon: false,
+        width: 'small',
+      })
     },
-    [openModal, closeLastModal, updateFolder, translate]
+    [openModal, openContextModal, closeLastModal, updateFolder, translate]
   )
 
   const openRenameDocForm = useCallback(
-    (doc: SerializedDoc) => {
-      openModal(
+    (doc: SerializedDoc, event?: React.MouseEvent<Element>) => {
+      let renameSubmitted = false
+      const updateDocTitle = async (inputValue: string, emoji?: string) => {
+        if (renameSubmitted) {
+          return
+        }
+
+        try {
+          renameSubmitted = true
+          await updateDoc(doc, {
+            workspaceId: doc.workspaceId,
+            parentFolderId: doc.parentFolderId,
+            title: inputValue,
+            emoji: emoji == null ? null : emoji,
+          })
+        } catch (error) {
+          renameSubmitted = false
+          throw error
+        }
+      }
+
+      const content = (
         <EmojiInputForm
           defaultIcon={mdiFileDocumentOutline}
           defaultInputValue={doc.title}
           defaultEmoji={doc.emoji}
           placeholder={translate(lngKeys.DocTitlePlaceholder)}
           onSubmit={async (inputValue: string, emoji?: string) => {
-            await updateDoc(doc, {
-              workspaceId: doc.workspaceId,
-              parentFolderId: doc.parentFolderId,
-              title: inputValue,
-              emoji: emoji == null ? null : emoji,
-            })
+            await updateDocTitle(inputValue, emoji)
             closeLastModal()
           }}
-          onBlur={async (inputValue: string, emoji?: string) => {
-            await updateDoc(doc, {
-              workspaceId: doc.workspaceId,
-              parentFolderId: doc.parentFolderId,
-              title: inputValue,
-              emoji: emoji == null ? null : emoji,
-            })
-          }}
-        />,
-        {
-          showCloseIcon: false,
-          width: 'small',
-        }
+          onBlur={updateDocTitle}
+        />
       )
+      if (event != null) {
+        openContextModal(event, content, {
+          width: 320,
+          alignment: 'right',
+        })
+        return
+      }
+
+      openModal(content, {
+        showCloseIcon: false,
+        width: 'small',
+      })
     },
-    [closeLastModal, openModal, translate, updateDoc]
+    [closeLastModal, openModal, openContextModal, translate, updateDoc]
   )
 
   const openNewFolderForm = useCallback(
