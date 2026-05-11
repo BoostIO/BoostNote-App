@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, MouseEvent } from 'react'
 import {
   mdiCog,
+  mdiContentCopy,
   mdiFileDocumentOutline,
   mdiFilePlusOutline,
   mdiFolderPlusOutline,
@@ -14,6 +15,7 @@ import {
   mdiWeb,
   mdiDotsHorizontal,
 } from '@mdi/js'
+import copy from 'copy-to-clipboard'
 import { FoldingProps } from '../../../design/components/atoms/FoldingWrapper'
 import { SidebarTreeSortingOrder } from '../../../design/lib/sidebar'
 import {
@@ -403,6 +405,12 @@ export function useNavigatorTree() {
               contextControls: [
                 {
                   type: MenuTypes.Normal,
+                  icon: mdiContentCopy,
+                  label: 'Copy the link',
+                  onClick: () => copy(href),
+                },
+                {
+                  type: MenuTypes.Normal,
                   icon: doc.bookmarked ? mdiStar : mdiStarOutline,
                   label:
                     treeSendingMap.get(doc.id) === 'bookmark'
@@ -433,6 +441,14 @@ export function useNavigatorTree() {
                   icon: doc.bookmarked ? mdiStar : mdiStarOutline,
                   onClick: () =>
                     toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
+                },
+              ],
+              contextControls: [
+                {
+                  type: MenuTypes.Normal,
+                  icon: mdiContentCopy,
+                  label: 'Copy the link',
+                  onClick: () => copy(href),
                 },
               ],
             }
