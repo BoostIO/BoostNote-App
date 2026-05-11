@@ -34,6 +34,7 @@ import {
   exportAsMarkdownFile,
   exportAsHtmlFile,
   filenamifyTitle,
+  pdfExportTheme,
 } from '../../lib/export'
 import { downloadBlob } from '../../../design/lib/dom'
 import { useNav } from '../../lib/stores/nav'
@@ -219,7 +220,7 @@ export function DocContextMenuActions({
       await fetchDocPdf({
         updatedDoc,
         exportOptions: {
-          appTheme: settings['general.theme'],
+          appTheme: pdfExportTheme,
           codeBlockTheme: settings['general.codeBlockTheme'],
         },
         token,

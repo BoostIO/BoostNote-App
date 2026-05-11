@@ -37,6 +37,8 @@ const remarkAdmonitionOptions = {
   infima: false,
 }
 
+export const pdfExportTheme = 'light'
+
 export const exportAsHtmlFile = async (
   doc: SerializedDoc,
   preferences: UserSettings,
@@ -122,7 +124,10 @@ const fetchCorrectMdThemeName = (theme: string, appTheme: string) => {
   return theme
 }
 
-const getCssLinks = (settings: UserSettings) => {
+const getCssLinks = (
+  settings: UserSettings,
+  appTheme = settings['general.theme']
+) => {
   const cssHrefs: string[] = []
 
   cssHrefs.push(boostHubBaseUrl + '/app/codemirror/theme/codemirror.css')
@@ -131,7 +136,7 @@ const getCssLinks = (settings: UserSettings) => {
 
   const editorTheme = fetchCorrectMdThemeName(
     settings['general.editorTheme'],
-    settings['general.theme']
+    appTheme
   )
   if (editorTheme != null) {
     const editorThemePath =
@@ -141,7 +146,7 @@ const getCssLinks = (settings: UserSettings) => {
 
   const markdownCodeBlockTheme = fetchCorrectMdThemeName(
     settings['general.codeBlockTheme'],
-    settings['general.theme']
+    appTheme
   )
   if (
     markdownCodeBlockTheme != null &&
@@ -162,12 +167,11 @@ const generatePrintToPdfHTML = (
   settings: UserSettings,
   previewStyle?: string
 ) => {
-  const cssHrefs: string[] = getCssLinks(settings)
-  const generalThemeName = settings['general.theme']
+  const cssHrefs: string[] = getCssLinks(settings, pdfExportTheme)
   const cssLinks = cssHrefs
     .map((href) => cssStyleLinkGenerator(href))
     .join('\n')
-  const themedGlobalCss = getGlobalCss(selectV2Theme(generalThemeName))
+  const themedGlobalCss = getGlobalCss(selectV2Theme(pdfExportTheme))
   const previewStyleCssEl = previewStyle ? `` : ''
 
   return `<!DOCTYPE html>
@@ -189,7 +193,7 @@ const generatePrintToPdfHTML = (
         </style>
       </head>
       <body>
-        <div class="${generalThemeName}">
+        <div class="${pdfExportTheme}">
           ${markdownHTML}
         </div>
       </body>
