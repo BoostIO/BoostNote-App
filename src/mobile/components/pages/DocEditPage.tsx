@@ -55,6 +55,7 @@ import {
 } from '../../../cloud/lib/subscription'
 import CustomizedMarkdownPreviewer from '../../../cloud/components/MarkdownView/CustomizedMarkdownPreviewer'
 import { scrollEditorToLine } from '../../../cloud/lib/hooks/editor/docEditor'
+import { attachTouchCursorDrag } from '../../lib/codeMirrorTouchCursor'
 
 interface EditorProps {
   doc: SerializedDocWithSupplemental
@@ -94,6 +95,7 @@ const Editor = ({
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const [editorContent, setEditorContent] = useState('')
   const editorRef = useRef<CodeMirror.Editor | null>(null)
+  const touchCursorDragDisposerRef = useRef<() => void>()
   const fileUploadHandlerRef = useRef<OnFileCallback>()
   const docRef = useRef<string>('')
   const [shortcodeConvertMenu, setShortcodeConvertMenu] = useState<{
@@ -269,6 +271,9 @@ const Editor = ({
   const bindCallback = useCallback((editor: CodeMirror.Editor) => {
     setEditorContent(editor.getValue())
     editorRef.current = editor
+    if (osName === 'android' && touchCursorDragDisposerRef.current == null) {
+      touchCursorDragDisposerRef.current = attachTouchCursorDrag(editor)
+    }
     attachFileHandlerToCodeMirrorEditor(editor, {
       onFile: async (file) => {
         return fileUploadHandlerRef.current != null
@@ -364,6 +369,15 @@ const Editor = ({
         currentSelections: selections,
       })
     })
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (touchCursorDragDisposerRef.current != null) {
+        touchCursorDragDisposerRef.current()
+        touchCursorDragDisposerRef.current = undefined
+      }
+    }
   }, [])
 
   useEffect(() => {
@@ -755,6 +769,10 @@ const StyledEditor = styled.div`
     height: 100%;
     position: relative;
     z-index: 0 !important;
+    &.CodeMirror-touch-cursor-dragging {
+      cursor: text;
+      user-select: none;
+    }
     .CodeMirror-hints {
       position: absolute;
       z-index: 10;
