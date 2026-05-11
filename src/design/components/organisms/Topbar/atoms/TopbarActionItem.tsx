@@ -14,7 +14,7 @@ interface TopbarActionItemProps {
 export interface TopbarActionItemAttrbs {
   label: string
   icon: string
-  onClick: () => void
+  onClick: (event: React.MouseEvent<Element>) => void
 }
 
 const TopbarActionItem = ({
@@ -40,7 +40,7 @@ const TopbarActionItem = ({
       id={`tree-action-${shortid.generate()}`}
       onClick={(event: React.MouseEvent) => {
         event.preventDefault()
-        item.onClick()
+        item.onClick(event)
       }}
       onFocus={() => setFocused(true)}
       tabIndex={0}
