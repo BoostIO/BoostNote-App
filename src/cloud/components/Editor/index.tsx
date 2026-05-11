@@ -104,6 +104,7 @@ import {
   CodeMirrorEditorModeHints,
   getModeSuggestions,
 } from '../../lib/editor/CodeMirror'
+import { copySelectionOnVimCtrlC } from '../../lib/editor/vimKeyMap'
 import { scrollEditorToLine } from '../../lib/hooks/editor/docEditor'
 
 type LayoutMode = 'split' | 'preview' | 'editor'
@@ -269,6 +270,7 @@ const Editor = ({
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
         'Ctrl-Space': 'autocomplete',
+        'Ctrl-C': copySelectionOnVimCtrlC,
       },
       scrollPastEnd: true,
       // fixes IME being on top of current line, Codemirror issue: https://github.com/codemirror/CodeMirror/issues/3137

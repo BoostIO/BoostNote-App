@@ -12,6 +12,7 @@ import { SerializedTeam } from '../../../interfaces/db/team'
 import { SerializedTemplate } from '../../../interfaces/db/template'
 import { SerializedUser } from '../../../interfaces/db/user'
 import useRealtime from '../../editor/hooks/useRealtime'
+import { copySelectionOnVimCtrlC } from '../../editor/vimKeyMap'
 import attachFileHandlerToCodeMirrorEditor, {
   OnFileCallback,
 } from '../../editor/plugins/fileHandler'
@@ -132,6 +133,7 @@ export function useDocEditor({
       extraKeys: {
         Enter: 'newlineAndIndentContinueMarkdownList',
         Tab: 'indentMore',
+        'Ctrl-C': copySelectionOnVimCtrlC,
       },
       scrollPastEnd: true,
       // fixes IME being on top of current line, Codemirror issue: https://github.com/codemirror/CodeMirror/issues/3137
