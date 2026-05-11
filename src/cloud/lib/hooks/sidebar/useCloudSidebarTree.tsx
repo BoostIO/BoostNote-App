@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 import {
   mdiCog,
+  mdiContentCopy,
   mdiFileDocumentOutline,
   mdiTextBoxPlus,
   mdiFolderPlusOutline,
@@ -13,6 +14,7 @@ import {
   mdiTrashCanOutline,
   mdiViewDashboard,
 } from '@mdi/js'
+import copy from 'copy-to-clipboard'
 import { FoldingProps } from '../../../../design/components/atoms/FoldingWrapper'
 import { SidebarDragState } from '../../../../design/lib/dnd'
 import {
@@ -111,6 +113,7 @@ export function useCloudSidebarTree() {
   const {
     dropInDocOrFolder,
     dropInWorkspace,
+    dropFilesInWorkspace,
     saveFolderTransferData,
     saveDocTransferData,
     clearDragTransferData,
@@ -262,8 +265,14 @@ export function useCloudSidebarTree() {
         currentUserIsCoreMember
           ? {
               dropIn: true,
-              onDrop: (event: any) =>
-                dropInWorkspace(event, wp.id, updateFolder, updateDoc),
+              onDrop: (event: any) => {
+                const files = event.dataTransfer?.files
+                if (files != null && files.length > 0) {
+                  dropFilesInWorkspace(event, wp.id, team, createDoc)
+                } else {
+                  dropInWorkspace(event, wp.id, updateFolder, updateDoc)
+                }
+              },
               controls: [
                 {
                   icon: mdiTextBoxPlus,
@@ -492,6 +501,12 @@ export function useCloudSidebarTree() {
                       : translate(lngKeys.GeneralBookmarkVerb),
                   onClick: () =>
                     toggleDocBookmark(doc.teamId, doc.id, doc.bookmarked),
+                },
+                {
+                  type: MenuTypes.Normal,
+                  icon: mdiContentCopy,
+                  label: translate(lngKeys.GeneralCopyTheLink),
+                  onClick: () => copy(href),
                 },
                 {
                   type: MenuTypes.Normal,
@@ -1117,4 +1132,5 @@ type CloudTreeItem = {
   onDragStart?: (event: any) => void
   onDrop?: (event: any, position?: SidebarDragState) => void
   onDragEnd?: (event: any) => void
+  onDropFiles?: (event: any) => void
 }
