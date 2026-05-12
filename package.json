@@ -119,7 +119,7 @@
     "copy-webpack-plugin": "^6.2.1",
     "cross-env": "^6.0.0",
     "css-loader": "^5.2.6",
-    "electron-builder": "^22.8.1",
+    "electron-builder": "^22.14.13",
     "electron-notarize": "^1.0.0",
     "env-cmd": "^10.0.1",
     "error-overlay-webpack-plugin": "^0.4.2",
@@ -267,6 +267,20 @@
     "afterSign": "build-utils/afterSignHook.js",
     "mac": {
       "icon": "static/boostnote-mac-icon.png",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
       "hardenedRuntime": true,
       "entitlementsInherit": "macOs/entitlements.mac.plist",
       "entitlements": "macOs/entitlements.mac.plist"
