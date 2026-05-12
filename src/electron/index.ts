@@ -15,7 +15,14 @@ function applyMenuTemplate(template: MenuItemConstructorOptions[]) {
 }
 
 const mac = process.platform === 'darwin'
+const linux = process.platform === 'linux'
 let ready = false
+
+if (linux && app.isPackaged && !process.argv.includes('--no-sandbox')) {
+  // Debian-based systems can abort before opening a window when the packaged
+  // chrome-sandbox helper is not installed with setuid permissions.
+  app.commandLine.appendSwitch('no-sandbox')
+}
 
 const singleInstance = app.requestSingleInstanceLock()
 if (!singleInstance) {
