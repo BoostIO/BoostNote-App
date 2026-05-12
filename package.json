@@ -273,6 +273,9 @@
     },
     "linux": {
       "icon": "static/icon.icns",
+      "executableArgs": [
+        "--no-sandbox"
+      ],
       "target": [
         "deb",
         "rpm",
