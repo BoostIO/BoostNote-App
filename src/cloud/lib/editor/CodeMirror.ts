@@ -240,6 +240,51 @@ for (const [key, suggestions] of Object.entries(supportedModeSuggestions)) {
   })
 }
 
+const initialModeSuggestions = [
+  'js',
+  'ts',
+  'python',
+  'shell',
+  'css',
+  'html',
+  'sql',
+  'go',
+  'rust',
+  'java',
+]
+
+function getAllModeSuggestions(
+  suggestionModes: SuggestionModeType = improvedModeSuggestions
+) {
+  return Object.values(suggestionModes).reduce(
+    (result, suggestions) => result.concat(suggestions),
+    []
+  )
+}
+
+export function getInitialModeSuggestions(
+  suggestionModes: SuggestionModeType = improvedModeSuggestions
+): CodeMirror.Hint[] {
+  const suggestions = getAllModeSuggestions(suggestionModes)
+  const initialSuggestions: CodeMirror.Hint[] = []
+
+  initialModeSuggestions.forEach((autocomplete) => {
+    const suggestion = suggestions.find(
+      (modeSuggestion) => modeSuggestion.autocomplete === autocomplete
+    )
+    if (suggestion == null) {
+      return
+    }
+
+    initialSuggestions.push({
+      text: suggestion.autocomplete,
+      displayText: suggestion.displayText,
+    })
+  })
+
+  return initialSuggestions
+}
+
 export function getModeSuggestions(
   word: string,
   suggestionModes: SuggestionModeType = improvedModeSuggestions
@@ -283,11 +328,89 @@ export function getModeSuggestions(
   return []
 }
 
+export function getCodeBlockHintContext(line: string, cursorColumn: number) {
+  const fenceMarker = line.startsWith('```')
+    ? '```'
+    : line.startsWith('~~~')
+    ? '~~~'
+    : null
+  if (fenceMarker == null || cursorColumn < fenceMarker.length) {
+    return null
+  }
+
+  const language = line.slice(fenceMarker.length).toLowerCase()
+  if (!/^[\w#+-]*$/.test(language)) {
+    return null
+  }
+
+  return {
+    fenceMarker,
+    language,
+  }
+}
+
+function buildCodeBlockHint(
+  fenceMarker: string,
+  suggestion: CodeMirror.Hint
+): CodeMirror.Hint {
+  return {
+    ...suggestion,
+    hint: (cm, data, selectedSuggestion) => {
+      const language = selectedSuggestion.text
+      cm.replaceRange(
+        `${fenceMarker}${language}\n\n${fenceMarker}`,
+        data.from,
+        data.to,
+        'complete'
+      )
+      cm.setCursor(CodeMirror.Pos(data.from.line + 1, 0))
+    },
+  }
+}
+
+export function getCodeBlockModeSuggestions(
+  language: string,
+  fenceMarker: string
+) {
+  const modeSuggestions =
+    language.length === 0
+      ? [
+          {
+            text: '',
+            displayText: 'Plain code block',
+          },
+          ...getInitialModeSuggestions(),
+        ]
+      : getModeSuggestions(language)
+
+  return modeSuggestions.map((suggestion) => {
+    return buildCodeBlockHint(fenceMarker, suggestion)
+  })
+}
+
 export function CodeMirrorEditorModeHints(cm: CodeMirror.Editor) {
   return new Promise(function (accept) {
     setTimeout(function () {
       const cursor = cm.getCursor(),
         line = cm.getLine(cursor.line)
+
+      const codeBlockHintContext = getCodeBlockHintContext(line, cursor.ch)
+      if (codeBlockHintContext != null) {
+        const suggestions = getCodeBlockModeSuggestions(
+          codeBlockHintContext.language,
+          codeBlockHintContext.fenceMarker
+        )
+        if (suggestions.length == 0) {
+          return accept(null)
+        }
+
+        return accept({
+          list: suggestions,
+          from: CodeMirror.Pos(cursor.line, 0),
+          to: CodeMirror.Pos(cursor.line, line.length),
+        })
+      }
+
       let start = cursor.ch
       let end = cursor.ch
       while (start && /\w/.test(line.charAt(start - 1))) --start

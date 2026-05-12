@@ -102,7 +102,8 @@ import { useLocalSnapshot } from '../../lib/stores/localSnapshots'
 import SyncStatus from '../Topbar/SyncStatus'
 import {
   CodeMirrorEditorModeHints,
-  getModeSuggestions,
+  getCodeBlockHintContext,
+  getCodeBlockModeSuggestions,
 } from '../../lib/editor/CodeMirror'
 import { scrollEditorToLine } from '../../lib/hooks/editor/docEditor'
 
@@ -361,18 +362,23 @@ const Editor = ({
     const cursorsEqual =
       currentCursor.ch == previousCursor.ch &&
       currentCursor.line == previousCursor.line
+    const codeBlockHintContext = getCodeBlockHintContext(
+      currentLine,
+      cursorColumn
+    )
     if (
       !cm.state.completeActive &&
-      // user has started with '```x' and is waiting for options
-      currentLine.startsWith('```') &&
-      currentLine.length >= 4 &&
-      cursorColumn >= 3 &&
+      codeBlockHintContext != null &&
       !cursorsEqual
     ) {
-      const inputWord = currentLine.substring(3)
-      const modeSuggestions = getModeSuggestions(inputWord)
+      const modeSuggestions = getCodeBlockModeSuggestions(
+        codeBlockHintContext.language,
+        codeBlockHintContext.fenceMarker
+      )
       const isOnlySuggestion =
-        modeSuggestions.length == 1 && modeSuggestions[0].text == inputWord
+        codeBlockHintContext.language.length > 0 &&
+        modeSuggestions.length == 1 &&
+        modeSuggestions[0].text == codeBlockHintContext.language
       if (!isOnlySuggestion) {
         cm.showHint()
       }
